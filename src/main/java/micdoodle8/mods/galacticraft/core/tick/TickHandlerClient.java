@@ -57,10 +57,12 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;
 
+@Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE)
 public class TickHandlerClient
 {
     public static int airRemaining;
@@ -182,7 +184,7 @@ public class TickHandlerClient
     }
 
     @SubscribeEvent
-    public void onRenderTick(TickEvent.RenderTickEvent event)
+    public static void onRenderTick(TickEvent.RenderTickEvent event)
     {
         final Minecraft minecraft = Minecraft.getInstance();
         final ClientPlayerEntity player = minecraft.player;
@@ -272,7 +274,7 @@ public class TickHandlerClient
     }
 
     @SubscribeEvent
-    public void onPreGuiRender(RenderGameOverlayEvent.Pre event)
+    public static void onPreGuiRender(RenderGameOverlayEvent.Pre event)
     {
         final Minecraft minecraft = Minecraft.getInstance();
         final ClientPlayerEntity player = minecraft.player;
@@ -293,7 +295,7 @@ public class TickHandlerClient
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event)
+    public static void onClientTick(TickEvent.ClientTickEvent event)
     {
         final Minecraft minecraft = Minecraft.getInstance();
         final ClientWorld world = minecraft.world;
@@ -453,7 +455,7 @@ public class TickHandlerClient
 
             if (ClientProxyCore.leakTrace != null)
             {
-                this.spawnLeakParticles();
+                spawnLeakParticles();
             }
 
             if (world != null && TickHandlerClient.spaceRaceGuiScheduled && minecraft.currentScreen == null && ConfigManagerCore.enableSpaceRaceManagerPopup.get())
@@ -629,7 +631,7 @@ public class TickHandlerClient
         }
     }
 
-    private void spawnLeakParticles()
+    private static void spawnLeakParticles()
     {
         Random rand = new Random();
         for (int i = ClientProxyCore.leakTrace.size() - 1; i >= 0; i--)

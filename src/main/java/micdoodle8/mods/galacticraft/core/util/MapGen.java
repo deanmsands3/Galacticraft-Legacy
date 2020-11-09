@@ -1,9 +1,12 @@
 package micdoodle8.mods.galacticraft.core.util;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.OverworldGenSettings;
 import net.minecraft.world.gen.layer.Layer;
@@ -16,6 +19,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,8 +62,8 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
     private WorldInfo worldInfo;
     private OverworldGenSettings settings = null;
 
-    private final int[] biomesGrid = null;  //Memory efficient to keep re-using the same one.
-    private final Biome[] biomesGridHeights = null;
+    private Biome[] biomesGrid = null;  //Memory efficient to keep re-using the same one.
+    private int[] biomesGridHeights = null;
     private int[] biomeCount = null;
     private final DimensionType dimID;
 
@@ -436,76 +441,78 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
 
     private void biomeMapOneChunk(int x0, int z0, int ix, int iz, int limit)
     {
-//        biomesGrid = this.getBiomeGenAt(biomesGrid, x0 << 4, z0 << 4, 16, 16);
-//        if (biomesGrid == null)
-//        {
-//            return;
-//        }
+        biomesGrid = this.getBiomeGenAt(biomesGrid, x0 << 4, z0 << 4, 16, 16);
+        if (biomesGrid == null)
+        {
+            return;
+        }
 //        this.getHeightMap(x0, z0);
-//        int factor = this.biomeMapFactor;
-//        int halfFactor = limit * limit / 2;
-//        ArrayList<Integer> cols = new ArrayList<>();
-//        for (int j = 0; j < biomeCount.length; j++)
-//        {
-//            biomeCount[j] = 0;
-//        }
-//        for (int x = 0; x < 16; x += factor)
-//        {
-//            int izstore = iz;
-//            for (int z = 0; z < 16; z += factor)
-//            {
-//                cols.clear();
-//                int maxcount = 0;
-//                int maxindex = -1;
-//                int biome = -1;
-//                int lastcol = -1;
-//                int idx = 0;
-//                int avgHeight = 0;
-//                int divisor = 0;
-//                //TODO: start in centre instead of top left
-//                BIOMEDONE:
-//                for (int xx = 0; xx < limit; xx++)
-//                {
-//                    int hidx = ((xx + x) << 4) + z;
-//                    for (int zz = 0; zz < limit; zz++)
-//                    {
-//                        int height = heights[hidx + zz];
-//                        avgHeight += height;
-//                        divisor++;
-//                        biome = biomesGrid[xx + x + ((zz + z) << 4)];
-//                        if (biome != lastcol)
-//                        {
-//                            idx = cols.indexOf(biome);
-//                            if (idx == -1)
-//                            {
-//                                idx = cols.size();
-//                                cols.add(biome);
-//                            }
-//                            lastcol = biome;
-//                        }
-//                        biomeCount[idx]++;
-//                        if (biomeCount[idx] > maxcount)
-//                        {
-//                            maxcount = biomeCount[idx];
-//                            maxindex = idx;
-//                            if (maxcount > halfFactor)
-//                            {
-//                                break BIOMEDONE;
-//                            }
-//                        }
-//                    }
-//                }
-//                //Clear the array for next time
-//                arrayClear(biomeCount, cols.size());
-//
-//                int arrayIndex = (ix * biomeMapSizeZ + iz) * 2;
-//                this.biomeAndHeightArray[arrayIndex] = (byte) (cols.get(maxindex).intValue());
-//                this.biomeAndHeightArray[arrayIndex + 1] = (byte) ((avgHeight + (divisor + 1) / 2) / divisor);
-//                iz++;
-//            }
-//            iz = izstore;
-//            ix++;
-//        }
+        int factor = this.biomeMapFactor;
+        int halfFactor = limit * limit / 2;
+        ArrayList<Biome> cols = new ArrayList<>();
+        for (int j = 0; j < biomeCount.length; j++)
+        {
+            biomeCount[j] = 0;
+        }
+        for (int x = 0; x < 16; x += factor)
+        {
+            int izstore = iz;
+            for (int z = 0; z < 16; z += factor)
+            {
+                cols.clear();
+                int maxcount = 0;
+                int maxindex = -1;
+                Biome biome = null;
+                Biome lastcol = null;
+                int idx = 0;
+                int avgHeight = 0;
+                int divisor = 0;
+                //TODO: start in centre instead of top left
+                BIOMEDONE:
+                for (int xx = 0; xx < limit; xx++)
+                {
+                    int hidx = ((xx + x) << 4) + z;
+                    for (int zz = 0; zz < limit; zz++)
+                    {
+                        int height = heights[hidx + zz];
+                        avgHeight += height;
+                        divisor++;
+                        biome = biomesGrid[xx + x + ((zz + z) << 4)];
+                        if (biome != lastcol)
+                        {
+                            idx = cols.indexOf(biome);
+                            if (idx == -1)
+                            {
+                                idx = cols.size();
+                                cols.add(biome);
+                            }
+                            lastcol = biome;
+                        }
+                        biomeCount[idx]++;
+                        if (biomeCount[idx] > maxcount)
+                        {
+                            maxcount = biomeCount[idx];
+                            maxindex = idx;
+                            if (maxcount > halfFactor)
+                            {
+                                break BIOMEDONE;
+                            }
+                        }
+                    }
+                }
+                //Clear the array for next time
+                arrayClear(biomeCount, cols.size());
+
+                int arrayIndex = (ix * biomeMapSizeZ + iz) * 2;
+                // Registry.BIOME.getByValue(biomeIds[k])
+
+                this.biomeAndHeightArray[arrayIndex] = (byte) Registry.BIOME.getId(cols.get(maxindex));
+                this.biomeAndHeightArray[arrayIndex + 1] = (byte) ((avgHeight + (divisor + 1) / 2) / divisor);
+                iz++;
+            }
+            iz = izstore;
+            ix++;
+        }
     }
 
 //    public void getHeightMap(int cx, int cz)
@@ -718,7 +725,7 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
 //            }
 //        }
 //    }
-//
+
 //    /**
 //     *      REPLICATES method in WorldChunkManager
 //     * Returns an array of biomes for the location input, used for generating the height map
@@ -745,14 +752,33 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
 //
 //        return biomes;
 //    }
-//
-//    /**
-//     *      REPLICATES method in WorldChunkManager (with higher performance!)
-//     * Return a list of ints representing mapgen biomes at the specified coordinates. Args: listToReuse, x, y, width, height
-//     * This is after all genlayers (oceans, islands, hills, rivers, etc)
-//     */
-//    public int[] getBiomeGenAt(int[] listToReuse, int x, int z, int width, int height)
-//    {
+
+    /**
+     *      REPLICATES method in WorldChunkManager (with higher performance!)
+     * Return a list of ints representing mapgen biomes at the specified coordinates. Args: listToReuse, x, y, width, height
+     * This is after all genlayers (oceans, islands, hills, rivers, etc)
+     */
+    public Biome[] getBiomeGenAt(Biome[] listToReuse, int x, int z, int width, int height)
+    {
+//        int[] aint = this.biomeIndexLayer.getInts(x, z, width, height);
+
+        int size = width * height;
+        if (listToReuse == null || listToReuse.length < size)
+        {
+            listToReuse = new Biome[size];
+        }
+
+        BlockPos.Mutable pos = new BlockPos.Mutable();
+        for (int x0 = 0; x0 < width; ++x0)
+        {
+            for (int z0 = 0; z0 < height; ++z0)
+            {
+                pos.setPos(x + x0, 8, z + z0);
+                listToReuse[(z + z0) * width + x0 + x] = this.world.getBiome(pos);
+            }
+        }
+
+        return listToReuse;
 //        IntCache.resetIntCacheGC();
 //        int[] aint = this.biomeIndexLayer.getInts(x, z, width, height);
 //
@@ -764,5 +790,5 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
 //        System.arraycopy(aint, 0, listToReuse, 0, size);
 //
 //        return listToReuse;
-//    }
+    }
 }

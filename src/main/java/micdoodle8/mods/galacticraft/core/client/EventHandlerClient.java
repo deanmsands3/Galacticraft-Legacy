@@ -3,6 +3,7 @@ package micdoodle8.mods.galacticraft.core.client;
 import com.mojang.blaze3d.platform.GlStateManager;
 import micdoodle8.mods.galacticraft.api.entity.ICameraZoomEntity;
 import micdoodle8.mods.galacticraft.api.event.client.CelestialBodyRenderEvent;
+import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiCelestialSelection;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
@@ -15,8 +16,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.opengl.GL11;
 
+@Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE)
 public class EventHandlerClient
 {
     public static Minecraft mc = Minecraft.getInstance();
@@ -24,7 +27,7 @@ public class EventHandlerClient
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     //Lowest priority to do the PushMatrix last, just before vanilla RenderPlayer - this also means if it gets cancelled first by another mod, this will never be called
-    public void onRenderPlayerPre(RenderPlayerEvent.Pre event)
+    public static void onRenderPlayerPre(RenderPlayerEvent.Pre event)
     {
         GL11.glPushMatrix();
 
@@ -57,7 +60,7 @@ public class EventHandlerClient
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     //Highest priority to do the PushMatrix first, just after vanilla RenderPlayer
-    public void onRenderPlayerPost(RenderPlayerEvent.Post event)
+    public static void onRenderPlayerPost(RenderPlayerEvent.Post event)
     {
         GL11.glPopMatrix();
 
@@ -68,7 +71,7 @@ public class EventHandlerClient
     }
 
     @SubscribeEvent
-    public void onRenderPlanetPre(CelestialBodyRenderEvent.Pre event)
+    public static void onRenderPlanetPre(CelestialBodyRenderEvent.Pre event)
     {
         if (event.celestialBody == GalacticraftCore.planetOverworld)
         {
@@ -87,7 +90,7 @@ public class EventHandlerClient
     }
 
     @SubscribeEvent
-    public void onRenderPlanetPost(CelestialBodyRenderEvent.Post event)
+    public static void onRenderPlanetPost(CelestialBodyRenderEvent.Post event)
     {
         if (mc.currentScreen instanceof GuiCelestialSelection)
         {

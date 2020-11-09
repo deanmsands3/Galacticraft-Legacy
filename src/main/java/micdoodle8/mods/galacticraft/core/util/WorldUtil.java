@@ -304,7 +304,7 @@ public class WorldUtil
 
         for (DimensionType element : WorldUtil.registeredSpaceStations)
         {
-            final SpaceStationWorldData data = SpaceStationWorldData.getStationData((ServerWorld) playerBase.world, element.getRegistryName(), null, null);
+            final SpaceStationWorldData data = SpaceStationWorldData.getStationData(playerBase.getServer(), element.getRegistryName(), DimensionType.OVERWORLD, null);
 
             if (!ConfigManagerCore.spaceStationsRequirePermission.get() || data.getAllowedAll() || data.getAllowedPlayers().contains(playerBase.getUniqueID()) || ArrayUtils.contains(playerBase.server.getPlayerList().getOppedPlayerNames(), playerBase.getName()))
             {
@@ -321,7 +321,7 @@ public class WorldUtil
                     if (playerBase.world.getDimension() instanceof IOrbitDimension)
                     {
                         //Player is currently on another space station around the same planet
-                        final SpaceStationWorldData dataCurrent = SpaceStationWorldData.getStationData((ServerWorld) playerBase.world, playerBase.dimension.getRegistryName(), null, null);
+                        final SpaceStationWorldData dataCurrent = SpaceStationWorldData.getStationData(playerBase.getServer(), playerBase.dimension.getRegistryName(), DimensionType.OVERWORLD, null);
                         if (dataCurrent.getHomePlanet() == data.getHomePlanet())
                         {
                             temp.add(element);
@@ -467,7 +467,7 @@ public class WorldUtil
                 //This no longer checks whether a WorldProvider can be created, for performance reasons (that causes the dimension to load unnecessarily at map building stage)
                 if (playerBase != null)
                 {
-                    final SpaceStationWorldData data = SpaceStationWorldData.getStationData((ServerWorld) playerBase.world, id.getRegistryName(), null, null);
+                    final SpaceStationWorldData data = SpaceStationWorldData.getStationData(playerBase.getServer(), id.getRegistryName(), DimensionType.OVERWORLD, null);
                     map.put(celestialBody.getName() + "$" + data.getOwner() + "$" + data.getSpaceStationName() + "$" + id.getRegistryName().toString() + "$" + data.getHomePlanet().getRegistryName().toString(), id);
                 }
             }

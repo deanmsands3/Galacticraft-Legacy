@@ -5,9 +5,11 @@ import micdoodle8.mods.galacticraft.api.galaxies.Satellite;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
@@ -210,8 +212,9 @@ public class SpaceStationWorldData extends WorldSavedData
     /**
      * Retrieve a space station data entry, creating if necessary (with provided data)
      */
-    public static SpaceStationWorldData getStationData(ServerWorld world, ResourceLocation stationID, DimensionType homeType/*, int providerIdDynamic, int providerIdStatic*/, PlayerEntity owner)
+    public static SpaceStationWorldData getStationData(MinecraftServer server, ResourceLocation stationID, DimensionType homeType/*, int providerIdDynamic, int providerIdStatic*/, PlayerEntity owner)
     {
+        ServerWorld world = server.getWorld(homeType);
         DimensionType providerType = DimensionType.byName(stationID);
 
 //        boolean foundMatch = false;

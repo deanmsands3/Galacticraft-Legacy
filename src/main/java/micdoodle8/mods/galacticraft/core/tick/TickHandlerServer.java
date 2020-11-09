@@ -292,14 +292,14 @@ public class TickHandlerServer
 
             TickHandlerServer.scheduledDimensionChanges.clear();
 
-            if (MapUtil.calculatingMap.get())
-            {
-                MapUtil.BiomeMapNextTick_MultiThreaded();
-            }
-            else if (!MapUtil.doneOverworldTexture)
-            {
-                MapUtil.makeOverworldTexture();
-            }
+//            if (MapUtil.calculatingMap.get())
+//            {
+//                MapUtil.BiomeMapNextTick_MultiThreaded();
+//            }
+//            else if (!MapUtil.doneOverworldTexture)
+//            {
+//                MapUtil.makeOverworldTexture();
+//            }
 
             if (TickHandlerServer.spaceRaceData == null)
             {

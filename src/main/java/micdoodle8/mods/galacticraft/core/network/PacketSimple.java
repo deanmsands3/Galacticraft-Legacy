@@ -891,7 +891,7 @@ public class PacketSimple extends PacketBase implements IPacket<INetHandler>, IG
                     GCTriggers.CREATE_SPACE_STATION.trigger(playerBase);
 //                    WorldUtil.bindSpaceStationToNewDimension(playerBase.world, playerBase, homeID);
                     DimensionType createdStation = WorldUtil.createNewSpaceStation(playerBase.getUniqueID(), false);
-                    SpaceStationWorldData.getStationData((ServerWorld) player.world, createdStation.getRegistryName(), homeID, player);
+                    SpaceStationWorldData.getStationData(player.world.getServer(), createdStation.getRegistryName(), homeID, player);
 //                    dimNames.put(newID, "Space Station " + newID);
                     stats.getSpaceStationDimensionData().put(homeID, createdStation);
                     GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SPACESTATION_CLIENT_ID, GCCoreUtil.getDimensionType(player.world), new Object[] { WorldUtil.spaceStationDataToString(stats.getSpaceStationDimensionData()) }), playerBase);

@@ -165,13 +165,15 @@ public class GalacticraftCore
         versionNumber = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion();
         MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
         MinecraftForge.EVENT_BUS.addListener(GCDimensions::onModDimensionRegister);
+        MinecraftForge.EVENT_BUS.addListener(GalacticraftCore::serverInit);
+        MinecraftForge.EVENT_BUS.addListener(GalacticraftCore::serverAboutToStart);
         GalacticraftCore.galacticraftBlocksTab = new CreativeTabGC("galacticraft_blocks", null, null);
         GalacticraftCore.galacticraftItemsTab = new CreativeTabGC("galacticraft_items", null, null);
 
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::clientSetup);
-        modBus.addListener(this::onModConfigEvent);
+        modBus.addListener(GalacticraftCore::onModConfigEvent);
         modBus.addGenericListener(ContainerType.class, GCContainers::initContainers);
         modBus.addGenericListener(IRecipeSerializer.class, GalacticraftCore::registerRecipeSerializers);
         modBus.addGenericListener(Biome.class, GalacticraftCore::biomeRegisterEvent);
@@ -569,7 +571,7 @@ public class GalacticraftCore
     }
 
     @SubscribeEvent
-    public void onModConfigEvent(final ModConfig.ModConfigEvent event)
+    public static void onModConfigEvent(final ModConfig.ModConfigEvent event)
     {
         ModConfig config = event.getConfig();
         if (config.getSpec() == ConfigManagerCore.COMMON_SPEC)
@@ -595,13 +597,13 @@ public class GalacticraftCore
     }
 
     @SubscribeEvent
-    public void serverAboutToStart(FMLServerAboutToStartEvent event)
+    public static void serverAboutToStart(FMLServerAboutToStartEvent event)
     {
         TickHandlerServer.restart();
     }
 
     @SubscribeEvent
-    public void serverInit(FMLServerStartedEvent event)
+    public static void serverInit(FMLServerStartedEvent event)
     {
         if (ThreadRequirementMissing.INSTANCE == null)
         {
