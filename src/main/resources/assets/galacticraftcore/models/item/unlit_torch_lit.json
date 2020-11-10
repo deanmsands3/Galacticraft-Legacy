@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "minecraft:blocks/torch_on"
+        "layer0": "minecraft:block/torch"
     },
     "display": {
         "thirdperson": {

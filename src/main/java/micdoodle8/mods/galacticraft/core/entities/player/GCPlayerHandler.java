@@ -14,6 +14,7 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
+import micdoodle8.mods.galacticraft.core.blocks.BlockUnlitTorch;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRace;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRaceManager;
 import micdoodle8.mods.galacticraft.core.entities.*;
@@ -1029,12 +1030,12 @@ public class GCPlayerHandler
 
     public void registerTorchTypes()
     {
-//        for (Entry<Block, Block> type : BlockUnlitTorch.registeredTorches.entrySet())
-//        {
-//            //Space Torch registration must be unique; there may be multiple mappings for vanillaTorch
-//            torchItemsSpace.add(Item.getItemFromBlock(type.getKey()));
-//            torchItemsRegular.add(Item.getItemFromBlock(type.getValue()));
-//        } TODO Torch replacement
+        for (Entry<Block, Block> type : BlockUnlitTorch.registeredTorches.entrySet())
+        {
+            //Space Torch registration must be unique; there may be multiple mappings for vanillaTorch
+            torchItemsSpace.add(Item.getItemFromBlock(type.getKey()));
+            torchItemsRegular.add(Item.getItemFromBlock(type.getValue()));
+        }
     }
 
     public void registerItemChanges()

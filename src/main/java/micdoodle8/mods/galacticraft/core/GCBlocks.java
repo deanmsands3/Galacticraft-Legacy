@@ -6,6 +6,7 @@ import micdoodle8.mods.galacticraft.core.items.ItemBlockWallOrFloorDesc;
 import micdoodle8.mods.galacticraft.core.tile.*;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockDungeonBrick;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.*;
@@ -38,10 +39,10 @@ public class GCBlocks
     public static final Block landingPadFull = new BlockPadFull(Block.Properties.from(landingPad));
     public static final Block buggyPadFull = new BlockPadFull(Block.Properties.from(landingPad));
 
-    public static final Block unlitTorch = new BlockUnlitTorch(false, Block.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.0F).lightValue(3).sound(SoundType.WOOD));
-    public static final Block unlitTorchWall = new BlockUnlitTorchWall(false, Block.Properties.from(unlitTorch));
-    public static final Block unlitTorchLit = new BlockUnlitTorch(true, Block.Properties.from(unlitTorch).lightValue(14));
-    public static final Block unlitTorchWallLit = new BlockUnlitTorchWall(true, Block.Properties.from(unlitTorch).lightValue(14));
+    public static final Block unlitTorch = new BlockUnlitTorch(Block.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.0F).lightValue(3).sound(SoundType.WOOD));
+    public static final Block unlitTorchWall = new BlockUnlitTorchWall(Block.Properties.from(unlitTorch));
+    public static final Block unlitTorchLit = new BlockUnlitTorch(Block.Properties.from(unlitTorch).lightValue(14));
+    public static final Block unlitTorchWallLit = new BlockUnlitTorchWall(Block.Properties.from(unlitTorch).lightValue(14));
     public static final Block glowstoneTorch = new BlockGlowstoneTorch(Block.Properties.from(unlitTorch).lightValue(12));
     public static final Block glowstoneTorchWall = new BlockGlowstoneTorchWall(Block.Properties.from(unlitTorch).lightValue(12));
 
@@ -461,6 +462,9 @@ public class GCBlocks
         // Register blocks before register ores, so that the ItemStack picks up the correct item
 //        GCBlocks.registerBlocks();
 //        GCBlocks.setHarvestLevels();
+
+        BlockUnlitTorch.register((BlockUnlitTorch) GCBlocks.unlitTorch, (BlockUnlitTorch) GCBlocks.unlitTorchLit, Blocks.TORCH);
+        BlockUnlitTorchWall.register((BlockUnlitTorchWall) GCBlocks.unlitTorchWall, (BlockUnlitTorchWall) GCBlocks.unlitTorchWallLit, Blocks.WALL_TORCH);
     }
 
     @SubscribeEvent
@@ -540,6 +544,8 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(platform), new ItemBlockDesc(platform, props));
         props = props.group(null);
         register(r, Registry.BLOCK.getKey(airLockSeal), new BlockItem(airLockSeal, props));
+        register(r, Registry.BLOCK.getKey(unlitTorch), new ItemBlockWallOrFloorDesc(unlitTorch, unlitTorchWall, props));
+        register(r, Registry.BLOCK.getKey(unlitTorchLit), new ItemBlockWallOrFloorDesc(unlitTorchLit, unlitTorchWallLit, props));
     }
 
     public static void oreDictRegistrations()

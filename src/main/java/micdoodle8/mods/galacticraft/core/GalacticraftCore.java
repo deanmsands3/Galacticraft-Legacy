@@ -512,6 +512,10 @@ public class GalacticraftCore
 //                }
 //            }
 //        }
+
+        // Final steps of item registration
+        GalacticraftCore.handler.registerTorchTypes();
+        GalacticraftCore.handler.registerItemChanges();
     }
 
     private void setupSortedTab(List<ResourceLocation> list, CreativeTabGC creativeTab)
@@ -884,10 +888,6 @@ public class GalacticraftCore
     @SubscribeEvent
     public static void registerBiomes(RegistryEvent.Register<Biome> event)
     {
-        // First, final steps of item registration
-        GalacticraftCore.handler.registerTorchTypes();
-        GalacticraftCore.handler.registerItemChanges();
-
         for (BiomeGC biome : GalacticraftCore.biomesList)
         {
             event.getRegistry().register(biome);

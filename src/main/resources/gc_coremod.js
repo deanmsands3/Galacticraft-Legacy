@@ -100,7 +100,7 @@ function initializeCoreMod() {
 
                 instructions.remove(first_INVOKEINTERFACE_getValue.getPrevious());
                 instructions.remove(first_INVOKEINTERFACE_getValue);
-                
+
                 return instructions;
 		 	}
 		 }

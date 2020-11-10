@@ -7,6 +7,7 @@ import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TorchBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
@@ -17,6 +18,7 @@ import net.minecraft.world.storage.loot.LootContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -25,16 +27,14 @@ public class BlockUnlitTorch extends TorchBlock implements IOxygenReliantBlock
 {
 //    public static final DirectionProperty HORIZONTAL_FACING = HorizontalBlock.HORIZONTAL_FACING;
 
-    public boolean lit;
     public Block litVersion;
     public Block unlitVersion;
     public Block fallback;
     public static HashMap<Block, Block> registeredTorches = new HashMap<>();
 
-    public BlockUnlitTorch(boolean lit, Properties builder)
+    public BlockUnlitTorch(Properties builder)
     {
         super(builder);
-        this.lit = lit;
     }
 
     public static void register(BlockUnlitTorch unlittorch, BlockUnlitTorch littorch, Block vanillatorch)
@@ -160,7 +160,20 @@ public class BlockUnlitTorch extends TorchBlock implements IOxygenReliantBlock
         return this.litVersion.getDrops(state, builder);
     }
 
-//    @Override
+    @Override
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    {
+        this.checkOxygen(worldIn, pos, state);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
+    {
+        this.checkOxygen(worldIn, pos, state);
+    }
+
+
+    //    @Override
 //    @OnlyIn(Dist.CLIENT)
 //    public BlockRenderLayer getRenderLayer()
 //    {

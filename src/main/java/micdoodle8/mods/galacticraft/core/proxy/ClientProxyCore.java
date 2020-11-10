@@ -189,7 +189,9 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 //        RenderTypeLookup.setRenderLayer(GCBlocks.grating, cutout);
 //        RenderTypeLookup.setRenderLayer(GCBlocks.platform, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorch, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorchWall, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorchLit, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorchWallLit, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.fluidTank, cutout);
 
         ClientProxyCore.registerInventoryTabs();
