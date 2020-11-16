@@ -53,6 +53,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fml.network.NetworkHooks;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -231,7 +232,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
     @Override
     public IPacket<?> createSpawnPacket()
     {
-        return new SSpawnObjectPacket(this);
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

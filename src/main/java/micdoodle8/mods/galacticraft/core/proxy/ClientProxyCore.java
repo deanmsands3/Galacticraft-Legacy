@@ -580,17 +580,17 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
         RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_CREEPER, RenderEvolvedCreeper::new);
         RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SKELETON, RenderEvolvedSkeleton::new);
         RenderingRegistry.registerEntityRenderingHandler(GCEntities.SKELETON_BOSS, RenderEvolvedSkeletonBoss::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityMeteor.class, RenderMeteor::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityFlag.class, RenderFlag::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityParachest.class, RenderParaChest::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR, RenderMeteor::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.FLAG, RenderFlag::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.PARA_CHEST, RenderParaChest::new);
 ////        RenderingRegistry.registerEntityRenderingHandler(EntityAlienVillager.class, (EntityRendererManager manager) -> new RenderAlienVillager(manager)); TODO Villagers
-//        RenderingRegistry.registerEntityRenderingHandler(EntityLander.class, RenderLander::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityCelestialFake.class, RenderEntityFake::new);
-////        RenderingRegistry.registerEntityRenderingHandler(EntityBuggy.class, RenderBuggy::new); TODO Buggy renderer
-//        RenderingRegistry.registerEntityRenderingHandler(EntityMeteorChunk.class, RenderMeteorChunk::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityHangingSchematic.class, RenderSchematic::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityEvolvedEnderman.class, RenderEvolvedEnderman::new);
-//        RenderingRegistry.registerEntityRenderingHandler(EntityEvolvedWitch.class, RenderEvolvedWitch::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.LANDER, RenderLander::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.CELESTIAL_FAKE, RenderEntityFake::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.BUGGY, RenderBuggy::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR_CHUNK, RenderMeteorChunk::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.HANGING_SCHEMATIC, RenderSchematic::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_ENDERMAN, RenderEvolvedEnderman::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_WITCH, RenderEvolvedWitch::new);
     }
 
     private static void registerHandlers()

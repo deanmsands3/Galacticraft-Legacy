@@ -1238,7 +1238,7 @@ public class GCPlayerHandler
         MinecraftServer theServer = player.server;
         if (theServer != null && PlayerUtil.getPlayerForUsernameVanilla(theServer, PlayerUtil.getName(player)) != null)
         {
-            GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_UPDATE_GEAR_SLOT, GCCoreUtil.getDimensionType(player.world), new Object[]{PlayerUtil.getName(player), packetType.ordinal(), gearType.ordinal(), gearID}), new PacketDistributor.TargetPoint(player.getPosX(), player.getPosY(), player.getPosZ(), 50.0, GCCoreUtil.getDimensionType(player.world)));
+            GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_UPDATE_GEAR_SLOT, GCCoreUtil.getDimensionType(player.world), new Object[]{player.getUniqueID(), packetType.ordinal(), gearType.ordinal(), gearID}), new PacketDistributor.TargetPoint(player.getPosX(), player.getPosY(), player.getPosZ(), 50.0, GCCoreUtil.getDimensionType(player.world)));
         }
     }
 

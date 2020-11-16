@@ -6,6 +6,7 @@ import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.entity.IAntiGrav;
 import micdoodle8.mods.galacticraft.api.galaxies.*;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
+import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase;
 import micdoodle8.mods.galacticraft.api.prefab.world.gen.DimensionSpace;
 import micdoodle8.mods.galacticraft.api.recipe.SpaceStationRecipe;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
@@ -21,7 +22,9 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.dimension.GCDimensions;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceStationWorldData;
 import micdoodle8.mods.galacticraft.core.entities.EntityCelestialFake;
+import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerHandler;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
+import micdoodle8.mods.galacticraft.core.items.ItemParaChute;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
@@ -33,6 +36,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.network.PacketBuffer;
@@ -793,24 +797,24 @@ public class WorldUtil
     private static Entity teleportEntity(ServerWorld worldNew, Entity entity, DimensionType dimID, ITeleportType type, boolean transferInv, EntityAutoRocket ridingRocket)
     {
 //        Entity otherRiddenEntity = null;
-//        if (entity.getRidingEntity() != null)
-//        {
-//            if (entity.getRidingEntity() instanceof EntitySpaceshipBase)
-//            {
-//                entity.startRiding(entity.getRidingEntity());
-//            }
-//            else if (entity.getRidingEntity() instanceof EntityCelestialFake)
-//            {
-//                Entity e = entity.getRidingEntity();
-//                e.removePassengers();
-//                e.remove();
-//            }
+        if (entity.getRidingEntity() != null)
+        {
+            if (entity.getRidingEntity() instanceof EntitySpaceshipBase)
+            {
+                entity.startRiding(entity.getRidingEntity());
+            }
+            else if (entity.getRidingEntity() instanceof EntityCelestialFake)
+            {
+                Entity e = entity.getRidingEntity();
+                e.removePassengers();
+                e.remove();
+            }
 //        	else
 //        	{
 //                otherRiddenEntity = entity.getRidingEntity();
 //        	    entity.stopRiding();
 //        	}
-//        }
+        }
 //
 //        boolean dimChange = entity.world != worldNew;
 //        //Make sure the entity is added to the correct chunk in the OLD world so that it will be properly removed later if it needs to be unloaded from that world
@@ -1126,6 +1130,93 @@ public class WorldUtil
         {
             entity.setMotion(entity.getMotion().mul(1.0D, 0.0D, 1.0D));
             entity.onGround = true;
+        }
+
+        //Update PlayerStatsGC
+        if (entity instanceof ServerPlayerEntity)
+        {
+            ServerPlayerEntity player = (ServerPlayerEntity) entity;
+
+            GCPlayerStats stats = GCPlayerStats.get(player);
+            if (ridingRocket == null && type.useParachute() && stats.getExtendedInventory().getStackInSlot(4) != ItemStack.EMPTY && stats.getExtendedInventory().getStackInSlot(4).getItem() instanceof ItemParaChute)
+            {
+                GCPlayerHandler.setUsingParachute(player, stats, true);
+            }
+            else
+            {
+                GCPlayerHandler.setUsingParachute(player, stats, false);
+            }
+
+            if (stats.getRocketStacks() != null && !stats.getRocketStacks().isEmpty())
+            {
+                for (int stack = 0; stack < stats.getRocketStacks().size(); stack++)
+                {
+                    if (transferInv)
+                    {
+                        if (stats.getRocketStacks().get(stack).isEmpty())
+                        {
+                            if (stack == stats.getRocketStacks().size() - 1)
+                            {
+                                if (stats.getRocketItem() != null)
+                                {
+                                    stats.getRocketStacks().set(stack, new ItemStack(stats.getRocketItem(), 1));
+                                }
+                            }
+                            else if (stack == stats.getRocketStacks().size() - 2)
+                            {
+                                ItemStack launchpad = stats.getLaunchpadStack();
+                                stats.getRocketStacks().set(stack, launchpad == null ? ItemStack.EMPTY : launchpad);
+                                stats.setLaunchpadStack(null);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        stats.getRocketStacks().set(stack, ItemStack.EMPTY);
+                    }
+                }
+            }
+
+            if (transferInv && stats.getChestSpawnCooldown() == 0)
+            {
+                stats.setChestSpawnVector(type.getParaChestSpawnLocation((ServerWorld) entity.world, player, new Random()));
+                stats.setChestSpawnCooldown(200);
+            }
+        }
+
+        if (ridingRocket != null)
+        {
+            boolean previous = CompatibilityManager.forceLoadChunks((ServerWorld) worldNew);
+            ridingRocket.forceSpawn = true;
+            worldNew.addEntity(ridingRocket);
+            ridingRocket.setWorld(worldNew);
+//            worldNew.updateEntityWithOptionalForce(ridingRocket, true);
+            CompatibilityManager.forceLoadChunksEnd((ServerWorld) worldNew, previous);
+            entity.startRiding(ridingRocket);
+            GCLog.debug("Entering rocket at : " + entity.getPosX() + "," + entity.getPosZ() + " rocket at: " + ridingRocket.getPosY() + "," + ridingRocket.getPosZ());
+        }
+//        else if (otherRiddenEntity != null)
+//        {
+//            if (dimChange)
+//            {
+//                World worldOld = otherRiddenEntity.world;
+//                CompoundNBT nbt = new CompoundNBT();
+//                otherRiddenEntity.writeToNBTOptional(nbt);
+//                removeEntityFromWorld(worldOld, otherRiddenEntity, true);
+//                otherRiddenEntity = EntityList.createEntityFromNBT(nbt, worldNew);
+//                worldNew.addEntity(otherRiddenEntity);
+//                otherRiddenEntity.setWorld(worldNew);
+//            }
+//            otherRiddenEntity.setPositionAndRotation(entity.posX, entity.posY - 10, entity.getPosZ(), otherRiddenEntity.rotationYaw, otherRiddenEntity.rotationPitch);
+//            worldNew.updateEntityWithOptionalForce(otherRiddenEntity, true);
+//        }
+
+        if (entity instanceof ServerPlayerEntity)
+        {
+//            if (dimChange) FMLCommonHandler.instance().firePlayerChangedDimensionEvent((ServerPlayerEntity) entity, oldDimID, dimID);
+
+            //Spawn in a lander if appropriate
+            type.onSpaceDimensionChanged(worldNew, (ServerPlayerEntity) entity, ridingRocket != null);
         }
 
         return entity;

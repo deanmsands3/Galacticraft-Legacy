@@ -23,6 +23,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +44,7 @@ public class EntityMeteor extends Entity implements ILaserTrackableFast
     @Override
     public IPacket<?> createSpawnPacket()
     {
-        return new SSpawnObjectPacket(this);
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     //    public EntityMeteor(World world, double x, double y, double z, double motX, double motY, double motZ, int size)

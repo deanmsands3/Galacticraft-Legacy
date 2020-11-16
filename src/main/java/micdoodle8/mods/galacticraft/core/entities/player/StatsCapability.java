@@ -5,6 +5,7 @@ import micdoodle8.mods.galacticraft.api.recipe.ISchematicPage;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import micdoodle8.mods.galacticraft.api.vector.Vector3D;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.inventory.InventoryExtended;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
@@ -91,7 +92,7 @@ public class StatsCapability extends GCPlayerStats
     public boolean hasOpenedPlanetSelectionGui = false;
 
     public int chestSpawnCooldown;
-    public micdoodle8.mods.galacticraft.api.vector.Vector3 chestSpawnVector;
+    public micdoodle8.mods.galacticraft.api.vector.Vector3D chestSpawnVector;
 
     public int teleportCooldown;
 
@@ -670,13 +671,13 @@ public class StatsCapability extends GCPlayerStats
     }
 
     @Override
-    public Vector3 getChestSpawnVector()
+    public Vector3D getChestSpawnVector()
     {
         return chestSpawnVector;
     }
 
     @Override
-    public void setChestSpawnVector(Vector3 chestSpawnVector)
+    public void setChestSpawnVector(Vector3D chestSpawnVector)
     {
         this.chestSpawnVector = chestSpawnVector;
     }
