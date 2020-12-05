@@ -1,6 +1,0 @@
-{
-    "variants": {
-        "active=true": { "model": "galacticraftcore:block/detector_model" },
-        "active=false": { "model": "galacticraftcore:block/detector_model" }
-    }
-}

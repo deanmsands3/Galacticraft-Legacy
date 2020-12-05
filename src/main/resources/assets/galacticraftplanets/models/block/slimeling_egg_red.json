@@ -1,7 +1,0 @@
-{
-"parent": "galacticraftplanets:block/slimeling_egg",
-"textures": {
-    "particle": "galacticraftplanets:blocks/red_egg_0",
-    "texture": "galacticraftplanets:blocks/red_egg_0"
-}
-}

@@ -1,8 +1,0 @@
-{
-    "variants": {
-        "facing=north": { "model": "galacticraftplanets:block/laser_turret" },
-        "facing=east":  { "model": "galacticraftplanets:block/laser_turret", "y": 90 },
-        "facing=west":  { "model": "galacticraftplanets:block/laser_turret", "y": 270 },
-        "facing=south": { "model": "galacticraftplanets:block/laser_turret", "y": 180 }
-    }
-}

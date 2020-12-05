@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "#forge:wafers/advanced",
-    "#forge:wafers/basic",
-    "#forge:wafers/solar"
-  ]
-}
