@@ -2,12 +2,11 @@ package micdoodle8.mods.galacticraft.planets.venus.world.gen.dungeon;
 
 import com.google.common.collect.Lists;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.List;
 import java.util.Random;
 
@@ -16,20 +15,20 @@ import static micdoodle8.mods.galacticraft.planets.venus.world.gen.VenusFeatures
 public class DungeonStartVenus extends EntranceCraterVenus
 {
     public List<StructurePiece> attachedComponents = Lists.newArrayList();
-    public List<MutableBoundingBox> componentBounds = Lists.newArrayList();
+    public List<BoundingBox> componentBounds = Lists.newArrayList();
 
-    public DungeonStartVenus(TemplateManager templateManager, CompoundNBT nbt)
+    public DungeonStartVenus(StructureManager templateManager, CompoundTag nbt)
     {
         super(CVENUS_DUNGEON_START, nbt);
     }
 
-    public DungeonStartVenus(World world, DungeonConfigurationVenus configuration, Random rand, int blockPosX, int blockPosZ)
+    public DungeonStartVenus(Level world, DungeonConfigurationVenus configuration, Random rand, int blockPosX, int blockPosZ)
     {
         super(CVENUS_DUNGEON_START, configuration, rand, blockPosX, blockPosZ);
     }
 
     @Override
-    public void buildComponent(StructurePiece componentIn, List<StructurePiece> listIn, Random rand)
+    public void addChildren(StructurePiece componentIn, List<StructurePiece> listIn, Random rand)
     {
         boolean validAttempt = false;
         final int maxAttempts = 10;
@@ -62,23 +61,23 @@ public class DungeonStartVenus extends EntranceCraterVenus
 
         if (!validAttempt)
         {
-            int xPos = this.boundingBox.minX + (this.boundingBox.maxX - this.boundingBox.minX) / 2;
-            int zPos = this.boundingBox.minZ + (this.boundingBox.maxZ - this.boundingBox.minZ) / 2;
+            int xPos = this.boundingBox.x0 + (this.boundingBox.x1 - this.boundingBox.x0) / 2;
+            int zPos = this.boundingBox.z0 + (this.boundingBox.z1 - this.boundingBox.z0) / 2;
             System.err.println("Could not find valid venus dungeon layout! This is a bug, please report it, including your world seed (/seed) and dungeon location (" + xPos + ", " + zPos + ")");
         }
     }
 
     public boolean checkIntersection(int blockX, int blockZ, int sizeX, int sizeZ)
     {
-        return this.checkIntersection(new MutableBoundingBox(blockX, blockZ, blockX + sizeX, blockZ + sizeZ));
+        return this.checkIntersection(new BoundingBox(blockX, blockZ, blockX + sizeX, blockZ + sizeZ));
     }
 
-    public boolean checkIntersection(MutableBoundingBox bounds)
+    public boolean checkIntersection(BoundingBox bounds)
     {
         for (int i = 0; i < componentBounds.size() - 1; ++i)
         {
-            MutableBoundingBox boundingBox = componentBounds.get(i);
-            if (boundingBox.intersectsWith(bounds))
+            BoundingBox boundingBox = componentBounds.get(i);
+            if (boundingBox.intersects(bounds))
             {
                 return true;
             }

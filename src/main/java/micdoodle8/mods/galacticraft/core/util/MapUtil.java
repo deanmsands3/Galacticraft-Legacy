@@ -8,23 +8,24 @@ import micdoodle8.mods.galacticraft.core.client.screen.DrawGameScreen;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.OverworldDimension;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelType;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.NormalDimension;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -34,6 +35,7 @@ import javax.imageio.*;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
+import com.mojang.blaze3d.platform.NativeImage;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -102,20 +104,20 @@ public class MapUtil
         overworldImageCompressed = null;
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void resetClient()
     {
         resetClientFlag.set(true);
         //Threadsafe
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void resetClientBody()
     {
         ClientProxyCore.overworldTexturesValid = false;
         clientRequests.clear();
         overworldImageBytesPart = null;
-        File baseFolder = new File(Minecraft.getInstance().gameDir, "assets/galacticraftMaps");
+        File baseFolder = new File(Minecraft.getInstance().gameDirectory, "assets/galacticraftMaps");
         if (baseFolder.exists() && baseFolder.isDirectory())
         {
             for (File f : baseFolder.listFiles())
@@ -126,7 +128,7 @@ public class MapUtil
                 }
             }
         }
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_REQUEST_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(Minecraft.getInstance().world), new Object[]{}));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(Minecraft.getInstance().level), new Object[]{}));
         ClientProxyCore.overworldTextureRequestSent = true;
         DrawGameScreen.reusableMap = new DynamicTexture(MapUtil.SIZE_STD2, MapUtil.SIZE_STD2, false);
         MapUtil.biomeColours.clear();
@@ -136,13 +138,13 @@ public class MapUtil
     /**
      * The BufferedImage needs to be already set up as a sized image of TYPE_INT_RGB
      */
-    public static void getLocalMap(World world, int chunkXPos, int chunkZPos, BufferedImage image)
+    public static void getLocalMap(Level world, int chunkXPos, int chunkZPos, BufferedImage image)
     {
         for (int x0 = -12; x0 <= 12; x0++)
         {
             for (int z0 = -12; z0 <= 12; z0++)
             {
-                Chunk chunk = world.getChunk(chunkXPos + x0, chunkZPos + z0);
+                LevelChunk chunk = world.getChunk(chunkXPos + x0, chunkZPos + z0);
                 BlockPos pos = null;
 
                 if (chunk != null)
@@ -151,8 +153,8 @@ public class MapUtil
                     {
                         for (int x = 0; x < 16; x++)
                         {
-                            int l4 = chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE_WG, x, z) + 1;
-                            BlockState state = Blocks.AIR.getDefaultState();
+                            int l4 = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z) + 1;
+                            BlockState state = Blocks.AIR.defaultBlockState();
 
                             if (l4 > 1)
                             {
@@ -161,10 +163,10 @@ public class MapUtil
                                     --l4;
                                     state = chunk.getBlockState(new BlockPos(x, l4, z));
                                 }
-                                while (state.getMaterialColor(world, pos) == MaterialColor.AIR && l4 > 0);
+                                while (state.getMapColor(world, pos) == MaterialColor.NONE && l4 > 0);
                             }
 
-                            int col = pos != null ? state.getMaterialColor(world, pos).colorValue : 0;
+                            int col = pos != null ? state.getMapColor(world, pos).col : 0;
                             image.setRGB(x + (x0 + 12) * 16, z + (z0 + 12) * 16, col);
                         }
                     }
@@ -179,13 +181,13 @@ public class MapUtil
         {
             return;
         }
-        World overworld = WorldUtil.getProviderForDimensionServer(DimensionType.OVERWORLD).getWorld();
+        Level overworld = WorldUtil.getProviderForDimensionServer(DimensionType.OVERWORLD).getWorld();
         if (overworld == null)
         {
             return;
         }
 
-        if (overworld.getWorldType() == WorldType.FLAT || !(overworld.getDimension() instanceof OverworldDimension))
+        if (overworld.getGeneratorType() == LevelType.FLAT || !(overworld.getDimension() instanceof NormalDimension))
         {
             doneOverworldTexture = true;
             return;
@@ -209,7 +211,7 @@ public class MapUtil
         //MapUtil.getBiomeMapForCoords(overworld, 0, 0, OVERWORLD_MAP_SCALE, OVERWORLD_LARGEMAP_WIDTH, OVERWORLD_LARGEMAP_HEIGHT, baseFolder);
     }
 
-    public static void sendOverworldToClient(ServerPlayerEntity client)
+    public static void sendOverworldToClient(ServerPlayer client)
     {
         if (doneOverworldTexture)
         {
@@ -240,10 +242,10 @@ public class MapUtil
         }
     }
 
-    public static void sendOrCreateMap(World world, int cx, int cz, ServerPlayerEntity client)
+    public static void sendOrCreateMap(Level world, int cx, int cz, ServerPlayer client)
     {
 
-        if (world.getWorldType() == WorldType.FLAT || !(world.getDimension() instanceof OverworldDimension))
+        if (world.getGeneratorType() == LevelType.FLAT || !(world.getDimension() instanceof NormalDimension))
         {
             doneOverworldTexture = true;
             return;
@@ -272,7 +274,7 @@ public class MapUtil
         }
     }
 
-    public static void sendMapPacket(int cx, int cz, ServerPlayerEntity client, byte[] largeMap) throws IOException
+    public static void sendMapPacket(int cx, int cz, ServerPlayer client, byte[] largeMap) throws IOException
     {
         byte[] compressed;
         if (cx == LARGEMAP_MARKER)
@@ -308,19 +310,19 @@ public class MapUtil
         sendMapPacketAllCompressed(cx, cz, compressed);
     }
 
-    private static void sendMapPacketCompressed(int cx, int cz, ServerPlayerEntity client, byte[] map) throws IOException
+    private static void sendMapPacketCompressed(int cx, int cz, ServerPlayer client, byte[] map) throws IOException
     {
         if (cx == LARGEMAP_MARKER && map.length < 2080000)
         {
             int halfSize = map.length / 2;
             byte[] largeMapPartA = Arrays.copyOf(map, halfSize);
             byte[] largeMapPartB = Arrays.copyOfRange(map, halfSize, map.length);
-            GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_SEND_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(client.world), new Object[]{cx, map.length, largeMapPartA}), client);
-            GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_SEND_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(client.world), new Object[]{cx + 1, map.length, largeMapPartB}), client);
+            GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_SEND_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(client.level), new Object[]{cx, map.length, largeMapPartA}), client);
+            GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_SEND_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(client.level), new Object[]{cx + 1, map.length, largeMapPartB}), client);
         }
         else if (map.length < 1040000)  //That's about the limit on a Forge packet length
         {
-            GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_SEND_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(client.world), new Object[]{cx, cz, map}), client);
+            GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_SEND_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(client.level), new Object[]{cx, cz, map}), client);
         }
     }
 
@@ -345,9 +347,9 @@ public class MapUtil
      * The needed files may already have been generated by previous calls on the same server
      * Files are stored in the world save folder, subfolder galacticraft/overworldMap
      */
-    public static boolean buildMaps(World world, int x, int z)
+    public static boolean buildMaps(Level world, int x, int z)
     {
-        if (world.getWorldType() == WorldType.FLAT || !(world.getDimension() instanceof OverworldDimension))
+        if (world.getGeneratorType() == LevelType.FLAT || !(world.getDimension() instanceof NormalDimension))
         {
             return false;
         }
@@ -388,7 +390,7 @@ public class MapUtil
         return cx * SIZE_STD2;
     }
 
-    public static boolean getBiomeMapForCoords(World world, int cx, int cz, int scale, int sizeX, int sizeZ, File baseFolder)
+    public static boolean getBiomeMapForCoords(Level world, int cx, int cz, int scale, int sizeX, int sizeZ, File baseFolder)
     {
         File outputFile;
         if (sizeX != sizeZ)
@@ -696,12 +698,12 @@ public class MapUtil
         return b;
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void writeImgToFile(BufferedImage img, String name)
     {
         if (GalacticraftCore.enableJPEG)
         {
-            File folder = new File(Minecraft.getInstance().gameDir, "assets/galacticraftMaps");
+            File folder = new File(Minecraft.getInstance().gameDirectory, "assets/galacticraftMaps");
 
             try
             {
@@ -746,7 +748,7 @@ public class MapUtil
         return deCompressed.toByteArray();
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void receiveOverworldImageCompressed(int cx, int cz, byte[] raw) throws IOException
     {
         if (cx == LARGEMAP_MARKER)
@@ -801,7 +803,7 @@ public class MapUtil
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void getOverworldImageFromRaw(int cx, int cz, byte[] raw) throws IOException
     {
         File folder = MapUtil.getClientMapsFolder();
@@ -903,7 +905,7 @@ public class MapUtil
                 }
             }
 
-            IResourceManager rm = Minecraft.getInstance().getResourceManager();
+            ResourceManager rm = Minecraft.getInstance().getResourceManager();
             BufferedImage paletteImage = null;
             try
             {
@@ -950,15 +952,15 @@ public class MapUtil
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static boolean getMap(NativeImage image, World world, BlockPos pos)
+    @Environment(EnvType.CLIENT)
+    public static boolean getMap(NativeImage image, Level world, BlockPos pos)
     {
         int xCoord = pos.getX();
         int zCoord = pos.getZ();
         int cx = convertMap(xCoord);
         int cz = convertMap(zCoord);
 
-        File baseFolder = new File(Minecraft.getInstance().gameDir, "assets/galacticraftMaps");
+        File baseFolder = new File(Minecraft.getInstance().gameDirectory, "assets/galacticraftMaps");
         if (!baseFolder.exists() && !baseFolder.mkdirs())
         {
             GCLog.severe("Base folder(s) could not be created: " + baseFolder.getAbsolutePath());
@@ -1006,7 +1008,7 @@ public class MapUtil
         return result;
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     private static boolean makeRGBimage(NativeImage image, File baseFolder, int cx, int cz, int offsetX, int offsetZ, int xCoord, int zCoord, DimensionType dim, boolean prevResult)
     {
         File filename = makeFileName(baseFolder, cx, cz);
@@ -1020,7 +1022,7 @@ public class MapUtil
             {
                 clientRequests.add(filename.getName());
                 //GCLog.debug("Info: Client requested map file" + filename.getName());
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_REQUEST_MAP_IMAGE, GCCoreUtil.getDimensionType(Minecraft.getInstance().world), new Object[]{dim, cx, cz}));
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_MAP_IMAGE, GCCoreUtil.getDimensionType(Minecraft.getInstance().level), new Object[]{dim, cx, cz}));
             }
             return true;
         }
@@ -1149,7 +1151,7 @@ public class MapUtil
         {
             if (MapUtil.rand.nextInt(8) > 98 - height)
             {
-                rv = Material.SNOW.getColor().colorValue;
+                rv = Material.TOP_SNOW.getColor().col;
             }
         }
         float factor = (height - 68F) / 94F;
@@ -1159,13 +1161,13 @@ public class MapUtil
     private static void setupColours()
     {
         //ocean = Ocean(0) colour(112) "Ocean"
-        MapUtil.biomeColours.add(new BlockVec3(Material.WATER.getColor().colorValue, 0, 0));
+        MapUtil.biomeColours.add(new BlockVec3(Material.WATER.getColor().col, 0, 0));
         //plains = Plains(1) colour(9286496) "Plains"
         MapUtil.biomeColours.add(new BlockVec3(0x497436, 0, 0));
         //desert = Desert(2) colour(16421912) "Desert"
-        MapUtil.biomeColours.add(new BlockVec3(0xd4cd98, Material.CACTUS.getColor().colorValue, 3));
+        MapUtil.biomeColours.add(new BlockVec3(0xd4cd98, Material.CACTUS.getColor().col, 3));
         //extremeHills = Hills(3, false) colour(6316128) "Extreme Hills"
-        MapUtil.biomeColours.add(new BlockVec3(0x4d654c, Material.ROCK.getColor().colorValue, 15));
+        MapUtil.biomeColours.add(new BlockVec3(0x4d654c, Material.STONE.getColor().col, 15));
         //forest = Forest(4, 0) colour(353825) "Forest"
         MapUtil.biomeColours.add(new BlockVec3(0x3c7521, 0x295416, 45));
         //taiga = Taiga(5, 0) colour(747097) "Taiga"
@@ -1177,19 +1179,19 @@ public class MapUtil
         MapUtil.biomeColours.add(new BlockVec3(0, 0, 0));
         MapUtil.biomeColours.add(new BlockVec3(0, 0, 0));
         //frozenOcean = Ocean(10) colour(9474208) "FrozenOcean"
-        MapUtil.biomeColours.add(new BlockVec3(Material.ICE.getColor().colorValue, 0, 0));
+        MapUtil.biomeColours.add(new BlockVec3(Material.ICE.getColor().col, 0, 0));
         //frozenRiver = River(11) colour(10526975) "FrozenRiver"
-        MapUtil.biomeColours.add(new BlockVec3(Material.ICE.getColor().colorValue, 0, 0));
+        MapUtil.biomeColours.add(new BlockVec3(Material.ICE.getColor().col, 0, 0));
         //icePlains = Snow(12, false) colour(16777215) "Ice Plains"
-        MapUtil.biomeColours.add(new BlockVec3(Material.SNOW.getColor().colorValue, 0x497436, 3));
+        MapUtil.biomeColours.add(new BlockVec3(Material.TOP_SNOW.getColor().col, 0x497436, 3));
         //iceMountains = Snow(13, false) colour(10526880) "Ice Mountains"
-        MapUtil.biomeColours.add(new BlockVec3(Material.SNOW.getColor().colorValue, Material.ICE.getColor().colorValue, 5));
+        MapUtil.biomeColours.add(new BlockVec3(Material.TOP_SNOW.getColor().col, Material.ICE.getColor().col, 5));
         //mushroomIsland = MushroomIsland(14) colour(16711935) "MushroomIsland"
         MapUtil.biomeColours.add(new BlockVec3(0x63565f, 0x7c1414, 10));
         //mushroomIslandShore = MushroomIsland(15) colour(10486015) "MushroomIslandShore"
         MapUtil.biomeColours.add(new BlockVec3(0x6a6066, 0, 0));
         //beach = Beach(16) colour(16440917) "Beach"
-        MapUtil.biomeColours.add(new BlockVec3(Material.SAND.getColor().colorValue, 0, 0));
+        MapUtil.biomeColours.add(new BlockVec3(Material.SAND.getColor().col, 0, 0));
         //desertHills = Desert(17) colour(13786898) "DesertHills"
         MapUtil.biomeColours.add(new BlockVec3(0xd4cd98, 0, 0));
         //forestHills = Forest(18, 0) colour(2250012) "ForestHills"
@@ -1207,9 +1209,9 @@ public class MapUtil
         //deepOcean = Ocean(24) colour(48) "Deep Ocean"
         MapUtil.biomeColours.add(new BlockVec3(0x2f2fd4, 0, 0));
         //stoneBeach = StoneBeach(25) colour(10658436) "Stone Beach"
-        MapUtil.biomeColours.add(new BlockVec3(Material.ROCK.getColor().colorValue, 0, 0));
+        MapUtil.biomeColours.add(new BlockVec3(Material.STONE.getColor().col, 0, 0));
         //coldBeach = Beach(26) colour(16445632) "Cold Beach"
-        MapUtil.biomeColours.add(new BlockVec3(Material.SAND.getColor().colorValue, Material.SNOW.getColor().colorValue, 75));
+        MapUtil.biomeColours.add(new BlockVec3(Material.SAND.getColor().col, Material.TOP_SNOW.getColor().col, 75));
         //birchForest = Forest(27, 2)) colour(3175492) "Birch Forest"
         MapUtil.biomeColours.add(new BlockVec3(0x516b36, 0x497436, 65));
         //birchForestHills = Forest(28, 2)) colour(2055986) "Birch Forest Hills"
@@ -1217,9 +1219,9 @@ public class MapUtil
         //roofedForest = Forest(29, 3) colour(4215066) "Roofed Forest"
         MapUtil.biomeColours.add(new BlockVec3(0x9c2424, 0x1e2e18, 98));
         //coldTaiga = Taiga(30, 0) colour(3233098) "Cold Taiga"
-        MapUtil.biomeColours.add(new BlockVec3(Material.SNOW.getColor().colorValue, 0x172a17, 12));
+        MapUtil.biomeColours.add(new BlockVec3(Material.TOP_SNOW.getColor().col, 0x172a17, 12));
         //coldTaigaHills = Taiga(31, 0) colour(2375478) "Cold Taiga Hills"
-        MapUtil.biomeColours.add(new BlockVec3(Material.SNOW.getColor().colorValue, 0x172a17, 12));
+        MapUtil.biomeColours.add(new BlockVec3(Material.TOP_SNOW.getColor().col, 0x172a17, 12));
         //megaTaiga = Taiga(32, 1) colour(5858897) "Mega Taiga"
         MapUtil.biomeColours.add(new BlockVec3(0x172a17, 0x6e4e35, 12));
         //megaTaigaHills = Taiga(33, 1) colour(4542270) "Mega Taiga Hills"
@@ -1240,12 +1242,12 @@ public class MapUtil
 
     public static void makeVanillaMap(DimensionType dim, int chunkXPos, int chunkZPos, File baseFolder, BufferedImage image)
     {
-        World world = WorldUtil.getWorldForDimensionServer(dim);
+        Level world = WorldUtil.getWorldForDimensionServer(dim);
         for (int x0 = -12; x0 <= 12; x0++)
         {
             for (int z0 = -12; z0 <= 12; z0++)
             {
-                Chunk chunk = world.getChunk(chunkXPos + x0, chunkZPos + z0);
+                LevelChunk chunk = world.getChunk(chunkXPos + x0, chunkZPos + z0);
 
                 if (chunk != null)
                 {
@@ -1253,8 +1255,8 @@ public class MapUtil
                     {
                         for (int x = 0; x < 16; x++)
                         {
-                            int l4 = chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE_WG, x, z) + 1;
-                            BlockState state = Blocks.AIR.getDefaultState();
+                            int l4 = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z) + 1;
+                            BlockState state = Blocks.AIR.defaultBlockState();
                             BlockPos pos = null;
 
                             if (l4 > 1)
@@ -1265,10 +1267,10 @@ public class MapUtil
                                     pos = new BlockPos(x, l4, z);
                                     state = chunk.getBlockState(pos);
                                 }
-                                while (state.getMaterialColor(world, pos) == MaterialColor.AIR && l4 > 0);
+                                while (state.getMapColor(world, pos) == MaterialColor.NONE && l4 > 0);
                             }
 
-                            int col = pos != null ? state.getMaterialColor(world, pos).colorValue : 0;
+                            int col = pos != null ? state.getMapColor(world, pos).col : 0;
                             image.setRGB(x + (x0 + 12) * 16, z + (z0 + 12) * 16, col);
                         }
                     }
@@ -1291,10 +1293,10 @@ public class MapUtil
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static File getClientMapsFolder()
     {
-        File folder = new File(Minecraft.getInstance().gameDir, "assets/galacticraftMaps");
+        File folder = new File(Minecraft.getInstance().gameDirectory, "assets/galacticraftMaps");
         try
         {
             if (folder.exists() || folder.mkdirs())

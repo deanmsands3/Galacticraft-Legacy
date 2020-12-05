@@ -15,28 +15,30 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.passive.horse.HorseEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
@@ -49,10 +51,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class TileEntityTelemetry extends TileEntity implements ITickableTileEntity
+public class TileEntityTelemetry extends BlockEntity implements TickableBlockEntity
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.telemetry)
-    public static TileEntityType<TileEntityTelemetry> TYPE;
+    public static BlockEntityType<TileEntityTelemetry> TYPE;
 
     //    public Class<?> clientClass;
     public EntityType<?> clientType;
@@ -75,17 +77,17 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
     @Override
     public void onLoad()
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             loadedList.add(new BlockVec3Dim(this));
         }
     }
 
     @Override
-    public void remove()
+    public void setRemoved()
     {
-        super.remove();
-        if (this.world.isRemote)
+        super.setRemoved();
+        if (this.level.isClientSide)
         {
             loadedList.remove(new BlockVec3Dim(this));
         }
@@ -94,7 +96,7 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
     @Override
     public void tick()
     {
-        if (!this.world.isRemote && ++this.ticks % 2 == 0)
+        if (!this.level.isClientSide && ++this.ticks % 2 == 0)
         {
             if (this.toUpdate != null)
             {
@@ -117,7 +119,7 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
                 }
                 else
                 {
-                    if (linkedEntity instanceof ServerPlayerEntity)
+                    if (linkedEntity instanceof ServerPlayer)
                     {
                         name = "$" + linkedEntity.getName();
                     }
@@ -138,10 +140,10 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
                         name = "";
                     }
 
-                    double xmotion = linkedEntity.getMotion().x;
-                    double ymotion = linkedEntity instanceof LivingEntity ? linkedEntity.getMotion().y + 0.078D : linkedEntity.getMotion().y;
-                    double zmotion = linkedEntity.getMotion().z;
-                    data[2] = (int) (MathHelper.sqrt(xmotion * xmotion + ymotion * ymotion + zmotion * zmotion) * 2000D);
+                    double xmotion = linkedEntity.getDeltaMovement().x;
+                    double ymotion = linkedEntity instanceof LivingEntity ? linkedEntity.getDeltaMovement().y + 0.078D : linkedEntity.getDeltaMovement().y;
+                    double zmotion = linkedEntity.getDeltaMovement().z;
+                    data[2] = (int) (Mth.sqrt(xmotion * xmotion + ymotion * ymotion + zmotion * zmotion) * 2000D);
 
                     if (linkedEntity instanceof ITelemetry)
                     {
@@ -159,7 +161,7 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
                             this.pulseRate += 100;
                         }
                         this.lastHurttime = eLiving.hurtTime;
-                        if (eLiving.getRidingEntity() != null)
+                        if (eLiving.getVehicle() != null)
                         {
                             data[2] /= 4;  //reduced pulse effect if riding a vehicle
                         }
@@ -179,49 +181,49 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
                         data[2] = this.pulseRate / 10;
 
                         data[1] = (int) (eLiving.getHealth() * 100 / eLiving.getMaxHealth());
-                        if (eLiving instanceof ServerPlayerEntity)
+                        if (eLiving instanceof ServerPlayer)
                         {
-                            data[3] = ((ServerPlayerEntity) eLiving).getFoodStats().getFoodLevel() * 5;
+                            data[3] = ((ServerPlayer) eLiving).getFoodData().getFoodLevel() * 5;
                             GCPlayerStats stats = GCPlayerStats.get(eLiving);
                             data[4] = stats.getAirRemaining() * 4096 + stats.getAirRemaining2();
-                            UUID uuid = eLiving.getUniqueID();
+                            UUID uuid = eLiving.getUUID();
                             if (uuid != null)
                             {
                                 strUUID = uuid.toString();
                             }
                         }
-                        else if (eLiving instanceof HorseEntity)
+                        else if (eLiving instanceof Horse)
                         {
 //                            data[3] = ((EntityHorse) eLiving).getType().ordinal();
-                            data[4] = ((HorseEntity) eLiving).getHorseVariant();
+                            data[4] = ((Horse) eLiving).getVariant();
                         }
-                        else if (eLiving instanceof VillagerEntity)
+                        else if (eLiving instanceof Villager)
                         {
 //                            data[3] = ((VillagerEntity) eLiving).getVillagerData().getProfession();
-                            data[4] = ((VillagerEntity) eLiving).getGrowingAge();
+                            data[4] = ((Villager) eLiving).getAge();
                         }
-                        else if (eLiving instanceof WolfEntity)
+                        else if (eLiving instanceof Wolf)
                         {
-                            data[3] = ((WolfEntity) eLiving).getCollarColor().getId();
-                            data[4] = ((WolfEntity) eLiving).isBegging() ? 1 : 0;
+                            data[3] = ((Wolf) eLiving).getCollarColor().getId();
+                            data[4] = ((Wolf) eLiving).isInterested() ? 1 : 0;
                         }
-                        else if (eLiving instanceof SheepEntity)
+                        else if (eLiving instanceof Sheep)
                         {
-                            data[3] = ((SheepEntity) eLiving).getFleeceColor().getId();
-                            data[4] = ((SheepEntity) eLiving).getSheared() ? 1 : 0;
+                            data[3] = ((Sheep) eLiving).getColor().getId();
+                            data[4] = ((Sheep) eLiving).isSheared() ? 1 : 0;
                         }
-                        else if (eLiving instanceof CatEntity)
+                        else if (eLiving instanceof Cat)
                         {
-                            data[3] = ((CatEntity) eLiving).getCatType();
+                            data[3] = ((Cat) eLiving).getCatType();
                         }
-                        else if (eLiving instanceof SkeletonEntity)
+                        else if (eLiving instanceof Skeleton)
                         {
 //                            data[3] = ((EntitySkeleton) eLiving).getSkeletonType().ordinal();
                         }
-                        else if (eLiving instanceof ZombieEntity)
+                        else if (eLiving instanceof Zombie)
                         {
 //                            data[3] = ((EntityZombie) eLiving).isVillager() ? 1 : 0; TODO Fix for MC 1.10
-                            data[4] = eLiving.isChild() ? 1 : 0;
+                            data[4] = eLiving.isBaby() ? 1 : 0;
                         }
                     }
                 }
@@ -230,11 +232,11 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
             {
                 name = "";
             }
-            GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_UPDATE_TELEMETRY, this.world.getDimension().getType(), new Object[]{this.getPos(), name, data[0], data[1], data[2], data[3], data[4], strUUID}), new TargetPoint(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 320D, this.world.getDimension().getType()));
+            GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_UPDATE_TELEMETRY, this.level.getDimension().getType(), new Object[]{this.getBlockPos(), name, data[0], data[1], data[2], data[3], data[4], strUUID}), new TargetPoint(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), 320D, this.level.getDimension().getType()));
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void receiveUpdate(List<Object> data, DimensionType dimID)
     {
         String name = (String) data.get(1);
@@ -260,9 +262,9 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         Long msb = nbt.getLong("entityUUIDMost");
         Long lsb = nbt.getLong("entityUUIDLeast");
         this.toUpdate = new UUID(msb, lsb);
@@ -270,13 +272,13 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
 
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         if (this.linkedEntity != null && this.linkedEntity.isAlive())
         {
-            nbt.putLong("entityUUIDMost", this.linkedEntity.getUniqueID().getMostSignificantBits());
-            nbt.putLong("entityUUIDLeast", this.linkedEntity.getUniqueID().getLeastSignificantBits());
+            nbt.putLong("entityUUIDMost", this.linkedEntity.getUUID().getMostSignificantBits());
+            nbt.putLong("entityUUIDLeast", this.linkedEntity.getUUID().getLeastSignificantBits());
         }
         return nbt;
     }
@@ -285,8 +287,8 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
     {
         this.pulseRate = 400;
         this.lastHurttime = 0;
-        Stream<Entity> eList = ((ServerWorld) this.world).getEntities();
-        Optional<Entity> match = eList.filter((e) -> e.getUniqueID().equals(uuid)).findFirst();
+        Stream<Entity> eList = ((ServerLevel) this.level).getEntities();
+        Optional<Entity> match = eList.filter((e) -> e.getUUID().equals(uuid)).findFirst();
         if (match.isPresent())
         {
             this.linkedEntity = match.get();
@@ -328,7 +330,7 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
         this.linkedEntity = null;
     }
 
-    public static TileEntityTelemetry getNearest(TileEntity te)
+    public static TileEntityTelemetry getNearest(BlockEntity te)
     {
         if (te == null)
         {
@@ -338,7 +340,7 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
 
         int distSq = 1025;
         BlockVec3Dim nearest = null;
-        DimensionType dim = GCCoreUtil.getDimensionType(te.getWorld());
+        DimensionType dim = GCCoreUtil.getDimensionType(te.getLevel());
         for (BlockVec3Dim telemeter : loadedList)
         {
             if (telemeter.dim != dim)
@@ -357,7 +359,7 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
         {
             return null;
         }
-        TileEntity result = te.getWorld().getTileEntity(new BlockPos(nearest.x, nearest.y, nearest.z));
+        BlockEntity result = te.getLevel().getBlockEntity(new BlockPos(nearest.x, nearest.y, nearest.z));
         if (result instanceof TileEntityTelemetry)
         {
             return (TileEntityTelemetry) result;
@@ -372,13 +374,13 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
      * @param held   The frequency module
      * @param player
      */
-    public static void frequencyModulePlayer(ItemStack held, ServerPlayerEntity player, boolean remove)
+    public static void frequencyModulePlayer(ItemStack held, ServerPlayer player, boolean remove)
     {
         if (held == null)
         {
             return;
         }
-        CompoundNBT fmData = held.getTag();
+        CompoundTag fmData = held.getTag();
         if (fmData != null && fmData.contains("teDim"))
         {
             int dim = fmData.getInt("teDim");
@@ -393,7 +395,7 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
             }
             else
             {
-                TileEntity te = wp.getWorld().getTileEntity(new BlockPos(x, y, z));
+                BlockEntity te = wp.getWorld().getBlockEntity(new BlockPos(x, y, z));
                 if (te instanceof TileEntityTelemetry)
                 {
                     if (remove)
@@ -405,18 +407,18 @@ public class TileEntityTelemetry extends TileEntity implements ITickableTileEnti
                     }
                     else
                     {
-                        ((TileEntityTelemetry) te).addTrackedEntity(player.getUniqueID());
+                        ((TileEntityTelemetry) te).addTrackedEntity(player.getUUID());
                     }
                 }
             }
         }
     }
 
-    public static void updateLinkedPlayer(ServerPlayerEntity playerOld, ServerPlayerEntity playerNew)
+    public static void updateLinkedPlayer(ServerPlayer playerOld, ServerPlayer playerNew)
     {
         for (BlockVec3Dim telemeter : loadedList)
         {
-            TileEntity te = telemeter.getTileEntityNoLoad();
+            BlockEntity te = telemeter.getTileEntityNoLoad();
             if (te instanceof TileEntityTelemetry)
             {
                 if (((TileEntityTelemetry) te).linkedEntity == playerOld)

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.nei;
+package micdoodle8.mods.galacticraft.core.nei;
 //
 //import codechicken.lib.gui.GuiDraw;
 //import codechicken.nei.ItemList;

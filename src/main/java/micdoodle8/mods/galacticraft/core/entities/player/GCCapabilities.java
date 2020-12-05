@@ -1,10 +1,9 @@
 package micdoodle8.mods.galacticraft.core.entities.player;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -25,30 +24,30 @@ public class GCCapabilities
         CapabilityManager.INSTANCE.register(GCPlayerStats.class, new Capability.IStorage<GCPlayerStats>()
         {
             @Override
-            public INBT writeNBT(Capability<GCPlayerStats> capability, GCPlayerStats instance, Direction side)
+            public Tag writeNBT(Capability<GCPlayerStats> capability, GCPlayerStats instance, Direction side)
             {
-                CompoundNBT nbt = new CompoundNBT();
+                CompoundTag nbt = new CompoundTag();
                 instance.saveNBTData(nbt);
                 return nbt;
             }
 
             @Override
-            public void readNBT(Capability<GCPlayerStats> capability, GCPlayerStats instance, Direction side, INBT nbt)
+            public void readNBT(Capability<GCPlayerStats> capability, GCPlayerStats instance, Direction side, Tag nbt)
             {
-                instance.loadNBTData((CompoundNBT) nbt);
+                instance.loadNBTData((CompoundTag) nbt);
             }
         }, StatsCapability::new);
 
         CapabilityManager.INSTANCE.register(GCPlayerStatsClient.class, new Capability.IStorage<GCPlayerStatsClient>()
         {
             @Override
-            public INBT writeNBT(Capability<GCPlayerStatsClient> capability, GCPlayerStatsClient instance, Direction side)
+            public Tag writeNBT(Capability<GCPlayerStatsClient> capability, GCPlayerStatsClient instance, Direction side)
             {
                 return null;
             }
 
             @Override
-            public void readNBT(Capability<GCPlayerStatsClient> capability, GCPlayerStatsClient instance, Direction side, INBT nbt)
+            public void readNBT(Capability<GCPlayerStatsClient> capability, GCPlayerStatsClient instance, Direction side, Tag nbt)
             {
             }
         }, StatsClientCapability::new);

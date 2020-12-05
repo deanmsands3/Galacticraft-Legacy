@@ -4,21 +4,22 @@ import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.HangingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -29,20 +30,20 @@ public class EntityHangingSchematic extends HangingEntity
     private boolean sendToClient;
     private int tickCounter1;
 
-    protected EntityHangingSchematic(EntityType<? extends EntityHangingSchematic> type, World world)
+    protected EntityHangingSchematic(EntityType<? extends EntityHangingSchematic> type, Level world)
     {
         super(type, world);
     }
 
-    public EntityHangingSchematic(EntityType<? extends EntityHangingSchematic> type, World world, BlockPos pos, Direction facing, int schematicType)
+    public EntityHangingSchematic(EntityType<? extends EntityHangingSchematic> type, Level world, BlockPos pos, Direction facing, int schematicType)
     {
         super(type, world);
         this.schematic = schematicType;
-        this.updateFacingWithBoundingBox(facing);
+        this.setDirection(facing);
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -50,97 +51,97 @@ public class EntityHangingSchematic extends HangingEntity
     @Override
     public void tick()
     {
-        this.prevPosX = this.getPosX();
-        this.prevPosY = this.getPosY();
-        this.prevPosZ = this.getPosZ();
+        this.xo = this.getX();
+        this.yo = this.getY();
+        this.zo = this.getZ();
 
         if (this.sendToClient)
         {
             this.sendToClient = false;
-            this.sendToClient(this.world, this.hangingPosition);
+            this.sendToClient(this.level, this.pos);
         }
 
         if (this.tickCounter1++ == 10)
         {
             this.tickCounter1 = 0;
 
-            if (!this.world.isRemote && this.isAlive() && !this.onValidSurface())
+            if (!this.level.isClientSide && this.isAlive() && !this.survives())
             {
                 this.remove();
-                this.onBroken(null);
+                this.dropItem(null);
             }
         }
     }
 
     @Override
-    public void writeAdditional(CompoundNBT tagCompound)
+    public void addAdditionalSaveData(CompoundTag tagCompound)
     {
         tagCompound.putInt("schem", this.schematic);
-        super.writeAdditional(tagCompound);
+        super.addAdditionalSaveData(tagCompound);
     }
 
     @Override
-    public void readAdditional(CompoundNBT tag)
+    public void readAdditionalSaveData(CompoundTag tag)
     {
         this.schematic = tag.getInt("schem");
-        super.readAdditional(tag);
+        super.readAdditionalSaveData(tag);
         this.setSendToClient();
     }
 
     @Override
-    public int getWidthPixels()
+    public int getWidth()
     {
         return 32;
     }
 
     @Override
-    public int getHeightPixels()
+    public int getHeight()
     {
         return 32;
     }
 
     @Override
-    public void onBroken(Entity brokenEntity)
+    public void dropItem(Entity brokenEntity)
     {
-        if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS))
+        if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))
         {
-            if (brokenEntity instanceof PlayerEntity)
+            if (brokenEntity instanceof Player)
             {
-                PlayerEntity entityplayer = (PlayerEntity) brokenEntity;
+                Player entityplayer = (Player) brokenEntity;
 
-                if (entityplayer.abilities.isCreativeMode)
+                if (entityplayer.abilities.instabuild)
                 {
                     return;
                 }
             }
 
-            this.entityDropItem(SchematicRegistry.getSchematicItem(this.schematic), 0.0F);
+            this.spawnAtLocation(SchematicRegistry.getSchematicItem(this.schematic), 0.0F);
         }
     }
 
     @Override
-    public ItemStack getPickedResult(RayTraceResult target)
+    public ItemStack getPickedResult(HitResult target)
     {
         return SchematicRegistry.getSchematicItem(this.schematic);
     }
 
     @Override
-    public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch)
+    public void moveTo(double x, double y, double z, float yaw, float pitch)
     {
-        BlockPos blockpos = this.hangingPosition.add(x - this.getPosX(), y - this.getPosY(), z - this.getPosZ());
-        this.setPosition(blockpos.getX(), blockpos.getY(), blockpos.getZ());
+        BlockPos blockpos = this.pos.offset(x - this.getX(), y - this.getY(), z - this.getZ());
+        this.setPos(blockpos.getX(), blockpos.getY(), blockpos.getZ());
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)
+    @Environment(EnvType.CLIENT)
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)
     {
     }
 
-    public void sendToClient(World worldIn, BlockPos blockpos)
+    public void sendToClient(Level worldIn, BlockPos blockpos)
     {
         DimensionType dimID = GCCoreUtil.getDimensionType(worldIn);
-        GCCoreUtil.sendToAllAround(new PacketSimple(EnumSimplePacket.C_SPAWN_HANGING_SCHEMATIC, dimID, new Object[]{blockpos, this.getEntityId(), this.facingDirection.ordinal(), this.schematic}), worldIn, dimID, blockpos, 150D);
+        GCCoreUtil.sendToAllAround(new PacketSimple(EnumSimplePacket.C_SPAWN_HANGING_SCHEMATIC, dimID, new Object[]{blockpos, this.getId(), this.direction.ordinal(), this.schematic}), worldIn, dimID, blockpos, 150D);
     }
 
     public void setSendToClient()
@@ -149,8 +150,8 @@ public class EntityHangingSchematic extends HangingEntity
     }
 
     @Override
-    public void playPlaceSound()
+    public void playPlacementSound()
     {
-        this.playSound(SoundEvents.ENTITY_PAINTING_PLACE, 1.0F, 1.0F);
+        this.playSound(SoundEvents.PAINTING_PLACE, 1.0F, 1.0F);
     }
 }

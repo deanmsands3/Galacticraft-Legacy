@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei;
+package micdoodle8.mods.galacticraft.core.client.jei;
 //
 //import mezz.jei.api.ingredients.IIngredients;
 //import mezz.jei.api.recipe.BlankRecipeWrapper;

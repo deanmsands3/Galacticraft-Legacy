@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.event;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.dimension.Dimension;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 
@@ -18,7 +18,7 @@ public abstract class ZeroGravityEvent extends LivingEvent
     public ZeroGravityEvent(LivingEntity entity)
     {
         super(entity);
-        this.dimension = entity.world.getDimension();
+        this.dimension = entity.level.getDimension();
     }
 
     /**

@@ -4,17 +4,16 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -73,12 +72,12 @@ public class ItemOilCanister extends ItemCanisterGeneric implements ISortable
     @Override
     public String getTranslationKey(ItemStack stack)
     {
-        if (stack.getMaxDamage() == stack.getDamage())
+        if (stack.getMaxDamage() == stack.getDamageValue())
         {
             return "item.galacticraftcore.empty_liquid_canister";
         }
 
-        if (stack.getDamage() == 1)
+        if (stack.getDamageValue() == 1)
         {
             return "item.galacticraftcore.oil_canister";
         }
@@ -87,18 +86,18 @@ public class ItemOilCanister extends ItemCanisterGeneric implements ISortable
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        if (stack.getMaxDamage() - stack.getDamage() > 0)
+        if (stack.getMaxDamage() - stack.getDamageValue() > 0)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.oil") + ": " + (stack.getMaxDamage() - stack.getDamage())));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("gui.message.oil") + ": " + (stack.getMaxDamage() - stack.getDamageValue())));
         }
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items)
+    public void appendStacks(CreativeModeTab group, NonNullList<ItemStack> items)
     {
-        if (this.isInGroup(group))
+        if (this.isIn(group))
         {
             items.add(createEmptyCanister(1));
             items.add(new ItemStack(this));
@@ -119,15 +118,15 @@ public class ItemOilCanister extends ItemCanisterGeneric implements ISortable
 
 
     @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
+    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected)
     {
-        if (ItemCanisterGeneric.EMPTY_CAPACITY == stack.getDamage())
+        if (ItemCanisterGeneric.EMPTY_CAPACITY == stack.getDamageValue())
         {
 //            stack.setTag(null);
         }
-        else if (stack.getDamage() <= 0)
+        else if (stack.getDamageValue() <= 0)
         {
-            stack.setDamage(1);
+            stack.setDamageValue(1);
         }
     }
 
@@ -140,7 +139,7 @@ public class ItemOilCanister extends ItemCanisterGeneric implements ISortable
     public static ItemStack createEmptyCanister(int count)
     {
         ItemStack stack = new ItemStack(GCItems.oilCanister, count);
-        stack.setDamage(ItemCanisterGeneric.EMPTY_CAPACITY);
+        stack.setDamageValue(ItemCanisterGeneric.EMPTY_CAPACITY);
         return stack;
     }
 }

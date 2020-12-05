@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.gui.overlay;
+package micdoodle8.mods.galacticraft.core.client.gui.overlay;
 //
 //import com.mojang.blaze3d.platform.GLX;
 //import com.mojang.blaze3d.platform.GlStateManager;

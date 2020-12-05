@@ -1,11 +1,11 @@
 package micdoodle8.mods.galacticraft.core.client.fx;
 
-import net.minecraft.client.particle.SpriteTexturedParticle;
-import net.minecraft.world.World;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.world.level.Level;
 
-public abstract class LaunchParticle extends SpriteTexturedParticle
+public abstract class LaunchParticle extends TextureSheetParticle
 {
-    public LaunchParticle(World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+    public LaunchParticle(Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
     {
         super(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
     }

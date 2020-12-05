@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.jei.gasliquefier;
+package micdoodle8.mods.galacticraft.planets.mars.client.jei.gasliquefier;
 //
 //import mezz.jei.api.ingredients.IIngredients;
 //import mezz.jei.api.recipe.IRecipeWrapper;

@@ -7,19 +7,19 @@ import micdoodle8.mods.galacticraft.core.blocks.BlockMachineBase;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerOxygenStorageModule;
 import micdoodle8.mods.galacticraft.core.inventory.IInventoryDefaults;
 import micdoodle8.mods.galacticraft.core.util.FluidUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
@@ -28,12 +28,12 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TileEntityOxygenStorageModule extends TileEntityOxygen implements IInventoryDefaults, ISidedInventory, IMachineSides, INamedContainerProvider
+public class TileEntityOxygenStorageModule extends TileEntityOxygen implements IInventoryDefaults, WorldlyContainer, IMachineSides, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenStorageModule)
-    public static TileEntityType<TileEntityOxygenStorageModule> TYPE;
+    public static BlockEntityType<TileEntityOxygenStorageModule> TYPE;
 
-    public final Set<PlayerEntity> playersUsing = new HashSet<PlayerEntity>();
+    public final Set<Player> playersUsing = new HashSet<Player>();
     public int scaledOxygenLevel;
     private int lastScaledOxygenLevel;
 
@@ -51,9 +51,9 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
     @Override
     public void tick()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
-            ItemStack oxygenItemStack = this.getStackInSlot(0);
+            ItemStack oxygenItemStack = this.getItem(0);
             if (oxygenItemStack != null && oxygenItemStack.getItem() instanceof IItemOxygenSupply)
             {
                 IItemOxygenSupply oxygenItem = (IItemOxygenSupply) oxygenItemStack.getItem();
@@ -72,13 +72,13 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
 
         if (this.scaledOxygenLevel != this.lastScaledOxygenLevel)
         {
-            this.world.getChunkProvider().getLightManager().checkBlock(this.getPos());
+            this.level.getChunkSource().getLightEngine().checkBlock(this.getBlockPos());
 //            this.world.notifyLightSet(this.getPos());
         }
 
         this.lastScaledOxygenLevel = this.scaledOxygenLevel;
 
-        this.produceOxygen(getFront().rotateY().getOpposite());
+        this.produceOxygen(getFront().getClockWise().getOpposite());
 
         // if (!this.world.isRemote)
         // {
@@ -122,17 +122,17 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
 
         this.readMachineSidesFromNBT(nbt);  //Needed by IMachineSides
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         this.addMachineSidesToNBT(nbt);  //Needed by IMachineSides
         return nbt;
     }
@@ -188,11 +188,11 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
     @Override
     public Direction getFront()
     {
-        return BlockMachineBase.getFront(this.world.getBlockState(getPos()));
+        return BlockMachineBase.getFront(this.level.getBlockState(getBlockPos()));
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         return slotID == 0 && itemstack != null && itemstack.getItem() instanceof IItemOxygenSupply;
     }
@@ -205,17 +205,17 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (slotID == 0 && this.isItemValidForSlot(slotID, itemstack))
+        if (slotID == 0 && this.canPlaceItem(slotID, itemstack))
         {
-            return itemstack.getDamage() < itemstack.getItem().getMaxDamage();
+            return itemstack.getDamageValue() < itemstack.getItem().getMaxDamage();
         }
         return false;
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         if (slotID == 0 && !itemstack.isEmpty())
         {
@@ -299,11 +299,11 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
             dir = Direction.DOWN;
             break;
         case RIGHT:
-            dir = getFront().rotateYCCW();
+            dir = getFront().getCounterClockWise();
             break;
         case LEFT:
         default:
-            dir = getFront().rotateY();
+            dir = getFront().getClockWise();
         }
         return EnumSet.of(dir);
     }
@@ -324,11 +324,11 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
             dir = Direction.DOWN;
             break;
         case LEFT:
-            dir = getFront().rotateY();
+            dir = getFront().getClockWise();
             break;
         case RIGHT:
         default:
-            dir = getFront().rotateYCCW();
+            dir = getFront().getCounterClockWise();
         }
         return EnumSet.of(dir);
     }
@@ -382,14 +382,14 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
     //------------------END OF IMachineSides implementation
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerOxygenStorageModule(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.oxygen_storage");
+        return new TranslatableComponent("container.oxygen_storage");
     }
 }

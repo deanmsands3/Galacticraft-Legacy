@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.galaxies;
 
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 
 public class Satellite extends CelestialBody implements IChildBody
 {

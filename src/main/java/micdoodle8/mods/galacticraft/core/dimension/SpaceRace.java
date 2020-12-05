@@ -12,11 +12,10 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FlagData;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +49,7 @@ public class SpaceRace
         this.spaceRaceID = ++SpaceRace.lastSpaceRaceID;
     }
 
-    public void loadFromNBT(CompoundNBT nbt)
+    public void loadFromNBT(CompoundTag nbt)
     {
         this.teamName = nbt.getString("TeamName");
         if (ConfigManagerCore.enableDebug.get())
@@ -62,17 +61,17 @@ public class SpaceRace
         this.flagData = FlagData.readFlagData(nbt);
         this.teamColor = new Vector3(nbt.getFloat("teamColorR"), nbt.getFloat("teamColorG"), nbt.getFloat("teamColorB"));
 
-        ListNBT tagList = nbt.getList("PlayerList", 10);
+        ListTag tagList = nbt.getList("PlayerList", 10);
         for (int i = 0; i < tagList.size(); i++)
         {
-            CompoundNBT tagAt = tagList.getCompound(i);
+            CompoundTag tagAt = tagList.getCompound(i);
             this.playerNames.add(tagAt.getString("PlayerName"));
         }
 
         tagList = nbt.getList("CelestialBodyList", 10);
         for (int i = 0; i < tagList.size(); i++)
         {
-            CompoundNBT tagAt = tagList.getCompound(i);
+            CompoundTag tagAt = tagList.getCompound(i);
 
             CelestialBody body = GalaxyRegistry.getCelestialBodyFromUnlocalizedName(tagAt.getString("CelestialBodyName"));
 
@@ -85,14 +84,14 @@ public class SpaceRace
         tagList = nbt.getList("SchList", 10);
         for (int i = 0; i < tagList.size(); i++)
         {
-            CompoundNBT tagAt = tagList.getCompound(i);
+            CompoundTag tagAt = tagList.getCompound(i);
             String name = tagAt.getString("Mem");
             if (this.playerNames.contains(name))
             {
-                final ListNBT itemList = tagAt.getList("Sch", 10);
+                final ListTag itemList = tagAt.getList("Sch", 10);
                 for (int j = 0; j < itemList.size(); ++j)
                 {
-                    addNewSchematic(name, ItemStack.read(itemList.getCompound(j)));
+                    addNewSchematic(name, ItemStack.of(itemList.getCompound(j)));
                 }
             }
         }
@@ -103,7 +102,7 @@ public class SpaceRace
         }
     }
 
-    public void saveToNBT(CompoundNBT nbt)
+    public void saveToNBT(CompoundTag nbt)
     {
         if (ConfigManagerCore.enableDebug.get())
         {
@@ -117,38 +116,38 @@ public class SpaceRace
         nbt.putDouble("teamColorG", this.teamColor.y);
         nbt.putDouble("teamColorB", this.teamColor.z);
 
-        ListNBT tagList = new ListNBT();
+        ListTag tagList = new ListTag();
         for (String player : this.playerNames)
         {
-            CompoundNBT tagComp = new CompoundNBT();
+            CompoundTag tagComp = new CompoundTag();
             tagComp.putString("PlayerName", player);
             tagList.add(tagComp);
         }
 
         nbt.put("PlayerList", tagList);
 
-        tagList = new ListNBT();
+        tagList = new ListTag();
         for (Entry<CelestialBody, Integer> celestialBody : this.celestialBodyStatusList.entrySet())
         {
-            CompoundNBT tagComp = new CompoundNBT();
+            CompoundTag tagComp = new CompoundTag();
             tagComp.putString("CelestialBodyName", celestialBody.getKey().getUnlocalizedName());
             tagComp.putInt("TimeTaken", celestialBody.getValue());
             tagList.add(tagComp);
         }
         nbt.put("CelestialBodyList", tagList);
 
-        tagList = new ListNBT();
+        tagList = new ListTag();
         for (Entry<String, List<ItemStack>> schematic : this.schematicsToUnlock.entrySet())
         {
             if (this.playerNames.contains(schematic.getKey()))
             {
-                CompoundNBT tagComp = new CompoundNBT();
+                CompoundTag tagComp = new CompoundTag();
                 tagComp.putString("Mem", schematic.getKey());
-                final ListNBT itemList = new ListNBT();
+                final ListTag itemList = new ListTag();
                 for (ItemStack stack : schematic.getValue())
                 {
-                    final CompoundNBT itemTag = new CompoundNBT();
-                    stack.write(itemTag);
+                    final CompoundTag itemTag = new CompoundTag();
+                    stack.save(itemTag);
                     itemList.add(itemTag);
                 }
                 tagComp.put("Sch", itemList);
@@ -273,7 +272,7 @@ public class SpaceRace
     /*
      * Used to give a stored schematic to a team player on next login
      */
-    public void updatePlayerSchematics(ServerPlayerEntity player)
+    public void updatePlayerSchematics(ServerPlayer player)
     {
         List<ItemStack> list = this.schematicsToUnlock.get(PlayerUtil.getName(player));
         if (list != null)

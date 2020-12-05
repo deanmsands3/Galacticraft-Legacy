@@ -9,32 +9,31 @@ import micdoodle8.mods.galacticraft.core.entities.EntityLanderBase;
 import micdoodle8.mods.galacticraft.core.entities.IScaleableFuelLevel;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLevel, ICameraZoomEntity, IIgnoreShift
 {
-    public EntityEntryPod(EntityType<? extends EntityEntryPod> type, World worldIn)
+    public EntityEntryPod(EntityType<? extends EntityEntryPod> type, Level worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.5F, 3.0F);
     }
 
-    public static EntityEntryPod createEntityEntryPod(ServerPlayerEntity player)
+    public static EntityEntryPod createEntityEntryPod(ServerPlayer player)
     {
-        EntityEntryPod pod = new EntityEntryPod(AsteroidEntities.ENTRY_POD.get(), player.world);
+        EntityEntryPod pod = new EntityEntryPod(AsteroidEntities.ENTRY_POD.get(), player.level);
         GCPlayerStats stats = GCPlayerStats.get(player);
         pod.stacks = NonNullList.withSize(stats.getRocketStacks().size() + 1, ItemStack.EMPTY);
         pod.fuelTank.setFluid(new FluidStack(GCFluids.FUEL.getFluid(), stats.getFuelLevel()));
@@ -51,14 +50,14 @@ public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLe
             }
         }
 
-        pod.setPositionAndRotation(player.getPosX(), player.getPosY(), player.getPosZ(), 0, 0);
+        pod.absMoveTo(player.getX(), player.getY(), player.getZ(), 0, 0);
 
         player.startRiding(pod, true);
         return pod;
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -70,9 +69,9 @@ public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLe
     }
 
     @Override
-    public double getMountedYOffset()
+    public double getRideHeight()
     {
-        return this.getHeight() - 2.0D;
+        return this.getBbHeight() - 2.0D;
     }
 
     @Override
@@ -118,11 +117,11 @@ public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLe
     {
         super.tickInAir();
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             if (!this.onGround)
             {
-                this.setMotion(this.getMotion().x, this.getMotion().y - 0.002, this.getMotion().z);
+                this.setDeltaMovement(this.getDeltaMovement().x, this.getDeltaMovement().y - 0.002, this.getDeltaMovement().z);
             }
         }
     }
@@ -130,8 +129,8 @@ public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLe
     @Override
     public void onGroundHit()
     {
-        BlockPos pos = new BlockPos(this).up(2);
-        this.world.setBlockState(pos, GCBlocks.brightAir.getDefaultState(), 2);
+        BlockPos pos = new BlockPos(this).above(2);
+        this.level.setBlock(pos, GCBlocks.brightAir.defaultBlockState(), 2);
     }
 
     @Override
@@ -145,11 +144,11 @@ public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLe
         if (this.ticks >= 40 && this.ticks < 45)
         {
 //            this.motionY = this.getInitialMotionY();
-            this.setMotion(this.getMotion().x, this.getInitialMotionY(), this.getMotion().z);
+            this.setDeltaMovement(this.getDeltaMovement().x, this.getInitialMotionY(), this.getDeltaMovement().z);
         }
 
 //        return new Vector3(this.motionX, this.motionY, this.motionZ);
-        return new Vector3D(this.getMotion());
+        return new Vector3D(this.getDeltaMovement());
     }
 
     @Override
@@ -183,39 +182,39 @@ public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLe
 //    }
 
     @Override
-    protected boolean canTriggerWalking()
+    protected boolean isMovementNoisy()
     {
         return false;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox()
+    public AABB getCollideBox()
     {
         return null;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox(Entity par1Entity)
+    public AABB getCollideAgainstBox(Entity par1Entity)
     {
         return null;
     }
 
     @Override
-    public boolean canBePushed()
+    public boolean isPushable()
     {
         return false;
     }
 
     @Override
-    public boolean canBeCollidedWith()
+    public boolean isPickable()
     {
         return this.isAlive();
     }
 
     @Override
-    public boolean processInitialInteract(PlayerEntity player, Hand hand)
+    public boolean interact(Player player, InteractionHand hand)
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             if (!this.onGround)
             {
@@ -224,25 +223,25 @@ public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLe
 
             if (!this.getPassengers().isEmpty())
             {
-                this.removePassengers();
+                this.ejectPassengers();
             }
 
             return true;
         }
 
-        if (this.getPassengers().isEmpty() && player instanceof ServerPlayerEntity)
+        if (this.getPassengers().isEmpty() && player instanceof ServerPlayer)
         {
 //            GCCoreUtil.openParachestInv((ServerPlayerEntity) player, this); TODO Guis
             return true;
         }
-        else if (player instanceof ServerPlayerEntity)
+        else if (player instanceof ServerPlayer)
         {
             if (!this.onGround)
             {
                 return false;
             }
 
-            this.removePassengers();
+            this.ejectPassengers();
             return true;
         }
         else

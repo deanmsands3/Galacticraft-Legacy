@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.blocks;
+package micdoodle8.mods.galacticraft.core.blocks;
 //
 //import micdoodle8.mods.galacticraft.api.block.IPartialSealableBlock;
 //import micdoodle8.mods.galacticraft.api.item.IPaintable;

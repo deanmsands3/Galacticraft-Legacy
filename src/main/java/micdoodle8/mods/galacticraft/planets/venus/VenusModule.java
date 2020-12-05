@@ -29,12 +29,12 @@ import micdoodle8.mods.galacticraft.planets.venus.inventory.VenusContainers;
 import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
 import micdoodle8.mods.galacticraft.planets.venus.tick.VenusTickHandlerServer;
 import micdoodle8.mods.galacticraft.planets.venus.dimension.biome.BiomeVenus;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biome.SpawnerData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -54,7 +54,7 @@ public class VenusModule implements IPlanetsModule
     public VenusModule()
     {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modBus.addGenericListener(ContainerType.class, VenusContainers::initContainers);
+        modBus.addGenericListener(MenuType.class, VenusContainers::initContainers);
 
         VenusModule.planetVenus = (Planet) new Planet("venus").setRingColorRGB(0.1F, 0.9F, 0.6F).setPhaseShift(2.0F).setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(0.75F, 0.75F)).setRelativeOrbitTime(0.61527929901423877327491785323111F);
     }
@@ -117,11 +117,11 @@ public class VenusModule implements IPlanetsModule
         VenusModule.planetVenus.setBodyIcon(new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/celestialbodies/venus.png"));
         VenusModule.planetVenus.setAtmosphere(new AtmosphereInfo(false, true, true, 5.0F, 0.3F, 54.0F));
         VenusModule.planetVenus.atmosphereComponent(EnumAtmosphericGas.CO2).atmosphereComponent(EnumAtmosphericGas.NITROGEN);
-        VenusModule.planetVenus.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_ZOMBIE, 8, 2, 3), EntityClassification.MONSTER);
-        VenusModule.planetVenus.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_SPIDER, 8, 2, 3), EntityClassification.MONSTER);
-        VenusModule.planetVenus.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_SKELETON, 8, 2, 3), EntityClassification.MONSTER);
-        VenusModule.planetVenus.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_CREEPER, 8, 2, 3), EntityClassification.MONSTER);
-        VenusModule.planetVenus.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), EntityClassification.MONSTER);
+        VenusModule.planetVenus.addMobInfo(new SpawnerData(GCEntities.EVOLVED_ZOMBIE, 8, 2, 3), MobCategory.MONSTER);
+        VenusModule.planetVenus.addMobInfo(new SpawnerData(GCEntities.EVOLVED_SPIDER, 8, 2, 3), MobCategory.MONSTER);
+        VenusModule.planetVenus.addMobInfo(new SpawnerData(GCEntities.EVOLVED_SKELETON, 8, 2, 3), MobCategory.MONSTER);
+        VenusModule.planetVenus.addMobInfo(new SpawnerData(GCEntities.EVOLVED_CREEPER, 8, 2, 3), MobCategory.MONSTER);
+        VenusModule.planetVenus.addMobInfo(new SpawnerData(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), MobCategory.MONSTER);
         VenusModule.planetVenus.addChecklistKeys("equip_oxygen_suit", "equip_shield_controller", "thermal_padding_t2");
         VenusModule.planetVenus.setSurfaceBlocks(Lists.newArrayList(VenusBlocks.rockHard));
 

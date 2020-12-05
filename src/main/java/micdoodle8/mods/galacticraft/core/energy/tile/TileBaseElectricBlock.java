@@ -7,11 +7,11 @@ import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.RedstoneUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.LogicalSide;
 
 import java.util.EnumSet;
@@ -29,7 +29,7 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
     public boolean hasEnoughEnergyToRun = false;
     public boolean noRedstoneControl = false;
 
-    public TileBaseElectricBlock(TileEntityType<?> type)
+    public TileBaseElectricBlock(BlockEntityType<?> type)
     {
         super(type);
     }
@@ -94,14 +94,14 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
     @Override
     public void tick()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.shouldPullEnergy() && this.getEnergyStoredGC(null) < this.getMaxEnergyStoredGC(null) && this.getBatteryInSlot() != null && this.getElectricInputDirection() != null)
             {
                 this.discharge(this.getBatteryInSlot());
             }
 
-            if (this.getEnergyStoredGC(null) > this.storage.getMaxExtract() && (this.noRedstoneControl || !RedstoneUtil.isBlockReceivingRedstone(this.world, this.getPos())))
+            if (this.getEnergyStoredGC(null) > this.storage.getMaxExtract() && (this.noRedstoneControl || !RedstoneUtil.isBlockReceivingRedstone(this.level, this.getBlockPos())))
             {
                 this.hasEnoughEnergyToRun = true;
                 if (this.shouldUseEnergy())
@@ -122,7 +122,7 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
 
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.disableCooldown > 0)
             {
@@ -140,24 +140,24 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
 
         nbt.putBoolean("isDisabled", this.getDisabled(0));
         return nbt;
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
 
         this.setDisabled(0, nbt.getBoolean("isDisabled"));
     }
@@ -218,9 +218,9 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity entityplayer)
+    public boolean stillValid(Player entityplayer)
     {
-        return this.getWorld().getTileEntity(this.getPos()) == this && entityplayer.getDistanceSq(this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D) <= 64.0D;
+        return this.getLevel().getBlockEntity(this.getBlockPos()) == this && entityplayer.distanceToSqr(this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D) <= 64.0D;
     }
 
     @Override
@@ -236,7 +236,7 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
 
     public String getGUIstatus()
     {
-        if (!this.noRedstoneControl && RedstoneUtil.isBlockReceivingRedstone(this.world, this.getPos()))
+        if (!this.noRedstoneControl && RedstoneUtil.isBlockReceivingRedstone(this.level, this.getBlockPos()))
         {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.off");
         }
@@ -266,7 +266,7 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
      */
     public String getGUIstatus(String missingInput, String activeString, boolean shorten)
     {
-        if (!this.noRedstoneControl && RedstoneUtil.isBlockReceivingRedstone(this.world, this.getPos()))
+        if (!this.noRedstoneControl && RedstoneUtil.isBlockReceivingRedstone(this.level, this.getBlockPos()))
         {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.off");
         }

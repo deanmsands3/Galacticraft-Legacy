@@ -2,31 +2,33 @@ package micdoodle8.mods.galacticraft.core.client.screen;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import micdoodle8.mods.galacticraft.api.client.IGameScreen;
 import micdoodle8.mods.galacticraft.api.client.IScreenManager;
 import micdoodle8.mods.galacticraft.api.entity.ITelemetry;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityTelemetry;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.passive.OcelotEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.passive.horse.HorseEntity;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Ocelot;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.BufferUtils;
@@ -52,7 +54,7 @@ public class GameScreenText implements IGameScreen
             planes = BufferUtils.createDoubleBuffer(4 * Double.SIZE);
             try
             {
-                Class clazz = LivingRenderer.class;
+                Class clazz = LivingEntityRenderer.class;
                 int count = 0;
                 for (Method m : clazz.getDeclaredMethods())
                 {
@@ -92,7 +94,7 @@ public class GameScreenText implements IGameScreen
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void render(int type, float ticks, float sizeX, float sizeY, IScreenManager scr)
     {
         DrawGameScreen screen = (DrawGameScreen) scr;
@@ -142,59 +144,59 @@ public class GameScreenText implements IGameScreen
                     if (telemeter.clientType == EntityType.PLAYER)
                     {
                         strName = telemeter.clientName;
-                        entity = new RemoteClientPlayerEntity((ClientWorld) screen.driver.getWorld(), telemeter.clientGameProfile);
-                        renderEntity = Minecraft.getInstance().getRenderManager().getRenderer(entity);
+                        entity = new RemotePlayer((ClientLevel) screen.driver.getLevel(), telemeter.clientGameProfile);
+                        renderEntity = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
                     }
                     else
                     {
                         try
                         {
-                            entity = telemeter.clientType.create(screen.driver.getWorld());
+                            entity = telemeter.clientType.create(screen.driver.getLevel());
                         }
                         catch (Exception ex)
                         {
                         }
                         if (entity != null)
                         {
-                            strName = entity.getName().getFormattedText();
+                            strName = entity.getName().getColoredString();
                         }
-                        renderEntity = Minecraft.getInstance().getRenderManager().renderers.get(entity.getClass());
+                        renderEntity = Minecraft.getInstance().getEntityRenderDispatcher().renderers.get(entity.getClass());
                     }
                 }
 
                 //Setup special visual types from data sent by Telemetry
-                if (entity instanceof HorseEntity)
+                if (entity instanceof Horse)
                 {
 //                    ((EntityHorse) entity).setType(HorseType.values()[telemeter.clientData[3]]);
-                    ((HorseEntity) entity).setHorseVariant(telemeter.clientData[4]);
+                    ((Horse) entity).setVariant(telemeter.clientData[4]);
                 }
-                if (entity instanceof VillagerEntity)
+                if (entity instanceof Villager)
                 {
 //                    ((VillagerEntity) entity).getVillagerData().setProfession(telemeter.clientData[3]); TODO Fix for MC 1.14+
-                    ((VillagerEntity) entity).setGrowingAge(telemeter.clientData[4]);
+                    ((Villager) entity).setAge(telemeter.clientData[4]);
                 }
-                else if (entity instanceof WolfEntity)
+                else if (entity instanceof Wolf)
                 {
 //                    ((WolfEntity) entity).setCollarColor(DyeColor.byDyeDamage(telemeter.clientData[3])); TODO Fix for MC 1.14+
-                    ((WolfEntity) entity).setBegging(telemeter.clientData[4] == 1);
+                    ((Wolf) entity).setIsInterested(telemeter.clientData[4] == 1);
                 }
-                else if (entity instanceof SheepEntity)
+                else if (entity instanceof Sheep)
                 {
 //                    ((SheepEntity) entity).setFleeceColor(DyeColor.byDyeDamage(telemeter.clientData[3])); TODO Fix for MC 1.14+
-                    ((SheepEntity) entity).setSheared(telemeter.clientData[4] == 1);
+                    ((Sheep) entity).setSheared(telemeter.clientData[4] == 1);
                 }
-                else if (entity instanceof OcelotEntity)
+                else if (entity instanceof Ocelot)
                 {
 //                    ((OcelotEntity) entity).setTameSkin(telemeter.clientData[3]); TODO Fix for MC 1.14+
                 }
-                else if (entity instanceof SkeletonEntity)
+                else if (entity instanceof Skeleton)
                 {
 //                    ((EntitySkeleton) entity).setSkeletonType(SkeletonType.values()[telemeter.clientData[3]]);
                 }
-                else if (entity instanceof ZombieEntity)
+                else if (entity instanceof Zombie)
                 {
 //                    ((EntityZombie) entity).setVillager(telemeter.clientData[3] == 1); TODO Fix for MC 1.10
-                    ((ZombieEntity) entity).setChild(telemeter.clientData[4] == 1);
+                    ((Zombie) entity).setBaby(telemeter.clientData[4] == 1);
                 }
 
             }
@@ -250,7 +252,7 @@ public class GameScreenText implements IGameScreen
         else
         {
             //Default - draw a simple time display just to show the Display Screen is working
-            World w1 = screen.driver.getWorld();
+            Level w1 = screen.driver.getLevel();
             int time1 = w1 != null ? (int) ((w1.getDayTime() + 6000L) % 24000L) : 0;
             str[2] = makeTimeString(time1 * 360);
         }
@@ -311,7 +313,7 @@ public class GameScreenText implements IGameScreen
         if (renderEntity != null && entity != null)
         {
             GL11.glTranslatef(-Xmargin / 2 / scaleText, textHeightPixels / 2 + (-Yoffset + (sizeY - borders) / 2) / scaleText, -0.0005F);
-            float scalefactor = 38F / (float) Math.pow(Math.max(entity.getHeight(), entity.getWidth()), 0.65);
+            float scalefactor = 38F / (float) Math.pow(Math.max(entity.getBbHeight(), entity.getBbWidth()), 0.65);
             GL11.glScalef(scalefactor, scalefactor, 0.0015F);
             GL11.glRotatef(180F, 0, 0, 1);
             GL11.glRotatef(180F, 0, 1, 0);
@@ -351,7 +353,7 @@ public class GameScreenText implements IGameScreen
 
     // This is a simplified version of doRender() in RenderLivingEntity
     // No lighting adjustment, no sitting, no name text, no sneaking and no Forge events
-    private void renderLiving(LivingEntity entity, LivingRenderer render, float partialTicks)
+    private void renderLiving(LivingEntity entity, LivingEntityRenderer render, float partialTicks)
     {
 //        GlStateManager.pushMatrix();
 //        GlStateManager.disableCull();
@@ -444,7 +446,7 @@ public class GameScreenText implements IGameScreen
 
     private void drawText(String str, int colour)
     {
-        Minecraft.getInstance().fontRenderer.drawString(str, 0, yPos, colour);
+        Minecraft.getInstance().font.draw(str, 0, yPos, colour);
         yPos += 10;
     }
 
@@ -452,15 +454,15 @@ public class GameScreenText implements IGameScreen
     {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        final Tessellator tess = Tessellator.getInstance();
-        BufferBuilder worldRenderer = tess.getBuffer();
+        final Tesselator tess = Tesselator.getInstance();
+        BufferBuilder worldRenderer = tess.getBuilder();
         GL11.glColor4f(greyLevel, greyLevel, greyLevel, 1.0F);
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-        worldRenderer.pos(frameA, frameBy, 0.005F).endVertex();
-        worldRenderer.pos(frameBx, frameBy, 0.005F).endVertex();
-        worldRenderer.pos(frameBx, frameA, 0.005F).endVertex();
-        worldRenderer.pos(frameA, frameA, 0.005F).endVertex();
-        tess.draw();
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION);
+        worldRenderer.vertex(frameA, frameBy, 0.005F).endVertex();
+        worldRenderer.vertex(frameBx, frameBy, 0.005F).endVertex();
+        worldRenderer.vertex(frameBx, frameA, 0.005F).endVertex();
+        worldRenderer.vertex(frameA, frameA, 0.005F).endVertex();
+        tess.end();
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(GL11.GL_TEXTURE_2D);

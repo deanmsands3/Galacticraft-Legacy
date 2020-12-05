@@ -13,14 +13,14 @@ import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityAstroMiner;
 import micdoodle8.mods.galacticraft.planets.asteroids.inventory.ContainerAstroMinerDock;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityMinerBase;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -31,14 +31,14 @@ public class GuiAstroMinerDock extends GuiContainerGC<ContainerAstroMinerDock>
     private static final ResourceLocation dockGui = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/gui_astro_miner_dock.png");
     private final TileEntityMinerBase minerBase;
     private Button recallButton;
-    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 233, (this.height - this.ySize) / 2 + 31, 10, 68, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 233, (this.height - this.imageHeight) / 2 + 31, 10, 68, new ArrayList<String>(), this.width, this.height, this);
     private boolean extraLines;
 
-    public GuiAstroMinerDock(ContainerAstroMinerDock container, PlayerInventory playerInv, ITextComponent title)
+    public GuiAstroMinerDock(ContainerAstroMinerDock container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
-        this.xSize = 256;
-        this.ySize = 221;
+        this.imageWidth = 256;
+        this.imageHeight = 221;
         this.minerBase = container.getMinerBase();
     }
 
@@ -66,8 +66,8 @@ public class GuiAstroMinerDock extends GuiContainerGC<ContainerAstroMinerDock>
     public void init()
     {
         super.init();
-        int xPos = (this.width - this.xSize) / 2;
-        int yPos = (this.height - this.ySize) / 2;
+        int xPos = (this.width - this.imageWidth) / 2;
+        int yPos = (this.height - this.imageHeight) / 2;
         List<String> electricityDesc = new ArrayList<>();
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
         electricityDesc.add(EnumColor.YELLOW + GCCoreUtil.translate("gui.energy_storage.desc.1") + ((int) Math.floor(this.minerBase.getEnergyStoredGC()) + " / " + (int) Math.floor(this.minerBase.getMaxEnergyStoredGC())));
@@ -83,7 +83,7 @@ public class GuiAstroMinerDock extends GuiContainerGC<ContainerAstroMinerDock>
         this.infoRegions.add(new GuiElementInfoRegion(xPos + 230, yPos + 108, 18, 18, batterySlotDesc, this.width, this.height, this));
         this.buttons.add(this.recallButton = new Button(xPos + 173, yPos + 195, 76, 20, GCCoreUtil.translate("gui.button.recall"), (button) ->
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(this.minecraft.world), new Object[]{this.minerBase.getPos(), 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(this.minecraft.level), new Object[]{this.minerBase.getBlockPos(), 0}));
         }));
     }
 
@@ -93,28 +93,28 @@ public class GuiAstroMinerDock extends GuiContainerGC<ContainerAstroMinerDock>
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
+    protected void renderLabels(int mouseX, int mouseY)
     {
-        this.font.drawString(this.title.getFormattedText(), 7, 6, 4210752);
-        this.font.drawString(this.getStatus(), 177, 141, 4210752);
+        this.font.draw(this.title.getColoredString(), 7, 6, 4210752);
+        this.font.draw(this.getStatus(), 177, 141, 4210752);
 
         if (this.extraLines)
         {
-            this.font.drawString("\u0394x: " + this.getDeltaString(this.minerBase.linkedMinerDataDX), 186, 152, 2536735);
+            this.font.draw("\u0394x: " + this.getDeltaString(this.minerBase.linkedMinerDataDX), 186, 152, 2536735);
         }
         if (this.extraLines)
         {
-            this.font.drawString("\u0394y: " + this.getDeltaString(this.minerBase.linkedMinerDataDY), 186, 162, 2536735);
+            this.font.draw("\u0394y: " + this.getDeltaString(this.minerBase.linkedMinerDataDY), 186, 162, 2536735);
         }
         if (this.extraLines)
         {
-            this.font.drawString("\u0394z: " + this.getDeltaString(this.minerBase.linkedMinerDataDZ), 186, 172, 2536735);
+            this.font.draw("\u0394z: " + this.getDeltaString(this.minerBase.linkedMinerDataDZ), 186, 172, 2536735);
         }
         if (this.extraLines)
         {
-            this.font.drawString(GCCoreUtil.translate("gui.miner.mined") + ": " + this.minerBase.linkedMinerDataCount, 177, 183, 2536735);
+            this.font.draw(GCCoreUtil.translate("gui.miner.mined") + ": " + this.minerBase.linkedMinerDataCount, 177, 183, 2536735);
         }
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 7, this.ySize - 92, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 7, this.imageHeight - 92, 4210752);
     }
 
     private String getStatus()
@@ -150,19 +150,19 @@ public class GuiAstroMinerDock extends GuiContainerGC<ContainerAstroMinerDock>
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
+    protected void renderBg(float partialTicks, int mouseX, int mouseY)
     {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        int xPos = (this.width - this.xSize) / 2;
-        int yPos = (this.height - this.ySize) / 2;
-        this.minecraft.getTextureManager().bindTexture(GuiAstroMinerDock.dockGui);
-        this.blit(xPos, yPos, 0, 0, this.xSize, this.ySize);
+        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        int xPos = (this.width - this.imageWidth) / 2;
+        int yPos = (this.height - this.imageHeight) / 2;
+        this.minecraft.getTextureManager().bind(GuiAstroMinerDock.dockGui);
+        this.blit(xPos, yPos, 0, 0, this.imageWidth, this.imageHeight);
         List<String> electricityDesc = new ArrayList<>();
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
         EnergyDisplayHelper.getEnergyDisplayTooltip(this.minerBase.getEnergyStoredGC(), this.minerBase.getMaxEnergyStoredGC(), electricityDesc);
         this.electricInfoRegion.tooltipStrings = electricityDesc;
 
-        this.minecraft.getTextureManager().bindTexture(GuiCargoLoader.loaderTexture);
+        this.minecraft.getTextureManager().bind(GuiCargoLoader.loaderTexture);
 
         if (this.minerBase.getEnergyStoredGC() > 0)
         {
@@ -175,20 +175,20 @@ public class GuiAstroMinerDock extends GuiContainerGC<ContainerAstroMinerDock>
 
     private void drawColorModalRect(int x, int y, int width, int height, int color)
     {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder worldRenderer = tessellator.getBuffer();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param,
-                GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        worldRenderer.pos(x + 0, y + height, this.getBlitOffset()).color((color >> 16 & 255) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, 1.0F).endVertex();
-        worldRenderer.pos(x + width, y + height, this.getBlitOffset()).color((color >> 16 & 255) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, 1.0F).endVertex();
-        worldRenderer.pos(x + width, y + 0, this.getBlitOffset()).color((color >> 16 & 255) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, 1.0F).endVertex();
-        worldRenderer.pos(x + 0, y + 0, this.getBlitOffset()).color((color >> 16 & 255) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, 1.0F).endVertex();
-        tessellator.draw();
-        GlStateManager.enableTexture();
-        GlStateManager.disableBlend();
-        GlStateManager.blendFunc(770, 771);
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder worldRenderer = tessellator.getBuilder();
+        GlStateManager._enableBlend();
+        GlStateManager._disableTexture();
+        GlStateManager._blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.value,
+                GlStateManager.SourceFactor.ONE.value, GlStateManager.DestFactor.ZERO.value);
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+        worldRenderer.vertex(x + 0, y + height, this.getBlitOffset()).color((color >> 16 & 255) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, 1.0F).endVertex();
+        worldRenderer.vertex(x + width, y + height, this.getBlitOffset()).color((color >> 16 & 255) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, 1.0F).endVertex();
+        worldRenderer.vertex(x + width, y + 0, this.getBlitOffset()).color((color >> 16 & 255) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, 1.0F).endVertex();
+        worldRenderer.vertex(x + 0, y + 0, this.getBlitOffset()).color((color >> 16 & 255) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, 1.0F).endVertex();
+        tessellator.end();
+        GlStateManager._enableTexture();
+        GlStateManager._disableBlend();
+        GlStateManager._blendFunc(770, 771);
     }
 }

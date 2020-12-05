@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.jei.gasliquefier;
+package micdoodle8.mods.galacticraft.planets.mars.client.jei.gasliquefier;
 //
 //import micdoodle8.mods.galacticraft.core.GCItems;
 //import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;

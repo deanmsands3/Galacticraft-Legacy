@@ -7,12 +7,14 @@ import micdoodle8.mods.galacticraft.planets.ConfigManagerPlanets;
 import micdoodle8.mods.galacticraft.planets.GuiIdsPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.client.gui.GuiSchematicTier2Rocket;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerSchematicTier2Rocket;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,17 +38,17 @@ public class SchematicTier2Rocket implements ISchematicPage
         return new ItemStack(GCItems.schematicRocketT2, 1);
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     @Override
-    public ScreenManager.IScreenFactory<ContainerSchematicTier2Rocket, GuiSchematicTier2Rocket> getResultScreen(PlayerEntity player, BlockPos pos)
+    public MenuScreens.ScreenConstructor<ContainerSchematicTier2Rocket, GuiSchematicTier2Rocket> getResultScreen(Player player, BlockPos pos)
     {
         return GuiSchematicTier2Rocket::new;
     }
 
     @Override
-    public SimpleNamedContainerProvider getContainerProvider(PlayerEntity player)
+    public SimpleMenuProvider getContainerProvider(Player player)
     {
-        return new SimpleNamedContainerProvider((w, p, pl) -> new ContainerSchematicTier2Rocket(w, p), new TranslationTextComponent("container.schematic_tier2_rocket"));
+        return new SimpleMenuProvider((w, p, pl) -> new ContainerSchematicTier2Rocket(w, p), new TranslatableComponent("container.schematic_tier2_rocket"));
     }
 
     @Override

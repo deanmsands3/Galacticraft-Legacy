@@ -3,18 +3,18 @@ package micdoodle8.mods.galacticraft.core.tile;
 import micdoodle8.mods.galacticraft.core.GCBlockNames;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
-public class TileEntityLandingPadSingle extends TileEntity implements ITickableTileEntity
+public class TileEntityLandingPadSingle extends BlockEntity implements TickableBlockEntity
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPad)
-    public static TileEntityType<TileEntityLandingPadSingle> TYPE;
+    public static BlockEntityType<TileEntityLandingPadSingle> TYPE;
 
     private int corner = 0;
 
@@ -26,15 +26,15 @@ public class TileEntityLandingPadSingle extends TileEntity implements ITickableT
     @Override
     public void tick()
     {
-        if (!this.world.isRemote && this.corner == 0)
+        if (!this.level.isClientSide && this.corner == 0)
         {
-            final ArrayList<TileEntity> attachedLaunchPads = new ArrayList<>();
+            final ArrayList<BlockEntity> attachedLaunchPads = new ArrayList<>();
 
-            for (int x = this.getPos().getX() - 1; x < this.getPos().getX() + 2; x++)
+            for (int x = this.getBlockPos().getX() - 1; x < this.getBlockPos().getX() + 2; x++)
             {
-                for (int z = this.getPos().getZ() - 1; z < this.getPos().getZ() + 2; z++)
+                for (int z = this.getBlockPos().getZ() - 1; z < this.getBlockPos().getZ() + 2; z++)
                 {
-                    final TileEntity tile = this.world.getTileEntity(new BlockPos(x, this.getPos().getY(), z));
+                    final BlockEntity tile = this.level.getBlockEntity(new BlockPos(x, this.getBlockPos().getY(), z));
 
                     if (tile instanceof TileEntityLandingPadSingle && !tile.isRemoved() && ((TileEntityLandingPadSingle) tile).corner == 0)
                     {
@@ -45,13 +45,13 @@ public class TileEntityLandingPadSingle extends TileEntity implements ITickableT
 
             if (attachedLaunchPads.size() == 9)
             {
-                for (final TileEntity tile : attachedLaunchPads)
+                for (final BlockEntity tile : attachedLaunchPads)
                 {
-                    this.world.removeTileEntity(tile.getPos());
+                    this.level.removeBlockEntity(tile.getBlockPos());
                     ((TileEntityLandingPadSingle) tile).corner = 1;
                 }
 
-                this.world.setBlockState(this.getPos(), GCBlocks.landingPadFull.getDefaultState(), 2);
+                this.level.setBlock(this.getBlockPos(), GCBlocks.landingPadFull.defaultBlockState(), 2);
             }
         }
     }

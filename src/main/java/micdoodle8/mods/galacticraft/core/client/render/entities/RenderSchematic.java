@@ -1,26 +1,32 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.core.entities.EntityHangingSchematic;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.item.HangingEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class RenderSchematic extends EntityRenderer<EntityHangingSchematic>
 {
-    public RenderSchematic(EntityRendererManager manager)
+    public RenderSchematic(EntityRenderDispatcher manager)
     {
         super(manager);
     }
@@ -32,27 +38,27 @@ public class RenderSchematic extends EntityRenderer<EntityHangingSchematic>
     }
 
     @Override
-    public void render(EntityHangingSchematic entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn)
+    public void render(EntityHangingSchematic entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn)
     {
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 //        GlStateManager.pushMatrix();
 //        GlStateManager.translated(x, y, z);
 //        GlStateManager.rotatef(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
-        matrixStackIn.rotate(new Quaternion(Vector3f.YP, entityYaw, true));
-        GlStateManager.enableRescaleNormal();
+        matrixStackIn.mulPose(new Quaternion(Vector3f.YP, entityYaw, true));
+        GlStateManager._enableRescaleNormal();
 //        this.bindEntityTexture(entity);
         float f = 0.0625F;
 //        GlStateManager.scalef(f, f, f);
         matrixStackIn.scale(f, f, f);
-        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntitySolid(this.getEntityTexture(entityIn)));
-        this.renderPainting(entityIn, ivertexbuilder, matrixStackIn, entityIn.getWidthPixels(), entityIn.getHeightPixels());
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.popMatrix();
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entitySolid(this.getEntityTexture(entityIn)));
+        this.renderPainting(entityIn, ivertexbuilder, matrixStackIn, entityIn.getWidth(), entityIn.getHeight());
+        GlStateManager._disableRescaleNormal();
+        GlStateManager._popMatrix();
 //        super.doRender(entity, x, y, z, entityYaw, partialTicks);
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
-    private void renderPainting(EntityHangingSchematic painting, IVertexBuilder vertexBuilder, MatrixStack matrixStackIn, int width, int height)
+    private void renderPainting(EntityHangingSchematic painting, VertexConsumer vertexBuilder, PoseStack matrixStackIn, int width, int height)
     {
         float f = (float) (-width) / 2.0F;
         float f1 = (float) (-height) / 2.0F;
@@ -83,8 +89,8 @@ public class RenderSchematic extends EntityRenderer<EntityHangingSchematic>
                 float f20 = (float) (width - (i + 1) * 16) / 32.0F;
                 float f21 = (float) (height - j * 16) / 32.0F;
                 float f22 = (float) (height - (j + 1) * 16) / 32.0F;
-                Matrix4f matrix = matrixStackIn.getLast().getMatrix();
-                Matrix3f nMatrix = matrixStackIn.getLast().getNormal();
+                Matrix4f matrix = matrixStackIn.last().pose();
+                Matrix3f nMatrix = matrixStackIn.last().normal();
 //                Tessellator tessellator = Tessellator.getInstance();
 //                BufferBuilder worldrenderer = tessellator.getBuffer();
                 addVertex(vertexBuilder, matrix, nMatrix, a, d, (-f2), f20, f21, light, 0.0F, 0.0F, -1.0F);
@@ -116,33 +122,33 @@ public class RenderSchematic extends EntityRenderer<EntityHangingSchematic>
         }
     }
 
-    private void addVertex(IVertexBuilder vertexBuilder, Matrix4f matrix, Matrix3f nMatrix, float x, float y, float z, float tX, float tY, int light, float nX, float nY, float nZ)
+    private void addVertex(VertexConsumer vertexBuilder, Matrix4f matrix, Matrix3f nMatrix, float x, float y, float z, float tX, float tY, int light, float nX, float nY, float nZ)
     {
-        vertexBuilder.pos(matrix, x, y, z).color(255, 255, 255, 255).tex(tX, tY).overlay(OverlayTexture.NO_OVERLAY).lightmap(light).normal(nMatrix, nX, nY, nZ).endVertex();
+        vertexBuilder.vertex(matrix, x, y, z).color(255, 255, 255, 255).uv(tX, tY).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(nMatrix, nX, nY, nZ).endVertex();
     }
 
     private int getLight(HangingEntity painting, double yOffset, double xzOffset)
     {
-        int i1 = MathHelper.floor(painting.getPosX());
-        int j1 = MathHelper.floor(painting.getPosY() + (yOffset / 16.0F));
-        int k1 = MathHelper.floor(painting.getPosZ());
-        Direction direction = painting.getHorizontalFacing();
+        int i1 = Mth.floor(painting.getX());
+        int j1 = Mth.floor(painting.getY() + (yOffset / 16.0F));
+        int k1 = Mth.floor(painting.getZ());
+        Direction direction = painting.getDirection();
         if (direction == Direction.NORTH) {
-            i1 = MathHelper.floor(painting.getPosX() + (xzOffset / 16.0F));
+            i1 = Mth.floor(painting.getX() + (xzOffset / 16.0F));
         }
 
         if (direction == Direction.WEST) {
-            k1 = MathHelper.floor(painting.getPosZ() - (xzOffset / 16.0F));
+            k1 = Mth.floor(painting.getZ() - (xzOffset / 16.0F));
         }
 
         if (direction == Direction.SOUTH) {
-            i1 = MathHelper.floor(painting.getPosX() - (xzOffset / 16.0F));
+            i1 = Mth.floor(painting.getX() - (xzOffset / 16.0F));
         }
 
         if (direction == Direction.EAST) {
-            k1 = MathHelper.floor(painting.getPosZ() + (xzOffset / 16.0F));
+            k1 = Mth.floor(painting.getZ() + (xzOffset / 16.0F));
         }
 
-        return WorldRenderer.getCombinedLight(painting.world, new BlockPos(i1, j1, k1));
+        return LevelRenderer.getLightColor(painting.level, new BlockPos(i1, j1, k1));
     }
 }

@@ -2,17 +2,16 @@ package micdoodle8.mods.galacticraft.core.client.gui.element;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import org.lwjgl.opengl.GL11;
 
-public class GuiElementCheckbox extends Widget
+public class GuiElementCheckbox extends AbstractWidget
 {
     protected static final ResourceLocation texture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/gui.png");
     public Boolean isSelected;
@@ -62,11 +61,11 @@ public class GuiElementCheckbox extends Widget
         if (this.visible)
         {
             Minecraft minecraft = Minecraft.getInstance();
-            minecraft.getTextureManager().bindTexture(GuiElementCheckbox.texture);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            minecraft.getTextureManager().bind(GuiElementCheckbox.texture);
+            GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.isHovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
             this.blit(this.x, this.y, this.isSelected ? this.texX + this.texWidth : this.texX, this.isHovered() ? this.shiftOnHover ? this.texY + this.texHeight : this.texY : this.texY, this.width, this.height);
-            minecraft.fontRenderer.drawString(this.getMessage(), this.x + this.width + 3, this.y + (this.height - 6) / 2, this.textColor);
+            minecraft.font.draw(this.getMessage(), this.x + this.width + 3, this.y + (this.height - 6) / 2, this.textColor);
         }
     }
 
@@ -75,14 +74,14 @@ public class GuiElementCheckbox extends Widget
     {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder worldRenderer = tessellator.getBuffer();
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer.pos(par1 + 0, par2 + par6, this.getBlitOffset()).tex((par3 + 0) * f, (par4 + this.texHeight) * f1).endVertex();
-        worldRenderer.pos(par1 + par5, par2 + par6, this.getBlitOffset()).tex((par3 + this.texWidth) * f, (par4 + this.texHeight) * f1).endVertex();
-        worldRenderer.pos(par1 + par5, par2 + 0, this.getBlitOffset()).tex((par3 + this.texWidth) * f, (par4 + 0) * f1).endVertex();
-        worldRenderer.pos(par1 + 0, par2 + 0, this.getBlitOffset()).tex((par3 + 0) * f, (par4 + 0) * f1).endVertex();
-        tessellator.draw();
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder worldRenderer = tessellator.getBuilder();
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+        worldRenderer.vertex(par1 + 0, par2 + par6, this.getBlitOffset()).uv((par3 + 0) * f, (par4 + this.texHeight) * f1).endVertex();
+        worldRenderer.vertex(par1 + par5, par2 + par6, this.getBlitOffset()).uv((par3 + this.texWidth) * f, (par4 + this.texHeight) * f1).endVertex();
+        worldRenderer.vertex(par1 + par5, par2 + 0, this.getBlitOffset()).uv((par3 + this.texWidth) * f, (par4 + 0) * f1).endVertex();
+        worldRenderer.vertex(par1 + 0, par2 + 0, this.getBlitOffset()).uv((par3 + 0) * f, (par4 + 0) * f1).endVertex();
+        tessellator.end();
     }
 
     @Override
@@ -113,7 +112,7 @@ public class GuiElementCheckbox extends Widget
     {
         void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected);
 
-        boolean canPlayerEdit(GuiElementCheckbox checkbox, PlayerEntity player);
+        boolean canPlayerEdit(GuiElementCheckbox checkbox, Player player);
 
         boolean getInitiallySelected(GuiElementCheckbox checkbox);
 

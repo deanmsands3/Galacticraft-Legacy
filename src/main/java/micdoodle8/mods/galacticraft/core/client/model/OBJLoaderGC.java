@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.model;
+package micdoodle8.mods.galacticraft.core.client.model;
 //
 //import java.io.FileNotFoundException;
 //import java.io.IOException;

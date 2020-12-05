@@ -6,9 +6,9 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.items.ItemBase;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -111,7 +111,7 @@ public class AsteroidsItems
 
     public static Item.Properties defaultBuilder()
     {
-        return new Item.Properties().group(GalacticraftCore.galacticraftItemsTab);
+        return new Item.Properties().tab(GalacticraftCore.galacticraftItemsTab);
     }
 
     public static void registerItems(RegistryEvent.Register<Item> evt)
@@ -123,7 +123,7 @@ public class AsteroidsItems
         register(r, new ItemTier3Rocket(defaultBuilder()), AsteroidItemNames.rocketTierThreeCargo2);
         register(r, new ItemTier3Rocket(defaultBuilder()), AsteroidItemNames.rocketTierThreeCargo3);
         register(r, new ItemTier3Rocket(defaultBuilder()), AsteroidItemNames.rocketTierThreeCreative);
-        register(r, new ItemAstroMiner(defaultBuilder().maxDamage(0).maxStackSize(1)), AsteroidItemNames.astroMiner);
+        register(r, new ItemAstroMiner(defaultBuilder().durability(0).stacksTo(1)), AsteroidItemNames.astroMiner);
         register(r, new ItemThermalPadding(defaultBuilder()), AsteroidItemNames.thermalHelm);
         register(r, new ItemThermalPadding(defaultBuilder()), AsteroidItemNames.thermalChestplate);
         register(r, new ItemThermalPadding(defaultBuilder()), AsteroidItemNames.thermalLeggings);
@@ -145,10 +145,10 @@ public class AsteroidsItems
         register(r, new ItemBase(defaultBuilder()), AsteroidItemNames.atmosphericValve);
         register(r, new ItemBase(defaultBuilder()), AsteroidItemNames.heavyNoseCone);
         register(r, new ItemBase(defaultBuilder()), AsteroidItemNames.orionDrive);
-        register(r, new ItemArmorAsteroids(EquipmentSlotType.HEAD, defaultBuilder()), AsteroidItemNames.titaniumHelmet);
-        register(r, new ItemArmorAsteroids(EquipmentSlotType.CHEST, defaultBuilder()), AsteroidItemNames.titaniumChestplate);
-        register(r, new ItemArmorAsteroids(EquipmentSlotType.LEGS, defaultBuilder()), AsteroidItemNames.titaniumLeggings);
-        register(r, new ItemArmorAsteroids(EquipmentSlotType.FEET, defaultBuilder()), AsteroidItemNames.titaniumBoots);
+        register(r, new ItemArmorAsteroids(EquipmentSlot.HEAD, defaultBuilder()), AsteroidItemNames.titaniumHelmet);
+        register(r, new ItemArmorAsteroids(EquipmentSlot.CHEST, defaultBuilder()), AsteroidItemNames.titaniumChestplate);
+        register(r, new ItemArmorAsteroids(EquipmentSlot.LEGS, defaultBuilder()), AsteroidItemNames.titaniumLeggings);
+        register(r, new ItemArmorAsteroids(EquipmentSlot.FEET, defaultBuilder()), AsteroidItemNames.titaniumBoots);
         register(r, new ItemAxeAsteroids(defaultBuilder()), AsteroidItemNames.titaniumAxe);
         register(r, new ItemPickaxeAsteroids(defaultBuilder()), AsteroidItemNames.titaniumPickaxe);
         register(r, new ItemSpadeAsteroids(defaultBuilder()), AsteroidItemNames.titaniumSpade);

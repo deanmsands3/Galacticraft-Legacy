@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei.circuitfabricator;
+package micdoodle8.mods.galacticraft.core.client.jei.circuitfabricator;
 //
 //import micdoodle8.mods.galacticraft.api.recipe.CircuitFabricatorRecipes;
 //import java.util.ArrayList;

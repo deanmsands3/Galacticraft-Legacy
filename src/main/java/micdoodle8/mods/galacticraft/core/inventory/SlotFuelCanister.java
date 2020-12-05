@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.inventory;
+package micdoodle8.mods.galacticraft.core.inventory;
 //
 //import micdoodle8.mods.galacticraft.core.items.ItemFuelCanister;
 //import net.minecraft.inventory.IInventory;

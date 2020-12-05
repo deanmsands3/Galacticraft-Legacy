@@ -1,15 +1,15 @@
 package micdoodle8.mods.galacticraft.api.recipe;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
-public class ShapedRecipesGC implements IRecipe<CraftingInventory>
+public class ShapedRecipesGC implements Recipe<CraftingContainer>
 {
     public final int recipeWidth;
     public final int recipeHeight;
@@ -25,19 +25,19 @@ public class ShapedRecipesGC implements IRecipe<CraftingInventory>
     }
 
     @Override
-    public ItemStack getRecipeOutput()
+    public ItemStack getResultItem()
     {
         return this.recipeOutput;
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv)
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv)
     {
-        NonNullList<ItemStack> aitemstack = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+        NonNullList<ItemStack> aitemstack = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
         for (int i = 0; i < aitemstack.size(); ++i)
         {
-            ItemStack itemstack = inv.getStackInSlot(i);
+            ItemStack itemstack = inv.getItem(i);
             aitemstack.set(i, net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack));
         }
 
@@ -45,7 +45,7 @@ public class ShapedRecipesGC implements IRecipe<CraftingInventory>
     }
 
     @Override
-    public boolean matches(CraftingInventory inv, World worldIn)
+    public boolean matches(CraftingContainer inv, Level worldIn)
     {
         for (int i = 0; i <= 3 - this.recipeWidth; ++i)
         {
@@ -66,7 +66,7 @@ public class ShapedRecipesGC implements IRecipe<CraftingInventory>
         return false;
     }
 
-    private boolean checkMatch(CraftingInventory craftingInv, int p_77573_2_, int p_77573_3_, boolean p_77573_4_)
+    private boolean checkMatch(CraftingContainer craftingInv, int p_77573_2_, int p_77573_3_, boolean p_77573_4_)
     {
         for (int i = 0; i < 3; ++i)
         {
@@ -88,7 +88,7 @@ public class ShapedRecipesGC implements IRecipe<CraftingInventory>
                     }
                 }
 
-                ItemStack itemstack1 = craftingInv.getStackInSlot(i + j * craftingInv.getWidth());
+                ItemStack itemstack1 = craftingInv.getItem(i + j * craftingInv.getWidth());
 
                 if (!itemstack1.isEmpty() || !itemstack.isEmpty())
                 {
@@ -102,7 +102,7 @@ public class ShapedRecipesGC implements IRecipe<CraftingInventory>
                         return false;
                     }
 
-                    if (itemstack.getDamage() != itemstack1.getDamage())
+                    if (itemstack.getDamageValue() != itemstack1.getDamageValue())
                     {
                         return false;
                     }
@@ -114,13 +114,13 @@ public class ShapedRecipesGC implements IRecipe<CraftingInventory>
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingInventory inv)
+    public ItemStack getCraftingResult(CraftingContainer inv)
     {
-        return this.getRecipeOutput().copy();
+        return this.getResultItem().copy();
     }
 
     @Override
-    public boolean canFit(int width, int height)
+    public boolean canCraftInDimensions(int width, int height)
     {
         return width >= 3 && height >= 3;
     }
@@ -132,13 +132,13 @@ public class ShapedRecipesGC implements IRecipe<CraftingInventory>
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer()
+    public RecipeSerializer<?> getSerializer()
     {
         return null;
     }
 
     @Override
-    public IRecipeType<?> getType()
+    public RecipeType<?> getType()
     {
         return null;
     }

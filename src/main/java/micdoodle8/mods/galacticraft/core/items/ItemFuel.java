@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.items;
+package micdoodle8.mods.galacticraft.core.items;
 //
 //import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 //import net.minecraft.item.Rarity;

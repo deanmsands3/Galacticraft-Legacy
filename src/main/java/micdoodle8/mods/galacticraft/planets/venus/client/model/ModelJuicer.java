@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.venus.client.model;
+package micdoodle8.mods.galacticraft.planets.venus.client.model;
 //
 //import micdoodle8.mods.galacticraft.planets.venus.entities.EntityJuicer;
 //import net.minecraft.client.renderer.entity.model.EntityModel;

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei.oxygencompressor;
+package micdoodle8.mods.galacticraft.core.client.jei.oxygencompressor;
 //
 //import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 //import micdoodle8.mods.galacticraft.api.item.EnumExtendedInventorySlot;

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.venus.client.render.tile;
+package micdoodle8.mods.galacticraft.planets.venus.client.render.tile;
 //
 //import micdoodle8.mods.galacticraft.core.client.model.block.ModelTreasureChest;
 //import micdoodle8.mods.galacticraft.core.tile.TileEntityTreasureChest;

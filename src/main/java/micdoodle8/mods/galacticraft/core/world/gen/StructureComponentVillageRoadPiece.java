@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.world.gen;
+package micdoodle8.mods.galacticraft.core.world.gen;
 //
 //public abstract class StructureComponentVillageRoadPiece extends StructureComponentVillage
 //{

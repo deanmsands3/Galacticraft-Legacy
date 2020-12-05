@@ -11,29 +11,29 @@ import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithIn
 import micdoodle8.mods.galacticraft.core.inventory.ContainerCircuitFabricator;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
-public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInventory implements ISidedInventory, IMachineSides, INamedContainerProvider
+public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IMachineSides, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.circuitFabricator)
-    public static TileEntityType<TileEntityCircuitFabricator> TYPE;
+    public static BlockEntityType<TileEntityCircuitFabricator> TYPE;
 
     public static final int PROCESS_TIME_REQUIRED = 300;
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -55,7 +55,7 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
 
         this.updateInput();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             boolean updateInv = false;
 
@@ -67,7 +67,7 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
 
                     if (this.processTicks >= this.getProcessTimeRequired())
                     {
-                        this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.3F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+                        this.level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.3F, this.level.random.nextFloat() * 0.1F + 0.9F);
                         this.processTicks = 0;
                         this.compressItems();
                         updateInv = true;
@@ -85,7 +85,7 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
 
             if (updateInv)
             {
-                this.markDirty();
+                this.setChanged();
             }
         }
 
@@ -112,12 +112,12 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
         {
             return true;
         }
-        if (!this.getInventory().get(6).isEmpty() && !this.getInventory().get(6).isItemEqual(this.producingStack))
+        if (!this.getInventory().get(6).isEmpty() && !this.getInventory().get(6).sameItem(this.producingStack))
         {
             return false;
         }
         int result = this.getInventory().get(6).isEmpty() ? 0 : this.getInventory().get(6).getCount() + this.producingStack.getCount();
-        return result <= this.getInventoryStackLimit() && result <= this.producingStack.getMaxStackSize();
+        return result <= this.getMaxStackSize() && result <= this.producingStack.getMaxStackSize();
     }
 
     public void compressItems()
@@ -125,7 +125,7 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
         if (this.canCompress())
         {
             ItemStack resultItemStack = this.producingStack.copy();
-            if (this.world.getDimension() instanceof IZeroGDimension)
+            if (this.level.getDimension() instanceof IZeroGDimension)
             {
                 if (resultItemStack.getItem() == GCItems.compressedWaferBasic)
                 {
@@ -145,12 +145,12 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
             {
                 this.getInventory().set(6, resultItemStack);
             }
-            else if (this.getInventory().get(6).isItemEqual(resultItemStack))
+            else if (this.getInventory().get(6).sameItem(resultItemStack))
             {
                 if (this.getInventory().get(6).getCount() + resultItemStack.getCount() > 64)
                 {
                     resultItemStack.setCount(this.getInventory().get(6).getCount() + resultItemStack.getCount() - 64);
-                    GCCoreUtil.spawnItem(this.world, this.getPos(), resultItemStack);
+                    GCCoreUtil.spawnItem(this.level, this.getBlockPos(), resultItemStack);
                     this.getInventory().get(6).setCount(64);
                 }
                 else
@@ -162,22 +162,22 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
 
         for (int i = 1; i < 6; i++)
         {
-            this.decrStackSize(i, 1);
+            this.removeItem(i, 1);
         }
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.processTicks = nbt.getInt("smeltingTicks");
         this.readMachineSidesFromNBT(nbt);  //Needed by IMachineSides
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("smeltingTicks", this.processTicks);
         this.addMachineSidesToNBT(nbt);  //Needed by IMachineSides
         return nbt;
@@ -190,7 +190,7 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
 //    }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
+    public boolean canPlaceItem(int slotID, ItemStack itemStack)
     {
         if (slotID == 0)
         {
@@ -206,7 +206,7 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
 
         for (ItemStack test : list)
         {
-            if (test.isItemEqual(itemStack))
+            if (test.sameItem(itemStack))
             {
                 return true;
             }
@@ -229,13 +229,13 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack par2ItemStack, Direction par3)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack par2ItemStack, Direction par3)
     {
-        return slotID < 6 && this.isItemValidForSlot(slotID, par2ItemStack);
+        return slotID < 6 && this.canPlaceItem(slotID, par2ItemStack);
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack par2ItemStack, Direction par3)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack par2ItemStack, Direction par3)
     {
         return slotID == 6;
     }
@@ -259,7 +259,7 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return getFront().getCounterClockWise();
         case REAR:
             return getFront().getOpposite();
         case TOP:
@@ -268,7 +268,7 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
             return Direction.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return getFront().getClockWise();
         }
     }
 
@@ -320,14 +320,14 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
     //------------------END OF IMachineSides implementation
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerCircuitFabricator(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.circuit_fabricator");
+        return new TranslatableComponent("container.circuit_fabricator");
     }
 }

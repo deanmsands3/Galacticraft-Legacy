@@ -4,7 +4,7 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.items.ItemBase;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -48,7 +48,7 @@ public class VenusItems
 
     public static Item.Properties defaultBuilder()
     {
-        return new Item.Properties().group(GalacticraftCore.galacticraftItemsTab);
+        return new Item.Properties().tab(GalacticraftCore.galacticraftItemsTab);
     }
 
     public static void registerItems(RegistryEvent.Register<Item> evt)
@@ -66,7 +66,7 @@ public class VenusItems
         register(r, new ItemThermalPaddingTier2(defaultBuilder()), VenusItemNames.thermal_leggings_t2);
         register(r, new ItemThermalPaddingTier2(defaultBuilder()), VenusItemNames.thermal_boots_t2);
         register(r, new ItemVolcanicPickaxe(defaultBuilder()), VenusItemNames.volcanicPickaxe);
-        register(r, new ItemKeyVenus(defaultBuilder().maxStackSize(1).maxDamage(0)), VenusItemNames.keyT3);
+        register(r, new ItemKeyVenus(defaultBuilder().stacksTo(1).durability(0)), VenusItemNames.keyT3);
         register(r, new ItemBatteryAtomic(defaultBuilder()), VenusItemNames.atomicBattery);
 
 //        VenusItems.registerItems();

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.world;
+package micdoodle8.mods.galacticraft.core.world;
 //
 //import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 //import micdoodle8.mods.galacticraft.core.util.GCLog;

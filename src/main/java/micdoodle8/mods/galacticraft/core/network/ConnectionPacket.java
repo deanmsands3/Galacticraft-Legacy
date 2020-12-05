@@ -7,14 +7,14 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.ServerPlayNetHandler;
-import net.minecraft.network.play.client.CCustomPayloadPacket;
-import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,7 +42,7 @@ public class ConnectionPacket
 
 //    public static SimpleChannel bus;
 
-    public void handle(ByteBuf payload, PlayerEntity player)
+    public void handle(ByteBuf payload, Player player)
     {
         int packetId = payload.readByte();
         List<Object> data = new ArrayList<Object>();
@@ -89,21 +89,21 @@ public class ConnectionPacket
         }
     }
 
-    public static SCustomPayloadPlayPacket createDimPacket(List<DimensionType> dims)
+    public static ClientboundCustomPayloadPacket createDimPacket(List<DimensionType> dims)
     {
         ArrayList<DimensionType> data = new ArrayList<>(dims);
         return createPacket((byte) 101, data);
     }
 
-    public static SCustomPayloadPlayPacket createSSPacket(Set<DimensionType> dims)
+    public static ClientboundCustomPayloadPacket createSSPacket(Set<DimensionType> dims)
     {
         HashSet<DimensionType> data = new HashSet<>(dims);
         return createPacket((byte) 102, data);
     }
 
-    public static SCustomPayloadPlayPacket createPacket(byte packetId, Collection<DimensionType> data)
+    public static ClientboundCustomPayloadPacket createPacket(byte packetId, Collection<DimensionType> data)
     {
-        PacketBuffer payload = new PacketBuffer(Unpooled.buffer());
+        FriendlyByteBuf payload = new FriendlyByteBuf(Unpooled.buffer());
 
         payload.writeByte(packetId);
         payload.writeInt(data.size());
@@ -112,7 +112,7 @@ public class ConnectionPacket
             payload.writeInt(i.getId());
         }
         payload.writeInt(3519); //signature
-        return new SCustomPayloadPlayPacket(NAME, payload);
+        return new ClientboundCustomPayloadPacket(NAME, payload);
     }
 //
 //    public static FMLProxyPacket createConfigPacket(List<Object> data)
@@ -132,7 +132,7 @@ public class ConnectionPacket
 //    }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void onPacketData(NetworkEvent.ClientCustomPayloadEvent event)
     {
         onData(event.getPayload(), Minecraft.getInstance().player);
@@ -144,7 +144,7 @@ public class ConnectionPacket
         onData(event.getPayload(), event.getSource().get().getSender());
     }
 
-    public void onData(PacketBuffer buffer, PlayerEntity player)
+    public void onData(FriendlyByteBuf buffer, Player player)
     {
         try
         {

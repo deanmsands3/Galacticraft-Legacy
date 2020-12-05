@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.core.util;
 
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 public class DelayTimer
 {
@@ -12,12 +12,12 @@ public class DelayTimer
         internalDelay = delay;
     }
 
-    public boolean markTimeIfDelay(World world)
+    public boolean markTimeIfDelay(Level world)
     {
         return markTimeIfDelay(world, internalDelay);
     }
 
-    public boolean markTimeIfDelay(World world, long delay)
+    public boolean markTimeIfDelay(Level world, long delay)
     {
         if (world == null)
         {

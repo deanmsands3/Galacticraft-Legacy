@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.entities;
+package micdoodle8.mods.galacticraft.core.entities;
 //
 //import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
 //import micdoodle8.mods.galacticraft.core.GCItems;

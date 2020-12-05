@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.entities.player;
+package micdoodle8.mods.galacticraft.core.entities.player;
 //
 //import api.player.server.ServerPlayerAPI;
 //import api.player.server.ServerPlayerBase;

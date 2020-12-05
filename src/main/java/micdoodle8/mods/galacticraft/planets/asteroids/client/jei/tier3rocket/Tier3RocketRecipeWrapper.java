@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.client.jei.tier3rocket;
+package micdoodle8.mods.galacticraft.planets.asteroids.client.jei.tier3rocket;
 //
 //import com.google.common.collect.Lists;
 //import mezz.jei.api.ingredients.IIngredients;

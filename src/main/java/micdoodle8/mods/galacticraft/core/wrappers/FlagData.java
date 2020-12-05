@@ -2,8 +2,7 @@ package micdoodle8.mods.galacticraft.core.wrappers;
 
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
-import net.minecraft.nbt.CompoundNBT;
-
+import net.minecraft.nbt.CompoundTag;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
@@ -84,7 +83,7 @@ public class FlagData
         this.color[posX][posY][2] = (byte) (colorVec.intZ() - 128);
     }
 
-    public static FlagData readFlagData(CompoundNBT nbt)
+    public static FlagData readFlagData(CompoundTag nbt)
     {
         if (nbt.contains("FlagWidth"))
         {
@@ -126,7 +125,7 @@ public class FlagData
         return flagData;
     }
 
-    public void saveFlagData(CompoundNBT nbt)
+    public void saveFlagData(CompoundTag nbt)
     {
         nbt.putInt("FWidth", this.width);
         nbt.putInt("FHeight", this.height);

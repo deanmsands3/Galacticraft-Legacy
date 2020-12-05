@@ -2,17 +2,16 @@ package micdoodle8.mods.galacticraft.core.blocks;
 
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import java.lang.reflect.Method;
 
 /**
@@ -29,47 +28,47 @@ public abstract class BlockAdvanced extends Block
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit)
     {
-        if (hand != Hand.MAIN_HAND)
+        if (hand != InteractionHand.MAIN_HAND)
         {
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         }
 
-        ItemStack heldItem = playerIn.getHeldItem(hand);
+        ItemStack heldItem = playerIn.getItemInHand(hand);
 
-        if (this.useWrench(worldIn, pos, playerIn, hand, heldItem, hit) == ActionResultType.CONSUME)
+        if (this.useWrench(worldIn, pos, playerIn, hand, heldItem, hit) == InteractionResult.CONSUME)
         {
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         }
 
-        if (playerIn.isSneaking())
+        if (playerIn.isShiftKeyDown())
         {
-            if (this.onSneakMachineActivated(worldIn, pos, playerIn, hand, heldItem, hit) == ActionResultType.CONSUME)
+            if (this.onSneakMachineActivated(worldIn, pos, playerIn, hand, heldItem, hit) == InteractionResult.CONSUME)
             {
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
 
         return this.onMachineActivated(worldIn, pos, state, playerIn, hand, heldItem, hit);
     }
 
-    protected ActionResultType useWrench(World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    protected InteractionResult useWrench(Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
         if (heldItem.getItem() == GCItems.wrench)
         {
-            if (playerIn.isSneaking())
+            if (playerIn.isShiftKeyDown())
             {
-                if (this.onSneakUseWrench(worldIn, pos, playerIn, hand, heldItem, hit) == ActionResultType.SUCCESS)
+                if (this.onSneakUseWrench(worldIn, pos, playerIn, hand, heldItem, hit) == InteractionResult.SUCCESS)
                 {
-                    playerIn.swingArm(hand);
-                    return ActionResultType.SUCCESS;
+                    playerIn.swing(hand);
+                    return InteractionResult.SUCCESS;
                 }
-                return ActionResultType.PASS;
+                return InteractionResult.PASS;
             }
 
-            playerIn.swingArm(hand);
-            return ActionResultType.PASS;
+            playerIn.swing(hand);
+            return InteractionResult.PASS;
         }
         /*
          * Check if the player is holding a wrench or an electric item. If so,
@@ -79,23 +78,23 @@ public abstract class BlockAdvanced extends Block
         {
             this.damageWrench(playerIn, heldItem, pos);
 
-            if (playerIn.isSneaking())
+            if (playerIn.isShiftKeyDown())
             {
-                if (this.onSneakUseWrench(worldIn, pos, playerIn, hand, heldItem, hit) == ActionResultType.SUCCESS)
+                if (this.onSneakUseWrench(worldIn, pos, playerIn, hand, heldItem, hit) == InteractionResult.SUCCESS)
                 {
-                    playerIn.swingArm(hand);
-                    return ActionResultType.SUCCESS;
+                    playerIn.swing(hand);
+                    return InteractionResult.SUCCESS;
                 }
             }
 
-            if (this.onUseWrench(worldIn, pos, playerIn, hand, heldItem, hit) == ActionResultType.SUCCESS)
+            if (this.onUseWrench(worldIn, pos, playerIn, hand, heldItem, hit) == InteractionResult.SUCCESS)
             {
-                playerIn.swingArm(hand);
-                return ActionResultType.SUCCESS;
+                playerIn.swing(hand);
+                return InteractionResult.SUCCESS;
             }
         }
 
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     /**
@@ -105,7 +104,7 @@ public abstract class BlockAdvanced extends Block
      *
      * @return True if it is a wrench.
      */
-    public boolean isUsableWrench(PlayerEntity entityPlayer, ItemStack itemStack, BlockPos pos)
+    public boolean isUsableWrench(Player entityPlayer, ItemStack itemStack, BlockPos pos)
     {
         if (entityPlayer != null && itemStack != null)
         {
@@ -122,7 +121,7 @@ public abstract class BlockAdvanced extends Block
              */
             try
             {
-                Method methodCanWrench = wrenchClass.getMethod("canWrench", PlayerEntity.class, BlockPos.class);
+                Method methodCanWrench = wrenchClass.getMethod("canWrench", Player.class, BlockPos.class);
                 return (Boolean) methodCanWrench.invoke(item, entityPlayer, pos);
             }
             catch (NoClassDefFoundError e)
@@ -139,7 +138,7 @@ public abstract class BlockAdvanced extends Block
                  */
                 if (wrenchClass == CompatibilityManager.classIC2wrench || wrenchClass == CompatibilityManager.classIC2wrenchElectric)
                 {
-                    return itemStack.getDamage() < itemStack.getMaxDamage();
+                    return itemStack.getDamageValue() < itemStack.getMaxDamage();
                 }
             }
         }
@@ -153,7 +152,7 @@ public abstract class BlockAdvanced extends Block
      *
      * @return True if damage was successfull.
      */
-    public boolean damageWrench(PlayerEntity entityPlayer, ItemStack itemStack, BlockPos pos)
+    public boolean damageWrench(Player entityPlayer, ItemStack itemStack, BlockPos pos)
     {
         if (this.isUsableWrench(entityPlayer, itemStack, pos))
         {
@@ -164,7 +163,7 @@ public abstract class BlockAdvanced extends Block
              */
             try
             {
-                Method methodWrenchUsed = wrenchClass.getMethod("wrenchUsed", PlayerEntity.class, BlockPos.class);
+                Method methodWrenchUsed = wrenchClass.getMethod("wrenchUsed", Player.class, BlockPos.class);
                 methodWrenchUsed.invoke(itemStack.getItem(), entityPlayer, pos);
                 return true;
             }
@@ -179,7 +178,7 @@ public abstract class BlockAdvanced extends Block
             {
                 if (wrenchClass == CompatibilityManager.classIC2wrench || wrenchClass == CompatibilityManager.classIC2wrenchElectric)
                 {
-                    Method methodWrenchDamage = wrenchClass.getMethod("damage", ItemStack.class, Integer.TYPE, PlayerEntity.class);
+                    Method methodWrenchDamage = wrenchClass.getMethod("damage", ItemStack.class, Integer.TYPE, Player.class);
                     methodWrenchDamage.invoke(itemStack.getItem(), itemStack, 1, entityPlayer);
                     return true;
                 }
@@ -197,9 +196,9 @@ public abstract class BlockAdvanced extends Block
      *
      * @return True if something happens
      */
-    public ActionResultType onMachineActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onMachineActivated(Level worldIn, BlockPos pos, BlockState state, Player playerIn, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     /**
@@ -207,9 +206,9 @@ public abstract class BlockAdvanced extends Block
      *
      * @return True if something happens
      */
-    public ActionResultType onSneakMachineActivated(World world, BlockPos pos, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onSneakMachineActivated(Level world, BlockPos pos, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     /**
@@ -217,9 +216,9 @@ public abstract class BlockAdvanced extends Block
      *
      * @return True if some happens
      */
-    public ActionResultType onUseWrench(World world, BlockPos pos, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onUseWrench(Level world, BlockPos pos, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     /**
@@ -228,7 +227,7 @@ public abstract class BlockAdvanced extends Block
      *
      * @return True if some happens
      */
-    public ActionResultType onSneakUseWrench(World world, BlockPos pos, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onSneakUseWrench(Level world, BlockPos pos, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
         return this.onUseWrench(world, pos, entityPlayer, hand, heldItem, hit);
     }

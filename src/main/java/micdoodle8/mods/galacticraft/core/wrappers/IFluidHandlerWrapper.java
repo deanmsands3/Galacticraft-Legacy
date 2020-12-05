@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.core.wrappers;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 

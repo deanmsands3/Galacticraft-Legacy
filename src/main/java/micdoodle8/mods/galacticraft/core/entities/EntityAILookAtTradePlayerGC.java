@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.entities;
+package micdoodle8.mods.galacticraft.core.entities;
 //
 //import net.minecraft.entity.ai.goal.LookAtGoal;
 //import net.minecraft.entity.player.PlayerEntity;

@@ -4,10 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
 import micdoodle8.mods.galacticraft.core.world.gen.dungeon.DungeonConfiguration;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
@@ -28,7 +27,7 @@ public class DungeonConfigurationVenus extends DungeonConfiguration
     }
 
     @Override
-    public CompoundNBT writeToNBT(CompoundNBT tagCompound)
+    public CompoundTag writeToNBT(CompoundTag tagCompound)
     {
         tagCompound.putString("brickBlockFloor", this.brickBlockFloor.getBlock().getRegistryName().toString());
 
@@ -36,7 +35,7 @@ public class DungeonConfigurationVenus extends DungeonConfiguration
     }
 
     @Override
-    public void readFromNBT(CompoundNBT tagCompound)
+    public void readFromNBT(CompoundTag tagCompound)
     {
         try
         {

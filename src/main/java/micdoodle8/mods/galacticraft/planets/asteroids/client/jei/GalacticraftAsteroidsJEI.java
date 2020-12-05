@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.client.jei;
+package micdoodle8.mods.galacticraft.planets.asteroids.client.jei;
 //
 //import mezz.jei.api.BlankModPlugin;
 //import mezz.jei.api.IGuiHelper;

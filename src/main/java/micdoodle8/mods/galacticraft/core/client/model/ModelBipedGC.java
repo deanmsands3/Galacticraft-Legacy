@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.model;
+package micdoodle8.mods.galacticraft.core.client.model;
 //
 //import micdoodle8.mods.galacticraft.api.entity.ICameraZoomEntity;
 //import micdoodle8.mods.galacticraft.api.item.IHoldableItem;

@@ -8,19 +8,18 @@ import micdoodle8.mods.galacticraft.core.entities.IScaleableFuelLevel;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.planets.mars.entities.EntityProjectileTNT;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -28,15 +27,15 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
 {
     private Integer groundPosY = null;
 
-    public EntityEntryPodVenus(EntityType<? extends EntityEntryPodVenus> type, World worldIn)
+    public EntityEntryPodVenus(EntityType<? extends EntityEntryPodVenus> type, Level worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.5F, 3.0F);
     }
 
-    public static EntityEntryPodVenus createEntityEntryPodVenus(ServerPlayerEntity player)
+    public static EntityEntryPodVenus createEntityEntryPodVenus(ServerPlayer player)
     {
-        EntityEntryPodVenus pod = new EntityEntryPodVenus(VenusEntities.ENTRY_POD, player.world);
+        EntityEntryPodVenus pod = new EntityEntryPodVenus(VenusEntities.ENTRY_POD, player.level);
 
         GCPlayerStats stats = GCPlayerStats.get(player);
         pod.stacks = NonNullList.withSize(stats.getRocketStacks().size() + 1, ItemStack.EMPTY);
@@ -54,7 +53,7 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
             }
         }
 
-        pod.setPositionAndRotation(player.getPosX(), player.getPosY(), player.getPosZ(), 0, 0);
+        pod.absMoveTo(player.getX(), player.getY(), player.getZ(), 0, 0);
 
         player.startRiding(pod, true);
         return pod;
@@ -67,9 +66,9 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
     }
 
     @Override
-    public double getMountedYOffset()
+    public double getRideHeight()
     {
-        return this.getHeight() - 2.0D;
+        return this.getBbHeight() - 2.0D;
     }
 
     @Override
@@ -104,7 +103,7 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -120,33 +119,33 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
     {
         super.tickInAir();
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             if (!this.onGround)
             {
 //                this.motionY -= 0.002D;
-                this.setMotion(getMotion().x, this.getMotion().y - 0.002, this.getMotion().z);
+                this.setDeltaMovement(getDeltaMovement().x, this.getDeltaMovement().y - 0.002, this.getDeltaMovement().z);
 
-                if (this.getMotion().y < -0.7F)
+                if (this.getDeltaMovement().y < -0.7F)
                 {
 //                    this.motionY *= 0.994F;
-                    this.setMotion(getMotion().x, this.getMotion().y * 0.994F, this.getMotion().z);
+                    this.setDeltaMovement(getDeltaMovement().x, this.getDeltaMovement().y * 0.994F, this.getDeltaMovement().z);
                 }
 
-                if (this.getPosY() <= 242.0F)
+                if (this.getY() <= 242.0F)
                 {
                     if (groundPosY == null)
                     {
-                        this.groundPosY = this.world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, new BlockPos(this.getPosX(), this.getPosY(), this.getPosZ())).getY();
+                        this.groundPosY = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(this.getX(), this.getY(), this.getZ())).getY();
                     }
 
-                    if (this.getPosY() - this.groundPosY > 5.0F)
+                    if (this.getY() - this.groundPosY > 5.0F)
                     {
-                        this.setMotion(getMotion().x, this.getMotion().y * 0.995F, this.getMotion().z);
+                        this.setDeltaMovement(getDeltaMovement().x, this.getDeltaMovement().y * 0.995F, this.getDeltaMovement().z);
                     }
                     else
                     {
-                        this.setMotion(getMotion().x, this.getMotion().y * 0.9995F, this.getMotion().z);
+                        this.setDeltaMovement(getDeltaMovement().x, this.getDeltaMovement().y * 0.9995F, this.getDeltaMovement().z);
                     }
                 }
             }
@@ -169,7 +168,7 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
 
         if (this.ticks >= 40 && this.ticks < 45)
         {
-            this.setMotion(this.getMotion().x, this.getInitialMotionY(), this.getMotionVec().z);
+            this.setDeltaMovement(this.getDeltaMovement().x, this.getInitialMotionY(), this.getMotionVec().z);
         }
 
         if (!this.shouldMove())
@@ -177,7 +176,7 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
             return new Vector3D(0, 0, 0);
         }
 
-        return new Vector3D(this.getMotion());
+        return new Vector3D(this.getDeltaMovement());
     }
 
     @Override
@@ -211,39 +210,39 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
 //    }
 
     @Override
-    protected boolean canTriggerWalking()
+    protected boolean isMovementNoisy()
     {
         return false;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox()
+    public AABB getCollideBox()
     {
         return null;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox(Entity par1Entity)
+    public AABB getCollideAgainstBox(Entity par1Entity)
     {
         return null;
     }
 
     @Override
-    public boolean canBePushed()
+    public boolean isPushable()
     {
         return false;
     }
 
     @Override
-    public boolean canBeCollidedWith()
+    public boolean isPickable()
     {
         return this.isAlive();
     }
 
     @Override
-    public boolean processInitialInteract(PlayerEntity player, Hand hand)
+    public boolean interact(Player player, InteractionHand hand)
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             if (!this.onGround)
             {
@@ -252,25 +251,25 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
 
             if (!this.getPassengers().isEmpty())
             {
-                this.removePassengers();
+                this.ejectPassengers();
             }
 
             return true;
         }
 
-        if (this.getPassengers().isEmpty() && player instanceof ServerPlayerEntity)
+        if (this.getPassengers().isEmpty() && player instanceof ServerPlayer)
         {
 //            GCCoreUtil.openParachestInv((ServerPlayerEntity) player, this); TODO guis
             return true;
         }
-        else if (player instanceof ServerPlayerEntity)
+        else if (player instanceof ServerPlayer)
         {
             if (!this.onGround)
             {
                 return false;
             }
 
-            this.removePassengers();
+            this.ejectPassengers();
             return true;
         }
         else

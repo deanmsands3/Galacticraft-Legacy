@@ -1,14 +1,14 @@
 package micdoodle8.mods.galacticraft.planets.venus.world.gen;
 
 import micdoodle8.mods.galacticraft.planets.venus.dimension.VenusGenSettings;
-import net.minecraft.util.Util;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.gen.NoiseChunkGenerator;
-import net.minecraft.world.gen.OctavesNoiseGenerator;
+import net.minecraft.Util;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
-public class VenusChunkGenerator extends NoiseChunkGenerator<VenusGenSettings>
+public class VenusChunkGenerator extends NoiseBasedChunkGenerator<VenusGenSettings>
 {
     private static final float[] BIOME_WEIGHTS = Util.make(new float[25], (weights) ->
     {
@@ -50,12 +50,12 @@ public class VenusChunkGenerator extends NoiseChunkGenerator<VenusGenSettings>
 //            VenusBlocks.venusBlock.getDefaultState().with(BlockVenusRock.BASIC_TYPE_VENUS, BlockVenusRock.EnumBlockBasicVenus.DUNGEON_BRICK_2),
 //            30, 8, 16, 7, 7, RoomBossVenus.class, RoomTreasureVenus.class));
 
-    private final OctavesNoiseGenerator depthNoise;
+    private final PerlinNoise depthNoise;
 
-    public VenusChunkGenerator(IWorld worldIn, BiomeProvider biomeProvider, VenusGenSettings settingsIn)
+    public VenusChunkGenerator(LevelAccessor worldIn, BiomeSource biomeProvider, VenusGenSettings settingsIn)
     {
         super(worldIn, biomeProvider, 4, 8, 128, settingsIn, true);
-        depthNoise = new OctavesNoiseGenerator(randomSeed, 15, 0);
+        depthNoise = new PerlinNoise(random, 15, 0);
     }
 
 //    public VenusChunkGenerator(World worldIn, long seed, boolean mapFeaturesEnabled)
@@ -385,20 +385,20 @@ public class VenusChunkGenerator extends NoiseChunkGenerator<VenusGenSettings>
 
     // get depth / scale
     @Override
-    protected double[] getBiomeNoiseColumn(int x, int z)
+    protected double[] getDepthAndScale(int x, int z)
     {
         double[] depthAndScale = new double[2];
         float scaleF1 = 0.0F;
         float depthF1 = 0.0F;
         float divisor = 0.0F;
         int j = this.getSeaLevel();
-        float baseDepth = this.biomeProvider.getNoiseBiome(x, j, z).getDepth();
+        float baseDepth = this.biomeSource.getNoiseBiome(x, j, z).getDepth();
 
         for (int xMod = -2; xMod <= 2; ++xMod)
         {
             for (int zMod = -2; zMod <= 2; ++zMod)
             {
-                Biome biomeAt = this.biomeProvider.getNoiseBiome(x + xMod, j, z + zMod);
+                Biome biomeAt = this.biomeSource.getNoiseBiome(x + xMod, j, z + zMod);
                 float biomeDepth = biomeAt.getDepth();
                 float biomeScale = biomeAt.getScale();
 
@@ -451,7 +451,7 @@ public class VenusChunkGenerator extends NoiseChunkGenerator<VenusGenSettings>
 
     // yoffset
     @Override
-    protected double func_222545_a(double depth, double scale, int yy)
+    protected double getYOffset(double depth, double scale, int yy)
     {
         // The higher this value is, the higher the terrain is!
         final double baseSize = 17D;
@@ -476,11 +476,11 @@ public class VenusChunkGenerator extends NoiseChunkGenerator<VenusGenSettings>
         final int topSlideMax = 0;
         final int topSlideScale = 3;
 
-        calcNoiseColumn(noiseColumn, x, z, xzScale, yScale, xzOtherScale, yOtherScale, topSlideScale, topSlideMax);
+        fillNoiseColumn(noiseColumn, x, z, xzScale, yScale, xzOtherScale, yOtherScale, topSlideScale, topSlideMax);
     }
 
     @Override
-    public int getGroundHeight()
+    public int getSpawnHeight()
     {
         return 69;
     }

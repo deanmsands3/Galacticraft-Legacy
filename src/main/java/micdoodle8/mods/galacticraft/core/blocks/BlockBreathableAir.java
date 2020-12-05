@@ -2,20 +2,20 @@ package micdoodle8.mods.galacticraft.core.blocks;
 
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.fluid.OxygenPressureProtocol;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 public class BlockBreathableAir extends BlockThermalAir
 {
     public BlockBreathableAir(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(THERMAL, false));
+        this.registerDefaultState(stateDefinition.any().setValue(THERMAL, false));
     }
 
 //    @Override
@@ -31,7 +31,7 @@ public class BlockBreathableAir extends BlockThermalAir
 //    }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block oldBlock, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block oldBlock, BlockPos fromPos, boolean isMoving)
     {
         if (Blocks.AIR != oldBlock)
         //Do no check if replacing breatheableAir with a solid block, although that could be dividing a sealed space
@@ -54,7 +54,7 @@ public class BlockBreathableAir extends BlockThermalAir
                 }
                 if (OxygenPressureProtocol.canBlockPassAir(worldIn, state, fromPos, side))
                 {
-                    worldIn.setBlockState(fromPos, GCBlocks.breatheableAir.getDefaultState(), 6);
+                    worldIn.setBlock(fromPos, GCBlocks.breatheableAir.defaultBlockState(), 6);
                 }
             }
             // In all cases, trigger a leak check at this point
@@ -63,7 +63,7 @@ public class BlockBreathableAir extends BlockThermalAir
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(THERMAL);
     }

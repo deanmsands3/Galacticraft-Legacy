@@ -1,23 +1,21 @@
 package micdoodle8.mods.galacticraft.core.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-
 import javax.annotation.Nonnull;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
 
-public class PersistantInventoryCrafting extends CraftingInventory
+public class PersistantInventoryCrafting extends CraftingContainer
 {
     public NonNullList<ItemStack> stacks;
 
     private final int inventoryWidth;
     private final int inventoryHeight;
 
-    public Container eventHandler;
+    public AbstractContainerMenu eventHandler;
 
     public PersistantInventoryCrafting()
     {
@@ -29,29 +27,29 @@ public class PersistantInventoryCrafting extends CraftingInventory
     }
 
     @Override
-    public int getSizeInventory()
+    public int getContainerSize()
     {
         return this.stacks.size();
     }
 
     @Override
     @Nonnull
-    public ItemStack getStackInSlot(int index)
+    public ItemStack getItem(int index)
     {
         return this.stacks.get(index);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
+    public ItemStack removeItem(int index, int count)
     {
-        ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
+        ItemStack itemstack = ContainerHelper.removeItem(this.stacks, index, count);
 
         if (!itemstack.isEmpty())
         {
-            this.markDirty();
+            this.setChanged();
             if (this.eventHandler != null)
             {
-                this.eventHandler.onCraftMatrixChanged(this);
+                this.eventHandler.slotsChanged(this);
             }
         }
 
@@ -65,25 +63,25 @@ public class PersistantInventoryCrafting extends CraftingInventory
 //    }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
+    public ItemStack removeItemNoUpdate(int index)
     {
-        return ItemStackHelper.getAndRemove(this.stacks, index);
+        return ContainerHelper.takeItem(this.stacks, index);
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
+    public void setItem(int index, ItemStack stack)
     {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
+        if (stack.getCount() > this.getMaxStackSize())
         {
-            stack.setCount(this.getInventoryStackLimit());
+            stack.setCount(this.getMaxStackSize());
         }
 
-        this.markDirty();
+        this.setChanged();
         if (this.eventHandler != null)
         {
-            this.eventHandler.onCraftMatrixChanged(this);
+            this.eventHandler.slotsChanged(this);
         }
     }
 
@@ -91,12 +89,12 @@ public class PersistantInventoryCrafting extends CraftingInventory
     {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
+        if (stack.getCount() > this.getMaxStackSize())
         {
-            stack.setCount(this.getInventoryStackLimit());
+            stack.setCount(this.getMaxStackSize());
         }
 
-        this.markDirty();
+        this.setChanged();
     }
 
     @Override
@@ -126,34 +124,34 @@ public class PersistantInventoryCrafting extends CraftingInventory
 //    }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 64;
     }
 
     @Override
-    public void markDirty()
+    public void setChanged()
     {
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
         return true;
     }
 
     @Override
-    public void openInventory(PlayerEntity player)
+    public void startOpen(Player player)
     {
     }
 
     @Override
-    public void closeInventory(PlayerEntity player)
+    public void stopOpen(Player player)
     {
     }
 
     @Override
-    public boolean isItemValidForSlot(int par1, ItemStack par2ItemStack)
+    public boolean canPlaceItem(int par1, ItemStack par2ItemStack)
     {
         return true;
     }
@@ -177,7 +175,7 @@ public class PersistantInventoryCrafting extends CraftingInventory
 //    }
 
     @Override
-    public void clear()
+    public void clearContent()
     {
 
     }

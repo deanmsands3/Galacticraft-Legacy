@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.api.client;
+package micdoodle8.mods.galacticraft.api.client;
 //
 //import net.minecraft.item.ItemStack;
 //

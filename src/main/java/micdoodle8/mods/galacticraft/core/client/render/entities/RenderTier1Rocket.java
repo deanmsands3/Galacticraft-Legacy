@@ -1,39 +1,40 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.model.ModelRocketTier1;
 import micdoodle8.mods.galacticraft.core.entities.EntityTier1Rocket;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class RenderTier1Rocket extends EntityRenderer<EntityTier1Rocket>
 {
     private final ResourceLocation spaceshipTexture;
 
     protected final EntityModel<EntityTier1Rocket> rocketModel = new ModelRocketTier1();
 
-    public RenderTier1Rocket(EntityRendererManager manager)
+    public RenderTier1Rocket(EntityRenderDispatcher manager)
     {
         this(manager, new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/rocket_t1.png"));
     }
 
-    private RenderTier1Rocket(EntityRendererManager manager, ResourceLocation texture)
+    private RenderTier1Rocket(EntityRenderDispatcher manager, ResourceLocation texture)
     {
         super(manager);
         this.spaceshipTexture = texture;
-        this.shadowSize = 0.9F;
+        this.shadowRadius = 0.9F;
     }
 
     @Override
@@ -79,24 +80,24 @@ public class RenderTier1Rocket extends EntityRenderer<EntityTier1Rocket>
 
 
     @Override
-    public boolean shouldRender(EntityTier1Rocket livingEntityIn, ClippingHelperImpl camera, double camX, double camY, double camZ)
+    public boolean shouldRender(EntityTier1Rocket livingEntityIn, Frustum camera, double camX, double camY, double camZ)
     {
         return true;
     }
 
     @Override
-    public void render(EntityTier1Rocket entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn)
+    public void render(EntityTier1Rocket entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn)
     {
-        matrixStackIn.push();
-        float pitch = entityIn.prevRotationPitch + (entityIn.rotationPitch - entityIn.prevRotationPitch) * partialTicks;
-        float yaw = entityIn.prevRotationYaw + (entityIn.rotationYaw - entityIn.prevRotationYaw) * partialTicks;
-        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(this.rocketModel.getRenderType(this.getEntityTexture(entityIn)));
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F - entityYaw));
-        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(-pitch));
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-yaw));
+        matrixStackIn.pushPose();
+        float pitch = entityIn.xRotO + (entityIn.xRot - entityIn.xRotO) * partialTicks;
+        float yaw = entityIn.yRotO + (entityIn.yRot - entityIn.yRotO) * partialTicks;
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(this.rocketModel.renderType(this.getEntityTexture(entityIn)));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180.0F - entityYaw));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(-pitch));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-yaw));
         matrixStackIn.translate(0.0F, entityIn.getRenderOffsetY(), 0.0F);
         matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
-        this.rocketModel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        matrixStackIn.pop();
+        this.rocketModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        matrixStackIn.popPose();
     }
 }

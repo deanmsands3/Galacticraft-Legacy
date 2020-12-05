@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.tile;
+package micdoodle8.mods.galacticraft.core.tile;
 //
 //import io.netty.buffer.ByteBuf;
 //

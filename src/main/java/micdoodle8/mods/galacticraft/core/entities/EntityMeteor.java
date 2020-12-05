@@ -5,24 +5,29 @@ import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
-import net.minecraft.block.AirBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.IndirectEntityDamageSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.math.*;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.Iterator;
@@ -31,18 +36,18 @@ import java.util.Optional;
 
 public class EntityMeteor extends Entity implements ILaserTrackableFast
 {
-    private static final DataParameter<Integer> SIZE = EntityDataManager.createKey(EntityMeteor.class, DataSerializers.VARINT);
-    public MobEntity shootingEntity;
+    private static final EntityDataAccessor<Integer> SIZE = SynchedEntityData.defineId(EntityMeteor.class, EntityDataSerializers.INT);
+    public Mob shootingEntity;
     public int size;
 
-    public EntityMeteor(EntityType<EntityMeteor> type, World world)
+    public EntityMeteor(EntityType<EntityMeteor> type, Level world)
     {
         super(type, world);
 //        this.setSize(1.0F, 1.0F);
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -63,33 +68,33 @@ public class EntityMeteor extends Entity implements ILaserTrackableFast
     @Override
     public void tick()
     {
-        this.setRotation(this.rotationYaw + 2F, this.rotationPitch + 2F);
-        this.prevPosX = this.getPosX();
-        this.prevPosY = this.getPosY();
-        this.prevPosZ = this.getPosZ();
+        this.setRot(this.yRot + 2F, this.xRot + 2F);
+        this.xo = this.getX();
+        this.yo = this.getY();
+        this.zo = this.getZ();
 //        this.motionY -= 0.03999999910593033D;
-        this.setMotion(this.getMotion().add(0.0, 0.03999999910593033, 0.0));
-        this.move(MoverType.SELF, this.getMotion());
+        this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.03999999910593033, 0.0));
+        this.move(MoverType.SELF, this.getDeltaMovement());
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             this.spawnParticles();
         }
 
-        Vec3d currentPosition = new Vec3d(this.getPosX(), this.getPosY(), this.getPosZ());
-        Vec3d nextPosition = new Vec3d(this.getPosX() + this.getMotion().x, this.getPosY() + this.getMotion().y, this.getPosZ() + this.getMotion().z);
+        Vec3 currentPosition = new Vec3(this.getX(), this.getY(), this.getZ());
+        Vec3 nextPosition = new Vec3(this.getX() + this.getDeltaMovement().x, this.getY() + this.getDeltaMovement().y, this.getZ() + this.getDeltaMovement().z);
         // currentPosition, nextPosition, true, true, false
-        RayTraceResult collisionIntercept = this.world.rayTraceBlocks(new RayTraceContext(currentPosition, nextPosition, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
-        currentPosition = new Vec3d(this.getPosX(), this.getPosY(), this.getPosZ());
-        nextPosition = new Vec3d(this.getPosX() + this.getMotion().x, this.getPosY() + this.getMotion().y, this.getPosZ() + this.getMotion().z);
+        HitResult collisionIntercept = this.level.clip(new ClipContext(currentPosition, nextPosition, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        currentPosition = new Vec3(this.getX(), this.getY(), this.getZ());
+        nextPosition = new Vec3(this.getX() + this.getDeltaMovement().x, this.getY() + this.getDeltaMovement().y, this.getZ() + this.getDeltaMovement().z);
 
-        if (collisionIntercept.getType() != RayTraceResult.Type.MISS)
+        if (collisionIntercept.getType() != HitResult.Type.MISS)
         {
-            nextPosition = new Vec3d(collisionIntercept.getHitVec().x, collisionIntercept.getHitVec().y, collisionIntercept.getHitVec().z);
+            nextPosition = new Vec3(collisionIntercept.getLocation().x, collisionIntercept.getLocation().y, collisionIntercept.getLocation().z);
         }
 
         Entity collidingEntity = null;
-        final List<?> nearbyEntities = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getBoundingBox().expand(this.getMotion()).grow(2.0D, 2.0D, 2.0D));
+        final List<?> nearbyEntities = this.level.getEntities(this, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(2.0D, 2.0D, 2.0D));
         double distanceToCollidingEntityIntercept = 0.0D;
         final Iterator<?> nearbyEntitiesIterator = nearbyEntities.iterator();
         final double entityBBPadding = 0.01D;
@@ -98,10 +103,10 @@ public class EntityMeteor extends Entity implements ILaserTrackableFast
         {
             final Entity nearbyEntity = (Entity) nearbyEntitiesIterator.next();
 
-            if (nearbyEntity.canBeCollidedWith() && !nearbyEntity.isEntityEqual(this.shootingEntity))
+            if (nearbyEntity.isPickable() && !nearbyEntity.is(this.shootingEntity))
             {
-                final AxisAlignedBB nearbyEntityPaddedBB = nearbyEntity.getBoundingBox().grow(entityBBPadding, entityBBPadding, entityBBPadding);
-                final Optional<Vec3d> nearbyEntityIntercept = nearbyEntityPaddedBB.rayTrace(currentPosition, nextPosition);
+                final AABB nearbyEntityPaddedBB = nearbyEntity.getBoundingBox().inflate(entityBBPadding, entityBBPadding, entityBBPadding);
+                final Optional<Vec3> nearbyEntityIntercept = nearbyEntityPaddedBB.clip(currentPosition, nextPosition);
 
                 if (nearbyEntityIntercept.isPresent())
                 {
@@ -118,15 +123,15 @@ public class EntityMeteor extends Entity implements ILaserTrackableFast
 
         if (collidingEntity != null)
         {
-            collisionIntercept = new EntityRayTraceResult(collidingEntity);
+            collisionIntercept = new EntityHitResult(collidingEntity);
         }
 
-        if (collisionIntercept.getType() != RayTraceResult.Type.MISS)
+        if (collisionIntercept.getType() != HitResult.Type.MISS)
         {
             this.onImpact(collisionIntercept);
         }
 
-        if (this.getPosY() <= -20 || this.getPosY() >= 400)
+        if (this.getY() <= -20 || this.getY() >= 400)
         {
             this.remove();
         }
@@ -134,46 +139,46 @@ public class EntityMeteor extends Entity implements ILaserTrackableFast
 
     protected void spawnParticles()
     {
-        this.world.addParticle(ParticleTypes.SMOKE, this.getPosX(), this.getPosY() + 1D + Math.random(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
-        this.world.addParticle(ParticleTypes.SMOKE, this.getPosX() + Math.random() / 2, this.getPosY() + 1D + Math.random() / 2, this.getPosZ(), 0.0D, 0.0D, 0.0D);
-        this.world.addParticle(ParticleTypes.SMOKE, this.getPosX(), this.getPosY() + 1D + Math.random(), this.getPosZ() + Math.random(), 0.0D, 0.0D, 0.0D);
-        this.world.addParticle(ParticleTypes.SMOKE, this.getPosX() - Math.random() / 2, this.getPosY() + 1D + Math.random() / 2, this.getPosZ(), 0.0D, 0.0D, 0.0D);
-        this.world.addParticle(ParticleTypes.SMOKE, this.getPosX(), this.getPosY() + 1D + Math.random(), this.getPosZ() - Math.random(), 0.0D, 0.0D, 0.0D);
+        this.level.addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 1D + Math.random(), this.getZ(), 0.0D, 0.0D, 0.0D);
+        this.level.addParticle(ParticleTypes.SMOKE, this.getX() + Math.random() / 2, this.getY() + 1D + Math.random() / 2, this.getZ(), 0.0D, 0.0D, 0.0D);
+        this.level.addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 1D + Math.random(), this.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
+        this.level.addParticle(ParticleTypes.SMOKE, this.getX() - Math.random() / 2, this.getY() + 1D + Math.random() / 2, this.getZ(), 0.0D, 0.0D, 0.0D);
+        this.level.addParticle(ParticleTypes.SMOKE, this.getX(), this.getY() + 1D + Math.random(), this.getZ() - Math.random(), 0.0D, 0.0D, 0.0D);
     }
 
-    protected void onImpact(RayTraceResult movingObjPos)
+    protected void onImpact(HitResult movingObjPos)
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
-            this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), this.size / 3 + 2, false, Explosion.Mode.BREAK);
+            this.level.explode(this, this.getX(), this.getY(), this.getZ(), this.size / 3 + 2, false, Explosion.BlockInteraction.BREAK);
 
             if (movingObjPos != null)
             {
                 BlockPos pos;
-                if (movingObjPos.getType() != RayTraceResult.Type.BLOCK)
+                if (movingObjPos.getType() != HitResult.Type.BLOCK)
                 {
-                    pos = new BlockPos(movingObjPos.getHitVec());
+                    pos = new BlockPos(movingObjPos.getLocation());
                 }
                 else
                 {
-                    if (movingObjPos.getType() == RayTraceResult.Type.ENTITY)
+                    if (movingObjPos.getType() == HitResult.Type.ENTITY)
                     {
-                        pos = this.world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ((EntityRayTraceResult) movingObjPos).getEntity().getPosition());
+                        pos = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ((EntityHitResult) movingObjPos).getEntity().getCommandSenderBlockPosition());
                     }
                     else
                     {
-                        pos = this.world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, this.getPosition());
+                        pos = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, this.getCommandSenderBlockPosition());
                     }
                 }
-                BlockPos above = pos.up();
-                if (this.world.getBlockState(above).getBlock() instanceof AirBlock)
+                BlockPos above = pos.above();
+                if (this.level.getBlockState(above).getBlock() instanceof AirBlock)
                 {
-                    this.world.setBlockState(above, GCBlocks.fallenMeteor.getDefaultState(), 3);
+                    this.level.setBlock(above, GCBlocks.fallenMeteor.defaultBlockState(), 3);
                 }
 
-                if (movingObjPos.getType() == RayTraceResult.Type.ENTITY)
+                if (movingObjPos.getType() == HitResult.Type.ENTITY)
                 {
-                    ((EntityRayTraceResult) movingObjPos).getEntity().attackEntityFrom(EntityMeteor.causeMeteorDamage(this, this.shootingEntity), ConfigManagerCore.hardMode.get() ? 12F : 6F);
+                    ((EntityHitResult) movingObjPos).getEntity().hurt(EntityMeteor.causeMeteorDamage(this, this.shootingEntity), ConfigManagerCore.hardMode.get() ? 12F : 6F);
                 }
             }
         }
@@ -191,15 +196,15 @@ public class EntityMeteor extends Entity implements ILaserTrackableFast
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
-        this.dataManager.register(SIZE, this.size);
-        this.noClip = true;
+        this.entityData.define(SIZE, this.size);
+        this.noPhysics = true;
     }
 
     public int getSize()
     {
-        return this.dataManager.get(SIZE);
+        return this.entityData.get(SIZE);
     }
 
     /**
@@ -207,17 +212,17 @@ public class EntityMeteor extends Entity implements ILaserTrackableFast
      */
     public void setSize(int par1)
     {
-        this.dataManager.set(SIZE, Integer.valueOf(par1));
+        this.entityData.set(SIZE, Integer.valueOf(par1));
     }
 
     @Override
-    protected void readAdditional(CompoundNBT compound)
+    protected void readAdditionalSaveData(CompoundTag compound)
     {
 
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT compound)
+    protected void addAdditionalSaveData(CompoundTag compound)
     {
 
     }

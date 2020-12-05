@@ -1,10 +1,7 @@
 package micdoodle8.mods.galacticraft.core.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Player;
 
 /*
  * IInventory providing defaults for the eight methods
@@ -15,17 +12,17 @@ import net.minecraft.util.text.TranslationTextComponent;
  *
  * Override .hasCustomName() if true is required.
  */
-public interface IInventoryDefaults extends ISidedInventory
+public interface IInventoryDefaults extends WorldlyContainer
 {
     //We don't use these because we use forge containers
     @Override
-    default void openInventory(PlayerEntity player)
+    default void startOpen(Player player)
     {
     }
 
     //We don't use these because we use forge containers
     @Override
-    default void closeInventory(PlayerEntity player)
+    default void stopOpen(Player player)
     {
     }
 
@@ -47,7 +44,7 @@ public interface IInventoryDefaults extends ISidedInventory
 //    }
 
     @Override
-    default void clear()
+    default void clearContent()
     {
 
     }

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.api.prefab.world.gen;
+package micdoodle8.mods.galacticraft.api.prefab.world.gen;
 //
 //import com.google.common.collect.Sets;
 //import net.minecraft.block.BlockState;

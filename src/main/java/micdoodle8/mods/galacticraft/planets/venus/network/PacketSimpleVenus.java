@@ -8,15 +8,16 @@ import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.network.PacketSimpleAsteroids;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityLaserTurret;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
@@ -84,7 +85,7 @@ public class PacketSimpleVenus extends PacketBase
         this.data = data;
     }
 
-    public static void encode(final PacketSimpleVenus message, final PacketBuffer buf)
+    public static void encode(final PacketSimpleVenus message, final FriendlyByteBuf buf)
     {
         buf.writeInt(message.type.ordinal());
         NetworkUtil.writeUTF8String(buf, message.getDimensionID().getRegistryName().toString());
@@ -99,10 +100,10 @@ public class PacketSimpleVenus extends PacketBase
         }
     }
 
-    public static PacketSimpleVenus decode(PacketBuffer buf)
+    public static PacketSimpleVenus decode(FriendlyByteBuf buf)
     {
-        PacketSimpleVenus.EnumSimplePacketVenus type = PacketSimpleVenus.EnumSimplePacketVenus.values()[buf.readInt()];
-        DimensionType dim = DimensionType.byName(new ResourceLocation(NetworkUtil.readUTF8String(buf)));
+        EnumSimplePacketVenus type = EnumSimplePacketVenus.values()[buf.readInt()];
+        DimensionType dim = DimensionType.getByName(new ResourceLocation(NetworkUtil.readUTF8String(buf)));
         ArrayList<Object> data = null;
 
         try
@@ -131,7 +132,7 @@ public class PacketSimpleVenus extends PacketBase
         {
             if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
             {
-                message.handleClientSide(Minecraft.getInstance().player);
+                message.handleClientSide(MinecraftClient.getInstance().player);
             }
             else
             {
@@ -169,15 +170,15 @@ public class PacketSimpleVenus extends PacketBase
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     @Override
-    public void handleClientSide(PlayerEntity player)
+    public void handleClientSide(Player player)
     {
-        ClientPlayerEntity playerBaseClient = null;
+        LocalPlayer playerBaseClient = null;
 
-        if (player instanceof ClientPlayerEntity)
+        if (player instanceof LocalPlayer)
         {
-            playerBaseClient = (ClientPlayerEntity) player;
+            playerBaseClient = (LocalPlayer) player;
         }
 
         switch (this.type)
@@ -188,14 +189,14 @@ public class PacketSimpleVenus extends PacketBase
     }
 
     @Override
-    public void handleServerSide(PlayerEntity player)
+    public void handleServerSide(Player player)
     {
-        ServerPlayerEntity playerBase = PlayerUtil.getPlayerBaseServerFromPlayer(player, false);
+        ServerPlayer playerBase = PlayerUtil.getPlayerBaseServerFromPlayer(player, false);
 
         switch (this.type)
         {
         case S_UPDATE_ADVANCED_GUI:
-            TileEntity tile0 = player.world.getTileEntity((BlockPos) this.data.get(1));
+            BlockEntity tile0 = player.level.getBlockEntity((BlockPos) this.data.get(1));
 
             switch ((Integer) this.data.get(0))
             {
@@ -250,7 +251,7 @@ public class PacketSimpleVenus extends PacketBase
 //            player.openGui(GalacticraftPlanets.instance, GuiIdsPlanets.MACHINE_VENUS, player.world, pos.getX(), pos.getY(), pos.getZ()); TODO guis
             break;
         case S_MODIFY_LASER_TARGET:
-            TileEntity tile1 = player.world.getTileEntity((BlockPos) this.data.get(1));
+            BlockEntity tile1 = player.level.getBlockEntity((BlockPos) this.data.get(1));
 
             switch ((Integer) this.data.get(0))
             {

@@ -1,10 +1,10 @@
 package micdoodle8.mods.galacticraft.core.client.gui.overlay;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import micdoodle8.mods.galacticraft.core.entities.EntityTier1Rocket;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.opengl.GL11;
 
 public class Overlay
@@ -15,14 +15,14 @@ public class Overlay
      * @param player thePlayer
      * @return position of player's spaceship
      */
-    protected static int getPlayerPositionY(PlayerEntity player)
+    protected static int getPlayerPositionY(Player player)
     {
-        if (player.getRidingEntity() != null && player.getRidingEntity() instanceof EntityTier1Rocket)
+        if (player.getVehicle() != null && player.getVehicle() instanceof EntityTier1Rocket)
         {
-            return (int) Math.floor(((EntityTier1Rocket) player.getRidingEntity()).getPosY());
+            return (int) Math.floor(((EntityTier1Rocket) player.getVehicle()).getY());
         }
 
-        return (int) Math.floor(player.getPosY());
+        return (int) Math.floor(player.getY());
     }
 
     /**
@@ -39,14 +39,14 @@ public class Overlay
     {
         final float var7 = 0.00390625F;
         final float var8 = 0.00390625F;
-        final Tessellator tess = Tessellator.getInstance();
-        BufferBuilder worldRenderer = tess.getBuffer();
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer.pos(par1 + 0, par2 + par6, 0.0).tex((par3 + 0) * var7, (par4 + par6) * var8).endVertex();
-        worldRenderer.pos(par1 + par5, par2 + par6, 0.0).tex((par3 + par5) * var7, (par4 + par6) * var8).endVertex();
-        worldRenderer.pos(par1 + par5, par2 + 0, 0.0).tex((par3 + par5) * var7, (par4 + 0) * var8).endVertex();
-        worldRenderer.pos(par1 + 0, par2 + 0, 0.0).tex((par3 + 0) * var7, (par4 + 0) * var8).endVertex();
-        tess.draw();
+        final Tesselator tess = Tesselator.getInstance();
+        BufferBuilder worldRenderer = tess.getBuilder();
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+        worldRenderer.vertex(par1 + 0, par2 + par6, 0.0).uv((par3 + 0) * var7, (par4 + par6) * var8).endVertex();
+        worldRenderer.vertex(par1 + par5, par2 + par6, 0.0).uv((par3 + par5) * var7, (par4 + par6) * var8).endVertex();
+        worldRenderer.vertex(par1 + par5, par2 + 0, 0.0).uv((par3 + par5) * var7, (par4 + 0) * var8).endVertex();
+        worldRenderer.vertex(par1 + 0, par2 + 0, 0.0).uv((par3 + 0) * var7, (par4 + 0) * var8).endVertex();
+        tess.end();
     }
 
     /**

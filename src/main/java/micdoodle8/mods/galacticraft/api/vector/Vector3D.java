@@ -1,16 +1,14 @@
 package micdoodle8.mods.galacticraft.api.vector;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.*;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -51,7 +49,7 @@ public class Vector3D implements Cloneable
 
     public Vector3D(Entity par1)
     {
-        this(par1.getPosX(), par1.getPosY(), par1.getPosZ());
+        this(par1.getX(), par1.getY(), par1.getZ());
     }
 
     public Vector3D(BlockPos pos)
@@ -59,27 +57,27 @@ public class Vector3D implements Cloneable
         this(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public Vector3D(TileEntity par1)
+    public Vector3D(BlockEntity par1)
     {
-        this(par1.getPos());
+        this(par1.getBlockPos());
     }
 
-    public Vector3D(Vec3d par1)
+    public Vector3D(Vec3 par1)
     {
         this(par1.x, par1.y, par1.z);
     }
 
-    public Vector3D(RayTraceResult par1)
+    public Vector3D(HitResult par1)
     {
-        this(par1.getHitVec());
+        this(par1.getLocation());
     }
 
     public Vector3D(Direction direction)
     {
-        this(direction.getXOffset(), direction.getYOffset(), direction.getZOffset());
+        this(direction.getStepX(), direction.getStepY(), direction.getStepZ());
     }
 
-    public Vector3D(CompoundNBT nbt)
+    public Vector3D(CompoundTag nbt)
     {
         this(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z"));
     }

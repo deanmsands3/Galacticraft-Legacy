@@ -1,39 +1,40 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.PoseStack;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
 import micdoodle8.mods.galacticraft.core.client.model.ModelEvolvedCreeper;
 import micdoodle8.mods.galacticraft.core.client.render.entities.layer.LayerEvolvedCreeperCharge;
 import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedCreeper;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class RenderEvolvedCreeper extends MobRenderer<EntityEvolvedCreeper, ModelEvolvedCreeper>
 {
     private static final ResourceLocation creeperTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/creeper.png");
     private boolean texSwitch;
 
-    public RenderEvolvedCreeper(EntityRendererManager manager)
+    public RenderEvolvedCreeper(EntityRenderDispatcher manager)
     {
         super(manager, new ModelEvolvedCreeper(), 0.5F);
         this.addLayer(new LayerEvolvedCreeperCharge(this));
     }
 
     @Override
-    protected void preRenderCallback(EntityEvolvedCreeper entity, MatrixStack matrixStackIn, float partialTickTime)
+    protected void preRenderCallback(EntityEvolvedCreeper entity, PoseStack matrixStackIn, float partialTickTime)
     {
-        float f = entity.getCreeperFlashIntensity(partialTickTime);
-        float f1 = 1.0F + MathHelper.sin(f * 100.0F) * f * 0.01F;
-        f = MathHelper.clamp(f, 0.0F, 1.0F);
+        float f = entity.getSwelling(partialTickTime);
+        float f1 = 1.0F + Mth.sin(f * 100.0F) * f * 0.01F;
+        f = Mth.clamp(f, 0.0F, 1.0F);
         f = f * f;
         f = f * f;
         float f2 = (1.0F + f * 0.4F) * f1;
@@ -50,8 +51,8 @@ public class RenderEvolvedCreeper extends MobRenderer<EntityEvolvedCreeper, Mode
 
     @Override
     protected float getOverlayProgress(EntityEvolvedCreeper livingEntityIn, float partialTicks) {
-        float f = livingEntityIn.getCreeperFlashIntensity(partialTicks);
-        return (int)(f * 10.0F) % 2 == 0 ? 0.0F : MathHelper.clamp(f, 0.5F, 1.0F);
+        float f = livingEntityIn.getSwelling(partialTicks);
+        return (int)(f * 10.0F) % 2 == 0 ? 0.0F : Mth.clamp(f, 0.5F, 1.0F);
     }
 
 
@@ -79,7 +80,7 @@ public class RenderEvolvedCreeper extends MobRenderer<EntityEvolvedCreeper, Mode
     }
 
     @Override
-    public void render(EntityEvolvedCreeper entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn)
+    public void render(EntityEvolvedCreeper entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn)
     {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         if (OverlaySensorGlasses.overrideMobTexture())

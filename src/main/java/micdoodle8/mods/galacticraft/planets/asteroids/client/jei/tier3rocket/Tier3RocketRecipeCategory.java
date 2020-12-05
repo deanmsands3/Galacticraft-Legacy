@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.client.jei.tier3rocket;
+package micdoodle8.mods.galacticraft.planets.asteroids.client.jei.tier3rocket;
 //
 //import mezz.jei.api.IGuiHelper;
 //import mezz.jei.api.gui.IDrawable;

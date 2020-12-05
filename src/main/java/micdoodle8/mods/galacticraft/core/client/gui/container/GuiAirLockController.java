@@ -15,10 +15,10 @@ import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
 public class GuiAirLockController extends Screen implements ICheckBoxCallback, IDropboxCallback, ITextBoxCallback
@@ -38,7 +38,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
 
     public GuiAirLockController(TileEntityAirLockController controller)
     {
-        super(new TranslationTextComponent("gui.title.air_lock"));
+        super(new TranslatableComponent("gui.title.air_lock"));
         this.controller = controller;
         this.ySize = 139;
         this.xSize = 181;
@@ -108,22 +108,22 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
 
-        this.minecraft.textureManager.bindTexture(GuiAirLockController.AIR_LOCK_TEXTURE);
+        this.minecraft.textureManager.bind(GuiAirLockController.AIR_LOCK_TEXTURE);
         this.blit(var5, var6, 0, 0, this.xSize, this.ySize);
 
         this.blit(var5 + 11, var6 + 51, 181, 0, 7, 9);
 
         String message = GCCoreUtil.translateWithFormat("gui.title.air_lock", this.controller.ownerName);
-        this.font.drawString(message, this.width / 2 - this.font.getStringWidth(message) / 2, this.height / 2 - 65, 4210752);
+        this.font.draw(message, this.width / 2 - this.font.width(message) / 2, this.height / 2 - 65, 4210752);
 
         if (this.cannotEditTimer > 0)
         {
-            this.font.drawString(this.controller.ownerName, this.width / 2 - this.font.getStringWidth(message) / 2, this.height / 2 - 65, this.cannotEditTimer % 30 < 15 ? ColorUtil.to32BitColor(255, 255, 100, 100) : 4210752);
+            this.font.draw(this.controller.ownerName, this.width / 2 - this.font.width(message) / 2, this.height / 2 - 65, this.cannotEditTimer % 30 < 15 ? ColorUtil.to32BitColor(255, 255, 100, 100) : 4210752);
             this.cannotEditTimer--;
         }
 
         message = GCCoreUtil.translate("gui.message.status") + ":";
-        this.font.drawString(message, this.width / 2 - this.font.getStringWidth(message) / 2, this.height / 2 + 45, 4210752);
+        this.font.draw(message, this.width / 2 - this.font.width(message) / 2, this.height / 2 + 45, 4210752);
         message = EnumColor.RED + GCCoreUtil.translate("gui.status.air_lock_closed");
 
         if (!this.controller.active)
@@ -131,7 +131,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
             message = EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.status.air_lock_open");
         }
 
-        this.font.drawString(message, this.width / 2 - this.font.getStringWidth(message) / 2, this.height / 2 + 55, 4210752);
+        this.font.draw(message, this.width / 2 - this.font.width(message) / 2, this.height / 2 + 55, 4210752);
 
         super.render(mouseX, mouseY, partialTicks);
     }
@@ -142,7 +142,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
         if (checkbox.equals(this.checkboxRedstoneSignal))
         {
             this.controller.redstoneActivation = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{0, this.controller.getPos(), this.controller.redstoneActivation ? 1 : 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{0, this.controller.getBlockPos(), this.controller.redstoneActivation ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 0,
             // this.controller.xCoord, this.controller.yCoord,
@@ -152,7 +152,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
         else if (checkbox.equals(this.checkboxPlayerDistance))
         {
             this.controller.playerDistanceActivation = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{1, this.controller.getPos(), this.controller.playerDistanceActivation ? 1 : 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{1, this.controller.getBlockPos(), this.controller.playerDistanceActivation ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 1,
             // this.controller.xCoord, this.controller.yCoord,
@@ -162,7 +162,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
         else if (checkbox.equals(this.checkboxOpenForPlayer))
         {
             this.controller.playerNameMatches = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{3, this.controller.getPos(), this.controller.playerNameMatches ? 1 : 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{3, this.controller.getBlockPos(), this.controller.playerNameMatches ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 3,
             // this.controller.xCoord, this.controller.yCoord,
@@ -172,7 +172,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
         else if (checkbox.equals(this.checkboxInvertSelection))
         {
             this.controller.invertSelection = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{4, this.controller.getPos(), this.controller.invertSelection ? 1 : 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{4, this.controller.getBlockPos(), this.controller.invertSelection ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 4,
             // this.controller.xCoord, this.controller.yCoord,
@@ -183,7 +183,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
         {
             this.controller.lastHorizontalModeEnabled = this.controller.horizontalModeEnabled;
             this.controller.horizontalModeEnabled = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{5, this.controller.getPos(), this.controller.horizontalModeEnabled ? 1 : 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{5, this.controller.getBlockPos(), this.controller.horizontalModeEnabled ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 5,
             // this.controller.xCoord, this.controller.yCoord,
@@ -193,7 +193,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckbox checkbox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementCheckbox checkbox, Player player)
     {
         return PlayerUtil.getName(player).equals(this.controller.ownerName);
     }
@@ -226,7 +226,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
     }
 
     @Override
-    public boolean canBeClickedBy(GuiElementDropdown dropdown, PlayerEntity player)
+    public boolean canBeClickedBy(GuiElementDropdown dropdown, Player player)
     {
         return PlayerUtil.getName(player).equals(this.controller.ownerName);
     }
@@ -237,7 +237,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
         if (dropdown.equals(this.dropdownPlayerDistance))
         {
             this.controller.playerDistanceSelection = selection;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{2, this.controller.getPos(), this.controller.playerDistanceSelection}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{2, this.controller.getBlockPos(), this.controller.playerDistanceSelection}));
         }
     }
 
@@ -248,7 +248,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementTextBox textBox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementTextBox textBox, Player player)
     {
         return PlayerUtil.getName(player).equals(this.controller.ownerName);
     }
@@ -259,7 +259,7 @@ public class GuiAirLockController extends Screen implements ICheckBoxCallback, I
         if (textBox.equals(this.textBoxPlayerToOpenFor))
         {
             this.controller.playerToOpenFor = newText != null ? newText : "";
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_STRING, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{0, this.controller.getPos(), this.controller.playerToOpenFor}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_STRING, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{0, this.controller.getBlockPos(), this.controller.playerToOpenFor}));
         }
     }
 

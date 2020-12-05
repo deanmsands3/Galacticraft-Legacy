@@ -1,15 +1,15 @@
 package micdoodle8.mods.galacticraft.core.dimension;
 
 import micdoodle8.mods.galacticraft.core.dimension.chunk.MoonGenSettings;
-import net.minecraft.world.biome.provider.IBiomeProviderSettings;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.level.biome.BiomeSourceSettings;
+import net.minecraft.world.level.storage.LevelData;
 
-public class MoonBiomeProviderSettings implements IBiomeProviderSettings
+public class MoonBiomeProviderSettings implements BiomeSourceSettings
 {
-    private WorldInfo worldInfo;
+    private LevelData worldInfo;
     private MoonGenSettings generatorSettings;
 
-    public MoonBiomeProviderSettings(WorldInfo worldInfo)
+    public MoonBiomeProviderSettings(LevelData worldInfo)
     {
         this.worldInfo = worldInfo;
     }
@@ -20,7 +20,7 @@ public class MoonBiomeProviderSettings implements IBiomeProviderSettings
         return this;
     }
 
-    public WorldInfo getWorldInfo()
+    public LevelData getWorldInfo()
     {
         return this.worldInfo;
     }

@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.api.transmission.tile;
 
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
  * Applied to TileEntities.
@@ -16,7 +16,7 @@ public interface INetworkConnection extends IConnector
      *
      * @return
      */
-    TileEntity[] getAdjacentConnections();
+    BlockEntity[] getAdjacentConnections();
 
     /**
      * Refreshes the conductor

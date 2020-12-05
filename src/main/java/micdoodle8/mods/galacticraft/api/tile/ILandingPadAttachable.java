@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.tile;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
 
 /**
  * Implement into tile entities that can attack to landing pads. It is
@@ -18,5 +18,5 @@ public interface ILandingPadAttachable
      * @param pos   Coordinate the landing pad is located at
      * @return True if the block can attach to the landing pad, false if not
      */
-    boolean canAttachToLandingPad(IWorldReader world, BlockPos pos);
+    boolean canAttachToLandingPad(LevelReader world, BlockPos pos);
 }

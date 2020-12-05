@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei.circuitfabricator;
+package micdoodle8.mods.galacticraft.core.client.jei.circuitfabricator;
 //
 //import mezz.jei.api.IGuiHelper;
 //import mezz.jei.api.gui.*;

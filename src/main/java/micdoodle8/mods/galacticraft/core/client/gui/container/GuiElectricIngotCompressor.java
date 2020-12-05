@@ -8,11 +8,9 @@ import micdoodle8.mods.galacticraft.core.inventory.ContainerElectricIngotCompres
 import micdoodle8.mods.galacticraft.core.tile.TileEntityElectricIngotCompressor;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -25,12 +23,12 @@ public class GuiElectricIngotCompressor extends GuiContainerGC<ContainerElectric
     private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion(0, 0, 56, 9, null, 0, 0, this);
     private final GuiElementInfoRegion processInfoRegion = new GuiElementInfoRegion(0, 0, 52, 25, null, 0, 0, this);
 
-    public GuiElectricIngotCompressor(ContainerElectricIngotCompressor container, PlayerInventory playerInv, ITextComponent title)
+    public GuiElectricIngotCompressor(ContainerElectricIngotCompressor container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
 //        super(new ContainerElectricIngotCompressor(playerInv, compressor), playerInv, new TranslationTextComponent(compressor.getTierGC() == 2 ? "tile.machine2.4" : "tile.machine4.11"));
         this.compressor = container.getCompressor();
-        this.ySize = 199;
+        this.imageHeight = 199;
     }
 
     @Override
@@ -38,27 +36,27 @@ public class GuiElectricIngotCompressor extends GuiContainerGC<ContainerElectric
     {
         super.init();
         this.electricInfoRegion.tooltipStrings = new ArrayList<String>();
-        this.electricInfoRegion.xPosition = (this.width - this.xSize) / 2 + 17;
-        this.electricInfoRegion.yPosition = (this.height - this.ySize) / 2 + 95;
+        this.electricInfoRegion.xPosition = (this.width - this.imageWidth) / 2 + 17;
+        this.electricInfoRegion.yPosition = (this.height - this.imageHeight) / 2 + 95;
         this.electricInfoRegion.parentWidth = this.width;
         this.electricInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.electricInfoRegion);
         List<String> batterySlotDesc = new ArrayList<String>();
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.0"));
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.1"));
-        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 54, (this.height - this.ySize) / 2 + 74, 18, 18, batterySlotDesc, this.width, this.height, this));
+        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 54, (this.height - this.imageHeight) / 2 + 74, 18, 18, batterySlotDesc, this.width, this.height, this));
         this.processInfoRegion.tooltipStrings = new ArrayList<String>();
-        this.processInfoRegion.xPosition = (this.width - this.xSize) / 2 + 77;
-        this.processInfoRegion.yPosition = (this.height - this.ySize) / 2 + 30;
+        this.processInfoRegion.xPosition = (this.width - this.imageWidth) / 2 + 77;
+        this.processInfoRegion.yPosition = (this.height - this.imageHeight) / 2 + 30;
         this.processInfoRegion.parentWidth = this.width;
         this.processInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.processInfoRegion);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        this.font.drawString(this.title.getFormattedText(), 10, 6, 4210752);
+        this.font.draw(this.title.getColoredString(), 10, 6, 4210752);
         String displayText;
 
         if (this.compressor.processTicks > 0)
@@ -71,8 +69,8 @@ public class GuiElectricIngotCompressor extends GuiContainerGC<ContainerElectric
         }
 
         String str = GCCoreUtil.translate("gui.message.status") + ": " + this.compressor.getGUIstatus(displayText, null, true);
-        this.font.drawString(str, 120 - this.font.getStringWidth(str) / 2, 75, 4210752);
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 93, 4210752);
+        this.font.draw(str, 120 - this.font.width(str) / 2, 75, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, this.imageHeight - 93, 4210752);
 //		str = "" + this.tileEntity.storage.getMaxExtract();
 //		this.font.drawString(str, 120 - this.font.getStringWidth(str) / 2, 85, 4210752);
 //		//		str = ElectricityDisplay.getDisplay(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE);
@@ -84,14 +82,14 @@ public class GuiElectricIngotCompressor extends GuiContainerGC<ContainerElectric
      * items)
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void renderBg(float par1, int par2, int par3)
     {
-        this.minecraft.textureManager.bindTexture(GuiElectricIngotCompressor.electricFurnaceTexture);
+        this.minecraft.textureManager.bind(GuiElectricIngotCompressor.electricFurnaceTexture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int containerWidth = (this.width - this.xSize) / 2;
-        int containerHeight = (this.height - this.ySize) / 2;
-        this.blit(containerWidth, containerHeight, 0, 0, this.xSize, this.ySize);
+        int containerWidth = (this.width - this.imageWidth) / 2;
+        int containerHeight = (this.height - this.imageHeight) / 2;
+        this.blit(containerWidth, containerHeight, 0, 0, this.imageWidth, this.imageHeight);
         int scale;
 
         List<String> electricityDesc = new ArrayList<String>();

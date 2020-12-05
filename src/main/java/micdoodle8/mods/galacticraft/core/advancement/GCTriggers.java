@@ -9,29 +9,28 @@ import micdoodle8.mods.galacticraft.core.advancement.criterion.GenericTrigger;
 import micdoodle8.mods.galacticraft.core.entities.EntitySkeletonBoss;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.ICriterionTrigger;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 
 public class GCTriggers
 {
     public static final GenericTrigger LAUNCH_ROCKET = new GenericTrigger("launch_rocket")
     {
         @Override
-        public ICriterionInstance deserializeInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext)
+        public CriterionTriggerInstance createInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext)
         {
             return new Instance(getId())
             {
                 @Override
-                public boolean test(ServerPlayerEntity player)
+                public boolean test(ServerPlayer player)
                 {
-                    if (player.getRidingEntity() instanceof EntitySpaceshipBase)
+                    if (player.getVehicle() instanceof EntitySpaceshipBase)
                     {
-                        if (((EntitySpaceshipBase) player.getRidingEntity()).launchPhase >= EntitySpaceshipBase.EnumLaunchPhase.LAUNCHED.ordinal())
+                        if (((EntitySpaceshipBase) player.getVehicle()).launchPhase >= EntitySpaceshipBase.EnumLaunchPhase.LAUNCHED.ordinal())
                         {
-                            return player.getRidingEntity().getPassengers().size() >= 1 && player.getRidingEntity().getPassengers().get(0) instanceof ServerPlayerEntity;
+                            return player.getVehicle().getPassengers().size() >= 1 && player.getVehicle().getPassengers().get(0) instanceof ServerPlayer;
                         }
                     }
                     return false;
@@ -42,14 +41,14 @@ public class GCTriggers
     public static final GenericTrigger FIND_MOON_BOSS = new GenericTrigger("boss_moon")
     {
         @Override
-        public ICriterionInstance deserializeInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext)
+        public CriterionTriggerInstance createInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext)
         {
             return new Instance(getId())
             {
                 @Override
-                public boolean test(ServerPlayerEntity player)
+                public boolean test(ServerPlayer player)
                 {
-                    return ((ServerWorld) player.world).getEntities().filter((entity -> entity instanceof EntitySkeletonBoss && entity.getDistanceSq(player) < 400)).count() >= 1;
+                    return ((ServerLevel) player.level).getEntities().filter((entity -> entity instanceof EntitySkeletonBoss && entity.squaredDistanceTo(player) < 400)).count() >= 1;
                 }
             };
         }
@@ -57,12 +56,12 @@ public class GCTriggers
     public static final GenericTrigger CREATE_SPACE_STATION = new GenericTrigger("create_space_station")
     {
         @Override
-        public ICriterionInstance deserializeInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext)
+        public CriterionTriggerInstance createInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext)
         {
             return new Instance(getId())
             {
                 @Override
-                public boolean test(ServerPlayerEntity player)
+                public boolean test(ServerPlayer player)
                 {
                     return !GCPlayerStats.get(player).getSpaceStationDimensionData().isEmpty();
                 }
@@ -80,7 +79,7 @@ public class GCTriggers
             for (Method m : mm)
             {
                 Class<?>[] params = m.getParameterTypes();
-                if (params != null && params.length == 1 && params[0] == ICriterionTrigger.class)
+                if (params != null && params.length == 1 && params[0] == CriterionTrigger.class)
                 {
                     register = m;
                     break;

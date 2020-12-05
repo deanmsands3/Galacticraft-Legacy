@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.world.gen;
+package micdoodle8.mods.galacticraft.planets.mars.world.gen;
 //
 //import net.minecraft.world.biome.Biome;
 //import net.minecraftforge.common.BiomeDictionary;

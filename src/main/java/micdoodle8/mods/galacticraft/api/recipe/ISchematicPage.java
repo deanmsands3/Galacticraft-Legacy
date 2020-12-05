@@ -1,13 +1,15 @@
 package micdoodle8.mods.galacticraft.api.recipe;
 
-import net.minecraft.client.gui.IHasContainer;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -35,8 +37,8 @@ public interface ISchematicPage extends Comparable<ISchematicPage>
      * @param pos    Coordinates of the NASA Workbench
      * @return the GUI to be opened with this schematic
      */
-    @OnlyIn(Dist.CLIENT)
-    <M extends Container, U extends Screen & IHasContainer<M>> ScreenManager.IScreenFactory<M, U> getResultScreen(PlayerEntity player, BlockPos pos);
+    @Environment(EnvType.CLIENT)
+    <M extends AbstractContainerMenu, U extends Screen & MenuAccess<M>> MenuScreens.ScreenConstructor<M, U> getResultScreen(Player player, BlockPos pos);
 
     /**
      * The resulting container for this page
@@ -44,5 +46,5 @@ public interface ISchematicPage extends Comparable<ISchematicPage>
      * @param player The player opening this GUI
      * @return the container to be opened with this schematic
      */
-    SimpleNamedContainerProvider getContainerProvider(PlayerEntity player);
+    SimpleMenuProvider getContainerProvider(Player player);
 }

@@ -12,24 +12,22 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityFuelLoader;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityNasaWorkbench;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -48,9 +46,9 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
 //    }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state)
+    public RenderShape getRenderShape(BlockState state)
     {
-        return BlockRenderType.MODEL;
+        return RenderShape.MODEL;
     }
 
 //    @Override
@@ -98,16 +96,16 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
 //    }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
     {
         BlockMulti.onPlacement(worldIn, pos, placer, this);
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        final TileEntity var9 = worldIn.getTileEntity(pos);
+        final BlockEntity var9 = worldIn.getBlockEntity(pos);
 
         int fakeBlockCount = 0;
 
@@ -121,7 +119,7 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
                     {
                         if (Math.abs(x) != 1 || Math.abs(z) != 1)
                         {
-                            Block block = worldIn.getBlockState(pos.add(x, y, z)).getBlock();
+                            Block block = worldIn.getBlockState(pos.offset(x, y, z)).getBlock();
 
                             if ((y == 0 || y == 3) && x == 0 && z == 0)
                             {
@@ -148,18 +146,18 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
             ((IMultiBlock) var9).onDestroy(var9);
         }
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit)
     {
-        if (!worldIn.isRemote)
+        if (!worldIn.isClientSide)
         {
-            SimpleNamedContainerProvider container = SchematicRegistry.getMatchingRecipeForID(0).getContainerProvider(playerIn);
-            NetworkHooks.openGui((ServerPlayerEntity) playerIn, container, buf -> buf.writeBlockPos(pos));
+            SimpleMenuProvider container = SchematicRegistry.getMatchingRecipeForID(0).getContainerProvider(playerIn);
+            NetworkHooks.openGui((ServerPlayer) playerIn, container, buf -> buf.writeBlockPos(pos));
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
 //    @Override
@@ -169,7 +167,7 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
 //    }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityNasaWorkbench();
     }
@@ -183,7 +181,7 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -199,7 +197,7 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
 //    }
 
     @Override
-    public boolean isSealed(World worldIn, BlockPos pos, Direction direction)
+    public boolean isSealed(Level worldIn, BlockPos pos, Direction direction)
     {
         return true;
     }
@@ -211,10 +209,10 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param)
+    public boolean triggerEvent(BlockState state, Level worldIn, BlockPos pos, int id, int param)
     {
-        super.eventReceived(state, worldIn, pos, id, param);
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(id, param);
+        super.triggerEvent(state, worldIn, pos, id, param);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity != null && tileentity.triggerEvent(id, param);
     }
 }

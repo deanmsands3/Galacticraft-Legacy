@@ -10,14 +10,14 @@ import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.*;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlockNames;
 import micdoodle8.mods.galacticraft.planets.mars.tile.*;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -73,12 +73,12 @@ public class AsteroidBlocks
     {
         IForgeRegistry<Block> r = evt.getRegistry();
 
-        Block.Properties builder = Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F).sound(SoundType.METAL);
+        Block.Properties builder = Block.Properties.of(Material.METAL).strength(1.0F).sound(SoundType.METAL);
         register(r, new BlockWalkway(builder), AsteroidBlockNames.blockWalkway);
         register(r, new BlockWalkway(builder), AsteroidBlockNames.blockWalkwayFluid);
         register(r, new BlockWalkway(builder), AsteroidBlockNames.blockWalkwayWire);
 
-        builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F);
+        builder = Block.Properties.of(Material.STONE).strength(3.0F);
         register(r, new BlockAsteroidRock(builder), AsteroidBlockNames.rock0);
         register(r, new BlockAsteroidRock(builder), AsteroidBlockNames.rock1);
         register(r, new BlockAsteroidRock(builder), AsteroidBlockNames.rock2);
@@ -88,25 +88,25 @@ public class AsteroidBlocks
         register(r, new DecoBlock(builder), AsteroidBlockNames.asteroidDeco);
         register(r, new DecoBlock(builder), AsteroidBlockNames.titaniumBlock);
 
-        builder = Block.Properties.create(Material.IRON).sound(SoundType.METAL);
+        builder = Block.Properties.of(Material.METAL).sound(SoundType.METAL);
         register(r, new BlockBeamReflector(builder), AsteroidBlockNames.beamReflector);
         register(r, new BlockBeamReceiver(builder), AsteroidBlockNames.beamReceiver);
 
-        builder = Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3.0F);
+        builder = Block.Properties.of(Material.METAL).sound(SoundType.METAL).strength(3.0F);
         register(r, new BlockShortRangeTelepad(builder), AsteroidBlockNames.shortRangeTelepad);
 
-        builder = Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(100000.0F);
+        builder = Block.Properties.of(Material.METAL).sound(SoundType.METAL).strength(100000.0F);
         register(r, new BlockTelepadFake(builder), AsteroidBlockNames.fakeTelepad);
 
-        builder = Block.Properties.create(Material.ICE).sound(SoundType.GLASS).hardnessAndResistance(0.5F).slipperiness(0.98F);
+        builder = Block.Properties.of(Material.ICE).sound(SoundType.GLASS).strength(0.5F).friction(0.98F);
         register(r, new BlockIceAsteroids(builder), AsteroidBlockNames.blockDenseIce);
 
-        builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F).sound(SoundType.METAL).notSolid();
+        builder = Block.Properties.of(Material.STONE).strength(3.0F).sound(SoundType.METAL).noOcclusion();
         register(r, new BlockMinerBase(builder), AsteroidBlockNames.blockMinerBase);
-        builder = builder.hardnessAndResistance(3.0F, 35.0F);
+        builder = builder.strength(3.0F, 35.0F);
         register(r, new BlockMinerBaseFull(builder), AsteroidBlockNames.minerBaseFull);
 
-        builder = Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().sound(SoundType.NETHER_WART);
+        builder = Block.Properties.of(Material.PLANT).noCollission().randomTicks().sound(SoundType.NETHER_WART);
         register(r, new BlockSpaceWart(builder), AsteroidBlockNames.spaceWart);
     }
 
@@ -117,7 +117,7 @@ public class AsteroidBlocks
 
     public static <V extends IForgeRegistryEntry<V>> void register(IForgeRegistry<V> reg, ResourceLocation name, IForgeRegistryEntry<V> thing)
     {
-        if (Registry.BLOCK.getValue(name).get() instanceof IShiftDescription && !(thing instanceof ItemBlockDesc)) {
+        if (Registry.BLOCK.getOptional(name).get() instanceof IShiftDescription && !(thing instanceof ItemBlockDesc)) {
             System.err.println("IShiftDescription block needs ItemBlockDesc registration!");
         }
         GCBlocks.register(reg, name, thing);
@@ -126,11 +126,11 @@ public class AsteroidBlocks
     public static void registerItemBlocks(RegistryEvent.Register<Item> evt)
     {
         IForgeRegistry<Item> r = evt.getRegistry();
-        Item.Properties props = GCItems.defaultBuilder().group(null);
+        Item.Properties props = GCItems.defaultBuilder().tab(null);
         register(r, Registry.BLOCK.getKey(fakeTelepad), new BlockItem(fakeTelepad, props));
         register(r, Registry.BLOCK.getKey(minerBaseFull), new BlockItem(minerBaseFull, props));
         register(r, Registry.BLOCK.getKey(spaceWart), new BlockItem(spaceWart, props));
-        props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
+        props = GCItems.defaultBuilder().tab(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(blockWalkway), new ItemBlockDesc(blockWalkway, props));
         register(r, Registry.BLOCK.getKey(blockWalkwayFluid), new ItemBlockDesc(blockWalkwayFluid, props));
         register(r, Registry.BLOCK.getKey(blockWalkwayWire), new ItemBlockDesc(blockWalkwayWire, props));
@@ -185,15 +185,15 @@ public class AsteroidBlocks
 //    }
 
     @SubscribeEvent
-    public static void initTileEntities(RegistryEvent.Register<TileEntityType<?>> evt)
+    public static void initTileEntities(RegistryEvent.Register<BlockEntityType<?>> evt)
     {
-        IForgeRegistry<TileEntityType<?>> r = evt.getRegistry();
+        IForgeRegistry<BlockEntityType<?>> r = evt.getRegistry();
 
-        register(r, TileEntityType.Builder.create(TileEntityBeamReceiver::new, beamReceiver).build(null), AsteroidBlockNames.beamReceiver);
-        register(r, TileEntityType.Builder.create(TileEntityBeamReflector::new, beamReflector).build(null), AsteroidBlockNames.beamReflector);
-        register(r, TileEntityType.Builder.create(TileEntityMinerBaseSingle::new, blockMinerBase).build(null), AsteroidBlockNames.blockMinerBase);
-        register(r, TileEntityType.Builder.create(TileEntityMinerBase::new, minerBaseFull).build(null), AsteroidBlockNames.minerBaseFull);
-        register(r, TileEntityType.Builder.create(TileEntityShortRangeTelepad::new, shortRangeTelepad).build(null), AsteroidBlockNames.shortRangeTelepad);
-        register(r, TileEntityType.Builder.create(TileEntityTelepadFake::new, fakeTelepad).build(null), AsteroidBlockNames.fakeTelepad);
+        register(r, BlockEntityType.Builder.of(TileEntityBeamReceiver::new, beamReceiver).build(null), AsteroidBlockNames.beamReceiver);
+        register(r, BlockEntityType.Builder.of(TileEntityBeamReflector::new, beamReflector).build(null), AsteroidBlockNames.beamReflector);
+        register(r, BlockEntityType.Builder.of(TileEntityMinerBaseSingle::new, blockMinerBase).build(null), AsteroidBlockNames.blockMinerBase);
+        register(r, BlockEntityType.Builder.of(TileEntityMinerBase::new, minerBaseFull).build(null), AsteroidBlockNames.minerBaseFull);
+        register(r, BlockEntityType.Builder.of(TileEntityShortRangeTelepad::new, shortRangeTelepad).build(null), AsteroidBlockNames.shortRangeTelepad);
+        register(r, BlockEntityType.Builder.of(TileEntityTelepadFake::new, fakeTelepad).build(null), AsteroidBlockNames.fakeTelepad);
     }
 }

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client;
+package micdoodle8.mods.galacticraft.core.client;
 //
 //import com.mojang.blaze3d.platform.GlStateManager;
 //import micdoodle8.mods.galacticraft.core.Constants;

@@ -4,15 +4,15 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlock;
 import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlockNames;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class TileEntityTelepadFake extends TileBaseElectricBlock
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.fakeTelepad)
-    public static TileEntityType<TileEntityTelepadFake> TYPE;
+    public static BlockEntityType<TileEntityTelepadFake> TYPE;
 
     // The the position of the main block
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -52,10 +52,10 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     {
         this.setMainBlockInternal(mainBlock);
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
-            BlockState state = this.world.getBlockState(this.getPos());
-            this.world.notifyBlockUpdate(this.getPos(), state, state, 3);
+            BlockState state = this.level.getBlockState(this.getBlockPos());
+            this.level.sendBlockUpdated(this.getBlockPos(), state, state, 3);
         }
     }
 
@@ -75,12 +75,12 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
         }
     }
 
-    public ActionResultType onActivated(PlayerEntity par5EntityPlayer)
+    public InteractionResult onActivated(Player par5EntityPlayer)
     {
         TileEntityShortRangeTelepad telepad = this.getBaseTelepad();
         if (telepad == null)
         {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
         return telepad.onActivated(par5EntityPlayer);
     }
@@ -110,7 +110,7 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
 
         if (mainTelepad == null)
         {
-            TileEntity tileEntity = this.world.getTileEntity(this.mainBlockPosition);
+            BlockEntity tileEntity = this.level.getBlockEntity(this.mainBlockPosition);
 
             if (tileEntity != null)
             {
@@ -123,7 +123,7 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
 
         if (mainTelepad == null)
         {
-            this.world.removeBlock(this.mainBlockPosition, false);
+            this.level.removeBlock(this.mainBlockPosition, false);
         }
         else
         {
@@ -135,7 +135,7 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
             }
             else
             {
-                this.world.removeTileEntity(this.getPos());
+                this.level.removeBlockEntity(this.getBlockPos());
             }
         }
 
@@ -143,21 +143,21 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
-        CompoundNBT tagCompound = nbt.getCompound("mainBlockPosition");
+        super.load(nbt);
+        CompoundTag tagCompound = nbt.getCompound("mainBlockPosition");
         this.setMainBlockInternal(new BlockPos(tagCompound.getInt("x"), tagCompound.getInt("y"), tagCompound.getInt("z")));
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
 
         if (this.mainBlockPosition != null)
         {
-            CompoundNBT tagCompound = new CompoundNBT();
+            CompoundTag tagCompound = new CompoundTag();
             tagCompound.putInt("x", this.mainBlockPosition.getX());
             tagCompound.putInt("y", this.mainBlockPosition.getY());
             tagCompound.putInt("z", this.mainBlockPosition.getZ());
@@ -190,7 +190,7 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     {
         if (this.mainBlockPosition == null)
         {
-            if (this.world.isRemote || !this.resetMainBlockPosition())
+            if (this.level.isClientSide || !this.resetMainBlockPosition())
             {
                 return;
             }
@@ -206,8 +206,8 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
             {
                 for (int y = -2; y < 1; y += 2)
                 {
-                    final BlockPos vecToCheck = this.getPos().add(x, y, z);
-                    if (this.world.getTileEntity(vecToCheck) instanceof TileEntityShortRangeTelepad)
+                    final BlockPos vecToCheck = this.getBlockPos().offset(x, y, z);
+                    if (this.level.getBlockEntity(vecToCheck) instanceof TileEntityShortRangeTelepad)
                     {
                         this.setMainBlock(vecToCheck);
                         return true;
@@ -251,9 +251,9 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     {
         if (this.mainBlockPosition != null)
         {
-            if (this.getPos().getX() == mainBlockPosition.getX() && this.getPos().getZ() == mainBlockPosition.getZ())
+            if (this.getBlockPos().getX() == mainBlockPosition.getX() && this.getBlockPos().getZ() == mainBlockPosition.getZ())
             {
-                if (this.getPos().getY() > mainBlockPosition.getY())
+                if (this.getBlockPos().getY() > mainBlockPosition.getY())
                 {
                     // If the block has the same x- and y- coordinates, but is above the base block, this is the
                     //      connectable tile

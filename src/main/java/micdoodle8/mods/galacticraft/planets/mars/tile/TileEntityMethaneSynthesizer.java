@@ -26,24 +26,24 @@ import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlockNames;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerLaunchController;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerMethaneSynthesizer;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -58,10 +58,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInventory implements ISidedInventory, IDisableableMachine, IFluidHandlerWrapper, INamedContainerProvider
+public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IDisableableMachine, IFluidHandlerWrapper, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.methaneSynthesizer)
-    public static TileEntityType<TileEntityMethaneSynthesizer> TYPE;
+    public static BlockEntityType<TileEntityMethaneSynthesizer> TYPE;
 
     private final int tankCapacity = 4000;
 
@@ -138,7 +138,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
             this.hasCO2 = this.getAirProducts();
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             //If somehow it has CO2 in a CO2-free dimension, flush it out
             if (this.hasCO2 == 0 && this.gasTank2.getFluidAmount() > 0)
@@ -159,11 +159,11 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
                     //CO2 -> CO2 tank
                     if (this.gasTank2.getFluidAmount() < this.gasTank2.getCapacity())
                     {
-                        BlockState stateAbove = this.world.getBlockState(this.getPos().up());
+                        BlockState stateAbove = this.level.getBlockState(this.getBlockPos().above());
                         Block blockAbove = stateAbove.getBlock();
                         if (blockAbove.getMaterial(stateAbove) == Material.AIR && blockAbove != GCBlocks.breatheableAir && blockAbove != GCBlocks.brightBreatheableAir)
                         {
-                            if (!OxygenUtil.inOxygenBubble(this.world, this.getPos().getX() + 0.5D, this.getPos().getY() + 1D, this.getPos().getZ() + 0.5D))
+                            if (!OxygenUtil.inOxygenBubble(this.level, this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 1D, this.getBlockPos().getZ() + 0.5D))
                             {
                                 FluidStack gcAtmosphere = new FluidStack(PlanetFluids.GAS_CARBON_DIOXIDE.getFluid(), 4);
                                 this.gasTank2.fill(gcAtmosphere, IFluidHandler.FluidAction.EXECUTE);
@@ -271,7 +271,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
 
     public int getAirProducts()
     {
-        Dimension WP = this.world.getDimension();
+        Dimension WP = this.level.getDimension();
         if (WP instanceof DimensionSpace)
         {
             ArrayList<EnumAtmosphericGas> atmos = ((DimensionSpace) WP).getCelestialBody().atmosphere.composition;
@@ -316,7 +316,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
         {
             if (this.coalPartial == 0)
             {
-                this.decrStackSize(3, 1);
+                this.removeItem(3, 1);
             }
             this.coalPartial++;
             if (this.coalPartial == 40)
@@ -348,9 +348,9 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.processTicks = nbt.getInt("smeltingTicks");
 
         if (nbt.contains("gasTank"))
@@ -370,24 +370,24 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("smeltingTicks", this.processTicks);
 
         if (this.gasTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("gasTank", this.gasTank.writeToNBT(new CompoundNBT()));
+            nbt.put("gasTank", this.gasTank.writeToNBT(new CompoundTag()));
         }
 
         if (this.gasTank2.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("gasTank2", this.gasTank2.writeToNBT(new CompoundNBT()));
+            nbt.put("gasTank2", this.gasTank2.writeToNBT(new CompoundTag()));
         }
 
         if (this.liquidTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("liquidTank", this.liquidTank.writeToNBT(new CompoundNBT()));
+            nbt.put("liquidTank", this.liquidTank.writeToNBT(new CompoundTag()));
         }
 
         return nbt;
@@ -408,9 +408,9 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (this.isItemValidForSlot(slotID, itemstack))
+        if (this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
@@ -428,9 +428,9 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (this.isItemValidForSlot(slotID, itemstack))
+        if (this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
@@ -446,7 +446,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         switch (slotID)
         {
@@ -714,17 +714,17 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
 //        if (state.getBlock() instanceof BlockMachineMarsT2)
 //        {
 //            return state.get(BlockMachineMarsT2.FACING);
 //        }
-        return state.get(BlockMethaneSynthesizer.FACING);
+        return state.getValue(BlockMethaneSynthesizer.FACING);
     }
 
     public Direction getHydrogenInputDirection()
     {
-        return this.getFront().rotateY();
+        return this.getFront().getClockWise();
     }
 
     private boolean produceOutput(Direction outputDirection)
@@ -733,7 +733,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
 
         if (provide > 0)
         {
-            TileEntity outputTile = new BlockVec3(this).getTileEntityOnSide(this.world, outputDirection);
+            BlockEntity outputTile = new BlockVec3(this).getTileEntityOnSide(this.level, outputDirection);
             FluidNetwork outputNetwork = NetworkHelper.getFluidNetworkFromTile(outputTile, outputDirection);
 
             if (outputNetwork != null)
@@ -758,14 +758,14 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerMethaneSynthesizer(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.methane_synthesizer");
+        return new TranslatableComponent("container.methane_synthesizer");
     }
 }

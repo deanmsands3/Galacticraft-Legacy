@@ -7,27 +7,27 @@ import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerOxygenDecompressor;
 import micdoodle8.mods.galacticraft.core.inventory.IInventoryDefaults;
 import micdoodle8.mods.galacticraft.core.items.ItemOxygenTank;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 
-public class TileEntityOxygenDecompressor extends TileEntityOxygen implements IInventoryDefaults, ISidedInventory, INamedContainerProvider
+public class TileEntityOxygenDecompressor extends TileEntityOxygen implements IInventoryDefaults, WorldlyContainer, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenDecompressor)
-    public static TileEntityType<TileEntityOxygenDecompressor> TYPE;
+    public static BlockEntityType<TileEntityOxygenDecompressor> TYPE;
 
     public static final int OUTPUT_PER_TICK = 100;
     private boolean usingEnergy = false;
@@ -43,16 +43,16 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.usingEnergy = false;
             ItemStack tank1 = this.getInventory().get(0);
 
             if (!tank1.isEmpty() && this.hasEnoughEnergyToRun && this.getOxygenStored() < this.getMaxOxygenStored())
             {
-                if (tank1.getItem() instanceof ItemOxygenTank && tank1.getDamage() < tank1.getMaxDamage())
+                if (tank1.getItem() instanceof ItemOxygenTank && tank1.getDamageValue() < tank1.getMaxDamage())
                 {
-                    tank1.setDamage(tank1.getDamage() + 1); // TODO Test: Shouldn't damage only be done if receieve was successful?
+                    tank1.setDamageValue(tank1.getDamageValue() + 1); // TODO Test: Shouldn't damage only be done if receieve was successful?
                     this.receiveOxygen(1, IFluidHandler.FluidAction.EXECUTE);
                     this.usingEnergy = true;
                 }
@@ -68,7 +68,7 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 1;
     }
@@ -82,14 +82,14 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (this.isItemValidForSlot(slotID, itemstack))
+        if (this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
             case 0:
-                return itemstack.getDamage() < itemstack.getMaxDamage();
+                return itemstack.getDamageValue() < itemstack.getMaxDamage();
             case 1:
                 return ItemElectricBase.isElectricItemCharged(itemstack);
             default:
@@ -100,14 +100,14 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (this.isItemValidForSlot(slotID, itemstack))
+        if (this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
             case 0:
-                return itemstack.getDamage() == itemstack.getMaxDamage();
+                return itemstack.getDamageValue() == itemstack.getMaxDamage();
             case 1:
                 return ItemElectricBase.isElectricItemEmpty(itemstack);
             default:
@@ -118,7 +118,7 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         switch (slotID)
         {
@@ -140,10 +140,10 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (state.getBlock() instanceof BlockOxygenCompressor)
         {
-            return state.get(BlockOxygenCompressor.FACING).rotateY();
+            return state.getValue(BlockOxygenCompressor.FACING).getClockWise();
         }
         return Direction.NORTH;
     }
@@ -157,7 +157,7 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
     @Override
     public ItemStack getBatteryInSlot()
     {
-        return this.getStackInSlot(1);
+        return this.getItem(1);
     }
 
     public Direction getOxygenOutputDirection()
@@ -196,14 +196,14 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerOxygenDecompressor(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.oxygen_decompressor");
+        return new TranslatableComponent("container.oxygen_decompressor");
     }
 }

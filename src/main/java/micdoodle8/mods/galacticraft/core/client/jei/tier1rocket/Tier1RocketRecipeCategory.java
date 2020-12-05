@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei.tier1rocket;
+package micdoodle8.mods.galacticraft.core.client.jei.tier1rocket;
 //
 //import mezz.jei.api.IGuiHelper;
 //import mezz.jei.api.gui.IDrawable;

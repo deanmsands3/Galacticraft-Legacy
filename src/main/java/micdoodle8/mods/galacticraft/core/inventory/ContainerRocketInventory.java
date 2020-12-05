@@ -4,33 +4,32 @@ import micdoodle8.mods.galacticraft.api.entity.IRocketType.EnumRocketType;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityTieredRocket;
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerRocketInventory extends Container
+public class ContainerRocketInventory extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.ROCKET_INVENTORY)
-    public static ContainerType<ContainerRocketInventory> TYPE;
+    public static MenuType<ContainerRocketInventory> TYPE;
 
-    private final PlayerInventory playerInv;
+    private final Inventory playerInv;
     private final EntityAutoRocket rocket;
 
-    public ContainerRocketInventory(int containerId, PlayerInventory playerInv, EntityAutoRocket rocket)
+    public ContainerRocketInventory(int containerId, Inventory playerInv, EntityAutoRocket rocket)
     {
         super(TYPE, containerId);
         this.playerInv = playerInv;
         this.rocket = rocket;
-        rocket.openInventory(playerInv.player);
-        this.addSlotsWithInventory(rocket.getSizeInventory());
+        rocket.startOpen(playerInv.player);
+        this.addSlotsWithInventory(rocket.getContainerSize());
     }
 
-    public PlayerInventory getPlayerInv()
+    public Inventory getPlayerInv()
     {
         return playerInv;
     }
@@ -70,42 +69,42 @@ public class ContainerRocketInventory extends Container
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.rocket.isUsableByPlayer(par1EntityPlayer);
+        return this.rocket.stillValid(par1EntityPlayer);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par2)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par2)
     {
         ItemStack var3 = ItemStack.EMPTY;
-        final Slot var4 = this.inventorySlots.get(par2);
-        final int b = this.inventorySlots.size() - 36;
+        final Slot var4 = this.slots.get(par2);
+        final int b = this.slots.size() - 36;
 
-        if (var4 != null && var4.getHasStack())
+        if (var4 != null && var4.hasItem())
         {
-            final ItemStack var5 = var4.getStack();
+            final ItemStack var5 = var4.getItem();
             var3 = var5.copy();
 
             if (par2 < b)
             {
-                if (!this.mergeItemStack(var5, b, b + 36, true))
+                if (!this.moveItemStackTo(var5, b, b + 36, true))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (!this.mergeItemStack(var5, 0, b, false))
+            else if (!this.moveItemStackTo(var5, 0, b, false))
             {
                 return ItemStack.EMPTY;
             }
 
             if (var5.getCount() == 0)
             {
-                var4.putStack(ItemStack.EMPTY);
+                var4.set(ItemStack.EMPTY);
             }
             else
             {
-                var4.onSlotChanged();
+                var4.setChanged();
             }
         }
 
@@ -113,9 +112,9 @@ public class ContainerRocketInventory extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity par1EntityPlayer)
+    public void removed(Player par1EntityPlayer)
     {
-        super.onContainerClosed(par1EntityPlayer);
-        this.playerInv.closeInventory(par1EntityPlayer);
+        super.removed(par1EntityPlayer);
+        this.playerInv.stopOpen(par1EntityPlayer);
     }
 }

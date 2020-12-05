@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.wrappers;
+package micdoodle8.mods.galacticraft.core.wrappers;
 //
 //import net.minecraft.block.Block;
 //

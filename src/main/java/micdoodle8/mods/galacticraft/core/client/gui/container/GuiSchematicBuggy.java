@@ -5,10 +5,10 @@ import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerSchematicBuggy;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.opengl.GL11;
 
 public class GuiSchematicBuggy extends GuiContainerGC<ContainerSchematicBuggy> implements ISchematicResultPage
@@ -17,10 +17,10 @@ public class GuiSchematicBuggy extends GuiContainerGC<ContainerSchematicBuggy> i
 
     private int pageIndex;
 
-    public GuiSchematicBuggy(ContainerSchematicBuggy containerBuggy, PlayerInventory playerInv, ITextComponent title)
+    public GuiSchematicBuggy(ContainerSchematicBuggy containerBuggy, Inventory playerInv, Component title)
     {
         super(containerBuggy, playerInv, title);
-        this.ySize = 221;
+        this.imageHeight = 221;
     }
 
     @Override
@@ -39,20 +39,20 @@ public class GuiSchematicBuggy extends GuiContainerGC<ContainerSchematicBuggy> i
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        this.font.drawString(GCCoreUtil.translate("schematic.moonbuggy"), 7, -20 + 27, 4210752);
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, 202 - 104 + 2 + 27, 4210752);
+        this.font.draw(GCCoreUtil.translate("schematic.moonbuggy"), 7, -20 + 27, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, 202 - 104 + 2 + 27, 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void renderBg(float par1, int par2, int par3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.textureManager.bindTexture(GuiSchematicBuggy.buggyBenchTexture);
-        final int var5 = (this.width - this.xSize) / 2;
+        this.minecraft.textureManager.bind(GuiSchematicBuggy.buggyBenchTexture);
+        final int var5 = (this.width - this.imageWidth) / 2;
         final int var6 = (this.height - 221) / 2;
-        this.blit(var5, var6, 0, 0, this.xSize, 220);
+        this.blit(var5, var6, 0, 0, this.imageWidth, 220);
     }
 
     @Override

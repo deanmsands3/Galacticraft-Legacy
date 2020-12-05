@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.render.entities;
+package micdoodle8.mods.galacticraft.core.client.render.entities;
 //
 //import micdoodle8.mods.galacticraft.core.Constants;
 //import micdoodle8.mods.galacticraft.core.GalacticraftCore;

@@ -1,9 +1,8 @@
 package micdoodle8.mods.galacticraft.api.inventory;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-
 import java.lang.reflect.Method;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 /**
  * A static method for other mods to access the Galacticraft
@@ -17,7 +16,7 @@ public class AccessInventoryGC
     private static Method getStats;
     private static Method getExtendedInventory;
 
-    public static IInventoryGC getGCInventoryForPlayer(ServerPlayerEntity player)
+    public static IInventoryGC getGCInventoryForPlayer(ServerPlayer player)
     {
         try
         {

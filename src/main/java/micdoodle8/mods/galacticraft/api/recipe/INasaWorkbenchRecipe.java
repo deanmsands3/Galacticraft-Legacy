@@ -1,14 +1,13 @@
 package micdoodle8.mods.galacticraft.api.recipe;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-
 import javax.annotation.Nonnull;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 
 public interface INasaWorkbenchRecipe
 {
-    boolean matches(IInventory inventory);
+    boolean matches(Container inventory);
 
     int getRecipeSize();
 

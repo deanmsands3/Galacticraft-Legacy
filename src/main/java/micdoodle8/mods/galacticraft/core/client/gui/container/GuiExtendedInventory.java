@@ -1,46 +1,43 @@
 package micdoodle8.mods.galacticraft.core.client.gui.container;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.InventoryTabGalacticraft;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerEnergyStorageModule;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerExtendedInventory;
 import micdoodle8.mods.galacticraft.core.inventory.InventoryExtended;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.DisplayEffectsScreen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
-public class GuiExtendedInventory extends DisplayEffectsScreen<ContainerExtendedInventory>
+public class GuiExtendedInventory extends EffectRenderingInventoryScreen<ContainerExtendedInventory>
 {
     private static final ResourceLocation inventoryTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/inventory.png");
     private int potionOffsetLast;
     private static float rotation = 0.0F;
     private boolean initWithPotion;
 
-    public GuiExtendedInventory(ContainerExtendedInventory container, PlayerInventory playerInv, ITextComponent title)
+    public GuiExtendedInventory(ContainerExtendedInventory container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
 //        super(new ContainerExtendedInventory(playerInv, inventory), playerInv.inventory, new StringTextComponent("Extended Inventory"));
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
+    protected void renderLabels(int mouseX, int mouseY)
     {
         GuiExtendedInventory.drawPlayerOnGui(this.minecraft, 33, 80, 29);
     }
@@ -50,32 +47,32 @@ public class GuiExtendedInventory extends DisplayEffectsScreen<ContainerExtended
     {
         super.init();
 
-        this.guiLeft = (this.width - this.xSize) / 2;
-        this.guiLeft += this.getPotionOffset();
+        this.leftPos = (this.width - this.imageWidth) / 2;
+        this.leftPos += this.getPotionOffset();
         this.potionOffsetLast = this.getPotionOffsetNEI();
 
-        int cornerX = this.guiLeft;
-        int cornerY = this.guiTop;
+        int cornerX = this.leftPos;
+        int cornerY = this.topPos;
 
         TabRegistry.updateTabValues(cornerX, cornerY, InventoryTabGalacticraft.class);
         TabRegistry.addTabsToList(this::addButton);
 
-        this.buttons.add(new Button(this.guiLeft + 10, this.guiTop + 71, 7, 7, "", (button) ->
+        this.buttons.add(new Button(this.leftPos + 10, this.topPos + 71, 7, 7, "", (button) ->
         {
             GuiExtendedInventory.rotation += 10.0F;
         }));
-        this.buttons.add(new Button(this.guiLeft + 51, this.guiTop + 71, 7, 7, "", (button) ->
+        this.buttons.add(new Button(this.leftPos + 51, this.topPos + 71, 7, 7, "", (button) ->
         {
             GuiExtendedInventory.rotation -= 10.0F;
         }));
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
+    protected void renderBg(float partialTicks, int mouseX, int mouseY)
     {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GuiExtendedInventory.inventoryTexture);
-        this.blit(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.minecraft.getTextureManager().bind(GuiExtendedInventory.inventoryTexture);
+        this.blit(this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
@@ -87,7 +84,7 @@ public class GuiExtendedInventory extends DisplayEffectsScreen<ContainerExtended
         {
             int diff = newPotionOffset - this.potionOffsetLast;
             this.potionOffsetLast = newPotionOffset;
-            this.guiLeft += diff;
+            this.leftPos += diff;
 
 //            for (int k = 0; k < this.buttons.size(); ++k)
 //            {
@@ -101,44 +98,44 @@ public class GuiExtendedInventory extends DisplayEffectsScreen<ContainerExtended
         }
         this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+        this.renderTooltip(mouseX, mouseY);
     }
 
     public static void drawPlayerOnGui(Minecraft minecraft, int x, int y, int scale)
     {
-        ClientPlayerEntity player = minecraft.player;
+        LocalPlayer player = minecraft.player;
         RenderSystem.pushMatrix();
 //        RenderSystem.translatef((float)x, (float)y, 1050.0F);
 //        RenderSystem.scalef(1.0F, 1.0F, -1.0F);
-        MatrixStack matrixstack = new MatrixStack();
+        PoseStack matrixstack = new PoseStack();
         matrixstack.translate(x, y, 1000.0D);
         matrixstack.scale((float)scale, (float)scale, (float)-scale);
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
 //        Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
 //        quaternion.multiply(quaternion1);
-        matrixstack.rotate(quaternion);
-        float f2 = player.renderYawOffset;
-        float f3 = player.rotationYaw;
-        float f4 = player.rotationPitch;
-        float f5 = player.prevRotationYawHead;
-        float f6 = player.rotationYawHead;
-        player.renderYawOffset = GuiExtendedInventory.rotation;
-        player.rotationPitch = (float) Math.sin(Util.milliTime() / 500.0F) * 3.0F;
-        player.rotationYaw = GuiExtendedInventory.rotation;
-        player.prevRotationYawHead = player.rotationYaw;
-        EntityRendererManager entityrenderermanager = Minecraft.getInstance().getRenderManager();
+        matrixstack.mulPose(quaternion);
+        float f2 = player.yBodyRot;
+        float f3 = player.yRot;
+        float f4 = player.xRot;
+        float f5 = player.yHeadRotO;
+        float f6 = player.yHeadRot;
+        player.yBodyRot = GuiExtendedInventory.rotation;
+        player.xRot = (float) Math.sin(Util.getMillis() / 500.0F) * 3.0F;
+        player.yRot = GuiExtendedInventory.rotation;
+        player.yHeadRotO = player.yRot;
+        EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
 //        quaternion1.conjugate();
 //        entityrenderermanager.setCameraOrientation(quaternion1);
         entityrenderermanager.setRenderShadow(false);
-        IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-        entityrenderermanager.renderEntityStatic(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixstack, irendertypebuffer$impl, 15728880);
-        irendertypebuffer$impl.finish();
+        MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
+        entityrenderermanager.render(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixstack, irendertypebuffer$impl, 15728880);
+        irendertypebuffer$impl.endBatch();
         entityrenderermanager.setRenderShadow(true);
-        player.renderYawOffset = f2;
-        player.rotationYaw = f3;
-        player.rotationPitch = f4;
-        player.prevRotationYawHead = f5;
-        player.rotationYawHead = f6;
+        player.yBodyRot = f2;
+        player.yRot = f3;
+        player.xRot = f4;
+        player.yHeadRotO = f5;
+        player.yHeadRot = f6;
         RenderSystem.popMatrix();
     }
 

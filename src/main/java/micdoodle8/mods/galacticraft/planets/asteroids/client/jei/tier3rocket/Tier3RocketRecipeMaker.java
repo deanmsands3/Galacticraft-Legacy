@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.client.jei.tier3rocket;
+package micdoodle8.mods.galacticraft.planets.asteroids.client.jei.tier3rocket;
 //
 //import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 //import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;

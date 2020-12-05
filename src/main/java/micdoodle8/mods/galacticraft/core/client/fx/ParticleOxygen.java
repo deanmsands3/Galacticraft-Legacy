@@ -1,21 +1,21 @@
 package micdoodle8.mods.galacticraft.core.client.fx;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Camera;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.HashMap;
 import java.util.Map;
 
-@OnlyIn(Dist.CLIENT)
-public class ParticleOxygen extends SpriteTexturedParticle
+@Environment(EnvType.CLIENT)
+public class ParticleOxygen extends TextureSheetParticle
 {
     private final float portalParticleScale;
     private final double portalPosX;
@@ -24,50 +24,50 @@ public class ParticleOxygen extends SpriteTexturedParticle
     private static long tick = -1L;
     private static final Map<BlockPos, Integer> cacheLighting = new HashMap<>();
 
-    public ParticleOxygen(World par1World, double posX, double posY, double posZ, double motX, double motY, double motZ, float colR, float colG, float colB)
+    public ParticleOxygen(Level par1World, double posX, double posY, double posZ, double motX, double motY, double motZ, float colR, float colG, float colB)
     {
         super(par1World, posX, posY, posZ, motX, motY, motZ);
-        this.motionX = motX;
-        this.motionY = motY;
-        this.motionZ = motZ;
-        this.portalPosX = this.posX = posX;
-        this.portalPosY = this.posY = posY;
-        this.portalPosZ = this.posZ = posZ;
-        this.portalParticleScale = this.particleScale = 0.1F;
-        this.particleRed = colR;
-        this.particleGreen = colG;
-        this.particleBlue = colB;
-        this.maxAge = (int) (Math.random() * 10.0D) + 40;
-        this.canCollide = false;
+        this.xd = motX;
+        this.yd = motY;
+        this.zd = motZ;
+        this.portalPosX = this.x = posX;
+        this.portalPosY = this.y = posY;
+        this.portalPosZ = this.z = posZ;
+        this.portalParticleScale = this.quadSize = 0.1F;
+        this.rCol = colR;
+        this.gCol = colG;
+        this.bCol = colB;
+        this.lifetime = (int) (Math.random() * 10.0D) + 40;
+        this.hasPhysics = false;
     }
 
     @Override
-    public IParticleRenderType getRenderType()
+    public ParticleRenderType getRenderType()
     {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
-    public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks)
+    public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks)
     {
-        float var8 = (this.age + partialTicks) / this.maxAge;
+        float var8 = (this.age + partialTicks) / this.lifetime;
         var8 = 1.0F - var8;
         var8 *= var8;
         var8 = 1.0F - var8;
-        this.particleScale = this.portalParticleScale * var8;
-        super.renderParticle(buffer, renderInfo, partialTicks);
+        this.quadSize = this.portalParticleScale * var8;
+        super.render(buffer, renderInfo, partialTicks);
     }
 
     @Override
-    public int getBrightnessForRender(float par1)
+    public int getLightColor(float par1)
     {
-        long time = this.world.getDayTime();
+        long time = this.level.getDayTime();
         if (time > tick)
         {
             cacheLighting.clear();
             tick = time;
         }
-        BlockPos blockpos = new BlockPos(this.posX, this.posY + 0.17, this.posZ);
+        BlockPos blockpos = new BlockPos(this.x, this.y + 0.17, this.z);
         int var2;
         if (cacheLighting.containsKey(blockpos))
         {
@@ -75,10 +75,10 @@ public class ParticleOxygen extends SpriteTexturedParticle
         }
         else
         {
-            var2 = this.world.isBlockLoaded(blockpos) ? this.world.getLight(blockpos) : 0;
+            var2 = this.level.hasChunkAt(blockpos) ? this.level.getMaxLocalRawBrightness(blockpos) : 0;
             cacheLighting.put(blockpos, var2);
         }
-        float var3 = (float) this.age / (float) this.maxAge;
+        float var3 = (float) this.age / (float) this.lifetime;
         var3 *= var3;
         var3 *= var3;
         final int var4 = var2 & 255;
@@ -105,35 +105,35 @@ public class ParticleOxygen extends SpriteTexturedParticle
     @Override
     public void tick()
     {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
-        float var1 = (float) this.age / (float) this.maxAge;
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
+        float var1 = (float) this.age / (float) this.lifetime;
         final float var2 = var1;
         var1 = -var1 + var1 * var1 * 2.0F;
         var1 = 1.0F - var1;
-        this.posX = this.portalPosX + this.motionX * var1;
-        this.posY = this.portalPosY + this.motionY * var1 + (1.0F - var2);
-        this.posZ = this.portalPosZ + this.motionZ * var1;
+        this.x = this.portalPosX + this.xd * var1;
+        this.y = this.portalPosY + this.yd * var1 + (1.0F - var2);
+        this.z = this.portalPosZ + this.zd * var1;
 
-        if (this.age++ >= this.maxAge)
+        if (this.age++ >= this.lifetime)
         {
-            this.setExpired();
+            this.remove();
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<BasicParticleType>
+    @Environment(EnvType.CLIENT)
+    public static class Factory implements ParticleProvider<SimpleParticleType>
     {
-        private final IAnimatedSprite spriteSet;
+        private final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite spriteSet)
+        public Factory(SpriteSet spriteSet)
         {
             this.spriteSet = spriteSet;
         }
 
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle makeParticle(SimpleParticleType typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
         {
             return new ParticleOxygen(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, 0.7F, 0.7F, 1.0F);
         }

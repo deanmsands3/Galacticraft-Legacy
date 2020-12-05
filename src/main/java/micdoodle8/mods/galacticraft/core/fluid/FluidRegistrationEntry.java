@@ -5,10 +5,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -16,7 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
  * Credit to pupnewfster from the Mekanism project
  */
 @ParametersAreNonnullByDefault
-public class FluidRegistrationEntry<STILL extends Fluid, FLOWING extends Fluid, BLOCK extends FlowingFluidBlock, BUCKET extends Item>
+public class FluidRegistrationEntry<STILL extends Fluid, FLOWING extends Fluid, BLOCK extends LiquidBlock, BUCKET extends Item>
 {
     private RegistryObject<STILL> stillRO;
     private RegistryObject<FLOWING> flowingRO;

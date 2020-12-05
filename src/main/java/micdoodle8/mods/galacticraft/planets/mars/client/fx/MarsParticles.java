@@ -2,10 +2,9 @@ package micdoodle8.mods.galacticraft.planets.mars.client.fx;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.fx.BlockPosParticleData;
-import net.minecraft.client.Minecraft;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,9 +17,9 @@ import net.minecraftforge.registries.ObjectHolder;
 public class MarsParticles
 {
     @ObjectHolder(MarsParticleTypeNames.drip)
-    public static BasicParticleType DRIP;
+    public static SimpleParticleType DRIP;
     @ObjectHolder(MarsParticleTypeNames.cryo)
-    public static BasicParticleType CRYO;
+    public static SimpleParticleType CRYO;
 
     public static <V extends IForgeRegistryEntry<V>> void register(IForgeRegistry<V> reg, IForgeRegistryEntry<V> thing, ResourceLocation name)
     {
@@ -37,7 +36,7 @@ public class MarsParticles
     {
         IForgeRegistry<ParticleType<?>> r = evt.getRegistry();
 
-        register(r, new BasicParticleType(false), MarsParticleTypeNames.drip);
-        register(r, new BasicParticleType(false), MarsParticleTypeNames.cryo);
+        register(r, new SimpleParticleType(false), MarsParticleTypeNames.drip);
+        register(r, new SimpleParticleType(false), MarsParticleTypeNames.cryo);
     }
 }

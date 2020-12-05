@@ -6,15 +6,14 @@ import com.mojang.datafixers.types.DynamicOps;
 import micdoodle8.mods.galacticraft.core.world.gen.dungeon.DungeonConfiguration;
 import micdoodle8.mods.galacticraft.planets.asteroids.world.gen.base.BaseDeck.EnumBaseType;
 import micdoodle8.mods.galacticraft.planets.asteroids.world.gen.base.BaseRoom.EnumRoomType;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Random;
 
-public class BaseConfiguration implements IFeatureConfig
+public class BaseConfiguration implements FeatureConfiguration
 {
     private final static int HANGAR_AIRLOCK_HEIGHT = 6;
     private final static int HANGAR_AIRLOCK_WIDTH = 7;
@@ -42,7 +41,7 @@ public class BaseConfiguration implements IFeatureConfig
 
     public BaseConfiguration(int yPosition, Random rand)
     {
-        BaseDeck.EnumBaseType[] types = BaseDeck.EnumBaseType.values();
+        EnumBaseType[] types = EnumBaseType.values();
         this.yPosition = yPosition - 2 + rand.nextInt(5);
         this.baseType = rand.nextInt(types.length);
         this.hangar = rand.nextInt(3) == 0;
@@ -119,7 +118,7 @@ public class BaseConfiguration implements IFeatureConfig
         return config;
     }
 
-    public void writeToNBT(CompoundNBT tagCompound)
+    public void writeToNBT(CompoundTag tagCompound)
     {
         tagCompound.putInt("yPos", this.yPosition);
         tagCompound.putInt("dT", this.baseType + (this.hangar ? 16 : 0));
@@ -127,7 +126,7 @@ public class BaseConfiguration implements IFeatureConfig
         tagCompound.putInt("rmN", this.roomsNo);
     }
 
-    public void readFromNBT(CompoundNBT tagCompound)
+    public void readFromNBT(CompoundTag tagCompound)
     {
         try
         {
@@ -141,8 +140,8 @@ public class BaseConfiguration implements IFeatureConfig
             }
             this.roomDepth = tagCompound.getInt("rmD");
             this.roomsNo = tagCompound.getInt("rmN");
-            this.roomHeight = BaseDeck.EnumBaseType.values()[this.baseType].height;
-            this.wallBlock = BaseDeck.EnumBaseType.values()[this.baseType].wall;
+            this.roomHeight = EnumBaseType.values()[this.baseType].height;
+            this.wallBlock = EnumBaseType.values()[this.baseType].wall;
         }
         catch (Exception e)
         {
@@ -173,7 +172,7 @@ public class BaseConfiguration implements IFeatureConfig
 
     public EnumBaseType getDeckType()
     {
-        return BaseDeck.EnumBaseType.values()[this.baseType];
+        return EnumBaseType.values()[this.baseType];
     }
 
     public boolean isHangarDeck()

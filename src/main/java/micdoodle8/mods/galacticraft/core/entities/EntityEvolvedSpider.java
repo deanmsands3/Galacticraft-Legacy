@@ -7,27 +7,27 @@ import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import net.minecraft.entity.*;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.entity.monster.SpiderEntity;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.DifficultyInstance;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.monster.SharedMonsterAttributes;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 
-public class EntityEvolvedSpider extends SpiderEntity implements IEntityBreathable
+public class EntityEvolvedSpider extends Spider implements IEntityBreathable
 {
-    public EntityEvolvedSpider(EntityType<? extends EntityEvolvedSpider> type, World world)
+    public EntityEvolvedSpider(EntityType<? extends EntityEvolvedSpider> type, Level world)
     {
         super(type, world);
     }
@@ -38,7 +38,7 @@ public class EntityEvolvedSpider extends SpiderEntity implements IEntityBreathab
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(22.0D);
         double difficulty = 0;
-        switch (this.world.getDifficulty())
+        switch (this.level.getDifficulty())
         {
         case HARD:
             difficulty = 2D;
@@ -61,15 +61,15 @@ public class EntityEvolvedSpider extends SpiderEntity implements IEntityBreathab
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag)
+    public SpawnGroupData finalizeSpawn(LevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag)
     {
-        spawnDataIn = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 
         // onInitialSpawn is called for EntitySpider, which has a chance of adding a vanilla skeleton, remove these
         for (Entity entity : getPassengers())
         {
             entity.stopRiding();
-            if (!(entity instanceof SkeletonEntity))
+            if (!(entity instanceof Skeleton))
             {
                 GCLog.severe("Removed unexpected passenger from spider: " + entity);
             }
@@ -79,32 +79,32 @@ public class EntityEvolvedSpider extends SpiderEntity implements IEntityBreathab
             }
         }
 
-        if (this.world.rand.nextInt(100) == 0)
+        if (this.level.random.nextInt(100) == 0)
         {
-            EntityEvolvedSkeleton entityskeleton = new EntityEvolvedSkeleton(GCEntities.EVOLVED_SKELETON, world);
-            entityskeleton.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, 0.0F);
-            entityskeleton.onInitialSpawn(worldIn, difficultyIn, reason, null, null);
-            this.world.addEntity(entityskeleton);
+            EntityEvolvedSkeleton entityskeleton = new EntityEvolvedSkeleton(GCEntities.EVOLVED_SKELETON, level);
+            entityskeleton.moveTo(this.getX(), this.getY(), this.getZ(), this.yRot, 0.0F);
+            entityskeleton.finalizeSpawn(worldIn, difficultyIn, reason, null, null);
+            this.level.addFreshEntity(entityskeleton);
             entityskeleton.startRiding(this);
         }
 
         if (spawnDataIn == null)
         {
-            spawnDataIn = new SpiderEntity.GroupData();
+            spawnDataIn = new Spider.SpiderEffectsGroupData();
 
-            if (this.world.getDifficulty() == Difficulty.HARD && this.world.rand.nextFloat() < 0.1F * difficultyIn.getClampedAdditionalDifficulty())
+            if (this.level.getDifficulty() == Difficulty.HARD && this.level.random.nextFloat() < 0.1F * difficultyIn.getSpecialMultiplier())
             {
-                ((SpiderEntity.GroupData) spawnDataIn).setRandomEffect(this.world.rand);
+                ((Spider.SpiderEffectsGroupData) spawnDataIn).setRandomEffect(this.level.random);
             }
         }
 
-        if (spawnDataIn instanceof SpiderEntity.GroupData)
+        if (spawnDataIn instanceof Spider.SpiderEffectsGroupData)
         {
-            Effect potion = ((SpiderEntity.GroupData) spawnDataIn).effect;
+            MobEffect potion = ((Spider.SpiderEffectsGroupData) spawnDataIn).effect;
 
             if (potion != null)
             {
-                this.addPotionEffect(new EffectInstance(potion, Integer.MAX_VALUE));
+                this.addEffect(new MobEffectInstance(potion, Integer.MAX_VALUE));
             }
         }
 

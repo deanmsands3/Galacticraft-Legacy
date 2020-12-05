@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.core.inventory;
 
-import net.minecraft.inventory.IInventory;
+import net.minecraft.world.Container;
 
-public interface IInventorySettable extends IInventory
+public interface IInventorySettable extends Container
 {
     void setSizeInventory(int size);
 }

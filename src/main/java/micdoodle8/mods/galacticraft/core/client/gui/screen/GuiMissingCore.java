@@ -2,17 +2,18 @@ package micdoodle8.mods.galacticraft.core.client.gui.screen;
 
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.net.URI;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class GuiMissingCore extends Screen
 {
     private int urlX;
@@ -22,7 +23,7 @@ public class GuiMissingCore extends Screen
 
     public GuiMissingCore()
     {
-        super(new StringTextComponent("Missing Core"));
+        super(new TextComponent("Missing Core"));
     }
 
     @Override
@@ -42,12 +43,12 @@ public class GuiMissingCore extends Screen
         offset += 20;
         this.drawCenteredString(this.font, GCCoreUtil.translate("gui.missing_core.name.2"), this.width / 2, offset, 0x999999);
         offset += 20;
-        String s = TextFormatting.UNDERLINE + GCCoreUtil.translate("gui.missing_core.name.3");
-        this.urlX = this.width / 2 - this.font.getStringWidth(s) / 2 - 10;
+        String s = ChatFormatting.UNDERLINE + GCCoreUtil.translate("gui.missing_core.name.3");
+        this.urlX = this.width / 2 - this.font.width(s) / 2 - 10;
         this.urlY = offset - 2;
-        this.urlWidth = this.font.getStringWidth(s) + 20;
+        this.urlWidth = this.font.width(s) + 20;
         this.urlHeight = 14;
-        AbstractGui.fill(this.urlX, this.urlY, this.urlX + this.urlWidth, this.urlY + this.urlHeight, ColorUtil.to32BitColor(50, 0, 0, 255));
+        GuiComponent.fill(this.urlX, this.urlY, this.urlX + this.urlWidth, this.urlY + this.urlHeight, ColorUtil.to32BitColor(50, 0, 0, 255));
         this.drawCenteredString(this.font, s, this.width / 2, offset, 0x999999);
     }
 

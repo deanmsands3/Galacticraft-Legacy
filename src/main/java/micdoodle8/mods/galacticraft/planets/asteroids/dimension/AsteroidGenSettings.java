@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.dimension;
 
-import net.minecraft.world.gen.GenerationSettings;
+import net.minecraft.world.level.levelgen.ChunkGeneratorSettings;
 
-public class AsteroidGenSettings extends GenerationSettings
+public class AsteroidGenSettings extends ChunkGeneratorSettings
 {
     public int getBiomeSize()
     {
@@ -20,7 +20,7 @@ public class AsteroidGenSettings extends GenerationSettings
     }
 
     @Override
-    public int getBedrockFloorHeight()
+    public int getBedrockFloorPosition()
     {
         return 0;
     }

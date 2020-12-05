@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.venus.blocks;
+package micdoodle8.mods.galacticraft.planets.venus.blocks;
 //
 //import micdoodle8.mods.galacticraft.api.vector.Vector3;
 //import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;

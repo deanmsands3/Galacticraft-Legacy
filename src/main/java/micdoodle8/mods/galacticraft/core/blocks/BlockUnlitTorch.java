@@ -4,17 +4,17 @@ import micdoodle8.mods.galacticraft.api.block.IOxygenReliantBlock;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.TorchBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -102,7 +102,7 @@ public class BlockUnlitTorch extends TorchBlock implements IOxygenReliantBlock
 //        }
 //    }
 
-    private void checkOxygen(World world, BlockPos pos, BlockState state)
+    private void checkOxygen(Level world, BlockPos pos, BlockState state)
     {
         if (world.getDimension() instanceof IGalacticraftDimension)
         {
@@ -117,13 +117,13 @@ public class BlockUnlitTorch extends TorchBlock implements IOxygenReliantBlock
         }
         else
         {
-            world.setBlockState(pos, this.fallback.getDefaultState(), 2);
+            world.setBlock(pos, this.fallback.defaultBlockState(), 2);
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     @Override
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand)
     {
         double d0 = (double) pos.getX() + 0.5D;
         double d1 = (double) pos.getY() + 0.7D;
@@ -137,20 +137,20 @@ public class BlockUnlitTorch extends TorchBlock implements IOxygenReliantBlock
     }
 
     @Override
-    public void onOxygenRemoved(World world, BlockPos pos, BlockState state)
+    public void onOxygenRemoved(Level world, BlockPos pos, BlockState state)
     {
         if (world.getDimension() instanceof IGalacticraftDimension)
         {
-            world.setBlockState(pos, this.unlitVersion.getDefaultState(), 2);
+            world.setBlock(pos, this.unlitVersion.defaultBlockState(), 2);
         }
     }
 
     @Override
-    public void onOxygenAdded(World world, BlockPos pos, BlockState state)
+    public void onOxygenAdded(Level world, BlockPos pos, BlockState state)
     {
         if (world.getDimension() instanceof IGalacticraftDimension)
         {
-            world.setBlockState(pos, this.litVersion.getDefaultState(), 2);
+            world.setBlock(pos, this.litVersion.defaultBlockState(), 2);
         }
     }
 
@@ -161,13 +161,13 @@ public class BlockUnlitTorch extends TorchBlock implements IOxygenReliantBlock
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         this.checkOxygen(worldIn, pos, state);
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
     {
         this.checkOxygen(worldIn, pos, state);
     }

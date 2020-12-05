@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.energy.item;
+package micdoodle8.mods.galacticraft.core.energy.item;
 //
 //import ic2.api.item.IElectricItem;
 //import ic2.api.item.IElectricItemManager;

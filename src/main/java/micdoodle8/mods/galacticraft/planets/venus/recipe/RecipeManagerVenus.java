@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.venus.recipe;
+package micdoodle8.mods.galacticraft.planets.venus.recipe;
 //
 //import micdoodle8.mods.galacticraft.api.recipe.CircuitFabricatorRecipes;
 //import micdoodle8.mods.galacticraft.core.GCItems;

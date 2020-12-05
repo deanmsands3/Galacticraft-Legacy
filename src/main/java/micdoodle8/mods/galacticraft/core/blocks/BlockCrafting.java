@@ -6,28 +6,26 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityCrafting;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockCrafting extends BlockAdvancedTile implements IShiftDescription, ISortable
@@ -46,49 +44,49 @@ public class BlockCrafting extends BlockAdvancedTile implements IShiftDescriptio
 //    }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit)
     {
-        ItemStack heldItem = playerIn.getHeldItem(hand);
+        ItemStack heldItem = playerIn.getItemInHand(hand);
 
-        if (this.useWrench(worldIn, pos, playerIn, hand, heldItem, hit) == ActionResultType.SUCCESS)
+        if (this.useWrench(worldIn, pos, playerIn, hand, heldItem, hit) == InteractionResult.SUCCESS)
         {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
-        if (playerIn.isSneaking())
+        if (playerIn.isShiftKeyDown())
         {
-            if (this.onSneakMachineActivated(worldIn, pos, playerIn, hand, heldItem, hit) == ActionResultType.SUCCESS)
+            if (this.onSneakMachineActivated(worldIn, pos, playerIn, hand, heldItem, hit) == InteractionResult.SUCCESS)
             {
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
 
-        if (!worldIn.isRemote)
+        if (!worldIn.isClientSide)
         {
-            NetworkHooks.openGui((ServerPlayerEntity) playerIn, getContainer(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
+            NetworkHooks.openGui((ServerPlayer) playerIn, getMenuProvider(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
         }
 
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos)
+    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider)tileentity : null;
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity instanceof MenuProvider ? (MenuProvider)tileentity : null;
     }
 
     @Override
-    public ActionResultType onUseWrench(World world, BlockPos pos, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onUseWrench(Level world, BlockPos pos, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
         this.rotate6Ways(world, pos);
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    private void rotate6Ways(World world, BlockPos pos)
+    private void rotate6Ways(Level world, BlockPos pos)
     {
         BlockState state = world.getBlockState(pos);
-        Direction facing = state.get(FACING);
+        Direction facing = state.getValue(FACING);
         if (facing == Direction.DOWN)
         {
             facing = Direction.UP;
@@ -103,7 +101,7 @@ public class BlockCrafting extends BlockAdvancedTile implements IShiftDescriptio
         }
         else
         {
-            facing = facing.rotateY();
+            facing = facing.getClockWise();
         }
 //        int metadata = this.getMetaFromState(world.getBlockState(pos));
 //        int metaDir = ((metadata & 7) + 1) % 6;
@@ -122,11 +120,11 @@ public class BlockCrafting extends BlockAdvancedTile implements IShiftDescriptio
 //            metaDir = 0;
 //        }
 
-        world.setBlockState(pos, state.with(FACING, facing), 3);
+        world.setBlock(pos, state.setValue(FACING, facing), 3);
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityCrafting();
     }
@@ -138,16 +136,16 @@ public class BlockCrafting extends BlockAdvancedTile implements IShiftDescriptio
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.getDefaultState().with(FACING, getFacingFromEntity(context.getWorld(), context.getPos(), context.getPlayer()));
+        return this.defaultBlockState().setValue(FACING, getFacingFromEntity(context.getLevel(), context.getClickedPos(), context.getPlayer()));
     }
 
-    public static Direction getFacingFromEntity(World worldIn, BlockPos clickedBlock, LivingEntity entityIn)
+    public static Direction getFacingFromEntity(Level worldIn, BlockPos clickedBlock, LivingEntity entityIn)
     {
-        if (MathHelper.abs((float) entityIn.getPosX() - (float) clickedBlock.getX()) < 3.0F && MathHelper.abs((float) entityIn.getPosZ() - (float) clickedBlock.getZ()) < 3.0F)
+        if (Mth.abs((float) entityIn.getX() - (float) clickedBlock.getX()) < 3.0F && Mth.abs((float) entityIn.getZ() - (float) clickedBlock.getZ()) < 3.0F)
         {
-            double d0 = entityIn.getPosY() + (double) entityIn.getEyeHeight();
+            double d0 = entityIn.getY() + (double) entityIn.getEyeHeight();
 
             if (d0 - (double) clickedBlock.getY() > 2.0D)
             {
@@ -160,7 +158,7 @@ public class BlockCrafting extends BlockAdvancedTile implements IShiftDescriptio
             }
         }
 
-        return entityIn.getHorizontalFacing().getOpposite();
+        return entityIn.getDirection().getOpposite();
     }
 
     @Override
@@ -172,7 +170,7 @@ public class BlockCrafting extends BlockAdvancedTile implements IShiftDescriptio
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -188,7 +186,7 @@ public class BlockCrafting extends BlockAdvancedTile implements IShiftDescriptio
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(FACING);
     }

@@ -1,19 +1,16 @@
 package micdoodle8.mods.galacticraft.core.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
-public class InventoryTreasureChest implements IInventory
+public class InventoryTreasureChest implements Container
 {
     private final String name;
-    private final IInventory upperChest;
-    private final IInventory lowerChest;
+    private final Container upperChest;
+    private final Container lowerChest;
 
-    public InventoryTreasureChest(String name, IInventory upper, IInventory lower)
+    public InventoryTreasureChest(String name, Container upper, Container lower)
     {
         this.name = name;
 
@@ -32,9 +29,9 @@ public class InventoryTreasureChest implements IInventory
     }
 
     @Override
-    public int getSizeInventory()
+    public int getContainerSize()
     {
-        return this.upperChest.getSizeInventory() + this.lowerChest.getSizeInventory();
+        return this.upperChest.getContainerSize() + this.lowerChest.getContainerSize();
     }
 
 
@@ -51,80 +48,80 @@ public class InventoryTreasureChest implements IInventory
 //    }
 
     @Override
-    public ItemStack getStackInSlot(int slot)
+    public ItemStack getItem(int slot)
     {
-        return slot >= this.upperChest.getSizeInventory() ? this.lowerChest.getStackInSlot(slot - this.upperChest.getSizeInventory()) : this.upperChest.getStackInSlot(slot);
+        return slot >= this.upperChest.getContainerSize() ? this.lowerChest.getItem(slot - this.upperChest.getContainerSize()) : this.upperChest.getItem(slot);
     }
 
     @Override
-    public ItemStack decrStackSize(int slot, int count)
+    public ItemStack removeItem(int slot, int count)
     {
-        return slot >= this.upperChest.getSizeInventory() ? this.lowerChest.decrStackSize(slot - this.upperChest.getSizeInventory(), count) : this.upperChest.decrStackSize(slot, count);
+        return slot >= this.upperChest.getContainerSize() ? this.lowerChest.removeItem(slot - this.upperChest.getContainerSize(), count) : this.upperChest.removeItem(slot, count);
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int slot)
+    public ItemStack removeItemNoUpdate(int slot)
     {
-        return slot >= this.upperChest.getSizeInventory() ? this.lowerChest.removeStackFromSlot(slot - this.upperChest.getSizeInventory()) : this.upperChest.removeStackFromSlot(slot);
+        return slot >= this.upperChest.getContainerSize() ? this.lowerChest.removeItemNoUpdate(slot - this.upperChest.getContainerSize()) : this.upperChest.removeItemNoUpdate(slot);
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack stack)
+    public void setItem(int slot, ItemStack stack)
     {
-        if (slot >= this.upperChest.getSizeInventory())
+        if (slot >= this.upperChest.getContainerSize())
         {
-            this.lowerChest.setInventorySlotContents(slot - this.upperChest.getSizeInventory(), stack);
+            this.lowerChest.setItem(slot - this.upperChest.getContainerSize(), stack);
         }
         else
         {
-            this.upperChest.setInventorySlotContents(slot, stack);
+            this.upperChest.setItem(slot, stack);
         }
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
-        return this.upperChest.getInventoryStackLimit();
+        return this.upperChest.getMaxStackSize();
     }
 
     @Override
-    public void markDirty()
+    public void setChanged()
     {
-        this.upperChest.markDirty();
-        this.lowerChest.markDirty();
+        this.upperChest.setChanged();
+        this.lowerChest.setChanged();
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity p_70300_1_)
+    public boolean stillValid(Player p_70300_1_)
     {
-        return this.upperChest.isUsableByPlayer(p_70300_1_) && this.lowerChest.isUsableByPlayer(p_70300_1_);
+        return this.upperChest.stillValid(p_70300_1_) && this.lowerChest.stillValid(p_70300_1_);
     }
 
     @Override
-    public void openInventory(PlayerEntity player)
+    public void startOpen(Player player)
     {
-        this.upperChest.openInventory(player);
-        this.lowerChest.openInventory(player);
+        this.upperChest.startOpen(player);
+        this.lowerChest.startOpen(player);
     }
 
     @Override
-    public void closeInventory(PlayerEntity player)
+    public void stopOpen(Player player)
     {
-        this.upperChest.closeInventory(player);
-        this.lowerChest.closeInventory(player);
+        this.upperChest.stopOpen(player);
+        this.lowerChest.stopOpen(player);
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack)
+    public boolean canPlaceItem(int slot, ItemStack stack)
     {
         return true;
     }
 
     @Override
-    public void clear()
+    public void clearContent()
     {
-        this.upperChest.clear();
-        this.lowerChest.clear();
+        this.upperChest.clearContent();
+        this.lowerChest.clearContent();
     }
 
     @Override

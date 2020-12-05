@@ -2,32 +2,31 @@ package micdoodle8.mods.galacticraft.core.client.fx;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.command.arguments.BlockStateParser;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class BlockPosParticleData implements IParticleData
+public class BlockPosParticleData implements ParticleOptions
 {
-    public static final IParticleData.IDeserializer<BlockPosParticleData> DESERIALIZER = new IParticleData.IDeserializer<BlockPosParticleData>()
+    public static final ParticleOptions.Deserializer<BlockPosParticleData> DESERIALIZER = new ParticleOptions.Deserializer<BlockPosParticleData>()
     {
         @Override
-        public BlockPosParticleData deserialize(ParticleType<BlockPosParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException
+        public BlockPosParticleData fromCommand(ParticleType<BlockPosParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException
         {
             reader.expect(' ');
-            return new BlockPosParticleData(particleTypeIn, BlockPos.fromLong(reader.readLong()));
+            return new BlockPosParticleData(particleTypeIn, BlockPos.of(reader.readLong()));
         }
 
         @Override
-        public BlockPosParticleData read(ParticleType<BlockPosParticleData> particleTypeIn, PacketBuffer buffer)
+        public BlockPosParticleData fromNetwork(ParticleType<BlockPosParticleData> particleTypeIn, FriendlyByteBuf buffer)
         {
-            return new BlockPosParticleData(particleTypeIn, BlockPos.fromLong(buffer.readLong()));
+            return new BlockPosParticleData(particleTypeIn, BlockPos.of(buffer.readLong()));
         }
     };
     private final ParticleType<BlockPosParticleData> particleType;
@@ -40,13 +39,13 @@ public class BlockPosParticleData implements IParticleData
     }
 
     @Override
-    public void write(PacketBuffer buffer)
+    public void writeToNetwork(FriendlyByteBuf buffer)
     {
-        buffer.writeLong(this.blockPos.toLong());
+        buffer.writeLong(this.blockPos.asLong());
     }
 
     @Override
-    public String getParameters()
+    public String writeToString()
     {
         return Registry.PARTICLE_TYPE.getKey(this.getType()) + " " + this.blockPos.toString();
     }
@@ -57,7 +56,7 @@ public class BlockPosParticleData implements IParticleData
         return this.particleType;
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public BlockPos getBlockPos()
     {
         return this.blockPos;

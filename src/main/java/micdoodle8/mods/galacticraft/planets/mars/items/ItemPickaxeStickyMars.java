@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.items;
+package micdoodle8.mods.galacticraft.planets.mars.items;
 //
 //import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 //import micdoodle8.mods.galacticraft.core.items.ISortableItem;

@@ -3,9 +3,8 @@ package micdoodle8.mods.galacticraft.planets.venus.entities;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityEntryPod;
 import micdoodle8.mods.galacticraft.planets.mars.entities.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -23,29 +22,29 @@ public class VenusEntities
 {
 //    public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Constants.MOD_ID_PLANETS);
 
-    public static final EntityType<EntityEntryPodVenus> ENTRY_POD = EntityType.Builder.create(EntityEntryPodVenus::new, EntityClassification.MISC)
-            .size(1.5F, 3.0F)
-            .immuneToFire()
+    public static final EntityType<EntityEntryPodVenus> ENTRY_POD = EntityType.Builder.of(EntityEntryPodVenus::new, MobCategory.MISC)
+            .sized(1.5F, 3.0F)
+            .fireImmune()
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntityJuicer> JUICER = EntityType.Builder.create(EntityJuicer::new, EntityClassification.MISC)
-            .size(0.95F, 0.6F)
+    public static final EntityType<EntityJuicer> JUICER = EntityType.Builder.of(EntityJuicer::new, MobCategory.MISC)
+            .sized(0.95F, 0.6F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntitySpiderQueen> SPIDER_QUEEN = EntityType.Builder.create(EntitySpiderQueen::new, EntityClassification.MISC)
-            .size(1.4F, 0.9F)
-            .immuneToFire()
+    public static final EntityType<EntitySpiderQueen> SPIDER_QUEEN = EntityType.Builder.of(EntitySpiderQueen::new, MobCategory.MISC)
+            .sized(1.4F, 0.9F)
+            .fireImmune()
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntityWebShot> WEB_SHOT = EntityType.Builder.create(EntityWebShot::new, EntityClassification.MISC)
-            .size(0.5F, 0.5F)
-            .immuneToFire()
+    public static final EntityType<EntityWebShot> WEB_SHOT = EntityType.Builder.of(EntityWebShot::new, MobCategory.MISC)
+            .sized(0.5F, 0.5F)
+            .fireImmune()
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)

@@ -14,21 +14,21 @@ import micdoodle8.mods.galacticraft.core.util.FluidUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FluidHandlerWrapper;
 import micdoodle8.mods.galacticraft.core.wrappers.IFluidHandlerWrapper;
 import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -38,14 +38,14 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
-
+import FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileEntityRefinery extends TileBaseElectricBlockWithInventory implements ISidedInventory, IFluidHandlerWrapper, INamedContainerProvider
+public class TileEntityRefinery extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IFluidHandlerWrapper, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.refinery)
-    public static TileEntityType<TileEntityRefinery> TYPE;
+    public static BlockEntityType<TileEntityRefinery> TYPE;
 
     private final int tankCapacity = 24000;
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -72,7 +72,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             final FluidStack liquid = FluidUtil.getFluidContained(this.getInventory().get(1));
             if (FluidUtil.isOil(liquid))
@@ -156,9 +156,9 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.processTicks = nbt.getInt("smeltingTicks");
 
         if (nbt.contains("oilTank"))
@@ -182,19 +182,19 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("smeltingTicks", this.processTicks);
 
         if (this.oilTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("oilTank", this.oilTank.writeToNBT(new CompoundNBT()));
+            nbt.put("oilTank", this.oilTank.writeToNBT(new CompoundTag()));
         }
 
         if (this.fuelTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundNBT()));
+            nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundTag()));
         }
         return nbt;
     }
@@ -214,9 +214,9 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (!itemstack.isEmpty() && this.isItemValidForSlot(slotID, itemstack))
+        if (!itemstack.isEmpty() && this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
@@ -234,9 +234,9 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (!itemstack.isEmpty() && this.isItemValidForSlot(slotID, itemstack))
+        if (!itemstack.isEmpty() && this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
@@ -254,7 +254,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         switch (slotID)
         {
@@ -283,22 +283,22 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (state.getBlock() instanceof BlockRefinery)
         {
-            return state.get(BlockRefinery.FACING);
+            return state.getValue(BlockRefinery.FACING);
         }
         return Direction.NORTH;
     }
 
     private Direction getOilPipe()
     {
-        return getFront().rotateY();
+        return getFront().getClockWise();
     }
 
     private Direction getFuelPipe()
     {
-        return getFront().rotateYCCW();
+        return getFront().getCounterClockWise();
     }
 
     @Override
@@ -495,14 +495,14 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerRefinery(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.refinery");
+        return new TranslatableComponent("container.refinery");
     }
 }

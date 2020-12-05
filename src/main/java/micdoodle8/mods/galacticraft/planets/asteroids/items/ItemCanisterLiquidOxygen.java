@@ -6,12 +6,14 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.items.ItemCanisterGeneric;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
@@ -72,12 +74,12 @@ public class ItemCanisterLiquidOxygen extends ItemCanisterGeneric implements IIt
     }*/
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    @Environment(EnvType.CLIENT)
+    public void appendTooltip(ItemStack par1ItemStack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        if (ItemCanisterGeneric.EMPTY_CAPACITY - par1ItemStack.getDamage() > 0)
+        if (ItemCanisterGeneric.EMPTY_CAPACITY - par1ItemStack.getDamageValue() > 0)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("item.canister.lox") + ": " + (ItemCanisterGeneric.EMPTY_CAPACITY - par1ItemStack.getDamage())));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("item.canister.lox") + ": " + (ItemCanisterGeneric.EMPTY_CAPACITY - par1ItemStack.getDamageValue())));
         }
     }
 
@@ -95,11 +97,11 @@ public class ItemCanisterLiquidOxygen extends ItemCanisterGeneric implements IIt
             if (saved < ItemCanisterGeneric.EMPTY_CAPACITY)
             {
                 ItemCanisterLiquidOxygen.craftingvalues.remove(itemstack);
-                itemstack.setDamage(saved);
+                itemstack.setDamageValue(saved);
                 return itemstack.copy();
             }
-            ItemStack stack = new ItemStack(this.getContainerItem(), 1);
-            stack.setDamage(ItemCanisterGeneric.EMPTY_CAPACITY);
+            ItemStack stack = new ItemStack(this.getRecipeRemainder(), 1);
+            stack.setDamageValue(ItemCanisterGeneric.EMPTY_CAPACITY);
             return stack;
         }
         if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
@@ -112,7 +114,7 @@ public class ItemCanisterLiquidOxygen extends ItemCanisterGeneric implements IIt
     @Override
     public int discharge(ItemStack itemStack, int amount)
     {
-        int damage = itemStack.getDamage();
+        int damage = itemStack.getDamageValue();
         int used = Math.min((int) (amount * Constants.LOX_GAS_RATIO), ItemCanisterGeneric.EMPTY_CAPACITY - damage);
         this.setNewDamage(itemStack, damage + used);
         return (int) Math.floor(used / Constants.LOX_GAS_RATIO);
@@ -121,7 +123,7 @@ public class ItemCanisterLiquidOxygen extends ItemCanisterGeneric implements IIt
     @Override
     public int getOxygenStored(ItemStack par1ItemStack)
     {
-        return ItemCanisterGeneric.EMPTY_CAPACITY - par1ItemStack.getDamage();
+        return ItemCanisterGeneric.EMPTY_CAPACITY - par1ItemStack.getDamageValue();
     }
 
     @Override

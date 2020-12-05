@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.recipe;
+package micdoodle8.mods.galacticraft.planets.asteroids.recipe;
 //
 //import micdoodle8.mods.galacticraft.core.GCItems;
 //import micdoodle8.mods.galacticraft.core.items.ItemOxygenTank;

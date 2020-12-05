@@ -3,13 +3,13 @@ package micdoodle8.mods.galacticraft.core.client.gui.element;
 import com.mojang.blaze3d.platform.GlStateManager;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
 import org.lwjgl.opengl.GL11;
 
 public class GuiElementGradientButton extends Button
 {
-    public GuiElementGradientButton(int x, int y, int width, int height, String buttonText, Button.IPressable onPress)
+    public GuiElementGradientButton(int x, int y, int width, int height, String buttonText, Button.OnPress onPress)
     {
         super(x, y, width, height, buttonText, onPress);
     }
@@ -20,11 +20,11 @@ public class GuiElementGradientButton extends Button
         if (this.visible)
         {
             Minecraft minecraft = Minecraft.getInstance();
-            FontRenderer fontrenderer = minecraft.fontRenderer;
+            Font fontrenderer = minecraft.font;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             GL11.glEnable(GL11.GL_BLEND);
-            GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param, GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
+            GlStateManager._blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.value, GlStateManager.SourceFactor.ONE.value, GlStateManager.DestFactor.ZERO.value);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             int color = ColorUtil.to32BitColor(150, 10, 10, 10);
 

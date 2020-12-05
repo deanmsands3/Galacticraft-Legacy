@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei.refinery;
+package micdoodle8.mods.galacticraft.core.client.jei.refinery;
 //
 //import micdoodle8.mods.galacticraft.core.GCItems;
 //import net.minecraft.item.ItemStack;

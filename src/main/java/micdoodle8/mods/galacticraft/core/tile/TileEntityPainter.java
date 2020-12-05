@@ -14,36 +14,36 @@ import micdoodle8.mods.galacticraft.core.network.PacketDynamic;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.*;
 
 //import net.minecraft.item.EnumDyeColor;
 
-public class TileEntityPainter extends TileEntityInventory implements IDisableableMachine, IPacketReceiver, INamedContainerProvider
+public class TileEntityPainter extends TileEntityInventory implements IDisableableMachine, IPacketReceiver, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.painter)
-    public static TileEntityType<TileEntityPainter> TYPE;
+    public static BlockEntityType<TileEntityPainter> TYPE;
 
     private static final int RANGE_DEFAULT = 96;
     public static Map<DimensionType, Set<BlockVec3>> loadedTilesForDim = new HashMap<>();
@@ -51,7 +51,7 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
     public int range = RANGE_DEFAULT;  //currently unused
 
     public int[] glassColor = new int[]{-1, -1, -1};  //Size of this array must match GlassType enum
-    public final Set<PlayerEntity> playersUsing = new HashSet<PlayerEntity>();
+    public final Set<Player> playersUsing = new HashSet<Player>();
 
     public int guiColor = 0xffffff;
 
@@ -85,8 +85,8 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
             Block b = ((BlockItem) item).getBlock();
             try
             {
-                MaterialColor mc = b.getDefaultState().getMaterialColor(world, null);
-                color = mc.colorValue;
+                MaterialColor mc = b.defaultBlockState().getMapColor(level, null);
+                color = mc.col;
             }
             catch (Exception e)
             {
@@ -104,7 +104,7 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
         }
     }
 
-    private void applyColorToItem(ItemStack itemStack, int color, PlayerEntity player)
+    private void applyColorToItem(ItemStack itemStack, int color, Player player)
     {
         if (itemStack == null)
         {
@@ -162,9 +162,9 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         if (nbt.contains("guic"))
         {
             this.glassColor[0] = nbt.getInt("G1");
@@ -176,9 +176,9 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("G1", this.glassColor[0]);
         nbt.putInt("G2", this.glassColor[1]);
         nbt.putInt("G3", this.glassColor[2]);
@@ -189,12 +189,12 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
-    private static Set<BlockVec3> getLoadedTiles(World world)
+    private static Set<BlockVec3> getLoadedTiles(Level world)
     {
         DimensionType dimID = GCCoreUtil.getDimensionType(world);
         Set<BlockVec3> loaded = loadedTilesForDim.get(dimID);
@@ -211,40 +211,40 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
     @Override
     public void onLoad()
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             //Request any networked information from server on first client tick
             GalacticraftCore.packetPipeline.sendToServer(new PacketDynamic(this));
         }
         else
         {
-            getLoadedTiles(this.world).add(new BlockVec3(this.pos));
+            getLoadedTiles(this.level).add(new BlockVec3(this.worldPosition));
         }
     }
 
     @Override
     public void onChunkUnloaded()
     {
-        getLoadedTiles(this.world).remove(new BlockVec3(this.pos));
+        getLoadedTiles(this.level).remove(new BlockVec3(this.worldPosition));
         super.onChunkUnloaded();
     }
 
     @Override
-    public void remove()
+    public void setRemoved()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
-            getLoadedTiles(this.world).remove(new BlockVec3(this.pos));
+            getLoadedTiles(this.level).remove(new BlockVec3(this.worldPosition));
         }
-        super.remove();
+        super.setRemoved();
     }
 
-    public static void onServerTick(World world)
+    public static void onServerTick(Level world)
     {
         Set<BlockVec3> loaded = getLoadedTiles(world);
         DimensionType dimID = GCCoreUtil.getDimensionType(world);
-        List<ServerPlayerEntity> allPlayers = PlayerUtil.getPlayersOnline();
-        for (final ServerPlayerEntity player : allPlayers)
+        List<ServerPlayer> allPlayers = PlayerUtil.getPlayersOnline();
+        for (final ServerPlayer player : allPlayers)
         {
             if (player.dimension != dimID)
             {
@@ -266,7 +266,7 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
 
             if (nearest != null)
             {
-                TileEntity te = nearest.getTileEntity(world);
+                BlockEntity te = nearest.getTileEntity(world);
                 if (te instanceof TileEntityPainter)
                 {
                     ((TileEntityPainter) te).dominantToPlayer(player);
@@ -279,7 +279,7 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
         }
     }
 
-    private void dominantToPlayer(ServerPlayerEntity player)
+    private void dominantToPlayer(ServerPlayer player)
     {
         GCPlayerStats.get(player).setGlassColors(this.glassColor[0], this.glassColor[1], this.glassColor[2]);
     }
@@ -294,21 +294,21 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
     public void setDisabled(int index, boolean disabled)
     {
         //Used to do the painting!
-        for (PlayerEntity entityPlayer : playersUsing)
+        for (Player entityPlayer : playersUsing)
         {
             this.buttonPressed(index, entityPlayer);
         }
     }
 
-    public void buttonPressed(int index, PlayerEntity player)
+    public void buttonPressed(int index, Player player)
     {
         switch (index)
         {
         case 0:  //Apply Paint
-            this.applyColorToItem(this.getStackInSlot(1), this.guiColor, player);
+            this.applyColorToItem(this.getItem(1), this.guiColor, player);
             break;
         case 1:  //Mix Colors
-            this.takeColorFromItem(this.getStackInSlot(0));
+            this.takeColorFromItem(this.getItem(0));
             break;
         case 2:  //Reset Colors
             this.guiColor = 0xffffff;
@@ -325,7 +325,7 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
     @Override
     public void getNetworkedData(ArrayList<Object> sendData)
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             return;
         }
@@ -336,7 +336,7 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
     @Override
     public void decodePacketdata(ByteBuf buffer)
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             try
             {
@@ -376,14 +376,14 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerPainter(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.painter");
+        return new TranslatableComponent("container.painter");
     }
 }

@@ -1,10 +1,9 @@
 package micdoodle8.mods.galacticraft.planets.venus.client.fx;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.client.Minecraft;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,9 +16,9 @@ import net.minecraftforge.registries.ObjectHolder;
 public class VenusParticles
 {
     @ObjectHolder(VenusParticleTypeNames.acidExhaust)
-    public static BasicParticleType ACID_EXHAUST;
+    public static SimpleParticleType ACID_EXHAUST;
     @ObjectHolder(VenusParticleTypeNames.acidVapor)
-    public static BasicParticleType ACID_VAPOR;
+    public static SimpleParticleType ACID_VAPOR;
 
     public static <V extends IForgeRegistryEntry<V>> void register(IForgeRegistry<V> reg, IForgeRegistryEntry<V> thing, ResourceLocation name)
     {
@@ -36,7 +35,7 @@ public class VenusParticles
     {
         IForgeRegistry<ParticleType<?>> r = evt.getRegistry();
 
-        register(r, new BasicParticleType(false), VenusParticleTypeNames.acidExhaust);
-        register(r, new BasicParticleType(false), VenusParticleTypeNames.acidVapor);
+        register(r, new SimpleParticleType(false), VenusParticleTypeNames.acidExhaust);
+        register(r, new SimpleParticleType(false), VenusParticleTypeNames.acidVapor);
     }
 }

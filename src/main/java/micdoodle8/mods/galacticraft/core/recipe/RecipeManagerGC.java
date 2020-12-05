@@ -18,21 +18,16 @@ import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
 import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagCollection;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -118,11 +113,11 @@ public class RecipeManagerGC
         input.put(17, ItemStack.EMPTY);
         RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.rocketTierOne, 1), input);
 
-        Tag<Block> woodChestTag = BlockTags.getCollection().getOrCreate(new ResourceLocation("forge", "chests/wooden"));
+        Tag<Block> woodChestTag = BlockTags.getAllTags().getTagOrEmpty(new ResourceLocation("forge", "chests/wooden"));
 
         HashMap<Integer, ItemStack> input2;
 
-        for (Block chestBlock : woodChestTag.getAllElements())
+        for (Block chestBlock : woodChestTag.getValues())
         {
             ItemStack woodChest = new ItemStack(chestBlock);
 
@@ -296,12 +291,12 @@ public class RecipeManagerGC
           	CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.basicItem, 1, 8), stack, stack);
         }
 */
-        Collection<Item> bronzeItems = ItemTags.getCollection().getOrCreate(new ResourceLocation("forge", "ingots/bronze")).getAllElements();
+        Collection<Item> bronzeItems = ItemTags.getAllTags().getTagOrEmpty(new ResourceLocation("forge", "ingots/bronze")).getValues();
         if (bronzeItems.size() > 0)
         {
             CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedBronze, 1), "ingots/bronze", "ingots/bronze");
         }
-        Collection<Item> steelItems = ItemTags.getCollection().getOrCreate(new ResourceLocation("forge", "ingots/steel")).getAllElements();
+        Collection<Item> steelItems = ItemTags.getAllTags().getTagOrEmpty(new ResourceLocation("forge", "ingots/steel")).getValues();
         if (steelItems.size() > 0)
         {
             CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedSteel, 1), "ingots/steel", "ingots/steel");

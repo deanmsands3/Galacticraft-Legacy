@@ -5,34 +5,33 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityTreasureChest;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -41,16 +40,16 @@ import java.util.List;
 public class BlockTier1TreasureChest extends Block implements IShiftDescription, ISortable
 {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    protected static final VoxelShape AABB = VoxelShapes.create(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
+    protected static final VoxelShape AABB = Shapes.box(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
 
     public BlockTier1TreasureChest(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        this.registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         return AABB;
     }
@@ -80,9 +79,9 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
 //    }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state)
+    public RenderShape getRenderShape(BlockState state)
     {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
 //    @Override
@@ -130,9 +129,9 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
 //    }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.getDefaultState().with(FACING, context.getPlayer().getHorizontalFacing());
+        return this.defaultBlockState().setValue(FACING, context.getPlayer().getDirection());
     }
 
 //    @Override
@@ -214,46 +213,46 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
 //    }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
         if (tileentity instanceof TileEntityTreasureChest)
         {
-            tileentity.updateContainingBlockInfo();
+            tileentity.clearCache();
         }
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
-        if (tileentity instanceof IInventory)
+        if (tileentity instanceof Container)
         {
-            InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
-            worldIn.updateComparatorOutputLevel(pos, this);
+            Containers.dropContents(worldIn, pos, (Container) tileentity);
+            worldIn.updateNeighbourForOutputSignal(pos, this);
         }
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit)
     {
-        if (!worldIn.isRemote)
+        if (!worldIn.isClientSide)
         {
 //            TileEntity tile = worldIn.getTileEntity(pos);
-            NetworkHooks.openGui((ServerPlayerEntity) playerIn, getContainer(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
+            NetworkHooks.openGui((ServerPlayer) playerIn, getMenuProvider(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
 //            playerIn.displayGUIChest((IInventory) tile);
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityTreasureChest();
     }
@@ -264,27 +263,27 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
         return true;
     }
 
-    public int isProvidingWeakPower(IBlockReader worldIn, BlockPos pos, BlockState state, Direction side)
+    public int isProvidingWeakPower(BlockGetter worldIn, BlockPos pos, BlockState state, Direction side)
     {
-        if (!this.canProvidePower(state))
+        if (!this.isSignalSource(state))
         {
             return 0;
         }
         else
         {
             int i = 0;
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+            BlockEntity tileentity = worldIn.getBlockEntity(pos);
 
             if (tileentity instanceof TileEntityTreasureChest)
             {
                 i = ((TileEntityTreasureChest) tileentity).numPlayersUsing;
             }
 
-            return MathHelper.clamp(i, 0, 15);
+            return Mth.clamp(i, 0, 15);
         }
     }
 
-    public int isProvidingStrongPower(IBlockReader worldIn, BlockPos pos, BlockState state, Direction side)
+    public int isProvidingStrongPower(BlockGetter worldIn, BlockPos pos, BlockState state, Direction side)
     {
         return side == Direction.UP ? this.isProvidingWeakPower(worldIn, pos, state, side) : 0;
     }
@@ -299,12 +298,12 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
 //        return worldIn.isSideSolid(pos.up(), Direction.DOWN, false);
 //    }
 
-    private boolean isOcelotSittingOnChest(World worldIn, BlockPos pos)
+    private boolean isOcelotSittingOnChest(Level worldIn, BlockPos pos)
     {
-        List<CatEntity> list = worldIn.getEntitiesWithinAABB(CatEntity.class, new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1));
+        List<Cat> list = worldIn.getEntitiesOfClass(Cat.class, new AABB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1));
         if (!list.isEmpty())
         {
-            for (CatEntity catentity : list)
+            for (Cat catentity : list)
             {
                 if (catentity.isSitting())
                 {
@@ -317,7 +316,7 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state)
+    public boolean hasAnalogOutputSignal(BlockState state)
     {
         return true;
     }
@@ -336,7 +335,7 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(FACING);
     }
@@ -344,7 +343,7 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -366,18 +365,18 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param)
+    public boolean triggerEvent(BlockState state, Level worldIn, BlockPos pos, int id, int param)
     {
-        super.eventReceived(state, worldIn, pos, id, param);
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(id, param);
+        super.triggerEvent(state, worldIn, pos, id, param);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity != null && tileentity.triggerEvent(id, param);
     }
 
     @Override
     @Nullable
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos)
+    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider) tileentity : null;
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity instanceof MenuProvider ? (MenuProvider) tileentity : null;
     }
 }

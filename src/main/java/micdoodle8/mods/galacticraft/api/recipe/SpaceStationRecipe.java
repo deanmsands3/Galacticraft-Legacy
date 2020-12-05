@@ -1,13 +1,12 @@
 package micdoodle8.mods.galacticraft.api.recipe;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
-
 import java.util.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public class SpaceStationRecipe
 {
@@ -38,7 +37,7 @@ public class SpaceStationRecipe
             }
             else if (obj instanceof String)
             {
-                Collection<Item> items = ItemTags.getCollection().getOrCreate(new ResourceLocation("forge", (String) obj)).getAllElements();
+                Collection<Item> items = ItemTags.getAllTags().getTagOrEmpty(new ResourceLocation("forge", (String) obj)).getValues();
                 for (Item item : items)
                 {
                     this.input.put(item, amount);
@@ -46,7 +45,7 @@ public class SpaceStationRecipe
             }
             else if (obj instanceof ResourceLocation)
             {
-                Collection<Item> items = ItemTags.getCollection().getOrCreate((ResourceLocation) obj).getAllElements();
+                Collection<Item> items = ItemTags.getAllTags().getTagOrEmpty((ResourceLocation) obj).getValues();
                 for (Item item : items)
                 {
                     this.input.put(item, amount);
@@ -69,7 +68,7 @@ public class SpaceStationRecipe
     }
 
     @SuppressWarnings("unchecked")
-    public boolean matches(PlayerEntity player, boolean remove)
+    public boolean matches(Player player, boolean remove)
     {
         final HashMap<Object, Integer> required = new HashMap<Object, Integer>();
         required.putAll(this.input);
@@ -83,9 +82,9 @@ public class SpaceStationRecipe
             final int amountRequired = required.get(next);
             int amountInInv = 0;
 
-            for (int x = 0; x < player.inventory.getSizeInventory(); x++)
+            for (int x = 0; x < player.inventory.getContainerSize(); x++)
             {
-                final ItemStack slot = player.inventory.getStackInSlot(x);
+                final ItemStack slot = player.inventory.getItem(x);
 
                 if (slot != null && slot.getCount() > 0)  //Intentional ItemStack null check
                 {
@@ -124,7 +123,7 @@ public class SpaceStationRecipe
     }
 
     @SuppressWarnings("unchecked")
-    public void removeItems(PlayerEntity player)
+    public void removeItems(Player player)
     {
         final HashMap<Object, Integer> required = new HashMap<Object, Integer>(this.input);
 
@@ -138,9 +137,9 @@ public class SpaceStationRecipe
             int amountRemoved = 0;
 
             InventoryLoop:
-            for (int x = 0; x < player.inventory.getSizeInventory(); x++)
+            for (int x = 0; x < player.inventory.getContainerSize(); x++)
             {
-                final ItemStack slot = player.inventory.getStackInSlot(x);
+                final ItemStack slot = player.inventory.getItem(x);
 
                 if (slot != null && slot.getCount() > 0)  //Intentional ItemStack null check
                 {
@@ -159,7 +158,7 @@ public class SpaceStationRecipe
                                 newStack = ItemStack.EMPTY;
                             }
 
-                            player.inventory.setInventorySlotContents(x, newStack);
+                            player.inventory.setItem(x, newStack);
                             amountRemoved += amountToRemove;
                             if (amountRemoved == amountRequired)
                             {
@@ -182,7 +181,7 @@ public class SpaceStationRecipe
                                     newStack = ItemStack.EMPTY;
                                 }
 
-                                player.inventory.setInventorySlotContents(x, newStack);
+                                player.inventory.setItem(x, newStack);
                                 amountRemoved += amountToRemove;
                                 if (amountRemoved == amountRequired)
                                 {
@@ -198,7 +197,7 @@ public class SpaceStationRecipe
 
     public static boolean checkItemEquals(ItemStack target, ItemStack input)
     {
-        return target.getItem() == input.getItem() && target.getDamage() == input.getDamage();
+        return target.getItem() == input.getItem() && target.getDamageValue() == input.getDamageValue();
     }
 
     /**

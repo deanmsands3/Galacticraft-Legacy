@@ -9,28 +9,29 @@ import micdoodle8.mods.galacticraft.core.tile.IMultiBlock;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityCryogenicChamber;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -48,16 +49,16 @@ public class BlockCryoChamber extends BlockTileGC implements IShiftDescription, 
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        final TileEntity var9 = worldIn.getTileEntity(pos);
+        final BlockEntity var9 = worldIn.getBlockEntity(pos);
 
         if (var9 instanceof IMultiBlock)
         {
             ((IMultiBlock) var9).onDestroy(var9);
         }
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
 //    @OnlyIn(Dist.CLIENT)
@@ -68,7 +69,7 @@ public class BlockCryoChamber extends BlockTileGC implements IShiftDescription, 
 //    }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
     {
 //        int metadata = getMetaFromState(state);
 
@@ -80,16 +81,16 @@ public class BlockCryoChamber extends BlockTileGC implements IShiftDescription, 
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public ActionResultType onMachineActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onMachineActivated(Level worldIn, BlockPos pos, BlockState state, Player playerIn, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        ((IMultiBlock) worldIn.getTileEntity(pos)).onActivated(playerIn);
-        return ActionResultType.SUCCESS;
+        ((IMultiBlock) worldIn.getBlockEntity(pos)).onActivated(playerIn);
+        return InteractionResult.SUCCESS;
     }
 
 //    @Override
@@ -113,7 +114,7 @@ public class BlockCryoChamber extends BlockTileGC implements IShiftDescription, 
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityCryogenicChamber();
     }
@@ -125,21 +126,21 @@ public class BlockCryoChamber extends BlockTileGC implements IShiftDescription, 
     }
 
     @Override
-    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, @Nullable Entity player)
+    public boolean isBed(BlockState state, BlockGetter world, BlockPos pos, @Nullable Entity player)
     {
         return true;
     }
 
     @Override
-    public Optional<Vec3d> getBedSpawnPosition(EntityType<?> entityType, BlockState state, IWorldReader world, BlockPos pos, @Nullable LivingEntity sleeper)
+    public Optional<Vec3> getBedSpawnPosition(EntityType<?> entityType, BlockState state, LevelReader world, BlockPos pos, @Nullable LivingEntity sleeper)
     {
-        return Optional.of(new Vec3d(pos.up()));
+        return Optional.of(new Vec3(pos.above()));
     }
 
     @Override
-    public void setBedOccupied(BlockState state, IWorldReader world, BlockPos pos, LivingEntity sleeper, boolean occupied)
+    public void setBedOccupied(BlockState state, LevelReader world, BlockPos pos, LivingEntity sleeper, boolean occupied)
     {
-        TileEntity tile = world.getTileEntity(pos);
+        BlockEntity tile = world.getBlockEntity(pos);
 
         if (tile instanceof TileEntityCryogenicChamber)
         {
@@ -148,15 +149,15 @@ public class BlockCryoChamber extends BlockTileGC implements IShiftDescription, 
     }
 
     @Override
-    public Direction getBedDirection(BlockState state, IWorldReader world, BlockPos pos)
+    public Direction getBedDirection(BlockState state, LevelReader world, BlockPos pos)
     {
-        return state.get(FACING);
+        return state.getValue(FACING);
     }
 
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -181,14 +182,14 @@ public class BlockCryoChamber extends BlockTileGC implements IShiftDescription, 
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(FACING);
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState state, World worldIn, BlockPos pos, Random rand)
+    @Environment(EnvType.CLIENT)
+    public void animateTick(BlockState state, Level worldIn, BlockPos pos, Random rand)
     {
 //        GalacticraftPlanets.addParticle("cryoFreeze", new Vector3(pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4), new Vector3(0.0, 0.05 + rand.nextDouble() * 0.01, 0.0));
 //        GalacticraftPlanets.addParticle("cryoFreeze", new Vector3(pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4), new Vector3(0.0, 0.05 + rand.nextDouble() * 0.01, 0.0));
@@ -207,7 +208,7 @@ public class BlockCryoChamber extends BlockTileGC implements IShiftDescription, 
     }
 
     @Override
-    public boolean isSealed(World world, BlockPos pos, Direction direction)
+    public boolean isSealed(Level world, BlockPos pos, Direction direction)
     {
         return false;
     }

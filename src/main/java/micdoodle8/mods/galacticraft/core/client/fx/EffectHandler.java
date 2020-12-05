@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.fx;
+package micdoodle8.mods.galacticraft.core.client.fx;
 //
 //import micdoodle8.mods.galacticraft.api.vector.Vector3;
 //import net.minecraft.client.Minecraft;

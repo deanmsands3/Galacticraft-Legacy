@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.api.prefab.world.gen;
+package micdoodle8.mods.galacticraft.api.prefab.world.gen;
 //
 //import java.util.ArrayList;
 //import java.util.List;

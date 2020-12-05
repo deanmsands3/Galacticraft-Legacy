@@ -11,20 +11,22 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Rarity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -53,16 +55,16 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
 
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context)
+    public InteractionResult useOn(UseOnContext context)
     {
-        ItemStack stack = context.getPlayer().getHeldItem(context.getHand());
+        ItemStack stack = context.getPlayer().getItemInHand(context.getHand());
         boolean padFound = false;
-        TileEntity tile = null;
+        BlockEntity tile = null;
 
-        if (context.getWorld().isRemote && context.getPlayer() instanceof ClientPlayerEntity)
+        if (context.getLevel().isClientSide && context.getPlayer() instanceof LocalPlayer)
         {
-            ClientProxyCore.playerClientHandler.onBuild(8, (ClientPlayerEntity) context.getPlayer());
-            return ActionResultType.SUCCESS;
+            ClientProxyCore.playerClientHandler.onBuild(8, (LocalPlayer) context.getPlayer());
+            return InteractionResult.SUCCESS;
         }
         else
         {
@@ -74,17 +76,17 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
             {
                 for (int j = -1; j < 2; j++)
                 {
-                    BlockPos pos1 = context.getPos().add(i, 0, j);
-                    BlockState state = context.getWorld().getBlockState(pos1);
+                    BlockPos pos1 = context.getClickedPos().offset(i, 0, j);
+                    BlockState state = context.getLevel().getBlockState(pos1);
 
                     if (state.getBlock() == GCBlocks.landingPadFull)
                     {
                         padFound = true;
-                        tile = context.getWorld().getTileEntity(context.getPos().add(i, 0, j));
+                        tile = context.getLevel().getBlockEntity(context.getClickedPos().offset(i, 0, j));
 
-                        centerX = context.getPos().getX() + i + 0.5F;
-                        centerY = context.getPos().getY() + 0.4F;
-                        centerZ = context.getPos().getZ() + j + 0.5F;
+                        centerX = context.getClickedPos().getX() + i + 0.5F;
+                        centerY = context.getClickedPos().getY() + 0.4F;
+                        centerZ = context.getClickedPos().getZ() + j + 0.5F;
 
                         break;
                     }
@@ -98,25 +100,25 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
 
             if (padFound)
             {
-                if (!placeRocketOnPad(stack, context.getWorld(), tile, centerX, centerY, centerZ))
+                if (!placeRocketOnPad(stack, context.getLevel(), tile, centerX, centerY, centerZ))
                 {
-                    return ActionResultType.FAIL;
+                    return InteractionResult.FAIL;
                 }
 
-                if (!context.getPlayer().abilities.isCreativeMode)
+                if (!context.getPlayer().abilities.instabuild)
                 {
                     stack.shrink(1);
                 }
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
             else
             {
-                return ActionResultType.PASS;
+                return InteractionResult.PASS;
             }
         }
     }
 
-    public static boolean placeRocketOnPad(ItemStack stack, World worldIn, TileEntity tile, float centerX, float centerY, float centerZ)
+    public static boolean placeRocketOnPad(ItemStack stack, Level worldIn, BlockEntity tile, float centerX, float centerY, float centerZ)
     {
         //Check whether there is already a rocket on the pad
         if (tile instanceof TileEntityLandingPad)
@@ -132,11 +134,11 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
         }
 
         final EntityTier1Rocket spaceship = GCEntities.ROCKET_T1.create(worldIn);
-        spaceship.setPosition(centerX, centerY, centerZ);
+        spaceship.setPos(centerX, centerY, centerZ);
         spaceship.rocketType = EntityTier1Rocket.getTypeFromItem(stack.getItem());
 
-        spaceship.setPosition(spaceship.getPosX(), spaceship.getPosY() + spaceship.getOnPadYOffset(), spaceship.getPosZ());
-        worldIn.addEntity(spaceship);
+        spaceship.setPos(spaceship.getX(), spaceship.getY() + spaceship.getOnPadYOffset(), spaceship.getZ());
+        worldIn.addFreshEntity(spaceship);
 
         if (spaceship.rocketType.getPreFueled())
         {
@@ -163,47 +165,47 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
 //    }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rarity getRarity(ItemStack par1ItemStack)
     {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        EnumRocketType type = EnumRocketType.values()[stack.getDamage()];
+        EnumRocketType type = EnumRocketType.values()[stack.getDamageValue()];
 
-        if (!type.getTooltip().getFormattedText().isEmpty())
+        if (!type.getTooltip().getColoredString().isEmpty())
         {
             tooltip.add(type.getTooltip());
         }
 
         if (type.getPreFueled())
         {
-            tooltip.add(new StringTextComponent(EnumColor.RED + "\u00a7o" + GCCoreUtil.translate("gui.creative_only.desc")));
+            tooltip.add(new TextComponent(EnumColor.RED + "\u00a7o" + GCCoreUtil.translate("gui.creative_only.desc")));
         }
 
         if (stack.hasTag() && stack.getTag().contains("RocketFuel"))
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + stack.getTag().getInt("RocketFuel") + " / " + EntityTier1Rocket.FUEL_CAPACITY));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + stack.getTag().getInt("RocketFuel") + " / " + EntityTier1Rocket.FUEL_CAPACITY));
         }
     }
 
     @Override
-    public boolean shouldHoldLeftHandUp(PlayerEntity player)
+    public boolean shouldHoldLeftHandUp(Player player)
     {
         return true;
     }
 
     @Override
-    public boolean shouldHoldRightHandUp(PlayerEntity player)
+    public boolean shouldHoldRightHandUp(Player player)
     {
         return true;
     }
 
     @Override
-    public boolean shouldCrouch(PlayerEntity player)
+    public boolean shouldCrouch(Player player)
     {
         return true;
     }

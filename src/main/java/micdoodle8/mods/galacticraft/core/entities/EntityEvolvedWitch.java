@@ -2,16 +2,13 @@ package micdoodle8.mods.galacticraft.core.entities;
 
 import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
 import micdoodle8.mods.galacticraft.core.GCItems;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.WitchEntity;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Witch;
+import net.minecraft.world.level.Level;
 
-public class EntityEvolvedWitch extends WitchEntity implements IEntityBreathable
+public class EntityEvolvedWitch extends Witch implements IEntityBreathable
 {
-    public EntityEvolvedWitch(EntityType<? extends EntityEvolvedWitch> type, World worldIn)
+    public EntityEvolvedWitch(EntityType<? extends EntityEvolvedWitch> type, Level worldIn)
     {
         super(type, worldIn);
     }

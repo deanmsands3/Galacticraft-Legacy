@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.model;
+package micdoodle8.mods.galacticraft.planets.mars.client.model;
 //
 //import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
 //import net.minecraft.client.renderer.entity.model.EntityModel;

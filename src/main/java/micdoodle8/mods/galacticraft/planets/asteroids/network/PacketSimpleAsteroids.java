@@ -11,17 +11,18 @@ import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityGrapple;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityShortRangeTelepad;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
@@ -89,7 +90,7 @@ public class PacketSimpleAsteroids extends PacketBase
         this.data = data;
     }
 
-    public static void encode(final PacketSimpleAsteroids message, final PacketBuffer buf)
+    public static void encode(final PacketSimpleAsteroids message, final FriendlyByteBuf buf)
     {
         buf.writeInt(message.type.ordinal());
         NetworkUtil.writeUTF8String(buf, message.getDimensionID().getRegistryName().toString());
@@ -104,10 +105,10 @@ public class PacketSimpleAsteroids extends PacketBase
         }
     }
 
-    public static PacketSimpleAsteroids decode(PacketBuffer buf)
+    public static PacketSimpleAsteroids decode(FriendlyByteBuf buf)
     {
-        PacketSimpleAsteroids.EnumSimplePacketAsteroids type = PacketSimpleAsteroids.EnumSimplePacketAsteroids.values()[buf.readInt()];
-        DimensionType dim = DimensionType.byName(new ResourceLocation(NetworkUtil.readUTF8String(buf)));
+        EnumSimplePacketAsteroids type = EnumSimplePacketAsteroids.values()[buf.readInt()];
+        DimensionType dim = DimensionType.getByName(new ResourceLocation(NetworkUtil.readUTF8String(buf)));
         ArrayList<Object> data = null;
 
         try
@@ -136,7 +137,7 @@ public class PacketSimpleAsteroids extends PacketBase
         {
             if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
             {
-                message.handleClientSide(Minecraft.getInstance().player);
+                message.handleClientSide(MinecraftClient.getInstance().player);
             }
             else
             {
@@ -174,35 +175,35 @@ public class PacketSimpleAsteroids extends PacketBase
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     @Override
-    public void handleClientSide(PlayerEntity player)
+    public void handleClientSide(Player player)
     {
-        ClientPlayerEntity playerBaseClient = null;
+        LocalPlayer playerBaseClient = null;
 
-        if (player instanceof ClientPlayerEntity)
+        if (player instanceof LocalPlayer)
         {
-            playerBaseClient = (ClientPlayerEntity) player;
+            playerBaseClient = (LocalPlayer) player;
         }
 
-        TileEntity tile;
+        BlockEntity tile;
         switch (this.type)
         {
         case C_TELEPAD_SEND:
-            Entity entity = playerBaseClient.world.getEntityByID((Integer) this.data.get(1));
+            Entity entity = playerBaseClient.level.getEntity((Integer) this.data.get(1));
 
             if (entity != null && entity instanceof LivingEntity)
             {
                 BlockVec3 pos = (BlockVec3) this.data.get(0);
-                entity.setPosition(pos.x + 0.5, pos.y + 2.2, pos.z + 0.5);
+                entity.setPos(pos.x + 0.5, pos.y + 2.2, pos.z + 0.5);
             }
             break;
         case C_UPDATE_GRAPPLE_POS:
-            entity = playerBaseClient.world.getEntityByID((Integer) this.data.get(0));
+            entity = playerBaseClient.level.getEntity((Integer) this.data.get(0));
             if (entity != null && entity instanceof EntityGrapple)
             {
                 Vector3 vec = (Vector3) this.data.get(1);
-                entity.setPosition(vec.x, vec.y, vec.z);
+                entity.setPos(vec.x, vec.y, vec.z);
             }
             break;
         default:
@@ -211,14 +212,14 @@ public class PacketSimpleAsteroids extends PacketBase
     }
 
     @Override
-    public void handleServerSide(PlayerEntity player)
+    public void handleServerSide(Player player)
     {
-        ServerPlayerEntity playerBase = PlayerUtil.getPlayerBaseServerFromPlayer(player, false);
+        ServerPlayer playerBase = PlayerUtil.getPlayerBaseServerFromPlayer(player, false);
 
         switch (this.type)
         {
         case S_UPDATE_ADVANCED_GUI:
-            TileEntity tile = player.world.getTileEntity((BlockPos) this.data.get(1));
+            BlockEntity tile = player.level.getBlockEntity((BlockPos) this.data.get(1));
 
             switch ((Integer) this.data.get(0))
             {

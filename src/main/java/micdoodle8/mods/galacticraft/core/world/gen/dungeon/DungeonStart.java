@@ -2,13 +2,11 @@ package micdoodle8.mods.galacticraft.core.world.gen.dungeon;
 
 import com.google.common.collect.Lists;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.List;
 import java.util.Random;
 
@@ -17,27 +15,27 @@ import static micdoodle8.mods.galacticraft.core.world.gen.GCFeatures.CMOON_DUNGE
 public class DungeonStart extends EntranceCrater
 {
     public List<StructurePiece> attachedComponents = Lists.newArrayList();
-    public List<MutableBoundingBox> componentBounds = Lists.newArrayList();
+    public List<BoundingBox> componentBounds = Lists.newArrayList();
 
     //    public DungeonStart(IStructurePieceType type)
 //    {
 //        super(type);
 //    }
 //
-    public DungeonStart(World world, DungeonConfiguration configuration, Random rand, int blockPosX, int blockPosZ)
+    public DungeonStart(Level world, DungeonConfiguration configuration, Random rand, int blockPosX, int blockPosZ)
     {
         super(CMOON_DUNGEON_START, world, configuration, rand, blockPosX, blockPosZ);
     }
 
-    public DungeonStart(TemplateManager templateManager, CompoundNBT nbt)
+    public DungeonStart(StructureManager templateManager, CompoundTag nbt)
     {
         super(CMOON_DUNGEON_START, nbt);
     }
 
     @Override
-    public void buildComponent(StructurePiece componentIn, List<StructurePiece> listIn, Random rand)
+    public void addChildren(StructurePiece componentIn, List<StructurePiece> listIn, Random rand)
     {
-        System.out.println((boundingBox.maxX + boundingBox.minX) / 2 + " " + 100 + " " + (boundingBox.maxZ + boundingBox.minZ) / 2);
+        System.out.println((boundingBox.x1 + boundingBox.x0) / 2 + " " + 100 + " " + (boundingBox.z1 + boundingBox.z0) / 2);
         boolean validAttempt = false;
         final int maxAttempts = 10;
         int attempts = 0;
@@ -69,25 +67,25 @@ public class DungeonStart extends EntranceCrater
 
         if (!validAttempt)
         {
-            int xPos = this.boundingBox.minX + (this.boundingBox.maxX - this.boundingBox.minX) / 2;
-            int zPos = this.boundingBox.minZ + (this.boundingBox.maxZ - this.boundingBox.minZ) / 2;
+            int xPos = this.boundingBox.x0 + (this.boundingBox.x1 - this.boundingBox.x0) / 2;
+            int zPos = this.boundingBox.z0 + (this.boundingBox.z1 - this.boundingBox.z0) / 2;
             System.err.println("Could not find valid dungeon layout! This is a bug, please report it, including your world seed (/seed) and dungeon location (" + xPos + ", " + zPos + ")");
         }
 
-        super.buildComponent(componentIn, listIn, rand);
+        super.addChildren(componentIn, listIn, rand);
     }
 
     public boolean checkIntersection(int blockX, int blockZ, int sizeX, int sizeZ)
     {
-        return this.checkIntersection(new MutableBoundingBox(blockX, blockZ, blockX + sizeX, blockZ + sizeZ));
+        return this.checkIntersection(new BoundingBox(blockX, blockZ, blockX + sizeX, blockZ + sizeZ));
     }
 
-    public boolean checkIntersection(MutableBoundingBox bounds)
+    public boolean checkIntersection(BoundingBox bounds)
     {
         for (int i = 0; i < componentBounds.size() - 1; ++i)
         {
-            MutableBoundingBox boundingBox = componentBounds.get(i);
-            if (boundingBox.intersectsWith(bounds))
+            BoundingBox boundingBox = componentBounds.get(i);
+            if (boundingBox.intersects(bounds))
             {
                 return true;
             }

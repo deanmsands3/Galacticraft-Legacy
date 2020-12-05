@@ -1,5 +1,6 @@
 package micdoodle8.mods.galacticraft.core.tile;
 
+import FluidStack;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import micdoodle8.mods.galacticraft.core.GCBlockNames;
@@ -11,18 +12,20 @@ import micdoodle8.mods.galacticraft.core.util.DelayTimer;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FluidHandlerWrapper;
 import micdoodle8.mods.galacticraft.core.wrappers.IFluidHandlerWrapper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -42,12 +45,12 @@ import java.util.List;
 public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHandlerWrapper
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fluidTank)
-    public static TileEntityType<TileEntityFluidTank> TYPE;
+    public static BlockEntityType<TileEntityFluidTank> TYPE;
 
     public FluidTankGC fluidTank = new FluidTankGC(16000, this);
     public boolean updateClient = false;
     private final DelayTimer delayTimer = new DelayTimer(1);
-    private AxisAlignedBB renderAABB;
+    private AABB renderAABB;
 
     public TileEntityFluidTank()
     {
@@ -92,10 +95,10 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
             moveFluidDown();
         }
 
-        if (!this.world.isRemote && updateClient && delayTimer.markTimeIfDelay(this.world))
+        if (!this.level.isClientSide && updateClient && delayTimer.markTimeIfDelay(this.level))
         {
             PacketDynamic packet = new PacketDynamic(this);
-            GalacticraftCore.packetPipeline.sendToAllAround(packet, new PacketDistributor.TargetPoint(getPos().getX(), getPos().getY(), getPos().getZ(), this.getPacketRange(), GCCoreUtil.getDimensionType(this.world)));
+            GalacticraftCore.packetPipeline.sendToAllAround(packet, new PacketDistributor.TargetPoint(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), this.getPacketRange(), GCCoreUtil.getDimensionType(this.level)));
             this.updateClient = false;
         }
     }
@@ -127,7 +130,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
             }
             copy.setAmount(copy.getAmount() - used);
             totalUsed += used;
-            toFill = getNextTank(toFill.getPos());
+            toFill = getNextTank(toFill.getBlockPos());
         }
 
         return totalUsed;
@@ -205,12 +208,12 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
         TileEntityFluidTank last = getLastTank();
 
         int capacity = last.fluidTank.getCapacity();
-        last = getNextTank(last.getPos());
+        last = getNextTank(last.getBlockPos());
 
         while (last != null)
         {
             capacity += last.fluidTank.getCapacity();
-            last = getNextTank(last.getPos());
+            last = getNextTank(last.getBlockPos());
         }
 
         return capacity;
@@ -287,7 +290,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 
     public void moveFluidDown()
     {
-        TileEntityFluidTank next = getPreviousTank(this.getPos());
+        TileEntityFluidTank next = getPreviousTank(this.getBlockPos());
         if (next != null)
         {
             int used = next.fluidTank.fill(fluidTank.getFluid(), IFluidHandler.FluidAction.EXECUTE);
@@ -307,7 +310,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 
         while (true)
         {
-            TileEntityFluidTank tank = getPreviousTank(lastTank.getPos());
+            TileEntityFluidTank tank = getPreviousTank(lastTank.getBlockPos());
             if (tank != null)
             {
                 lastTank = tank;
@@ -323,7 +326,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 
     public TileEntityFluidTank getNextTank(BlockPos current)
     {
-        TileEntity above = this.world.getTileEntity(current.up());
+        BlockEntity above = this.level.getBlockEntity(current.above());
         if (above instanceof TileEntityFluidTank)
         {
             return (TileEntityFluidTank) above;
@@ -333,7 +336,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 
     public TileEntityFluidTank getPreviousTank(BlockPos current)
     {
-        TileEntity below = this.world.getTileEntity(current.down());
+        BlockEntity below = this.level.getBlockEntity(current.below());
         if (below instanceof TileEntityFluidTank)
         {
             return (TileEntityFluidTank) below;
@@ -342,9 +345,9 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
 
         if (nbt.contains("fuelTank"))
         {
@@ -355,28 +358,28 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
 
         if (this.fluidTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("fuelTank", this.fluidTank.writeToNBT(new CompoundNBT()));
+            nbt.put("fuelTank", this.fluidTank.writeToNBT(new CompoundTag()));
         }
 
         return nbt;
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket()
+    public ClientboundBlockEntityDataPacket getUpdatePacket()
     {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         nbt.putString("net-type", "desc-packet");
         PacketDynamic packet = new PacketDynamic(this);
         ByteBuf buf = Unpooled.buffer();
@@ -384,23 +387,23 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
         byte[] bytes = new byte[buf.readableBytes()];
         buf.readBytes(bytes);
         nbt.putByteArray("net-data", bytes);
-        SUpdateTileEntityPacket tileUpdate = new SUpdateTileEntityPacket(getPos(), 0, nbt);
+        ClientboundBlockEntityDataPacket tileUpdate = new ClientboundBlockEntityDataPacket(getBlockPos(), 0, nbt);
         return tileUpdate;
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
+    @Environment(EnvType.CLIENT)
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt)
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             return;
         }
-        if (pkt.getNbtCompound() == null)
+        if (pkt.getTag() == null)
         {
             throw new RuntimeException("[GC] Missing NBTTag compound!");
         }
-        CompoundNBT nbt = pkt.getNbtCompound();
+        CompoundTag nbt = pkt.getTag();
         try
         {
             if ("desc-packet".equals(nbt.getString("net-type")))
@@ -421,7 +424,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     @Override
     public void addExtraNetworkedData(List<Object> networkedList)
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (fluidTank == null)
             {
@@ -441,7 +444,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     @Override
     public void readExtraNetworkedData(ByteBuf buffer)
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             int capacity = buffer.readInt();
             String fluidName = NetworkUtil.readUTF8String(buffer);
@@ -454,7 +457,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
             }
             else
             {
-                Fluid fluid = Registry.FLUID.getOrDefault(new ResourceLocation(fluidName));
+                Fluid fluid = Registry.FLUID.get(new ResourceLocation(fluidName));
 //                Fluid fluid = FluidRegistry.getFluid(fluidName);
                 fluidTank.setFluid(new FluidStack(fluid, amount));
             }
@@ -524,19 +527,19 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 //    }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
+    @Environment(EnvType.CLIENT)
+    public AABB getRenderBoundingBox()
     {
         if (this.renderAABB == null)
         {
-            this.renderAABB = new AxisAlignedBB(pos, pos.add(1, 1, 1));
+            this.renderAABB = new AABB(worldPosition, worldPosition.offset(1, 1, 1));
         }
         return this.renderAABB;
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public double getMaxRenderDistanceSquared()
+    @Environment(EnvType.CLIENT)
+    public double getViewDistance()
     {
         return Constants.RENDERDISTANCE_MEDIUM;
     }

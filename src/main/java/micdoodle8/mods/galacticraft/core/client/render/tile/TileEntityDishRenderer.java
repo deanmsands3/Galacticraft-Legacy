@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.render.tile;
+package micdoodle8.mods.galacticraft.core.client.render.tile;
 //
 //import micdoodle8.mods.galacticraft.core.Constants;
 //import micdoodle8.mods.galacticraft.core.tile.TileEntityDish;

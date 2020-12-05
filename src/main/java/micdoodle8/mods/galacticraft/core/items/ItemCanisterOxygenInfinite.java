@@ -6,18 +6,20 @@ import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -44,16 +46,16 @@ public class ItemCanisterOxygenInfinite extends Item implements IItemOxygenSuppl
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack)
+    public boolean isFoil(ItemStack stack)
     {
         return true;
     }
 
     @Override
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack par1ItemStack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        tooltip.add(new StringTextComponent(EnumColor.DARK_GREEN + GCCoreUtil.translate("gui.infinite_item.desc")));
-        tooltip.add(new StringTextComponent(EnumColor.RED + GCCoreUtil.translate("gui.creative_only.desc")));
+        tooltip.add(new TextComponent(EnumColor.DARK_GREEN + GCCoreUtil.translate("gui.infinite_item.desc")));
+        tooltip.add(new TextComponent(EnumColor.RED + GCCoreUtil.translate("gui.creative_only.desc")));
     }
 
     /*@Override
@@ -92,7 +94,7 @@ public class ItemCanisterOxygenInfinite extends Item implements IItemOxygenSuppl
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rarity getRarity(ItemStack par1ItemStack)
     {
         return ClientProxyCore.galacticraftItem;
@@ -105,26 +107,26 @@ public class ItemCanisterOxygenInfinite extends Item implements IItemOxygenSuppl
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand hand)
     {
-        ItemStack itemStack = player.getHeldItem(hand);
-        if (player instanceof ServerPlayerEntity)
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (player instanceof ServerPlayer)
         {
             GCPlayerStats stats = GCPlayerStats.get(player);
-            ItemStack gear = stats.getExtendedInventory().getStackInSlot(2);
-            ItemStack gear1 = stats.getExtendedInventory().getStackInSlot(3);
+            ItemStack gear = stats.getExtendedInventory().getItem(2);
+            ItemStack gear1 = stats.getExtendedInventory().getItem(3);
 
             if (gear.isEmpty())
             {
-                stats.getExtendedInventory().setInventorySlotContents(2, itemStack.copy());
+                stats.getExtendedInventory().setItem(2, itemStack.copy());
                 itemStack = ItemStack.EMPTY;
             }
             else if (gear1.isEmpty())
             {
-                stats.getExtendedInventory().setInventorySlotContents(3, itemStack.copy());
+                stats.getExtendedInventory().setItem(3, itemStack.copy());
                 itemStack = ItemStack.EMPTY;
             }
         }
-        return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemStack);
     }
 }

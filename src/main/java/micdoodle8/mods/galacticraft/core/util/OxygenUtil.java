@@ -19,25 +19,39 @@ import micdoodle8.mods.galacticraft.core.items.ItemOxygenGear;
 import micdoodle8.mods.galacticraft.core.items.ItemOxygenMask;
 import micdoodle8.mods.galacticraft.core.items.ItemOxygenTank;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityOxygenDistributor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.GravelBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SpongeBlock;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -65,10 +79,10 @@ public class OxygenUtil
 
     private static HashSet<BlockPos> checked;
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static boolean shouldDisplayTankGui(Screen gui)
     {
-        if (Minecraft.getInstance().gameSettings.hideGUI)
+        if (Minecraft.getInstance().options.hideGui)
         {
             return false;
         }
@@ -94,9 +108,9 @@ public class OxygenUtil
 
     public static boolean isAABBInBreathableAirBlock(LivingEntity entity, boolean testThermal)
     {
-        double y = entity.getPosY() + entity.getEyeHeight();
-        double x = entity.getPosX();
-        double z = entity.getPosZ();
+        double y = entity.getY() + entity.getEyeHeight();
+        double x = entity.getX();
+        double z = entity.getZ();
 
         double sx = entity.getBoundingBox().maxX - entity.getBoundingBox().minX;
         double sy = entity.getBoundingBox().maxY - entity.getBoundingBox().minY;
@@ -108,20 +122,20 @@ public class OxygenUtil
 
         // If entity is within air lock wall, check adjacent blocks for oxygen
         // The value is equal to the max distance from an adjacent oxygen block to the edge of a sealer wall
-        if (entity.world.getBlockState(entity.getPosition()).getBlock() == GCBlocks.airLockSeal)
+        if (entity.level.getBlockState(entity.getCommandSenderBlockPosition()).getBlock() == GCBlocks.airLockSeal)
         {
             offsetXZ = 0.75F;
         }
 
-        return OxygenUtil.isAABBInBreathableAirBlock(entity.world, new AxisAlignedBB(x - smin - offsetXZ, y - smin, z - smin - offsetXZ, x + smin + offsetXZ, y + smin, z + smin + offsetXZ), testThermal);
+        return OxygenUtil.isAABBInBreathableAirBlock(entity.level, new AABB(x - smin - offsetXZ, y - smin, z - smin - offsetXZ, x + smin + offsetXZ, y + smin, z + smin + offsetXZ), testThermal);
     }
 
-    public static boolean isAABBInBreathableAirBlock(World world, AxisAlignedBB bb)
+    public static boolean isAABBInBreathableAirBlock(Level world, AABB bb)
     {
         return isAABBInBreathableAirBlock(world, bb, false);
     }
 
-    public static boolean isAABBInBreathableAirBlock(World world, AxisAlignedBB bb, boolean testThermal)
+    public static boolean isAABBInBreathableAirBlock(Level world, AABB bb, boolean testThermal)
     {
         final double avgX = (bb.minX + bb.maxX) / 2.0D;
         final double avgY = (bb.minY + bb.maxY) / 2.0D;
@@ -140,17 +154,17 @@ public class OxygenUtil
         return OxygenUtil.isInOxygenBlock(world, bb);
     }
 
-    public static boolean isInOxygenBlock(World world, AxisAlignedBB bb)
+    public static boolean isInOxygenBlock(Level world, AABB bb)
     {
-        int xm = MathHelper.floor(bb.minX + 0.001D);
-        int xx = MathHelper.floor(bb.maxX - 0.001D);
-        int ym = MathHelper.floor(bb.minY + 0.001D);
-        int yy = MathHelper.floor(bb.maxY - 0.001D);
-        int zm = MathHelper.floor(bb.minZ + 0.001D);
-        int zz = MathHelper.floor(bb.maxZ - 0.001D);
+        int xm = Mth.floor(bb.minX + 0.001D);
+        int xx = Mth.floor(bb.maxX - 0.001D);
+        int ym = Mth.floor(bb.minY + 0.001D);
+        int yy = Mth.floor(bb.maxY - 0.001D);
+        int zm = Mth.floor(bb.minZ + 0.001D);
+        int zz = Mth.floor(bb.maxZ - 0.001D);
 
         OxygenUtil.checked = new HashSet<>();
-        if (world.isAreaLoaded(new BlockPos(xm, ym, zm), new BlockPos(xx, yy, zz)))
+        if (world.hasChunksAt(new BlockPos(xm, ym, zm), new BlockPos(xx, yy, zz)))
         {
             for (int x = xm; x <= xx; ++x)
             {
@@ -172,17 +186,17 @@ public class OxygenUtil
         return false;
     }
 
-    public static boolean isInOxygenAndThermalBlock(World world, AxisAlignedBB bb)
+    public static boolean isInOxygenAndThermalBlock(Level world, AABB bb)
     {
-        int i = MathHelper.floor(bb.minX + 0.001D);
-        int j = MathHelper.floor(bb.maxX - 0.001D);
-        int k = MathHelper.floor(bb.minY + 0.001D);
-        int l = MathHelper.floor(bb.maxY - 0.001D);
-        int i1 = MathHelper.floor(bb.minZ + 0.001D);
-        int j1 = MathHelper.floor(bb.maxZ - 0.001D);
+        int i = Mth.floor(bb.minX + 0.001D);
+        int j = Mth.floor(bb.maxX - 0.001D);
+        int k = Mth.floor(bb.minY + 0.001D);
+        int l = Mth.floor(bb.maxY - 0.001D);
+        int i1 = Mth.floor(bb.minZ + 0.001D);
+        int j1 = Mth.floor(bb.maxZ - 0.001D);
 
         OxygenUtil.checked = new HashSet<>();
-        if (world.isAreaLoaded(new BlockPos(i, k, i1), new BlockPos(j, l, j1)))
+        if (world.hasChunksAt(new BlockPos(i, k, i1), new BlockPos(j, l, j1)))
         {
             for (int x = i; x <= j; ++x)
             {
@@ -209,7 +223,7 @@ public class OxygenUtil
      * all 6 sides of the given block (because a torch can pass air on all sides)
      * Used in BlockUnlitTorch.
      */
-    public static boolean checkTorchHasOxygen(World world, BlockPos pos)
+    public static boolean checkTorchHasOxygen(Level world, BlockPos pos)
     {
         if (OxygenUtil.inOxygenBubble(world, pos.getX() + 0.5D, pos.getY() + 0.6D, pos.getZ() + 0.5D))
         {
@@ -237,13 +251,13 @@ public class OxygenUtil
      * air-reachable blocks (up to 5 blocks away) and return true if breathable air is found
      * in one of them, or false if not.
      */
-    private static synchronized BreathableAirResult testContactWithBreathableAir(World world, Block block, BlockPos pos, int limitCount)
+    private static synchronized BreathableAirResult testContactWithBreathableAir(Level world, Block block, BlockPos pos, int limitCount)
     {
         checked.add(pos);
         if (block == GCBlocks.breatheableAir || block == GCBlocks.brightBreatheableAir)
         {
             BlockState state = world.getBlockState(pos);
-            return state.get(BlockThermalAir.THERMAL) ? BreathableAirResult.THERMAL_BREATHABLE : BreathableAirResult.BREATHABLE;
+            return state.getValue(BlockThermalAir.THERMAL) ? BreathableAirResult.THERMAL_BREATHABLE : BreathableAirResult.BREATHABLE;
         }
 
         BlockState state = world.getBlockState(pos);
@@ -256,7 +270,7 @@ public class OxygenUtil
         boolean permeableFlag = false;
         if (!(block instanceof LeavesBlock))
         {
-            if (state.isOpaqueCube(world, pos))
+            if (state.isSolidRender(world, pos))
             {
                 if (block instanceof GravelBlock || block.getMaterial(state) == Material.WOOL || block instanceof SpongeBlock)
                 {
@@ -271,7 +285,7 @@ public class OxygenUtil
             {
                 return BreathableAirResult.NONE;
             }
-            else if (block instanceof FlowingFluidBlock)
+            else if (block instanceof LiquidBlock)
             {
                 return BreathableAirResult.NONE;
             }
@@ -297,7 +311,7 @@ public class OxygenUtil
             {
                 if (permeableFlag || OxygenUtil.canBlockPassAirOnSide(world, block, pos, side))
                 {
-                    BlockPos sidevec = pos.add(side.getXOffset(), side.getYOffset(), side.getZOffset());
+                    BlockPos sidevec = pos.offset(side.getStepX(), side.getStepY(), side.getStepZ());
                     if (!checked.contains(sidevec))
                     {
                         Block newblock = world.getBlockState(sidevec).getBlock();
@@ -316,7 +330,7 @@ public class OxygenUtil
     //TODO - performance, could add a 'safe' version of this code (inside world borders)
 
     //TODO - add more performance increase, these sided checks could be done once only
-    private static boolean canBlockPassAirOnSide(World world, Block block, BlockPos vec, Direction side)
+    private static boolean canBlockPassAirOnSide(Level world, Block block, BlockPos vec, Direction side)
     {
         if (block instanceof IPartialSealableBlock)
         {
@@ -327,35 +341,35 @@ public class OxygenUtil
         if (block instanceof SlabBlock)
         {
             BlockState state = world.getBlockState(vec);
-            SlabType slabType = state.get(SlabBlock.TYPE);
+            SlabType slabType = state.getValue(SlabBlock.TYPE);
             return !(side == Direction.DOWN && slabType == SlabType.TOP || side == Direction.UP && slabType == SlabType.BOTTOM);
         }
 
         //Farmland etc only seals on the solid underside
-        if (block instanceof FarmlandBlock || block instanceof EnchantingTableBlock || block instanceof FlowingFluidBlock)
+        if (block instanceof FarmBlock || block instanceof EnchantmentTableBlock || block instanceof LiquidBlock)
         {
             return side != Direction.UP;
         }
 
-        if (block instanceof PistonBlock)
+        if (block instanceof PistonBaseBlock)
         {
             BlockState state = world.getBlockState(vec);
-            if (state.get(PistonBlock.EXTENDED))
+            if (state.getValue(PistonBaseBlock.EXTENDED))
             {
-                Direction direction = state.get(PistonBlock.FACING);
+                Direction direction = state.getValue(PistonBaseBlock.FACING);
                 return side != direction;
             }
             return false;
         }
 
-        return Block.doesSideFillSquare(world.getBlockState(vec).getCollisionShape(world, vec, ISelectionContext.dummy()), side.getOpposite());
+        return Block.isFaceFull(world.getBlockState(vec).getCollisionShape(world, vec, CollisionContext.empty()), side.getOpposite());
 //        return !block.isSideSolid(world.getBlockState(vec), world, vec, Direction.byIndex(side.getIndex() ^ 1));
     }
 
     public static int getDrainSpacing(ItemStack tank, ItemStack tank2)
     {
-        boolean tank1Valid = !tank.isEmpty() && tank.getItem() instanceof ItemOxygenTank && tank.getMaxDamage() - tank.getDamage() > 0;
-        boolean tank2Valid = !tank2.isEmpty() && tank2.getItem() instanceof ItemOxygenTank && tank2.getMaxDamage() - tank2.getDamage() > 0;
+        boolean tank1Valid = !tank.isEmpty() && tank.getItem() instanceof ItemOxygenTank && tank.getMaxDamage() - tank.getDamageValue() > 0;
+        boolean tank2Valid = !tank2.isEmpty() && tank2.getItem() instanceof ItemOxygenTank && tank2.getMaxDamage() - tank2.getDamageValue() > 0;
 
         if (!tank1Valid && !tank2Valid)
         {
@@ -365,17 +379,17 @@ public class OxygenUtil
         return 9;
     }
 
-    public static boolean hasValidOxygenSetup(ServerPlayerEntity player)
+    public static boolean hasValidOxygenSetup(ServerPlayer player)
     {
         boolean missingComponent = false;
 
         GCPlayerStats stats = GCPlayerStats.get(player);
 
-        if (!OxygenUtil.isItemValidForPlayerTankInv(0, stats.getExtendedInventory().getStackInSlot(0)))
+        if (!OxygenUtil.isItemValidForPlayerTankInv(0, stats.getExtendedInventory().getItem(0)))
         {
             boolean handled = false;
 
-            for (final ItemStack armorStack : player.inventory.armorInventory)
+            for (final ItemStack armorStack : player.inventory.armor)
             {
                 if (!armorStack.isEmpty() && armorStack.getItem() instanceof IBreathableArmor)
                 {
@@ -397,11 +411,11 @@ public class OxygenUtil
             }
         }
 
-        if (!OxygenUtil.isItemValidForPlayerTankInv(1, stats.getExtendedInventory().getStackInSlot(1)))
+        if (!OxygenUtil.isItemValidForPlayerTankInv(1, stats.getExtendedInventory().getItem(1)))
         {
             boolean handled = false;
 
-            for (final ItemStack armorStack : player.inventory.armorInventory)
+            for (final ItemStack armorStack : player.inventory.armor)
             {
                 if (!armorStack.isEmpty() && armorStack.getItem() instanceof IBreathableArmor)
                 {
@@ -423,11 +437,11 @@ public class OxygenUtil
             }
         }
 
-        if (!OxygenUtil.isItemValidForPlayerTankInv(2, stats.getExtendedInventory().getStackInSlot(2)) && !OxygenUtil.isItemValidForPlayerTankInv(3, stats.getExtendedInventory().getStackInSlot(3)))
+        if (!OxygenUtil.isItemValidForPlayerTankInv(2, stats.getExtendedInventory().getItem(2)) && !OxygenUtil.isItemValidForPlayerTankInv(3, stats.getExtendedInventory().getItem(3)))
         {
             boolean handled = false;
 
-            for (final ItemStack armorStack : player.inventory.armorInventory)
+            for (final ItemStack armorStack : player.inventory.armor)
             {
                 if (!armorStack.isEmpty() && armorStack.getItem() instanceof IBreathableArmor)
                 {
@@ -476,30 +490,30 @@ public class OxygenUtil
         return false;
     }
 
-    public static TileEntity[] getAdjacentFluidConnections(TileEntity tile)
+    public static BlockEntity[] getAdjacentFluidConnections(BlockEntity tile)
     {
         return getAdjacentFluidConnections(tile, false);
     }
 
-    public static TileEntity[] getAdjacentFluidConnections(TileEntity tile, boolean ignoreConnect)
+    public static BlockEntity[] getAdjacentFluidConnections(BlockEntity tile, boolean ignoreConnect)
     {
         if (tile == null)
         {
-            return new TileEntity[Direction.values().length];
+            return new BlockEntity[Direction.values().length];
         }
 
-        return getAdjacentFluidConnections(new BlockVec3(tile), tile.getWorld(), ignoreConnect);
+        return getAdjacentFluidConnections(new BlockVec3(tile), tile.getLevel(), ignoreConnect);
     }
 
-    public static TileEntity[] getAdjacentFluidConnections(BlockVec3 pos, World world, boolean ignoreConnect)
+    public static BlockEntity[] getAdjacentFluidConnections(BlockVec3 pos, Level world, boolean ignoreConnect)
     {
-        TileEntity[] adjacentConnections = new TileEntity[Direction.values().length];
+        BlockEntity[] adjacentConnections = new BlockEntity[Direction.values().length];
 
         boolean isMekLoaded = EnergyConfigHandler.isMekanismLoaded();
 
         for (Direction direction : Direction.values())
         {
-            TileEntity tileEntity = pos.getTileEntityOnSide(world, direction);
+            BlockEntity tileEntity = pos.getTileEntityOnSide(world, direction);
 
             boolean connectable = false;
             if (tileEntity instanceof IConnector)
@@ -530,14 +544,14 @@ public class OxygenUtil
         return false;
     }
 
-    public static boolean inOxygenBubble(World worldObj, double avgX, double avgY, double avgZ)
+    public static boolean inOxygenBubble(Level worldObj, double avgX, double avgY, double avgZ)
     {
         DimensionType dimID = GCCoreUtil.getDimensionType(worldObj);
         for (final BlockVec3Dim blockVec : TileEntityOxygenDistributor.loadedTiles)
         {
             if (blockVec != null && blockVec.dim == dimID)
             {
-                TileEntity tile = blockVec.getTileEntity();
+                BlockEntity tile = blockVec.getTileEntity();
                 if (tile instanceof TileEntityOxygenDistributor)
                 {
                     if (((TileEntityOxygenDistributor) tile).inBubble(avgX, avgY, avgZ))

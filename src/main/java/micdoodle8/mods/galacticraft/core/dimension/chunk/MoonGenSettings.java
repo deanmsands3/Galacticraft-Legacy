@@ -1,15 +1,15 @@
 package micdoodle8.mods.galacticraft.core.dimension.chunk;
 
 import micdoodle8.mods.galacticraft.core.GCBlocks;
-import net.minecraft.block.Blocks;
-import net.minecraft.world.gen.GenerationSettings;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.ChunkGeneratorSettings;
 
-public class MoonGenSettings extends GenerationSettings
+public class MoonGenSettings extends ChunkGeneratorSettings
 {
     public MoonGenSettings()
     {
-        this.defaultBlock = GCBlocks.moonStone.getDefaultState();
-        this.defaultFluid = Blocks.AIR.getDefaultState();
+        this.defaultBlock = GCBlocks.moonStone.defaultBlockState();
+        this.defaultFluid = Blocks.AIR.defaultBlockState();
     }
 
     public int getBiomeSize()
@@ -28,7 +28,7 @@ public class MoonGenSettings extends GenerationSettings
     }
 
     @Override
-    public int getBedrockFloorHeight()
+    public int getBedrockFloorPosition()
     {
         return 0;
     }

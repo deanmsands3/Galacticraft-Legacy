@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.render.entities.layer;
+package micdoodle8.mods.galacticraft.core.client.render.entities.layer;
 //
 //import com.mojang.blaze3d.platform.GlStateManager;
 //import micdoodle8.mods.galacticraft.api.entity.ICameraZoomEntity;

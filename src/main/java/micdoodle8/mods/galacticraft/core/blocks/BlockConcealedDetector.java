@@ -4,20 +4,19 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityPlayerDetector;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.RedstoneUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import javax.annotation.Nullable;
 
 public class BlockConcealedDetector extends Block implements ISortable
@@ -29,7 +28,7 @@ public class BlockConcealedDetector extends Block implements ISortable
     public BlockConcealedDetector(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(VARIANT, 0).with(DETECTED, false));
+        this.registerDefaultState(stateDefinition.any().setValue(VARIANT, 0).setValue(DETECTED, false));
     }
 
 //    @Override
@@ -46,9 +45,9 @@ public class BlockConcealedDetector extends Block implements ISortable
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
 //    @Override
@@ -60,7 +59,7 @@ public class BlockConcealedDetector extends Block implements ISortable
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(FACING, VARIANT, DETECTED);
     }
@@ -90,7 +89,7 @@ public class BlockConcealedDetector extends Block implements ISortable
 //    }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityPlayerDetector();
     }
@@ -102,28 +101,28 @@ public class BlockConcealedDetector extends Block implements ISortable
     }
 
     @Override
-    public boolean canProvidePower(BlockState state)
+    public boolean isSignalSource(BlockState state)
     {
         return true;
     }
 
     @Override
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side)
+    public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side)
     {
-        if (blockAccess instanceof World && RedstoneUtil.isBlockReceivingDirectRedstone((World) blockAccess, pos))
+        if (blockAccess instanceof Level && RedstoneUtil.isBlockReceivingDirectRedstone((Level) blockAccess, pos))
         {
             return 0;
         }
 
-        return blockAccess.getBlockState(pos).get(DETECTED) ? 0 : 15;
+        return blockAccess.getBlockState(pos).getValue(DETECTED) ? 0 : 15;
     }
 
-    public void updateState(World worldObj, BlockPos pos, boolean result)
+    public void updateState(Level worldObj, BlockPos pos, boolean result)
     {
         BlockState bs = worldObj.getBlockState(pos);
-        if (result != bs.get(DETECTED))
+        if (result != bs.getValue(DETECTED))
         {
-            worldObj.setBlockState(pos, bs.with(DETECTED, result), 3);
+            worldObj.setBlock(pos, bs.setValue(DETECTED, result), 3);
         }
     }
 

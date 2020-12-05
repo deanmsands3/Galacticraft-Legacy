@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.world.gen;
+package micdoodle8.mods.galacticraft.core.world.gen;
 //
 //import net.minecraft.nbt.CompoundNBT;
 //import net.minecraft.world.biome.dimension.BiomeProvider;

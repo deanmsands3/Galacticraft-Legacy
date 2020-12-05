@@ -2,25 +2,25 @@ package micdoodle8.mods.galacticraft.core.inventory;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityIngotCompressor;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.inventory.container.FurnaceResultSlot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.FurnaceResultSlot;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerIngotCompressor extends Container
+public class ContainerIngotCompressor extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.INGOT_COMPRESSOR)
-    public static ContainerType<ContainerIngotCompressor> TYPE;
+    public static MenuType<ContainerIngotCompressor> TYPE;
 
     private final TileEntityIngotCompressor compressor;
 
-    public ContainerIngotCompressor(int containerId, PlayerInventory playerInv, TileEntityIngotCompressor compressor)
+    public ContainerIngotCompressor(int containerId, Inventory playerInv, TileEntityIngotCompressor compressor)
     {
         super(TYPE, containerId);
         this.compressor = compressor;
@@ -63,22 +63,22 @@ public class ContainerIngotCompressor extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity entityplayer)
+    public void removed(Player entityplayer)
     {
-        super.onContainerClosed(entityplayer);
+        super.removed(entityplayer);
         this.compressor.playersUsing.remove(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.compressor.isUsableByPlayer(par1EntityPlayer);
+        return this.compressor.stillValid(par1EntityPlayer);
     }
 
     @Override
-    public void onCraftMatrixChanged(IInventory par1IInventory)
+    public void slotsChanged(Container par1IInventory)
     {
-        super.onCraftMatrixChanged(par1IInventory);
+        super.slotsChanged(par1IInventory);
         this.compressor.updateInput();
     }
 
@@ -87,45 +87,45 @@ public class ContainerIngotCompressor extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(par1);
+        Slot slot = this.slots.get(par1);
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            ItemStack var4 = slot.getStack();
+            ItemStack var4 = slot.getItem();
             var2 = var4.copy();
 
             if (par1 <= 10)
             {
-                if (!this.mergeItemStack(var4, 11, 47, true))
+                if (!this.moveItemStackTo(var4, 11, 47, true))
                 {
                     return ItemStack.EMPTY;
                 }
 
                 if (par1 == 1)
                 {
-                    slot.onSlotChange(var4, var2);
+                    slot.onQuickCraft(var4, var2);
                 }
             }
             else
             {
                 if (ForgeHooks.getBurnTime(var4) > 0)
                 {
-                    if (!this.mergeItemStack(var4, 9, 10, false))
+                    if (!this.moveItemStackTo(var4, 9, 10, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (par1 < 38)
                 {
-                    if (!this.mergeItemStack(var4, 0, 9, false) && !this.mergeItemStack(var4, 38, 47, false))
+                    if (!this.moveItemStackTo(var4, 0, 9, false) && !this.moveItemStackTo(var4, 38, 47, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (!this.mergeItemStack(var4, 0, 9, false) && !this.mergeItemStack(var4, 11, 38, false))
+                else if (!this.moveItemStackTo(var4, 0, 9, false) && !this.moveItemStackTo(var4, 11, 38, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -133,11 +133,11 @@ public class ContainerIngotCompressor extends Container
 
             if (var4.getCount() == 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (var4.getCount() == var2.getCount())
@@ -153,9 +153,9 @@ public class ContainerIngotCompressor extends Container
 
     //Can only split-drag into the crafting table slots
     @Override
-    public boolean canDragIntoSlot(Slot par1Slot)
+    public boolean canDragTo(Slot par1Slot)
     {
-        return par1Slot.slotNumber < 9;
+        return par1Slot.index < 9;
     }
 
 }

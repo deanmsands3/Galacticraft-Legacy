@@ -1,10 +1,9 @@
 package micdoodle8.mods.galacticraft.planets.venus.world.gen.dungeon;
 
 import micdoodle8.mods.galacticraft.core.world.gen.dungeon.DungeonConfiguration;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 
 public abstract class SizedPieceVenus extends DirectionalPieceVenus
 {
@@ -12,12 +11,12 @@ public abstract class SizedPieceVenus extends DirectionalPieceVenus
     protected int sizeY;
     protected int sizeZ;
 
-    public SizedPieceVenus(IStructurePieceType type, CompoundNBT nbt)
+    public SizedPieceVenus(StructurePieceType type, CompoundTag nbt)
     {
         super(type, nbt);
     }
 
-    public SizedPieceVenus(IStructurePieceType type, DungeonConfigurationVenus configuration, int sizeX, int sizeY, int sizeZ, Direction direction)
+    public SizedPieceVenus(StructurePieceType type, DungeonConfigurationVenus configuration, int sizeX, int sizeY, int sizeZ, Direction direction)
     {
         super(type, configuration, direction);
         this.sizeX = sizeX;
@@ -26,7 +25,7 @@ public abstract class SizedPieceVenus extends DirectionalPieceVenus
     }
 
     @Override
-    protected void writeStructureToNBT(CompoundNBT tagCompound)
+    protected void writeStructureToNBT(CompoundTag tagCompound)
     {
         super.writeStructureToNBT(tagCompound);
 
@@ -36,7 +35,7 @@ public abstract class SizedPieceVenus extends DirectionalPieceVenus
     }
 
     @Override
-    protected void readStructureFromNBT(CompoundNBT tagCompound)
+    protected void readStructureFromNBT(CompoundTag tagCompound)
     {
         super.readStructureFromNBT(tagCompound);
 

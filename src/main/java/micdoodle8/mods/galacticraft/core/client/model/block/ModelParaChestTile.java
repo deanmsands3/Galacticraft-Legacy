@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.model.block;
+package micdoodle8.mods.galacticraft.core.client.model.block;
 //
 //import net.minecraft.client.renderer.model.ModelRenderer;
 //import net.minecraft.client.renderer.tileentity.model.ChestModel;

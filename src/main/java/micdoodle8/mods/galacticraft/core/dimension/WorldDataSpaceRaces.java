@@ -1,14 +1,14 @@
 package micdoodle8.mods.galacticraft.core.dimension;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
 
-public class WorldDataSpaceRaces extends WorldSavedData
+public class WorldDataSpaceRaces extends SavedData
 {
     public static final String saveDataID = Constants.GCDATAFOLDER + "GCSpaceRaceData";
-    private CompoundNBT dataCompound;
+    private CompoundTag dataCompound;
 
     public WorldDataSpaceRaces()
     {
@@ -16,20 +16,20 @@ public class WorldDataSpaceRaces extends WorldSavedData
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
         SpaceRaceManager.loadSpaceRaces(nbt);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
         return SpaceRaceManager.saveSpaceRaces(nbt);
     }
 
-    public static WorldDataSpaceRaces initWorldData(ServerWorld world)
+    public static WorldDataSpaceRaces initWorldData(ServerLevel world)
     {
-        return world.getSavedData().getOrCreate(WorldDataSpaceRaces::new, WorldDataSpaceRaces.saveDataID);
+        return world.getDataStorage().computeIfAbsent(WorldDataSpaceRaces::new, WorldDataSpaceRaces.saveDataID);
     }
 
     @Override

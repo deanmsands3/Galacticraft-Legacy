@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.command;
+package micdoodle8.mods.galacticraft.core.command;
 //
 //import java.util.List;
 //

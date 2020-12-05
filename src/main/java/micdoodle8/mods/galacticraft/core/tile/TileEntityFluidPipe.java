@@ -12,15 +12,17 @@ import micdoodle8.mods.galacticraft.core.blocks.BlockFluidPipe;
 import micdoodle8.mods.galacticraft.core.fluid.FluidNetwork;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.DyeColor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -34,11 +36,11 @@ import javax.annotation.Nonnull;
 public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements IColorable
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fluidPipe)
-    public static TileEntityType<TileEntityFluidPipe> TYPE;
+    public static BlockEntityType<TileEntityFluidPipe> TYPE;
 
     public FluidTankGC buffer = new FluidTankGC(1000, this);
     private final boolean dataRequest = false;
-    private AxisAlignedBB renderAABB;
+    private AABB renderAABB;
 
     public TileEntityFluidPipe()
     {
@@ -72,14 +74,14 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     @Override
     public boolean canConnect(Direction direction, NetworkType type)
     {
-        TileEntity adjacentTile = new BlockVec3(this).getTileEntityOnSide(this.world, direction);
+        BlockEntity adjacentTile = new BlockVec3(this).getTileEntityOnSide(this.level, direction);
 
         if (type == NetworkType.FLUID)
         {
             if (adjacentTile instanceof IColorable)
             {
-                BlockState state = this.world.getBlockState(this.getPos());
-                BlockState adjacentTileState = adjacentTile.getWorld().getBlockState(adjacentTile.getPos());
+                BlockState state = this.level.getBlockState(this.getBlockPos());
+                BlockState adjacentTileState = adjacentTile.getLevel().getBlockState(adjacentTile.getBlockPos());
                 byte thisCol = this.getColor(state);
                 byte otherCol = ((IColorable) adjacentTile).getColor(adjacentTileState);
                 return thisCol == otherCol || thisCol == DyeColor.WHITE.getId() || otherCol == DyeColor.WHITE.getId();
@@ -119,23 +121,23 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     @Override
     public void onLoad()
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
 //            this.world.notifyLightSet(getPos());
-            world.getChunkProvider().getLightManager().checkBlock(getPos());
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_REQUEST_DATA, GCCoreUtil.getDimensionType(this.world), new Object[]{GCCoreUtil.getDimensionType(this.world), this.getPos()}));
+            level.getChunkSource().getLightEngine().checkBlock(getBlockPos());
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_REQUEST_DATA, GCCoreUtil.getDimensionType(this.level), new Object[]{GCCoreUtil.getDimensionType(this.level), this.getBlockPos()}));
         }
     }
 
     @Override
     public void onColorUpdate()
     {
-        if (this.world != null)
+        if (this.level != null)
         {
-            if (this.world.isRemote)
+            if (this.level.isClientSide)
             {
 //                this.world.notifyLightSet(getPos());
-                world.getChunkProvider().getLightManager().checkBlock(getPos());
+                level.getChunkSource().getLightEngine().checkBlock(getBlockPos());
             }
             else
             {
@@ -150,7 +152,7 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     {
         if (state.getBlock() instanceof BlockFluidPipe)
         {
-            return (byte) state.get(BlockFluidPipe.COLOR).getId();
+            return (byte) state.getValue(BlockFluidPipe.COLOR).getId();
         }
         return 15;
     }
@@ -158,41 +160,41 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     @Override
     public void onAdjacentColorChanged(Direction direction)
     {
-        BlockState state = this.world.getBlockState(this.getPos());
-        this.world.notifyBlockUpdate(this.getPos(), state, state, 3);
+        BlockState state = this.level.getBlockState(this.getBlockPos());
+        this.level.sendBlockUpdated(this.getBlockPos(), state, state, 3);
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.refresh();
         }
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tagCompound)
+    public CompoundTag save(CompoundTag tagCompound)
     {
-        super.write(tagCompound);
+        super.save(tagCompound);
         if (this.buffer.getFluid() != FluidStack.EMPTY)
         {
-            tagCompound.put("buff", this.buffer.writeToNBT(new CompoundNBT()));
+            tagCompound.put("buff", this.buffer.writeToNBT(new CompoundTag()));
         }
         return tagCompound;
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void read(CompoundNBT tagCompound)
+    public void load(CompoundTag tagCompound)
     {
-        super.read(tagCompound);
+        super.load(tagCompound);
 
         if (tagCompound.contains("pipeColor"))
         {
             // Backwards compatibility
-            this.world.setBlockState(getPos(), this.world.getBlockState(getPos()).with(BlockFluidPipe.COLOR, DyeColor.byId(tagCompound.getByte("pipeColor"))));
+            this.level.setBlockAndUpdate(getBlockPos(), this.level.getBlockState(getBlockPos()).setValue(BlockFluidPipe.COLOR, DyeColor.byId(tagCompound.getByte("pipeColor"))));
         }
 
         if (tagCompound.contains("buff"))
@@ -310,7 +312,7 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
         }
 
         BlockFluidPipe.ignoreDrop = true;
-        this.world.setBlockState(pos, block.getDefaultState());
+        this.level.setBlockAndUpdate(worldPosition, block.defaultBlockState());
         BlockFluidPipe.ignoreDrop = false;
         if (this.hasNetwork())
         {
@@ -336,19 +338,19 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
+    @Environment(EnvType.CLIENT)
+    public AABB getRenderBoundingBox()
     {
         if (this.renderAABB == null)
         {
-            this.renderAABB = new AxisAlignedBB(pos, pos.add(1, 1, 1));
+            this.renderAABB = new AABB(worldPosition, worldPosition.offset(1, 1, 1));
         }
         return this.renderAABB;
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public double getMaxRenderDistanceSquared()
+    @Environment(EnvType.CLIENT)
+    public double getViewDistance()
     {
         return 16384;  //128 squared
     }

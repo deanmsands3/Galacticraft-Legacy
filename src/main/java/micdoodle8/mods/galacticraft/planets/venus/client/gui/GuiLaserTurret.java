@@ -15,11 +15,11 @@ import micdoodle8.mods.galacticraft.planets.venus.inventory.ContainerLaserTurret
 import micdoodle8.mods.galacticraft.planets.venus.network.PacketSimpleVenus;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityLaserTurret;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -38,66 +38,66 @@ public class GuiLaserTurret extends GuiContainerGC<ContainerLaserTurret> impleme
     private int cannotEditTimer;
 
     private Button buttonEnable;
-    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 107, (this.height - this.ySize) / 2 + 101, 56, 9, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 107, (this.height - this.imageHeight) / 2 + 101, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiLaserTurret(ContainerLaserTurret container, PlayerInventory playerInv, ITextComponent title)
+    public GuiLaserTurret(ContainerLaserTurret container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
         this.laserTurret = container.getTurret();
-        this.ySize = 219;
-        this.xSize = 176;
+        this.imageHeight = 219;
+        this.imageWidth = 176;
     }
 
     @Override
     public void init()
     {
-        final int yTop = (this.height - this.ySize) / 2;
+        final int yTop = (this.height - this.imageHeight) / 2;
         this.buttons.clear();
         super.init();
         List<String> electricityDesc = new ArrayList<String>();
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
         electricityDesc.add(EnumColor.YELLOW + GCCoreUtil.translate("gui.energy_storage.desc.1") + ((int) Math.floor(this.laserTurret.getEnergyStoredGC()) + " / " + (int) Math.floor(this.laserTurret.getMaxEnergyStoredGC())));
         this.electricInfoRegion.tooltipStrings = electricityDesc;
-        this.electricInfoRegion.xPosition = (this.width - this.xSize) / 2 + 112;
-        this.electricInfoRegion.yPosition = (this.height - this.ySize) / 2 + 106;
+        this.electricInfoRegion.xPosition = (this.width - this.imageWidth) / 2 + 112;
+        this.electricInfoRegion.yPosition = (this.height - this.imageHeight) / 2 + 106;
         this.electricInfoRegion.parentWidth = this.width;
         this.electricInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.electricInfoRegion);
         List<String> batterySlotDesc = new ArrayList<String>();
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.0"));
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.1"));
-        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 81, (this.height - this.ySize) / 2 + 92, 18, 18, batterySlotDesc, this.width, this.height, this));
+        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 81, (this.height - this.imageHeight) / 2 + 92, 18, 18, batterySlotDesc, this.width, this.height, this));
         String enableString = !this.laserTurret.getDisabled(0) ? GCCoreUtil.translate("gui.button.disable") : GCCoreUtil.translate("gui.button.enable");
-        this.buttons.add(this.buttonEnable = new Button((this.width - this.xSize) / 2 + 7, this.height / 2 - 9, 72, 20, enableString, (button) ->
+        this.buttons.add(this.buttonEnable = new Button((this.width - this.imageWidth) / 2 + 7, this.height / 2 - 9, 72, 20, enableString, (button) ->
         {
-            if (!this.minecraft.player.getUniqueID().equals(this.laserTurret.getOwnerUUID()))
+            if (!this.minecraft.player.getUUID().equals(this.laserTurret.getOwnerUUID()))
             {
                 this.cannotEditTimer = 50;
                 return;
             }
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(this.minecraft.world), new Object[]{this.laserTurret.getPos(), 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(this.minecraft.level), new Object[]{this.laserTurret.getBlockPos(), 0}));
             laserTurret.setDisabled(0, !laserTurret.getDisabled(0));
             init();
         }));
         this.blacklistMode = new GuiElementCheckbox(this, this.width / 2 - 81, yTop + 26, GCCoreUtil.translate("gui.message.blacklist_mode"), ColorUtil.to32BitColor(255, 75, 75, 75));
         this.targetMeteors = new GuiElementCheckbox(this, this.width / 2 - 81, yTop + 40, GCCoreUtil.translate("gui.message.target_meteors"), ColorUtil.to32BitColor(255, 75, 75, 75));
-        this.buttons.add(this.buttonEditList = new Button((this.width - this.xSize) / 2 + this.xSize / 2 - 41, yTop + 55, 82, 20, GCCoreUtil.translate("gui.button.edit_" + (laserTurret.blacklistMode ? "blacklist" : "whitelist") + ""), (button) ->
+        this.buttons.add(this.buttonEditList = new Button((this.width - this.imageWidth) / 2 + this.imageWidth / 2 - 41, yTop + 55, 82, 20, GCCoreUtil.translate("gui.button.edit_" + (laserTurret.blacklistMode ? "blacklist" : "whitelist") + ""), (button) ->
         {
-            if (!this.minecraft.player.getUniqueID().equals(this.laserTurret.getOwnerUUID()))
+            if (!this.minecraft.player.getUUID().equals(this.laserTurret.getOwnerUUID()))
             {
                 this.cannotEditTimer = 50;
                 return;
             }
-            Minecraft.getInstance().displayGuiScreen(new GuiLaserTurretEditList(laserTurret));
+            Minecraft.getInstance().setScreen(new GuiLaserTurretEditList(laserTurret));
         }));
-        this.buttons.add(this.buttonEditPriority = new Button((this.width - this.xSize) / 2 + this.xSize / 2 - 41, yTop + 78, 82, 20, GCCoreUtil.translate("gui.button.edit_priority"), (button) ->
+        this.buttons.add(this.buttonEditPriority = new Button((this.width - this.imageWidth) / 2 + this.imageWidth / 2 - 41, yTop + 78, 82, 20, GCCoreUtil.translate("gui.button.edit_priority"), (button) ->
         {
-            if (!this.minecraft.player.getUniqueID().equals(this.laserTurret.getOwnerUUID()))
+            if (!this.minecraft.player.getUUID().equals(this.laserTurret.getOwnerUUID()))
             {
                 this.cannotEditTimer = 50;
                 return;
             }
-            Minecraft.getInstance().displayGuiScreen(new GuiLaserTurretEditPriority(laserTurret));
+            Minecraft.getInstance().setScreen(new GuiLaserTurretEditPriority(laserTurret));
         }));
         this.buttons.add(this.blacklistMode);
         this.buttons.add(this.targetMeteors);
@@ -106,14 +106,14 @@ public class GuiLaserTurret extends GuiContainerGC<ContainerLaserTurret> impleme
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
         this.buttonEnable.active = this.laserTurret.disableCooldown == 0;
-        String displayString = this.getTitle().getFormattedText();
-        this.font.drawString(displayString, this.xSize / 2 - this.font.getStringWidth(displayString) / 2, 7, ColorUtil.to32BitColor(255, 75, 75, 75));
+        String displayString = this.getTitle().getColoredString();
+        this.font.draw(displayString, this.imageWidth / 2 - this.font.width(displayString) / 2, 7, ColorUtil.to32BitColor(255, 75, 75, 75));
         displayString = GCCoreUtil.translate("gui.message.status") + ": " + this.getStatus();
-        this.font.drawString(displayString, this.xSize / 2 - this.font.getStringWidth(displayString) / 2, 18, ColorUtil.to32BitColor(255, 75, 75, 75));
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 94, ColorUtil.to32BitColor(255, 75, 75, 75));
+        this.font.draw(displayString, this.imageWidth / 2 - this.font.width(displayString) / 2, 18, ColorUtil.to32BitColor(255, 75, 75, 75));
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, this.imageHeight - 94, ColorUtil.to32BitColor(255, 75, 75, 75));
     }
 
     private String getStatus()
@@ -132,13 +132,13 @@ public class GuiLaserTurret extends GuiContainerGC<ContainerLaserTurret> impleme
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
+    protected void renderBg(float var1, int var2, int var3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GuiLaserTurret.backgroundTexture);
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
-        this.blit(var5, var6, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(GuiLaserTurret.backgroundTexture);
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
+        this.blit(var5, var6, 0, 0, this.imageWidth, this.imageHeight);
 
         List<String> electricityDesc = new ArrayList<String>();
         EnergyDisplayHelper.getEnergyDisplayTooltip(this.laserTurret.getEnergyStoredGC(), this.laserTurret.getMaxEnergyStoredGC(), electricityDesc);
@@ -168,16 +168,16 @@ public class GuiLaserTurret extends GuiContainerGC<ContainerLaserTurret> impleme
         this.targetMeteors.isSelected = laserTurret.targetMeteors;
         this.buttonEditList.setMessage(GCCoreUtil.translate("gui.button.edit_" + (laserTurret.blacklistMode ? "blacklist" : "whitelist") + ""));
 
-        if (!minecraft.player.getUniqueID().equals(this.laserTurret.getOwnerUUID()))
+        if (!minecraft.player.getUUID().equals(this.laserTurret.getOwnerUUID()))
         {
-            String displayString = this.getTitle().getFormattedText();
+            String displayString = this.getTitle().getColoredString();
             boolean off = false;
             if (this.cannotEditTimer > 0)
             {
                 off = this.cannotEditTimer % 30 < 15;
             }
 
-            this.blit(var5 + this.xSize / 2 + this.font.getStringWidth(displayString) / 2 + (off ? -1 : 0) + 3, var6 + 5 + (off ? -1 : 0), 202 + (off ? 8 : 0), 7, off ? 10 : 8, off ? 12 : 10);
+            this.blit(var5 + this.imageWidth / 2 + this.font.width(displayString) / 2 + (off ? -1 : 0) + 3, var6 + 5 + (off ? -1 : 0), 202 + (off ? 8 : 0), 7, off ? 10 : 8, off ? 12 : 10);
         }
     }
 
@@ -188,19 +188,19 @@ public class GuiLaserTurret extends GuiContainerGC<ContainerLaserTurret> impleme
         if (checkbox.equals(this.blacklistMode))
         {
             this.laserTurret.blacklistMode = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{0, this.laserTurret.getPos(), this.laserTurret.blacklistMode ? 1 : 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{0, this.laserTurret.getBlockPos(), this.laserTurret.blacklistMode ? 1 : 0}));
         }
         else if (checkbox.equals(this.targetMeteors))
         {
             this.laserTurret.targetMeteors = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{1, this.laserTurret.getPos(), this.laserTurret.targetMeteors ? 1 : 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{1, this.laserTurret.getBlockPos(), this.laserTurret.targetMeteors ? 1 : 0}));
         }
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckbox checkbox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementCheckbox checkbox, Player player)
     {
-        return player.getUniqueID().equals(this.laserTurret.getOwnerUUID()) && this.cannotEditTimer <= 0;
+        return player.getUUID().equals(this.laserTurret.getOwnerUUID()) && this.cannotEditTimer <= 0;
     }
 
     @Override

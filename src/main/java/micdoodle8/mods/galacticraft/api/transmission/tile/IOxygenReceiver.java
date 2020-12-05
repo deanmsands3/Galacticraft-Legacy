@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.api.transmission.tile;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**

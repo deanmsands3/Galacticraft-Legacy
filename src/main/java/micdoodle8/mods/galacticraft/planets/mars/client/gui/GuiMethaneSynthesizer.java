@@ -14,10 +14,12 @@ import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.PlanetFluids;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerMethaneSynthesizer;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityMethaneSynthesizer;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,7 +28,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class GuiMethaneSynthesizer extends GuiContainerGC<ContainerMethaneSynthesizer>
 {
     private static final ResourceLocation refineryTexture = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/methane_synthesizer.png");
@@ -37,16 +39,16 @@ public class GuiMethaneSynthesizer extends GuiContainerGC<ContainerMethaneSynthe
 
     private Button buttonDisable;
 
-    private final GuiElementInfoRegion fuelTankRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 153, (this.height - this.ySize) / 2 + 28, 16, 38, new ArrayList<String>(), this.width, this.height, this);
-    private final GuiElementInfoRegion gasTankRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 7, (this.height - this.ySize) / 2 + 28, 16, 38, new ArrayList<String>(), this.width, this.height, this);
-    private final GuiElementInfoRegion gasTank2Region = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 7, (this.height - this.ySize) / 2 + 28, 16, 20, new ArrayList<String>(), this.width, this.height, this);
-    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 16, 56, 9, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion fuelTankRegion = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 153, (this.height - this.imageHeight) / 2 + 28, 16, 38, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion gasTankRegion = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 7, (this.height - this.imageHeight) / 2 + 28, 16, 38, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion gasTank2Region = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 7, (this.height - this.imageHeight) / 2 + 28, 16, 20, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 62, (this.height - this.imageHeight) / 2 + 16, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiMethaneSynthesizer(ContainerMethaneSynthesizer container, PlayerInventory playerInv, ITextComponent title)
+    public GuiMethaneSynthesizer(ContainerMethaneSynthesizer container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
         this.synthesizer = container.getSynthesizer();
-        this.ySize = 168;
+        this.imageHeight = 168;
     }
 
     @Override
@@ -54,8 +56,8 @@ public class GuiMethaneSynthesizer extends GuiContainerGC<ContainerMethaneSynthe
     {
         super.init();
 
-        int edgeLeft = (this.width - this.xSize) / 2;
-        int edgeTop = (this.height - this.ySize) / 2;
+        int edgeLeft = (this.width - this.imageWidth) / 2;
+        int edgeTop = (this.height - this.imageHeight) / 2;
 
         this.gasTankRegion.xPosition = edgeLeft + 7;
         this.gasTankRegion.yPosition = edgeTop + 28;
@@ -115,18 +117,18 @@ public class GuiMethaneSynthesizer extends GuiContainerGC<ContainerMethaneSynthe
 
         this.buttons.add(this.buttonDisable = new Button(this.width / 2 - 28, this.height / 2 - 56, 76, 20, GCCoreUtil.translate("gui.button.liquefy"), (button) ->
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(this.synthesizer.getWorld()), new Object[]{this.synthesizer.getPos(), 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(this.synthesizer.getLevel()), new Object[]{this.synthesizer.getBlockPos(), 0}));
         }));
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        this.font.drawString(this.title.getFormattedText(), 47, 5, 4210752);
+        this.font.draw(this.title.getColoredString(), 47, 5, 4210752);
         String displayText = "";
         int yOffset = -18;
 
-        if (RedstoneUtil.isBlockReceivingRedstone(this.synthesizer.getWorld(), this.synthesizer.getPos()))
+        if (RedstoneUtil.isBlockReceivingRedstone(this.synthesizer.getLevel(), this.synthesizer.getBlockPos()))
         {
             displayText = EnumColor.RED + GCCoreUtil.translate("gui.status.off");
         }
@@ -157,24 +159,24 @@ public class GuiMethaneSynthesizer extends GuiContainerGC<ContainerMethaneSynthe
 
         this.buttonDisable.active = this.synthesizer.disableCooldown == 0;
         this.buttonDisable.setMessage(this.synthesizer.processTicks <= -8 ? GCCoreUtil.translate("gui.button.liquefy") : GCCoreUtil.translate("gui.button.liquefy_stop"));
-        this.font.drawString(GCCoreUtil.translate("gui.message.status") + ":", 72, 45 + 23 + yOffset, 4210752);
-        this.font.drawString(displayText, 75, 45 + 33 + yOffset, 4210752);
+        this.font.draw(GCCoreUtil.translate("gui.message.status") + ":", 72, 45 + 23 + yOffset, 4210752);
+        this.font.draw(displayText, 75, 45 + 33 + yOffset, 4210752);
         //		this.font.drawString(ElectricityDisplay.getDisplay(this.tileEntity.ueWattsPerTick * 20, ElectricUnit.WATT), 72, 56 + 23 + yOffset, 4210752);
         //		this.font.drawString(ElectricityDisplay.getDisplay(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE), 72, 68 + 23 + yOffset, 4210752);
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 118 + 2 + 23, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, this.imageHeight - 118 + 2 + 23, 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void renderBg(float par1, int par2, int par3)
     {
-        this.minecraft.textureManager.bindTexture(GuiMethaneSynthesizer.refineryTexture);
+        this.minecraft.textureManager.bind(GuiMethaneSynthesizer.refineryTexture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int edgeLeft = (this.width - this.xSize) / 2;
-        int edgeTop = (this.height - this.ySize) / 2;
-        this.blit(edgeLeft, edgeTop, 0, 0, this.xSize, this.ySize);
+        int edgeLeft = (this.width - this.imageWidth) / 2;
+        int edgeTop = (this.height - this.imageHeight) / 2;
+        this.blit(edgeLeft, edgeTop, 0, 0, this.imageWidth, this.imageHeight);
 
-        this.minecraft.textureManager.bindTexture(GuiMethaneSynthesizer.gasTextures);
+        this.minecraft.textureManager.bind(GuiMethaneSynthesizer.gasTextures);
         int displayInt = this.synthesizer.getScaledGasLevel(38);
         this.blit(edgeLeft + 7, edgeTop + 17 + 49 - displayInt, 1 + 17, 38 - displayInt, 16, displayInt);
         displayInt = this.synthesizer.getScaledGasLevel2(20);
@@ -184,7 +186,7 @@ public class GuiMethaneSynthesizer extends GuiContainerGC<ContainerMethaneSynthe
 
         this.addToolTips();
 
-        this.minecraft.textureManager.bindTexture(GuiMethaneSynthesizer.refineryTexture);
+        this.minecraft.textureManager.bind(GuiMethaneSynthesizer.refineryTexture);
 
         if (this.synthesizer.getEnergyStoredGC() > 0)
         {

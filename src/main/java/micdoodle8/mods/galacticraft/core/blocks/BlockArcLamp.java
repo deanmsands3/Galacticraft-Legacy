@@ -6,51 +6,51 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityArclamp;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.RedstoneUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, ISortable
 {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 //    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
-    protected static final VoxelShape DOWN_AABB = VoxelShapes.create(0.2F, 0.0F, 0.2F, 0.8F, 0.6F, 0.8F);
-    protected static final VoxelShape UP_AABB = VoxelShapes.create(0.2F, 0.4F, 0.2F, 0.8F, 1.0F, 0.8F);
-    protected static final VoxelShape NORTH_AABB = VoxelShapes.create(0.2F, 0.2F, 0.0F, 0.8F, 0.8F, 0.6F);
-    protected static final VoxelShape SOUTH_AABB = VoxelShapes.create(0.2F, 0.2F, 0.4F, 0.8F, 0.8F, 1.0F);
-    protected static final VoxelShape WEST_AABB = VoxelShapes.create(0.0F, 0.2F, 0.2F, 0.6F, 0.8F, 0.8F);
-    protected static final VoxelShape EAST_AABB = VoxelShapes.create(0.4F, 0.2F, 0.2F, 1.0F, 0.8F, 0.8F);
+    protected static final VoxelShape DOWN_AABB = Shapes.box(0.2F, 0.0F, 0.2F, 0.8F, 0.6F, 0.8F);
+    protected static final VoxelShape UP_AABB = Shapes.box(0.2F, 0.4F, 0.2F, 0.8F, 1.0F, 0.8F);
+    protected static final VoxelShape NORTH_AABB = Shapes.box(0.2F, 0.2F, 0.0F, 0.8F, 0.8F, 0.6F);
+    protected static final VoxelShape SOUTH_AABB = Shapes.box(0.2F, 0.2F, 0.4F, 0.8F, 0.8F, 1.0F);
+    protected static final VoxelShape WEST_AABB = Shapes.box(0.0F, 0.2F, 0.2F, 0.6F, 0.8F, 0.8F);
+    protected static final VoxelShape EAST_AABB = Shapes.box(0.4F, 0.2F, 0.2F, 1.0F, 0.8F, 0.8F);
 
     //Metadata: bits 0-2 are the LogicalSide of the base plate using standard LogicalSide convention (0-5)
 
     public BlockArcLamp(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(FACING, Direction.UP));  //.with(ACTIVE, true));
+        this.registerDefaultState(stateDefinition.any().setValue(FACING, Direction.UP));  //.with(ACTIVE, true));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
-        switch (state.get(FACING))
+        switch (state.getValue(FACING))
         {
         case EAST:
             return EAST_AABB;
@@ -69,27 +69,27 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos)
+    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos)
     {
         Block block = state.getBlock();
         if (block != this)
         {
-            return block.getLightValue(state);
+            return block.getLightEmission(state);
         }
         /**
          * Gets the light value of the specified block coords. Args: x, y, z
          */
 
-        if (world instanceof World)
+        if (world instanceof Level)
         {
-            return RedstoneUtil.isBlockReceivingRedstone((World) world, pos) ? 0 : this.lightValue;
+            return RedstoneUtil.isBlockReceivingRedstone((Level) world, pos) ? 0 : this.lightEmission;
         }
 
         return 0;
     }
 
     @Override
-    public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos)
+    public int getLightBlock(BlockState state, BlockGetter worldIn, BlockPos pos)
     {
         return 1;
     }
@@ -142,9 +142,9 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
 //    }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.getDefaultState().with(FACING, context.getFace().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
     }
 
 //    @Override
@@ -198,21 +198,21 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
 //    }
 
     @Override
-    public ActionResultType onUseWrench(World world, BlockPos pos, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onUseWrench(Level world, BlockPos pos, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        if (!world.isRemote)
+        if (!world.isClientSide)
         {
-            TileEntity tile = world.getTileEntity(pos);
+            BlockEntity tile = world.getBlockEntity(pos);
             if (tile instanceof TileEntityArclamp)
             {
                 ((TileEntityArclamp) tile).facingChanged();
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityArclamp();
     }
@@ -232,7 +232,7 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -249,7 +249,7 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(FACING);  //, ACTIVE });
     }
@@ -267,8 +267,8 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state)
+    public RenderShape getRenderShape(BlockState state)
     {
-        return BlockRenderType.MODEL;
+        return RenderShape.MODEL;
     }
 }

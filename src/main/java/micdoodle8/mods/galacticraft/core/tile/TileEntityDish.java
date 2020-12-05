@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.tile;
+package micdoodle8.mods.galacticraft.core.tile;
 //
 //import micdoodle8.mods.galacticraft.api.tile.IDisableableMachine;
 //import micdoodle8.mods.galacticraft.api.transmission.tile.IConnector;

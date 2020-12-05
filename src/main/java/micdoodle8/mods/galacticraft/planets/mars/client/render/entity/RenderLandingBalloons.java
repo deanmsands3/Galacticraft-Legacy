@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.render.entity;
+package micdoodle8.mods.galacticraft.planets.mars.client.render.entity;
 //
 //import com.google.common.collect.ImmutableList;
 //import com.mojang.blaze3d.platform.GlStateManager;

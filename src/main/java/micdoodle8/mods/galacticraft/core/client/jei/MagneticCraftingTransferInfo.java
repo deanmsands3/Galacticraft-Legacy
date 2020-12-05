@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei;
+package micdoodle8.mods.galacticraft.core.client.jei;
 //
 //import java.util.ArrayList;
 //import java.util.List;

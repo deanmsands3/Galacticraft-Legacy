@@ -1,21 +1,14 @@
 package micdoodle8.mods.galacticraft.core.util;
 
 import micdoodle8.mods.galacticraft.core.GCBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldType;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
-
-import net.minecraft.entity.Entity;
-//import cpw.mods.fml.common.Loader;
-//import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.server.ServerChunkProvider;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.LevelType;
 import net.minecraftforge.fml.ModList;
 
 
@@ -405,7 +398,7 @@ public class CompatibilityManager
         return CompatibilityManager.modBOPLoaded;
     }
 
-    public static boolean isBOPWorld(WorldType worldType)
+    public static boolean isBOPWorld(LevelType worldType)
     {
         if (modBOPLoaded && classBOPWorldType != null && classBOPws != null && classBOPwcm != null)
         {
@@ -424,16 +417,16 @@ public class CompatibilityManager
         return CompatibilityManager.wailaLoaded;
     }
 
-    public static void spongeOverrideStart(ServerWorld w)
+    public static void spongeOverrideStart(ServerLevel w)
     {
     }
 
-    public static boolean forceLoadChunks(ServerWorld w)
+    public static boolean forceLoadChunks(ServerLevel w)
     {
         Boolean spongeForceChunksPrevious = null;
         if (spongeLoaded)
         {
-            ServerChunkProvider cps = w.getChunkProvider();
+            ServerChunkCache cps = w.getChunkSource();
             try
             {
                 spongeForceChunksPrevious = (Boolean) spongeOverrideGet.invoke(cps);
@@ -446,13 +439,13 @@ public class CompatibilityManager
         return Boolean.TRUE.equals(spongeForceChunksPrevious);
     }
 
-    public static void forceLoadChunksEnd(ServerWorld w, boolean previous)
+    public static void forceLoadChunksEnd(ServerLevel w, boolean previous)
     {
         if (spongeLoaded)
         {
             try
             {
-                spongeOverrideSet.invoke(w.getChunkProvider(), previous);
+                spongeOverrideSet.invoke(w.getChunkSource(), previous);
             }
             catch (Exception ignore)
             {
@@ -496,7 +489,7 @@ public class CompatibilityManager
 //        }
 //    }
 
-    public static boolean isAndroid(PlayerEntity player)
+    public static boolean isAndroid(Player player)
     {
         if (CompatibilityManager.modMatterOverdriveLoaded)
         {

@@ -1,31 +1,30 @@
 package micdoodle8.mods.galacticraft.core.wrappers;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
-
 import javax.annotation.Nullable;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
 import java.util.Random;
 
-abstract public class ModelTransformWrapper implements IBakedModel
+abstract public class ModelTransformWrapper implements BakedModel
 {
-    private final IBakedModel parent;
+    private final BakedModel parent;
 
-    public ModelTransformWrapper(IBakedModel parent)
+    public ModelTransformWrapper(BakedModel parent)
     {
         this.parent = parent;
     }
 
     @Override
-    public boolean isAmbientOcclusion()
+    public boolean useAmbientOcclusion()
     {
-        return parent.isAmbientOcclusion();
+        return parent.useAmbientOcclusion();
     }
 
     @Override
@@ -35,22 +34,22 @@ abstract public class ModelTransformWrapper implements IBakedModel
     }
 
     @Override
-    public boolean isBuiltInRenderer()
+    public boolean isCustomRenderer()
     {
-        return parent.isBuiltInRenderer();
+        return parent.isCustomRenderer();
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture()
+    public TextureAtlasSprite getParticleIcon()
     {
-        return parent.getParticleTexture();
+        return parent.getParticleIcon();
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemCameraTransforms getItemCameraTransforms()
+    public ItemTransforms getTransforms()
     {
-        return parent.getItemCameraTransforms();
+        return parent.getTransforms();
     }
 
     @Override
@@ -60,13 +59,13 @@ abstract public class ModelTransformWrapper implements IBakedModel
     }
 
     @Override
-    public ItemOverrideList getOverrides()
+    public ItemOverrides getOverrides()
     {
         return parent.getOverrides();
     }
 
     @Override
-    public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat)
+    public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat)
     {
         if (!getTransformForPerspective(cameraTransformType, mat))
         {
@@ -77,10 +76,10 @@ abstract public class ModelTransformWrapper implements IBakedModel
     }
 
     @Override
-    public boolean func_230044_c_()
+    public boolean usesBlockLight()
     {
         return true;
     }
 
-    abstract protected boolean getTransformForPerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat);
+    abstract protected boolean getTransformForPerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat);
 }

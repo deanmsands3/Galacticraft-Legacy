@@ -5,29 +5,34 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.CommandBlockBlock;
-import net.minecraft.block.StructureBlock;
-import net.minecraft.block.BlockState;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.item.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CommandBlock;
+import net.minecraft.world.level.block.StructureBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
-
+import com.mojang.blaze3d.platform.InputConstants;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -40,22 +45,22 @@ public class ItemVolcanicPickaxe extends PickaxeItem implements ISortable, IShif
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    @Environment(EnvType.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         if (this.showDescription(stack))
         {
-            if (InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), 340))
+            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 340))
             {
-                List<String> descString = Minecraft.getInstance().fontRenderer.listFormattedStringToWidth(this.getShiftDescription(stack), 150);
+                List<String> descString = Minecraft.getInstance().font.split(this.getShiftDescription(stack), 150);
                 for (String string : descString)
                 {
-                    tooltip.add(new StringTextComponent(string));
+                    tooltip.add(new TextComponent(string));
                 }
             }
             else
             {
-                tooltip.add(new StringTextComponent(GCCoreUtil.translateWithFormat("item_desc.shift", Minecraft.getInstance().gameSettings.keyBindSneak.getLocalizedName())));
+                tooltip.add(new TextComponent(GCCoreUtil.translateWithFormat("item_desc.shift", Minecraft.getInstance().options.keyShift.getTranslatedKeyMessage())));
             }
         }
     }
@@ -67,7 +72,7 @@ public class ItemVolcanicPickaxe extends PickaxeItem implements ISortable, IShif
 //    }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rarity getRarity(ItemStack par1ItemStack)
     {
         return ClientProxyCore.galacticraftItem;
@@ -80,23 +85,23 @@ public class ItemVolcanicPickaxe extends PickaxeItem implements ISortable, IShif
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving)
+    public boolean mineBlock(ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving)
     {
-        boolean ret = super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
+        boolean ret = super.mineBlock(stack, worldIn, state, pos, entityLiving);
 
-        if (!(entityLiving instanceof PlayerEntity) || worldIn.isRemote)
+        if (!(entityLiving instanceof Player) || worldIn.isClientSide)
         {
             return ret;
         }
 
-        PlayerEntity player = (PlayerEntity) entityLiving;
-        Direction facing = entityLiving.getHorizontalFacing();
+        Player player = (Player) entityLiving;
+        Direction facing = entityLiving.getDirection();
 
-        if (entityLiving.rotationPitch < -45.0F)
+        if (entityLiving.xRot < -45.0F)
         {
             facing = Direction.UP;
         }
-        else if (entityLiving.rotationPitch > 45.0F)
+        else if (entityLiving.xRot > 45.0F)
         {
             facing = Direction.DOWN;
         }
@@ -116,20 +121,20 @@ public class ItemVolcanicPickaxe extends PickaxeItem implements ISortable, IShif
                 BlockPos pos1;
                 if (yAxis)
                 {
-                    pos1 = pos.add(i, 0, j);
+                    pos1 = pos.offset(i, 0, j);
                 }
                 else if (xAxis)
                 {
-                    pos1 = pos.add(0, i, j);
+                    pos1 = pos.offset(0, i, j);
                 }
                 else
                 {
-                    pos1 = pos.add(i, j, 0);
+                    pos1 = pos.offset(i, j, 0);
                 }
 
                 //:Replicate logic of PlayerInteractionManager.tryHarvestBlock(pos1)
                 BlockState state1 = worldIn.getBlockState(pos1);
-                float f = state1.getBlockHardness(worldIn, pos1);
+                float f = state1.getDestroySpeed(worldIn, pos1);
                 if (f >= 0F)
                 {
                     BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(worldIn, pos1, state1, player);
@@ -137,18 +142,18 @@ public class ItemVolcanicPickaxe extends PickaxeItem implements ISortable, IShif
                     if (!event.isCanceled())
                     {
                         Block block = state1.getBlock();
-                        if ((block instanceof CommandBlockBlock || block instanceof StructureBlock) && !player.canUseCommandBlock())
+                        if ((block instanceof CommandBlock || block instanceof StructureBlock) && !player.canUseGameMasterBlocks())
                         {
-                            worldIn.notifyBlockUpdate(pos1, state1, state1, 3);
+                            worldIn.sendBlockUpdated(pos1, state1, state1, 3);
                             continue;
                         }
-                        TileEntity tileentity = worldIn.getTileEntity(pos1);
+                        BlockEntity tileentity = worldIn.getBlockEntity(pos1);
                         if (tileentity != null)
                         {
-                            IPacket<?> pkt = tileentity.getUpdatePacket();
+                            Packet<?> pkt = tileentity.getUpdatePacket();
                             if (pkt != null)
                             {
-                                ((ServerPlayerEntity) player).connection.sendPacket(pkt);
+                                ((ServerPlayer) player).connection.send(pkt);
                             }
                         }
 
@@ -156,12 +161,12 @@ public class ItemVolcanicPickaxe extends PickaxeItem implements ISortable, IShif
                         boolean destroyed = block.removedByPlayer(state1, worldIn, pos1, player, canHarvest, worldIn.getFluidState(pos1));
                         if (destroyed)
                         {
-                            block.onPlayerDestroy(worldIn, pos1, state1);
+                            block.destroy(worldIn, pos1, state1);
                         }
                         if (canHarvest && destroyed)
                         {
-                            block.harvestBlock(worldIn, player, pos1, state1, tileentity, stack);
-                            stack.damageItem(1, player, (e) ->
+                            block.playerDestroy(worldIn, player, pos1, state1, tileentity, stack);
+                            stack.hurtAndBreak(1, player, (e) ->
                             {
                             });
                         }
@@ -176,7 +181,7 @@ public class ItemVolcanicPickaxe extends PickaxeItem implements ISortable, IShif
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override

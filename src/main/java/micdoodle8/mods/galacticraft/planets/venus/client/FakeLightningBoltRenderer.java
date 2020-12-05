@@ -1,9 +1,9 @@
 package micdoodle8.mods.galacticraft.planets.venus.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
@@ -12,12 +12,12 @@ public class FakeLightningBoltRenderer
 {
     public static void renderBolt(long boltVertex, double x, double y, double z)
     {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder worldrenderer = tessellator.getBuffer();
-        GlStateManager.disableTexture();
-        GlStateManager.disableLighting();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder worldrenderer = tessellator.getBuilder();
+        GlStateManager._disableTexture();
+        GlStateManager._disableLighting();
+        GlStateManager._enableBlend();
+        GlStateManager._blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         double[] adouble = new double[8];
         double[] adouble1 = new double[8];
         double d0 = 0.0D;
@@ -70,7 +70,7 @@ public class FakeLightningBoltRenderer
                         d3 += random1.nextInt(31) - 15;
                     }
 
-                    worldrenderer.begin(5, DefaultVertexFormats.POSITION_COLOR);
+                    worldrenderer.begin(5, DefaultVertexFormat.POSITION_COLOR);
                     double d6 = 0.1D + (double) k1 * 0.2D;
 
                     if (j == 0)
@@ -113,18 +113,18 @@ public class FakeLightningBoltRenderer
                             d11 += d7 * 2.0D;
                         }
 
-                        worldrenderer.pos(d10 + d2, y + (double) (i1 * 16), d11 + d3).color(0.45F, 0.45F, 0.5F, 0.3F).endVertex();
-                        worldrenderer.pos(d8 + d4, y + (double) ((i1 + 1) * 16), d9 + d5).color(0.45F, 0.45F, 0.5F, 0.3F).endVertex();
+                        worldrenderer.vertex(d10 + d2, y + (double) (i1 * 16), d11 + d3).color(0.45F, 0.45F, 0.5F, 0.3F).endVertex();
+                        worldrenderer.vertex(d8 + d4, y + (double) ((i1 + 1) * 16), d9 + d5).color(0.45F, 0.45F, 0.5F, 0.3F).endVertex();
                     }
 
-                    tessellator.draw();
+                    tessellator.end();
                 }
             }
         }
 
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.disableBlend();
-        GlStateManager.enableLighting();
-        GlStateManager.enableTexture();
+        GlStateManager._blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager._disableBlend();
+        GlStateManager._enableLighting();
+        GlStateManager._enableTexture();
     }
 }

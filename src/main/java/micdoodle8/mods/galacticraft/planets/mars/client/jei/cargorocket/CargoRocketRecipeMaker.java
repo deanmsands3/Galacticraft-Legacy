@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.jei.cargorocket;
+package micdoodle8.mods.galacticraft.planets.mars.client.jei.cargorocket;
 //
 //import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 //import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;

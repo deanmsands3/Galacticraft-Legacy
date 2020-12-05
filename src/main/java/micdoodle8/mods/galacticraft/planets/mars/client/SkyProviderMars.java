@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client;
+package micdoodle8.mods.galacticraft.planets.mars.client;
 //
 //import com.mojang.blaze3d.platform.GlStateManager;
 //import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;

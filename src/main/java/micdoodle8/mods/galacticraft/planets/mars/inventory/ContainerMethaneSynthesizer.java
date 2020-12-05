@@ -8,22 +8,22 @@ import micdoodle8.mods.galacticraft.core.util.FluidUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityMethaneSynthesizer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerMethaneSynthesizer extends Container
+public class ContainerMethaneSynthesizer extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsContainerNames.METHANE_SYNTHESIZER)
-    public static ContainerType<ContainerMethaneSynthesizer> TYPE;
+    public static MenuType<ContainerMethaneSynthesizer> TYPE;
 
     private final TileEntityMethaneSynthesizer synthesizer;
 
-    public ContainerMethaneSynthesizer(int containerId, PlayerInventory playerInv, TileEntityMethaneSynthesizer synthesizer)
+    public ContainerMethaneSynthesizer(int containerId, Inventory playerInv, TileEntityMethaneSynthesizer synthesizer)
     {
         super(TYPE, containerId);
         this.synthesizer = synthesizer;
@@ -57,7 +57,7 @@ public class ContainerMethaneSynthesizer extends Container
             this.addSlot(new Slot(playerInv, var3, 8 + var3 * 18, 144));
         }
 
-        this.synthesizer.openInventory(playerInv.player);
+        this.synthesizer.startOpen(playerInv.player);
     }
 
     public TileEntityMethaneSynthesizer getSynthesizer()
@@ -66,16 +66,16 @@ public class ContainerMethaneSynthesizer extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity entityplayer)
+    public void removed(Player entityplayer)
     {
-        super.onContainerClosed(entityplayer);
-        this.synthesizer.closeInventory(entityplayer);
+        super.removed(entityplayer);
+        this.synthesizer.stopOpen(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.synthesizer.isUsableByPlayer(par1EntityPlayer);
+        return this.synthesizer.stillValid(par1EntityPlayer);
     }
 
     /**
@@ -83,33 +83,33 @@ public class ContainerMethaneSynthesizer extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(par1);
+        final Slot slot = this.slots.get(par1);
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            final ItemStack var4 = slot.getStack();
+            final ItemStack var4 = slot.getItem();
             var2 = var4.copy();
 
             if (par1 < 5)
             {
-                if (!this.mergeItemStack(var4, 5, 41, true))
+                if (!this.moveItemStackTo(var4, 5, 41, true))
                 {
                     return ItemStack.EMPTY;
                 }
 
                 if (par1 == 2)
                 {
-                    slot.onSlotChange(var4, var2);
+                    slot.onQuickCraft(var4, var2);
                 }
             }
             else
             {
                 if (EnergyUtil.isElectricItem(var4.getItem()))
                 {
-                    if (!this.mergeItemStack(var4, 0, 1, false))
+                    if (!this.moveItemStackTo(var4, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -118,33 +118,33 @@ public class ContainerMethaneSynthesizer extends Container
                 {
                     if (var4.getItem() == AsteroidsItems.atmosphericValve)
                     {
-                        if (!this.mergeItemStack(var4, 2, 3, false))
+                        if (!this.moveItemStackTo(var4, 2, 3, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
                     else if (var4.getItem() == MarsItems.carbonFragments)
                     {
-                        if (!this.mergeItemStack(var4, 3, 4, false))
+                        if (!this.moveItemStackTo(var4, 3, 4, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
                     else if (FluidUtil.isPartialContainer(var4, AsteroidsItems.methaneCanister))
                     {
-                        if (!this.mergeItemStack(var4, 4, 5, false))
+                        if (!this.moveItemStackTo(var4, 4, 5, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
                     else if (par1 < 32)
                     {
-                        if (!this.mergeItemStack(var4, 32, 41, false))
+                        if (!this.moveItemStackTo(var4, 32, 41, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (!this.mergeItemStack(var4, 5, 32, false))
+                    else if (!this.moveItemStackTo(var4, 5, 32, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -153,11 +153,11 @@ public class ContainerMethaneSynthesizer extends Container
 
             if (var4.isEmpty())
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (var4.getCount() == var2.getCount())

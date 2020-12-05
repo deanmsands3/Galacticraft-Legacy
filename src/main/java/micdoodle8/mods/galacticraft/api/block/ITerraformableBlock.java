@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.block;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface ITerraformableBlock
 {
@@ -15,5 +15,5 @@ public interface ITerraformableBlock
      * @param pos   The position of the block
      * @return True if the block can be terraformed, false if not.
      */
-    boolean isTerraformable(World world, BlockPos pos);
+    boolean isTerraformable(Level world, BlockPos pos);
 }

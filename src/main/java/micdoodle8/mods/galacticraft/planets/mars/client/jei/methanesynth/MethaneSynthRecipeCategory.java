@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.jei.methanesynth;
+package micdoodle8.mods.galacticraft.planets.mars.client.jei.methanesynth;
 //
 //import mezz.jei.api.IGuiHelper;
 //import mezz.jei.api.gui.*;

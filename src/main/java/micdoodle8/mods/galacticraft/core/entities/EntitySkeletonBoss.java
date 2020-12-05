@@ -14,27 +14,39 @@ import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.BossInfo;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.monster.SharedMonsterAttributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Random;
 
-public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreathable, IRangedAttackMob, IIgnoreShift
+public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreathable, RangedAttackMob, IIgnoreShift
 {
     protected long ticks = 0;
     private static final ItemStack defaultHeldItem = new ItemStack(Items.BOW, 1);
@@ -44,29 +56,29 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     public Entity thrownEntity;
     public Entity targetEntity;
 
-    public EntitySkeletonBoss(EntityType<? extends EntitySkeletonBoss> type, World worldIn)
+    public EntitySkeletonBoss(EntityType<? extends EntitySkeletonBoss> type, Level worldIn)
     {
         super(type, worldIn);
-        this.goalSelector.addGoal(1, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new EntityAIArrowAttack(this, 1.0D, 25, 10.0F));
-        this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(3, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false, true));
     }
 
-    public static EntitySkeletonBoss create(World world)
+    public static EntitySkeletonBoss create(Level world)
     {
         return new EntitySkeletonBoss(GCEntities.SKELETON_BOSS, world);
     }
 
     @Override
-    protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)
+    protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty)
     {
-        super.setEquipmentBasedOnDifficulty(difficulty);
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.BOW));
-        this.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.BOW));
+        super.populateDefaultEquipmentSlots(difficulty);
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
+        this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.BOW));
     }
 
     @Override
@@ -74,7 +86,7 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     {
         super.registerAttributes();
         double difficulty = 0;
-        switch (this.world.getDifficulty())
+        switch (this.level.getDifficulty())
         {
         case HARD:
             difficulty = 2D;
@@ -88,15 +100,15 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     }
 
     @Override
-    protected void onDeathUpdate()
+    protected void tickDeath()
     {
-        super.onDeathUpdate();
+        super.tickDeath();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.deathTicks == 100)
             {
-                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(PacketSimple.EnumSimplePacket.C_PLAY_SOUND_BOSS_DEATH, GCCoreUtil.getDimensionType(this.world), new Object[]{1.5F}), new PacketDistributor.TargetPoint(this.getPosX(), this.getPosY(), this.getPosZ(), 40.0D, GCCoreUtil.getDimensionType(this.world)));
+                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_PLAY_SOUND_BOSS_DEATH, GCCoreUtil.getDimensionType(this.level), new Object[]{1.5F}), new PacketDistributor.TargetPoint(this.getX(), this.getY(), this.getZ(), 40.0D, GCCoreUtil.getDimensionType(this.level)));
             }
         }
     }
@@ -108,48 +120,48 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     }
 
     @Override
-    public boolean handleWaterMovement()
+    public boolean updateInWaterState()
     {
         return false;
     }
 
     @Override
-    public void updatePassenger(Entity passenger)
+    public void positionRider(Entity passenger)
     {
-        if (this.isPassenger(passenger))
+        if (this.hasPassenger(passenger))
         {
-            final double offsetX = Math.sin(-this.rotationYawHead / Constants.RADIANS_TO_DEGREES_D);
-            final double offsetZ = Math.cos(this.rotationYawHead / Constants.RADIANS_TO_DEGREES_D);
+            final double offsetX = Math.sin(-this.yHeadRot / Constants.RADIANS_TO_DEGREES_D);
+            final double offsetZ = Math.cos(this.yHeadRot / Constants.RADIANS_TO_DEGREES_D);
             final double offsetY = 2 * Math.cos((this.throwTimer + this.postThrowDelay) * 0.05F);
 
-            passenger.setPosition(this.getPosX() + offsetX, this.getPosY() + this.getMountedYOffset() + passenger.getYOffset() + offsetY, this.getPosZ() + offsetZ);
+            passenger.setPos(this.getX() + offsetX, this.getY() + this.getRideHeight() + passenger.getRidingHeight() + offsetY, this.getZ() + offsetZ);
         }
     }
 
     @Override
-    public void knockBack(Entity par1Entity, float par2, double par3, double par5)
+    public void knockback(Entity par1Entity, float par2, double par3, double par5)
     {
     }
 
     @Override
-    public void onCollideWithPlayer(PlayerEntity par1EntityPlayer)
+    public void playerTouch(Player par1EntityPlayer)
     {
-        if (!this.isAIDisabled() && this.getPassengers().isEmpty() && this.postThrowDelay == 0 && this.throwTimer == 0 && par1EntityPlayer.equals(this.targetEntity) && this.deathTicks == 0)
+        if (!this.isNoAi() && this.getPassengers().isEmpty() && this.postThrowDelay == 0 && this.throwTimer == 0 && par1EntityPlayer.equals(this.targetEntity) && this.deathTicks == 0)
         {
-            if (!this.world.isRemote)
+            if (!this.level.isClientSide)
             {
-                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_PLAY_SOUND_BOSS_LAUGH, GCCoreUtil.getDimensionType(this.world), new Object[]{}), new PacketDistributor.TargetPoint(this.getPosX(), this.getPosY(), this.getPosZ(), 40.0D, GCCoreUtil.getDimensionType(this.world)));
+                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_PLAY_SOUND_BOSS_LAUGH, GCCoreUtil.getDimensionType(this.level), new Object[]{}), new PacketDistributor.TargetPoint(this.getX(), this.getY(), this.getZ(), 40.0D, GCCoreUtil.getDimensionType(this.level)));
                 par1EntityPlayer.startRiding(this);
             }
 
             this.throwTimer = 40;
         }
 
-        super.onCollideWithPlayer(par1EntityPlayer);
+        super.playerTouch(par1EntityPlayer);
     }
 
     @Override
-    public boolean canBePushed()
+    public boolean isPushable()
     {
         return false;
     }
@@ -157,7 +169,7 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn)
     {
-        this.playSound(GCSounds.bossOoh, this.getSoundVolume(), this.getSoundPitch() + 1.0F);
+        this.playSound(GCSounds.bossOoh, this.getSoundVolume(), this.getVoicePitch() + 1.0F);
         return null;
     }
 
@@ -176,9 +188,9 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
 
 
     @Override
-    public CreatureAttribute getCreatureAttribute()
+    public MobType getMobType()
     {
-        return CreatureAttribute.UNDEAD;
+        return MobType.UNDEAD;
     }
 
     @Override
@@ -186,34 +198,34 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     {
         this.ticks++;
 
-        for (int j2 = 0; j2 < world.getPlayers().size(); ++j2) //World#isAnyPlayerWithinRangeAt
+        for (int j2 = 0; j2 < level.players().size(); ++j2) //World#isAnyPlayerWithinRangeAt
         {
-            PlayerEntity entityplayer = world.getPlayers().get(j2);
+            Player entityplayer = level.players().get(j2);
 
-            if (EntityPredicates.NOT_SPECTATING.test(entityplayer) && entityplayer instanceof ServerPlayerEntity)
+            if (EntitySelector.NO_SPECTATORS.test(entityplayer) && entityplayer instanceof ServerPlayer)
             {
-                double d0 = entityplayer.getDistanceSq(this.getPosX(), this.getPosY(), this.getPosZ());
+                double d0 = entityplayer.distanceToSqr(this.getX(), this.getY(), this.getZ());
 
                 if (d0 < 20 * 20)
                 {
-                    GCTriggers.FIND_MOON_BOSS.trigger(((ServerPlayerEntity) entityplayer));
+                    GCTriggers.FIND_MOON_BOSS.trigger(((ServerPlayer) entityplayer));
 
                 }
             }
         }
 
-        if (!this.world.isRemote && this.getHealth() <= 150.0F * ConfigManagerCore.dungeonBossHealthMod.get() / 2)
+        if (!this.level.isClientSide && this.getHealth() <= 150.0F * ConfigManagerCore.dungeonBossHealthMod.get() / 2)
         {
             this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
         }
 
-        final PlayerEntity player = this.world.getClosestPlayer(this.getPosX(), this.getPosY(), this.getPosZ(), 20.0, false);
+        final Player player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 20.0, false);
 
         if (player != null && !player.equals(this.targetEntity))
         {
-            if (this.getDistanceSq(player) < 400.0D)
+            if (this.distanceToSqr(player) < 400.0D)
             {
-                this.getNavigator().getPathToEntity(player, 0);
+                this.getNavigation().createPath(player, 0);
                 this.targetEntity = player;
             }
         }
@@ -238,38 +250,38 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
 
             this.thrownEntity = this.getPassengers().get(0);
 
-            if (!this.world.isRemote)
+            if (!this.level.isClientSide)
             {
-                this.removePassengers();
+                this.ejectPassengers();
             }
         }
 
         if (this.thrownEntity != null && this.postThrowDelay == 18)
         {
-            double d0 = this.getPosX() - this.thrownEntity.getPosX();
+            double d0 = this.getX() - this.thrownEntity.getX();
             double d1;
 
-            for (d1 = this.getPosZ() - this.thrownEntity.getPosZ(); d0 * d0 + d1 * d1 < 1.0E-4D; d1 = (Math.random() - Math.random()) * 0.01D)
+            for (d1 = this.getZ() - this.thrownEntity.getZ(); d0 * d0 + d1 * d1 < 1.0E-4D; d1 = (Math.random() - Math.random()) * 0.01D)
             {
                 d0 = (Math.random() - Math.random()) * 0.01D;
             }
 
 
-            if (!this.world.isRemote)
+            if (!this.level.isClientSide)
             {
-                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_PLAY_SOUND_BOW, GCCoreUtil.getDimensionType(this.world), new Object[]{}), new PacketDistributor.TargetPoint(this.getPosX(), this.getPosY(), this.getPosZ(), 40.0, GCCoreUtil.getDimensionType(this.world)));
+                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_PLAY_SOUND_BOW, GCCoreUtil.getDimensionType(this.level), new Object[]{}), new PacketDistributor.TargetPoint(this.getX(), this.getY(), this.getZ(), 40.0, GCCoreUtil.getDimensionType(this.level)));
             }
-            ((PlayerEntity) this.thrownEntity).attackedAtYaw = (float) Math.atan2(d1, d0) * Constants.RADIANS_TO_DEGREES - this.rotationYaw;
+            ((Player) this.thrownEntity).hurtDir = (float) Math.atan2(d1, d0) * Constants.RADIANS_TO_DEGREES - this.yRot;
 
-            this.thrownEntity.isAirBorne = true;
-            final float f = MathHelper.sqrt(d0 * d0 + d1 * d1);
+            this.thrownEntity.hasImpulse = true;
+            final float f = Mth.sqrt(d0 * d0 + d1 * d1);
             final float f1 = 2.4F;
-            this.thrownEntity.setMotion(this.thrownEntity.getMotion().mul(0.5, 0.5, 0.5));
-            this.thrownEntity.setMotion(this.thrownEntity.getMotion().add(-d0 / f * f1, f1 / 5.0, -d1 / f * f1));
+            this.thrownEntity.setDeltaMovement(this.thrownEntity.getDeltaMovement().multiply(0.5, 0.5, 0.5));
+            this.thrownEntity.setDeltaMovement(this.thrownEntity.getDeltaMovement().add(-d0 / f * f1, f1 / 5.0, -d1 / f * f1));
 
-            if (this.thrownEntity.getMotion().y > 0.4000000059604645D)
+            if (this.thrownEntity.getDeltaMovement().y > 0.4000000059604645D)
             {
-                this.thrownEntity.setMotion(this.getMotion().x, 0.4000000059604645D, this.getMotion().z);
+                this.thrownEntity.setDeltaMovement(this.getDeltaMovement().x, 0.4000000059604645D, this.getDeltaMovement().z);
             }
         }
 
@@ -277,18 +289,18 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     }
 
     @Override
-    public ItemEntity entityDropItem(ItemStack par1ItemStack, float par2)
+    public ItemEntity spawnAtLocation(ItemStack par1ItemStack, float par2)
     {
-        final ItemEntity entityitem = new ItemEntity(this.world, this.getPosX(), this.getPosY() + par2, this.getPosZ(), par1ItemStack);
-        entityitem.setMotion(entityitem.getMotion().x, -2.0, entityitem.getMotion().z);
-        entityitem.setDefaultPickupDelay();
+        final ItemEntity entityitem = new ItemEntity(this.level, this.getX(), this.getY() + par2, this.getZ(), par1ItemStack);
+        entityitem.setDeltaMovement(entityitem.getDeltaMovement().x, -2.0, entityitem.getDeltaMovement().z);
+        entityitem.setDefaultPickUpDelay();
         if (captureDrops() != null)
         {
             this.captureDrops().add(entityitem);
         }
         else
         {
-            this.world.addEntity(entityitem);
+            this.level.addFreshEntity(entityitem);
         }
         return entityitem;
     }
@@ -320,22 +332,22 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     }
 
     @Override
-    public void attackEntityWithRangedAttack(LivingEntity target, float f)
+    public void performRangedAttack(LivingEntity target, float f)
     {
         if (!this.getPassengers().isEmpty())
         {
             return;
         }
 
-        ArrowEntity arrow = new ArrowEntity(this.world, this);
-        double d0 = target.getPosX() - this.getPosX();
-        double d1 = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - arrow.getPosY();
-        double d2 = target.getPosZ() - this.getPosZ();
-        double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
-        arrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
+        Arrow arrow = new Arrow(this.level, this);
+        double d0 = target.getX() - this.getX();
+        double d1 = target.getBoundingBox().minY + (double) (target.getBbHeight() / 3.0F) - arrow.getY();
+        double d2 = target.getZ() - this.getZ();
+        double d3 = Mth.sqrt(d0 * d0 + d2 * d2);
+        arrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float) (14 - this.level.getDifficulty().getId() * 4));
 
-        this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
-        this.world.addEntity(arrow);
+        this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.level.addFreshEntity(arrow);
     }
 
     @Override
@@ -360,13 +372,13 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     @Override
     public void dropKey()
     {
-        this.entityDropItem(new ItemStack(GCItems.key, 1), 0.5F);
+        this.spawnAtLocation(new ItemStack(GCItems.key, 1), 0.5F);
     }
 
     @Override
-    public BossInfo.Color getHealthBarColor()
+    public BossEvent.BossBarColor getHealthBarColor()
     {
-        return BossInfo.Color.GREEN;
+        return BossEvent.BossBarColor.GREEN;
     }
 
 //    @Override

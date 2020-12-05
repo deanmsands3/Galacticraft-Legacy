@@ -2,11 +2,9 @@ package micdoodle8.mods.galacticraft.core.world.gen;
 
 import micdoodle8.mods.galacticraft.api.world.BiomeGC;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;
 
 public class BiomeMoonHills extends BiomeMoon
 {
@@ -15,12 +13,12 @@ public class BiomeMoonHills extends BiomeMoon
 
     BiomeMoonHills()
     {
-        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(GCBlocks.moonTurf.getDefaultState(), GCBlocks.moonDirt.getDefaultState(), GCBlocks.moonDirt.getDefaultState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(1.1F).scale(0.0F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
+        super((new Biome.BiomeBuilder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderBaseConfiguration(GCBlocks.moonTurf.defaultBlockState(), GCBlocks.moonDirt.defaultBlockState(), GCBlocks.moonDirt.defaultBlockState())).precipitation(Biome.Precipitation.NONE).biomeCategory(BiomeCategory.NONE).depth(1.1F).scale(0.0F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
         addDefaultFeatures();
     }
 
     @Override
-    public float getSpawningChance()
+    public float getCreatureProbability()
     {
         return 0.1F;
     }

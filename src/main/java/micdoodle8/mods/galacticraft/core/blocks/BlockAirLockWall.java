@@ -4,27 +4,27 @@ import micdoodle8.mods.galacticraft.api.block.IPartialSealableBlock;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockAirLockWall extends Block implements IPartialSealableBlock, ISortable
 {
     public static final EnumProperty<EnumAirLockSealConnection> CONNECTION_TYPE = EnumProperty.create("connection", EnumAirLockSealConnection.class);
-    protected static final VoxelShape AABB_X = VoxelShapes.create(0.25, 0.0, 0.0, 0.75, 1.0, 1.0);
-    protected static final VoxelShape AABB_Z = VoxelShapes.create(0.0, 0.0, 0.25, 1.0, 1.0, 0.75);
-    protected static final VoxelShape AABB_FLAT = VoxelShapes.create(0.0, 0.25, 0.0, 1.0, 0.75, 1.0);
+    protected static final VoxelShape AABB_X = Shapes.box(0.25, 0.0, 0.0, 0.75, 1.0, 1.0);
+    protected static final VoxelShape AABB_Z = Shapes.box(0.0, 0.0, 0.25, 1.0, 1.0, 0.75);
+    protected static final VoxelShape AABB_FLAT = Shapes.box(0.0, 0.25, 0.0, 1.0, 0.75, 1.0);
 
-    public enum EnumAirLockSealConnection implements IStringSerializable
+    public enum EnumAirLockSealConnection implements StringRepresentable
     {
         X("x"),
         Z("z"),
@@ -38,7 +38,7 @@ public class BlockAirLockWall extends Block implements IPartialSealableBlock, IS
         }
 
         @Override
-        public String getName()
+        public String getSerializedName()
         {
             return this.name;
         }
@@ -47,11 +47,11 @@ public class BlockAirLockWall extends Block implements IPartialSealableBlock, IS
     public BlockAirLockWall(Properties builder)
     {
         super(builder);
-        this.setDefaultState(this.stateContainer.getBaseState().with(CONNECTION_TYPE, EnumAirLockSealConnection.X));
+        this.registerDefaultState(this.stateDefinition.any().setValue(CONNECTION_TYPE, EnumAirLockSealConnection.X));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         switch (getConnection(worldIn, pos))
         {
@@ -97,7 +97,7 @@ public class BlockAirLockWall extends Block implements IPartialSealableBlock, IS
 //    }
 
     @Override
-    public boolean isSealed(World worldIn, BlockPos pos, Direction direction)
+    public boolean isSealed(Level worldIn, BlockPos pos, Direction direction)
     {
         return true;
     }
@@ -114,15 +114,15 @@ public class BlockAirLockWall extends Block implements IPartialSealableBlock, IS
         return EnumSortCategory.MACHINE;
     }
 
-    public static EnumAirLockSealConnection getConnection(IBlockReader worldIn, BlockPos pos)
+    public static EnumAirLockSealConnection getConnection(BlockGetter worldIn, BlockPos pos)
     {
         EnumAirLockSealConnection connection;
 
         Block frameID = GCBlocks.airLockFrame;
         Block sealID = GCBlocks.airLockSeal;
 
-        Block idXMin = worldIn.getBlockState(pos.offset(Direction.WEST)).getBlock();
-        Block idXMax = worldIn.getBlockState(pos.offset(Direction.WEST)).getBlock();
+        Block idXMin = worldIn.getBlockState(pos.relative(Direction.WEST)).getBlock();
+        Block idXMax = worldIn.getBlockState(pos.relative(Direction.WEST)).getBlock();
 
         if (idXMin != frameID && idXMax != frameID && idXMin != sealID && idXMax != sealID)
         {
@@ -136,7 +136,7 @@ public class BlockAirLockWall extends Block implements IPartialSealableBlock, IS
             {
                 if (dir.getAxis().isHorizontal())
                 {
-                    Block blockID = worldIn.getBlockState(pos.offset(dir)).getBlock();
+                    Block blockID = worldIn.getBlockState(pos.relative(dir)).getBlock();
 
                     if (blockID == GCBlocks.airLockFrame || blockID == GCBlocks.airLockSeal)
                     {
@@ -159,7 +159,7 @@ public class BlockAirLockWall extends Block implements IPartialSealableBlock, IS
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(CONNECTION_TYPE);
     }

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.client.jei.astrominer;
+package micdoodle8.mods.galacticraft.planets.asteroids.client.jei.astrominer;
 //
 //import mezz.jei.api.IGuiHelper;
 //import mezz.jei.api.gui.IDrawable;

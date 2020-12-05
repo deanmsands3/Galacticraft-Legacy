@@ -1,19 +1,21 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import micdoodle8.mods.galacticraft.core.entities.EntityCelestialFake;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class RenderEntityFake extends EntityRenderer<EntityCelestialFake>
 {
-    public RenderEntityFake(EntityRendererManager manager)
+    public RenderEntityFake(EntityRenderDispatcher manager)
     {
         super(manager);
     }
@@ -25,13 +27,13 @@ public class RenderEntityFake extends EntityRenderer<EntityCelestialFake>
     }
 
     @Override
-    public boolean shouldRender(EntityCelestialFake livingEntityIn, ClippingHelperImpl camera, double camX, double camY, double camZ)
+    public boolean shouldRender(EntityCelestialFake livingEntityIn, Frustum camera, double camX, double camY, double camZ)
     {
         return false;
     }
 
     @Override
-    public void render(EntityCelestialFake entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn)
+    public void render(EntityCelestialFake entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn)
     {
     }
 }

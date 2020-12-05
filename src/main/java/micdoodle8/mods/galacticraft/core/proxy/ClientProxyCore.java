@@ -36,32 +36,29 @@ import micdoodle8.mods.galacticraft.core.util.*;
 import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
 import micdoodle8.mods.galacticraft.core.wrappers.PlayerGearData;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import net.minecraft.block.Block;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.MusicTicker;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.Rarity;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.play.ServerPlayNetHandler;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.resources.IResourceManagerReloadListener;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.sounds.MusicManager;
+import net.minecraft.network.PacketListener;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -87,7 +84,7 @@ import java.util.*;
 import static micdoodle8.mods.galacticraft.core.client.GCParticles.*;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class ClientProxyCore extends CommonProxyCore implements IResourceManagerReloadListener
+public class ClientProxyCore extends CommonProxyCore implements ResourceManagerReloadListener
 {
     public static List<String> flagRequestsSent = new ArrayList<>();
     public static Set<BlockVec3> valueableBlocks = Sets.newHashSet();
@@ -102,8 +99,8 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
     public static boolean lastSpacebarDown;
 
     public static HashMap<DimensionType, DimensionType> clientSpaceStationID = Maps.newHashMap();
-    public static MusicTicker.MusicType MUSIC_TYPE_MARS;
-    public static Rarity galacticraftItem = Rarity.create("GCRarity", TextFormatting.BLUE);
+    public static MusicManager.Music MUSIC_TYPE_MARS;
+    public static Rarity galacticraftItem = Rarity.create("GCRarity", ChatFormatting.BLUE);
     public static Map<String, ResourceLocation> capeMap = new HashMap<>();
     public static InventoryExtended dummyInventory = new InventoryExtended();
     public static Map<Fluid, ResourceLocation> submergedTextures = Maps.newHashMap();
@@ -127,7 +124,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 
     public ClientProxyCore()
     {
-        ((IReloadableResourceManager) Minecraft.getInstance().getResourceManager()).addReloadListener(this);
+        ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(this);
     }
 
     public static void clientInit()
@@ -177,22 +174,22 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 
         // ===============
 
-        RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(GCBlocks.fluidPipe, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.fluidPipePull, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.cheeseBlock, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.concealedRedstone, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.emergencyBox, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.emergencyBoxKit, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.glowstoneTorch, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.glowstoneTorchWall, cutout);
+        RenderType cutout = RenderType.cutout();
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.fluidPipe, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.fluidPipePull, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.cheeseBlock, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.concealedRedstone, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.emergencyBox, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.emergencyBoxKit, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.glowstoneTorch, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.glowstoneTorchWall, cutout);
 //        RenderTypeLookup.setRenderLayer(GCBlocks.grating, cutout);
 //        RenderTypeLookup.setRenderLayer(GCBlocks.platform, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorch, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorchWall, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorchLit, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorchWallLit, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.fluidTank, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.unlitTorch, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.unlitTorchWall, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.unlitTorchLit, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.unlitTorchWallLit, cutout);
+        ItemBlockRenderTypes.setRenderLayer(GCBlocks.fluidTank, cutout);
 
         ClientProxyCore.registerInventoryTabs();
         ItemSchematic.registerTextures();
@@ -254,9 +251,9 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager)
+    public void onResourceManagerReload(ResourceManager resourceManager)
     {
-        String lang = net.minecraft.client.Minecraft.getInstance().gameSettings.language;
+        String lang = net.minecraft.client.Minecraft.getInstance().options.languageCode;
         GCLog.debug("Reloading entity names for language " + lang);
         if (lang == null)
         {
@@ -347,9 +344,9 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
     }
 
     @Override
-    public World getClientWorld()
+    public Level getClientWorld()
     {
-        return ClientProxyCore.mc.world;
+        return ClientProxyCore.mc.level;
     }
 
 //    @Override
@@ -359,14 +356,14 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 //    }
 
     @Override
-    public World getWorldForID(DimensionType dimensionID)
+    public Level getWorldForID(DimensionType dimensionID)
     {
         if (GCCoreUtil.getEffectiveSide() == LogicalSide.SERVER)
         {
             return WorldUtil.getWorldForDimensionServer(dimensionID);
         }
 
-        World world = ClientProxyCore.mc.world;
+        Level world = ClientProxyCore.mc.level;
 
         if (world != null && GCCoreUtil.getDimensionType(world) == dimensionID)
         {
@@ -377,11 +374,11 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
     }
 
     @Override
-    public PlayerEntity getPlayerFromNetHandler(INetHandler handler)
+    public Player getPlayerFromNetHandler(PacketListener handler)
     {
-        if (handler instanceof ServerPlayNetHandler)
+        if (handler instanceof ServerGamePacketListenerImpl)
         {
-            return ((ServerPlayNetHandler) handler).player;
+            return ((ServerGamePacketListenerImpl) handler).player;
         }
         else
         {
@@ -414,9 +411,9 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
     @Override
     public boolean isPaused()
     {
-        if (Minecraft.getInstance().isSingleplayer() && !Minecraft.getInstance().getIntegratedServer().getPublic())
+        if (Minecraft.getInstance().hasSingleplayerServer() && !Minecraft.getInstance().getSingleplayerServer().isPublished())
         {
-            Screen screen = Minecraft.getInstance().currentScreen;
+            Screen screen = Minecraft.getInstance().screen;
 
             if (screen != null)
             {
@@ -457,7 +454,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
         event.getModelRegistry().replaceAll((r1, model) -> {
             try
             {
-                ICustomModelFactory factory = customModels.get(new ResourceLocation(r1.getNamespace(), r1.getPath()));
+                ICustomModelFactory factory = customModels.get(new Identifier(r1.getNamespace(), r1.getPath()));
                 return factory == null ? model : factory.create(model);
             }
             catch (Exception e)
@@ -606,7 +603,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 
     private static void registerTileEntityRenderers()
     {
-        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChest.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/treasure.png")));
+        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChest.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new Identifier(Constants.MOD_ID_CORE, "textures/model/treasure.png")));
         ClientRegistry.bindTileEntityRenderer(TileEntitySolar.TileEntitySolarT1.TYPE, TileEntitySolarPanelRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntitySolar.TileEntitySolarT2.TYPE, TileEntitySolarPanelRenderer::new);
 ////        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOxygenDistributor.class, new TileEntityBubbleProviderRenderer<>(0.25F, 0.25F, 1.0F));
@@ -1015,17 +1012,17 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
     }
 
     @Override
-    public PlayerGearData getGearData(PlayerEntity player)
+    public PlayerGearData getGearData(Player player)
     {
         PlayerGearData gearData = ClientProxyCore.playerItemData.get(player.getName());
 
         if (gearData == null)
         {
-            UUID id = player.getUniqueID();
+            UUID id = player.getUUID();
 
             if (!ClientProxyCore.gearDataRequests.contains(id))
             {
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_REQUEST_GEAR_DATA2, GCCoreUtil.getDimensionType(player.world), new Object[]{id}));
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_REQUEST_GEAR_DATA2, GCCoreUtil.getDimensionType(player.level), new Object[]{id}));
                 ClientProxyCore.gearDataRequests.add(id);
             }
         }
@@ -1035,16 +1032,16 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 
     @SubscribeEvent
     public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(WHITE_SMOKE_IDLE, ParticleSmokeUnlaunched.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(WHITE_SMOKE_LAUNCHED, ParticleSmokeLaunched.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(WHITE_SMOKE_IDLE_LARGE, ParticleSmokeUnlaunchedLarge.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(WHITE_SMOKE_LAUNCHED_LARGE, ParticleSmokeLaunchedLarge.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(LAUNCH_FLAME_IDLE, ParticleLaunchFlameUnlaunched.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(LAUNCH_FLAME_LAUNCHED, ParticleLaunchFlame.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(LAUNCH_SMOKE_TINY, ParticleSmokeSmall.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(OIL_DRIP, DripParticleGC.DrippingOilFactory::new);
-        Minecraft.getInstance().particles.registerFactory(OXYGEN, ParticleOxygen.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(LANDER_FLAME, ParticleLanderFlame.Factory::new);
+        Minecraft.getInstance().particleEngine.register(WHITE_SMOKE_IDLE, ParticleSmokeUnlaunched.Factory::new);
+        Minecraft.getInstance().particleEngine.register(WHITE_SMOKE_LAUNCHED, ParticleSmokeLaunched.Factory::new);
+        Minecraft.getInstance().particleEngine.register(WHITE_SMOKE_IDLE_LARGE, ParticleSmokeUnlaunchedLarge.Factory::new);
+        Minecraft.getInstance().particleEngine.register(WHITE_SMOKE_LAUNCHED_LARGE, ParticleSmokeLaunchedLarge.Factory::new);
+        Minecraft.getInstance().particleEngine.register(LAUNCH_FLAME_IDLE, ParticleLaunchFlameUnlaunched.Factory::new);
+        Minecraft.getInstance().particleEngine.register(LAUNCH_FLAME_LAUNCHED, ParticleLaunchFlame.Factory::new);
+        Minecraft.getInstance().particleEngine.register(LAUNCH_SMOKE_TINY, ParticleSmokeSmall.Factory::new);
+        Minecraft.getInstance().particleEngine.register(OIL_DRIP, DripParticleGC.DrippingOilFactory::new);
+        Minecraft.getInstance().particleEngine.register(OXYGEN, ParticleOxygen.Factory::new);
+        Minecraft.getInstance().particleEngine.register(LANDER_FLAME, ParticleLanderFlame.Factory::new);
     }
 
     public static void setCustomModel(ResourceLocation loc, ICustomModelFactory factory)
@@ -1052,8 +1049,8 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
         customModels.put(loc, factory);
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public interface ICustomModelFactory {
-        IBakedModel create(IBakedModel model);
+        BakedModel create(BakedModel model);
     }
 }

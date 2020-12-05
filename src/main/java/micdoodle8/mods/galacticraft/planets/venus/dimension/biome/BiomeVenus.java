@@ -2,18 +2,17 @@ package micdoodle8.mods.galacticraft.planets.venus.dimension.biome;
 
 import micdoodle8.mods.galacticraft.api.world.BiomeGC;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;
 
 public class BiomeVenus extends BiomeGC
 {
-    public static final Biome venusFlat = new BiomeVenus((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(VenusBlocks.rockHard.getDefaultState(), VenusBlocks.rockSoft.getDefaultState(), VenusBlocks.rockSoft.getDefaultState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(0.5F).scale(0.4F).temperature(4.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null));
-    public static final Biome venusMountain = new BiomeVenus((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(VenusBlocks.rockHard.getDefaultState(), VenusBlocks.rockSoft.getDefaultState(), VenusBlocks.rockSoft.getDefaultState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(2.0F).scale(1.0F).temperature(4.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null));
-    public static final Biome venusValley = new BiomeVenus((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(VenusBlocks.rockHard.getDefaultState(), VenusBlocks.rockSoft.getDefaultState(), VenusBlocks.rockSoft.getDefaultState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(-0.4F).scale(0.2F).temperature(4.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null));
+    public static final Biome venusFlat = new BiomeVenus((new Biome.BiomeBuilder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderBaseConfiguration(VenusBlocks.rockHard.defaultBlockState(), VenusBlocks.rockSoft.defaultBlockState(), VenusBlocks.rockSoft.defaultBlockState())).precipitation(Biome.Precipitation.NONE).biomeCategory(BiomeCategory.NONE).depth(0.5F).scale(0.4F).temperature(4.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null));
+    public static final Biome venusMountain = new BiomeVenus((new Biome.BiomeBuilder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderBaseConfiguration(VenusBlocks.rockHard.defaultBlockState(), VenusBlocks.rockSoft.defaultBlockState(), VenusBlocks.rockSoft.defaultBlockState())).precipitation(Biome.Precipitation.NONE).biomeCategory(BiomeCategory.NONE).depth(2.0F).scale(1.0F).temperature(4.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null));
+    public static final Biome venusValley = new BiomeVenus((new Biome.BiomeBuilder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderBaseConfiguration(VenusBlocks.rockHard.defaultBlockState(), VenusBlocks.rockSoft.defaultBlockState(), VenusBlocks.rockSoft.defaultBlockState())).precipitation(Biome.Precipitation.NONE).biomeCategory(BiomeCategory.NONE).depth(-0.4F).scale(0.2F).temperature(4.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null));
 
-    BiomeVenus(Biome.Builder biomeBuilder)
+    BiomeVenus(Biome.BiomeBuilder biomeBuilder)
     {
         super(biomeBuilder, true);
     }

@@ -13,11 +13,13 @@ import micdoodle8.mods.galacticraft.planets.venus.client.fx.ParticleAcidVapor;
 import micdoodle8.mods.galacticraft.planets.venus.client.render.tile.TileEntityLaserTurretRenderer;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityLaserTurret;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityTreasureChestVenus;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -49,13 +51,13 @@ public class VenusModuleClient implements IPlanetsModuleClient
         MinecraftForge.EVENT_BUS.register(new TickHandlerClientVenus());
 //        VenusModuleClient.registerBlockRenderers();
 
-        RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(VenusBlocks.torchWebLight, cutout);
-        RenderTypeLookup.setRenderLayer(VenusBlocks.torchWebSupport, cutout);
+        RenderType cutout = RenderType.cutout();
+        ItemBlockRenderTypes.setRenderLayer(VenusBlocks.torchWebLight, cutout);
+        ItemBlockRenderTypes.setRenderLayer(VenusBlocks.torchWebSupport, cutout);
 
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTreasureChestVenus.class, new TileEntityTreasureChestRenderer());
         ClientRegistry.bindTileEntityRenderer(TileEntityLaserTurret.TYPE, TileEntityLaserTurretRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChestVenus.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/model/treasure_venus.png")));
+        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChestVenus.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new Identifier(GalacticraftPlanets.ASSET_PREFIX, "textures/model/treasure_venus.png")));
     }
 
 //    private void addPlanetVariants(String name, String... variants)
@@ -91,7 +93,7 @@ public class VenusModuleClient implements IPlanetsModuleClient
 //    }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void loadTextures(TextureStitchEvent.Pre event)
     {
         registerTexture(event, "pod_flame");
@@ -107,7 +109,7 @@ public class VenusModuleClient implements IPlanetsModuleClient
     }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void onModelBakeEvent(ModelBakeEvent event)
     {
 //        RenderEntryPodVenus.updateModels(event.getModelLoader());
@@ -232,7 +234,7 @@ public class VenusModuleClient implements IPlanetsModuleClient
 
     @SubscribeEvent
     public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(ACID_EXHAUST, ParticleAcidExhaust.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(ACID_VAPOR, ParticleAcidVapor.Factory::new);
+        Minecraft.getInstance().particleEngine.register(ACID_EXHAUST, ParticleAcidExhaust.Factory::new);
+        Minecraft.getInstance().particleEngine.register(ACID_VAPOR, ParticleAcidVapor.Factory::new);
     }
 }

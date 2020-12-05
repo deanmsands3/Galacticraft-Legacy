@@ -1,13 +1,13 @@
 package micdoodle8.mods.galacticraft.core.blocks;
 
 import micdoodle8.mods.galacticraft.core.fluid.OxygenPressureProtocol;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class BlockBrightBreathableAir extends BlockThermalAir
 {
@@ -16,7 +16,7 @@ public class BlockBrightBreathableAir extends BlockThermalAir
     public BlockBrightBreathableAir(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(THERMAL, false));
+        this.registerDefaultState(stateDefinition.any().setValue(THERMAL, false));
     }
 
 //    @Override
@@ -53,7 +53,7 @@ public class BlockBrightBreathableAir extends BlockThermalAir
 
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         if (Blocks.AIR == blockIn)
         //Do no check if replacing breatheableAir with a solid block, although that could be dividing a sealed space
@@ -63,7 +63,7 @@ public class BlockBrightBreathableAir extends BlockThermalAir
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(THERMAL);
     }

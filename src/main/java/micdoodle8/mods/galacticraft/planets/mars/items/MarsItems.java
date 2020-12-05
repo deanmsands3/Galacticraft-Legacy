@@ -3,8 +3,8 @@ package micdoodle8.mods.galacticraft.planets.mars.items;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.items.ItemBase;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -83,7 +83,7 @@ public class MarsItems
 
     public static Item.Properties defaultBuilder()
     {
-        return new Item.Properties().group(GalacticraftCore.galacticraftItemsTab);
+        return new Item.Properties().tab(GalacticraftCore.galacticraftItemsTab);
     }
 
 //    public static ArmorMaterial ARMORDESH = EnumHelper.addArmorMaterial("DESH", "", 42, new int[] { 4, 7, 9, 4 }, 12, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.0F);
@@ -105,10 +105,10 @@ public class MarsItems
         register(r, new ItemHoeMars(defaultBuilder()), MarsItemNames.deshHoe);
         register(r, new ItemShovelMars(defaultBuilder()), MarsItemNames.deshSpade);
         register(r, new ItemSwordMars(defaultBuilder()), MarsItemNames.deshSword);
-        register(r, new ItemArmorMars(EquipmentSlotType.HEAD, defaultBuilder()), MarsItemNames.deshHelmet);
-        register(r, new ItemArmorMars(EquipmentSlotType.CHEST, defaultBuilder()), MarsItemNames.deshChestplate);
-        register(r, new ItemArmorMars(EquipmentSlotType.LEGS, defaultBuilder()), MarsItemNames.deshLeggings);
-        register(r, new ItemArmorMars(EquipmentSlotType.FEET, defaultBuilder()), MarsItemNames.deshBoots);
+        register(r, new ItemArmorMars(EquipmentSlot.HEAD, defaultBuilder()), MarsItemNames.deshHelmet);
+        register(r, new ItemArmorMars(EquipmentSlot.CHEST, defaultBuilder()), MarsItemNames.deshChestplate);
+        register(r, new ItemArmorMars(EquipmentSlot.LEGS, defaultBuilder()), MarsItemNames.deshLeggings);
+        register(r, new ItemArmorMars(EquipmentSlot.FEET, defaultBuilder()), MarsItemNames.deshBoots);
 //        @ObjectHolder(MarsItemNames.rocketTierTwo) public static Item rocketTierTwo;
 //        @ObjectHolder(MarsItemNames.rocketTierTwoCargo1) public static Item rocketTierTwoCargo1;
 //        @ObjectHolder(MarsItemNames.rocketTierTwoCargo2) public static Item rocketTierTwoCargo2;
@@ -118,16 +118,16 @@ public class MarsItems
 //        @ObjectHolder(MarsItemNames.rocketCargo2) public static Item rocketCargo2;
 //        @ObjectHolder(MarsItemNames.rocketCargo3) public static Item rocketCargo3;
 //        @ObjectHolder(MarsItemNames.rocketCargoCreative) public static Item rocketCargoCreative;
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.rocketTierTwo);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.rocketTierTwoCargo1);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.rocketTierTwoCargo2);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.rocketTierTwoCargo3);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.rocketTierTwoCreative);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.rocketCargo1);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.rocketCargo2);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.rocketCargo3);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.rocketCargoCreative);
-        register(r, new ItemKeyMars(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.key);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.rocketTierTwo);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.rocketTierTwoCargo1);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.rocketTierTwoCargo2);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.rocketTierTwoCargo3);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.rocketTierTwoCreative);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.rocketCargo1);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.rocketCargo2);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.rocketCargo3);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.rocketCargoCreative);
+        register(r, new ItemKeyMars(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.key);
         register(r, new ItemSchematicTier2(defaultBuilder()), MarsItemNames.schematicRocketT3);
         register(r, new ItemSchematicTier2(defaultBuilder()), MarsItemNames.schematicCargoRocket);
         register(r, new ItemSchematicTier2(defaultBuilder()), MarsItemNames.schematicAstroMiner);

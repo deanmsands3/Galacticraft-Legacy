@@ -5,18 +5,21 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementCheckboxPreLaunch;
+import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiPreLaunchChecklist.NextPageButton;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,13 +36,13 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
     private int bookTotalPages;
     private NextPageButton buttonNextPage;
     private NextPageButton buttonPreviousPage;
-    private final CompoundNBT tagCompound;
+    private final CompoundTag tagCompound;
     private final Map<GuiElementCheckboxPreLaunch, String> checkboxToKeyMap = Maps.newHashMap();
 
-    public GuiPreLaunchChecklist(List<List<String>> checklistKeys, CompoundNBT tagCompound)
+    public GuiPreLaunchChecklist(List<List<String>> checklistKeys, CompoundTag tagCompound)
     {
-        super(new StringTextComponent("Prelaunch Checklist"));
-        this.tagCompound = tagCompound != null ? tagCompound : new CompoundNBT();
+        super(new TextComponent("Prelaunch Checklist"));
+        this.tagCompound = tagCompound != null ? tagCompound : new CompoundTag();
         this.checklistKeys = checklistKeys;
     }
 
@@ -86,7 +89,7 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
                     this.checkboxToKeyMap.put(element, title);
                     index++;
                 }
-                yPos += size + minecraft.fontRenderer.FONT_HEIGHT / 2;
+                yPos += size + minecraft.font.lineHeight / 2;
             }
             else
             {
@@ -103,7 +106,7 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
                     this.checkboxToKeyMap.put(element, title);
                     index++;
                 }
-                yPos += size + minecraft.fontRenderer.FONT_HEIGHT / 2;
+                yPos += size + minecraft.font.lineHeight / 2;
             }
 
             for (String checkbox : checkboxes)
@@ -120,7 +123,7 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
                         this.checkboxToKeyMap.put(element, title + "." + checkbox + ".key");
                         index++;
                     }
-                    yPos += size + minecraft.fontRenderer.FONT_HEIGHT / 2;
+                    yPos += size + minecraft.font.lineHeight / 2;
                 }
                 else
                 {
@@ -137,7 +140,7 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
                         this.checkboxToKeyMap.put(element, title + "." + checkbox + ".key");
                         index++;
                     }
-                    yPos += size + minecraft.fontRenderer.FONT_HEIGHT / 2;
+                    yPos += size + minecraft.font.lineHeight / 2;
                 }
             }
         }
@@ -154,7 +157,7 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
 
     private void onDataChange()
     {
-        for (Widget button : this.buttons)
+        for (AbstractWidget button : this.buttons)
         {
             if (button instanceof GuiElementCheckboxPreLaunch)
             {
@@ -163,14 +166,14 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
         }
 
         // Send changed tag compound to server
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_UPDATE_CHECKLIST, GCCoreUtil.getDimensionType(minecraft.player.world), new Object[]{this.tagCompound}));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_UPDATE_CHECKLIST, GCCoreUtil.getDimensionType(minecraft.player.level), new Object[]{this.tagCompound}));
 
         // Update client item
-        ItemStack stack = minecraft.player.getHeldItem(Hand.MAIN_HAND /* TODO Support off-hand use */);
-        CompoundNBT tagCompound = stack.getTag();
+        ItemStack stack = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND /* TODO Support off-hand use */);
+        CompoundTag tagCompound = stack.getTag();
         if (tagCompound == null)
         {
-            tagCompound = new CompoundNBT();
+            tagCompound = new CompoundTag();
         }
         tagCompound.put("checklistData", this.tagCompound);
         stack.setTag(tagCompound);
@@ -179,8 +182,8 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
     @Override
     public void render(int par1, int par2, float par3)
     {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(bookGuiTexture);
+        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.minecraft.getTextureManager().bind(bookGuiTexture);
         int i = (this.width - this.bookImageWidth) / 2;
         int j = 2;
         this.blit(i, j, 0, 0, this.bookImageWidth, this.bookImageHeight);
@@ -195,7 +198,7 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
         boolean started = false;
         for (int i = 2; i < this.buttons.size(); ++i)
         {
-            Widget widget = this.buttons.get(i);
+            AbstractWidget widget = this.buttons.get(i);
             if (started)
             {
                 if (widget.x > element.x)
@@ -217,7 +220,7 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckboxPreLaunch checkbox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementCheckboxPreLaunch checkbox, Player player)
     {
         return true;
     }
@@ -233,12 +236,12 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
     {
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     static class NextPageButton extends Button
     {
         private final boolean forward;
 
-        public NextPageButton(int x, int y, boolean forward, Button.IPressable onPress)
+        public NextPageButton(int x, int y, boolean forward, Button.OnPress onPress)
         {
             super(x, y, 23, 13, "", onPress);
             this.forward = forward;
@@ -250,8 +253,8 @@ public class GuiPreLaunchChecklist extends Screen implements GuiElementCheckboxP
             if (this.visible)
             {
                 boolean flag = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-                GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                Minecraft.getInstance().getTextureManager().bindTexture(bookGuiTexture);
+                GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
+                Minecraft.getInstance().getTextureManager().bind(bookGuiTexture);
                 int i = 0;
                 int j = 192;
 

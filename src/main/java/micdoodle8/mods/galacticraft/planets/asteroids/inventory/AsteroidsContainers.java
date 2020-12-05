@@ -17,9 +17,7 @@ import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityCrashedProbe;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityGeothermalGenerator;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityLaserTurret;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntitySolarArrayController;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -32,14 +30,14 @@ import static micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBloc
 public class AsteroidsContainers
 {
     @SubscribeEvent
-    public static void initContainers(RegistryEvent.Register<ContainerType<?>> evt)
+    public static void initContainers(RegistryEvent.Register<MenuType<?>> evt)
     {
-        IForgeRegistry<ContainerType<?>> r = evt.getRegistry();
+        IForgeRegistry<MenuType<?>> r = evt.getRegistry();
 
-        ContainerType<ContainerAstroMinerDock> minerDock = IForgeContainerType.create((windowId, inv, data) -> new ContainerAstroMinerDock(windowId, inv, (TileEntityMinerBase) inv.player.world.getTileEntity(data.readBlockPos())));
-        ContainerType<ContainerSchematicAstroMiner> schematicAstroMiner = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicAstroMiner(windowId, inv));
-        ContainerType<ContainerSchematicTier3Rocket> schematicTier3Rocket = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicTier3Rocket(windowId, inv));
-        ContainerType<ContainerShortRangeTelepad> telepad = IForgeContainerType.create((windowId, inv, data) -> new ContainerShortRangeTelepad(windowId, inv, (TileEntityShortRangeTelepad) inv.player.world.getTileEntity(data.readBlockPos())));
+        MenuType<ContainerAstroMinerDock> minerDock = IForgeContainerType.create((windowId, inv, data) -> new ContainerAstroMinerDock(windowId, inv, (TileEntityMinerBase) inv.player.world.getBlockEntity(data.readBlockPos())));
+        MenuType<ContainerSchematicAstroMiner> schematicAstroMiner = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicAstroMiner(windowId, inv));
+        MenuType<ContainerSchematicTier3Rocket> schematicTier3Rocket = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicTier3Rocket(windowId, inv));
+        MenuType<ContainerShortRangeTelepad> telepad = IForgeContainerType.create((windowId, inv, data) -> new ContainerShortRangeTelepad(windowId, inv, (TileEntityShortRangeTelepad) inv.player.world.getBlockEntity(data.readBlockPos())));
 
         register(r, minerDock, AsteroidsContainerNames.ASTRO_MINER_DOCK);
         register(r, schematicAstroMiner, AsteroidsContainerNames.SCHEMATIC_ASTRO_MINER);
@@ -48,10 +46,10 @@ public class AsteroidsContainers
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
         {
-            ScreenManager.registerFactory(minerDock, GuiAstroMinerDock::new);
-            ScreenManager.registerFactory(schematicAstroMiner, GuiSchematicAstroMinerDock::new);
-            ScreenManager.registerFactory(schematicTier3Rocket, GuiSchematicTier3Rocket::new);
-            ScreenManager.registerFactory(telepad, GuiShortRangeTelepad::new);
+            Screens.register(minerDock, GuiAstroMinerDock::new);
+            Screens.register(schematicAstroMiner, GuiSchematicAstroMinerDock::new);
+            Screens.register(schematicTier3Rocket, GuiSchematicTier3Rocket::new);
+            Screens.register(telepad, GuiShortRangeTelepad::new);
         });
     }
 }

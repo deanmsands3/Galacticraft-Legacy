@@ -1,16 +1,14 @@
 package micdoodle8.mods.galacticraft.planets.venus.world.gen.dungeon;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
 import static micdoodle8.mods.galacticraft.planets.venus.world.gen.VenusFeatures.CVENUS_DUNGEON_EMPTY;
@@ -18,12 +16,12 @@ import static micdoodle8.mods.galacticraft.planets.venus.world.gen.VenusFeatures
 
 public class RoomEmptyVenus extends SizedPieceVenus
 {
-    public RoomEmptyVenus(TemplateManager templateManager, CompoundNBT nbt)
+    public RoomEmptyVenus(StructureManager templateManager, CompoundTag nbt)
     {
         this(CVENUS_DUNGEON_EMPTY, nbt);
     }
 
-    public RoomEmptyVenus(IStructurePieceType type, CompoundNBT nbt)
+    public RoomEmptyVenus(StructurePieceType type, CompoundTag nbt)
     {
         super(type, nbt);
     }
@@ -33,20 +31,20 @@ public class RoomEmptyVenus extends SizedPieceVenus
         this(CVENUS_DUNGEON_EMPTY, configuration, rand, blockPosX, blockPosZ, sizeX, sizeY, sizeZ, entranceDir.getOpposite());
     }
 
-    public RoomEmptyVenus(IStructurePieceType type, DungeonConfigurationVenus configuration, Random rand, int blockPosX, int blockPosZ, int sizeX, int sizeY, int sizeZ, Direction entranceDir)
+    public RoomEmptyVenus(StructurePieceType type, DungeonConfigurationVenus configuration, Random rand, int blockPosX, int blockPosZ, int sizeX, int sizeY, int sizeZ, Direction entranceDir)
     {
         super(type, configuration, sizeX, sizeY, sizeZ, entranceDir.getOpposite());
-        this.setCoordBaseMode(Direction.SOUTH);
+        this.setOrientation(Direction.SOUTH);
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.sizeZ = sizeZ;
         int yPos = configuration.getYPosition();
 
-        this.boundingBox = new MutableBoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos + this.sizeY, blockPosZ + this.sizeZ);
+        this.boundingBox = new BoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos + this.sizeY, blockPosZ + this.sizeZ);
     }
 
     @Override
-    public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
+    public boolean postProcess(LevelAccessor worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, BoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
         for (int i = 0; i <= this.sizeX; i++)
         {
@@ -59,8 +57,8 @@ public class RoomEmptyVenus extends SizedPieceVenus
                         boolean placeBlock = true;
                         if (getDirection().getAxis() == Direction.Axis.Z)
                         {
-                            int start = (this.boundingBox.maxX - this.boundingBox.minX) / 2 - 1;
-                            int end = (this.boundingBox.maxX - this.boundingBox.minX) / 2 + 1;
+                            int start = (this.boundingBox.x1 - this.boundingBox.x0) / 2 - 1;
+                            int end = (this.boundingBox.x1 - this.boundingBox.x0) / 2 + 1;
                             if (i > start && i <= end && j < this.configuration.getHallwayHeight() && j > 0)
                             {
                                 if (getDirection() == Direction.SOUTH && k == 0)
@@ -75,8 +73,8 @@ public class RoomEmptyVenus extends SizedPieceVenus
                         }
                         else
                         {
-                            int start = (this.boundingBox.maxZ - this.boundingBox.minZ) / 2 - 1;
-                            int end = (this.boundingBox.maxZ - this.boundingBox.minZ) / 2 + 1;
+                            int start = (this.boundingBox.z1 - this.boundingBox.z0) / 2 - 1;
+                            int end = (this.boundingBox.z1 - this.boundingBox.z0) / 2 + 1;
                             if (k > start && k <= end && j < this.configuration.getHallwayHeight() && j > 0)
                             {
                                 if (getDirection() == Direction.EAST && i == 0)
@@ -92,16 +90,16 @@ public class RoomEmptyVenus extends SizedPieceVenus
                         if (placeBlock)
                         {
                             DungeonConfigurationVenus venusConfig = this.configuration;
-                            this.setBlockState(worldIn, j == 0 || j == this.sizeY ? venusConfig.getBrickBlockFloor() : this.configuration.getBrickBlock(), i, j, k, boundingBox);
+                            this.placeBlock(worldIn, j == 0 || j == this.sizeY ? venusConfig.getBrickBlockFloor() : this.configuration.getBrickBlock(), i, j, k, boundingBox);
                         }
                         else
                         {
-                            this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i, j, k, boundingBox);
+                            this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, boundingBox);
                         }
                     }
                     else
                     {
-                        this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i, j, k, boundingBox);
+                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, boundingBox);
                     }
                 }
             }
@@ -113,12 +111,12 @@ public class RoomEmptyVenus extends SizedPieceVenus
     @Override
     public PieceVenus getNextPiece(DungeonStartVenus startPiece, Random rand)
     {
-        if (Math.abs(startPiece.getBoundingBox().maxZ - boundingBox.minZ) > 200)
+        if (Math.abs(startPiece.getBoundingBox().z1 - boundingBox.z0) > 200)
         {
             return null;
         }
 
-        if (Math.abs(startPiece.getBoundingBox().maxX - boundingBox.minX) > 200)
+        if (Math.abs(startPiece.getBoundingBox().x1 - boundingBox.x0) > 200)
         {
             return null;
         }

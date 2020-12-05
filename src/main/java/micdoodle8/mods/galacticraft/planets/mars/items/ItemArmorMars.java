@@ -4,12 +4,14 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,7 +19,7 @@ public class ItemArmorMars extends ArmorItem implements ISortable
 {
 //    private final ArmorMaterial material;
 
-    public ItemArmorMars(EquipmentSlotType slotType, Item.Properties properties)
+    public ItemArmorMars(EquipmentSlot slotType, Item.Properties properties)
     {
         super(EnumArmorMars.ARMOR_DESH, slotType, properties);
 //        this.material = par2EnumArmorMaterial;
@@ -32,9 +34,9 @@ public class ItemArmorMars extends ArmorItem implements ISortable
     }*/
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type)
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type)
     {
-        if (this.getArmorMaterial() == EnumArmorMars.ARMOR_DESH)
+        if (this.getMaterial() == EnumArmorMars.ARMOR_DESH)
         {
             if (stack.getItem() == MarsItems.deshHelmet)
             {
@@ -61,7 +63,7 @@ public class ItemArmorMars extends ArmorItem implements ISortable
 //    }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rarity getRarity(ItemStack stack)
     {
         return ClientProxyCore.galacticraftItem;
@@ -74,7 +76,7 @@ public class ItemArmorMars extends ArmorItem implements ISortable
     }
 
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair)
     {
         return repair.getItem() == MarsItems.ingotDesh;
     }

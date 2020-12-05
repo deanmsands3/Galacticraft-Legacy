@@ -1,6 +1,9 @@
 package micdoodle8.mods.galacticraft.core.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import micdoodle8.mods.galacticraft.api.item.ISensorGlassesArmor;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
 import micdoodle8.mods.galacticraft.core.Constants;
@@ -8,22 +11,21 @@ import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStatsClient;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Iterator;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class OverlaySensorGlasses extends Overlay
 {
     private static final ResourceLocation hudTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/hud.png");
@@ -37,19 +39,19 @@ public class OverlaySensorGlasses extends Overlay
     /**
      * Render the GUI that displays sensor glasses
      */
-    public static void renderSensorGlassesMain(ItemStack stack, PlayerEntity player, float partialTicks)
+    public static void renderSensorGlassesMain(ItemStack stack, Player player, float partialTicks)
     {
         OverlaySensorGlasses.zoom++;
 
-        final float f = MathHelper.sin(OverlaySensorGlasses.zoom / 80.0F) * 0.1F + 0.1F;
+        final float f = Mth.sin(OverlaySensorGlasses.zoom / 80.0F) * 0.1F + 0.1F;
 
 //        final ScaledResolution scaledresolution = ClientUtil.getScaledRes(OverlaySensorGlasses.minecraft, OverlaySensorGlasses.minecraft.displayWidth, OverlaySensorGlasses.minecraft.displayHeight);
 //        final int i = scaledresolution.getScaledWidth();
 //        final int k = scaledresolution.getScaledHeight();
 //        OverlaySensorGlasses.minecraft.entityRenderer.setupOverlayRendering();
         Minecraft mc = Minecraft.getInstance();
-        int width = (int) (mc.mouseHelper.getMouseX() * (double) mc.getMainWindow().getScaledWidth() / (double) mc.getMainWindow().getWidth());
-        int height = (int) (mc.mouseHelper.getMouseY() * (double) mc.getMainWindow().getScaledHeight() / (double) mc.getMainWindow().getHeight());
+        int width = (int) (mc.mouseHandler.xpos() * (double) mc.getWindow().getGuiScaledWidth() / (double) mc.getWindow().getScreenWidth());
+        int height = (int) (mc.mouseHandler.ypos() * (double) mc.getWindow().getGuiScaledHeight() / (double) mc.getWindow().getScreenHeight());
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(false);
@@ -57,14 +59,14 @@ public class OverlaySensorGlasses extends Overlay
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         mc.textureManager.bindTexture(OverlaySensorGlasses.hudTexture);
-        final Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder worldRenderer = tessellator.getBuffer();
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer.pos(width / 2 - height - f * 80, height + f * 40, -90D).tex(0.0F, 1.0F).endVertex();
-        worldRenderer.pos(width / 2 + height + f * 80, height + f * 40, -90D).tex(1.0F, 1.0F).endVertex();
-        worldRenderer.pos(width / 2 + height + f * 80, 0.0D - f * 40, -90D).tex(1.0F, 0.0F).endVertex();
-        worldRenderer.pos(width / 2 - height - f * 80, 0.0D - f * 40, -90D).tex(0.0F, 0.0F).endVertex();
-        tessellator.draw();
+        final Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder worldRenderer = tessellator.getBuilder();
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+        worldRenderer.vertex(width / 2 - height - f * 80, height + f * 40, -90D).uv(0.0F, 1.0F).endVertex();
+        worldRenderer.vertex(width / 2 + height + f * 80, height + f * 40, -90D).uv(1.0F, 1.0F).endVertex();
+        worldRenderer.vertex(width / 2 + height + f * 80, 0.0D - f * 40, -90D).uv(1.0F, 0.0F).endVertex();
+        worldRenderer.vertex(width / 2 - height - f * 80, 0.0D - f * 40, -90D).uv(0.0F, 0.0F).endVertex();
+        tessellator.end();
 
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -72,7 +74,7 @@ public class OverlaySensorGlasses extends Overlay
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    public static void renderSensorGlassesValueableBlocks(ItemStack stack, PlayerEntity player, float partialTicks)
+    public static void renderSensorGlassesValueableBlocks(ItemStack stack, Player player, float partialTicks)
     {
         final Iterator<BlockVec3> var51 = ClientProxyCore.valueableBlocks.iterator();
         double var52;
@@ -94,15 +96,15 @@ public class OverlaySensorGlasses extends Overlay
             var21 = Math.sqrt(var52 * var52 + var59 * var59) * 0.5D;
 
             Minecraft mc = Minecraft.getInstance();
-            int width = (int) (mc.mouseHelper.getMouseX() * (double) mc.getMainWindow().getScaledWidth() / (double) mc.getMainWindow().getWidth());
-            int height = (int) (mc.mouseHelper.getMouseY() * (double) mc.getMainWindow().getScaledHeight() / (double) mc.getMainWindow().getHeight());
+            int width = (int) (mc.mouseHandler.xpos() * (double) mc.getWindow().getGuiScaledWidth() / (double) mc.getWindow().getScreenWidth());
+            int height = (int) (mc.mouseHandler.ypos() * (double) mc.getWindow().getGuiScaledHeight() / (double) mc.getWindow().getScreenHeight());
 //            final ScaledResolution var5 = ClientUtil.getScaledRes(OverlaySensorGlasses.minecraft, OverlaySensorGlasses.minecraft.displayWidth, OverlaySensorGlasses.minecraft.displayHeight);
 //            final int var6 = var5.getScaledWidth();
 //            final int var7 = var5.getScaledHeight();
 
             boolean var2 = false;
 
-            final ClientPlayerEntity client = PlayerUtil.getPlayerBaseClientFromPlayer(OverlaySensorGlasses.minecraft.player, false);
+            final LocalPlayer client = PlayerUtil.getPlayerBaseClientFromPlayer(OverlaySensorGlasses.minecraft.player, false);
 
             if (client != null)
             {
@@ -110,7 +112,7 @@ public class OverlaySensorGlasses extends Overlay
                 var2 = stats.isUsingAdvancedGoggles();
             }
 
-            OverlaySensorGlasses.minecraft.fontRenderer.drawString(GCCoreUtil.translate("gui.sensor.advanced") + ": " + (var2 ? GCCoreUtil.translate("gui.sensor.advancedon") : GCCoreUtil.translate("gui.sensor.advancedoff")), width / 2 - 50, 4, 0x03b88f);
+            OverlaySensorGlasses.minecraft.font.draw(GCCoreUtil.translate("gui.sensor.advanced") + ": " + (var2 ? GCCoreUtil.translate("gui.sensor.advancedon") : GCCoreUtil.translate("gui.sensor.advancedoff")), width / 2 - 50, 4, 0x03b88f);
 
             try
             {
@@ -119,7 +121,7 @@ public class OverlaySensorGlasses extends Overlay
                 if (var20 < 4.0D)
                 {
                     GL11.glColor4f(0.0F, 255F / 255F, 198F / 255F, (float) Math.min(1.0D, Math.max(0.2D, (var20 - 1.0D) * 0.1D)));
-                    Minecraft.getInstance().textureManager.bindTexture(OverlaySensorGlasses.indicatorTexture);
+                    Minecraft.getInstance().textureManager.bind(OverlaySensorGlasses.indicatorTexture);
                     GL11.glRotatef(-var60 - ClientProxyCore.playerRotationYaw + 180.0F, 0.0F, 0.0F, 1.0F);
                     GL11.glTranslated(0.0D, var2 ? -var20 * 16 : -var21 * 16, 0.0D);
                     GL11.glRotatef(-(-var60 - ClientProxyCore.playerRotationYaw + 180.0F), 0.0F, 0.0F, 1.0F);
@@ -161,7 +163,7 @@ public class OverlaySensorGlasses extends Overlay
 
     public static boolean overrideMobTexture()
     {
-        PlayerEntity player = Minecraft.getInstance().player;
-        return (player != null && player.inventory.armorItemInSlot(3) != null && player.inventory.armorItemInSlot(3).getItem() instanceof ISensorGlassesArmor);
+        Player player = Minecraft.getInstance().player;
+        return (player != null && player.inventory.getArmor(3) != null && player.inventory.getArmor(3).getItem() instanceof ISensorGlassesArmor);
     }
 }

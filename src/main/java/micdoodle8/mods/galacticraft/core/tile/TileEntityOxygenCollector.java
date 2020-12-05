@@ -9,21 +9,21 @@ import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerOxygenCollector;
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.fluids.FluidStack;
@@ -32,10 +32,10 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 
-public class TileEntityOxygenCollector extends TileEntityOxygen implements INamedContainerProvider
+public class TileEntityOxygenCollector extends TileEntityOxygen implements MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenCollector)
-    public static TileEntityType<TileEntityOxygenCollector> TYPE;
+    public static BlockEntityType<TileEntityOxygenCollector> TYPE;
 
     public boolean active;
     public static final int OUTPUT_PER_TICK = 100;
@@ -64,7 +64,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IName
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             producedLastTick = this.getOxygenStored() < this.getMaxOxygenStored();
 
@@ -109,7 +109,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IName
             // }
 
             //Approximately once every 40 ticks, search out oxygen producing blocks
-            if (this.world.rand.nextInt(10) == 0)
+            if (this.level.random.nextInt(10) == 0)
             {
                 if (this.hasEnoughEnergyToRun)
                 {
@@ -119,7 +119,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IName
 
                     if (!this.isInitialised)
                     {
-                        this.noAtmosphericOxygen = (this.world.getDimension() instanceof IGalacticraftDimension && !((IGalacticraftDimension) this.world.getDimension()).isGasPresent(EnumAtmosphericGas.OXYGEN));
+                        this.noAtmosphericOxygen = (this.level.getDimension() instanceof IGalacticraftDimension && !((IGalacticraftDimension) this.level.getDimension()).isGasPresent(EnumAtmosphericGas.OXYGEN));
                         this.isInitialised = true;
                     }
 
@@ -128,40 +128,40 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IName
                         // Pre-test to see if close to the map edges, so code
                         // doesn't have to continually test for map edges inside the
                         // loop
-                        if (this.getPos().getX() > -29999995 && this.getPos().getY() < 2999995 && this.getPos().getZ() > -29999995 && this.getPos().getZ() < 29999995)
+                        if (this.getBlockPos().getX() > -29999995 && this.getBlockPos().getY() < 2999995 && this.getBlockPos().getZ() > -29999995 && this.getBlockPos().getZ() < 29999995)
                         {
                             // Test the y coordinates, so code doesn't have to keep
                             // testing that either
-                            int miny = this.getPos().getY() - 5;
-                            int maxy = this.getPos().getY() + 5;
+                            int miny = this.getBlockPos().getY() - 5;
+                            int maxy = this.getBlockPos().getY() + 5;
                             if (miny < 0)
                             {
                                 miny = 0;
                             }
-                            if (maxy >= this.world.getHeight())
+                            if (maxy >= this.level.getMaxBuildHeight())
                             {
-                                maxy = this.world.getHeight() - 1;
+                                maxy = this.level.getMaxBuildHeight() - 1;
                             }
 
                             // Loop the x and the z first, so the y loop will be at
                             // fixed (x,z) coordinates meaning fixed chunk
                             // coordinates
-                            for (int x = this.getPos().getX() - 5; x <= this.getPos().getX() + 5; x++)
+                            for (int x = this.getBlockPos().getX() - 5; x <= this.getBlockPos().getX() + 5; x++)
                             {
                                 int chunkx = x >> 4;
                                 int intrachunkx = x & 15;
                                 // Preload the first chunk for the z loop - there
                                 // can be a maximum of 2 chunks in the z loop
-                                int chunkz = this.getPos().getZ() - 5 >> 4;
-                                Chunk chunk = this.world.getChunk(chunkx, chunkz);
-                                for (int z = this.getPos().getZ() - 5; z <= this.getPos().getZ() + 5; z++)
+                                int chunkz = this.getBlockPos().getZ() - 5 >> 4;
+                                LevelChunk chunk = this.level.getChunk(chunkx, chunkz);
+                                for (int z = this.getBlockPos().getZ() - 5; z <= this.getBlockPos().getZ() + 5; z++)
                                 {
                                     if (z >> 4 != chunkz)
                                     {
                                         // moved across z chunk boundary into a new
                                         // chunk, so load the new chunk
                                         chunkz = z >> 4;
-                                        chunk = this.world.getChunk(chunkx, chunkz);
+                                        chunk = this.level.getChunk(chunkx, chunkz);
                                     }
                                     for (int y = miny; y <= maxy; y++)
                                     {
@@ -175,7 +175,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IName
                                         if (!(state.getBlock() instanceof AirBlock))
                                         {
                                             BlockPos pos = new BlockPos(x, y, z);
-                                            if (state.isIn(BlockTags.LEAVES) || state.getBlock() instanceof IPlantable && ((IPlantable) state.getBlock()).getPlantType(this.world, pos) == PlantType.Crop)
+                                            if (state.is(BlockTags.LEAVES) || state.getBlock() instanceof IPlantable && ((IPlantable) state.getBlock()).getPlantType(this.level, pos) == PlantType.Crop)
                                             {
                                                 nearbyLeaves += OXYGEN_PER_PLANT;
                                             }
@@ -213,13 +213,13 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IName
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         return slotID == 0;
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         return slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem());
     }
@@ -233,10 +233,10 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IName
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (state.getBlock() instanceof BlockOxygenCollector)
         {
-            return state.get(BlockOxygenCollector.FACING);
+            return state.getValue(BlockOxygenCollector.FACING);
         }
         return Direction.NORTH;
     }
@@ -244,13 +244,13 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IName
     @Override
     public Direction getElectricInputDirection()
     {
-        return getFront().rotateY();
+        return getFront().getClockWise();
     }
 
     @Override
     public ItemStack getBatteryInSlot()
     {
-        return this.getStackInSlot(0);
+        return this.getItem(0);
     }
 
     @Override
@@ -302,14 +302,14 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IName
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerOxygenCollector(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.oxygen_collector");
+        return new TranslatableComponent("container.oxygen_collector");
     }
 }

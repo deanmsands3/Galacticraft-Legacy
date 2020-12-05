@@ -7,11 +7,11 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerSchematicTier2Rocket;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 public class GuiSchematicTier2Rocket extends GuiContainerGC<ContainerSchematicTier2Rocket> implements ISchematicResultPage
@@ -20,10 +20,10 @@ public class GuiSchematicTier2Rocket extends GuiContainerGC<ContainerSchematicTi
 
     private int pageIndex;
 
-    public GuiSchematicTier2Rocket(ContainerSchematicTier2Rocket container, PlayerInventory playerInv, ITextComponent title)
+    public GuiSchematicTier2Rocket(ContainerSchematicTier2Rocket container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
-        this.ySize = 238;
+        this.imageHeight = 238;
     }
 
     @Override
@@ -42,20 +42,20 @@ public class GuiSchematicTier2Rocket extends GuiContainerGC<ContainerSchematicTi
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        this.font.drawString(MarsItems.rocketTierTwo.getDisplayName(new ItemStack(MarsItems.rocketTierTwo, 1)).getFormattedText(), 7, -20 + 27, 4210752);
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, 220 - 104 + 2 + 27, 4210752);
+        this.font.draw(MarsItems.rocketTierTwo.getName(new ItemStack(MarsItems.rocketTierTwo, 1)).getColoredString(), 7, -20 + 27, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, 220 - 104 + 2 + 27, 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void renderBg(float par1, int par2, int par3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.textureManager.bindTexture(GuiSchematicTier2Rocket.tier2SchematicTexture);
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
-        this.blit(var5, var6, 0, 0, this.xSize, this.ySize);
+        this.minecraft.textureManager.bind(GuiSchematicTier2Rocket.tier2SchematicTexture);
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
+        this.blit(var5, var6, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

@@ -3,10 +3,10 @@ package micdoodle8.mods.galacticraft.core.client.sounds;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.MusicTicker;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.sounds.MusicManager;
+import net.minecraft.util.Mth;
 
-public class MusicTickerGC extends MusicTicker
+public class MusicTickerGC extends MusicManager
 {
     public MusicTickerGC(Minecraft client)
     {
@@ -16,32 +16,32 @@ public class MusicTickerGC extends MusicTicker
     @Override
     public void tick()
     {
-        MusicTicker.MusicType musictype = this.client.getAmbientMusicType();
-        if (Minecraft.getInstance().world != null && Minecraft.getInstance().world.dimension instanceof IGalacticraftDimension)
+        MusicManager.Music musictype = this.minecraft.getSituationalMusic();
+        if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.dimension instanceof IGalacticraftDimension)
         {
             musictype = ClientProxyCore.MUSIC_TYPE_MARS;
         }
 
         if (this.currentMusic != null)
         {
-            if (!musictype.getSound().getName().equals(this.currentMusic.getSoundLocation()))
+            if (!musictype.getEvent().getLocation().equals(this.currentMusic.getLocation()))
             {
-                this.client.getSoundHandler().stop(this.currentMusic);
-                this.timeUntilNextMusic = MathHelper.nextInt(this.random, 0, musictype.getMinDelay() / 2);
+                this.minecraft.getSoundManager().stop(this.currentMusic);
+                this.nextSongDelay = Mth.nextInt(this.random, 0, musictype.getMinDelay() / 2);
             }
 
-            if (!this.client.getSoundHandler().isPlaying(this.currentMusic))
+            if (!this.minecraft.getSoundManager().isActive(this.currentMusic))
             {
                 this.currentMusic = null;
-                this.timeUntilNextMusic = Math.min(MathHelper.nextInt(this.random, musictype.getMinDelay(), musictype.getMaxDelay()), this.timeUntilNextMusic);
+                this.nextSongDelay = Math.min(Mth.nextInt(this.random, musictype.getMinDelay(), musictype.getMaxDelay()), this.nextSongDelay);
             }
         }
 
-        this.timeUntilNextMusic = Math.min(this.timeUntilNextMusic, musictype.getMaxDelay());
+        this.nextSongDelay = Math.min(this.nextSongDelay, musictype.getMaxDelay());
 
-        if (this.currentMusic == null && this.timeUntilNextMusic-- <= 0)
+        if (this.currentMusic == null && this.nextSongDelay-- <= 0)
         {
-            this.play(musictype);
+            this.startPlaying(musictype);
         }
     }
 }

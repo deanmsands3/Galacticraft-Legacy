@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.world.gen;
+package micdoodle8.mods.galacticraft.core.world.gen;
 //
 //import micdoodle8.mods.galacticraft.core.entities.EntityAlienVillager;
 //import net.minecraft.nbt.CompoundNBT;

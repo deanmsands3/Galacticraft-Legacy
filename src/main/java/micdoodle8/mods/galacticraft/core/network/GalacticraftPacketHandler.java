@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.network;
+package micdoodle8.mods.galacticraft.core.network;
 //
 //import com.google.common.collect.ImmutableMap;
 //import com.google.common.collect.Maps;

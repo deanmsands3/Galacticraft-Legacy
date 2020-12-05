@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.api.world;
 
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.level.dimension.DimensionType;
 
 public interface IOrbitDimension extends IGalacticraftDimension
 {

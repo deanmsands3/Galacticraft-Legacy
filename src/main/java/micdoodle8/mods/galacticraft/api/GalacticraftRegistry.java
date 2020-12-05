@@ -7,13 +7,15 @@ import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;
 import micdoodle8.mods.galacticraft.api.world.ITeleportType;
 import micdoodle8.mods.galacticraft.api.world.SpaceStationType;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.OverworldDimension;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.NormalDimension;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -190,7 +192,7 @@ public class GalacticraftRegistry
     {
         if (!IGalacticraftDimension.class.isAssignableFrom(clazz))
         {
-            clazz = OverworldDimension.class;
+            clazz = NormalDimension.class;
         }
         return GalacticraftRegistry.teleportTypeMap.get(clazz);
     }
@@ -259,12 +261,12 @@ public class GalacticraftRegistry
         return GalacticraftRegistry.astroMinerRecipes;
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static ResourceLocation getResouceLocationForDimension(Class<? extends Dimension> clazz)
     {
         if (!IGalacticraftDimension.class.isAssignableFrom(clazz))
         {
-            clazz = OverworldDimension.class;
+            clazz = NormalDimension.class;
         }
         return GalacticraftRegistry.rocketGuiMap.get(clazz);
     }
@@ -446,7 +448,7 @@ public class GalacticraftRegistry
                 }
                 else if (o instanceof ItemStack)
                 {
-                    if (stack.getItem() == ((ItemStack) o).getItem() && stack.getDamage() == ((ItemStack) o).getDamage())
+                    if (stack.getItem() == ((ItemStack) o).getItem() && stack.getDamageValue() == ((ItemStack) o).getDamageValue())
                     {
                         return entry.getKey();
                     }

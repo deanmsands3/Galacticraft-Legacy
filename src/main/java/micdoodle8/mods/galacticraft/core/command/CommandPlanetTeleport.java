@@ -7,34 +7,33 @@ import micdoodle8.mods.galacticraft.api.entity.IRocketType;
 import micdoodle8.mods.galacticraft.core.entities.EntityTier1Rocket;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import java.util.Collection;
 
 public class CommandPlanetTeleport
 {
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralCommandNode<CommandSource> literalcommandnode = dispatcher.register(Commands.literal("dimensiontp").requires((src) -> src.hasPermissionLevel(2)).executes((ctx) -> {
-            ServerPlayerEntity player = ctx.getSource().asPlayer();
-            return teleport(ImmutableList.of(player), ctx.getSource().getWorld());
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LiteralCommandNode<CommandSourceStack> literalcommandnode = dispatcher.register(Commands.literal("dimensiontp").requires((src) -> src.hasPermission(2)).executes((ctx) -> {
+            ServerPlayer player = ctx.getSource().getPlayerOrException();
+            return teleport(ImmutableList.of(player), ctx.getSource().getLevel());
         }).then(Commands.argument("targets", EntityArgument.entities()).executes((ctx) -> {
-            return teleport(EntityArgument.getPlayers(ctx, "targets"), ctx.getSource().getWorld());
+            return teleport(EntityArgument.getPlayers(ctx, "targets"), ctx.getSource().getLevel());
         })));
     }
 
-    private static int teleport(Collection<ServerPlayerEntity> targets, ServerWorld world)
+    private static int teleport(Collection<ServerPlayer> targets, ServerLevel world)
     {
-        for (ServerPlayerEntity target : targets)
+        for (ServerPlayer target : targets)
         {
 //        ServerWorld worldserver = server.getWorld(GCCoreUtil.getDimensionID(server.worlds[0]));
-            BlockPos spawnPoint = world.getSpawnPoint();
+            BlockPos spawnPoint = world.getSharedSpawnPos();
             GCPlayerStats stats = GCPlayerStats.get(target);
             stats.setRocketStacks(NonNullList.withSize(2, ItemStack.EMPTY));
             stats.setRocketItem(EntityTier1Rocket.getItemFromType(IRocketType.EnumRocketType.DEFAULT));

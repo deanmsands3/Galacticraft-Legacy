@@ -8,16 +8,16 @@ import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.blocks.BlockAirLockWall;
 import micdoodle8.mods.galacticraft.core.client.sounds.GCSounds;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -26,7 +26,7 @@ import java.util.List;
 public class TileEntityAirLockController extends TileEntityAdvanced
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.airLockController)
-    public static TileEntityType<TileEntityAirLockController> TYPE;
+    public static BlockEntityType<TileEntityAirLockController> TYPE;
 
     @NetworkedField(targetSide = LogicalSide.CLIENT)
     public boolean redstoneActivation;
@@ -65,13 +65,13 @@ public class TileEntityAirLockController extends TileEntityAdvanced
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.active = false;
 
             if (this.redstoneActivation)
             {
-                this.active = this.world.getRedstonePowerFromNeighbors(this.getPos()) > 0;
+                this.active = this.level.getBestNeighborSignal(this.getBlockPos()) > 0;
             }
 
             if ((this.active || !this.redstoneActivation) && this.playerDistanceActivation)
@@ -96,13 +96,13 @@ public class TileEntityAirLockController extends TileEntityAdvanced
 
                 Vector3 minPos = new Vector3(this).translate(0.5F - distance);
                 Vector3 maxPos = new Vector3(this).translate(0.5F + distance);
-                AxisAlignedBB matchingRegion = new AxisAlignedBB(minPos.x, minPos.y, minPos.z, maxPos.x, maxPos.y, maxPos.z);
-                List<PlayerEntity> playersWithin = this.world.getEntitiesWithinAABB(PlayerEntity.class, matchingRegion);
+                AABB matchingRegion = new AABB(minPos.x, minPos.y, minPos.z, maxPos.x, maxPos.y, maxPos.z);
+                List<Player> playersWithin = this.level.getEntitiesOfClass(Player.class, matchingRegion);
 
                 if (this.playerNameMatches)
                 {
                     boolean foundPlayer = false;
-                    for (PlayerEntity p : playersWithin)
+                    for (Player p : playersWithin)
                     {
                         if (PlayerUtil.getName(p).equalsIgnoreCase(this.playerToOpenFor))
                         {
@@ -161,8 +161,8 @@ public class TileEntityAirLockController extends TileEntityAdvanced
 
                 if (this.active != this.lastActive)
                 {
-                    BlockState state = this.world.getBlockState(this.getPos());
-                    this.world.notifyBlockUpdate(this.getPos(), state, state, 3);
+                    BlockState state = this.level.getBlockState(this.getBlockPos());
+                    this.level.sendBlockUpdated(this.getBlockPos(), state, state, 3);
                 }
 
                 this.lastActive = this.active;
@@ -178,9 +178,9 @@ public class TileEntityAirLockController extends TileEntityAdvanced
         int y = (this.lastProtocol.maxY + this.lastProtocol.minY) / 2;
         int z = (this.lastProtocol.maxZ + this.lastProtocol.minZ) / 2;
 
-        if (this.world.getBlockState(new BlockPos(x, y, z)).getBlock() != GCBlocks.airLockSeal)
+        if (this.level.getBlockState(new BlockPos(x, y, z)).getBlock() != GCBlocks.airLockSeal)
         {
-            this.world.playSound(null, x, y, z, GCSounds.openAirLock, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            this.level.playSound(null, x, y, z, GCSounds.openAirLock, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         if (this.horizontalModeEnabled)
@@ -192,9 +192,9 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++)
                     {
                         BlockPos pos = new BlockPos(x, y, z);
-                        if (this.world.getBlockState(pos).getBlock().isAir(this.world.getBlockState(pos), this.world, pos))
+                        if (this.level.getBlockState(pos).getBlock().isAir(this.level.getBlockState(pos), this.level, pos))
                         {
-                            this.world.setBlockState(pos, GCBlocks.airLockSeal.getDefaultState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.getConnection(world, pos)), 3);
+                            this.level.setBlock(pos, GCBlocks.airLockSeal.defaultBlockState().setValue(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.getConnection(level, pos)), 3);
                         }
                     }
                 }
@@ -209,9 +209,9 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     for (y = this.protocol.minY + 1; y <= this.protocol.maxY - 1; y++)
                     {
                         BlockPos pos = new BlockPos(x, y, z);
-                        if (this.world.getBlockState(pos).getBlock().isAir(this.world.getBlockState(pos), this.world, pos))
+                        if (this.level.getBlockState(pos).getBlock().isAir(this.level.getBlockState(pos), this.level, pos))
                         {
-                            this.world.setBlockState(pos, GCBlocks.airLockSeal.getDefaultState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.getConnection(world, pos)), 3);
+                            this.level.setBlock(pos, GCBlocks.airLockSeal.defaultBlockState().setValue(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.getConnection(level, pos)), 3);
                         }
                     }
                 }
@@ -223,9 +223,9 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     for (y = this.protocol.minY + 1; y <= this.protocol.maxY - 1; y++)
                     {
                         BlockPos pos = new BlockPos(x, y, z);
-                        if (this.world.getBlockState(pos).getBlock().isAir(this.world.getBlockState(pos), this.world, pos))
+                        if (this.level.getBlockState(pos).getBlock().isAir(this.level.getBlockState(pos), this.level, pos))
                         {
-                            this.world.setBlockState(pos, GCBlocks.airLockSeal.getDefaultState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.getConnection(world, pos)), 3);
+                            this.level.setBlock(pos, GCBlocks.airLockSeal.defaultBlockState().setValue(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.getConnection(level, pos)), 3);
                         }
                     }
                 }
@@ -245,11 +245,11 @@ public class TileEntityAirLockController extends TileEntityAdvanced
         int z = this.lastProtocol.minZ + (this.lastProtocol.maxZ - this.lastProtocol.minZ) / 2;
 
         BlockPos pos = new BlockPos(x, y, z);
-        BlockState state = this.world.getBlockState(pos);
+        BlockState state = this.level.getBlockState(pos);
 
         if (state.getMaterial() != Material.AIR)
         {
-            this.world.playSound(null, x, y, z, GCSounds.closeAirLock, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            this.level.playSound(null, x, y, z, GCSounds.closeAirLock, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         boolean sealedSide = false;
@@ -264,20 +264,20 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++)
                     {
                         pos = new BlockPos(x, y, z);
-                        b = this.world.getBlockState(pos.up()).getBlock();
+                        b = this.level.getBlockState(pos.above()).getBlock();
                         if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
                         {
-                            if (this.world.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
+                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
                             {
                                 sealedSide = true;
                                 break;
                             }
                             continue;
                         }
-                        b = this.world.getBlockState(pos.down()).getBlock();
+                        b = this.level.getBlockState(pos.below()).getBlock();
                         if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
                         {
-                            if (this.world.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
+                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
                             {
                                 sealedSide = true;
                                 break;
@@ -295,15 +295,15 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++)
                     {
                         pos = new BlockPos(x, y, z);
-                        if (this.world.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
+                        if (this.level.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
                         {
                             if (sealedSide)
                             {
-                                this.world.setBlockState(pos, GCBlocks.breatheableAir.getDefaultState(), 3);
+                                this.level.setBlock(pos, GCBlocks.breatheableAir.defaultBlockState(), 3);
                             }
                             else
                             {
-                                this.world.removeBlock(pos, false);
+                                this.level.removeBlock(pos, false);
                             }
                         }
                     }
@@ -320,20 +320,20 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
                     {
                         pos = new BlockPos(x, y, z);
-                        b = this.world.getBlockState(pos.north()).getBlock();
+                        b = this.level.getBlockState(pos.north()).getBlock();
                         if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
                         {
-                            if (this.world.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
+                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
                             {
                                 sealedSide = true;
                                 break;
                             }
                             continue;
                         }
-                        b = this.world.getBlockState(pos.south()).getBlock();
+                        b = this.level.getBlockState(pos.south()).getBlock();
                         if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
                         {
-                            if (this.world.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
+                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
                             {
                                 sealedSide = true;
                                 break;
@@ -351,15 +351,15 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
                     {
                         pos = new BlockPos(x, y, z);
-                        if (this.world.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
+                        if (this.level.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
                         {
                             if (sealedSide)
                             {
-                                this.world.setBlockState(pos, GCBlocks.breatheableAir.getDefaultState(), 3);
+                                this.level.setBlock(pos, GCBlocks.breatheableAir.defaultBlockState(), 3);
                             }
                             else
                             {
-                                this.world.removeBlock(pos, false);
+                                this.level.removeBlock(pos, false);
                             }
                         }
                     }
@@ -373,20 +373,20 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
                     {
                         pos = new BlockPos(x, y, z);
-                        b = this.world.getBlockState(pos.west()).getBlock();
+                        b = this.level.getBlockState(pos.west()).getBlock();
                         if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
                         {
-                            if (this.world.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
+                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
                             {
                                 sealedSide = true;
                                 break;
                             }
                             continue;
                         }
-                        b = this.world.getBlockState(pos.east()).getBlock();
+                        b = this.level.getBlockState(pos.east()).getBlock();
                         if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
                         {
-                            if (this.world.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
+                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
                             {
                                 sealedSide = true;
                                 break;
@@ -404,15 +404,15 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
                     {
                         pos = new BlockPos(x, y, z);
-                        if (this.world.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
+                        if (this.level.getBlockState(pos).getBlock() == GCBlocks.airLockSeal)
                         {
                             if (sealedSide)
                             {
-                                this.world.setBlockState(pos, GCBlocks.breatheableAir.getDefaultState(), 3);
+                                this.level.setBlock(pos, GCBlocks.breatheableAir.defaultBlockState(), 3);
                             }
                             else
                             {
-                                this.world.removeBlock(pos, false);
+                                this.level.removeBlock(pos, false);
                             }
                         }
                     }
@@ -422,9 +422,9 @@ public class TileEntityAirLockController extends TileEntityAdvanced
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.ownerName = nbt.getString("OwnerName");
         this.redstoneActivation = nbt.getBoolean("RedstoneActivation");
         this.playerDistanceActivation = nbt.getBoolean("PlayerDistanceActivation");
@@ -438,9 +438,9 @@ public class TileEntityAirLockController extends TileEntityAdvanced
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putString("OwnerName", this.ownerName);
         nbt.putBoolean("RedstoneActivation", this.redstoneActivation);
         nbt.putBoolean("PlayerDistanceActivation", this.playerDistanceActivation);
@@ -455,9 +455,9 @@ public class TileEntityAirLockController extends TileEntityAdvanced
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override

@@ -4,70 +4,69 @@ import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FlagData;
-import net.minecraft.block.Block;
-import net.minecraft.block.FenceBlock;
-import net.minecraft.block.SoundType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class EntityFlag extends Entity
 {
-    private static final DataParameter<String> OWNER = EntityDataManager.createKey(EntityFlag.class, DataSerializers.STRING);
-    private static final DataParameter<Float> DAMAGE = EntityDataManager.createKey(EntityFlag.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> FACING_ANGLE = EntityDataManager.createKey(EntityFlag.class, DataSerializers.VARINT);
+    private static final EntityDataAccessor<String> OWNER = SynchedEntityData.defineId(EntityFlag.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(EntityFlag.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> FACING_ANGLE = SynchedEntityData.defineId(EntityFlag.class, EntityDataSerializers.INT);
     public double xPosition;
     public double yPosition;
     public double zPosition;
     public boolean indestructable = false;
     public FlagData flagData;
 
-    public EntityFlag(EntityType<EntityFlag> type, World world)
+    public EntityFlag(EntityType<EntityFlag> type, Level world)
     {
         super(type, world);
-        this.ignoreFrustumCheck = true;
+        this.noCulling = true;
     }
 
-    public EntityFlag(World world, double x, double y, double z, int dir)
+    public EntityFlag(Level world, double x, double y, double z, int dir)
     {
         this(GCEntities.FLAG, world);
         this.setFacingAngle(dir);
-        this.setPosition(x, y, z);
+        this.setPos(x, y, z);
         this.xPosition = x;
         this.yPosition = y;
         this.zPosition = z;
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+    public boolean hurt(DamageSource par1DamageSource, float par2)
     {
-        Entity e = par1DamageSource.getTrueSource();
-        boolean flag = e instanceof PlayerEntity && ((PlayerEntity) e).abilities.isCreativeMode;
+        Entity e = par1DamageSource.getEntity();
+        boolean flag = e instanceof Player && ((Player) e).abilities.instabuild;
 
-        if (!this.world.isRemote && this.isAlive() && !this.indestructable)
+        if (!this.level.isClientSide && this.isAlive() && !this.indestructable)
         {
             if (this.isInvulnerableTo(par1DamageSource))
             {
@@ -75,11 +74,11 @@ public class EntityFlag extends Entity
             }
             else
             {
-                this.markVelocityChanged();
+                this.markHurt();
                 this.setDamage(this.getDamage() + par2 * 10);
-                this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundType.METAL.getBreakSound(), SoundCategory.BLOCKS, SoundType.METAL.getVolume(), SoundType.METAL.getPitch() + 1.0F);
+                this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundType.METAL.getBreakSound(), SoundSource.BLOCKS, SoundType.METAL.getVolume(), SoundType.METAL.getPitch() + 1.0F);
 
-                if (e instanceof PlayerEntity && ((PlayerEntity) e).abilities.isCreativeMode)
+                if (e instanceof Player && ((Player) e).abilities.instabuild)
                 {
                     this.setDamage(100.0F);
                 }
@@ -88,7 +87,7 @@ public class EntityFlag extends Entity
                 {
                     if (!this.getPassengers().isEmpty())
                     {
-                        this.removePassengers();
+                        this.ejectPassengers();
                     }
 
                     if (flag)
@@ -112,7 +111,7 @@ public class EntityFlag extends Entity
     }
 
     @Override
-    public ItemStack getPickedResult(RayTraceResult target)
+    public ItemStack getPickedResult(HitResult target)
     {
         return new ItemStack(GCItems.flag, 1);
     }
@@ -128,39 +127,39 @@ public class EntityFlag extends Entity
     }
 
     @Override
-    public boolean canBeCollidedWith()
+    public boolean isPickable()
     {
         return true;
     }
 
     @Override
-    protected boolean canTriggerWalking()
+    protected boolean isMovementNoisy()
     {
         return false;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox(Entity par1Entity)
+    public AABB getCollideAgainstBox(Entity par1Entity)
     {
-        return par1Entity.getCollisionBoundingBox();
+        return par1Entity.getCollideBox();
     }
 
     @Override
-    public boolean canBePushed()
+    public boolean isPushable()
     {
         return false;
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
-        this.dataManager.register(OWNER, "");
-        this.dataManager.register(DAMAGE, 0.0F);
-        this.dataManager.register(FACING_ANGLE, -1);
+        this.entityData.define(OWNER, "");
+        this.entityData.define(DAMAGE, 0.0F);
+        this.entityData.define(FACING_ANGLE, -1);
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
         this.setOwner(nbt.getString("Owner"));
         this.indestructable = nbt.getBoolean("Indestructable");
@@ -172,7 +171,7 @@ public class EntityFlag extends Entity
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT nbt)
+    protected void addAdditionalSaveData(CompoundTag nbt)
     {
         nbt.putString("Owner", String.valueOf(this.getOwner()));
         nbt.putBoolean("Indestructable", this.indestructable);
@@ -184,7 +183,7 @@ public class EntityFlag extends Entity
 
     public void dropItemStack()
     {
-        this.entityDropItem(new ItemStack(GCItems.flag, 1), 0.0F);
+        this.spawnAtLocation(new ItemStack(GCItems.flag, 1), 0.0F);
     }
 
     @Override
@@ -192,14 +191,14 @@ public class EntityFlag extends Entity
     {
         super.tick();
 
-        if ((this.ticksExisted - 1) % 20 == 0 && this.world.isRemote)
+        if ((this.tickCount - 1) % 20 == 0 && this.level.isClientSide)
         {
-            this.flagData = ClientUtil.updateFlagData(this.getOwner(), Minecraft.getInstance().player.getDistance(this) < 50.0D);
+            this.flagData = ClientUtil.updateFlagData(this.getOwner(), Minecraft.getInstance().player.distanceTo(this) < 50.0D);
         }
 
-        Vector3 vec = new Vector3((float) this.getPosX(), (float) this.getPosY(), (float) this.getPosZ());
+        Vector3 vec = new Vector3((float) this.getX(), (float) this.getY(), (float) this.getZ());
         vec = vec.translate(new Vector3(0, -1, 0));
-        final Block blockAt = vec.getBlock(this.world);
+        final Block blockAt = vec.getBlock(this.level);
 
         if (blockAt != null)
         {
@@ -208,19 +207,19 @@ public class EntityFlag extends Entity
             {
 
             }
-            else if (blockAt.isAir(this.world.getBlockState(pos), this.world, pos))
+            else if (blockAt.isAir(this.level.getBlockState(pos), this.level, pos))
             {
-                this.setMotion(getMotion().add(0.0, -0.02F, 0.0F));
+                this.setDeltaMovement(getDeltaMovement().add(0.0, -0.02F, 0.0F));
             }
         }
 
-        this.move(MoverType.SELF, this.getMotion());
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     @Override
-    public boolean processInitialInteract(PlayerEntity player, Hand hand)
+    public boolean interact(Player player, InteractionHand hand)
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.setFacingAngle(this.getFacingAngle() + 3);
         }
@@ -230,31 +229,31 @@ public class EntityFlag extends Entity
 
     public void setOwner(String par1)
     {
-        this.dataManager.set(OWNER, String.valueOf(par1));
+        this.entityData.set(OWNER, String.valueOf(par1));
     }
 
     public String getOwner()
     {
-        return this.dataManager.get(OWNER);
+        return this.entityData.get(OWNER);
     }
 
     public void setDamage(float par1)
     {
-        this.dataManager.set(DAMAGE, Float.valueOf(par1));
+        this.entityData.set(DAMAGE, Float.valueOf(par1));
     }
 
     public float getDamage()
     {
-        return this.dataManager.get(DAMAGE);
+        return this.entityData.get(DAMAGE);
     }
 
     public void setFacingAngle(int par1)
     {
-        this.dataManager.set(FACING_ANGLE, Integer.valueOf(par1));
+        this.entityData.set(FACING_ANGLE, Integer.valueOf(par1));
     }
 
     public int getFacingAngle()
     {
-        return this.dataManager.get(FACING_ANGLE);
+        return this.entityData.get(FACING_ANGLE);
     }
 }

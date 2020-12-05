@@ -12,11 +12,13 @@ import micdoodle8.mods.galacticraft.core.tick.TickHandlerServer;
 import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FluidHandlerWrapper;
 import micdoodle8.mods.galacticraft.core.wrappers.IFluidHandlerWrapper;
-import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -32,25 +34,25 @@ import javax.annotation.Nullable;
 public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced implements IBufferTransmitter<FluidStack>, IFluidHandlerWrapper
 {
     private IGridNetwork network;
-    public TileEntity[] adjacentConnections = null;
+    public BlockEntity[] adjacentConnections = null;
     private final int pullAmount;
     private boolean validated = true;
 
-    public TileEntityFluidTransmitter(TileEntityType<?> type, int pullAmount)
+    public TileEntityFluidTransmitter(BlockEntityType<?> type, int pullAmount)
     {
         super(type);
         this.pullAmount = pullAmount;
     }
 
     @Override
-    public void validate()
+    public void clearRemoved()
     {
         this.validated = false;
-        super.validate();
+        super.clearRemoved();
     }
 
     @Override
-    public void remove()
+    public void setRemoved()
     {
         if (!BlockFluidPipe.ignoreDrop)
         {
@@ -61,13 +63,13 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
 //            this.setNetwork(null);
 //        }
 
-        super.remove();
+        super.setRemoved();
     }
 
     @Override
     public void onChunkUnloaded()
     {
-        super.remove();
+        super.setRemoved();
         super.onChunkUnloaded();
     }
 
@@ -97,13 +99,13 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
     @Override
     public void onNetworkChanged()
     {
-        world.markBlockRangeForRenderUpdate(this.getPos(), this.getBlockState().getBlock().getDefaultState(), this.getBlockState()); // Forces block render update. Better way to do this?
+        level.setBlocksDirty(this.getBlockPos(), this.getBlockState().getBlock().defaultBlockState(), this.getBlockState()); // Forces block render update. Better way to do this?
     }
 
     @Override
     public void tick()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (!this.validated)
             {
@@ -114,11 +116,11 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
             Block blockType = this.getBlockState().getBlock();
             if (blockType instanceof BlockFluidPipe && ((BlockFluidPipe) blockType).getMode() == BlockFluidPipe.EnumPipeMode.PULL)
             {
-                TileEntity[] tiles = OxygenUtil.getAdjacentFluidConnections(this);
+                BlockEntity[] tiles = OxygenUtil.getAdjacentFluidConnections(this);
 
                 for (Direction side : Direction.values())
                 {
-                    TileEntity sideTile = tiles[side.ordinal()];
+                    BlockEntity sideTile = tiles[side.ordinal()];
 
                     if (sideTile != null && !(sideTile instanceof IBufferTransmitter))
                     {
@@ -157,7 +159,7 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
             return;
         }
 
-        if (this.world.isRemote && this.network != null)
+        if (this.level.isClientSide && this.network != null)
         {
             FluidNetwork fluidNetwork = (FluidNetwork) this.network;
             fluidNetwork.removeTransmitter(this);
@@ -170,7 +172,7 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
 
         this.network = network;
 
-        if (this.world.isRemote && this.network != null)
+        if (this.level.isClientSide && this.network != null)
         {
             ((FluidNetwork) this.network).pipes.add(this);
         }
@@ -179,14 +181,14 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
     @Override
     public void refresh()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.adjacentConnections = null;
 
             BlockVec3 thisVec = new BlockVec3(this);
             for (Direction side : Direction.values())
             {
-                TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
+                BlockEntity tileEntity = thisVec.getTileEntityOnSide(this.level, side);
 
                 if (tileEntity != null)
                 {
@@ -214,14 +216,14 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
     }
 
     @Override
-    public TileEntity[] getAdjacentConnections()
+    public BlockEntity[] getAdjacentConnections()
     {
         /**
          * Cache the adjacentConnections.
          */
         if (this.adjacentConnections == null)
         {
-            this.adjacentConnections = OxygenUtil.getAdjacentFluidConnections(this, this.world.isRemote);
+            this.adjacentConnections = OxygenUtil.getAdjacentFluidConnections(this, this.level.isClientSide);
         }
 
         return this.adjacentConnections;
@@ -234,10 +236,10 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
+    @Environment(EnvType.CLIENT)
+    public AABB getRenderBoundingBox()
     {
-        return new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1);
+        return new AABB(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), this.getBlockPos().getX() + 1, this.getBlockPos().getY() + 1, this.getBlockPos().getZ() + 1);
     }
 
     @Override

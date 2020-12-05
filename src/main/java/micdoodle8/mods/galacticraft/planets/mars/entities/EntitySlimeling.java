@@ -13,81 +13,103 @@ import micdoodle8.mods.galacticraft.planets.mars.inventory.InventorySlimeling;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.GhastEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.horse.HorseEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.potion.Effects;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.*;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.SitGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.monster.SharedMonsterAttributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.EnumSet;
 import java.util.UUID;
 
-public class EntitySlimeling extends TameableEntity implements IEntityBreathable
+public class EntitySlimeling extends TamableAnimal implements IEntityBreathable
 {
     public InventorySlimeling slimelingInventory = new InventorySlimeling(this);
 
-    private static final DataParameter<Float> HEALTH = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> COLOR_RED = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> COLOR_GREEN = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> COLOR_BLUE = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.VARINT);
-    private static final DataParameter<String> NAME = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.STRING);
-    private static final DataParameter<Integer> FAV_FOOD_ID = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.VARINT);
-    private static final DataParameter<Float> ATTACK_DAMAGE = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> KILLS = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.VARINT);
+    private static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(EntitySlimeling.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> COLOR_RED = SynchedEntityData.defineId(EntitySlimeling.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> COLOR_GREEN = SynchedEntityData.defineId(EntitySlimeling.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> COLOR_BLUE = SynchedEntityData.defineId(EntitySlimeling.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> AGE = SynchedEntityData.defineId(EntitySlimeling.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(EntitySlimeling.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> FAV_FOOD_ID = SynchedEntityData.defineId(EntitySlimeling.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> ATTACK_DAMAGE = SynchedEntityData.defineId(EntitySlimeling.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> KILLS = SynchedEntityData.defineId(EntitySlimeling.class, EntityDataSerializers.INT);
 
     public float colorRed;
     public float colorGreen;
     public float colorBlue;
     public long ticksAlive;
-    public int age = 0;
+    public int tickCount = 0;
     public final int MAX_AGE = 100000;
     public String slimelingName = GCCoreUtil.translate("gui.message.unnamed");
     public int favFoodID = 1;
     public float attackDamage = 0.05F;
     public int kills;
 
-    public EntitySlimeling(EntityType<? extends EntitySlimeling> type, World worldIn)
+    public EntitySlimeling(EntityType<? extends EntitySlimeling> type, Level worldIn)
     {
         super(type, worldIn);
 //        this.setSize(0.45F, 0.7F);
-        this.goalSelector.addGoal(1, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.sitGoal = new EntityAISitGC(this);
         this.goalSelector.addGoal(2, this.sitGoal);
         this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
         this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(9, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(7, new RandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(4, new NonTamedTargetGoal(this, EntitySludgeling.class, false, p_apply_1_ -> p_apply_1_ instanceof EntitySludgeling));
-        this.setTamed(false);
+        this.targetSelector.addGoal(4, new NonTameRandomTargetGoal(this, EntitySludgeling.class, false, p_apply_1_ -> p_apply_1_ instanceof EntitySludgeling));
+        this.setTame(false);
 
-        switch (this.rand.nextInt(3))
+        switch (this.random.nextInt(3))
         {
         case 0:
             this.colorRed = 1.0F;
@@ -104,7 +126,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         this.setRandomFavFood();
     }
 
-    public static EntitySlimeling createEntitySlimeling(World worldIn, float r, float g, float b)
+    public static EntitySlimeling createEntitySlimeling(Level worldIn, float r, float g, float b)
     {
         EntitySlimeling slimeling = new EntitySlimeling(MarsEntities.SLIMELING, worldIn);
         slimeling.colorRed = r;
@@ -114,7 +136,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -125,17 +147,17 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         LivingEntity owner = super.getOwner();
         if (owner == null)
         {
-            UUID ownerId = getOwnerId();
+            UUID ownerId = getOwnerUUID();
             if (ownerId != null)
             {
-                return this.world.getPlayerByUuid(ownerId);
+                return this.level.getPlayerByUUID(ownerId);
             }
         }
         return owner;
     }
 
     @Override
-    public boolean isOwner(LivingEntity entityLivingBase)
+    public boolean isOwnedBy(LivingEntity entityLivingBase)
     {
         return entityLivingBase == this.getOwner();
     }
@@ -158,44 +180,44 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
 //    }
 
     @Override
-    public boolean isChild()
+    public boolean isBaby()
     {
         return this.getAge() / (float) this.MAX_AGE < 0.33F;
     }
 
     private void setRandomFavFood()
     {
-        switch (this.rand.nextInt(10))
+        switch (this.random.nextInt(10))
         {
         case 0:
-            this.favFoodID = Item.getIdFromItem(Items.GOLD_INGOT);
+            this.favFoodID = Item.getId(Items.GOLD_INGOT);
             break;
         case 1:
-            this.favFoodID = Item.getIdFromItem(Items.FLINT_AND_STEEL);
+            this.favFoodID = Item.getId(Items.FLINT_AND_STEEL);
             break;
         case 2:
-            this.favFoodID = Item.getIdFromItem(Items.BAKED_POTATO);
+            this.favFoodID = Item.getId(Items.BAKED_POTATO);
             break;
         case 3:
-            this.favFoodID = Item.getIdFromItem(Items.STONE_SWORD);
+            this.favFoodID = Item.getId(Items.STONE_SWORD);
             break;
         case 4:
-            this.favFoodID = Item.getIdFromItem(Items.GUNPOWDER);
+            this.favFoodID = Item.getId(Items.GUNPOWDER);
             break;
         case 5:
-            this.favFoodID = Item.getIdFromItem(Items.WOODEN_HOE);
+            this.favFoodID = Item.getId(Items.WOODEN_HOE);
             break;
         case 6:
-            this.favFoodID = Item.getIdFromItem(Items.EMERALD);
+            this.favFoodID = Item.getId(Items.EMERALD);
             break;
         case 7:
-            this.favFoodID = Item.getIdFromItem(Items.TROPICAL_FISH);
+            this.favFoodID = Item.getId(Items.TROPICAL_FISH);
             break;
         case 8:
-            this.favFoodID = Item.getIdFromItem(Items.REPEATER);
+            this.favFoodID = Item.getId(Items.REPEATER);
             break;
         case 9:
-            this.favFoodID = Item.getIdFromItem(Items.OAK_BOAT);
+            this.favFoodID = Item.getId(Items.OAK_BOAT);
             break;
         }
     }
@@ -216,36 +238,36 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
 
 
     @Override
-    protected void updateAITasks()
+    protected void customServerAiStep()
     {
-        this.dataManager.set(HEALTH, this.getHealth());
+        this.entityData.set(HEALTH, this.getHealth());
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
-        super.registerData();
-        this.dataManager.register(HEALTH, this.getHealth());
-        this.dataManager.register(COLOR_RED, this.colorRed);
-        this.dataManager.register(COLOR_GREEN, this.colorGreen);
-        this.dataManager.register(COLOR_BLUE, this.colorBlue);
-        this.dataManager.register(AGE, this.age);
-        this.dataManager.register(NAME, "");
-        this.dataManager.register(FAV_FOOD_ID, this.favFoodID);
-        this.dataManager.register(ATTACK_DAMAGE, this.attackDamage);
-        this.dataManager.register(KILLS, this.kills);
+        super.defineSynchedData();
+        this.entityData.define(HEALTH, this.getHealth());
+        this.entityData.define(COLOR_RED, this.colorRed);
+        this.entityData.define(COLOR_GREEN, this.colorGreen);
+        this.entityData.define(COLOR_BLUE, this.colorBlue);
+        this.entityData.define(AGE, this.tickCount);
+        this.entityData.define(NAME, "");
+        this.entityData.define(FAV_FOOD_ID, this.favFoodID);
+        this.entityData.define(ATTACK_DAMAGE, this.attackDamage);
+        this.entityData.define(KILLS, this.kills);
         this.setSlimelingName(GCCoreUtil.translate("gui.message.unnamed"));
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        super.writeAdditional(nbt);
-        nbt.put("SlimelingInventory", this.slimelingInventory.writeToNBT(new ListNBT()));
+        super.addAdditionalSaveData(nbt);
+        nbt.put("SlimelingInventory", this.slimelingInventory.writeToNBT(new ListTag()));
         nbt.putFloat("SlimeRed", this.colorRed);
         nbt.putFloat("SlimeGreen", this.colorGreen);
         nbt.putFloat("SlimeBlue", this.colorBlue);
-        nbt.putInt("SlimelingAge", this.age);
+        nbt.putInt("SlimelingAge", this.tickCount);
         nbt.putString("SlimelingName", this.slimelingName);
         nbt.putInt("FavFoodID", this.favFoodID);
         nbt.putFloat("SlimelingDamage", this.attackDamage);
@@ -253,14 +275,14 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
-        super.readAdditional(nbt);
+        super.readAdditionalSaveData(nbt);
         this.slimelingInventory.readFromNBT(nbt.getList("SlimelingInventory", 10));
         this.colorRed = nbt.getFloat("SlimeRed");
         this.colorGreen = nbt.getFloat("SlimeGreen");
         this.colorBlue = nbt.getFloat("SlimeBlue");
-        this.age = nbt.getInt("SlimelingAge");
+        this.tickCount = nbt.getInt("SlimelingAge");
         this.slimelingName = nbt.getString("SlimelingName");
         this.favFoodID = nbt.getInt("FavFoodID");
         this.attackDamage = nbt.getFloat("SlimelingDamage");
@@ -268,7 +290,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         this.setColorRed(this.colorRed);
         this.setColorGreen(this.colorGreen);
         this.setColorBlue(this.colorBlue);
-        this.setAge(this.age);
+        this.setAge(this.tickCount);
         this.setSlimelingName(this.slimelingName);
         this.setKillCount(this.kills);
     }
@@ -276,7 +298,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn)
     {
-        this.playSound(SoundEvents.BLOCK_SLIME_BLOCK_STEP, this.getSoundVolume(), 1.1F);
+        this.playSound(SoundEvents.SLIME_BLOCK_STEP, this.getSoundVolume(), 1.1F);
         return null;
     }
 
@@ -294,11 +316,11 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
 //    }
 
     @Override
-    public void livingTick()
+    public void aiStep()
     {
-        super.livingTick();
+        super.aiStep();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.ticksAlive <= 0)
             {
@@ -311,12 +333,12 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
 
             if (this.ticksAlive % 2 == 0)
             {
-                if (this.age < this.MAX_AGE)
+                if (this.tickCount < this.MAX_AGE)
                 {
-                    this.age++;
+                    this.tickCount++;
                 }
 
-                this.setAge(Math.min(this.age, this.MAX_AGE));
+                this.setAge(Math.min(this.tickCount, this.MAX_AGE));
             }
 
             this.setFavoriteFood(this.favFoodID);
@@ -325,17 +347,17 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
 //            this.setCargoSlot(this.slimelingInventory.getStackInSlot(1));
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(this.getMaxHealthSlimeling());
 
-            if (this.getOwnerId() != null)
+            if (this.getOwnerUUID() != null)
             {
                 Entity owner = this.getOwner();
 
                 if (owner != null)
                 {
-                    this.setOwnerId(owner.getUniqueID());
+                    this.setOwnerUUID(owner.getUUID());
                 }
             }
         }
@@ -343,9 +365,9 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
 
     private double getMaxHealthSlimeling()
     {
-        if (this.isTamed())
+        if (this.isTame())
         {
-            return 20.001D + 30.0 * ((double) this.age / (double) this.MAX_AGE);
+            return 20.001D + 30.0 * ((double) this.tickCount / (double) this.MAX_AGE);
         }
         else
         {
@@ -356,11 +378,11 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
     @Override
     public float getEyeHeight(Pose pose)
     {
-        return this.getHeight() * 0.8F;
+        return this.getBbHeight() * 0.8F;
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+    public boolean hurt(DamageSource par1DamageSource, float par2)
     {
         if (this.isInvulnerableTo(par1DamageSource))
         {
@@ -368,75 +390,75 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         }
         else
         {
-            Entity entity = par1DamageSource.getTrueSource();
+            Entity entity = par1DamageSource.getEntity();
             this.setSittingAI(false);
 
-            if (entity != null && !(entity instanceof PlayerEntity))
+            if (entity != null && !(entity instanceof Player))
             {
                 par2 = (par2 + 1.0F) / 2.0F;
             }
 
-            return super.attackEntityFrom(par1DamageSource, par2);
+            return super.hurt(par1DamageSource, par2);
         }
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity par1Entity)
+    public boolean doHurtTarget(Entity par1Entity)
     {
-        return par1Entity.attackEntityFrom(new EntityDamageSource("slimeling", this), this.getDamage());
+        return par1Entity.hurt(new EntityDamageSource("slimeling", this), this.getDamage());
     }
 
     public float getDamage()
     {
-        int i = this.isTamed() ? 5 : 2;
+        int i = this.isTame() ? 5 : 2;
         return i * this.getAttackDamage();
     }
 
     @Override
-    public void setTamed(boolean par1)
+    public void setTame(boolean par1)
     {
-        super.setTamed(par1);
+        super.setTame(par1);
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(this.getMaxHealthSlimeling());
     }
 
     @Override
-    public boolean processInteract(PlayerEntity player, Hand hand)
+    public boolean mobInteract(Player player, InteractionHand hand)
     {
-        ItemStack itemstack = player.inventory.getCurrentItem();
+        ItemStack itemstack = player.inventory.getSelected();
 
-        if (this.isTamed())
+        if (this.isTame())
         {
             if (!itemstack.isEmpty())
             {
                 if (itemstack.getItem() == this.getFavoriteFood())
                 {
-                    if (this.isOwner(player))
+                    if (this.isOwnedBy(player))
                     {
                         itemstack.shrink(1);
 
                         if (itemstack.isEmpty())
                         {
-                            player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                            player.inventory.setItem(player.inventory.selected, ItemStack.EMPTY);
                         }
 
-                        if (this.world.isRemote)
+                        if (this.level.isClientSide)
                         {
                             MarsModuleClient.openSlimelingGui(this, 1);
                         }
 
-                        if (this.rand.nextInt(3) == 0)
+                        if (this.random.nextInt(3) == 0)
                         {
                             this.setRandomFavFood();
                         }
                     }
                     else
                     {
-                        if (player instanceof ServerPlayerEntity)
+                        if (player instanceof ServerPlayer)
                         {
                             GCPlayerStats stats = GCPlayerStats.get(player);
                             if (stats.getChatCooldown() == 0)
                             {
-                                player.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.slimeling.chat.wrong_player")));
+                                player.sendMessage(new TextComponent(GCCoreUtil.translate("gui.slimeling.chat.wrong_player")));
                                 stats.setChatCooldown(100);
                             }
                         }
@@ -444,7 +466,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
                 }
                 else
                 {
-                    if (this.world.isRemote)
+                    if (this.level.isClientSide)
                     {
                         MarsModuleClient.openSlimelingGui(this, 0);
                     }
@@ -452,7 +474,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
             }
             else
             {
-                if (this.world.isRemote)
+                if (this.level.isClientSide)
                 {
                     MarsModuleClient.openSlimelingGui(this, 0);
                 }
@@ -462,54 +484,54 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         }
         else if (!itemstack.isEmpty() && itemstack.getItem() == Items.SLIME_BALL)
         {
-            if (!player.abilities.isCreativeMode)
+            if (!player.abilities.instabuild)
             {
                 itemstack.shrink(1);
             }
 
             if (itemstack.isEmpty())
             {
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+                player.inventory.setItem(player.inventory.selected, ItemStack.EMPTY);
             }
 
-            if (!this.world.isRemote)
+            if (!this.level.isClientSide)
             {
-                if (this.rand.nextInt(3) == 0)
+                if (this.random.nextInt(3) == 0)
                 {
-                    this.setTamed(true);
-                    this.getNavigator().clearPath();
-                    this.setAttackTarget(null);
+                    this.setTame(true);
+                    this.getNavigation().stop();
+                    this.setTarget(null);
                     this.setSittingAI(true);
                     this.setHealth(20.0F);
-                    this.setOwnerId(player.getUniqueID());
-                    this.playTameEffect(true);
-                    this.world.setEntityState(this, (byte) 7);
+                    this.setOwnerUUID(player.getUUID());
+                    this.spawnTamingParticles(true);
+                    this.level.broadcastEntityEvent(this, (byte) 7);
                 }
                 else
                 {
-                    this.playTameEffect(false);
-                    this.world.setEntityState(this, (byte) 6);
+                    this.spawnTamingParticles(false);
+                    this.level.broadcastEntityEvent(this, (byte) 6);
                 }
             }
 
             return true;
         }
 
-        return super.processInteract(player, hand);
+        return super.mobInteract(player, hand);
     }
 
     public void setSittingAI(boolean sitting)
     {
-        this.sitGoal.setSitting(sitting);
+        this.sitGoal.wantToSit(sitting);
     }
 
     @Override
-    public boolean isBreedingItem(ItemStack par1ItemStack)
+    public boolean isFood(ItemStack par1ItemStack)
     {
         return false;
     }
 
-    public EntitySlimeling spawnBabyAnimal(AgeableEntity par1EntityAgeable)
+    public EntitySlimeling spawnBabyAnimal(AgableMob par1EntityAgeable)
     {
         if (par1EntityAgeable instanceof EntitySlimeling)
         {
@@ -521,14 +543,14 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
             newColor.x = Math.max(Math.min(newColor.x, 1.0F), 0);
             newColor.y = Math.max(Math.min(newColor.y, 1.0F), 0);
             newColor.z = Math.max(Math.min(newColor.z, 1.0F), 0);
-            EntitySlimeling newSlimeling = EntitySlimeling.createEntitySlimeling(this.world, newColor.x, newColor.y, newColor.z);
+            EntitySlimeling newSlimeling = EntitySlimeling.createEntitySlimeling(this.level, newColor.x, newColor.y, newColor.z);
 
-            UUID id = this.getOwnerId();
+            UUID id = this.getOwnerUUID();
 
             if (id != null)
             {
-                newSlimeling.setOwnerId(id);
-                newSlimeling.setTamed(true);
+                newSlimeling.setOwnerUUID(id);
+                newSlimeling.setTame(true);
             }
 
             return newSlimeling;
@@ -538,13 +560,13 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
     }
 
     @Override
-    public boolean canMateWith(AnimalEntity par1EntityAnimal)
+    public boolean canMate(Animal par1EntityAnimal)
     {
         if (par1EntityAnimal == this)
         {
             return false;
         }
-        else if (!this.isTamed())
+        else if (!this.isTame())
         {
             return false;
         }
@@ -555,26 +577,26 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         else
         {
             EntitySlimeling slimeling = (EntitySlimeling) par1EntityAnimal;
-            return slimeling.isTamed() && !slimeling.isSitting() && this.isInLove() && slimeling.isInLove();
+            return slimeling.isTame() && !slimeling.isSitting() && this.isInLove() && slimeling.isInLove();
         }
     }
 
     @Override
-    public boolean shouldAttackEntity(LivingEntity toAttack, LivingEntity owner)
+    public boolean wantsToAttack(LivingEntity toAttack, LivingEntity owner)
     {
-        if (!(toAttack instanceof CreeperEntity) && !(toAttack instanceof GhastEntity))
+        if (!(toAttack instanceof Creeper) && !(toAttack instanceof Ghast))
         {
             if (toAttack instanceof EntitySlimeling)
             {
                 EntitySlimeling slimeling = (EntitySlimeling) toAttack;
 
-                if (slimeling.isTamed() && slimeling.getOwner() == owner)
+                if (slimeling.isTame() && slimeling.getOwner() == owner)
                 {
                     return false;
                 }
             }
 
-            return !(toAttack instanceof PlayerEntity && owner instanceof PlayerEntity && !((PlayerEntity) owner).canAttackPlayer((PlayerEntity) toAttack)) && (!(toAttack instanceof HorseEntity) || !((HorseEntity) toAttack).isTame());
+            return !(toAttack instanceof Player && owner instanceof Player && !((Player) owner).canHarmPlayer((Player) toAttack)) && (!(toAttack instanceof Horse) || !((Horse) toAttack).isTamed());
         }
         else
         {
@@ -583,95 +605,95 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
     }
 
     @Override
-    public AgeableEntity createChild(AgeableEntity par1EntityAgeable)
+    public AgableMob getBreedOffspring(AgableMob par1EntityAgeable)
     {
         return this.spawnBabyAnimal(par1EntityAgeable);
     }
 
     public float getColorRed()
     {
-        return this.dataManager.get(COLOR_RED);
+        return this.entityData.get(COLOR_RED);
     }
 
     public void setColorRed(float color)
     {
-        this.dataManager.set(COLOR_RED, color);
+        this.entityData.set(COLOR_RED, color);
     }
 
     public float getColorGreen()
     {
-        return this.dataManager.get(COLOR_GREEN);
+        return this.entityData.get(COLOR_GREEN);
     }
 
     public void setColorGreen(float color)
     {
-        this.dataManager.set(COLOR_GREEN, color);
+        this.entityData.set(COLOR_GREEN, color);
     }
 
     public float getColorBlue()
     {
-        return this.dataManager.get(COLOR_BLUE);
+        return this.entityData.get(COLOR_BLUE);
     }
 
     public void setColorBlue(float color)
     {
-        this.dataManager.set(COLOR_BLUE, color);
+        this.entityData.set(COLOR_BLUE, color);
     }
 
     public int getAge()
     {
-        return this.dataManager.get(AGE);
+        return this.entityData.get(AGE);
     }
 
     public void setAge(int age)
     {
-        this.dataManager.set(AGE, age);
+        this.entityData.set(AGE, age);
     }
 
     public String getSlimelingName()
     {
-        return this.dataManager.get(NAME);
+        return this.entityData.get(NAME);
     }
 
     public void setSlimelingName(String name)
     {
-        this.dataManager.set(NAME, name);
+        this.entityData.set(NAME, name);
     }
 
     @Override
-    public ITextComponent getName()
+    public Component getName()
     {
-        return new StringTextComponent(this.getSlimelingName());
+        return new TextComponent(this.getSlimelingName());
     }
 
     public Item getFavoriteFood()
     {
-        return Item.getItemById(this.dataManager.get(FAV_FOOD_ID));
+        return Item.byId(this.entityData.get(FAV_FOOD_ID));
     }
 
     public void setFavoriteFood(int foodID)
     {
-        this.dataManager.set(FAV_FOOD_ID, foodID);
+        this.entityData.set(FAV_FOOD_ID, foodID);
     }
 
     public float getAttackDamage()
     {
-        return this.dataManager.get(ATTACK_DAMAGE);
+        return this.entityData.get(ATTACK_DAMAGE);
     }
 
     public void setAttackDamage(float damage)
     {
-        this.dataManager.set(ATTACK_DAMAGE, damage);
+        this.entityData.set(ATTACK_DAMAGE, damage);
     }
 
     public int getKillCount()
     {
-        return this.dataManager.get(KILLS);
+        return this.entityData.get(KILLS);
     }
 
     public void setKillCount(int damage)
     {
-        this.dataManager.set(KILLS, damage);
+        this.entityData.set(KILLS, damage);
     }
 
     @Override
@@ -691,38 +713,38 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
     }
 
     @Override
-    public void onDeath(DamageSource p_70645_1_)
+    public void die(DamageSource p_70645_1_)
     {
-        super.onDeath(p_70645_1_);
+        super.die(p_70645_1_);
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
-            ItemStack bag = this.slimelingInventory.getStackInSlot(1);
+            ItemStack bag = this.slimelingInventory.getItem(1);
             if (bag != null && bag.getItem() == MarsItems.slimelingCargo)
             {
-                this.slimelingInventory.decrStackSize(1, 64);
-                this.entityDropItem(bag, 0.5F);
+                this.slimelingInventory.removeItem(1, 64);
+                this.spawnAtLocation(bag, 0.5F);
             }
         }
     }
 
     public static class EntityAISitGC extends SitGoal
     {
-        private final TameableEntity theEntity;
+        private final TamableAnimal theEntity;
         private boolean isSitting;
 
-        public EntityAISitGC(TameableEntity theEntity)
+        public EntityAISitGC(TamableAnimal theEntity)
         {
             super(theEntity);
             this.theEntity = theEntity;
 //            this.setMutexBits(5);
-            this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.MOVE));
+            this.setFlags(EnumSet.of(Flag.JUMP, Flag.MOVE));
         }
 
         @Override
-        public boolean shouldExecute()
+        public boolean canUse()
         {
-            if (!this.theEntity.isTamed())
+            if (!this.theEntity.isTame())
             {
                 return false;
             }
@@ -736,57 +758,57 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
                 if (e instanceof LivingEntity)
                 {
                     LivingEntity living = (LivingEntity) e;
-                    return living == null || ((!(this.theEntity.getDistanceSq(living) < 144.0D) || living.getRevengeTarget() == null) && this.isSitting);
+                    return living == null || ((!(this.theEntity.distanceToSqr(living) < 144.0D) || living.getLastHurtByMob() == null) && this.isSitting);
                 }
                 return false;
             }
         }
 
         @Override
-        public void startExecuting()
+        public void start()
         {
-            this.theEntity.getNavigator().clearPath();
+            this.theEntity.getNavigation().stop();
             this.theEntity.setSitting(true);
         }
 
         @Override
-        public void resetTask()
+        public void stop()
         {
             this.theEntity.setSitting(false);
         }
 
         @Override
-        public void setSitting(boolean isSitting)
+        public void wantToSit(boolean isSitting)
         {
             this.isSitting = isSitting;
         }
     }
 
     @Override
-    protected void jump()
+    protected void jumpFromGround()
     {
-        this.setMotion(this.getMotion().x, 0.48D / WorldUtil.getGravityFactor(this), this.getMotion().z);
-        if (this.getMotion().y < 0.28D)
+        this.setDeltaMovement(this.getDeltaMovement().x, 0.48D / WorldUtil.getGravityFactor(this), this.getDeltaMovement().z);
+        if (this.getDeltaMovement().y < 0.28D)
         {
 //            this.motionY = 0.28D;
-            this.setMotion(this.getMotion().x, 0.28D, this.getMotion().z);
+            this.setDeltaMovement(this.getDeltaMovement().x, 0.28D, this.getDeltaMovement().z);
         }
 
-        if (this.isPotionActive(Effects.JUMP_BOOST))
+        if (this.hasEffect(MobEffects.JUMP))
         {
 //            this.motionY += (this.getActivePotionEffect(Effects.JUMP_BOOST).getAmplifier() + 1) * 0.1F;
-            this.setMotion(this.getMotion().x, this.getMotion().y + (this.getActivePotionEffect(Effects.JUMP_BOOST).getAmplifier() + 1) * 0.1F, this.getMotion().z);
+            this.setDeltaMovement(this.getDeltaMovement().x, this.getDeltaMovement().y + (this.getEffect(MobEffects.JUMP).getAmplifier() + 1) * 0.1F, this.getDeltaMovement().z);
         }
 
         if (this.isSprinting())
         {
-            float f = this.rotationYaw / Constants.RADIANS_TO_DEGREES;
+            float f = this.yRot / Constants.RADIANS_TO_DEGREES;
 //            this.motionX -= MathHelper.sin(f) * 0.2F;
 //            this.motionZ += MathHelper.cos(f) * 0.2F;
-            this.setMotion(this.getMotion().x - MathHelper.sin(f) * 0.2F, this.getMotion().y, this.getMotion().z + MathHelper.cos(f) * 0.2F);
+            this.setDeltaMovement(this.getDeltaMovement().x - Mth.sin(f) * 0.2F, this.getDeltaMovement().y, this.getDeltaMovement().z + Mth.cos(f) * 0.2F);
         }
 
-        this.isAirBorne = true;
+        this.hasImpulse = true;
         ForgeHooks.onLivingJump(this);
     }
 }

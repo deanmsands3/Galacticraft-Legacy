@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.recipe;
+package micdoodle8.mods.galacticraft.core.recipe;
 //
 //import java.util.HashMap;
 //

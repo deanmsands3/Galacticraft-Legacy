@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.jei.cargorocket;
+package micdoodle8.mods.galacticraft.planets.mars.client.jei.cargorocket;
 //
 //import mezz.jei.api.IGuiHelper;
 //import mezz.jei.api.gui.IDrawable;

@@ -4,9 +4,9 @@ import io.netty.buffer.ByteBuf;
 import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
 import micdoodle8.mods.galacticraft.core.GCBlockNames;
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class TileEntityFallenMeteor extends TileEntityAdvanced
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fallenMeteor)
-    public static TileEntityType<TileEntityFallenMeteor> TYPE;
+    public static BlockEntityType<TileEntityFallenMeteor> TYPE;
 
     public static final int MAX_HEAT_LEVEL = 5000;
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -38,7 +38,7 @@ public class TileEntityFallenMeteor extends TileEntityAdvanced
     {
         super.tick();
 
-        if (!this.world.isRemote && this.heatLevel > 0)
+        if (!this.level.isClientSide && this.heatLevel > 0)
         {
             this.heatLevel--;
         }
@@ -62,10 +62,10 @@ public class TileEntityFallenMeteor extends TileEntityAdvanced
     @Override
     public void readExtraNetworkedData(ByteBuf dataStream)
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
 //            this.world.notifyLightSet(this.getPos()); TODO Lighting
-            world.getChunkProvider().getLightManager().checkBlock(this.getPos());
+            level.getChunkSource().getLightEngine().checkBlock(this.getBlockPos());
         }
     }
 
@@ -76,16 +76,16 @@ public class TileEntityFallenMeteor extends TileEntityAdvanced
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.heatLevel = nbt.getInt("MeteorHeatLevel");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("MeteorHeatLevel", this.heatLevel);
         return nbt;
     }
@@ -97,9 +97,9 @@ public class TileEntityFallenMeteor extends TileEntityAdvanced
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override

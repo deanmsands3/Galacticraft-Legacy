@@ -20,11 +20,11 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FlagData;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -35,21 +35,21 @@ public class GuiJoinSpaceRace extends Screen implements ICheckBoxCallback, IText
     protected static final ResourceLocation texture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/gui.png");
 
     private int ticksPassed;
-    private final PlayerEntity thePlayer;
+    private final Player thePlayer;
     private boolean initialized;
 
     private int buttonFlag_height;
     private int buttonFlag_xPosition;
     private int buttonFlag_yPosition;
 
-    private final EntityFlag dummyFlag = new EntityFlag(GCEntities.FLAG, Minecraft.getInstance().world);
+    private final EntityFlag dummyFlag = new EntityFlag(GCEntities.FLAG, Minecraft.getInstance().level);
 //    private final ModelFlag dummyModel = new ModelFlag();
 
     private final SpaceRace spaceRaceData;
 
-    public GuiJoinSpaceRace(ClientPlayerEntity player)
+    public GuiJoinSpaceRace(LocalPlayer player)
     {
-        super(new StringTextComponent("Space Race"));
+        super(new TextComponent("Space Race"));
         this.thePlayer = player;
         GCPlayerStatsClient stats = GCPlayerStatsClient.get(player);
 
@@ -85,13 +85,13 @@ public class GuiJoinSpaceRace extends Screen implements ICheckBoxCallback, IText
 
             this.buttons.add(new GuiElementGradientButton(this.width / 2 - this.width / 3 + 15, this.height / 2 - this.height / 4 - 15, 50, 15, GCCoreUtil.translate("gui.space_race.create.close"), (button) ->
             {
-                this.thePlayer.closeScreen();
+                this.thePlayer.closeContainer();
             }));
             int width = (int) (var5 / 1.0F);
             this.buttons.add(new GuiElementGradientButton(this.width / 2 - width / 2, this.buttonFlag_yPosition + this.buttonFlag_height + 60, width, 20, GCCoreUtil.translateWithFormat("gui.space_race.join", this.spaceRaceData.getTeamName()), (button) ->
             {
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ADD_RACE_PLAYER, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{PlayerUtil.getName(this.thePlayer), this.spaceRaceData.getSpaceRaceID()}));
-                this.thePlayer.closeScreen();
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ADD_RACE_PLAYER, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{PlayerUtil.getName(this.thePlayer), this.spaceRaceData.getSpaceRaceID()}));
+                this.thePlayer.closeContainer();
             }));
         }
     }
@@ -119,9 +119,9 @@ public class GuiJoinSpaceRace extends Screen implements ICheckBoxCallback, IText
             this.drawCenteredString(this.font, GCCoreUtil.translate("gui.space_race.join.owner") + ": " + this.spaceRaceData.getPlayerNames().get(0), this.width / 2, this.buttonFlag_yPosition + this.buttonFlag_height + 25, ColorUtil.to32BitColor(255, 150, 150, 150));
             this.drawCenteredString(this.font, GCCoreUtil.translateWithFormat("gui.space_race.join.member_count", this.spaceRaceData.getPlayerNames().size()), this.width / 2, this.buttonFlag_yPosition + this.buttonFlag_height + 40, ColorUtil.to32BitColor(255, 150, 150, 150));
             GL11.glPushMatrix();
-            GL11.glTranslatef(this.width / 2, this.buttonFlag_yPosition + this.buttonFlag_height + 5 + Minecraft.getInstance().fontRenderer.FONT_HEIGHT / 2, 0);
+            GL11.glTranslatef(this.width / 2, this.buttonFlag_yPosition + this.buttonFlag_height + 5 + Minecraft.getInstance().font.lineHeight / 2, 0);
             GL11.glScalef(1.5F, 1.5F, 1.0F);
-            GL11.glTranslatef(-this.width / 2, (-(this.buttonFlag_yPosition + this.buttonFlag_height + 5)) - Minecraft.getInstance().fontRenderer.FONT_HEIGHT / 2, 0);
+            GL11.glTranslatef(-this.width / 2, (-(this.buttonFlag_yPosition + this.buttonFlag_height + 5)) - Minecraft.getInstance().font.lineHeight / 2, 0);
             this.drawCenteredString(this.font, this.spaceRaceData.getTeamName(), this.width / 2, this.buttonFlag_yPosition + this.buttonFlag_height + 5, ColorUtil.to32BitColor(255, 100, 150, 20));
             GL11.glPopMatrix();
         }
@@ -145,7 +145,7 @@ public class GuiJoinSpaceRace extends Screen implements ICheckBoxCallback, IText
     @Override
     public void renderBackground(int i)
     {
-        if (this.minecraft.world != null)
+        if (this.minecraft.level != null)
         {
             int scaleX = Math.min(this.ticksPassed * 14, this.width / 3);
             int scaleY = Math.min(this.ticksPassed * 14, this.height / 3);
@@ -171,7 +171,7 @@ public class GuiJoinSpaceRace extends Screen implements ICheckBoxCallback, IText
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckbox checkbox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementCheckbox checkbox, Player player)
     {
         return true;
     }
@@ -193,7 +193,7 @@ public class GuiJoinSpaceRace extends Screen implements ICheckBoxCallback, IText
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementTextBox textBox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementTextBox textBox, Player player)
     {
         return true;
     }

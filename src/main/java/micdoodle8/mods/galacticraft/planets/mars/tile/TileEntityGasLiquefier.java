@@ -23,24 +23,24 @@ import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockGasLiquefier;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlockNames;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerGasLiquefier;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerMethaneSynthesizer;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -55,10 +55,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory implements ISidedInventory, IDisableableMachine, IFluidHandlerWrapper, IOxygenReceiver, INamedContainerProvider
+public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IDisableableMachine, IFluidHandlerWrapper, IOxygenReceiver, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.gasLiquefier)
-    public static TileEntityType<TileEntityGasLiquefier> TYPE;
+    public static BlockEntityType<TileEntityGasLiquefier> TYPE;
 
     private final int tankCapacity = 2000;
 
@@ -153,9 +153,9 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public void remove()
+    public void setRemoved()
     {
-        super.remove();
+        super.setRemoved();
     }
 
     @Override
@@ -168,7 +168,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
             this.airProducts = this.getAirProducts();
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             FluidStack currentgas = this.gasTank.getFluid();
             if (currentgas == FluidStack.EMPTY || currentgas.getAmount() <= 0)
@@ -215,7 +215,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
                     //Air -> Air tank
                     if (this.gasTankType == -1 || (this.gasTankType == TankGases.AIR.index && this.gasTank.getFluid().getAmount() < this.gasTank.getCapacity()))
                     {
-                        BlockState stateAbove = this.world.getBlockState(getPos().up());
+                        BlockState stateAbove = this.level.getBlockState(getBlockPos().above());
                         if (stateAbove.getMaterial() == Material.AIR && stateAbove.getBlock() != GCBlocks.breatheableAir && stateAbove.getBlock() != GCBlocks.brightBreatheableAir)
                         {
                             FluidStack gcAtmosphere = new FluidStack(TankGases.AIR.gas, 4);
@@ -226,7 +226,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
                 }
                 else if (inputCanister.getItem() instanceof ItemCanisterGeneric)
                 {
-                    int amount = ItemCanisterGeneric.EMPTY_CAPACITY - inputCanister.getDamage();
+                    int amount = ItemCanisterGeneric.EMPTY_CAPACITY - inputCanister.getDamageValue();
                     if (amount > 0)
                     {
                         Item canisterType = inputCanister.getItem();
@@ -256,13 +256,13 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
                             if (used == amount)
                             {
                                 ItemStack stack = new ItemStack(GCItems.oilCanister, 1);
-                                stack.setDamage(ItemCanisterGeneric.EMPTY_CAPACITY);
+                                stack.setDamageValue(ItemCanisterGeneric.EMPTY_CAPACITY);
                                 getInventory().set(1, stack);
                             }
                             else
                             {
                                 ItemStack stack = new ItemStack(GCItems.oilCanister, 1);
-                                stack.setDamage(ItemCanisterGeneric.EMPTY_CAPACITY - amount + used);
+                                stack.setDamageValue(ItemCanisterGeneric.EMPTY_CAPACITY - amount + used);
                                 getInventory().set(1, stack);
                             }
                         }
@@ -462,7 +462,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
 
     public int getAirProducts()
     {
-        Dimension WP = this.world.getDimension();
+        Dimension WP = this.level.getDimension();
         if (WP instanceof DimensionSpace)
         {
             int result = 0;
@@ -566,9 +566,9 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.processTicks = nbt.getInt("smeltingTicks");
 
         if (nbt.contains("gasTank"))
@@ -587,23 +587,23 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("smeltingTicks", this.processTicks);
 
         if (this.gasTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("gasTank", this.gasTank.writeToNBT(new CompoundNBT()));
+            nbt.put("gasTank", this.gasTank.writeToNBT(new CompoundTag()));
         }
 
         if (this.liquidTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("liquidTank", this.liquidTank.writeToNBT(new CompoundNBT()));
+            nbt.put("liquidTank", this.liquidTank.writeToNBT(new CompoundTag()));
         }
         if (this.liquidTank2.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("liquidTank2", this.liquidTank2.writeToNBT(new CompoundNBT()));
+            nbt.put("liquidTank2", this.liquidTank2.writeToNBT(new CompoundTag()));
         }
 
         return nbt;
@@ -634,9 +634,9 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (this.isItemValidForSlot(slotID, itemstack))
+        if (this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
@@ -656,7 +656,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         switch (slotID)
         {
@@ -674,7 +674,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         switch (slotID)
         {
@@ -716,7 +716,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
         }
 
         //2->5 3->4 4->2 5->3
-        if (getGasInputDirection().rotateY() == from)
+        if (getGasInputDirection().getClockWise() == from)
         {
             return this.liquidTank.getFluid() != FluidStack.EMPTY && this.liquidTank.getFluidAmount() > 0;
         }
@@ -736,7 +736,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
         }
 
         //2->5 3->4 4->2 5->3
-        if (getGasInputDirection().rotateY() == from)
+        if (getGasInputDirection().getClockWise() == from)
         {
             if (resource != null && resource.isFluidEqual(this.liquidTank.getFluid()))
             {
@@ -756,7 +756,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
         }
 
         //2->5 3->4 4->2 5->3
-        if (getGasInputDirection().rotateY() == from)
+        if (getGasInputDirection().getClockWise() == from)
         {
             return this.liquidTank.drain(maxDrain, IFluidHandler.FluidAction.EXECUTE);
         }
@@ -886,7 +886,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
         {
             float conversion = 2F * Constants.LOX_GAS_RATIO;  //Special conversion ratio for breathable air
             FluidStack fluidToFill = new FluidStack(GCFluids.OXYGEN.getFluid(), (int) (receive * conversion));
-            int used = MathHelper.ceil(this.gasTank.fill(fluidToFill, action) / conversion);
+            int used = Mth.ceil(this.gasTank.fill(fluidToFill, action) / conversion);
             return used;
         }
 
@@ -921,7 +921,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
 
         if (type == NetworkType.FLUID)
         {
-            return direction == getGasInputDirection() || direction == this.getGasInputDirection().getOpposite() || direction == this.getGasInputDirection().rotateY();
+            return direction == getGasInputDirection() || direction == this.getGasInputDirection().getOpposite() || direction == this.getGasInputDirection().getClockWise();
         }
 
         if (type == NetworkType.POWER)
@@ -935,17 +935,17 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
 //        if (state.getBlock() instanceof BlockMachineMarsT2)
 //        {
 //            return state.get(BlockMachineMarsT2.FACING);
 //        }
-        return state.get(BlockGasLiquefier.FACING);
+        return state.getValue(BlockGasLiquefier.FACING);
     }
 
     public Direction getGasInputDirection()
     {
-        return this.getFront().rotateY();
+        return this.getFront().getClockWise();
     }
 
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.IGasHandler", modID = CompatibilityManager.modidMekanism)
@@ -1000,14 +1000,14 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
 //    }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerGasLiquefier(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.gas_liquefier");
+        return new TranslatableComponent("container.gas_liquefier");
     }
 }

@@ -1,14 +1,14 @@
 package micdoodle8.mods.galacticraft.api.transmission.grid;
 
 import micdoodle8.mods.galacticraft.api.transmission.tile.IConductor;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
  * The Electrical Network in interface form.
  *
  * @author Calclavia
  */
-public interface IElectricityNetwork extends IGridNetwork<IElectricityNetwork, IConductor, TileEntity>
+public interface IElectricityNetwork extends IGridNetwork<IElectricityNetwork, IConductor, BlockEntity>
 {
     /**
      * Produce energy into the network
@@ -19,7 +19,7 @@ public interface IElectricityNetwork extends IGridNetwork<IElectricityNetwork, I
      * @param ignoreTiles TileEntities to ignore for energy transfers.
      * @return Amount of energy REMAINING from the passed energy parameter
      */
-    float produce(float energy, boolean doReceive, int tierGC, TileEntity... ignoreTiles);
+    float produce(float energy, boolean doReceive, int tierGC, BlockEntity... ignoreTiles);
 
     /**
      * Get the total energy request in this network
@@ -27,5 +27,5 @@ public interface IElectricityNetwork extends IGridNetwork<IElectricityNetwork, I
      * @param ignoreTiles Tiles to ignore in the request calculations (NOTE: only used in initial (internal) check.
      * @return Amount of energy requested in this network
      */
-    float getRequest(TileEntity... ignoreTiles);
+    float getRequest(BlockEntity... ignoreTiles);
 }

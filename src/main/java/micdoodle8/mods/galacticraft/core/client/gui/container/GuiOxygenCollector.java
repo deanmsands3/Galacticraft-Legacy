@@ -8,11 +8,9 @@ import micdoodle8.mods.galacticraft.core.inventory.ContainerOxygenCollector;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityOxygenCollector;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -24,15 +22,15 @@ public class GuiOxygenCollector extends GuiContainerGC<ContainerOxygenCollector>
 
     private final TileEntityOxygenCollector collector;
 
-    private final GuiElementInfoRegion oxygenInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 112, (this.height - this.ySize) / 2 + 24, 56, 9, new ArrayList<String>(), this.width, this.height, this);
-    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 112, (this.height - this.ySize) / 2 + 37, 56, 9, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion oxygenInfoRegion = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 112, (this.height - this.imageHeight) / 2 + 24, 56, 9, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 112, (this.height - this.imageHeight) / 2 + 37, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiOxygenCollector(ContainerOxygenCollector container, PlayerInventory playerInv, ITextComponent title)
+    public GuiOxygenCollector(ContainerOxygenCollector container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
 //        super(new ContainerOxygenCollector(playerInv, collector), playerInv, new TranslationTextComponent("container.oxygen_collector"));
         this.collector = container.getCollector();
-        this.ySize = 180;
+        this.imageHeight = 180;
     }
 
     @Override
@@ -42,29 +40,29 @@ public class GuiOxygenCollector extends GuiContainerGC<ContainerOxygenCollector>
         List<String> batterySlotDesc = new ArrayList<String>();
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.0"));
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.1"));
-        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 31, (this.height - this.ySize) / 2 + 26, 18, 18, batterySlotDesc, this.width, this.height, this));
-        this.oxygenInfoRegion.xPosition = (this.width - this.xSize) / 2 + 112;
-        this.oxygenInfoRegion.yPosition = (this.height - this.ySize) / 2 + 24;
+        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 31, (this.height - this.imageHeight) / 2 + 26, 18, 18, batterySlotDesc, this.width, this.height, this));
+        this.oxygenInfoRegion.xPosition = (this.width - this.imageWidth) / 2 + 112;
+        this.oxygenInfoRegion.yPosition = (this.height - this.imageHeight) / 2 + 24;
         this.oxygenInfoRegion.parentWidth = this.width;
         this.oxygenInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.oxygenInfoRegion);
-        this.electricInfoRegion.xPosition = (this.width - this.xSize) / 2 + 112;
-        this.electricInfoRegion.yPosition = (this.height - this.ySize) / 2 + 37;
+        this.electricInfoRegion.xPosition = (this.width - this.imageWidth) / 2 + 112;
+        this.electricInfoRegion.yPosition = (this.height - this.imageHeight) / 2 + 37;
         this.electricInfoRegion.parentWidth = this.width;
         this.electricInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.electricInfoRegion);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        this.font.drawString(this.title.getFormattedText(), 8, 10, 4210752);
+        this.font.draw(this.title.getColoredString(), 8, 10, 4210752);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.out") + ":", 99, 25, 4210752, this.font);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.in") + ":", 99, 37, 4210752, this.font);
-        GCCoreUtil.drawStringCentered(GCCoreUtil.translate("gui.message.status") + ": " + this.getStatus(), this.xSize / 2, 50, 4210752, this.font);
+        GCCoreUtil.drawStringCentered(GCCoreUtil.translate("gui.message.status") + ": " + this.getStatus(), this.imageWidth / 2, 50, 4210752, this.font);
         String status = GCCoreUtil.translate("gui.status.collecting") + ": " + (int) (0.5F + Math.min(this.collector.lastOxygenCollected * 20F, TileEntityOxygenCollector.OUTPUT_PER_TICK * 20F)) + GCCoreUtil.translate("gui.per_second");
-        GCCoreUtil.drawStringCentered(status, this.xSize / 2, 60, 4210752, this.font);
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 90 + 2, 4210752);
+        GCCoreUtil.drawStringCentered(status, this.imageWidth / 2, 60, 4210752, this.font);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, this.imageHeight - 90 + 2, 4210752);
     }
 
     private String getStatus()
@@ -80,13 +78,13 @@ public class GuiOxygenCollector extends GuiContainerGC<ContainerOxygenCollector>
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
+    protected void renderBg(float var1, int var2, int var3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GuiOxygenCollector.collectorTexture);
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
-        this.blit(var5, var6 + 5, 0, 0, this.xSize, 181);
+        this.minecraft.getTextureManager().bind(GuiOxygenCollector.collectorTexture);
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
+        this.blit(var5, var6 + 5, 0, 0, this.imageWidth, 181);
 
         if (this.collector != null)
         {

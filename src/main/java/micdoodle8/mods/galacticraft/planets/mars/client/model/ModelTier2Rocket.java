@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.model;
+package micdoodle8.mods.galacticraft.planets.mars.client.model;
 //
 //import micdoodle8.mods.galacticraft.planets.mars.entities.EntityTier2Rocket;
 //import net.minecraft.client.renderer.entity.model.EntityModel;

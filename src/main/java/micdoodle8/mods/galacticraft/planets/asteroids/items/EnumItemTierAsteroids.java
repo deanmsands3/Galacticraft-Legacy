@@ -1,12 +1,11 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.items;
 
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
-
 import java.util.function.Supplier;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
 
-public enum EnumItemTierAsteroids implements IItemTier
+public enum EnumItemTierAsteroids implements Tier
 {
     TITANIUM(4, 760, 14.0F, 4.0F, 16, () ->
     {
@@ -19,7 +18,7 @@ public enum EnumItemTierAsteroids implements IItemTier
     private final float efficiency;
     private final float attackDamage;
     private final int enchantability;
-    private final LazyValue<Ingredient> repairMaterial;
+    private final LazyLoadedValue<Ingredient> repairMaterial;
 
     EnumItemTierAsteroids(int harvestLevelIn, int maxUsesIn, float efficiencyIn, float attackDamageIn, int enchantabilityIn, Supplier<Ingredient> repairMaterialIn)
     {
@@ -28,42 +27,42 @@ public enum EnumItemTierAsteroids implements IItemTier
         this.efficiency = efficiencyIn;
         this.attackDamage = attackDamageIn;
         this.enchantability = enchantabilityIn;
-        this.repairMaterial = new LazyValue<>(repairMaterialIn);
+        this.repairMaterial = new LazyLoadedValue<>(repairMaterialIn);
     }
 
     @Override
-    public int getMaxUses()
+    public int getUses()
     {
         return this.maxUses;
     }
 
     @Override
-    public float getEfficiency()
+    public float getSpeed()
     {
         return this.efficiency;
     }
 
     @Override
-    public float getAttackDamage()
+    public float getAttackDamageBonus()
     {
         return this.attackDamage;
     }
 
     @Override
-    public int getHarvestLevel()
+    public int getLevel()
     {
         return this.harvestLevel;
     }
 
     @Override
-    public int getEnchantability()
+    public int getEnchantmentValue()
     {
         return this.enchantability;
     }
 
     @Override
-    public Ingredient getRepairMaterial()
+    public Ingredient getRepairIngredient()
     {
-        return this.repairMaterial.getValue();
+        return this.repairMaterial.get();
     }
 }

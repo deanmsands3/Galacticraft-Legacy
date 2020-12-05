@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei.oxygencompressor;
+package micdoodle8.mods.galacticraft.core.client.jei.oxygencompressor;
 //
 //import mezz.jei.api.IGuiHelper;
 //import mezz.jei.api.gui.*;

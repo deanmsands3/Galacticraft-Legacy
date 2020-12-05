@@ -3,11 +3,10 @@ package micdoodle8.mods.galacticraft.core.client.obj;
 import java.util.*;
 
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.model.ModelRotation;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.ModelLoader;
@@ -22,7 +21,7 @@ public class GCModelCache extends BaseModelCache {
     private static final IModelConfiguration contentsConfiguration = new ContentsModelConfiguration();
 
     private Map<ResourceLocation, OBJModel> loadedModelCache = new HashMap<>();
-    private Map<VisibilityEntry, IBakedModel> visibleModelCache = new HashMap<>();
+    private Map<VisibilityEntry, BakedModel> visibleModelCache = new HashMap<>();
 
     public GCModelCache() {
     }
@@ -31,15 +30,15 @@ public class GCModelCache extends BaseModelCache {
      * @param visibleGroups A list of all visible groups from .obj file. If the provided list is empty,
      *                              all parts will be visible
      */
-    public IBakedModel getModel(ResourceLocation location, List<String> visibleGroups)
+    public BakedModel getModel(ResourceLocation location, List<String> visibleGroups)
     {
         OBJModel model = loadedModelCache.computeIfAbsent(location, loc -> OBJLoader.INSTANCE.loadModel(new OBJModel.ModelSettings(location, false, true, true, true, null)));
         return visibleModelCache.computeIfAbsent(new VisibilityEntry(location, visibleGroups), visEntry -> {
             if (visibleGroups.isEmpty()) {
-                return model.bake(new VisibleModelConfiguration(contentsConfiguration, visibleGroups), ModelLoader.instance(), material -> material.getSprite(), ModelRotation.X0_Y0, ItemOverrideList.EMPTY, location);
+                return model.bake(new VisibleModelConfiguration(contentsConfiguration, visibleGroups), ModelLoader.instance(), material -> material.getSprite(), BlockModelRotation.X0_Y0, ItemOverrides.EMPTY, location);
             } else {
                 return model.bake(new VisibleModelConfiguration(contentsConfiguration, visibleGroups),
-                        ModelLoader.instance(), material -> material.getSprite(), ModelRotation.X0_Y0, ItemOverrideList.EMPTY, location);
+                        ModelLoader.instance(), material -> material.getSprite(), BlockModelRotation.X0_Y0, ItemOverrides.EMPTY, location);
             }
         });
     }

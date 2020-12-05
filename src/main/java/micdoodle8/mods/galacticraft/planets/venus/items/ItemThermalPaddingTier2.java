@@ -6,18 +6,20 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -38,7 +40,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rarity getRarity(ItemStack par1ItemStack)
     {
         return ClientProxyCore.galacticraftItem;
@@ -52,9 +54,9 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
 //    }
 
     @Override
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack par1ItemStack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        tooltip.add(new StringTextComponent(GCCoreUtil.translate("item.tier2.desc")));
+        tooltip.add(new TextComponent(GCCoreUtil.translate("item.tier2.desc")));
     }
 
 //    @Override
@@ -95,7 +97,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
     @Override
     public boolean isValidForSlot(ItemStack stack, int armorSlot)
     {
-        return stack.getDamage() == armorSlot;
+        return stack.getDamageValue() == armorSlot;
     }
 
     @Override
@@ -105,23 +107,23 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand hand)
     {
-        ItemStack itemStack = player.getHeldItem(hand);
+        ItemStack itemStack = player.getItemInHand(hand);
 
-        if (player instanceof ServerPlayerEntity)
+        if (player instanceof ServerPlayer)
         {
             GCPlayerStats stats = GCPlayerStats.get(player);
-            ItemStack gear = stats.getExtendedInventory().getStackInSlot(6);
-            ItemStack gear1 = stats.getExtendedInventory().getStackInSlot(7);
-            ItemStack gear2 = stats.getExtendedInventory().getStackInSlot(8);
-            ItemStack gear3 = stats.getExtendedInventory().getStackInSlot(9);
+            ItemStack gear = stats.getExtendedInventory().getItem(6);
+            ItemStack gear1 = stats.getExtendedInventory().getItem(7);
+            ItemStack gear2 = stats.getExtendedInventory().getItem(8);
+            ItemStack gear3 = stats.getExtendedInventory().getItem(9);
 
             if (itemStack.getItem() == VenusItems.thermal_helmet_t2)
             {
                 if (gear.isEmpty())
                 {
-                    stats.getExtendedInventory().setInventorySlotContents(6, itemStack.copy());
+                    stats.getExtendedInventory().setItem(6, itemStack.copy());
                     itemStack.setCount(0);
                 }
             }
@@ -129,7 +131,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
             {
                 if (gear1.isEmpty())
                 {
-                    stats.getExtendedInventory().setInventorySlotContents(7, itemStack.copy());
+                    stats.getExtendedInventory().setItem(7, itemStack.copy());
                     itemStack.setCount(0);
                 }
             }
@@ -137,7 +139,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
             {
                 if (gear2.isEmpty())
                 {
-                    stats.getExtendedInventory().setInventorySlotContents(8, itemStack.copy());
+                    stats.getExtendedInventory().setItem(8, itemStack.copy());
                     itemStack.setCount(0);
                 }
             }
@@ -145,11 +147,11 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
             {
                 if (gear3.isEmpty())
                 {
-                    stats.getExtendedInventory().setInventorySlotContents(9, itemStack.copy());
+                    stats.getExtendedInventory().setItem(9, itemStack.copy());
                     itemStack.setCount(0);
                 }
             }
         }
-        return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemStack);
     }
 }

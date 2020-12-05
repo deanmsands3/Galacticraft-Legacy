@@ -1,68 +1,69 @@
 package micdoodle8.mods.galacticraft.core.client.fx;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.world.World;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Camera;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ParticleLaunchSmoke extends LaunchParticle
 {
     float smokeParticleScale;
-    private final IAnimatedSprite animatedSprite;
+    private final SpriteSet animatedSprite;
 
-    public ParticleLaunchSmoke(World par1World, double posX, double posY, double posZ, double motX, double motY, double motZ, float size, boolean launched, IAnimatedSprite animatedSprite)
+    public ParticleLaunchSmoke(Level par1World, double posX, double posY, double posZ, double motX, double motY, double motZ, float size, boolean launched, SpriteSet animatedSprite)
     {
         super(par1World, posX, posY, posZ, 0.0D, 0.0D, 0.0D);
-        this.motionX *= 0.10000000149011612D;
-        this.motionY *= 0.10000000149011612D;
-        this.motionZ *= 0.10000000149011612D;
+        this.xd *= 0.10000000149011612D;
+        this.yd *= 0.10000000149011612D;
+        this.zd *= 0.10000000149011612D;
         this.setSize(0.2F, 0.2F);
-        this.motionX += motX;
-        this.motionY += motY;
-        this.motionZ += motZ;
-        this.particleAlpha = 1.0F;
-        this.particleRed = this.particleGreen = this.particleBlue = (float) (Math.random() * 0.30000001192092896D) + 0.6F;
-        this.particleScale *= 0.75F;
-        this.particleScale *= size * 3;
-        this.smokeParticleScale = this.particleScale;
+        this.xd += motX;
+        this.yd += motY;
+        this.zd += motZ;
+        this.alpha = 1.0F;
+        this.rCol = this.gCol = this.bCol = (float) (Math.random() * 0.30000001192092896D) + 0.6F;
+        this.quadSize *= 0.75F;
+        this.quadSize *= size * 3;
+        this.smokeParticleScale = this.quadSize;
         this.animatedSprite = animatedSprite;
 
         if (launched)
         {
-            this.maxAge = (int) (this.maxAge * size) + 10;
+            this.lifetime = (int) (this.lifetime * size) + 10;
         }
         else
         {
-            this.motionX += par1World.rand.nextDouble() / 2 - 0.25;
-            this.motionY += par1World.rand.nextDouble() / 20;
-            this.motionZ += par1World.rand.nextDouble() / 2 - 0.25;
-            this.maxAge = 30 + this.maxAge;
+            this.xd += par1World.random.nextDouble() / 2 - 0.25;
+            this.yd += par1World.random.nextDouble() / 20;
+            this.zd += par1World.random.nextDouble() / 2 - 0.25;
+            this.lifetime = 30 + this.lifetime;
         }
 
-        this.canCollide = true;
-        this.selectSpriteWithAge(animatedSprite);
+        this.hasPhysics = true;
+        this.setSpriteFromAge(animatedSprite);
     }
 
     @Override
-    public IParticleRenderType getRenderType()
+    public ParticleRenderType getRenderType()
     {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
-    public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks)
+    public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks)
     {
         GL11.glPushMatrix();
         GL11.glDepthMask(false);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        float var8 = (this.age + partialTicks) / this.maxAge * 32.0F;
+        float var8 = (this.age + partialTicks) / this.lifetime * 32.0F;
 
         if (var8 < 0.0F)
         {
@@ -74,8 +75,8 @@ public class ParticleLaunchSmoke extends LaunchParticle
             var8 = 1.0F;
         }
 
-        this.particleScale = this.smokeParticleScale * var8;
-        super.renderParticle(buffer, renderInfo, partialTicks);
+        this.quadSize = this.smokeParticleScale * var8;
+        super.render(buffer, renderInfo, partialTicks);
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(true);
@@ -85,17 +86,17 @@ public class ParticleLaunchSmoke extends LaunchParticle
     @Override
     public void tick()
     {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
 
-        if (this.age++ >= this.maxAge)
+        if (this.age++ >= this.lifetime)
         {
-            this.setExpired();
+            this.remove();
         }
 
-        this.selectSpriteWithAge(this.animatedSprite);
-        this.move(this.motionX, this.motionY, this.motionZ);
+        this.setSpriteFromAge(this.animatedSprite);
+        this.move(this.xd, this.yd, this.zd);
 
 //        if (this.posY == this.prevPosY)
 //        {

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.nei;
+package micdoodle8.mods.galacticraft.core.nei;
 //
 //import codechicken.lib.gui.GuiDraw;
 //import codechicken.nei.api.stack.PositionedStack;
@@ -15,14 +15,15 @@
 //import java.util.Map;
 //import java.util.Set;
 //
-//public class CircuitFabricatorRecipeHandler extends TemplateRecipeHandler
+//public class ElectricIngotCompressorRecipeHandler extends TemplateRecipeHandler
 //{
-//    private static final ResourceLocation circuitFabricatorTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/circuit_fabricator.png");
-//    int ticksPassed;
+//    private static final ResourceLocation ingotCompressorTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/electric_ingot_compressor.png");
+//    public static int ticksPassed;
+//    private int alternate = 0;
 //
 //    public String getRecipeId()
 //    {
-//        return "galacticraft.circuits";
+//        return "galacticraft.electricingotcompressor";
 //    }
 //
 //    @Override
@@ -35,13 +36,18 @@
 //    {
 //        HashMap<ArrayList<PositionedStack>, PositionedStack> recipes = new HashMap<ArrayList<PositionedStack>, PositionedStack>();
 //
-//        for (Map.Entry<HashMap<Integer, PositionedStack>, PositionedStack> stack : NEIGalacticraftConfig.getCircuitFabricatorRecipes())
+//        for (Map.Entry<HashMap<Integer, PositionedStack>, PositionedStack> stack : NEIGalacticraftConfig.getIngotCompressorRecipes())
 //        {
 //            ArrayList<PositionedStack> inputStacks = new ArrayList<PositionedStack>();
 //
 //            for (Map.Entry<Integer, PositionedStack> input : stack.getKey().entrySet())
 //            {
-//                inputStacks.add(input.getValue());
+//                PositionedStack inputStack = input.getValue().copy();
+//                for (ItemStack inputItemStack : inputStack.items)
+//                {
+//                    inputItemStack.stackSize = 2;
+//                }
+//                inputStacks.add(inputStack);
 //            }
 //
 //            recipes.put(inputStacks, stack.getValue());
@@ -54,16 +60,22 @@
 //    public void drawBackground(int recipe)
 //    {
 //        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-//        GuiDraw.changeTexture(CircuitFabricatorRecipeHandler.circuitFabricatorTexture);
-//        GuiDraw.blit(-2, 9, 3, 4, 168, 64);
-//        GuiDraw.blit(68, 73, 73, 68, 96, 35);
-//        GuiDraw.blit(83, 25, 176, 17 + 10 * (Math.min(this.ticksPassed % 70, 51) / 3 % 3), Math.min(this.ticksPassed % 70, 51), 10);
+//        GuiDraw.changeTexture(ElectricIngotCompressorRecipeHandler.ingotCompressorTexture);
+//        GuiDraw.blit(20, 25, 18, 17, 137, 54);
+//
+//        if (ElectricIngotCompressorRecipeHandler.ticksPassed % 70 > 26)
+//        {
+//            GuiDraw.blit(103, 38, 176, 0, 17, 13);
+//        }
+//
+//        GuiDraw.blit(79, 46, 176, 13, Math.min(ElectricIngotCompressorRecipeHandler.ticksPassed % 70, 53), 17);
 //    }
 //
 //    @Override
 //    public void onUpdate()
 //    {
-//        this.ticksPassed += 1;
+//        ElectricIngotCompressorRecipeHandler.ticksPassed += 1 + this.alternate;
+//        this.alternate = 1 - this.alternate;
 //        super.onUpdate();
 //    }
 //
@@ -79,7 +91,7 @@
 //        {
 //            for (final Map.Entry<ArrayList<PositionedStack>, PositionedStack> irecipe : this.getRecipes())
 //            {
-//                this.arecipes.add(new CachedCircuitRecipe(irecipe));
+//                this.arecipes.add(new ElectricCompressorRecipe(irecipe));
 //            }
 //        }
 //        else
@@ -95,7 +107,7 @@
 //        {
 //            if (NEIServerUtils.areStacksSameTypeCrafting(irecipe.getValue().item, result))
 //            {
-//                this.arecipes.add(new CachedCircuitRecipe(irecipe));
+//                this.arecipes.add(new ElectricCompressorRecipe(irecipe));
 //            }
 //        }
 //    }
@@ -107,9 +119,9 @@
 //        {
 //            for (final PositionedStack pstack : irecipe.getKey())
 //            {
-//                if (NEIServerUtils.areStacksSameTypeCrafting(ingredient, pstack.item))
+//                if (pstack.contains(ingredient))
 //                {
-//                    this.arecipes.add(new CachedCircuitRecipe(irecipe));
+//                    this.arecipes.add(new ElectricCompressorRecipe(irecipe));
 //                    break;
 //                }
 //            }
@@ -125,7 +137,7 @@
 //    @Override
 //    public PositionedStack getResultStack(int recipe)
 //    {
-//        if (this.ticksPassed % 70 >= 51)
+//        if (ElectricIngotCompressorRecipeHandler.ticksPassed % 70 >= 53)
 //        {
 //            return this.arecipes.get(recipe).getResult();
 //        }
@@ -133,7 +145,7 @@
 //        return null;
 //    }
 //
-//    public class CachedCircuitRecipe extends TemplateRecipeHandler.CachedRecipe
+//    public class ElectricCompressorRecipe extends TemplateRecipeHandler.CachedRecipe
 //    {
 //        public ArrayList<PositionedStack> input;
 //        public PositionedStack output;
@@ -150,29 +162,52 @@
 //            return this.output;
 //        }
 //
-//        public CachedCircuitRecipe(ArrayList<PositionedStack> pstack1, PositionedStack pstack2)
+//        public ElectricCompressorRecipe(ArrayList<PositionedStack> pstack1, PositionedStack pstack2)
 //        {
 //            super();
-//            this.input = pstack1;
+//
+//            ArrayList<PositionedStack> ingred = new ArrayList<PositionedStack>();
+//
+//            for (PositionedStack stack : pstack1)
+//            {
+//                PositionedStack stack2 = stack.copy();
+//                ingred.add(stack2);
+//            }
+//
+//            this.input = ingred;
+//            pstack2.rely -= 8;
 //            this.output = pstack2;
 //        }
 //
-//        public CachedCircuitRecipe(Map.Entry<ArrayList<PositionedStack>, PositionedStack> recipe)
+//        public ElectricCompressorRecipe(Map.Entry<ArrayList<PositionedStack>, PositionedStack> recipe)
 //        {
-//            this(recipe.getKey(), recipe.getValue());
+//            this(new ArrayList<PositionedStack>(recipe.getKey()), recipe.getValue().copy());
+//        }
+//
+//        @Override
+//        public PositionedStack getOtherStack()
+//        {
+//            if (ElectricIngotCompressorRecipeHandler.ticksPassed % 70 >= 53)
+//            {
+//                PositionedStack outputCopy = this.output.copy();
+//                outputCopy.rely += 18;
+//                return outputCopy;
+//            }
+//
+//            return null;
 //        }
 //    }
 //
 //    @Override
 //    public String getRecipeName()
 //    {
-//        return GCCoreUtil.translate("tile.machine2.5");
+//        return GCCoreUtil.translate("tile.machine2.4");
 //    }
 //
 //    @Override
 //    public String getGuiTexture()
 //    {
-//        return Constants.TEXTURE_PREFIX + "textures/gui/circuit_fabricator.png";
+//        return Constants.TEXTURE_PREFIX + "textures/gui/electric_ingot_compressor.png";
 //    }
 //
 //    @Override

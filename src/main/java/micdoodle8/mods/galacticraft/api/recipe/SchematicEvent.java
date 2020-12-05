@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.recipe;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.eventbus.api.Event;
 
 /**
@@ -20,9 +20,9 @@ public abstract class SchematicEvent extends Event
 
     public static class Unlock extends SchematicEvent
     {
-        public ServerPlayerEntity player;
+        public ServerPlayer player;
 
-        public Unlock(ServerPlayerEntity player, ISchematicPage page)
+        public Unlock(ServerPlayer player, ISchematicPage page)
         {
             super(page);
             this.player = player;

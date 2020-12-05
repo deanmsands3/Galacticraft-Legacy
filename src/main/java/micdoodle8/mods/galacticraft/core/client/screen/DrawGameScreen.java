@@ -1,21 +1,21 @@
 package micdoodle8.mods.galacticraft.core.client.screen;
 
 import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.platform.MemoryTracker;
+import com.mojang.blaze3d.platform.NativeImage;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.client.IScreenManager;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.MapUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
@@ -23,7 +23,7 @@ import java.nio.FloatBuffer;
 public class DrawGameScreen implements IScreenManager
 {
     private final TextureManager textureManager = Minecraft.getInstance().textureManager;
-    private static final FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);
+    private static final FloatBuffer colorBuffer = MemoryTracker.createFloatBuffer(16);
     private static final int texCount = 1;
 
     private float tickDrawn = -1F;
@@ -37,7 +37,7 @@ public class DrawGameScreen implements IScreenManager
     private final float scaleX;
     private final float scaleZ;
 
-    public TileEntity driver;
+    public BlockEntity driver;
     public EntityType<?> telemetryLastType;
     public String telemetryLastName;
     public Entity telemetryLastEntity;
@@ -48,7 +48,7 @@ public class DrawGameScreen implements IScreenManager
     public boolean mapDone = false;
     public boolean mapFirstTick = false;
 
-    public DrawGameScreen(float scaleXparam, float scaleZparam, TileEntity te)
+    public DrawGameScreen(float scaleXparam, float scaleZparam, BlockEntity te)
     {
         this.scaleX = scaleXparam;
         this.scaleZ = scaleZparam;
@@ -68,16 +68,16 @@ public class DrawGameScreen implements IScreenManager
 
     private void makeMap()
     {
-        if (this.mapDone || reusableMap == null || GCCoreUtil.getDimensionType(this.driver.getWorld()) != DimensionType.OVERWORLD)
+        if (this.mapDone || reusableMap == null || GCCoreUtil.getDimensionType(this.driver.getLevel()) != DimensionType.OVERWORLD)
         {
             return;
         }
         this.localMap = new NativeImage(MapUtil.SIZE_STD2, MapUtil.SIZE_STD2, false);
 //        this.localMap = new int[MapUtil.SIZE_STD2 * MapUtil.SIZE_STD2];
-        boolean result = MapUtil.getMap(this.localMap, this.driver.getWorld(), this.driver.getPos());
+        boolean result = MapUtil.getMap(this.localMap, this.driver.getLevel(), this.driver.getBlockPos());
         if (result)
         {
-            this.localMap.uploadTextureSub(0, 0, 0, false);
+            this.localMap.upload(0, 0, 0, false);
 //            TextureUtil.uploadTexture(reusableMap.getGlTextureId(), this.localMap, MapUtil.SIZE_STD2, MapUtil.SIZE_STD2);
             mapDone = true;
         }
@@ -209,7 +209,7 @@ public class DrawGameScreen implements IScreenManager
     {
         if (this.driver != null)
         {
-            return driver.getWorld().dimension;
+            return driver.getLevel().dimension;
         }
 
         return null;

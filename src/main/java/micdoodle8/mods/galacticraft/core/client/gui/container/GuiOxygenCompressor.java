@@ -9,12 +9,9 @@ import micdoodle8.mods.galacticraft.core.items.ItemOxygenTank;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityOxygenCompressor;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -26,15 +23,15 @@ public class GuiOxygenCompressor extends GuiContainerGC<ContainerOxygenCompresso
 
     private final TileEntityOxygenCompressor compressor;
 
-    private final GuiElementInfoRegion oxygenInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 112, (this.height - this.ySize) / 2 + 24, 56, 9, new ArrayList<String>(), this.width, this.height, this);
-    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 112, (this.height - this.ySize) / 2 + 37, 56, 9, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion oxygenInfoRegion = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 112, (this.height - this.imageHeight) / 2 + 24, 56, 9, new ArrayList<String>(), this.width, this.height, this);
+    private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 112, (this.height - this.imageHeight) / 2 + 37, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiOxygenCompressor(ContainerOxygenCompressor container, PlayerInventory playerInv, ITextComponent title)
+    public GuiOxygenCompressor(ContainerOxygenCompressor container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
 //        super(new ContainerOxygenCompressor(playerInv, compressor, Minecraft.getInstance().player), playerInv, new TranslationTextComponent("container.oxygen_compressor"));
         this.compressor = container.getCompressor();
-        this.ySize = 180;
+        this.imageHeight = 180;
     }
 
     @Override
@@ -44,21 +41,21 @@ public class GuiOxygenCompressor extends GuiContainerGC<ContainerOxygenCompresso
         List<String> batterySlotDesc = new ArrayList<String>();
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.0"));
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.1"));
-        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 46, (this.height - this.ySize) / 2 + 26, 18, 18, batterySlotDesc, this.width, this.height, this));
+        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 46, (this.height - this.imageHeight) / 2 + 26, 18, 18, batterySlotDesc, this.width, this.height, this));
         List<String> oxygenSlotDesc = new ArrayList<String>();
         oxygenSlotDesc.add(GCCoreUtil.translate("gui.oxygen_slot.desc.0"));
         oxygenSlotDesc.add(GCCoreUtil.translate("gui.oxygen_slot.desc.1"));
-        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 16, (this.height - this.ySize) / 2 + 26, 18, 18, oxygenSlotDesc, this.width, this.height, this));
+        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 16, (this.height - this.imageHeight) / 2 + 26, 18, 18, oxygenSlotDesc, this.width, this.height, this));
         List<String> compressorSlotDesc = new ArrayList<String>();
         compressorSlotDesc.add(GCCoreUtil.translate("gui.oxygen_compressor.slot.desc.0"));
         compressorSlotDesc.add(GCCoreUtil.translate("gui.oxygen_compressor.slot.desc.1"));
-        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 132, (this.height - this.ySize) / 2 + 70, 18, 18, compressorSlotDesc, this.width, this.height, this));
+        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 132, (this.height - this.imageHeight) / 2 + 70, 18, 18, compressorSlotDesc, this.width, this.height, this));
         List<String> oxygenDesc = new ArrayList<String>();
         oxygenDesc.add(GCCoreUtil.translate("gui.oxygen_storage.desc.0"));
         oxygenDesc.add(EnumColor.YELLOW + GCCoreUtil.translate("gui.oxygen_storage.desc.1") + ": " + ((int) Math.floor(this.compressor.getOxygenStored()) + " / " + (int) Math.floor(this.compressor.getMaxOxygenStored())));
         this.oxygenInfoRegion.tooltipStrings = oxygenDesc;
-        this.oxygenInfoRegion.xPosition = (this.width - this.xSize) / 2 + 112;
-        this.oxygenInfoRegion.yPosition = (this.height - this.ySize) / 2 + 24;
+        this.oxygenInfoRegion.xPosition = (this.width - this.imageWidth) / 2 + 112;
+        this.oxygenInfoRegion.yPosition = (this.height - this.imageHeight) / 2 + 24;
         this.oxygenInfoRegion.parentWidth = this.width;
         this.oxygenInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.oxygenInfoRegion);
@@ -66,38 +63,38 @@ public class GuiOxygenCompressor extends GuiContainerGC<ContainerOxygenCompresso
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
         electricityDesc.add(EnumColor.YELLOW + GCCoreUtil.translate("gui.energy_storage.desc.1") + ((int) Math.floor(this.compressor.getEnergyStoredGC()) + " / " + (int) Math.floor(this.compressor.getMaxEnergyStoredGC())));
         this.electricInfoRegion.tooltipStrings = electricityDesc;
-        this.electricInfoRegion.xPosition = (this.width - this.xSize) / 2 + 112;
-        this.electricInfoRegion.yPosition = (this.height - this.ySize) / 2 + 37;
+        this.electricInfoRegion.xPosition = (this.width - this.imageWidth) / 2 + 112;
+        this.electricInfoRegion.yPosition = (this.height - this.imageHeight) / 2 + 37;
         this.electricInfoRegion.parentWidth = this.width;
         this.electricInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.electricInfoRegion);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        this.font.drawString(this.title.getFormattedText(), 8, 10, 4210752);
+        this.font.draw(this.title.getColoredString(), 8, 10, 4210752);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.in") + ":", 99, 26, 4210752, this.font);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.in") + ":", 99, 38, 4210752, this.font);
         String status = GCCoreUtil.translate("gui.message.status") + ": " + this.getStatus();
-        this.font.drawString(status, this.xSize / 2 - this.font.getStringWidth(status) / 2, 50, 4210752);
+        this.font.draw(status, this.imageWidth / 2 - this.font.width(status) / 2, 50, 4210752);
         status = GCCoreUtil.translate("gui.oxygen_use.desc") + ": " + TileEntityOxygenCompressor.TANK_TRANSFER_SPEED * 20 + GCCoreUtil.translate("gui.per_second");
-        this.font.drawString(status, this.xSize / 2 - this.font.getStringWidth(status) / 2, 60, 4210752);
+        this.font.draw(status, this.imageWidth / 2 - this.font.width(status) / 2, 60, 4210752);
         //		status = ElectricityDisplay.getDisplay(this.compressor.ueWattsPerTick * 20, ElectricUnit.WATT);
         //		this.font.drawString(status, this.xSize / 2 - this.font.getStringWidth(status) / 2, 70, 4210752);
         //		status = ElectricityDisplay.getDisplay(this.compressor.getVoltage(), ElectricUnit.VOLTAGE);
         //		this.font.drawString(status, this.xSize / 2 - this.font.getStringWidth(status) / 2, 80, 4210752);
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 104 + 17, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, this.imageHeight - 104 + 17, 4210752);
     }
 
     private String getStatus()
     {
-        if (this.compressor.getStackInSlot(0) == null || !(this.compressor.getStackInSlot(0).getItem() instanceof ItemOxygenTank))
+        if (this.compressor.getItem(0) == null || !(this.compressor.getItem(0).getItem() instanceof ItemOxygenTank))
         {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.missingtank");
         }
 
-        if (this.compressor.getStackInSlot(0) != null && this.compressor.getStackInSlot(0).getDamage() == 0)
+        if (this.compressor.getItem(0) != null && this.compressor.getItem(0).getDamageValue() == 0)
         {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.fulltank");
         }
@@ -111,13 +108,13 @@ public class GuiOxygenCompressor extends GuiContainerGC<ContainerOxygenCompresso
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
+    protected void renderBg(float var1, int var2, int var3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GuiOxygenCompressor.compressorTexture);
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
-        this.blit(var5, var6 + 5, 0, 0, this.xSize, 181);
+        this.minecraft.getTextureManager().bind(GuiOxygenCompressor.compressorTexture);
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
+        this.blit(var5, var6 + 5, 0, 0, this.imageWidth, 181);
 
         if (this.compressor != null)
         {

@@ -1,25 +1,27 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
 import micdoodle8.mods.galacticraft.core.client.model.ModelEvolvedSpider;
 import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSpider;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class RenderEvolvedSpider extends MobRenderer<EntityEvolvedSpider, ModelEvolvedSpider>
 {
     private static final ResourceLocation spiderTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/spider.png");
     private boolean texSwitch;
 
-    public RenderEvolvedSpider(EntityRendererManager manager)
+    public RenderEvolvedSpider(EntityRenderDispatcher manager)
     {
         super(manager, new ModelEvolvedSpider(), 1.0F);
     }
@@ -31,7 +33,7 @@ public class RenderEvolvedSpider extends MobRenderer<EntityEvolvedSpider, ModelE
     }
 
     @Override
-    protected void preRenderCallback(EntityEvolvedSpider spider, MatrixStack matStack, float partialTickTime)
+    protected void preRenderCallback(EntityEvolvedSpider spider, PoseStack matStack, float partialTickTime)
     {
         matStack.scale(1.2F, 1.2F, 1.2F);
         if (texSwitch)
@@ -42,7 +44,7 @@ public class RenderEvolvedSpider extends MobRenderer<EntityEvolvedSpider, ModelE
     }
 
     @Override
-    public void render(EntityEvolvedSpider entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn)
+    public void render(EntityEvolvedSpider entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn)
     {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         if (OverlaySensorGlasses.overrideMobTexture())

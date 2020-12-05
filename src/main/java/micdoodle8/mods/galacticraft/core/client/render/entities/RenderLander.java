@@ -1,34 +1,36 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.model.ModelLander;
 import micdoodle8.mods.galacticraft.core.entities.EntityLander;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class RenderLander extends EntityRenderer<EntityLander>
 {
     private static final ResourceLocation landerTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/lander.png");
 
     protected ModelLander landerModel;
 
-    public RenderLander(EntityRendererManager manager)
+    public RenderLander(EntityRenderDispatcher manager)
     {
         super(manager);
-        this.shadowSize = 2F;
+        this.shadowRadius = 2F;
         this.landerModel = new ModelLander();
     }
 
@@ -39,17 +41,17 @@ public class RenderLander extends EntityRenderer<EntityLander>
     }
 
     @Override
-    public void render(EntityLander lander, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn)
+    public void render(EntityLander lander, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn)
     {
 //        GL11.glPushMatrix();
-        matrixStackIn.push();
-        final float interpolatedPitch = lander.prevRotationPitch + (lander.rotationPitch - lander.prevRotationPitch) * partialTicks;
+        matrixStackIn.pushPose();
+        final float interpolatedPitch = lander.xRotO + (lander.xRot - lander.xRotO) * partialTicks;
 //        GL11.glTranslatef((float) par2, (float) par4 + 1.55F, (float) par6);
         matrixStackIn.translate(0.0F, 1.55F, 0.0F);
 //        GL11.glRotatef(180.0F - par8, 0.0F, 1.0F, 0.0F);
 //        GL11.glRotatef(-interpolatedPitch, 0.0F, 0.0F, 1.0F);
-        matrixStackIn.rotate(new Quaternion(Vector3f.YP, entityYaw, true));
-        matrixStackIn.rotate(new Quaternion(Vector3f.ZN, interpolatedPitch, true));
+        matrixStackIn.mulPose(new Quaternion(Vector3f.YP, entityYaw, true));
+        matrixStackIn.mulPose(new Quaternion(Vector3f.ZN, interpolatedPitch, true));
 
         float f6 = lander.timeSinceHit - partialTicks;
         float f7 = lander.currentDamage - partialTicks;
@@ -68,16 +70,16 @@ public class RenderLander extends EntityRenderer<EntityLander>
 //        GL11.glScalef(-1.0F, -1.0F, 1.0F);
         matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
 //        this.landerModel.render(lander, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
-        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(this.landerModel.getRenderType(this.getEntityTexture(lander)));
-        this.landerModel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(this.landerModel.renderType(this.getEntityTexture(lander)));
+        this.landerModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 //        GL11.glPopMatrix();
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 
     @Override
-    public boolean shouldRender(EntityLander lander, ClippingHelperImpl camera, double camX, double camY, double camZ)
+    public boolean shouldRender(EntityLander lander, Frustum camera, double camX, double camY, double camZ)
     {
-        AxisAlignedBB axisalignedbb = lander.getBoundingBox().grow(2D, 1D, 2D);
-        return lander.isInRangeToRender3d(camX, camY, camZ) && camera.isBoundingBoxInFrustum(axisalignedbb);
+        AABB axisalignedbb = lander.getBoundingBox().inflate(2D, 1D, 2D);
+        return lander.shouldRender(camX, camY, camZ) && camera.isVisible(axisalignedbb);
     }
 }

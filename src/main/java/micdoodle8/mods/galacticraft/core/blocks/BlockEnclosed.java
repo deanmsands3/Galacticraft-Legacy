@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.blocks;
+package micdoodle8.mods.galacticraft.core.blocks;
 //
 //import appeng.api.AEApi;
 //import appeng.api.parts.IPartHelper;

@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.core.entities.player;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -11,12 +11,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 
-public class CapabilityProviderStats implements ICapabilitySerializable<CompoundNBT>
+public class CapabilityProviderStats implements ICapabilitySerializable<CompoundTag>
 {
-    private ServerPlayerEntity owner;
+    private ServerPlayer owner;
     private final LazyOptional<GCPlayerStats> holder = LazyOptional.of(() -> new StatsCapability(new WeakReference<>(this.owner)));
 
-    public CapabilityProviderStats(ServerPlayerEntity owner)
+    public CapabilityProviderStats(ServerPlayer owner)
     {
         this.owner = owner;
     }
@@ -40,15 +40,15 @@ public class CapabilityProviderStats implements ICapabilitySerializable<Compound
     }
 
     @Override
-    public CompoundNBT serializeNBT()
+    public CompoundTag serializeNBT()
     {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         this.holder.orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!")).saveNBTData(nbt);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt)
+    public void deserializeNBT(CompoundTag nbt)
     {
         this.holder.orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!")).loadNBTData(nbt);
     }

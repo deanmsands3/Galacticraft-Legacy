@@ -4,48 +4,48 @@ import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockCheese extends Block implements IShiftDescription, ISortable
 {
     public static final IntegerProperty BITES = IntegerProperty.create("bites", 0, 6);
     protected static final VoxelShape[] CHEESE_AABB = new VoxelShape[]{
-            VoxelShapes.create(0.0625, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
-            VoxelShapes.create(0.1875, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
-            VoxelShapes.create(0.3125, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
-            VoxelShapes.create(0.4375, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
-            VoxelShapes.create(0.5625, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
-            VoxelShapes.create(0.6875, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
-            VoxelShapes.create(0.8125, 0.0, 0.0625, 0.9375, 0.5, 0.9375)
+            Shapes.box(0.0625, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
+            Shapes.box(0.1875, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
+            Shapes.box(0.3125, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
+            Shapes.box(0.4375, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
+            Shapes.box(0.5625, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
+            Shapes.box(0.6875, 0.0, 0.0625, 0.9375, 0.5, 0.9375),
+            Shapes.box(0.8125, 0.0, 0.0625, 0.9375, 0.5, 0.9375)
     };
 
     public BlockCheese(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(BITES, 0));
+        this.registerDefaultState(stateDefinition.any().setValue(BITES, 0));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         int bites = 0;
         if (state.getBlock() instanceof BlockCheese)
         {
-            bites = state.get(BITES);
+            bites = state.getValue(BITES);
         }
         return CHEESE_AABB[bites];
     }
@@ -69,22 +69,22 @@ public class BlockCheese extends Block implements IShiftDescription, ISortable
 //    }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit)
     {
         this.eatCheeseSlice(worldIn, pos, worldIn.getBlockState(pos), playerIn);
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    private void eatCheeseSlice(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn)
+    private void eatCheeseSlice(Level worldIn, BlockPos pos, BlockState state, Player playerIn)
     {
         if (playerIn.canEat(false))
         {
-            playerIn.getFoodStats().addStats(2, 0.1F);
-            int i = state.get(BITES);
+            playerIn.getFoodData().eat(2, 0.1F);
+            int i = state.getValue(BITES);
 
             if (i < 6)
             {
-                worldIn.setBlockState(pos, state.with(BITES, Integer.valueOf(i + 1)), 3);
+                worldIn.setBlock(pos, state.setValue(BITES, Integer.valueOf(i + 1)), 3);
             }
             else
             {
@@ -94,7 +94,7 @@ public class BlockCheese extends Block implements IShiftDescription, ISortable
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         if (!this.canBlockStay(worldIn, pos))
         {
@@ -102,9 +102,9 @@ public class BlockCheese extends Block implements IShiftDescription, ISortable
         }
     }
 
-    private boolean canBlockStay(World worldIn, BlockPos pos)
+    private boolean canBlockStay(Level worldIn, BlockPos pos)
     {
-        return worldIn.getBlockState(pos.down()).getMaterial().isSolid();
+        return worldIn.getBlockState(pos.below()).getMaterial().isSolid();
     }
 
 //    @Override
@@ -122,7 +122,7 @@ public class BlockCheese extends Block implements IShiftDescription, ISortable
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -151,19 +151,19 @@ public class BlockCheese extends Block implements IShiftDescription, ISortable
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(BITES);
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos)
     {
-        return (7 - worldIn.getBlockState(pos).get(BITES)) * 2;
+        return (7 - worldIn.getBlockState(pos).getValue(BITES)) * 2;
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state)
+    public boolean hasAnalogOutputSignal(BlockState state)
     {
         return true;
     }

@@ -8,12 +8,12 @@ import micdoodle8.mods.galacticraft.api.transmission.tile.IConductor;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
 import micdoodle8.mods.galacticraft.core.energy.EnergyConfigHandler;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -26,7 +26,7 @@ import java.util.EnumSet;
 
 public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversalElectrical
 {
-    public TileBaseUniversalElectricalSource(TileEntityType<?> type)
+    public TileBaseUniversalElectricalSource(BlockEntityType<?> type)
     {
         super(type);
     }
@@ -65,7 +65,7 @@ public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversa
     {
         float amountProduced = 0;
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             EnumSet<Direction> outputDirections = this.getElectricalOutputDirections();
 //            outputDirections.remove(EnumFacing.UNKNOWN);
@@ -73,7 +73,7 @@ public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversa
             BlockVec3 thisVec = new BlockVec3(this);
             for (Direction direction : outputDirections)
             {
-                TileEntity tileAdj = thisVec.getTileEntityOnSide(this.world, direction);
+                BlockEntity tileAdj = thisVec.getTileEntityOnSide(this.level, direction);
 
                 if (tileAdj != null)
                 {
@@ -289,7 +289,7 @@ public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversa
     {
         if (direction == null && EnergyConfigHandler.isIndustrialCraft2Loaded())
         {
-            TileEntity tile = new BlockVec3(this).getTileEntityOnSide(this.world, this.getElectricOutputDirection());
+            BlockEntity tile = new BlockVec3(this).getTileEntityOnSide(this.level, this.getElectricOutputDirection());
             if (tile instanceof IConductor)
             {
                 //No power provide to IC2 mod if it's a Galacticraft wire on the output.  Galacticraft network will provide the power.
@@ -356,7 +356,7 @@ public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversa
                 return 0;
             }
 
-            return MathHelper.floor(tile.getEnergyStoredGC() / EnergyConfigHandler.RF_RATIO.get());
+            return Mth.floor(tile.getEnergyStoredGC() / EnergyConfigHandler.RF_RATIO.get());
         }
 
         @Override
@@ -367,7 +367,7 @@ public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversa
                 return 0;
             }
 
-            return MathHelper.floor(tile.getMaxEnergyStoredGC() / EnergyConfigHandler.RF_RATIO.get());
+            return Mth.floor(tile.getMaxEnergyStoredGC() / EnergyConfigHandler.RF_RATIO.get());
         }
 
         @Override
@@ -378,7 +378,7 @@ public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversa
                 return 0;
             }
 
-            return MathHelper.floor(tile.storage.extractEnergyGC(maxExtract / EnergyConfigHandler.TO_RF_RATIO, !simulate) * EnergyConfigHandler.TO_RF_RATIO);
+            return Mth.floor(tile.storage.extractEnergyGC(maxExtract / EnergyConfigHandler.TO_RF_RATIO, !simulate) * EnergyConfigHandler.TO_RF_RATIO);
         }
 
         @Override

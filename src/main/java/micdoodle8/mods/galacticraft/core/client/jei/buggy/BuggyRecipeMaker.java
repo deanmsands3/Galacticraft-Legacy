@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei.buggy;
+package micdoodle8.mods.galacticraft.core.client.jei.buggy;
 //
 //import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 //import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;

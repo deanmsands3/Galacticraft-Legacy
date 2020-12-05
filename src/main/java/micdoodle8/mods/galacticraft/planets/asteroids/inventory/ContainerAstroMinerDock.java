@@ -5,22 +5,22 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.inventory.SlotSpecific;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityMinerBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerAstroMinerDock extends Container
+public class ContainerAstroMinerDock extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidsContainerNames.ASTRO_MINER_DOCK)
-    public static ContainerType<ContainerAstroMinerDock> TYPE;
+    public static MenuType<ContainerAstroMinerDock> TYPE;
 
     private final TileEntityMinerBase minerBase;
 
-    public ContainerAstroMinerDock(int containerId, PlayerInventory playerInv, TileEntityMinerBase minerBase)
+    public ContainerAstroMinerDock(int containerId, Inventory playerInv, TileEntityMinerBase minerBase)
     {
         super(TYPE, containerId);
         this.minerBase = minerBase;
@@ -59,26 +59,26 @@ public class ContainerAstroMinerDock extends Container
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity var1)
+    public boolean stillValid(Player var1)
     {
-        return this.minerBase.isUsableByPlayer(var1);
+        return this.minerBase.stillValid(var1);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par2)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par2)
     {
         ItemStack var3 = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(par2);
+        final Slot slot = this.slots.get(par2);
         int b = TileEntityMinerBase.HOLDSIZE + 1;
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            final ItemStack var5 = slot.getStack();
+            final ItemStack var5 = slot.getItem();
             var3 = var5.copy();
 
             if (par2 < b)
             {
-                if (!this.mergeItemStack(var5, b, b + 36, true))
+                if (!this.moveItemStackTo(var5, b, b + 36, true))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -87,19 +87,19 @@ public class ContainerAstroMinerDock extends Container
             {
                 if (EnergyUtil.isElectricItem(var5.getItem()))
                 {
-                    if (!this.mergeItemStack(var5, 0, 1, false))
+                    if (!this.moveItemStackTo(var5, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (par2 < b + 27)
                 {
-                    if (!this.mergeItemStack(var5, 1, b, false) && !this.mergeItemStack(var5, b + 27, b + 36, false))
+                    if (!this.moveItemStackTo(var5, 1, b, false) && !this.moveItemStackTo(var5, b + 27, b + 36, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (!this.mergeItemStack(var5, 1, b, false) && !this.mergeItemStack(var5, b, b + 27, false))
+                else if (!this.moveItemStackTo(var5, 1, b, false) && !this.moveItemStackTo(var5, b, b + 27, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -107,11 +107,11 @@ public class ContainerAstroMinerDock extends Container
 
             if (var5.isEmpty())
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (var5.getCount() == var3.getCount())

@@ -2,16 +2,13 @@ package micdoodle8.mods.galacticraft.core.entities;
 
 import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
 import micdoodle8.mods.galacticraft.core.GCItems;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.EndermanEntity;
-import net.minecraft.item.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.level.Level;
 
-public class EntityEvolvedEnderman extends EndermanEntity implements IEntityBreathable
+public class EntityEvolvedEnderman extends EnderMan implements IEntityBreathable
 {
-    public EntityEvolvedEnderman(EntityType<? extends EntityEvolvedEnderman> type, World worldIn)
+    public EntityEvolvedEnderman(EntityType<? extends EntityEvolvedEnderman> type, Level worldIn)
     {
         super(type, worldIn);
     }

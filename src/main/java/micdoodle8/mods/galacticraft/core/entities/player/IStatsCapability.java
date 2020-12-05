@@ -3,27 +3,26 @@ package micdoodle8.mods.galacticraft.core.entities.player;
 import micdoodle8.mods.galacticraft.api.recipe.ISchematicPage;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.inventory.InventoryExtended;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface IStatsCapability
 {
-    void saveNBTData(CompoundNBT nbt);
+    void saveNBTData(CompoundTag nbt);
 
-    void loadNBTData(CompoundNBT nbt);
+    void loadNBTData(CompoundTag nbt);
 
     void copyFrom(IStatsCapability oldData, boolean keepInv);
 
-    WeakReference<ServerPlayerEntity> getPlayer();
+    WeakReference<ServerPlayer> getPlayer();
 
-    void setPlayer(WeakReference<ServerPlayerEntity> player);
+    void setPlayer(WeakReference<ServerPlayer> player);
 
     InventoryExtended getExtendedInventory();
 

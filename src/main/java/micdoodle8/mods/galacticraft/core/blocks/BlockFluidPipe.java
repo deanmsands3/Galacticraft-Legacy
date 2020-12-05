@@ -12,30 +12,30 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityFluidPipe;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Random;
@@ -53,83 +53,83 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
     private static final float MAX = 0.65F;
     protected static final VoxelShape[] BOUNDING_BOXES = new VoxelShape[]{
 
-            VoxelShapes.create(MIN, MIN, MIN, MAX, MAX, MAX),  // No connection                                  000000
-            VoxelShapes.create(MIN, MIN, MIN, MAX, MAX, 1.0D), // South                                          000001
-            VoxelShapes.create(0.0D, MIN, MIN, MAX, MAX, MAX), // West                                           000010
-            VoxelShapes.create(0.0D, MIN, MIN, MAX, MAX, 1.0D), // South West                                    000011
-            VoxelShapes.create(MIN, MIN, 0.0D, MAX, MAX, MAX), // North                                          000100
-            VoxelShapes.create(MIN, MIN, 0.0D, MAX, MAX, 1.0D), // North South                                   000101
-            VoxelShapes.create(0.0D, MIN, 0.0D, MAX, MAX, MAX), // North West                                    000110
-            VoxelShapes.create(0.0D, MIN, 0.0D, MAX, MAX, 1.0D), // North South West                             000111
-            VoxelShapes.create(MIN, MIN, MIN, 1.0D, MAX, MAX), // East                                           001000
-            VoxelShapes.create(MIN, MIN, MIN, 1.0D, MAX, 1.0D), // East South                                    001001
-            VoxelShapes.create(0.0D, MIN, MIN, 1.0D, MAX, MAX), // West East                                     001010
-            VoxelShapes.create(0.0D, MIN, MIN, 1.0D, MAX, 1.0D), // South West East                              001011
-            VoxelShapes.create(MIN, MIN, 0.0D, 1.0D, MAX, MAX), // North East                                    001100
-            VoxelShapes.create(MIN, MIN, 0.0D, 1.0D, MAX, 1.0D), // North South East                             001101
-            VoxelShapes.create(0.0D, MIN, 0.0D, 1.0D, MAX, MAX), // North East West                              001110
-            VoxelShapes.create(0.0D, MIN, 0.0D, 1.0D, MAX, 1.0D), // North South East West                       001111
+            Shapes.box(MIN, MIN, MIN, MAX, MAX, MAX),  // No connection                                  000000
+            Shapes.box(MIN, MIN, MIN, MAX, MAX, 1.0D), // South                                          000001
+            Shapes.box(0.0D, MIN, MIN, MAX, MAX, MAX), // West                                           000010
+            Shapes.box(0.0D, MIN, MIN, MAX, MAX, 1.0D), // South West                                    000011
+            Shapes.box(MIN, MIN, 0.0D, MAX, MAX, MAX), // North                                          000100
+            Shapes.box(MIN, MIN, 0.0D, MAX, MAX, 1.0D), // North South                                   000101
+            Shapes.box(0.0D, MIN, 0.0D, MAX, MAX, MAX), // North West                                    000110
+            Shapes.box(0.0D, MIN, 0.0D, MAX, MAX, 1.0D), // North South West                             000111
+            Shapes.box(MIN, MIN, MIN, 1.0D, MAX, MAX), // East                                           001000
+            Shapes.box(MIN, MIN, MIN, 1.0D, MAX, 1.0D), // East South                                    001001
+            Shapes.box(0.0D, MIN, MIN, 1.0D, MAX, MAX), // West East                                     001010
+            Shapes.box(0.0D, MIN, MIN, 1.0D, MAX, 1.0D), // South West East                              001011
+            Shapes.box(MIN, MIN, 0.0D, 1.0D, MAX, MAX), // North East                                    001100
+            Shapes.box(MIN, MIN, 0.0D, 1.0D, MAX, 1.0D), // North South East                             001101
+            Shapes.box(0.0D, MIN, 0.0D, 1.0D, MAX, MAX), // North East West                              001110
+            Shapes.box(0.0D, MIN, 0.0D, 1.0D, MAX, 1.0D), // North South East West                       001111
 
-            VoxelShapes.create(MIN, 0.0D, MIN, MAX, MAX, MAX),  // Down                                          010000
-            VoxelShapes.create(MIN, 0.0D, MIN, MAX, MAX, 1.0D), // Down South                                    010001
-            VoxelShapes.create(0.0D, 0.0D, MIN, MAX, MAX, MAX), // Down West                                     010010
-            VoxelShapes.create(0.0D, 0.0D, MIN, MAX, MAX, 1.0D), // Down South West                              010011
-            VoxelShapes.create(MIN, 0.0D, 0.0D, MAX, MAX, MAX), // Down North                                    010100
-            VoxelShapes.create(MIN, 0.0D, 0.0D, MAX, MAX, 1.0D), // Down North South                             010101
-            VoxelShapes.create(0.0D, 0.0D, 0.0D, MAX, MAX, MAX), // Down North West                              010110
-            VoxelShapes.create(0.0D, 0.0D, 0.0D, MAX, MAX, 1.0D), // Down North South West                       010111
-            VoxelShapes.create(MIN, 0.0D, MIN, 1.0D, MAX, MAX), // Down East                                     011000
-            VoxelShapes.create(MIN, 0.0D, MIN, 1.0D, MAX, 1.0D), // Down East South                              011001
-            VoxelShapes.create(0.0D, 0.0D, MIN, 1.0D, MAX, MAX), // Down West East                               011010
-            VoxelShapes.create(0.0D, 0.0D, MIN, 1.0D, MAX, 1.0D), // Down South West East                        011011
-            VoxelShapes.create(MIN, 0.0D, 0.0D, 1.0D, MAX, MAX), // Down North East                              011100
-            VoxelShapes.create(MIN, 0.0D, 0.0D, 1.0D, MAX, 1.0D), // Down North South East                       011101
-            VoxelShapes.create(0.0D, 0.0D, 0.0D, 1.0D, MAX, MAX), // Down North East West                        011110
-            VoxelShapes.create(0.0D, 0.0D, 0.0D, 1.0D, MAX, 1.0D), // Down North South East West                 011111
+            Shapes.box(MIN, 0.0D, MIN, MAX, MAX, MAX),  // Down                                          010000
+            Shapes.box(MIN, 0.0D, MIN, MAX, MAX, 1.0D), // Down South                                    010001
+            Shapes.box(0.0D, 0.0D, MIN, MAX, MAX, MAX), // Down West                                     010010
+            Shapes.box(0.0D, 0.0D, MIN, MAX, MAX, 1.0D), // Down South West                              010011
+            Shapes.box(MIN, 0.0D, 0.0D, MAX, MAX, MAX), // Down North                                    010100
+            Shapes.box(MIN, 0.0D, 0.0D, MAX, MAX, 1.0D), // Down North South                             010101
+            Shapes.box(0.0D, 0.0D, 0.0D, MAX, MAX, MAX), // Down North West                              010110
+            Shapes.box(0.0D, 0.0D, 0.0D, MAX, MAX, 1.0D), // Down North South West                       010111
+            Shapes.box(MIN, 0.0D, MIN, 1.0D, MAX, MAX), // Down East                                     011000
+            Shapes.box(MIN, 0.0D, MIN, 1.0D, MAX, 1.0D), // Down East South                              011001
+            Shapes.box(0.0D, 0.0D, MIN, 1.0D, MAX, MAX), // Down West East                               011010
+            Shapes.box(0.0D, 0.0D, MIN, 1.0D, MAX, 1.0D), // Down South West East                        011011
+            Shapes.box(MIN, 0.0D, 0.0D, 1.0D, MAX, MAX), // Down North East                              011100
+            Shapes.box(MIN, 0.0D, 0.0D, 1.0D, MAX, 1.0D), // Down North South East                       011101
+            Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, MAX, MAX), // Down North East West                        011110
+            Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, MAX, 1.0D), // Down North South East West                 011111
 
-            VoxelShapes.create(MIN, MIN, MIN, MAX, 1.0D, MAX),  // Up                                            100000
-            VoxelShapes.create(MIN, MIN, MIN, MAX, 1.0D, 1.0D), // Up South                                      100001
-            VoxelShapes.create(0.0D, MIN, MIN, MAX, 1.0D, MAX), // Up West                                       100010
-            VoxelShapes.create(0.0D, MIN, MIN, MAX, 1.0D, 1.0D), // Up South West                                100011
-            VoxelShapes.create(MIN, MIN, 0.0D, MAX, 1.0D, MAX), // Up North                                      100100
-            VoxelShapes.create(MIN, MIN, 0.0D, MAX, 1.0D, 1.0D), // Up North South                               100101
-            VoxelShapes.create(0.0D, MIN, 0.0D, MAX, 1.0D, MAX), // Up North West                                100110
-            VoxelShapes.create(0.0D, MIN, 0.0D, MAX, 1.0D, 1.0D), // Up North South West                         100111
-            VoxelShapes.create(MIN, MIN, MIN, 1.0D, 1.0D, MAX), // Up East                                       101000
-            VoxelShapes.create(MIN, MIN, MIN, 1.0D, 1.0D, 1.0D), // Up East South                                101001
-            VoxelShapes.create(0.0D, MIN, MIN, 1.0D, 1.0D, MAX), // Up West East                                 101010
-            VoxelShapes.create(0.0D, MIN, MIN, 1.0D, 1.0D, 1.0D), // Up South West East                          101011
-            VoxelShapes.create(MIN, MIN, 0.0D, 1.0D, 1.0D, MAX), // Up North East                                101100
-            VoxelShapes.create(MIN, MIN, 0.0D, 1.0D, 1.0D, 1.0D), // Up North South East                         101101
-            VoxelShapes.create(0.0D, MIN, 0.0D, 1.0D, 1.0D, MAX), // Up North East West                          101110
-            VoxelShapes.create(0.0D, MIN, 0.0D, 1.0D, 1.0D, 1.0D), // Up North South East West                   101111
+            Shapes.box(MIN, MIN, MIN, MAX, 1.0D, MAX),  // Up                                            100000
+            Shapes.box(MIN, MIN, MIN, MAX, 1.0D, 1.0D), // Up South                                      100001
+            Shapes.box(0.0D, MIN, MIN, MAX, 1.0D, MAX), // Up West                                       100010
+            Shapes.box(0.0D, MIN, MIN, MAX, 1.0D, 1.0D), // Up South West                                100011
+            Shapes.box(MIN, MIN, 0.0D, MAX, 1.0D, MAX), // Up North                                      100100
+            Shapes.box(MIN, MIN, 0.0D, MAX, 1.0D, 1.0D), // Up North South                               100101
+            Shapes.box(0.0D, MIN, 0.0D, MAX, 1.0D, MAX), // Up North West                                100110
+            Shapes.box(0.0D, MIN, 0.0D, MAX, 1.0D, 1.0D), // Up North South West                         100111
+            Shapes.box(MIN, MIN, MIN, 1.0D, 1.0D, MAX), // Up East                                       101000
+            Shapes.box(MIN, MIN, MIN, 1.0D, 1.0D, 1.0D), // Up East South                                101001
+            Shapes.box(0.0D, MIN, MIN, 1.0D, 1.0D, MAX), // Up West East                                 101010
+            Shapes.box(0.0D, MIN, MIN, 1.0D, 1.0D, 1.0D), // Up South West East                          101011
+            Shapes.box(MIN, MIN, 0.0D, 1.0D, 1.0D, MAX), // Up North East                                101100
+            Shapes.box(MIN, MIN, 0.0D, 1.0D, 1.0D, 1.0D), // Up North South East                         101101
+            Shapes.box(0.0D, MIN, 0.0D, 1.0D, 1.0D, MAX), // Up North East West                          101110
+            Shapes.box(0.0D, MIN, 0.0D, 1.0D, 1.0D, 1.0D), // Up North South East West                   101111
 
-            VoxelShapes.create(MIN, 0.0D, MIN, MAX, 1.0D, MAX),  // Up Down                                      110000
-            VoxelShapes.create(MIN, 0.0D, MIN, MAX, 1.0D, 1.0D), // Up Down South                                110001
-            VoxelShapes.create(0.0D, 0.0D, MIN, MAX, 1.0D, MAX), // Up Down West                                 110010
-            VoxelShapes.create(0.0D, 0.0D, MIN, MAX, 1.0D, 1.0D), // Up Down South West                          110011
-            VoxelShapes.create(MIN, 0.0D, 0.0D, MAX, 1.0D, MAX), // Up Down North                                110100
-            VoxelShapes.create(MIN, 0.0D, 0.0D, MAX, 1.0D, 1.0D), // Up Down North South                         110101
-            VoxelShapes.create(0.0D, 0.0D, 0.0D, MAX, 1.0D, MAX), // Up Down North West                          110110
-            VoxelShapes.create(0.0D, 0.0D, 0.0D, MAX, 1.0D, 1.0D), // Up Down North South West                   110111
-            VoxelShapes.create(MIN, 0.0D, MIN, 1.0D, 1.0D, MAX), // Up Down East                                 111000
-            VoxelShapes.create(MIN, 0.0D, MIN, 1.0D, 1.0D, 1.0D), // Up Down East South                          111001
-            VoxelShapes.create(0.0D, 0.0D, MIN, 1.0D, 1.0D, MAX), // Up Down West East                           111010
-            VoxelShapes.create(0.0D, 0.0D, MIN, 1.0D, 1.0D, 1.0D), // Up Down South West East                    111011
-            VoxelShapes.create(MIN, 0.0D, 0.0D, 1.0D, 1.0D, MAX), // Up Down North East                          111100
-            VoxelShapes.create(MIN, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D), // Up Down North South East                   111101
-            VoxelShapes.create(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, MAX), // Up Down North East West                    111110
-            VoxelShapes.create(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D)}; // Up Down North South East West            111111
+            Shapes.box(MIN, 0.0D, MIN, MAX, 1.0D, MAX),  // Up Down                                      110000
+            Shapes.box(MIN, 0.0D, MIN, MAX, 1.0D, 1.0D), // Up Down South                                110001
+            Shapes.box(0.0D, 0.0D, MIN, MAX, 1.0D, MAX), // Up Down West                                 110010
+            Shapes.box(0.0D, 0.0D, MIN, MAX, 1.0D, 1.0D), // Up Down South West                          110011
+            Shapes.box(MIN, 0.0D, 0.0D, MAX, 1.0D, MAX), // Up Down North                                110100
+            Shapes.box(MIN, 0.0D, 0.0D, MAX, 1.0D, 1.0D), // Up Down North South                         110101
+            Shapes.box(0.0D, 0.0D, 0.0D, MAX, 1.0D, MAX), // Up Down North West                          110110
+            Shapes.box(0.0D, 0.0D, 0.0D, MAX, 1.0D, 1.0D), // Up Down North South West                   110111
+            Shapes.box(MIN, 0.0D, MIN, 1.0D, 1.0D, MAX), // Up Down East                                 111000
+            Shapes.box(MIN, 0.0D, MIN, 1.0D, 1.0D, 1.0D), // Up Down East South                          111001
+            Shapes.box(0.0D, 0.0D, MIN, 1.0D, 1.0D, MAX), // Up Down West East                           111010
+            Shapes.box(0.0D, 0.0D, MIN, 1.0D, 1.0D, 1.0D), // Up Down South West East                    111011
+            Shapes.box(MIN, 0.0D, 0.0D, 1.0D, 1.0D, MAX), // Up Down North East                          111100
+            Shapes.box(MIN, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D), // Up Down North South East                   111101
+            Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, MAX), // Up Down North East West                    111110
+            Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D)}; // Up Down North South East West            111111
 
     public BlockFluidPipe(Properties builder, EnumPipeMode mode)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(COLOR, DyeColor.WHITE));
+        this.registerDefaultState(stateDefinition.any().setValue(COLOR, DyeColor.WHITE));
         this.mode = mode;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
 //        state = this.getActualState(state, source, pos);
         return BOUNDING_BOXES[getBoundingBoxIdx(state)];
@@ -139,32 +139,32 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
     {
         int i = 0;
 
-        if (state.get(NORTH).booleanValue())
+        if (state.getValue(NORTH).booleanValue())
         {
-            i |= 1 << Direction.NORTH.getHorizontalIndex();
+            i |= 1 << Direction.NORTH.get2DDataValue();
         }
 
-        if (state.get(EAST).booleanValue())
+        if (state.getValue(EAST).booleanValue())
         {
-            i |= 1 << Direction.EAST.getHorizontalIndex();
+            i |= 1 << Direction.EAST.get2DDataValue();
         }
 
-        if (state.get(SOUTH).booleanValue())
+        if (state.getValue(SOUTH).booleanValue())
         {
-            i |= 1 << Direction.SOUTH.getHorizontalIndex();
+            i |= 1 << Direction.SOUTH.get2DDataValue();
         }
 
-        if (state.get(WEST).booleanValue())
+        if (state.getValue(WEST).booleanValue())
         {
-            i |= 1 << Direction.WEST.getHorizontalIndex();
+            i |= 1 << Direction.WEST.get2DDataValue();
         }
 
-        if (state.get(DOWN).booleanValue())
+        if (state.getValue(DOWN).booleanValue())
         {
             i |= 1 << 4;
         }
 
-        if (state.get(UP).booleanValue())
+        if (state.getValue(UP).booleanValue())
         {
             i |= 1 << 5;
         }
@@ -173,17 +173,17 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        final TileEntityFluidPipe tile = (TileEntityFluidPipe) worldIn.getTileEntity(pos);
-        DyeColor pipeColor = state.get(COLOR);
+        final TileEntityFluidPipe tile = (TileEntityFluidPipe) worldIn.getBlockEntity(pos);
+        DyeColor pipeColor = state.getValue(COLOR);
 
         if (!ignoreDrop && tile != null && pipeColor != DyeColor.WHITE)
         {
             spawnItem(worldIn, pos, pipeColor);
         }
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
 //    @Override
@@ -194,10 +194,10 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
 //    }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-        worldIn.getChunkProvider().getLightManager().checkBlock(pos);
+        worldIn.getChunkSource().getLightEngine().checkBlock(pos);
 //        worldIn.notifyLightSet(pos); TODO Light set? Does above work?
     }
 
@@ -213,30 +213,30 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
 //    }
 
     @Override
-    public ActionResultType onUseWrench(World world, BlockPos pos, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onUseWrench(Level world, BlockPos pos, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        if (!world.isRemote)
+        if (!world.isClientSide)
         {
-            TileEntityFluidPipe tile = (TileEntityFluidPipe) world.getTileEntity(pos);
+            TileEntityFluidPipe tile = (TileEntityFluidPipe) world.getBlockEntity(pos);
             tile.switchType();
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit)
     {
-        final TileEntityFluidPipe tileEntity = (TileEntityFluidPipe) worldIn.getTileEntity(pos);
+        final TileEntityFluidPipe tileEntity = (TileEntityFluidPipe) worldIn.getBlockEntity(pos);
 
-        if (super.onBlockActivated(state, worldIn, pos, playerIn, hand, hit) == ActionResultType.SUCCESS)
+        if (super.use(state, worldIn, pos, playerIn, hand, hit) == InteractionResult.SUCCESS)
         {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
-        if (!worldIn.isRemote)
+        if (!worldIn.isClientSide)
         {
-            final ItemStack stack = playerIn.inventory.getCurrentItem();
+            final ItemStack stack = playerIn.inventory.getSelected();
 
             if (!stack.isEmpty())
             {
@@ -248,13 +248,13 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
 
                     tileEntity.onColorUpdate();
 
-                    worldIn.setBlockState(pos, state.with(COLOR, dyeColor));
+                    worldIn.setBlockAndUpdate(pos, state.setValue(COLOR, dyeColor));
 
                     GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(PacketSimple.EnumSimplePacket.C_RECOLOR_PIPE, GCCoreUtil.getDimensionType(worldIn), new Object[]{pos}), new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 40.0, GCCoreUtil.getDimensionType(worldIn)));
 
-                    if (colorBefore != dyeColor && !playerIn.abilities.isCreativeMode)
+                    if (colorBefore != dyeColor && !playerIn.abilities.instabuild)
                     {
-                        playerIn.inventory.getCurrentItem().shrink(1);
+                        playerIn.inventory.getSelected().shrink(1);
                     }
 
                     if (colorBefore != dyeColor && colorBefore != DyeColor.WHITE)
@@ -264,10 +264,10 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
 
                     //					GCCorePacketManager.sendPacketToClients(GCCorePacketManager.getPacket(GalacticraftCore.CHANNELENTITIES, tileEntity, tileEntity.getColor(), (byte) -1)); TODO Fix pipe color
 
-                    BlockPos tileVec = tileEntity.getPos();
+                    BlockPos tileVec = tileEntity.getBlockPos();
                     for (final Direction dir : Direction.values())
                     {
-                        final TileEntity tileAt = worldIn.getTileEntity(tileVec.offset(dir));
+                        final BlockEntity tileAt = worldIn.getBlockEntity(tileVec.relative(dir));
 
                         if (tileAt != null && tileAt instanceof IColorable)
                         {
@@ -275,25 +275,25 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
                         }
                     }
 
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
 
         }
 
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
-    private void spawnItem(World worldIn, BlockPos pos, DyeColor colorBefore)
+    private void spawnItem(Level worldIn, BlockPos pos, DyeColor colorBefore)
     {
         final float f = 0.7F;
         Random syncRandom = GCCoreUtil.getRandom(pos);
         final double d0 = syncRandom.nextFloat() * f + (1.0F - f) * 0.5D;
         final double d1 = syncRandom.nextFloat() * f + (1.0F - f) * 0.2D + 0.6D;
         final double d2 = syncRandom.nextFloat() * f + (1.0F - f) * 0.5D;
-        final ItemEntity entityitem = new ItemEntity(worldIn, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(DyeItem.getItem(colorBefore), 1));
-        entityitem.setDefaultPickupDelay();
-        worldIn.addEntity(entityitem);
+        final ItemEntity entityitem = new ItemEntity(worldIn, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(DyeItem.byColor(colorBefore), 1));
+        entityitem.setDefaultPickUpDelay();
+        worldIn.addFreshEntity(entityitem);
     }
 
 //    @Override
@@ -321,7 +321,7 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
 //    }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityFluidPipe();
     }
@@ -348,11 +348,11 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(COLOR, UP, DOWN, NORTH, EAST, SOUTH, WEST, MIDDLE);
     }
@@ -377,34 +377,34 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
 //    }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        TileEntity[] connectable = OxygenUtil.getAdjacentFluidConnections(new BlockVec3(context.getPos()), context.getWorld(), false);
+        BlockEntity[] connectable = OxygenUtil.getAdjacentFluidConnections(new BlockVec3(context.getClickedPos()), context.getLevel(), false);
 
-        return getDefaultState().with(COLOR, DyeColor.WHITE)
-                .with(DOWN, connectable[Direction.DOWN.ordinal()] != null)
-                .with(UP, connectable[Direction.UP.ordinal()] != null)
-                .with(NORTH, connectable[Direction.NORTH.ordinal()] != null)
-                .with(EAST, connectable[Direction.EAST.ordinal()] != null)
-                .with(SOUTH, connectable[Direction.SOUTH.ordinal()] != null)
-                .with(WEST, connectable[Direction.WEST.ordinal()] != null);
+        return defaultBlockState().setValue(COLOR, DyeColor.WHITE)
+                .setValue(DOWN, connectable[Direction.DOWN.ordinal()] != null)
+                .setValue(UP, connectable[Direction.UP.ordinal()] != null)
+                .setValue(NORTH, connectable[Direction.NORTH.ordinal()] != null)
+                .setValue(EAST, connectable[Direction.EAST.ordinal()] != null)
+                .setValue(SOUTH, connectable[Direction.SOUTH.ordinal()] != null)
+                .setValue(WEST, connectable[Direction.WEST.ordinal()] != null);
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos)
     {
-        TileEntity tileEntity = worldIn.getTileEntity(currentPos);
+        BlockEntity tileEntity = worldIn.getBlockEntity(currentPos);
 
         if (tileEntity instanceof ITransmitter)
         {
-            TileEntity[] connectable = OxygenUtil.getAdjacentFluidConnections(tileEntity);
+            BlockEntity[] connectable = OxygenUtil.getAdjacentFluidConnections(tileEntity);
 
-            return stateIn.with(DOWN, connectable[Direction.DOWN.ordinal()] != null)
-                    .with(UP, connectable[Direction.UP.ordinal()] != null)
-                    .with(NORTH, connectable[Direction.NORTH.ordinal()] != null)
-                    .with(EAST, connectable[Direction.EAST.ordinal()] != null)
-                    .with(SOUTH, connectable[Direction.SOUTH.ordinal()] != null)
-                    .with(WEST, connectable[Direction.WEST.ordinal()] != null);
+            return stateIn.setValue(DOWN, connectable[Direction.DOWN.ordinal()] != null)
+                    .setValue(UP, connectable[Direction.UP.ordinal()] != null)
+                    .setValue(NORTH, connectable[Direction.NORTH.ordinal()] != null)
+                    .setValue(EAST, connectable[Direction.EAST.ordinal()] != null)
+                    .setValue(SOUTH, connectable[Direction.SOUTH.ordinal()] != null)
+                    .setValue(WEST, connectable[Direction.WEST.ordinal()] != null);
         }
 
         return stateIn;
@@ -421,7 +421,7 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
         return mode;
     }
 
-    public enum EnumPipeMode implements IStringSerializable
+    public enum EnumPipeMode implements StringRepresentable
     {
         NORMAL(0, "normal"),
         PULL(1, "pull");
@@ -446,7 +446,7 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
         }
 
         @Override
-        public String getName()
+        public String getSerializedName()
         {
             return this.name;
         }

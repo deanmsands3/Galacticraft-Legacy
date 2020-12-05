@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.venus.world.gen;
+package micdoodle8.mods.galacticraft.planets.venus.world.gen;
 //
 //import micdoodle8.mods.galacticraft.api.prefab.world.gen.MapGenBaseMeta;
 //import micdoodle8.mods.galacticraft.core.Constants;

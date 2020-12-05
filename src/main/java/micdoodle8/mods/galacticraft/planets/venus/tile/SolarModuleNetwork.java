@@ -5,9 +5,8 @@ import micdoodle8.mods.galacticraft.api.transmission.grid.IGridNetwork;
 import micdoodle8.mods.galacticraft.api.transmission.tile.ITransmitter;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.*;
 
 /**
@@ -15,7 +14,7 @@ import java.util.*;
  *
  * @author radfast, micdoodle8, Calclavia, Aidancbrady
  */
-public class SolarModuleNetwork implements IGridNetwork<SolarModuleNetwork, ITransmitter, TileEntity>
+public class SolarModuleNetwork implements IGridNetwork<SolarModuleNetwork, ITransmitter, BlockEntity>
 {
     private final Set<ITransmitter> transmitters = new HashSet<>();
 
@@ -58,16 +57,16 @@ public class SolarModuleNetwork implements IGridNetwork<SolarModuleNetwork, ITra
                 continue;
             }
 
-            TileEntity tile = (TileEntity) transmitter;
-            World world = tile.getWorld();
+            BlockEntity tile = (BlockEntity) transmitter;
+            Level world = tile.getLevel();
             //Remove any transmitters in unloaded chunks
-            if (tile.isRemoved() || world == null || !world.isBlockLoaded(tile.getPos()))
+            if (tile.isRemoved() || world == null || !world.hasChunkAt(tile.getBlockPos()))
             {
                 it.remove();
                 continue;
             }
 
-            if (transmitter != world.getTileEntity(tile.getPos()))
+            if (transmitter != world.getBlockEntity(tile.getBlockPos()))
             {
                 it.remove();
                 continue;
@@ -95,8 +94,8 @@ public class SolarModuleNetwork implements IGridNetwork<SolarModuleNetwork, ITra
                 continue;
             }
 
-            TileEntity tile = (TileEntity) conductor;
-            World world = tile.getWorld();
+            BlockEntity tile = (BlockEntity) conductor;
+            Level world = tile.getLevel();
             //Remove any transmitters in unloaded chunks
             if (tile.isRemoved() || world == null)
             {
@@ -158,7 +157,7 @@ public class SolarModuleNetwork implements IGridNetwork<SolarModuleNetwork, ITra
     @Override
     public void split(ITransmitter splitPoint)
     {
-        if (splitPoint instanceof TileEntity)
+        if (splitPoint instanceof BlockEntity)
         {
             this.getTransmitters().remove(splitPoint);
             splitPoint.setNetwork(null);
@@ -166,35 +165,35 @@ public class SolarModuleNetwork implements IGridNetwork<SolarModuleNetwork, ITra
             //If the size of the residual network is 1, it should simply be preserved
             if (this.getTransmitters().size() > 1)
             {
-                World world = ((TileEntity) splitPoint).getWorld();
+                Level world = ((BlockEntity) splitPoint).getLevel();
 
                 if (this.getTransmitters().size() > 0)
                 {
                     ITransmitter[] nextToSplit = new ITransmitter[6];
                     boolean[] toDo = {true, true, true, true, true, true};
-                    TileEntity tileEntity;
+                    BlockEntity tileEntity;
 
                     for (int j = 0; j < 6; j++)
                     {
                         switch (j)
                         {
                         case 0:
-                            tileEntity = world.getTileEntity(((TileEntity) splitPoint).getPos().down());
+                            tileEntity = world.getBlockEntity(((BlockEntity) splitPoint).getBlockPos().below());
                             break;
                         case 1:
-                            tileEntity = world.getTileEntity(((TileEntity) splitPoint).getPos().up());
+                            tileEntity = world.getBlockEntity(((BlockEntity) splitPoint).getBlockPos().above());
                             break;
                         case 2:
-                            tileEntity = world.getTileEntity(((TileEntity) splitPoint).getPos().north());
+                            tileEntity = world.getBlockEntity(((BlockEntity) splitPoint).getBlockPos().north());
                             break;
                         case 3:
-                            tileEntity = world.getTileEntity(((TileEntity) splitPoint).getPos().south());
+                            tileEntity = world.getBlockEntity(((BlockEntity) splitPoint).getBlockPos().south());
                             break;
                         case 4:
-                            tileEntity = world.getTileEntity(((TileEntity) splitPoint).getPos().west());
+                            tileEntity = world.getBlockEntity(((BlockEntity) splitPoint).getBlockPos().west());
                             break;
                         case 5:
-                            tileEntity = world.getTileEntity(((TileEntity) splitPoint).getPos().east());
+                            tileEntity = world.getBlockEntity(((BlockEntity) splitPoint).getBlockPos().east());
                             break;
                         default:
                             //Not reachable, only to prevent uninitiated compile errors
@@ -217,7 +216,7 @@ public class SolarModuleNetwork implements IGridNetwork<SolarModuleNetwork, ITra
                         if (toDo[i1])
                         {
                             ITransmitter connectedBlockA = nextToSplit[i1];
-                            NetworkFinderSolar finder = new NetworkFinderSolar(world, new BlockVec3((TileEntity) connectedBlockA), new BlockVec3((TileEntity) splitPoint));
+                            NetworkFinderSolar finder = new NetworkFinderSolar(world, new BlockVec3((BlockEntity) connectedBlockA), new BlockVec3((BlockEntity) splitPoint));
                             List<ITransmitter> partNetwork = finder.exploreNetwork();
 
                             //Mark any others still to do in the nextToSplit array which are connected to this, as dealt with

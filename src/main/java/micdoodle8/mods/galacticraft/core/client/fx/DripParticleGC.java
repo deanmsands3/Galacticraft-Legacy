@@ -1,58 +1,61 @@
 package micdoodle8.mods.galacticraft.core.client.fx;
 
 import micdoodle8.mods.galacticraft.core.client.GCParticles;
+import micdoodle8.mods.galacticraft.core.client.fx.DripParticleGC.DrippingOil;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class DripParticleGC extends SpriteTexturedParticle
+@Environment(EnvType.CLIENT)
+public class DripParticleGC extends TextureSheetParticle
 {
     private final Fluid fluid;
 
-    private DripParticleGC(World world, double x, double y, double z, Fluid fluid)
+    private DripParticleGC(Level world, double x, double y, double z, Fluid fluid)
     {
         super(world, x, y, z);
         this.setSize(0.01F, 0.01F);
-        this.particleGravity = 0.06F;
+        this.gravity = 0.06F;
         this.fluid = fluid;
     }
 
     @Override
-    public IParticleRenderType getRenderType()
+    public ParticleRenderType getRenderType()
     {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
     public void tick()
     {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
         this.checkRespawn();
-        if (!this.isExpired)
+        if (!this.removed)
         {
-            this.motionY -= this.particleGravity;
-            this.move(this.motionX, this.motionY, this.motionZ);
+            this.yd -= this.gravity;
+            this.move(this.xd, this.yd, this.zd);
             this.updateMotion();
-            if (!this.isExpired)
+            if (!this.removed)
             {
-                this.motionX *= 0.98F;
-                this.motionY *= 0.98F;
-                this.motionZ *= 0.98F;
-                BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
-                IFluidState ifluidstate = this.world.getFluidState(blockpos);
-                if (ifluidstate.getFluid() == this.fluid && this.posY < (double) ((float) blockpos.getY() + ifluidstate.getActualHeight(this.world, blockpos)))
+                this.xd *= 0.98F;
+                this.yd *= 0.98F;
+                this.zd *= 0.98F;
+                BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
+                FluidState ifluidstate = this.level.getFluidState(blockpos);
+                if (ifluidstate.getType() == this.fluid && this.y < (double) ((float) blockpos.getY() + ifluidstate.getHeight(this.level, blockpos)))
                 {
-                    this.setExpired();
+                    this.remove();
                 }
 
             }
@@ -61,9 +64,9 @@ public class DripParticleGC extends SpriteTexturedParticle
 
     protected void checkRespawn()
     {
-        if (this.maxAge-- <= 0)
+        if (this.lifetime-- <= 0)
         {
-            this.setExpired();
+            this.remove();
         }
 
     }
@@ -72,26 +75,26 @@ public class DripParticleGC extends SpriteTexturedParticle
     {
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     static class Dripping extends DripParticleGC
     {
-        private final IParticleData data;
+        private final ParticleOptions data;
 
-        private Dripping(World world, double x, double y, double z, Fluid fluid, IParticleData data)
+        private Dripping(Level world, double x, double y, double z, Fluid fluid, ParticleOptions data)
         {
             super(world, x, y, z, fluid);
             this.data = data;
-            this.particleGravity *= 0.02F;
-            this.maxAge = 40;
+            this.gravity *= 0.02F;
+            this.lifetime = 40;
         }
 
         @Override
         protected void checkRespawn()
         {
-            if (this.maxAge-- <= 0)
+            if (this.lifetime-- <= 0)
             {
-                this.setExpired();
-                this.world.addParticle(this.data, this.posX, this.posY, this.posZ, this.motionX, this.motionY, this.motionZ);
+                this.remove();
+                this.level.addParticle(this.data, this.x, this.y, this.z, this.xd, this.yd, this.zd);
             }
 
         }
@@ -99,16 +102,16 @@ public class DripParticleGC extends SpriteTexturedParticle
         @Override
         protected void updateMotion()
         {
-            this.motionX *= 0.02D;
-            this.motionY *= 0.02D;
-            this.motionZ *= 0.02D;
+            this.xd *= 0.02D;
+            this.yd *= 0.02D;
+            this.zd *= 0.02D;
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    static class DrippingOil extends DripParticleGC.Dripping
+    @Environment(EnvType.CLIENT)
+    static class DrippingOil extends Dripping
     {
-        private DrippingOil(World world, double x, double y, double z, Fluid fluid, IParticleData data)
+        private DrippingOil(Level world, double x, double y, double z, Fluid fluid, ParticleOptions data)
         {
             super(world, x, y, z, fluid, data);
         }
@@ -116,28 +119,28 @@ public class DripParticleGC extends SpriteTexturedParticle
         @Override
         protected void checkRespawn()
         {
-            this.particleRed = 1.0F;
-            this.particleGreen = 16.0F / (float) (40 - this.maxAge + 16);
-            this.particleBlue = 4.0F / (float) (40 - this.maxAge + 8);
+            this.rCol = 1.0F;
+            this.gCol = 16.0F / (float) (40 - this.lifetime + 16);
+            this.bCol = 4.0F / (float) (40 - this.lifetime + 8);
             super.checkRespawn();
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static class DrippingOilFactory implements IParticleFactory<BasicParticleType>
+    @Environment(EnvType.CLIENT)
+    public static class DrippingOilFactory implements ParticleProvider<SimpleParticleType>
     {
-        protected final IAnimatedSprite spriteSet;
+        protected final SpriteSet spriteSet;
 
-        public DrippingOilFactory(IAnimatedSprite sprite)
+        public DrippingOilFactory(SpriteSet sprite)
         {
             this.spriteSet = sprite;
         }
 
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle makeParticle(SimpleParticleType typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
         {
-            DripParticleGC.DrippingOil oilDrip = new DripParticleGC.DrippingOil(worldIn, x, y, z, GCFluids.OIL.getFluid(), GCParticles.OIL_DRIP);
-            oilDrip.selectSpriteRandomly(this.spriteSet);
+            DrippingOil oilDrip = new DrippingOil(worldIn, x, y, z, GCFluids.OIL.getFluid(), GCParticles.OIL_DRIP);
+            oilDrip.pickSprite(this.spriteSet);
             return oilDrip;
         }
     }

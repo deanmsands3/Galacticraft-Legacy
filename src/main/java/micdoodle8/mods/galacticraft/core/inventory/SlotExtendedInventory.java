@@ -2,25 +2,25 @@ package micdoodle8.mods.galacticraft.core.inventory;
 
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.item.EnumExtendedInventorySlot;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class SlotExtendedInventory extends Slot
 {
-    public SlotExtendedInventory(IInventory par2IInventory, int par3, int par4, int par5)
+    public SlotExtendedInventory(Container par2IInventory, int par3, int par4, int par5)
     {
         super(par2IInventory, par3, par4, par5);
     }
 
     @Override
-    public int getSlotStackLimit()
+    public int getMaxStackSize()
     {
         return 1;
     }
 
     @Override
-    public boolean isItemValid(ItemStack itemstack)
+    public boolean mayPlace(ItemStack itemstack)
     {
         int gearID = GalacticraftRegistry.findMatchingGearID(itemstack, getTypeFromSlot());
 

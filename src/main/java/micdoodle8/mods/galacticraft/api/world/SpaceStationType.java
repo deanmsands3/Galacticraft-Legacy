@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.world;
 
 import micdoodle8.mods.galacticraft.api.recipe.SpaceStationRecipe;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.level.dimension.DimensionType;
 
 /**
  * Currently only used internally, not guaranteed to work.

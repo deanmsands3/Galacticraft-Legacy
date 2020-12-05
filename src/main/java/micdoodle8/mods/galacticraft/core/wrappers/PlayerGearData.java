@@ -2,12 +2,12 @@ package micdoodle8.mods.galacticraft.core.wrappers;
 
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerHandler;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 public class PlayerGearData
 {
-    private final PlayerEntity player;
+    private final Player player;
     private int mask;
     private int gear;
     private int leftTank;
@@ -17,13 +17,13 @@ public class PlayerGearData
     private int frequencyModule;
     private int shieldController;
 
-    public PlayerGearData(PlayerEntity player)
+    public PlayerGearData(Player player)
     {
         this(player, GCPlayerHandler.GEAR_NOT_PRESENT, GCPlayerHandler.GEAR_NOT_PRESENT, GCPlayerHandler.GEAR_NOT_PRESENT, GCPlayerHandler.GEAR_NOT_PRESENT, GCPlayerHandler.GEAR_NOT_PRESENT,
                 new int[]{GCPlayerHandler.GEAR_NOT_PRESENT, GCPlayerHandler.GEAR_NOT_PRESENT, GCPlayerHandler.GEAR_NOT_PRESENT, GCPlayerHandler.GEAR_NOT_PRESENT});
     }
 
-    public PlayerGearData(PlayerEntity player, int mask, int gear, int leftTank, int rightTank, int frequencyModule, int[] thermalPadding)
+    public PlayerGearData(Player player, int mask, int gear, int leftTank, int rightTank, int frequencyModule, int[] thermalPadding)
     {
         this.player = player;
         this.mask = mask;
@@ -74,7 +74,7 @@ public class PlayerGearData
         this.rightTank = rightTank;
     }
 
-    public PlayerEntity getPlayer()
+    public Player getPlayer()
     {
         return this.player;
     }

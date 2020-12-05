@@ -2,9 +2,9 @@ package micdoodle8.mods.galacticraft.planets.asteroids.entities;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCargoRocket;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -30,9 +30,9 @@ public class AsteroidEntities
 
     private static EntityType.Builder<EntityAstroMiner> astroMiner()
     {
-        return EntityType.Builder.create(EntityAstroMiner::new, EntityClassification.MISC)
-                .size(2.6F, 1.8F)
-                .immuneToFire()
+        return EntityType.Builder.of(EntityAstroMiner::new, MobCategory.MISC)
+                .sized(2.6F, 1.8F)
+                .fireImmune()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
                 .setShouldReceiveVelocityUpdates(true);
@@ -40,9 +40,9 @@ public class AsteroidEntities
 
     private static EntityType.Builder<EntityEntryPod> entryPod()
     {
-        return EntityType.Builder.create(EntityEntryPod::new, EntityClassification.MISC)
-                .size(2.6F, 1.8F)
-                .immuneToFire()
+        return EntityType.Builder.of(EntityEntryPod::new, MobCategory.MISC)
+                .sized(2.6F, 1.8F)
+                .fireImmune()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
                 .setShouldReceiveVelocityUpdates(true);
@@ -50,9 +50,9 @@ public class AsteroidEntities
 
     private static EntityType.Builder<EntityGrapple> grapple()
     {
-        return EntityType.Builder.create(EntityGrapple::new, EntityClassification.MISC)
-                .size(0.75F, 0.75F)
-                .immuneToFire()
+        return EntityType.Builder.of(EntityGrapple::new, MobCategory.MISC)
+                .sized(0.75F, 0.75F)
+                .fireImmune()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
                 .setShouldReceiveVelocityUpdates(true);
@@ -60,9 +60,9 @@ public class AsteroidEntities
 
     private static EntityType.Builder<EntitySmallAsteroid> smallAsteroid()
     {
-        return EntityType.Builder.create(EntitySmallAsteroid::new, EntityClassification.MISC)
-                .size(1.0F, 1.0F)
-                .immuneToFire()
+        return EntityType.Builder.of(EntitySmallAsteroid::new, MobCategory.MISC)
+                .sized(1.0F, 1.0F)
+                .fireImmune()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
                 .setShouldReceiveVelocityUpdates(true);
@@ -70,9 +70,9 @@ public class AsteroidEntities
 
     private static EntityType.Builder<EntityTier3Rocket> rocketT3()
     {
-        return EntityType.Builder.create(EntityTier3Rocket::new, EntityClassification.MISC)
-                .size(1.8F, 6.0F)
-                .immuneToFire()
+        return EntityType.Builder.of(EntityTier3Rocket::new, MobCategory.MISC)
+                .sized(1.8F, 6.0F)
+                .fireImmune()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
                 .setShouldReceiveVelocityUpdates(true);

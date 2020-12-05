@@ -9,21 +9,21 @@ import micdoodle8.mods.galacticraft.core.energy.tile.EnergyStorageTile;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerElectricFurnace;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
@@ -31,12 +31,12 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventory implements ISidedInventory, IMachineSides, INamedContainerProvider
+public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IMachineSides, MenuProvider
 {
     public static class TileEntityElectricFurnaceT1 extends TileEntityElectricFurnace
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.furnaceElectric)
-        public static TileEntityType<TileEntityElectricFurnaceT1> TYPE;
+        public static BlockEntityType<TileEntityElectricFurnaceT1> TYPE;
 
         public TileEntityElectricFurnaceT1()
         {
@@ -48,7 +48,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
     public static class TileEntityElectricFurnaceT2 extends TileEntityElectricFurnace
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.furanceArc)
-        public static TileEntityType<TileEntityElectricFurnaceT2> TYPE;
+        public static BlockEntityType<TileEntityElectricFurnaceT2> TYPE;
 
         public TileEntityElectricFurnaceT2()
         {
@@ -72,14 +72,14 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
     @NetworkedField(targetSide = LogicalSide.CLIENT)
     public int processTicks = 0;
 
-    public final Set<PlayerEntity> playersUsing = new HashSet<PlayerEntity>();
+    public final Set<Player> playersUsing = new HashSet<Player>();
 
     private boolean initialised = false;
 
     /*
      * @param tier: 1 = Electric Furnace  2 = Electric Arc Furnace
      */
-    public TileEntityElectricFurnace(TileEntityType<?> type)
+    public TileEntityElectricFurnace(BlockEntityType<?> type)
     {
         super(type);
         this.initialised = true;
@@ -114,7 +114,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
 
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.canProcess())
             {
@@ -142,7 +142,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
                 else if (this.processTicks > 0 && this.processTicks < this.processTimeRequired)
                 {
                     //Apply a "cooling down" process if the electric furnace runs out of energy while smelting
-                    if (this.world.rand.nextInt(4) == 0)
+                    if (this.level.random.nextInt(4) == 0)
                     {
                         this.processTicks++;
                     }
@@ -173,12 +173,12 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
         {
             return false;
         }
-        IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe(IRecipeType.SMELTING, this, this.world).orElse(null);
+        Recipe<?> irecipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this, this.level).orElse(null);
         if (irecipe == null)
         {
             return false;
         }
-        ItemStack result = irecipe.getRecipeOutput();
+        ItemStack result = irecipe.getResultItem();
         if (!result.isEmpty())
         {
             int burnable = ForgeHooks.getBurnTime(stack);
@@ -192,7 +192,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
         {
             if (!this.getInventory().get(2).isEmpty())
             {
-                return (this.getInventory().get(2).isItemEqual(result) && this.getInventory().get(2).getCount() < 64);
+                return (this.getInventory().get(2).sameItem(result) && this.getInventory().get(2).getCount() < 64);
             }
         }
 
@@ -202,11 +202,11 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
             return true;
         }
         int space = 0;
-        if (this.getInventory().get(2).isItemEqual(result))
+        if (this.getInventory().get(2).sameItem(result))
         {
             space = 64 - this.getInventory().get(2).getCount();
         }
-        if (this.getInventory().get(3).isItemEqual(result))
+        if (this.getInventory().get(3).sameItem(result))
         {
             space += 64 - this.getInventory().get(3).getCount();
         }
@@ -221,14 +221,14 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
     {
         if (this.canProcess())
         {
-            IRecipe<?> irecipe = this.world.getRecipeManager().getRecipe(IRecipeType.SMELTING, this, this.world).orElse(null);
+            Recipe<?> irecipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this, this.level).orElse(null);
 //            ItemStack resultItemStack = FurnaceRecipes.instance().getSmeltingResult(this.getInventory().get(1));
-            ItemStack resultItemStack = irecipe.getRecipeOutput();
+            ItemStack resultItemStack = irecipe.getResultItem();
             boolean doubleResult = false;
             if (this.tierGC > 1)
             {
-                String nameSmelted = this.getInventory().get(1).getTranslationKey().toLowerCase();
-                if ((resultItemStack.getTranslationKey().toLowerCase().contains("ingot") || resultItemStack.getItem() == Items.QUARTZ) && (nameSmelted.contains("ore") || nameSmelted.contains("raw") || nameSmelted.contains("moon") || nameSmelted.contains("mars") || nameSmelted.contains("shard")))
+                String nameSmelted = this.getInventory().get(1).getDescriptionId().toLowerCase();
+                if ((resultItemStack.getDescriptionId().toLowerCase().contains("ingot") || resultItemStack.getItem() == Items.QUARTZ) && (nameSmelted.contains("ore") || nameSmelted.contains("raw") || nameSmelted.contains("moon") || nameSmelted.contains("mars") || nameSmelted.contains("shard")))
                 {
                     doubleResult = true;
                 }
@@ -244,7 +244,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
                     this.getInventory().get(2).grow(resultItemStack.getCount());
                     space2 = 2;
                 }
-                else if (this.getInventory().get(2).isItemEqual(resultItemStack))
+                else if (this.getInventory().get(2).sameItem(resultItemStack))
                 {
                     space2 = (64 - this.getInventory().get(2).getCount()) / resultItemStack.getCount();
                     if (space2 > 2)
@@ -263,7 +263,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
                             this.getInventory().get(3).grow(resultItemStack.getCount());
                         }
                     }
-                    else if (this.getInventory().get(3).isItemEqual(resultItemStack))
+                    else if (this.getInventory().get(3).sameItem(resultItemStack))
                     {
                         space3 = (64 - this.getInventory().get(3).getCount()) / resultItemStack.getCount();
                         if (space3 > 2 - space2)
@@ -278,7 +278,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
             {
                 this.getInventory().set(2, resultItemStack.copy());
             }
-            else if (this.getInventory().get(2).isItemEqual(resultItemStack))
+            else if (this.getInventory().get(2).sameItem(resultItemStack))
             {
                 this.getInventory().get(2).grow(resultItemStack.getCount());
             }
@@ -288,9 +288,9 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         if (this.storage.getEnergyStoredGC() > EnergyStorageTile.STANDARD_CAPACITY)
         {
             this.setTier2();
@@ -306,13 +306,13 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
         if (this.tierGC == 1 && this.storage.getEnergyStoredGC() > EnergyStorageTile.STANDARD_CAPACITY)
         {
             this.storage.setEnergyStored(EnergyStorageTile.STANDARD_CAPACITY);
         }
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("smeltingTicks", this.processTicks);
 
         this.addMachineSidesToNBT(nbt);  //Needed by IMachineSides
@@ -331,7 +331,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
      * stack size) into the given slot.
      */
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
+    public boolean canPlaceItem(int slotID, ItemStack itemStack)
     {
         if (itemStack.isEmpty())
         {
@@ -352,13 +352,13 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack par2ItemStack, Direction par3)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack par2ItemStack, Direction par3)
     {
-        return this.isItemValidForSlot(slotID, par2ItemStack);
+        return this.canPlaceItem(slotID, par2ItemStack);
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack par2ItemStack, Direction par3)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack par2ItemStack, Direction par3)
     {
         return slotID == 2 || this.tierGC == 2 && slotID == 3;
     }
@@ -378,7 +378,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
     @Override
     public Direction getFront()
     {
-        return BlockMachineBase.getFront(this.world.getBlockState(getPos()));
+        return BlockMachineBase.getFront(this.level.getBlockState(getBlockPos()));
     }
 
     @Override
@@ -387,7 +387,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return getFront().getCounterClockWise();
         case REAR:
             return getFront().getOpposite();
         case TOP:
@@ -396,18 +396,18 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
             return Direction.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return getFront().getClockWise();
         }
     }
 
     @Override
-    public void openInventory(PlayerEntity player)
+    public void startOpen(Player player)
     {
         playersUsing.add(player);
     }
 
     @Override
-    public void closeInventory(PlayerEntity player)
+    public void stopOpen(Player player)
     {
         playersUsing.remove(player);
     }
@@ -460,14 +460,14 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
     //------------------END OF IMachineSides implementation
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerElectricFurnace(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.electric_furnace");
+        return new TranslatableComponent("container.electric_furnace");
     }
 }

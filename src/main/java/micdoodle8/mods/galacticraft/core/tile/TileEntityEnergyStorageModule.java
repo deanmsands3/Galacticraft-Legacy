@@ -10,30 +10,30 @@ import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseUniversalElectricalSource;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerEnergyStorageModule;
 import micdoodle8.mods.galacticraft.core.inventory.IInventoryDefaults;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalElectricalSource implements ISidedInventory, IInventoryDefaults, IConnector, IMachineSides, INamedContainerProvider
+public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalElectricalSource implements WorldlyContainer, IInventoryDefaults, IConnector, IMachineSides, MenuProvider
 {
     public static class TileEntityEnergyStorageModuleT1 extends TileEntityEnergyStorageModule
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.energyStorage)
-        public static TileEntityType<TileEntityEnergyStorageModuleT1> TYPE;
+        public static BlockEntityType<TileEntityEnergyStorageModuleT1> TYPE;
 
         public TileEntityEnergyStorageModuleT1()
         {
@@ -46,7 +46,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     public static class TileEntityEnergyStorageModuleT2 extends TileEntityEnergyStorageModule
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.energyStorage)
-        public static TileEntityType<TileEntityEnergyStorageModuleT2> TYPE;
+        public static BlockEntityType<TileEntityEnergyStorageModuleT2> TYPE;
 
         public TileEntityEnergyStorageModuleT2()
         {
@@ -58,7 +58,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     private final static float BASE_CAPACITY = 500000;
     private final static float TIER2_CAPACITY = 2500000;
 
-    public final Set<PlayerEntity> playersUsing = new HashSet<PlayerEntity>();
+    public final Set<Player> playersUsing = new HashSet<Player>();
     public int scaledEnergyLevel;
     public int lastScaledEnergyLevel;
     private float lastEnergy = 0;
@@ -68,7 +68,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     /*
      * @param tier: 1 = Electric Furnace  2 = Electric Arc Furnace
      */
-    public TileEntityEnergyStorageModule(TileEntityType<?> type)
+    public TileEntityEnergyStorageModule(BlockEntityType<?> type)
     {
         super(type);
         this.initialised = true;
@@ -101,7 +101,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
         }
 
         float energy = this.storage.getEnergyStoredGC();
-        if (this.getTierGC() == 1 && !this.world.isRemote)
+        if (this.getTierGC() == 1 && !this.level.isClientSide)
         {
             if (this.lastEnergy - energy > this.storage.getMaxExtract() - 1)
             {
@@ -118,16 +118,16 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
         if (this.scaledEnergyLevel != this.lastScaledEnergyLevel)
         {
 //            this.world.notifyLightSet(this.getPos());
-            world.getChunkProvider().getLightManager().checkBlock(this.getPos());
+            level.getChunkSource().getLightEngine().checkBlock(this.getBlockPos());
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.recharge(this.getInventory().get(0));
             this.discharge(this.getInventory().get(1));
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.produce();
         }
@@ -136,9 +136,9 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         if (this.storage.getEnergyStoredGC() > BASE_CAPACITY)
         {
             this.setTier2();
@@ -153,14 +153,14 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
         if (this.tierGC == 1 && this.storage.getEnergyStoredGC() > BASE_CAPACITY)
         {
             this.storage.setEnergyStored(BASE_CAPACITY);
         }
 
-        super.write(nbt);
+        super.save(nbt);
 
         this.addMachineSidesToNBT(nbt);  //Needed by IMachineSides
 
@@ -168,7 +168,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 1;
     }
@@ -180,7 +180,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         return ItemElectricBase.isElectricItem(itemstack.getItem());
     }
@@ -192,7 +192,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
 //    }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         if (itemstack.getItem() instanceof IItemElectricBase)
         {
@@ -209,7 +209,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         if (itemstack.getItem() instanceof IItemElectricBase)
         {
@@ -253,7 +253,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     @Override
     public Direction getFront()
     {
-        return BlockMachineBase.getFront(this.world.getBlockState(getPos()));
+        return BlockMachineBase.getFront(this.level.getBlockState(getBlockPos()));
     }
 
     @Override
@@ -262,7 +262,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case LEFT:
-            return getFront().rotateY();
+            return getFront().getClockWise();
         case REAR:
             return getFront().getOpposite();
         case TOP:
@@ -271,7 +271,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
             return Direction.DOWN;
         case RIGHT:
         default:
-            return getFront().rotateYCCW();
+            return getFront().getCounterClockWise();
         }
     }
 
@@ -281,7 +281,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
         switch (this.getSide(MachineSide.ELECTRIC_OUT))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return getFront().getCounterClockWise();
         case REAR:
             return getFront().getOpposite();
         case TOP:
@@ -290,7 +290,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
             return Direction.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return getFront().getClockWise();
         }
     }
 
@@ -342,14 +342,14 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
     //------------------END OF IMachineSides implementation
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerEnergyStorageModule(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.storage_module");
+        return new TranslatableComponent("container.storage_module");
     }
 }

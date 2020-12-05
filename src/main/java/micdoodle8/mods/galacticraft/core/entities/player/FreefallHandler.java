@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.entities.player;
+package micdoodle8.mods.galacticraft.core.entities.player;
 //
 //import micdoodle8.mods.galacticraft.api.event.ZeroGravityEvent;
 //import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase;

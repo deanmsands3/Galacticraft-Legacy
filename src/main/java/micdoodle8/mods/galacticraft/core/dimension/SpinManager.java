@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.dimension;
+package micdoodle8.mods.galacticraft.core.dimension;
 //
 //import com.google.common.collect.Lists;
 //

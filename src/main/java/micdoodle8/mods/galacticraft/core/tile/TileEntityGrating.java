@@ -1,39 +1,39 @@
 package micdoodle8.mods.galacticraft.core.tile;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class TileEntityGrating extends TileEntity
+public class TileEntityGrating extends BlockEntity
 {
-    private BlockState substate = Blocks.AIR.getDefaultState();
+    private BlockState substate = Blocks.AIR.defaultBlockState();
 
-    public TileEntityGrating(TileEntityType<?> tileEntityTypeIn)
+    public TileEntityGrating(BlockEntityType<?> tileEntityTypeIn)
     {
         super(tileEntityTypeIn);
     }
 
     @Override
-    public void read(CompoundNBT compound)
+    public void load(CompoundTag compound)
     {
-        super.read(compound);
+        super.load(compound);
 
-        CompoundNBT sub = compound.getCompound("substate");
+        CompoundTag sub = compound.getCompound("substate");
 
-        this.substate = NBTUtil.readBlockState(sub);
+        this.substate = NbtUtils.readBlockState(sub);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
-        CompoundNBT subTag = NBTUtil.writeBlockState(substate);
+        CompoundTag subTag = NbtUtils.writeBlockState(substate);
 
         compound.put("substate", subTag);
 
-        return super.write(compound);
+        return super.save(compound);
 
     }
 }

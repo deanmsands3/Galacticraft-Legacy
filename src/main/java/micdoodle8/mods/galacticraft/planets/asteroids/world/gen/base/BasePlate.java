@@ -1,15 +1,13 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.world.gen.base;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
 import static micdoodle8.mods.galacticraft.planets.asteroids.world.gen.AsteroidFeatures.CBASE_PLATE;
@@ -17,7 +15,7 @@ import static micdoodle8.mods.galacticraft.planets.asteroids.world.gen.AsteroidF
 
 public class BasePlate extends SizedPiece
 {
-    public BasePlate(TemplateManager templateManager, CompoundNBT nbt)
+    public BasePlate(StructureManager templateManager, CompoundTag nbt)
     {
         super(CBASE_PLATE, nbt);
     }
@@ -25,12 +23,12 @@ public class BasePlate extends SizedPiece
     public BasePlate(BaseConfiguration configuration, int blockPosX, int yPos, int blockPosZ, int sizeX, int sizeZ, Direction dir)
     {
         super(CBASE_PLATE, configuration, sizeX, 1, sizeZ, dir);
-        this.setCoordBaseMode(dir);
-        this.boundingBox = new MutableBoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos, blockPosZ + this.sizeZ);
+        this.setOrientation(dir);
+        this.boundingBox = new BoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos, blockPosZ + this.sizeZ);
     }
 
     @Override
-    public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
+    public boolean postProcess(LevelAccessor worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, BoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
         BlockState blockWall = this.configuration.getWallBlock();
         boolean axisEW = getDirection().getAxis() == Direction.Axis.X;
@@ -40,7 +38,7 @@ public class BasePlate extends SizedPiece
         {
             for (int zz = 0; zz <= maxZ; zz++)
             {
-                this.setBlockState(worldIn, blockWall, xx, 0, zz, boundingBox);
+                this.placeBlock(worldIn, blockWall, xx, 0, zz, boundingBox);
             }
         }
 

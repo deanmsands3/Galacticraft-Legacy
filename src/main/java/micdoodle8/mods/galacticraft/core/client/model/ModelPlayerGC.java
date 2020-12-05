@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.model;
+package micdoodle8.mods.galacticraft.core.client.model;
 //
 //import micdoodle8.mods.galacticraft.core.Constants;
 //import net.minecraft.client.entity.player.AbstractClientPlayerEntity;

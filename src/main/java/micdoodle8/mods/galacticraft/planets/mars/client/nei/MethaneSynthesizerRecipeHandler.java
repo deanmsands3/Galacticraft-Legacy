@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.nei;
+package micdoodle8.mods.galacticraft.planets.mars.client.nei;
 //
 //import codechicken.lib.gui.GuiDraw;
 //import codechicken.nei.api.stack.PositionedStack;

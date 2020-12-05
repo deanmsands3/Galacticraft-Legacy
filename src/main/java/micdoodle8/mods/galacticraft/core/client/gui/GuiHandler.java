@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.gui;
+package micdoodle8.mods.galacticraft.core.client.gui;
 //
 //import micdoodle8.mods.galacticraft.api.prefab.entity.EntityTieredRocket;
 //import micdoodle8.mods.galacticraft.api.recipe.ISchematicPage;

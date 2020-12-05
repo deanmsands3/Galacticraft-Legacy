@@ -10,11 +10,11 @@ import micdoodle8.mods.galacticraft.planets.asteroids.dimension.ShortRangeTelepa
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityAstroMiner;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityMinerBase;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -51,13 +51,13 @@ public class AsteroidsTickHandlerServer
 
             if (AsteroidsTickHandlerServer.spaceRaceData == null)
             {
-                World world = server.getWorld(DimensionType.OVERWORLD);
-                AsteroidsTickHandlerServer.spaceRaceData = ((ServerWorld) world).getSavedData().getOrCreate(() -> new ShortRangeTelepadHandler(ShortRangeTelepadHandler.saveDataID), ShortRangeTelepadHandler.saveDataID);
+                Level world = server.getLevel(DimensionType.OVERWORLD);
+                AsteroidsTickHandlerServer.spaceRaceData = ((ServerLevel) world).getDataStorage().computeIfAbsent(() -> new ShortRangeTelepadHandler(ShortRangeTelepadHandler.saveDataID), ShortRangeTelepadHandler.saveDataID);
 
                 if (AsteroidsTickHandlerServer.spaceRaceData == null)
                 {
                     AsteroidsTickHandlerServer.spaceRaceData = new ShortRangeTelepadHandler(ShortRangeTelepadHandler.saveDataID);
-                    ((ServerWorld) world).getSavedData().set(AsteroidsTickHandlerServer.spaceRaceData);
+                    ((ServerLevel) world).getDataStorage().set(AsteroidsTickHandlerServer.spaceRaceData);
                 }
             }
 
@@ -90,8 +90,8 @@ public class AsteroidsTickHandlerServer
                                 }
                                 else
                                 {
-                                    data.x = miner.chunkCoordX;
-                                    data.z = miner.chunkCoordZ;
+                                    data.x = miner.xChunk;
+                                    data.z = miner.zChunk;
                                 }
                                 inListAlready = true;
                                 break;
@@ -99,7 +99,7 @@ public class AsteroidsTickHandlerServer
                         }
                         if (!inListAlready)
                         {
-                            BlockVec3 data = new BlockVec3(miner.chunkCoordX, miner.dimension.getId(), miner.chunkCoordZ);
+                            BlockVec3 data = new BlockVec3(miner.xChunk, miner.dimension.getId(), miner.zChunk);
                             data.sideDoneBits = index;
                             list.add(data);
                         }
@@ -117,10 +117,10 @@ public class AsteroidsTickHandlerServer
         {
             for (EntityAstroMiner miner : activeMiners)
             {
-                if (miner.playerMP != null && miner.world == event.world && miner.isAlive())
+                if (miner.playerMP != null && miner.level == event.world && miner.isAlive())
                 {
                     miner.serverTick = true;
-                    miner.serverTickSave = miner.ticksExisted;
+                    miner.serverTickSave = miner.tickCount;
                 }
             }
         }
@@ -133,12 +133,12 @@ public class AsteroidsTickHandlerServer
 //                    minerIt.remove();  Don't remove it, we want the index number to be static for the others
                     continue;
                 }
-                if (miner.playerMP != null && miner.world == event.world)
+                if (miner.playerMP != null && miner.level == event.world)
                 {
                     if (miner.serverTick)
                     {
                         //Force an entity update tick, if it didn't happen already (mainly needed on Sponge servers - entities not super close to players seem to be not updated at all on Sponge even if the chunk is active, see issue #3307)
-                        miner.ticksExisted = miner.serverTickSave + 1;
+                        miner.tickCount = miner.serverTickSave + 1;
                         miner.tick();
                     }
 
@@ -146,12 +146,12 @@ public class AsteroidsTickHandlerServer
                     {
                         if (droppedChunks == null)
                         {
-                            Class clazz = ((ServerWorld) miner.world).getChunkProvider().getClass();
+                            Class clazz = ((ServerLevel) miner.level).getChunkSource().getClass();
                             droppedChunks = clazz.getDeclaredField(GCCoreUtil.isDeobfuscated() ? "droppedChunksSet" : "field_73248_b");
                             droppedChunks.setAccessible(true);
                         }
-                        Set<Long> undrop = (Set<Long>) droppedChunks.get(((ServerWorld) miner.world).getChunkProvider());
-                        undrop.remove(ChunkPos.asLong(miner.chunkCoordX, miner.chunkCoordZ));
+                        Set<Long> undrop = (Set<Long>) droppedChunks.get(((ServerLevel) miner.level).getChunkSource());
+                        undrop.remove(ChunkPos.asLong(miner.xChunk, miner.zChunk));
                     }
                     catch (Exception ignore)
                     {
@@ -205,9 +205,9 @@ public class AsteroidsTickHandlerServer
                 if (p != null && p.getWorld() != null)
                 {
                     GCLog.debug("Loading chunk " + data.y + ": " + data.x + "," + data.z + " - should contain a miner!");
-                    ServerWorld w = (ServerWorld) p.getWorld();
+                    ServerLevel w = (ServerLevel) p.getWorld();
                     boolean previous = CompatibilityManager.forceLoadChunks(w);
-                    w.getChunkProvider().getChunk(data.x, data.z, true);
+                    w.getChunkSource().getChunk(data.x, data.z, true);
                     CompatibilityManager.forceLoadChunksEnd(w, previous);
                 }
             }

@@ -3,24 +3,24 @@ package micdoodle8.mods.galacticraft.core.inventory;
 import micdoodle8.mods.galacticraft.api.item.IPaintable;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityPainter;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerPainter extends Container
+public class ContainerPainter extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.PAINTER)
-    public static ContainerType<ContainerPainter> TYPE;
+    public static MenuType<ContainerPainter> TYPE;
 
     private final TileEntityPainter painter;
 
-    public ContainerPainter(int containerId, PlayerInventory playerInv, TileEntityPainter painter)
+    public ContainerPainter(int containerId, Inventory playerInv, TileEntityPainter painter)
     {
         super(TYPE, containerId);
         this.painter = painter;
@@ -54,16 +54,16 @@ public class ContainerPainter extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity entityplayer)
+    public void removed(Player entityplayer)
     {
-        super.onContainerClosed(entityplayer);
+        super.removed(entityplayer);
         this.painter.playersUsing.remove(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.painter.isUsableByPlayer(par1EntityPlayer);
+        return this.painter.stillValid(par1EntityPlayer);
     }
 
     /**
@@ -71,24 +71,24 @@ public class ContainerPainter extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int index)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int index)
     {
         ItemStack stackOrig = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        final int b = this.inventorySlots.size();
+        Slot slot = this.slots.get(index);
+        final int b = this.slots.size();
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            ItemStack stack = slot.getStack();
+            ItemStack stack = slot.getItem();
             stackOrig = stack.copy();
 
             if (index < 2)
             {
-                if (!this.mergeItemStack(stack, b - 36, b, true))
+                if (!this.moveItemStackTo(stack, b - 36, b, true))
                 {
                     return ItemStack.EMPTY;
                 }
-                slot.onSlotChange(stack, stackOrig);
+                slot.onQuickCraft(stack, stackOrig);
             }
             else if (index != 1 && index != 0)
             {
@@ -102,12 +102,12 @@ public class ContainerPainter extends Container
                 }
                 else if (index < b - 9)
                 {
-                    if (!this.mergeItemStack(stack, b - 9, b, false))
+                    if (!this.moveItemStackTo(stack, b - 9, b, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (!this.mergeItemStack(stack, b - 36, b - 9, false))
+                else if (!this.moveItemStackTo(stack, b - 36, b - 9, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -115,11 +115,11 @@ public class ContainerPainter extends Container
 
             if (stack.getCount() == 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (stack.getCount() == stackOrig.getCount())
@@ -143,16 +143,16 @@ public class ContainerPainter extends Container
 
             for (int k = par2; k < par3; k++)
             {
-                slot = this.inventorySlots.get(k);
-                slotStack = slot.getStack();
+                slot = this.slots.get(k);
+                slotStack = slot.getItem();
 
                 if (slotStack.isEmpty())
                 {
                     ItemStack stackOneItem = par1ItemStack.copy();
                     stackOneItem.setCount(1);
                     par1ItemStack.shrink(1);
-                    slot.putStack(stackOneItem);
-                    slot.onSlotChanged();
+                    slot.set(stackOneItem);
+                    slot.setChanged();
                     flag1 = true;
                     break;
                 }

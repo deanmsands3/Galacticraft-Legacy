@@ -5,16 +5,20 @@ import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import net.minecraft.item.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Rarity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ArmorItemGC extends ArmorItem implements ISortable
 {
-    public ArmorItemGC(EquipmentSlotType slot, Item.Properties builder)
+    public ArmorItemGC(EquipmentSlot slot, Item.Properties builder)
     {
         super(EnumArmorGC.ARMOR_STEEL, slot, builder);
 //        this.setUnlocalizedName("steel_" + assetSuffix);
@@ -28,16 +32,16 @@ public class ArmorItemGC extends ArmorItem implements ISortable
 //    }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rarity getRarity(ItemStack par1ItemStack)
     {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type)
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type)
     {
-        if (this.getArmorMaterial() == EnumArmorGC.ARMOR_STEEL)
+        if (this.getMaterial() == EnumArmorGC.ARMOR_STEEL)
         {
             if (stack.getItem() == GCItems.steelHelmet)
             {

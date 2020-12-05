@@ -2,9 +2,9 @@ package micdoodle8.mods.galacticraft.core.client.gui.element;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.opengl.GL11;
 
 public class GuiElementSpinner extends Button
@@ -41,7 +41,7 @@ public class GuiElementSpinner extends Button
         if (this.visible)
         {
             Minecraft minecraft = Minecraft.getInstance();
-            minecraft.getTextureManager().bindTexture(GuiElementSpinner.texture);
+            minecraft.getTextureManager().bind(GuiElementSpinner.texture);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             this.hoverUpper = mouseX >= this.x + 20 && mouseX < this.x + width && mouseY > this.y && mouseY < this.y + this.height / 2;
@@ -50,7 +50,7 @@ public class GuiElementSpinner extends Button
             this.blit(this.x + 20, this.y, this.hoverUpper ? 245 : 234, 0, 11, 10);
             this.blit(this.x + 20, this.y + 10, this.hoverLower ? 245 : 234, 10, 11, 10);
 //            this.mouseDragged(minecraft, mX, mY);
-            minecraft.fontRenderer.drawString(this.value.toString(), this.x + 11 - (minecraft.fontRenderer.getStringWidth(this.value.toString()) >> 1), this.y + (this.height - 6) / 2, this.textColor);
+            minecraft.font.draw(this.value.toString(), this.x + 11 - (minecraft.font.width(this.value.toString()) >> 1), this.y + (this.height - 6) / 2, this.textColor);
         }
     }
 
@@ -98,7 +98,7 @@ public class GuiElementSpinner extends Button
     {
         void onSelectionChanged(GuiElementSpinner spinner, int newVal);
 
-        boolean canPlayerEdit(GuiElementSpinner spinner, PlayerEntity player);
+        boolean canPlayerEdit(GuiElementSpinner spinner, Player player);
 
         int getInitialValue(GuiElementSpinner spinner);
 

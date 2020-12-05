@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.dimension;
+package micdoodle8.mods.galacticraft.core.dimension;
 //
 //import micdoodle8.mods.galacticraft.core.Constants;
 //import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;

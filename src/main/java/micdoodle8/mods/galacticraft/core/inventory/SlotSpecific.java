@@ -2,10 +2,9 @@ package micdoodle8.mods.galacticraft.core.inventory;
 
 import micdoodle8.mods.galacticraft.api.item.IItemElectric;
 import micdoodle8.mods.galacticraft.core.energy.EnergyConfigHandler;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -25,13 +24,13 @@ public class SlotSpecific extends Slot
     public boolean isInverted = false;
     public boolean isMetadataSensitive = false;
 
-    public SlotSpecific(IInventory par2IInventory, int par3, int par4, int par5, ItemStack... itemStacks)
+    public SlotSpecific(Container par2IInventory, int par3, int par4, int par5, ItemStack... itemStacks)
     {
         super(par2IInventory, par3, par4, par5);
         this.setItemStacks(itemStacks);
     }
 
-    public SlotSpecific(IInventory par2IInventory, int par3, int par4, int par5, Class... validClasses)
+    public SlotSpecific(Container par2IInventory, int par3, int par4, int par5, Class... validClasses)
     {
         super(par2IInventory, par3, par4, par5);
         if (validClasses != null && Arrays.asList(validClasses).contains(IItemElectric.class))
@@ -95,13 +94,13 @@ public class SlotSpecific extends Slot
      * the armor slots.
      */
     @Override
-    public boolean isItemValid(ItemStack compareStack)
+    public boolean mayPlace(ItemStack compareStack)
     {
         boolean returnValue = false;
 
         for (ItemStack itemStack : this.validItemStacks)
         {
-            if (compareStack.isItemEqual(itemStack) || !this.isMetadataSensitive && compareStack.getItem() == itemStack.getItem())
+            if (compareStack.sameItem(itemStack) || !this.isMetadataSensitive && compareStack.getItem() == itemStack.getItem())
             {
                 returnValue = true;
                 break;

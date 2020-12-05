@@ -22,12 +22,14 @@ import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
 import micdoodle8.mods.galacticraft.planets.mars.items.ItemSchematicTier2;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityTreasureChestMars;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -121,14 +123,14 @@ public class MarsModuleClient implements IPlanetsModuleClient
 
         // ==============================
 
-        RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(MarsBlocks.vine, cutout);
+        RenderType cutout = RenderType.cutout();
+        ItemBlockRenderTypes.setRenderLayer(MarsBlocks.vine, cutout);
 
 //            IModelCustom chamberModel = AdvancedModelLoader.loadModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/chamber.obj"));
 //            IModelCustom cargoRocketModel = AdvancedModelLoader.loadModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/cargoRocket.obj"));
 //
 //        // Tile Entity Renderers
-        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChestMars.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/model/treasure.png")));
+        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChestMars.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new Identifier(GalacticraftPlanets.ASSET_PREFIX, "textures/model/treasure.png")));
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTreasureChestMars.class, new TileEntityTreasureChestRenderer());
 //            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCryogenicChamber.class, new TileEntityCryogenicChamberRenderer(chamberModel));
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTerraformer.class, new TileEntityBubbleProviderRenderer<>(0.25F, 1.0F, 0.25F));
@@ -152,7 +154,7 @@ public class MarsModuleClient implements IPlanetsModuleClient
     }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void loadTextures(TextureStitchEvent.Pre event)
     {
         registerTexture(event, "rocket_t2");
@@ -166,7 +168,7 @@ public class MarsModuleClient implements IPlanetsModuleClient
     }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void onModelBakeEvent(ModelBakeEvent event)
     {
 //        replaceModelDefault(event, "rocket_t2", "rocket_t2.obj", ImmutableList.of("Rocket"), ItemModelRocketT2.class, TRSRTransformation.identity());
@@ -177,8 +179,8 @@ public class MarsModuleClient implements IPlanetsModuleClient
 
     @SubscribeEvent
     public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(DRIP, ParticleDrip.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(CRYO, EntityCryoFX.Factory::new);
+        Minecraft.getInstance().particleEngine.register(DRIP, ParticleDrip.Factory::new);
+        Minecraft.getInstance().particleEngine.register(CRYO, EntityCryoFX.Factory::new);
     }
 
 //    private void replaceModelDefault(ModelBakeEvent event, String resLoc, String objLoc, List<String> visibleGroups, Class<? extends ModelTransformWrapper> clazz, IModelState parentState, String... variants)
@@ -303,23 +305,23 @@ public class MarsModuleClient implements IPlanetsModuleClient
         switch (gui)
         {
         case 0:
-            Minecraft.getInstance().displayGuiScreen(new GuiSlimeling(slimeling));
+            Minecraft.getInstance().setScreen(new GuiSlimeling(slimeling));
             break;
         case 1:
-            Minecraft.getInstance().displayGuiScreen(new GuiSlimelingFeed(slimeling));
+            Minecraft.getInstance().setScreen(new GuiSlimelingFeed(slimeling));
             break;
         }
     }
 
     public static class TickHandlerClient
     {
-        @OnlyIn(Dist.CLIENT)
+        @Environment(EnvType.CLIENT)
         @SubscribeEvent
         public void onClientTick(TickEvent.ClientTickEvent event)
         {
             final Minecraft minecraft = Minecraft.getInstance();
 
-            final ClientWorld world = minecraft.world;
+            final ClientLevel world = minecraft.level;
 
             if (world != null)
             {

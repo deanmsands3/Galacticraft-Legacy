@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.items;
+package micdoodle8.mods.galacticraft.planets.asteroids.items;
 //
 //import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 //import micdoodle8.mods.galacticraft.planets.asteroids.blocks.BlockAsteroidRock;

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.world.gen;
+package micdoodle8.mods.galacticraft.core.world.gen;
 //
 //import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;
 //import net.minecraft.block.BlockState;

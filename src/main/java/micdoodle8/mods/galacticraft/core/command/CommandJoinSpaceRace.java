@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.command;
+package micdoodle8.mods.galacticraft.core.command;
 //
 //import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 //import micdoodle8.mods.galacticraft.core.dimension.SpaceRaceManager;

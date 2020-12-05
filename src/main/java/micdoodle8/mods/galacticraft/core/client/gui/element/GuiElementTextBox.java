@@ -1,15 +1,15 @@
 package micdoodle8.mods.galacticraft.core.client.gui.element;
 
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SharedConstants;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
-public class GuiElementTextBox extends Widget
+public class GuiElementTextBox extends AbstractWidget
 {
     public String text;
     public boolean numericOnly;
@@ -39,7 +39,7 @@ public class GuiElementTextBox extends Widget
     @Override
     public boolean charTyped(char character, int modifiers)
     {
-        if (SharedConstants.isAllowedCharacter(character))
+        if (SharedConstants.isAllowedChatCharacter(character))
         {
             if (this.active)
             {
@@ -97,7 +97,7 @@ public class GuiElementTextBox extends Widget
             }
             else if (Screen.isPaste(key))
             {
-                String pastestring = Minecraft.getInstance().keyboardListener.getClipboardString();
+                String pastestring = Minecraft.getInstance().keyboardHandler.getClipboard();
 
                 if (this.isValid(this.text + pastestring))
                 {
@@ -149,8 +149,8 @@ public class GuiElementTextBox extends Widget
 
         if (this.visible)
         {
-            AbstractGui.fill(this.x, this.y, this.x + this.width, this.y + this.height, ColorUtil.to32BitColor(140, 140, 140, 140));
-            AbstractGui.fill(this.x + 1, this.y + 1, this.x + this.width - 1, this.y + this.height - 1, ColorUtil.to32BitColor(255, 0, 0, 0));
+            GuiComponent.fill(this.x, this.y, this.x + this.width, this.y + this.height, ColorUtil.to32BitColor(140, 140, 140, 140));
+            GuiComponent.fill(this.x + 1, this.y + 1, this.x + this.width - 1, this.y + this.height - 1, ColorUtil.to32BitColor(255, 0, 0, 0));
 
             this.cursorPulse++;
 
@@ -200,10 +200,10 @@ public class GuiElementTextBox extends Widget
 
             if (this.centered)
             {
-                xPos = this.x + this.width / 2 - this.minecraft.fontRenderer.getStringWidth(this.text) / 2;
+                xPos = this.x + this.width / 2 - this.minecraft.font.width(this.text) / 2;
             }
 
-            this.drawString(this.minecraft.fontRenderer, this.text + (this.cursorPulse / 24 % 2 == 0 && this.isTextFocused ? "_" : ""), xPos, this.y + this.height / 2 - 4, this.incorrectUseTimer > 0 ? ColorUtil.to32BitColor(255, 255, 20, 20) : this.parentGui.getTextColor(this));
+            this.drawString(this.minecraft.font, this.text + (this.cursorPulse / 24 % 2 == 0 && this.isTextFocused ? "_" : ""), xPos, this.y + this.height / 2 - 4, this.incorrectUseTimer > 0 ? ColorUtil.to32BitColor(255, 255, 20, 20) : this.parentGui.getTextColor(this));
         }
     }
 
@@ -223,7 +223,7 @@ public class GuiElementTextBox extends Widget
     {
         if (this.numericOnly)
         {
-            if (string.length() > 0 && SharedConstants.isAllowedCharacter(string.charAt(string.length() - 1)))
+            if (string.length() > 0 && SharedConstants.isAllowedChatCharacter(string.charAt(string.length() - 1)))
             {
                 try
                 {
@@ -247,7 +247,7 @@ public class GuiElementTextBox extends Widget
                 return false;
             }
 
-            return SharedConstants.isAllowedCharacter(string.charAt(string.length() - 1));
+            return SharedConstants.isAllowedChatCharacter(string.charAt(string.length() - 1));
         }
     }
 
@@ -256,7 +256,7 @@ public class GuiElementTextBox extends Widget
     {
         if (super.clicked(mouseX, mouseY))
         {
-            AbstractGui.fill(this.x, this.y, this.x + this.width, this.y + this.height, 0xffA0A0A0);
+            GuiComponent.fill(this.x, this.y, this.x + this.width, this.y + this.height, 0xffA0A0A0);
             this.isTextFocused = true;
             if (resetOnClick)
             {
@@ -279,7 +279,7 @@ public class GuiElementTextBox extends Widget
 
     public interface ITextBoxCallback
     {
-        boolean canPlayerEdit(GuiElementTextBox textBox, PlayerEntity player);
+        boolean canPlayerEdit(GuiElementTextBox textBox, Player player);
 
         void onTextChanged(GuiElementTextBox textBox, String newText);
 

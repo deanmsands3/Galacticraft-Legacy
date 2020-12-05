@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.venus.client.model;
+package micdoodle8.mods.galacticraft.planets.venus.client.model;
 //
 //import micdoodle8.mods.galacticraft.core.client.model.ModelRendererGC;
 //import micdoodle8.mods.galacticraft.planets.venus.entities.EntitySpiderQueen;

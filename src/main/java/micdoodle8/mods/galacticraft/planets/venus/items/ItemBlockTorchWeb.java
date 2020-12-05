@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.venus.items;
+package micdoodle8.mods.galacticraft.planets.venus.items;
 //
 //import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
 //import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;

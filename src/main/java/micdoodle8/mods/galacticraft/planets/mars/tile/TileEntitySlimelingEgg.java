@@ -5,20 +5,19 @@ import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockSlimelingEgg;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlockNames;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.UUID;
 
-public class TileEntitySlimelingEgg extends TileEntity implements ITickableTileEntity
+public class TileEntitySlimelingEgg extends BlockEntity implements TickableBlockEntity
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.slimelingEgg)
-    public static TileEntityType<TileEntitySlimelingEgg> TYPE;
+    public static BlockEntityType<TileEntitySlimelingEgg> TYPE;
 
     public int timeToHatch = -1;
     public String lastTouchedPlayerUUID = "";
@@ -31,7 +30,7 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickableTileE
     @Override
     public void tick()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.timeToHatch > 0)
             {
@@ -39,7 +38,7 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickableTileE
             }
             else if (this.timeToHatch == 0 && lastTouchedPlayerUUID != null && lastTouchedPlayerUUID.length() > 0)
             {
-                BlockState state = this.world.getBlockState(this.getPos());
+                BlockState state = this.level.getBlockState(this.getBlockPos());
 
                 float colorRed = 0.0F;
                 float colorGreen = 0.0F;
@@ -59,30 +58,30 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickableTileE
                     colorGreen = 1.0F;
                 }
 
-                EntitySlimeling slimeling = EntitySlimeling.createEntitySlimeling(this.world, colorRed, colorGreen, colorBlue);
+                EntitySlimeling slimeling = EntitySlimeling.createEntitySlimeling(this.level, colorRed, colorGreen, colorBlue);
 
-                slimeling.setPosition(this.getPos().getX() + 0.5, this.getPos().getY() + 1.0, this.getPos().getZ() + 0.5);
-                slimeling.setOwnerId(UUID.fromString(this.lastTouchedPlayerUUID));
+                slimeling.setPos(this.getBlockPos().getX() + 0.5, this.getBlockPos().getY() + 1.0, this.getBlockPos().getZ() + 0.5);
+                slimeling.setOwnerUUID(UUID.fromString(this.lastTouchedPlayerUUID));
 
-                if (!this.world.isRemote)
+                if (!this.level.isClientSide)
                 {
-                    this.world.addEntity(slimeling);
+                    this.level.addFreshEntity(slimeling);
                 }
 
-                slimeling.setTamed(true);
-                slimeling.getNavigator().clearPath();
-                slimeling.setAttackTarget(null);
+                slimeling.setTame(true);
+                slimeling.getNavigation().stop();
+                slimeling.setTarget(null);
                 slimeling.setHealth(20.0F);
 
-                this.world.removeBlock(this.getPos(), false);
+                this.level.removeBlock(this.getBlockPos(), false);
             }
         }
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.timeToHatch = nbt.getInt("TimeToHatch");
 
         String uuid = nbt.getString("OwnerUUID");
@@ -94,9 +93,9 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickableTileE
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("TimeToHatch", this.timeToHatch);
         nbt.putString("OwnerUUID", this.lastTouchedPlayerUUID);
         return nbt;

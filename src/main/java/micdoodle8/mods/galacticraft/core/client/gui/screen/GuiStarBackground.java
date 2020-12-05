@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.gui.screen;
+package micdoodle8.mods.galacticraft.core.client.gui.screen;
 //
 //import micdoodle8.mods.galacticraft.core.Constants;
 //import micdoodle8.mods.galacticraft.core.util.ClientUtil;

@@ -4,15 +4,14 @@ import com.google.common.collect.Maps;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
 import micdoodle8.mods.galacticraft.planets.asteroids.tick.AsteroidsTickHandlerServer;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityShortRangeTelepad;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.storage.WorldSavedData;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.saveddata.SavedData;
 import java.util.Map;
 import java.util.Objects;
 
-public class ShortRangeTelepadHandler extends WorldSavedData
+public class ShortRangeTelepadHandler extends SavedData
 {
     public static final String saveDataID = "ShortRangeTelepads";
     private static final Map<Integer, TelepadEntry> tileMap = Maps.newHashMap();
@@ -52,14 +51,14 @@ public class ShortRangeTelepadHandler extends WorldSavedData
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        ListNBT tagList = nbt.getList("TelepadList", 10);
+        ListTag tagList = nbt.getList("TelepadList", 10);
         tileMap.clear();
 
         for (int i = 0; i < tagList.size(); i++)
         {
-            CompoundNBT nbt2 = tagList.getCompound(i);
+            CompoundTag nbt2 = tagList.getCompound(i);
             int address = nbt2.getInt("Address");
             int dimId = nbt.getInt("dimension");
             DimensionType dimType = DimensionType.getById(dimId);
@@ -83,13 +82,13 @@ public class ShortRangeTelepadHandler extends WorldSavedData
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        ListNBT tagList = new ListNBT();
+        ListTag tagList = new ListTag();
 
         for (Map.Entry<Integer, TelepadEntry> e : tileMap.entrySet())
         {
-            CompoundNBT nbt2 = new CompoundNBT();
+            CompoundTag nbt2 = new CompoundTag();
             nbt2.putInt("Address", e.getKey());
             nbt2.putInt("DimID", e.getValue().dimensionID.getId());
             nbt2.putInt("PosX", e.getValue().position.x);
@@ -105,11 +104,11 @@ public class ShortRangeTelepadHandler extends WorldSavedData
 
     public static void addShortRangeTelepad(TileEntityShortRangeTelepad telepad)
     {
-        if (!telepad.getWorld().isRemote)
+        if (!telepad.getLevel().isClientSide)
         {
             if (telepad.addressValid)
             {
-                TelepadEntry newEntry = new TelepadEntry(telepad.getWorld().dimension.getDimension().getType(), new BlockVec3(telepad), !telepad.getDisabled(0));
+                TelepadEntry newEntry = new TelepadEntry(telepad.getLevel().dimension.getDimension().getType(), new BlockVec3(telepad), !telepad.getDisabled(0));
                 TelepadEntry previous = tileMap.put(telepad.address, newEntry);
 
                 if (previous == null || !previous.equals(newEntry))
@@ -122,7 +121,7 @@ public class ShortRangeTelepadHandler extends WorldSavedData
 
     public static void removeShortRangeTeleporter(TileEntityShortRangeTelepad telepad)
     {
-        if (!telepad.getWorld().isRemote)
+        if (!telepad.getLevel().isClientSide)
         {
             if (telepad.addressValid)
             {

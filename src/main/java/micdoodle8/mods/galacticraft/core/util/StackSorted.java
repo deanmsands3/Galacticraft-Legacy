@@ -1,9 +1,8 @@
 package micdoodle8.mods.galacticraft.core.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-
 import java.util.Objects;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 public class StackSorted
 {
@@ -12,7 +11,7 @@ public class StackSorted
 
     public StackSorted(Block block)
     {
-        this(Item.getItemFromBlock(block));
+        this(Item.byBlock(block));
     }
 
     public StackSorted(Item item)

@@ -4,25 +4,27 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.items.ItemCanisterGeneric;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -81,12 +83,12 @@ public class ItemCanisterLiquidNitrogen extends ItemCanisterGeneric implements I
     }*/
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    @Environment(EnvType.CLIENT)
+    public void appendTooltip(ItemStack par1ItemStack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        if (par1ItemStack.getMaxDamage() - par1ItemStack.getDamage() > 0)
+        if (par1ItemStack.getMaxDamage() - par1ItemStack.getDamageValue() > 0)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("item.canister.liquid_nitrogen") + ": " + (par1ItemStack.getMaxDamage() - par1ItemStack.getDamage())));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("item.canister.liquid_nitrogen") + ": " + (par1ItemStack.getMaxDamage() - par1ItemStack.getDamageValue())));
         }
     }
 
@@ -104,37 +106,37 @@ public class ItemCanisterLiquidNitrogen extends ItemCanisterGeneric implements I
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand hand)
     {
-        ItemStack itemStack = playerIn.getHeldItem(hand);
+        ItemStack itemStack = playerIn.getItemInHand(hand);
 
-        int damage = itemStack.getDamage() + 125;
+        int damage = itemStack.getDamageValue() + 125;
         if (damage > itemStack.getMaxDamage())
         {
-            return new ActionResult<>(ActionResultType.PASS, itemStack);
+            return new InteractionResultHolder<>(InteractionResult.PASS, itemStack);
         }
 
-        RayTraceResult movingobjectposition = Item.rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.ANY);
+        HitResult movingobjectposition = Item.getPlayerPOVHitResult(worldIn, playerIn, ClipContext.Fluid.ANY);
 
-        if (movingobjectposition.getType() == RayTraceResult.Type.MISS)
+        if (movingobjectposition.getType() == HitResult.Type.MISS)
         {
-            return new ActionResult<>(ActionResultType.PASS, itemStack);
+            return new InteractionResultHolder<>(InteractionResult.PASS, itemStack);
         }
         else
         {
-            if (movingobjectposition.getType() == RayTraceResult.Type.BLOCK)
+            if (movingobjectposition.getType() == HitResult.Type.BLOCK)
             {
-                BlockRayTraceResult blockResult = (BlockRayTraceResult) movingobjectposition;
-                BlockPos pos = blockResult.getPos();
+                BlockHitResult blockResult = (BlockHitResult) movingobjectposition;
+                BlockPos pos = blockResult.getBlockPos();
 
                 if (!worldIn.canMineBlockBody(playerIn, pos))
                 {
-                    return new ActionResult<>(ActionResultType.PASS, itemStack);
+                    return new InteractionResultHolder<>(InteractionResult.PASS, itemStack);
                 }
 
-                if (!playerIn.canPlayerEdit(pos, blockResult.getFace(), itemStack))
+                if (!playerIn.mayUseItemAt(pos, blockResult.getDirection(), itemStack))
                 {
-                    return new ActionResult<>(ActionResultType.PASS, itemStack);
+                    return new InteractionResultHolder<>(InteractionResult.PASS, itemStack);
                 }
 
                 //Material material = par2World.getBlock(i, j, k).getMaterial();
@@ -146,13 +148,13 @@ public class ItemCanisterLiquidNitrogen extends ItemCanisterGeneric implements I
                 if (result != null)
                 {
                     this.setNewDamage(itemStack, damage);
-                    worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.NEUTRAL, 1.0F, Item.random.nextFloat() * 0.4F + 0.8F);
-                    worldIn.setBlockState(pos, result.getDefaultState(), 3);
-                    return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
+                    worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SoundEvents.FLINTANDSTEEL_USE, SoundSource.NEUTRAL, 1.0F, Item.random.nextFloat() * 0.4F + 0.8F);
+                    worldIn.setBlock(pos, result.defaultBlockState(), 3);
+                    return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemStack);
                 }
             }
 
-            return new ActionResult<>(ActionResultType.PASS, itemStack);
+            return new InteractionResultHolder<>(InteractionResult.PASS, itemStack);
         }
     }
 

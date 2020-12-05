@@ -22,11 +22,11 @@ import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.mars.schematic.SchematicCargoRocket;
 import micdoodle8.mods.galacticraft.planets.mars.schematic.SchematicTier2Rocket;
 import micdoodle8.mods.galacticraft.planets.mars.dimension.biome.BiomeMars;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -48,7 +48,7 @@ public class MarsModule implements IPlanetsModule
     public MarsModule()
     {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modBus.addGenericListener(ContainerType.class, MarsContainers::initContainers);
+        modBus.addGenericListener(MenuType.class, MarsContainers::initContainers);
     }
 
     @Override
@@ -102,11 +102,11 @@ public class MarsModule implements IPlanetsModule
         MarsModule.planetMars.setBodyIcon(new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/celestialbodies/mars.png"));
         MarsModule.planetMars.setAtmosphere(new AtmosphereInfo(false, false, false, -1.0F, 0.3F, 0.1F));
         MarsModule.planetMars.atmosphereComponent(EnumAtmosphericGas.CO2).atmosphereComponent(EnumAtmosphericGas.ARGON).atmosphereComponent(EnumAtmosphericGas.NITROGEN);
-        MarsModule.planetMars.addMobInfo(new Biome.SpawnListEntry(GCEntities.EVOLVED_ZOMBIE, 8, 2, 3), EntityClassification.MONSTER);
-        MarsModule.planetMars.addMobInfo(new Biome.SpawnListEntry(GCEntities.EVOLVED_SPIDER, 8, 2, 3), EntityClassification.MONSTER);
-        MarsModule.planetMars.addMobInfo(new Biome.SpawnListEntry(GCEntities.EVOLVED_SKELETON, 8, 2, 3), EntityClassification.MONSTER);
-        MarsModule.planetMars.addMobInfo(new Biome.SpawnListEntry(GCEntities.EVOLVED_CREEPER, 8, 2, 3), EntityClassification.MONSTER);
-        MarsModule.planetMars.addMobInfo(new Biome.SpawnListEntry(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), EntityClassification.MONSTER);
+        MarsModule.planetMars.addMobInfo(new Biome.SpawnerData(GCEntities.EVOLVED_ZOMBIE, 8, 2, 3), MobCategory.MONSTER);
+        MarsModule.planetMars.addMobInfo(new Biome.SpawnerData(GCEntities.EVOLVED_SPIDER, 8, 2, 3), MobCategory.MONSTER);
+        MarsModule.planetMars.addMobInfo(new Biome.SpawnerData(GCEntities.EVOLVED_SKELETON, 8, 2, 3), MobCategory.MONSTER);
+        MarsModule.planetMars.addMobInfo(new Biome.SpawnerData(GCEntities.EVOLVED_CREEPER, 8, 2, 3), MobCategory.MONSTER);
+        MarsModule.planetMars.addMobInfo(new Biome.SpawnerData(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), MobCategory.MONSTER);
         MarsModule.planetMars.addChecklistKeys("equip_oxygen_suit", "thermal_padding");
         MarsModule.planetMars.setSurfaceBlocks(Lists.newArrayList(MarsBlocks.rockSurface));
 

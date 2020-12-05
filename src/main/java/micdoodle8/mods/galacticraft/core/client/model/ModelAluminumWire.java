@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.model;
+package micdoodle8.mods.galacticraft.core.client.model;
 //
 //import net.minecraft.client.model.ModelBase;
 //import net.minecraft.client.renderer.model.ModelRenderer;

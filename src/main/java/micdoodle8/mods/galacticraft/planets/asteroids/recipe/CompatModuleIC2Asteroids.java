@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.recipe;
+package micdoodle8.mods.galacticraft.planets.asteroids.recipe;
 //
 //import ic2.api.recipe.Recipes;
 //import micdoodle8.mods.galacticraft.core.GCItems;

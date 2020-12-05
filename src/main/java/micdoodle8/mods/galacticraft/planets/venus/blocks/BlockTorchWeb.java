@@ -9,21 +9,23 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.item.*;
-import net.minecraft.block.Blocks;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.*;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IShearable;
@@ -32,8 +34,8 @@ import javax.annotation.Nonnull;
 
 public class BlockTorchWeb extends Block implements IShearable, IShiftDescription, ISortable
 {
-    protected static final VoxelShape AABB_WEB = VoxelShapes.create(0.35, 0.0, 0.35, 0.65, 1.0, 0.65);
-    protected static final VoxelShape AABB_WEB_TORCH = VoxelShapes.create(0.35, 0.25, 0.35, 0.65, 1.0, 0.65);
+    protected static final VoxelShape AABB_WEB = Shapes.box(0.35, 0.0, 0.35, 0.65, 1.0, 0.65);
+    protected static final VoxelShape AABB_WEB_TORCH = Shapes.box(0.35, 0.25, 0.35, 0.65, 1.0, 0.65);
 
     public BlockTorchWeb(Properties builder)
     {
@@ -48,7 +50,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
 //    }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         if (state.getBlock() == VenusBlocks.torchWebLight)
         {
@@ -59,7 +61,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos)
+    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos)
     {
         if (state.getBlock() == VenusBlocks.torchWebLight)
         {
@@ -101,36 +103,36 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
 //    }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        World world = context.getWorld();
-        BlockPos pos = context.getPos();
-        if (world.getBlockState(pos).isReplaceable(context) && this.canBlockStay(world, pos))
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        if (world.getBlockState(pos).canBeReplaced(context) && this.canBlockStay(world, pos))
         {
             return super.getStateForPlacement(context);
         }
         return world.getBlockState(pos);
     }
 
-    private boolean canBlockStay(World world, BlockPos pos)
+    private boolean canBlockStay(Level world, BlockPos pos)
     {
-        BlockState blockUp = world.getBlockState(pos.up());
+        BlockState blockUp = world.getBlockState(pos.above());
         return blockUp.getMaterial().isSolid() || blockUp.getBlock() == VenusBlocks.torchWebSupport;
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         this.checkAndDropBlock(worldIn, pos);
     }
 
     @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random)
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random)
     {
         this.checkAndDropBlock(worldIn, pos);
     }
 
-    protected void checkAndDropBlock(World world, BlockPos pos)
+    protected void checkAndDropBlock(Level world, BlockPos pos)
     {
         if (!this.canBlockStay(world, pos))
         {
@@ -151,14 +153,14 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
 //    }
 
     @Override
-    public boolean isShearable(ItemStack item, IWorldReader world, BlockPos pos)
+    public boolean isShearable(ItemStack item, LevelReader world, BlockPos pos)
     {
         return true;
     }
 
     @Nonnull
     @Override
-    public List<ItemStack> onSheared(@Nonnull ItemStack item, IWorld world, BlockPos pos, int fortune)
+    public List<ItemStack> onSheared(@Nonnull ItemStack item, LevelAccessor world, BlockPos pos, int fortune)
     {
         ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
         ret.add(new ItemStack(this, 1));
@@ -168,13 +170,13 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
     public boolean showDescription(ItemStack stack)
     {
-        return BlockItem.BLOCK_TO_ITEM.get(VenusBlocks.torchWebLight) == stack.getItem();
+        return BlockItem.BY_BLOCK.get(VenusBlocks.torchWebLight) == stack.getItem();
     }
 
 //    @Override

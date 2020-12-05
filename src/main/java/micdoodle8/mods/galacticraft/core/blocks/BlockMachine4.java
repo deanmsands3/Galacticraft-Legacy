@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.blocks;
+package micdoodle8.mods.galacticraft.core.blocks;
 //
 //import micdoodle8.mods.galacticraft.core.tile.IMachineSides;
 //import micdoodle8.mods.galacticraft.core.tile.IMachineSidesProperties;

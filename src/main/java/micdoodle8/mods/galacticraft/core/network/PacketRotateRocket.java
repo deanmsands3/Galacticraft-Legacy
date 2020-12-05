@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.network;
+package micdoodle8.mods.galacticraft.core.network;
 //
 //import io.netty.buffer.ByteBuf;
 //import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;

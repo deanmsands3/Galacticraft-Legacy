@@ -1,60 +1,60 @@
 package micdoodle8.mods.galacticraft.planets.mars.client.fx;
 
 import micdoodle8.mods.galacticraft.core.client.fx.BlockPosParticleData;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.block.material.Material;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class ParticleDrip extends SpriteTexturedParticle
+@Environment(EnvType.CLIENT)
+public class ParticleDrip extends TextureSheetParticle
 {
-    private final IAnimatedSprite animatedSprite;
+    private final SpriteSet animatedSprite;
     private int bobTimer;
 
-    public ParticleDrip(World world, double x, double y, double z, IAnimatedSprite animatedSprite)
+    public ParticleDrip(Level world, double x, double y, double z, SpriteSet animatedSprite)
     {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
-        this.motionX = this.motionY = this.motionZ = 0.0D;
+        this.xd = this.yd = this.zd = 0.0D;
 //        this.setParticleTextureIndex(113);
         this.setSize(0.01F, 0.01F);
-        this.particleGravity = 0.06F;
+        this.gravity = 0.06F;
         this.bobTimer = 40;
-        this.maxAge = (int) (64.0D / (Math.random() * 0.8D + 0.2D));
-        this.motionX = this.motionY = this.motionZ = 0.0D;
+        this.lifetime = (int) (64.0D / (Math.random() * 0.8D + 0.2D));
+        this.xd = this.yd = this.zd = 0.0D;
         this.animatedSprite = animatedSprite;
     }
 
     @Override
-    public IParticleRenderType getRenderType()
+    public ParticleRenderType getRenderType()
     {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
     public void tick()
     {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
-        this.particleRed = 0.0F;
-        this.particleGreen = 0.2F;
-        this.particleBlue = 0.1F;
-        this.motionY -= this.particleGravity;
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
+        this.rCol = 0.0F;
+        this.gCol = 0.2F;
+        this.bCol = 0.1F;
+        this.yd -= this.gravity;
 
         if (this.bobTimer-- > 0)
         {
-            this.motionX *= 0.02D;
-            this.motionY *= 0.02D;
-            this.motionZ *= 0.02D;
+            this.xd *= 0.02D;
+            this.yd *= 0.02D;
+            this.zd *= 0.02D;
 //            this.setParticleTextureIndex(113);
         }
         else
@@ -62,55 +62,55 @@ public class ParticleDrip extends SpriteTexturedParticle
 //            this.setParticleTextureIndex(112);
         }
 
-        this.move(this.motionX, this.motionY, this.motionZ);
-        this.motionX *= 0.9800000190734863D;
-        this.motionY *= 0.9800000190734863D;
-        this.motionZ *= 0.9800000190734863D;
+        this.move(this.xd, this.yd, this.zd);
+        this.xd *= 0.9800000190734863D;
+        this.yd *= 0.9800000190734863D;
+        this.zd *= 0.9800000190734863D;
 
-        if (this.maxAge-- <= 0)
+        if (this.lifetime-- <= 0)
         {
-            this.setExpired();
+            this.remove();
         }
 
         if (this.onGround)
         {
-            this.setExpired();
+            this.remove();
         }
 
-        BlockPos pos = new BlockPos(this.posX, this.posY, this.posZ);
-        BlockState state = this.world.getBlockState(pos);
+        BlockPos pos = new BlockPos(this.x, this.y, this.z);
+        BlockState state = this.level.getBlockState(pos);
         Material material = state.getMaterial();
 
         if (material.isLiquid() || material.isSolid())
         {
             double d0 = 0.0D;
 
-            if (state.getBlock() instanceof FlowingFluidBlock)
+            if (state.getBlock() instanceof LiquidBlock)
             {
-                d0 = ((FlowingFluidBlock) state.getBlock()).getFluid().getHeight(((FlowingFluidBlock) state.getBlock()).getFluidState(state));
+                d0 = ((LiquidBlock) state.getBlock()).getFluid().getHeight(((LiquidBlock) state.getBlock()).getFluidState(state));
             }
 
-            double d1 = MathHelper.floor(this.posY) + 1 - d0;
+            double d1 = Mth.floor(this.y) + 1 - d0;
 
-            if (this.posY < d1)
+            if (this.y < d1)
             {
-                this.setExpired();
+                this.remove();
             }
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<BasicParticleType>
+    @Environment(EnvType.CLIENT)
+    public static class Factory implements ParticleProvider<SimpleParticleType>
     {
-        private final IAnimatedSprite spriteSet;
+        private final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite spriteSet)
+        public Factory(SpriteSet spriteSet)
         {
             this.spriteSet = spriteSet;
         }
 
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle makeParticle(SimpleParticleType typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
         {
             return new ParticleDrip(worldIn, x, y, z, this.spriteSet);
         }

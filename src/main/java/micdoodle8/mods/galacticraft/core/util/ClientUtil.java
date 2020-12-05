@@ -1,7 +1,5 @@
 package micdoodle8.mods.galacticraft.core.util;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRace;
@@ -10,24 +8,24 @@ import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.wrappers.FlagData;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.Random;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class ClientUtil
 {
     /**
@@ -41,7 +39,7 @@ public class ClientUtil
 
     public static long getClientTimeTotal()
     {
-        return (long) (Minecraft.getInstance().world.getGameTime() * 66.666666666666);
+        return (long) (Minecraft.getInstance().level.getGameTime() * 66.666666666666);
     }
 
 //    public static void addVariant(String modID, String name, String... variants)
@@ -94,7 +92,7 @@ public class ClientUtil
         }
         else if (!ClientProxyCore.flagRequestsSent.contains(playerName) && sendPacket)
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_FLAG_DATA, GCCoreUtil.getDimensionType(Minecraft.getInstance().world), new Object[]{playerName}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_FLAG_DATA, GCCoreUtil.getDimensionType(Minecraft.getInstance().level), new Object[]{playerName}));
             ClientProxyCore.flagRequestsSent.add(playerName);
         }
 
@@ -111,7 +109,7 @@ public class ClientUtil
         }
         else if (!ClientProxyCore.flagRequestsSent.contains(playerName) && sendPacket)
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_FLAG_DATA, GCCoreUtil.getDimensionType(Minecraft.getInstance().world), new Object[]{playerName}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_FLAG_DATA, GCCoreUtil.getDimensionType(Minecraft.getInstance().level), new Object[]{playerName}));
             ClientProxyCore.flagRequestsSent.add(playerName);
         }
 
@@ -187,43 +185,43 @@ public class ClientUtil
 //        return (OBJModel) model.bake(loader, textureGetter, new BasicState(new OBJModel.OBJState(visibleGroups, false, parentState), false), DefaultVertexFormats.ITEM);
 //    }
 
-    public static void drawBakedModel(IBakedModel model, IRenderTypeBuffer buffer, MatrixStack mat, int light)
+    public static void drawBakedModel(BakedModel model, MultiBufferSource buffer, PoseStack mat, int light)
     {
-        RenderType renderType = RenderType.getEntityTranslucent(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-        IVertexBuilder builder = buffer.getBuffer(renderType);
+        RenderType renderType = RenderType.entityTranslucent(TextureAtlas.LOCATION_BLOCKS);
+        VertexConsumer builder = buffer.getBuffer(renderType);
         Random random = new Random();
         random.setSeed(42);
 
-        MatrixStack.Entry last = mat.getLast();
+        PoseStack.Pose last = mat.last();
         for (BakedQuad bakedquad : model.getQuads(null, null, random))
         {
             builder.addVertexData(last, bakedquad, 1.0F, 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
         }
-        ((IRenderTypeBuffer.Impl) buffer).finish(renderType);
+        ((MultiBufferSource.BufferSource) buffer).endBatch(renderType);
     }
 
-    public static void drawBakedModelColored(IBakedModel model, IRenderTypeBuffer buffer, MatrixStack mat, int light, float r, float g, float b, float a)
+    public static void drawBakedModelColored(BakedModel model, MultiBufferSource buffer, PoseStack mat, int light, float r, float g, float b, float a)
     {
-        RenderType renderType = RenderType.getEntityTranslucent(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-        IVertexBuilder builder = buffer.getBuffer(renderType);
+        RenderType renderType = RenderType.entityTranslucent(TextureAtlas.LOCATION_BLOCKS);
+        VertexConsumer builder = buffer.getBuffer(renderType);
         Random random = new Random();
         random.setSeed(42);
 
-        MatrixStack.Entry last = mat.getLast();
+        PoseStack.Pose last = mat.last();
         for (BakedQuad bakedquad : model.getQuads(null, null, random))
         {
             builder.addVertexData(last, bakedquad, 1.0F, 1.0F, 1.0F, 1.0F, light, OverlayTexture.NO_OVERLAY);
         }
-        ((IRenderTypeBuffer.Impl) buffer).finish(renderType);
+        ((MultiBufferSource.BufferSource) buffer).endBatch(renderType);
     }
 //
-    public static void copyModelAngles(ModelRenderer source, ModelRenderer dest)
+    public static void copyModelAngles(ModelPart source, ModelPart dest)
     {
-        dest.rotateAngleX = source.rotateAngleX;
-        dest.rotateAngleY = source.rotateAngleY;
-        dest.rotateAngleZ = source.rotateAngleZ;
-        dest.rotationPointX = source.rotationPointX;
-        dest.rotationPointY = source.rotationPointY;
-        dest.rotationPointZ = source.rotationPointZ;
+        dest.xRot = source.xRot;
+        dest.yRot = source.yRot;
+        dest.zRot = source.zRot;
+        dest.x = source.x;
+        dest.y = source.y;
+        dest.z = source.z;
     }
 }

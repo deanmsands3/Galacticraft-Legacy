@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.blocks;
+package micdoodle8.mods.galacticraft.core.blocks;
 //
 //import com.google.common.base.Predicate;
 //import micdoodle8.mods.galacticraft.api.block.IDetectableResource;

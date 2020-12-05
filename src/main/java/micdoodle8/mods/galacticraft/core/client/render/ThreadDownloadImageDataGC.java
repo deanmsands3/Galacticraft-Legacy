@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.render;
+package micdoodle8.mods.galacticraft.core.client.render;
 //
 //import com.mojang.blaze3d.platform.TextureUtil;
 //import micdoodle8.mods.galacticraft.core.util.GCLog;

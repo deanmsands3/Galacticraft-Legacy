@@ -11,15 +11,22 @@ import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.util.ITooltipFlag;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.item.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.*;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -58,7 +65,7 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
 //    }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rarity getRarity(ItemStack par1ItemStack)
     {
         return ClientProxyCore.galacticraftItem;
@@ -71,20 +78,20 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
 //    }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    @Environment(EnvType.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         if (stack.getItem() == GCItems.schematicBuggy)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.moonbuggy")));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("schematic.moonbuggy")));
         }
         else if (stack.getItem() == GCItems.schematicRocketT2)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.rocket_t2")));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("schematic.rocket_t2")));
 
             if (!GalacticraftCore.isPlanetsLoaded)
             {
-                tooltip.add(new StringTextComponent(EnumColor.DARK_AQUA + "\"Galacticraft: Planets\" Not Installed!"));
+                tooltip.add(new TextComponent(EnumColor.DARK_AQUA + "\"Galacticraft: Planets\" Not Installed!"));
             }
         }
     }
@@ -96,37 +103,37 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context)
+    public InteractionResult useOn(UseOnContext context)
     {
-        ItemStack stack = context.getPlayer().getHeldItem(context.getHand());
-        BlockPos blockpos = context.getPos().offset(context.getFace());
-        Direction facing = context.getFace();
+        ItemStack stack = context.getPlayer().getItemInHand(context.getHand());
+        BlockPos blockpos = context.getClickedPos().relative(context.getClickedFace());
+        Direction facing = context.getClickedFace();
 
-        if (facing != Direction.DOWN && facing != Direction.UP && context.getPlayer().canPlayerEdit(blockpos, facing, stack))
+        if (facing != Direction.DOWN && facing != Direction.UP && context.getPlayer().mayUseItemAt(blockpos, facing, stack))
         {
-            EntityHangingSchematic entityhanging = this.createEntity(context.getWorld(), blockpos, facing, this.getIndex(stack.getDamage()));
+            EntityHangingSchematic entityhanging = this.createEntity(context.getLevel(), blockpos, facing, this.getIndex(stack.getDamageValue()));
 
-            if (entityhanging != null && entityhanging.onValidSurface())
+            if (entityhanging != null && entityhanging.survives())
             {
-                if (!context.getWorld().isRemote)
+                if (!context.getLevel().isClientSide)
                 {
-                    entityhanging.playPlaceSound();
-                    context.getWorld().addEntity(entityhanging);
-                    entityhanging.sendToClient(context.getWorld(), blockpos);
+                    entityhanging.playPlacementSound();
+                    context.getLevel().addFreshEntity(entityhanging);
+                    entityhanging.sendToClient(context.getLevel(), blockpos);
                 }
 
                 stack.shrink(1);
             }
 
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         else
         {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
     }
 
-    private EntityHangingSchematic createEntity(World worldIn, BlockPos pos, Direction clickedSide, int index)
+    private EntityHangingSchematic createEntity(Level worldIn, BlockPos pos, Direction clickedSide, int index)
     {
         return new EntityHangingSchematic(GCEntities.HANGING_SCHEMATIC, worldIn, pos, clickedSide, index);
     }
@@ -151,7 +158,7 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
     /**
      * Make sure the order of these will match the index values
      */
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void registerTextures()
     {
         SchematicRegistry.registerTexture(new ResourceLocation(Constants.MOD_ID_CORE, "textures/items/schematic_buggy.png"));
@@ -159,7 +166,7 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack)
+    public String getDescriptionId(ItemStack stack)
     {
         return "item.galacticraftcore.schematic";
     }

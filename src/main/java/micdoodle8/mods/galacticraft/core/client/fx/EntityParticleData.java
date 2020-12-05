@@ -2,29 +2,28 @@ package micdoodle8.mods.galacticraft.core.client.fx;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.registry.Registry;
-
 import java.util.Locale;
 import java.util.UUID;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.FriendlyByteBuf;
 
-public class EntityParticleData implements IParticleData
+public class EntityParticleData implements ParticleOptions
 {
-    public static final IParticleData.IDeserializer<EntityParticleData> DESERIALIZER = new IParticleData.IDeserializer<EntityParticleData>()
+    public static final ParticleOptions.Deserializer<EntityParticleData> DESERIALIZER = new ParticleOptions.Deserializer<EntityParticleData>()
     {
         @Override
-        public EntityParticleData deserialize(ParticleType<EntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException
+        public EntityParticleData fromCommand(ParticleType<EntityParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException
         {
             reader.expect(' ');
             return new EntityParticleData(particleTypeIn, UUID.fromString(reader.readString()));
         }
 
         @Override
-        public EntityParticleData read(ParticleType<EntityParticleData> particleTypeIn, PacketBuffer buffer)
+        public EntityParticleData fromNetwork(ParticleType<EntityParticleData> particleTypeIn, FriendlyByteBuf buffer)
         {
-            return new EntityParticleData(particleTypeIn, buffer.readUniqueId());
+            return new EntityParticleData(particleTypeIn, buffer.readUUID());
         }
     };
 
@@ -44,17 +43,17 @@ public class EntityParticleData implements IParticleData
     }
 
     @Override
-    public void write(PacketBuffer buffer)
+    public void writeToNetwork(FriendlyByteBuf buffer)
     {
         buffer.writeBoolean(this.entityUUID != null);
         if (this.entityUUID != null)
         {
-            buffer.writeUniqueId(this.entityUUID);
+            buffer.writeUUID(this.entityUUID);
         }
     }
 
     @Override
-    public String getParameters()
+    public String writeToString()
     {
         return String.format(Locale.ROOT, "%s %s", Registry.PARTICLE_TYPE.getKey(this.getType()), this.entityUUID.toString());
     }

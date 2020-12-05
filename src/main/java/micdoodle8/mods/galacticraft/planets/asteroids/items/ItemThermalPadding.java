@@ -5,15 +5,18 @@ import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Rarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.*;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -31,7 +34,7 @@ public class ItemThermalPadding extends Item implements IItemThermal, ISortable
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Rarity getRarity(ItemStack par1ItemStack)
     {
         return ClientProxyCore.galacticraftItem;
@@ -82,7 +85,7 @@ public class ItemThermalPadding extends Item implements IItemThermal, ISortable
     @Override
     public boolean isValidForSlot(ItemStack stack, int armorSlot)
     {
-        return stack.getDamage() == armorSlot;
+        return stack.getDamageValue() == armorSlot;
     }
 
     @Override
@@ -92,51 +95,51 @@ public class ItemThermalPadding extends Item implements IItemThermal, ISortable
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand hand)
     {
-        ItemStack itemStack = player.getHeldItem(hand);
+        ItemStack itemStack = player.getItemInHand(hand);
 
-        if (player instanceof ServerPlayerEntity)
+        if (player instanceof ServerPlayer)
         {
             GCPlayerStats stats = GCPlayerStats.get(player);
-            ItemStack gear = stats.getExtendedInventory().getStackInSlot(6);
-            ItemStack gear1 = stats.getExtendedInventory().getStackInSlot(7);
-            ItemStack gear2 = stats.getExtendedInventory().getStackInSlot(8);
-            ItemStack gear3 = stats.getExtendedInventory().getStackInSlot(9);
+            ItemStack gear = stats.getExtendedInventory().getItem(6);
+            ItemStack gear1 = stats.getExtendedInventory().getItem(7);
+            ItemStack gear2 = stats.getExtendedInventory().getItem(8);
+            ItemStack gear3 = stats.getExtendedInventory().getItem(9);
 
-            if (itemStack.getDamage() == 0)
+            if (itemStack.getDamageValue() == 0)
             {
                 if (gear.isEmpty())
                 {
-                    stats.getExtendedInventory().setInventorySlotContents(6, itemStack.copy());
+                    stats.getExtendedInventory().setItem(6, itemStack.copy());
                     itemStack.setCount(0);
                 }
             }
-            else if (itemStack.getDamage() == 1)
+            else if (itemStack.getDamageValue() == 1)
             {
                 if (gear1.isEmpty())
                 {
-                    stats.getExtendedInventory().setInventorySlotContents(7, itemStack.copy());
+                    stats.getExtendedInventory().setItem(7, itemStack.copy());
                     itemStack.setCount(0);
                 }
             }
-            else if (itemStack.getDamage() == 2)
+            else if (itemStack.getDamageValue() == 2)
             {
                 if (gear2.isEmpty())
                 {
-                    stats.getExtendedInventory().setInventorySlotContents(8, itemStack.copy());
+                    stats.getExtendedInventory().setItem(8, itemStack.copy());
                     itemStack.setCount(0);
                 }
             }
-            else if (itemStack.getDamage() == 3)
+            else if (itemStack.getDamageValue() == 3)
             {
                 if (gear3.isEmpty())
                 {
-                    stats.getExtendedInventory().setInventorySlotContents(9, itemStack.copy());
+                    stats.getExtendedInventory().setItem(9, itemStack.copy());
                     itemStack.setCount(0);
                 }
             }
         }
-        return new ActionResult<>(ActionResultType.PASS, itemStack);
+        return new InteractionResultHolder<>(InteractionResult.PASS, itemStack);
     }
 }

@@ -7,12 +7,9 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.Footprint;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;
@@ -23,7 +20,7 @@ public class FootprintRenderer
     public static Map<Long, List<Footprint>> footprints = new ConcurrentHashMap<Long, List<Footprint>>();
     private static final ResourceLocation footprintTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/misc/footprint.png");
 
-    public static void renderFootprints(PlayerEntity player, float partialTicks)
+    public static void renderFootprints(Player player, float partialTicks)
     {
 //        DimensionType dimActive = GCCoreUtil.getDimensionType(player.world);
 //        List<Footprint> footprintsToDraw = new LinkedList<>();

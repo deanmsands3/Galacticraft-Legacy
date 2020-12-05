@@ -10,11 +10,11 @@ import micdoodle8.mods.galacticraft.core.fluid.FluidNetwork;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.fluid.NetworkHelper;
 import micdoodle8.mods.galacticraft.core.wrappers.IFluidHandlerWrapper;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,7 +34,7 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
     public static int timeSinceOxygenRequest;
     private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
 
-    public TileEntityOxygen(TileEntityType<?> type, int maxOxygen, int oxygenPerTick)
+    public TileEntityOxygen(BlockEntityType<?> type, int maxOxygen, int oxygenPerTick)
     {
         super(type);
         this.tank = new FluidTankGC(maxOxygen, this);
@@ -86,7 +86,7 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (TileEntityOxygen.timeSinceOxygenRequest > 0)
             {
@@ -108,9 +108,9 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
 
         if (nbt.contains("storedOxygen"))
         {
@@ -129,17 +129,17 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         this.tank.writeToNBT(nbt);
         return nbt;
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override
@@ -256,7 +256,7 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
 
     public void produceOxygen()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             for (Direction direction : this.getOxygenOutputDirections())
             {
@@ -274,7 +274,7 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
 
         if (provide > 0)
         {
-            TileEntity outputTile = new BlockVec3(this).getTileEntityOnSide(this.world, outputDirection);
+            BlockEntity outputTile = new BlockVec3(this).getTileEntityOnSide(this.level, outputDirection);
             FluidNetwork outputNetwork = NetworkHelper.getFluidNetworkFromTile(outputTile, outputDirection);
 
             if (outputNetwork != null)

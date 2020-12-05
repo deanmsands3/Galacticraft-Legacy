@@ -1,14 +1,12 @@
 package micdoodle8.mods.galacticraft.core.inventory;
 
 import micdoodle8.mods.galacticraft.api.inventory.IInventoryGC;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 
 public class InventoryExtended implements IInventoryGC
@@ -30,48 +28,48 @@ public class InventoryExtended implements IInventoryGC
     }
 
     @Override
-    public int getSizeInventory()
+    public int getContainerSize()
     {
         return this.stacks.size();
     }
 
     @Override
     @Nonnull
-    public ItemStack getStackInSlot(int index)
+    public ItemStack getItem(int index)
     {
         return this.stacks.get(index);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
+    public ItemStack removeItem(int index, int count)
     {
-        ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
+        ItemStack itemstack = ContainerHelper.removeItem(this.stacks, index, count);
 
         if (!itemstack.isEmpty())
         {
-            this.markDirty();
+            this.setChanged();
         }
 
         return itemstack;
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
+    public ItemStack removeItemNoUpdate(int index)
     {
-        return ItemStackHelper.getAndRemove(this.stacks, index);
+        return ContainerHelper.takeItem(this.stacks, index);
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
+    public void setItem(int index, ItemStack stack)
     {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
+        if (stack.getCount() > this.getMaxStackSize())
         {
-            stack.setCount(this.getInventoryStackLimit());
+            stack.setCount(this.getMaxStackSize());
         }
 
-        this.markDirty();
+        this.setChanged();
     }
 
 //    @Override
@@ -87,43 +85,43 @@ public class InventoryExtended implements IInventoryGC
 //    }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 64;
     }
 
     @Override
-    public void markDirty()
+    public void setChanged()
     {
 
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity entityplayer)
+    public boolean stillValid(Player entityplayer)
     {
         return true;
     }
 
     @Override
-    public void openInventory(PlayerEntity player)
+    public void startOpen(Player player)
     {
 
     }
 
     @Override
-    public void closeInventory(PlayerEntity player)
+    public void stopOpen(Player player)
     {
 
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    public boolean canPlaceItem(int i, ItemStack itemstack)
     {
         return false;
     }
 
     @Override
-    public void dropExtendedItems(PlayerEntity player)
+    public void dropExtendedItems(Player player)
     {
         for (int i = 0; i < this.stacks.size(); i++)
         {
@@ -131,7 +129,7 @@ public class InventoryExtended implements IInventoryGC
 
             if (!stack.isEmpty())
             {
-                player.dropItem(stack, true);
+                player.drop(stack, true);
             }
 
             this.stacks.set(i, ItemStack.EMPTY);
@@ -139,15 +137,15 @@ public class InventoryExtended implements IInventoryGC
     }
 
     // Backwards compatibility for old inventory
-    public void readFromNBTOld(ListNBT par1NBTTagList)
+    public void readFromNBTOld(ListTag par1NBTTagList)
     {
         this.stacks = NonNullList.withSize(11, ItemStack.EMPTY);
 
         for (int i = 0; i < par1NBTTagList.size(); ++i)
         {
-            final CompoundNBT nbttagcompound = par1NBTTagList.getCompound(i);
+            final CompoundTag nbttagcompound = par1NBTTagList.getCompound(i);
             final int j = nbttagcompound.getByte("Slot") & 255;
-            final ItemStack itemstack = ItemStack.read(nbttagcompound);
+            final ItemStack itemstack = ItemStack.of(nbttagcompound);
 
             if (!itemstack.isEmpty())
             {
@@ -159,15 +157,15 @@ public class InventoryExtended implements IInventoryGC
         }
     }
 
-    public void readFromNBT(ListNBT tagList)
+    public void readFromNBT(ListTag tagList)
     {
         this.stacks = NonNullList.withSize(11, ItemStack.EMPTY);
 
         for (int i = 0; i < tagList.size(); ++i)
         {
-            final CompoundNBT nbttagcompound = tagList.getCompound(i);
+            final CompoundTag nbttagcompound = tagList.getCompound(i);
             final int j = nbttagcompound.getByte("Slot") & 255;
-            final ItemStack itemstack = ItemStack.read(nbttagcompound);
+            final ItemStack itemstack = ItemStack.of(nbttagcompound);
 
             if (!itemstack.isEmpty())
             {
@@ -176,17 +174,17 @@ public class InventoryExtended implements IInventoryGC
         }
     }
 
-    public ListNBT writeToNBT(ListNBT tagList)
+    public ListTag writeToNBT(ListTag tagList)
     {
-        CompoundNBT nbttagcompound;
+        CompoundTag nbttagcompound;
 
         for (int i = 0; i < this.stacks.size(); ++i)
         {
             if (!this.stacks.get(i).isEmpty())
             {
-                nbttagcompound = new CompoundNBT();
+                nbttagcompound = new CompoundTag();
                 nbttagcompound.putByte("Slot", (byte) i);
-                this.stacks.get(i).write(nbttagcompound);
+                this.stacks.get(i).save(nbttagcompound);
                 tagList.add(nbttagcompound);
             }
         }
@@ -222,7 +220,7 @@ public class InventoryExtended implements IInventoryGC
 //    }
 
     @Override
-    public void clear()
+    public void clearContent()
     {
 
     }

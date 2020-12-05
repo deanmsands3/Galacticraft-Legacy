@@ -1,59 +1,57 @@
 package micdoodle8.mods.galacticraft.planets.venus.entities.ai;
 
 import micdoodle8.mods.galacticraft.planets.venus.entities.EntityJuicer;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.pathfinding.PathFinder;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.pathfinder.PathFinder;
+import net.minecraft.world.phys.Vec3;
 import java.util.stream.Stream;
 
-public class PathNavigateCeiling extends PathNavigator
+public class PathNavigateCeiling extends PathNavigation
 {
     protected WalkNodeProcessorCeiling nodeProcessor;
 
-    public PathNavigateCeiling(EntityJuicer entity, World worldIn)
+    public PathNavigateCeiling(EntityJuicer entity, Level worldIn)
     {
         super(entity, worldIn);
     }
 
     @Override
-    protected PathFinder getPathFinder(int val)
+    protected PathFinder createPathFinder(int val)
     {
-        this.nodeProcessor = new WalkNodeProcessorCeiling();
-        return new PathFinder(this.nodeProcessor, val);
+        this.nodeEvaluator = new WalkNodeProcessorCeiling();
+        return new PathFinder(this.nodeEvaluator, val);
     }
 
     @Override
-    protected boolean canNavigate()
+    protected boolean canUpdatePath()
     {
-        return this.entity.onGround || this.entity.getRidingEntity() != null && this.entity instanceof ZombieEntity && this.entity.getRidingEntity() instanceof ChickenEntity;
+        return this.mob.onGround || this.mob.getVehicle() != null && this.mob instanceof Zombie && this.mob.getVehicle() instanceof Chicken;
     }
 
     @Override
-    protected Vec3d getEntityPosition()
+    protected Vec3 getTempMobPos()
     {
-        return new Vec3d(this.entity.getPosX(), this.getPathablePosY(), this.entity.getPosZ());
+        return new Vec3(this.mob.getX(), this.getPathablePosY(), this.mob.getZ());
     }
 
     private int getPathablePosY()
     {
-        return (int) (this.entity.getBoundingBox().minY + 0.5D);
+        return (int) (this.mob.getBoundingBox().minY + 0.5D);
     }
 
     @Override
-    protected boolean isDirectPathBetweenPoints(Vec3d current, Vec3d target, int sizeX, int sizeY, int sizeZ)
+    protected boolean canMoveDirectly(Vec3 current, Vec3 target, int sizeX, int sizeY, int sizeZ)
     {
-        int i = MathHelper.floor(current.x);
-        int j = MathHelper.floor(current.z);
+        int i = Mth.floor(current.x);
+        int j = Mth.floor(current.z);
         double d0 = target.x - current.x;
         double d1 = target.z - current.z;
         double d2 = d0 * d0 + d1 * d1;
@@ -97,8 +95,8 @@ public class PathNavigateCeiling extends PathNavigator
                 d7 = d7 / d1;
                 int k = d0 < 0.0D ? -1 : 1;
                 int l = d1 < 0.0D ? -1 : 1;
-                int i1 = MathHelper.floor(target.x);
-                int j1 = MathHelper.floor(target.z);
+                int i1 = Mth.floor(target.x);
+                int j1 = Mth.floor(target.z);
                 int k1 = i1 - i;
                 int l1 = j1 - j;
 
@@ -128,7 +126,7 @@ public class PathNavigateCeiling extends PathNavigator
         }
     }
 
-    private boolean isSafeToStandAt(int x, int y, int z, int sizeX, int sizeY, int sizeZ, Vec3d currentPos, double distanceX, double distanceZ)
+    private boolean isSafeToStandAt(int x, int y, int z, int sizeX, int sizeY, int sizeZ, Vec3 currentPos, double distanceX, double distanceZ)
     {
         int i = x - sizeX / 2;
         int j = z - sizeZ / 2;
@@ -148,7 +146,7 @@ public class PathNavigateCeiling extends PathNavigator
 
                     if (d0 * distanceX + d1 * distanceZ >= 0.0D)
                     {
-                        BlockState state = this.world.getBlockState(new BlockPos(k, y + 1, l));
+                        BlockState state = this.level.getBlockState(new BlockPos(k, y + 1, l));
                         Material material = state.getMaterial();
 
                         if (material == Material.AIR)
@@ -156,7 +154,7 @@ public class PathNavigateCeiling extends PathNavigator
                             return false;
                         }
 
-                        if (material == Material.WATER && !this.entity.isInWater())
+                        if (material == Material.WATER && !this.mob.isInWater())
                         {
                             return false;
                         }
@@ -173,15 +171,15 @@ public class PathNavigateCeiling extends PathNavigator
         }
     }
 
-    private boolean isPositionClear(int minX, int minY, int minZ, int sizeX, int sizeY, int sizeZ, Vec3d currentPos, double distanceX, double distanceZ)
+    private boolean isPositionClear(int minX, int minY, int minZ, int sizeX, int sizeY, int sizeZ, Vec3 currentPos, double distanceX, double distanceZ)
     {
-        Stream<BlockPos> stream = BlockPos.getAllInBox(new BlockPos(minX, minY, minZ), new BlockPos(minX + sizeX - 1, minY + sizeY - 1, minZ + sizeZ - 1));
+        Stream<BlockPos> stream = BlockPos.betweenClosedStream(new BlockPos(minX, minY, minZ), new BlockPos(minX + sizeX - 1, minY + sizeY - 1, minZ + sizeZ - 1));
         stream = stream.filter((pos) -> ((double) pos.getX() + 0.5D - currentPos.x) * distanceX + ((double) pos.getZ() + 0.5D - currentPos.z) * distanceZ >= 0.0D);
         return stream.allMatch((pos) ->
         {
-            BlockState state = this.world.getBlockState(pos);
+            BlockState state = this.level.getBlockState(pos);
 
-            return state.allowsMovement(world, pos, PathType.LAND);
+            return state.isPathfindable(level, pos, PathComputationType.LAND);
         });
     }
 }

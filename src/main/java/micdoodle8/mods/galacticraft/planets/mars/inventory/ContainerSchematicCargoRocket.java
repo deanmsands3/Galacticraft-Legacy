@@ -4,34 +4,33 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.inventory.SlotRocketBenchResult;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityMethaneSynthesizer;
 import micdoodle8.mods.galacticraft.planets.mars.util.RecipeUtilMars;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.block.Blocks;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerSchematicCargoRocket extends Container
+public class ContainerSchematicCargoRocket extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsContainerNames.SCHEMATIC_CARGO_ROCKET)
-    public static ContainerType<ContainerSchematicCargoRocket> TYPE;
+    public static MenuType<ContainerSchematicCargoRocket> TYPE;
 
     public InventorySchematicCargoRocket craftMatrix = new InventorySchematicCargoRocket(this);
-    public IInventory craftResult = new CraftResultInventory();
-    private final World world;
+    public Container craftResult = new ResultContainer();
+    private final Level world;
 
-    public ContainerSchematicCargoRocket(int containerId, PlayerInventory playerInv)
+    public ContainerSchematicCargoRocket(int containerId, Inventory playerInv)
     {
         super(TYPE, containerId);
         int change = 27;
-        this.world = playerInv.player.world;
+        this.world = playerInv.player.level;
         this.addSlot(new SlotRocketBenchResult(playerInv.player, this.craftMatrix, this.craftResult, 0, 142, 69 + change));
         int var6;
         int var7;
@@ -87,70 +86,70 @@ public class ContainerSchematicCargoRocket extends Container
             this.addSlot(new Slot(playerInv, var6, 8 + var6 * 18, 18 + 169 + change));
         }
 
-        this.onCraftMatrixChanged(this.craftMatrix);
+        this.slotsChanged(this.craftMatrix);
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity par1EntityPlayer)
+    public void removed(Player par1EntityPlayer)
     {
-        super.onContainerClosed(par1EntityPlayer);
+        super.removed(par1EntityPlayer);
 
-        if (!this.world.isRemote)
+        if (!this.world.isClientSide)
         {
-            for (int var2 = 1; var2 < this.craftMatrix.getSizeInventory(); ++var2)
+            for (int var2 = 1; var2 < this.craftMatrix.getContainerSize(); ++var2)
             {
-                final ItemStack var3 = this.craftMatrix.removeStackFromSlot(var2);
+                final ItemStack var3 = this.craftMatrix.removeItemNoUpdate(var2);
 
                 if (!var3.isEmpty())
                 {
-                    par1EntityPlayer.entityDropItem(var3, 0.0F);
+                    par1EntityPlayer.spawnAtLocation(var3, 0.0F);
                 }
             }
         }
     }
 
     @Override
-    public void onCraftMatrixChanged(IInventory par1IInventory)
+    public void slotsChanged(Container par1IInventory)
     {
-        this.craftResult.setInventorySlotContents(0, RecipeUtilMars.findMatchingCargoRocketRecipe(this.craftMatrix));
+        this.craftResult.setItem(0, RecipeUtilMars.findMatchingCargoRocketRecipe(this.craftMatrix));
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
         return true;
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        final Slot var3 = this.inventorySlots.get(par1);
+        final Slot var3 = this.slots.get(par1);
 
-        if (var3 != null && var3.getHasStack())
+        if (var3 != null && var3.hasItem())
         {
-            final ItemStack var4 = var3.getStack();
+            final ItemStack var4 = var3.getItem();
             var2 = var4.copy();
 
             boolean done = false;
             if (par1 <= 16)
             {
-                if (!this.mergeItemStack(var4, 17, 53, false))
+                if (!this.moveItemStackTo(var4, 17, 53, false))
                 {
                     return ItemStack.EMPTY;
                 }
 
                 if (par1 == 0)
                 {
-                    var3.onSlotChange(var4, var2);
+                    var3.onQuickCraft(var4, var2);
                 }
             }
             else
             {
                 for (int i = 1; i < 14; i++)
                 {
-                    Slot testSlot = this.inventorySlots.get(i);
-                    if (!testSlot.getHasStack() && testSlot.isItemValid(var2))
+                    Slot testSlot = this.slots.get(i);
+                    if (!testSlot.hasItem() && testSlot.mayPlace(var2))
                     {
                         if (!this.mergeOneItem(var4, i, i + 1, false))
                         {
@@ -163,21 +162,21 @@ public class ContainerSchematicCargoRocket extends Container
 
                 if (!done)
                 {
-                    if (var2.getItem() == Item.getItemFromBlock(Blocks.CHEST) && !this.inventorySlots.get(14).getHasStack())
+                    if (var2.getItem() == Item.byBlock(Blocks.CHEST) && !this.slots.get(14).hasItem())
                     {
                         if (!this.mergeOneItem(var4, 14, 15, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (var2.getItem() == Item.getItemFromBlock(Blocks.CHEST) && !this.inventorySlots.get(15).getHasStack())
+                    else if (var2.getItem() == Item.byBlock(Blocks.CHEST) && !this.slots.get(15).hasItem())
                     {
                         if (!this.mergeOneItem(var4, 15, 16, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (var2.getItem() == Item.getItemFromBlock(Blocks.CHEST) && !this.inventorySlots.get(16).getHasStack())
+                    else if (var2.getItem() == Item.byBlock(Blocks.CHEST) && !this.slots.get(16).hasItem())
                     {
                         if (!this.mergeOneItem(var4, 16, 17, false))
                         {
@@ -186,19 +185,19 @@ public class ContainerSchematicCargoRocket extends Container
                     }
                     else if (par1 >= 17 && par1 < 44)
                     {
-                        if (!this.mergeItemStack(var4, 44, 53, false))
+                        if (!this.moveItemStackTo(var4, 44, 53, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
                     else if (par1 >= 44 && par1 < 53)
                     {
-                        if (!this.mergeItemStack(var4, 17, 44, false))
+                        if (!this.moveItemStackTo(var4, 17, 44, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (!this.mergeItemStack(var4, 17, 53, false))
+                    else if (!this.moveItemStackTo(var4, 17, 53, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -207,11 +206,11 @@ public class ContainerSchematicCargoRocket extends Container
 
             if (var4.isEmpty())
             {
-                var3.putStack(ItemStack.EMPTY);
+                var3.set(ItemStack.EMPTY);
             }
             else
             {
-                var3.onSlotChanged();
+                var3.setChanged();
             }
 
             if (var4.getCount() == var2.getCount())
@@ -235,16 +234,16 @@ public class ContainerSchematicCargoRocket extends Container
 
             for (int k = par2; k < par3; k++)
             {
-                slot = this.inventorySlots.get(k);
-                slotStack = slot.getStack();
+                slot = this.slots.get(k);
+                slotStack = slot.getItem();
 
                 if (slotStack.isEmpty())
                 {
                     ItemStack stackOneItem = par1ItemStack.copy();
                     stackOneItem.setCount(1);
                     par1ItemStack.shrink(1);
-                    slot.putStack(stackOneItem);
-                    slot.onSlotChanged();
+                    slot.set(stackOneItem);
+                    slot.setChanged();
                     flag1 = true;
                     break;
                 }

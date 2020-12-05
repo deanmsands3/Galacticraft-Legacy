@@ -4,13 +4,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -39,30 +38,30 @@ public class PacketDynamic extends PacketBase
 
     public PacketDynamic(Entity entity)
     {
-        super(GCCoreUtil.getDimensionType(entity.world));
+        super(GCCoreUtil.getDimensionType(entity.level));
         assert entity instanceof IPacketReceiver : "Entity does not implement " + IPacketReceiver.class.getSimpleName();
         this.type = 0;
-        this.identifier = entity.getEntityId();
+        this.identifier = entity.getId();
         this.sendData = new ArrayList<>();
         ((IPacketReceiver) entity).getNetworkedData(this.sendData);
     }
 
-    public PacketDynamic(TileEntity tile)
+    public PacketDynamic(BlockEntity tile)
     {
-        super(GCCoreUtil.getDimensionType(tile.getWorld()));
+        super(GCCoreUtil.getDimensionType(tile.getLevel()));
         assert tile instanceof IPacketReceiver : "TileEntity does not implement " + IPacketReceiver.class.getSimpleName();
         this.type = 1;
-        this.identifier = tile.getPos();
+        this.identifier = tile.getBlockPos();
         this.sendData = new ArrayList<>();
         ((IPacketReceiver) tile).getNetworkedData(this.sendData);
     }
 
-    public static void encode(final PacketDynamic message, final PacketBuffer buf)
+    public static void encode(final PacketDynamic message, final FriendlyByteBuf buf)
     {
         message.encodeInto(buf);
     }
 
-    public static PacketDynamic decode(PacketBuffer buf)
+    public static PacketDynamic decode(FriendlyByteBuf buf)
     {
         PacketDynamic packet = new PacketDynamic();
         packet.decodeInto(buf);
@@ -75,7 +74,7 @@ public class PacketDynamic extends PacketBase
         {
             if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
             {
-                message.handleClientSide(Minecraft.getInstance().player);
+                message.handleClientSide(MinecraftClient.getInstance().player);
             }
             else
             {
@@ -157,23 +156,23 @@ public class PacketDynamic extends PacketBase
     }
 
     @Override
-    public void handleClientSide(PlayerEntity player)
+    public void handleClientSide(Player player)
     {
         this.handleData(LogicalSide.CLIENT, player);
     }
 
     @Override
-    public void handleServerSide(PlayerEntity player)
+    public void handleServerSide(Player player)
     {
         this.handleData(LogicalSide.SERVER, player);
     }
 
-    private void handleData(LogicalSide LogicalSide, PlayerEntity player)
+    private void handleData(LogicalSide LogicalSide, Player player)
     {
         switch (this.type)
         {
         case 0:
-            Entity entity = player.world.getEntityByID((Integer) this.identifier);
+            Entity entity = player.level.getEntity((Integer) this.identifier);
 
             if (entity instanceof IPacketReceiver)
             {
@@ -183,18 +182,18 @@ public class PacketDynamic extends PacketBase
                 }
 
                 //Treat any packet received by a server from a client as an update request specifically to that client
-                if (LogicalSide == net.minecraftforge.fml.LogicalSide.SERVER && player instanceof ServerPlayerEntity && entity != null)
+                if (LogicalSide == net.minecraftforge.fml.LogicalSide.SERVER && player instanceof ServerPlayer && entity != null)
                 {
-                    GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(entity), (ServerPlayerEntity) player);
+                    GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(entity), (ServerPlayer) player);
                 }
             }
             break;
 
         case 1:
             BlockPos bp = (BlockPos) this.identifier;
-            if (player.world.isBlockLoaded(bp))
+            if (player.level.hasChunkAt(bp))
             {
-                TileEntity tile = player.world.getTileEntity(bp);
+                BlockEntity tile = player.level.getBlockEntity(bp);
 
                 if (tile instanceof IPacketReceiver)
                 {
@@ -204,9 +203,9 @@ public class PacketDynamic extends PacketBase
                     }
 
                     //Treat any packet received by a server from a client as an update request specifically to that client
-                    if (LogicalSide == net.minecraftforge.fml.LogicalSide.SERVER && player instanceof ServerPlayerEntity && tile != null)
+                    if (LogicalSide == net.minecraftforge.fml.LogicalSide.SERVER && player instanceof ServerPlayer && tile != null)
                     {
-                        GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(tile), (ServerPlayerEntity) player);
+                        GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(tile), (ServerPlayer) player);
                     }
                 }
             }

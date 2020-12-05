@@ -11,21 +11,18 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.client.CloudRenderer;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.world.gen.dungeon.RoomTreasure;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -38,7 +35,7 @@ public class DimensionOverworldOrbit extends DimensionSpaceStation implements IO
 {
     Set<Entity> freefallingEntities = new HashSet<>();
 
-    public DimensionOverworldOrbit(World worldIn, DimensionType typeIn)
+    public DimensionOverworldOrbit(Level worldIn, DimensionType typeIn)
     {
         super(worldIn, typeIn, 0.0F);
     }
@@ -78,7 +75,7 @@ public class DimensionOverworldOrbit extends DimensionSpaceStation implements IO
     @Override
     public boolean isDaytime()
     {
-        final float a = this.world.getCelestialAngle(0F);
+        final float a = this.level.getTimeOfDay(0F);
         //TODO: adjust this according to size of planet below
         return a < 0.42F || a > 0.58F;
     }
@@ -104,7 +101,7 @@ public class DimensionOverworldOrbit extends DimensionSpaceStation implements IO
 //    }
 
     @Override
-    public boolean isSkyColored()
+    public boolean hasGround()
     {
         return false;
     }
@@ -123,13 +120,13 @@ public class DimensionOverworldOrbit extends DimensionSpaceStation implements IO
 
     @Override
     @Nullable
-    public BlockPos findSpawn(ChunkPos chunkPosIn, boolean checkValid)
+    public BlockPos getSpawnPosInChunk(ChunkPos chunkPosIn, boolean checkValid)
     {
-        for (int i = chunkPosIn.getXStart(); i <= chunkPosIn.getXEnd(); ++i)
+        for (int i = chunkPosIn.getMinBlockX(); i <= chunkPosIn.getMaxBlockX(); ++i)
         {
-            for (int j = chunkPosIn.getZStart(); j <= chunkPosIn.getZEnd(); ++j)
+            for (int j = chunkPosIn.getMinBlockZ(); j <= chunkPosIn.getMaxBlockZ(); ++j)
             {
-                BlockPos blockpos = this.findSpawn(i, j, checkValid);
+                BlockPos blockpos = this.getValidSpawnPosition(i, j, checkValid);
                 if (blockpos != null)
                 {
                     return blockpos;
@@ -142,24 +139,24 @@ public class DimensionOverworldOrbit extends DimensionSpaceStation implements IO
 
     @Override
     @Nullable
-    public BlockPos findSpawn(int posX, int posZ, boolean checkValid)
+    public BlockPos getValidSpawnPosition(int posX, int posZ, boolean checkValid)
     {
-        BlockPos.Mutable blockpos$mutableblockpos = new BlockPos.Mutable(posX, 0, posZ);
-        Biome biome = this.world.getBiome(blockpos$mutableblockpos);
-        BlockState blockstate = biome.getSurfaceBuilderConfig().getTop();
-        if (checkValid && !blockstate.getBlock().isIn(BlockTags.VALID_SPAWN))
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(posX, 0, posZ);
+        Biome biome = this.level.getBiome(blockpos$mutableblockpos);
+        BlockState blockstate = biome.getSurfaceBuilderConfig().getTopMaterial();
+        if (checkValid && !blockstate.getBlock().is(BlockTags.VALID_SPAWN))
         {
             return null;
         }
         else
         {
-            Chunk chunk = this.world.getChunk(posX >> 4, posZ >> 4);
-            int i = chunk.getTopBlockY(Heightmap.Type.MOTION_BLOCKING, posX & 15, posZ & 15);
+            LevelChunk chunk = this.level.getChunk(posX >> 4, posZ >> 4);
+            int i = chunk.getHeight(Heightmap.Types.MOTION_BLOCKING, posX & 15, posZ & 15);
             if (i < 0)
             {
                 return null;
             }
-            else if (chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE, posX & 15, posZ & 15) > chunk.getTopBlockY(Heightmap.Type.OCEAN_FLOOR, posX & 15, posZ & 15))
+            else if (chunk.getHeight(Heightmap.Types.WORLD_SURFACE, posX & 15, posZ & 15) > chunk.getHeight(Heightmap.Types.OCEAN_FLOOR, posX & 15, posZ & 15))
             {
                 return null;
             }
@@ -167,8 +164,8 @@ public class DimensionOverworldOrbit extends DimensionSpaceStation implements IO
             {
                 for (int j = i + 1; j >= 0; --j)
                 {
-                    blockpos$mutableblockpos.setPos(posX, j, posZ);
-                    BlockState blockstate1 = this.world.getBlockState(blockpos$mutableblockpos);
+                    blockpos$mutableblockpos.set(posX, j, posZ);
+                    BlockState blockstate1 = this.level.getBlockState(blockpos$mutableblockpos);
                     if (!blockstate1.getFluidState().isEmpty())
                     {
                         break;
@@ -176,7 +173,7 @@ public class DimensionOverworldOrbit extends DimensionSpaceStation implements IO
 
                     if (blockstate1.equals(blockstate))
                     {
-                        return blockpos$mutableblockpos.up().toImmutable();
+                        return blockpos$mutableblockpos.above().immutable();
                     }
                 }
 
@@ -341,9 +338,9 @@ public class DimensionOverworldOrbit extends DimensionSpaceStation implements IO
     }
 
     @Override
-    public Vec3d getFogColor(float celestialAngle, float partialTicks)
+    public Vec3 getFogColor(float celestialAngle, float partialTicks)
     {
-        return new Vec3d(0.0, 0.0, 0.0);
+        return new Vec3(0.0, 0.0, 0.0);
     }
 
     @Override
@@ -359,7 +356,7 @@ public class DimensionOverworldOrbit extends DimensionSpaceStation implements IO
     }
 
     @Override
-    public boolean doesXZShowFog(int x, int z)
+    public boolean isFoggyAt(int x, int z)
     {
         return false;
     }

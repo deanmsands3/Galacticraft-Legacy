@@ -8,25 +8,25 @@ import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerOxygenCompressor;
 import micdoodle8.mods.galacticraft.core.items.ItemOxygenTank;
 import micdoodle8.mods.galacticraft.core.util.FluidUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 
-public class TileEntityOxygenCompressor extends TileEntityOxygen implements INamedContainerProvider
+public class TileEntityOxygenCompressor extends TileEntityOxygen implements MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenCompressor)
-    public static TileEntityType<TileEntityOxygenCompressor> TYPE;
+    public static BlockEntityType<TileEntityOxygenCompressor> TYPE;
 
     public static final int TANK_TRANSFER_SPEED = 2;
     private boolean usingEnergy = false;
@@ -41,9 +41,9 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
     @Override
     public void tick()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
-            ItemStack oxygenItemStack = this.getStackInSlot(2);
+            ItemStack oxygenItemStack = this.getItem(2);
             if (oxygenItemStack != null && oxygenItemStack.getItem() instanceof IItemOxygenSupply)
             {
                 IItemOxygenSupply oxygenItem = (IItemOxygenSupply) oxygenItemStack.getItem();
@@ -58,7 +58,7 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
 
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.usingEnergy = false;
             if (this.getOxygenStored() > 0 && this.hasEnoughEnergyToRun)
@@ -67,9 +67,9 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
 
                 if (!tank0.isEmpty())
                 {
-                    if (tank0.getItem() instanceof ItemOxygenTank && tank0.getDamage() > 0)
+                    if (tank0.getItem() instanceof ItemOxygenTank && tank0.getDamageValue() > 0)
                     {
-                        tank0.setDamage(tank0.getDamage() - TileEntityOxygenCompressor.TANK_TRANSFER_SPEED);
+                        tank0.setDamageValue(tank0.getDamageValue() - TileEntityOxygenCompressor.TANK_TRANSFER_SPEED);
                         this.setOxygenStored(this.getOxygenStored() - TileEntityOxygenCompressor.TANK_TRANSFER_SPEED);
                         this.usingEnergy = true;
                     }
@@ -79,7 +79,7 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 1;
     }
@@ -93,18 +93,18 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (this.isItemValidForSlot(slotID, itemstack))
+        if (this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
             case 0:
-                return itemstack.getDamage() > 1;
+                return itemstack.getDamageValue() > 1;
             case 1:
                 return ItemElectricBase.isElectricItemCharged(itemstack);
             case 2:
-                return itemstack.getDamage() < itemstack.getItem().getMaxDamage();
+                return itemstack.getDamageValue() < itemstack.getItem().getMaxDamage();
             default:
                 return false;
             }
@@ -113,12 +113,12 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         switch (slotID)
         {
         case 0:
-            return itemstack.getItem() instanceof ItemOxygenTank && itemstack.getDamage() == 0;
+            return itemstack.getItem() instanceof ItemOxygenTank && itemstack.getDamageValue() == 0;
         case 1:
             return ItemElectricBase.isElectricItemEmpty(itemstack);
         case 2:
@@ -129,7 +129,7 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         switch (slotID)
         {
@@ -153,10 +153,10 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (state.getBlock() instanceof BlockOxygenCompressor)
         {
-            return state.get(BlockOxygenCompressor.FACING).rotateY();
+            return state.getValue(BlockOxygenCompressor.FACING).getClockWise();
         }
         return Direction.NORTH;
     }
@@ -170,7 +170,7 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
     @Override
     public ItemStack getBatteryInSlot()
     {
-        return this.getStackInSlot(1);
+        return this.getItem(1);
     }
 
     @Override
@@ -192,14 +192,14 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements INam
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerOxygenCompressor(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.oxygen_compressor");
+        return new TranslatableComponent("container.oxygen_compressor");
     }
 }

@@ -1,6 +1,8 @@
 package micdoodle8.mods.galacticraft.core.util;
 
 import micdoodle8.mods.galacticraft.core.client.gui.screen.GuiMissingCore;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -42,9 +44,9 @@ public class ThreadRequirementMissing extends Thread
 //        }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     private static void openGuiClient()
     {
-        Minecraft.getInstance().displayGuiScreen(new GuiMissingCore());
+        Minecraft.getInstance().setScreen(new GuiMissingCore());
     }
 }

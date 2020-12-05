@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.render.tile;
+package micdoodle8.mods.galacticraft.core.client.render.tile;
 //
 //import com.google.common.collect.Maps;
 //import com.mojang.blaze3d.platform.GlStateManager;

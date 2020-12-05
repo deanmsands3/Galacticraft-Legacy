@@ -8,7 +8,7 @@ import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class InventoryTabGalacticraft extends AbstractTab
 {
@@ -20,7 +20,7 @@ public class InventoryTabGalacticraft extends AbstractTab
     @Override
     public void onTabClicked()
     {
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_OPEN_EXTENDED_INVENTORY, GCCoreUtil.getDimensionType(Minecraft.getInstance().world), new Object[] {}));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_OPEN_EXTENDED_INVENTORY, GCCoreUtil.getDimensionType(Minecraft.getInstance().level), new Object[] {}));
         ClientProxyCore.playerClientHandler.onBuild(0, Minecraft.getInstance().player);
     }
 

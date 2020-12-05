@@ -30,27 +30,25 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityOxygenSealer;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityScreen;
 import micdoodle8.mods.galacticraft.core.util.*;
 import micdoodle8.mods.galacticraft.core.wrappers.Footprint;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.IngameMenuScreen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.dimension.OverworldDimension;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.NormalDimension;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -187,8 +185,8 @@ public class TickHandlerClient
     public static void onRenderTick(TickEvent.RenderTickEvent event)
     {
         final Minecraft minecraft = Minecraft.getInstance();
-        final ClientPlayerEntity player = minecraft.player;
-        final ClientPlayerEntity playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
+        final LocalPlayer player = minecraft.player;
+        final LocalPlayer playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
         if (player == null || playerBaseClient == null || !player.isAlive())
         {
             return;
@@ -198,7 +196,7 @@ public class TickHandlerClient
 
         if (event.phase == TickEvent.Phase.END)
         {
-            if (minecraft.currentScreen instanceof IngameMenuScreen)
+            if (minecraft.screen instanceof PauseScreen)
             {
 //                int i = Mouse.getEventX() * minecraft.currentScreen.width / minecraft.displayWidth;
 //                int j = minecraft.currentScreen.height - Mouse.getEventY() * minecraft.currentScreen.height / minecraft.displayHeight - 1;
@@ -221,21 +219,21 @@ public class TickHandlerClient
 //                } TODO Space race button
 
 //                this.fillGradient(minecraft.currentScreen.width - 100, minecraft.currentScreen.height - 35, minecraft.currentScreen.width, minecraft.currentScreen.height, ColorUtil.to32BitColor(150, 10 + deltaColor, 10 + deltaColor, 10 + deltaColor), ColorUtil.to32BitColor(250, 10 + deltaColor, 10 + deltaColor, 10 + deltaColor));
-                minecraft.fontRenderer.drawString(GCCoreUtil.translate("gui.space_race.create.title.name.0"), minecraft.currentScreen.width - 50 - minecraft.fontRenderer.getStringWidth(GCCoreUtil.translate("gui.space_race.create.title.name.0")) / 2, minecraft.currentScreen.height - 26, ColorUtil.to32BitColor(255, 240, 240, 240));
-                minecraft.fontRenderer.drawString(GCCoreUtil.translate("gui.space_race.create.title.name.1"), minecraft.currentScreen.width - 50 - minecraft.fontRenderer.getStringWidth(GCCoreUtil.translate("gui.space_race.create.title.name.1")) / 2, minecraft.currentScreen.height - 16, ColorUtil.to32BitColor(255, 240, 240, 240));
-                AbstractGui.fill(minecraft.currentScreen.width - 100, minecraft.currentScreen.height - 35, minecraft.currentScreen.width - 99, minecraft.currentScreen.height, ColorUtil.to32BitColor(255, 0, 0, 0));
-                AbstractGui.fill(minecraft.currentScreen.width - 100, minecraft.currentScreen.height - 35, minecraft.currentScreen.width, minecraft.currentScreen.height - 34, ColorUtil.to32BitColor(255, 0, 0, 0));
+                minecraft.font.draw(GCCoreUtil.translate("gui.space_race.create.title.name.0"), minecraft.screen.width - 50 - minecraft.font.width(GCCoreUtil.translate("gui.space_race.create.title.name.0")) / 2, minecraft.screen.height - 26, ColorUtil.to32BitColor(255, 240, 240, 240));
+                minecraft.font.draw(GCCoreUtil.translate("gui.space_race.create.title.name.1"), minecraft.screen.width - 50 - minecraft.font.width(GCCoreUtil.translate("gui.space_race.create.title.name.1")) / 2, minecraft.screen.height - 16, ColorUtil.to32BitColor(255, 240, 240, 240));
+                GuiComponent.fill(minecraft.screen.width - 100, minecraft.screen.height - 35, minecraft.screen.width - 99, minecraft.screen.height, ColorUtil.to32BitColor(255, 0, 0, 0));
+                GuiComponent.fill(minecraft.screen.width - 100, minecraft.screen.height - 35, minecraft.screen.width, minecraft.screen.height - 34, ColorUtil.to32BitColor(255, 0, 0, 0));
             }
 
-            ClientProxyCore.playerPosX = player.prevPosX + (player.getPosX() - player.prevPosX) * event.renderTickTime;
-            ClientProxyCore.playerPosY = player.prevPosY + (player.getPosY() - player.prevPosY) * event.renderTickTime;
-            ClientProxyCore.playerPosZ = player.prevPosZ + (player.getPosZ() - player.prevPosZ) * event.renderTickTime;
-            ClientProxyCore.playerRotationYaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * event.renderTickTime;
-            ClientProxyCore.playerRotationPitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * event.renderTickTime;
+            ClientProxyCore.playerPosX = player.xo + (player.getX() - player.xo) * event.renderTickTime;
+            ClientProxyCore.playerPosY = player.yo + (player.getY() - player.yo) * event.renderTickTime;
+            ClientProxyCore.playerPosZ = player.zo + (player.getZ() - player.zo) * event.renderTickTime;
+            ClientProxyCore.playerRotationYaw = player.yRotO + (player.yRot - player.yRotO) * event.renderTickTime;
+            ClientProxyCore.playerRotationPitch = player.xRotO + (player.xRot - player.xRotO) * event.renderTickTime;
 
-            if (minecraft.currentScreen == null && minecraft.gameSettings.thirdPersonView != 0 && !minecraft.gameSettings.hideGUI)
+            if (minecraft.screen == null && minecraft.options.thirdPersonView != 0 && !minecraft.options.hideGui)
             {
-                if (player.getRidingEntity() instanceof EntitySpaceshipBase)
+                if (player.getVehicle() instanceof EntitySpaceshipBase)
                 {
                 }
 
@@ -245,7 +243,7 @@ public class TickHandlerClient
 //                OverlayLaunchCountdown.renderCountdownOverlay(); TODO Overlays
             }
 
-            if (player.world.getDimension() instanceof IGalacticraftDimension && OxygenUtil.shouldDisplayTankGui(minecraft.currentScreen) && OxygenUtil.noAtmosphericCombustion(player.world.getDimension()) && !(playerBaseClient.isCreative() || playerBaseClient.isSpectator()) && !minecraft.gameSettings.showDebugInfo)
+            if (player.level.getDimension() instanceof IGalacticraftDimension && OxygenUtil.shouldDisplayTankGui(minecraft.screen) && OxygenUtil.noAtmosphericCombustion(player.level.getDimension()) && !(playerBaseClient.isCreative() || playerBaseClient.isSpectator()) && !minecraft.options.renderDebug)
             {
                 int var6 = (TickHandlerClient.airRemaining - 90) * -1;
 
@@ -266,7 +264,7 @@ public class TickHandlerClient
                 // TODO Overlays
             }
 
-            if (playerBaseClient != null && player.world.getDimension() instanceof IGalacticraftDimension && !stats.isOxygenSetupValid() && OxygenUtil.noAtmosphericCombustion(player.world.getDimension()) && minecraft.currentScreen == null && !minecraft.gameSettings.hideGUI && !(playerBaseClient.isCreative() || playerBaseClient.isSpectator()))
+            if (playerBaseClient != null && player.level.getDimension() instanceof IGalacticraftDimension && !stats.isOxygenSetupValid() && OxygenUtil.noAtmosphericCombustion(player.level.getDimension()) && minecraft.screen == null && !minecraft.options.hideGui && !(playerBaseClient.isCreative() || playerBaseClient.isSpectator()))
             {
                 OverlayOxygenWarning.renderOxygenWarningOverlay(TickHandlerClient.tickCount);
             }
@@ -277,35 +275,35 @@ public class TickHandlerClient
     public static void onPreGuiRender(RenderGameOverlayEvent.Pre event)
     {
         final Minecraft minecraft = Minecraft.getInstance();
-        final ClientPlayerEntity player = minecraft.player;
+        final LocalPlayer player = minecraft.player;
 
         if (event.getType() == RenderGameOverlayEvent.ElementType.ALL)
         {
-            if (player != null && player.getRidingEntity() != null && player.getRidingEntity() instanceof IIgnoreShift && ((IIgnoreShift) player.getRidingEntity()).shouldIgnoreShiftExit())
+            if (player != null && player.getVehicle() != null && player.getVehicle() instanceof IIgnoreShift && ((IIgnoreShift) player.getVehicle()).shouldIgnoreShiftExit())
             {
                 // Remove "Press shift to dismount" message when shift-exiting is disabled (not ideal, but the only option)
-                String str = I18n.format("mount.onboard", minecraft.gameSettings.keyBindSneak.getLocalizedName());
-                if (minecraft.ingameGUI.overlayMessage.equals(str))
+                String str = I18n.get("mount.onboard", minecraft.options.keyShift.getTranslatedKeyMessage());
+                if (minecraft.gui.overlayMessageString.equals(str))
                 {
-                    minecraft.ingameGUI.overlayMessage = "";
+                    minecraft.gui.overlayMessageString = "";
                 }
             }
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event)
     {
         final Minecraft minecraft = Minecraft.getInstance();
-        final ClientWorld world = minecraft.world;
-        final ClientPlayerEntity player = minecraft.player;
+        final ClientLevel world = minecraft.level;
+        final LocalPlayer player = minecraft.player;
 
         if (teleportingGui != null)
         {
-            if (minecraft.currentScreen != teleportingGui)
+            if (minecraft.screen != teleportingGui)
             {
-                minecraft.currentScreen = teleportingGui;
+                minecraft.screen = teleportingGui;
             }
         }
 
@@ -319,15 +317,15 @@ public class TickHandlerClient
         {
             if (ClientProxyCore.playerHead == null && player.getGameProfile() != null)
             {
-                Map<Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
+                Map<Type, MinecraftProfileTexture> map = minecraft.getSkinManager().getInsecureSkinInformation(player.getGameProfile());
 
                 if (map.containsKey(Type.SKIN))
                 {
-                    ClientProxyCore.playerHead = minecraft.getSkinManager().loadSkin(map.get(Type.SKIN), Type.SKIN);
+                    ClientProxyCore.playerHead = minecraft.getSkinManager().registerTexture(map.get(Type.SKIN), Type.SKIN);
                 }
                 else
                 {
-                    ClientProxyCore.playerHead = DefaultPlayerSkin.getDefaultSkin(PlayerEntity.getUUID(player.getGameProfile()));
+                    ClientProxyCore.playerHead = DefaultPlayerSkin.getDefaultSkin(Player.createPlayerUUID(player.getGameProfile()));
                 }
             }
 
@@ -378,7 +376,7 @@ public class TickHandlerClient
                     {
                         Footprint fp = fpIt.next();
                         fp.age += 20;
-                        fp.lightmapVal = player.world.getLight(new BlockPos(fp.position.x, fp.position.y, fp.position.z));
+                        fp.lightmapVal = player.level.getMaxLocalRawBrightness(new BlockPos(fp.position.x, fp.position.y, fp.position.z));
 
                         if (fp.age >= Footprint.MAX_AGE)
                         {
@@ -387,22 +385,22 @@ public class TickHandlerClient
                     }
                 }
 
-                if (!player.inventory.armorItemInSlot(3).isEmpty() && player.inventory.armorItemInSlot(3).getItem() instanceof ISensorGlassesArmor)
+                if (!player.inventory.getArmor(3).isEmpty() && player.inventory.getArmor(3).getItem() instanceof ISensorGlassesArmor)
                 {
                     ClientProxyCore.valueableBlocks.clear();
 
                     for (int i = -4; i < 5; i++)
                     {
-                        int x = MathHelper.floor(player.getPosX() + i);
+                        int x = Mth.floor(player.getX() + i);
                         for (int j = -4; j < 5; j++)
                         {
-                            int y = MathHelper.floor(player.getPosY() + j);
+                            int y = Mth.floor(player.getY() + j);
                             for (int k = -4; k < 5; k++)
                             {
-                                int z = MathHelper.floor(player.getPosZ() + k);
+                                int z = Mth.floor(player.getZ() + k);
                                 BlockPos pos = new BlockPos(x, y, z);
 
-                                BlockState state = player.world.getBlockState(pos);
+                                BlockState state = player.level.getBlockState(pos);
                                 final Block block = state.getBlock();
 
                                 if (block.getMaterial(state) != Material.AIR)
@@ -429,7 +427,7 @@ public class TickHandlerClient
                         }
                     }
 
-                    TileEntityOxygenSealer nearestSealer = TileEntityOxygenSealer.getNearestSealer(world, MathHelper.floor(player.getPosX()), MathHelper.floor(player.getPosY()), MathHelper.floor(player.getPosZ()));
+                    TileEntityOxygenSealer nearestSealer = TileEntityOxygenSealer.getNearestSealer(world, Mth.floor(player.getX()), Mth.floor(player.getY()), Mth.floor(player.getZ()));
                     if (nearestSealer != null && !nearestSealer.sealed)
                     {
                         ClientProxyCore.leakTrace = nearestSealer.getLeakTraceClient();
@@ -458,7 +456,7 @@ public class TickHandlerClient
                 spawnLeakParticles();
             }
 
-            if (world != null && TickHandlerClient.spaceRaceGuiScheduled && minecraft.currentScreen == null && ConfigManagerCore.enableSpaceRaceManagerPopup.get())
+            if (world != null && TickHandlerClient.spaceRaceGuiScheduled && minecraft.screen == null && ConfigManagerCore.enableSpaceRaceManagerPopup.get())
             {
 //                player.openGui(GalacticraftCore.instance, GuiIdsCore.SPACE_RACE_START, player.world, (int) player.getPosX(), (int) player.getPosY(), (int) player.getPosZ()); TODO Gui
                 TickHandlerClient.spaceRaceGuiScheduled = false;
@@ -471,20 +469,20 @@ public class TickHandlerClient
             }
 
             boolean inSpaceShip = false;
-            if (player.getRidingEntity() instanceof EntitySpaceshipBase)
+            if (player.getVehicle() instanceof EntitySpaceshipBase)
             {
                 inSpaceShip = true;
-                EntitySpaceshipBase rocket = (EntitySpaceshipBase) player.getRidingEntity();
-                if (rocket.prevRotationPitch != rocket.rotationPitch || rocket.prevRotationYaw != rocket.rotationYaw)
+                EntitySpaceshipBase rocket = (EntitySpaceshipBase) player.getVehicle();
+                if (rocket.xRotO != rocket.xRot || rocket.yRotO != rocket.yRot)
                 {
 //                    GalacticraftCore.packetPipeline.sendToServer(new PacketRotateRocket(player.getRidingEntity()));
-                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ROTATE_ROCKET, rocket.dimension, new Object[]{rocket.getEntityId(), rocket.rotationPitch, rocket.rotationYaw}));
+                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ROTATE_ROCKET, rocket.dimension, new Object[]{rocket.getId(), rocket.xRot, rocket.yRot}));
                 }
             }
 
             if (world != null)
             {
-                if (world.getDimension() instanceof OverworldDimension)
+                if (world.getDimension() instanceof NormalDimension)
                 {
 //                    if (world.getDimension().getSkyRenderer() == null && inSpaceShip &&
 //                            player.getRidingEntity().posY > Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT)
@@ -519,22 +517,22 @@ public class TickHandlerClient
 
             if (inSpaceShip)
             {
-                final EntitySpaceshipBase ship = (EntitySpaceshipBase) player.getRidingEntity();
+                final EntitySpaceshipBase ship = (EntitySpaceshipBase) player.getVehicle();
                 boolean hasChanged = false;
 
-                if (minecraft.gameSettings.keyBindLeft.isKeyDown())
+                if (minecraft.options.keyLeft.isDown())
                 {
                     ship.turnYaw(-1.0F);
                     hasChanged = true;
                 }
 
-                if (minecraft.gameSettings.keyBindRight.isKeyDown())
+                if (minecraft.options.keyRight.isDown())
                 {
                     ship.turnYaw(1.0F);
                     hasChanged = true;
                 }
 
-                if (minecraft.gameSettings.keyBindForward.isKeyDown())
+                if (minecraft.options.keyUp.isDown())
                 {
                     if (ship.getLaunched())
                     {
@@ -543,7 +541,7 @@ public class TickHandlerClient
                     }
                 }
 
-                if (minecraft.gameSettings.keyBindBack.isKeyDown())
+                if (minecraft.options.keyDown.isDown())
                 {
                     if (ship.getLaunched())
                     {
@@ -555,13 +553,13 @@ public class TickHandlerClient
                 if (hasChanged)
                 {
 //                    GalacticraftCore.packetPipeline.sendToServer(new PacketRotateRocket(ship));
-                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ROTATE_ROCKET, ship.dimension, new Object[]{ship.getEntityId(), ship.rotationPitch, ship.rotationYaw}));
+                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ROTATE_ROCKET, ship.dimension, new Object[]{ship.getId(), ship.xRot, ship.yRot}));
                 }
             }
 
             if (world != null)
             {
-                Iterable<Entity> entityList = world.getAllEntities();
+                Iterable<Entity> entityList = world.entitiesForRendering();
                 for (Object e : entityList)
                 {
                     if (e instanceof IEntityNoisy)
@@ -569,36 +567,36 @@ public class TickHandlerClient
                         IEntityNoisy vehicle = (IEntityNoisy) e;
                         if (vehicle.getSoundUpdater() == null)
                         {
-                            ISound noise = vehicle.setSoundUpdater(Minecraft.getInstance().player);
+                            SoundInstance noise = vehicle.setSoundUpdater(Minecraft.getInstance().player);
                             if (noise != null)
                             {
-                                Minecraft.getInstance().getSoundHandler().play(noise);
+                                Minecraft.getInstance().getSoundManager().play(noise);
                             }
                         }
                     }
                 }
             }
 
-            if (Minecraft.getInstance().currentScreen instanceof GuiCelestialSelection)
+            if (Minecraft.getInstance().screen instanceof GuiCelestialSelection)
             {
-                player.setMotion(player.getMotion().x, 0.0, player.getMotion().z);
+                player.setDeltaMovement(player.getDeltaMovement().x, 0.0, player.getDeltaMovement().z);
             }
 
             if (world != null && world.getDimension() instanceof IGalacticraftDimension && OxygenUtil.noAtmosphericCombustion(world.getDimension()) && ((IGalacticraftDimension) world.getDimension()).shouldDisablePrecipitation())
             {
-                world.setRainStrength(0.0F);
+                world.setRainLevel(0.0F);
             }
 
-            boolean isPressed = KeyHandlerClient.spaceKey.isKeyDown();
+            boolean isPressed = KeyHandlerClient.spaceKey.isDown();
 
             if (!isPressed)
             {
                 ClientProxyCore.lastSpacebarDown = false;
             }
 
-            if (player.getRidingEntity() != null && isPressed && !ClientProxyCore.lastSpacebarDown)
+            if (player.getVehicle() != null && isPressed && !ClientProxyCore.lastSpacebarDown)
             {
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_IGNITE_ROCKET, GCCoreUtil.getDimensionType(player.world), new Object[]{}));
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_IGNITE_ROCKET, GCCoreUtil.getDimensionType(player.level), new Object[]{}));
                 ClientProxyCore.lastSpacebarDown = true;
             }
 
@@ -608,7 +606,7 @@ public class TickHandlerClient
                 screenConnectionsUpdateList.clear();
                 for (TileEntityScreen te : updateListCopy)
                 {
-                    if (te.getWorld().getBlockState(te.getPos()).getBlock() == GCBlocks.screen)
+                    if (te.getLevel().getBlockState(te.getBlockPos()).getBlock() == GCBlocks.screen)
                     {
                         if (te.refreshOnUpdate)
                         {
@@ -658,7 +656,7 @@ public class TickHandlerClient
             Vector3 mot = new Vector3(vec.subtract(curr));
             Vector3 rnd = new Vector3(rand.nextFloat() / 2.0F - 0.25F, rand.nextFloat() / 2.0F - 0.25F, rand.nextFloat() / 2.0F - 0.25F);
             Vector3 offset = curr.midPoint().add(rnd);
-            Minecraft.getInstance().world.addParticle(GCParticles.OXYGEN, offset.x, offset.y, offset.z, mot.x, mot.y, mot.z);
+            Minecraft.getInstance().level.addParticle(GCParticles.OXYGEN, offset.x, offset.y, offset.z, mot.x, mot.y, mot.z);
         }
     }
 

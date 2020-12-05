@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.world.gen;
+package micdoodle8.mods.galacticraft.core.world.gen;
 //
 //import net.minecraft.util.Direction;
 //import net.minecraft.util.math.MathHelper;

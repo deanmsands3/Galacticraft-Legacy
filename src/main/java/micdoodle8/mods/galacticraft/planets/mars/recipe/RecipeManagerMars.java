@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.recipe;
+package micdoodle8.mods.galacticraft.planets.mars.recipe;
 //
 //import micdoodle8.mods.galacticraft.api.recipe.CompressorRecipes;
 //import micdoodle8.mods.galacticraft.core.GCItems;

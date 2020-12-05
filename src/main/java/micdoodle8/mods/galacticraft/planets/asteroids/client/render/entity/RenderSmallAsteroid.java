@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.client.render.entity;
+package micdoodle8.mods.galacticraft.planets.asteroids.client.render.entity;
 //
 //import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 //import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntitySmallAsteroid;

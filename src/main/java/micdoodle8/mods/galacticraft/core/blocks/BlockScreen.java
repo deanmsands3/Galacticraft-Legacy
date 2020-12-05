@@ -6,27 +6,26 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityScreen;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPartialSealableBlock, ISortable
 {
@@ -38,18 +37,18 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
 
     protected static final float boundsFront = 0.094F;
     protected static final float boundsBack = 1.0F - boundsFront;
-    protected static final VoxelShape DOWN_AABB = VoxelShapes.create(0F, 0F, 0F, 1.0F, boundsBack, 1.0F);
-    protected static final VoxelShape UP_AABB = VoxelShapes.create(0F, boundsFront, 0F, 1.0F, 1.0F, 1.0F);
-    protected static final VoxelShape NORTH_AABB = VoxelShapes.create(0F, 0F, boundsFront, 1.0F, 1.0F, 1.0F);
-    protected static final VoxelShape SOUTH_AABB = VoxelShapes.create(0F, 0F, 0F, 1.0F, 1.0F, boundsBack);
-    protected static final VoxelShape WEST_AABB = VoxelShapes.create(boundsFront, 0F, 0F, 1.0F, 1.0F, 1.0F);
-    protected static final VoxelShape EAST_AABB = VoxelShapes.create(0F, 0F, 0F, boundsBack, 1.0F, 1.0F);
+    protected static final VoxelShape DOWN_AABB = Shapes.box(0F, 0F, 0F, 1.0F, boundsBack, 1.0F);
+    protected static final VoxelShape UP_AABB = Shapes.box(0F, boundsFront, 0F, 1.0F, 1.0F, 1.0F);
+    protected static final VoxelShape NORTH_AABB = Shapes.box(0F, 0F, boundsFront, 1.0F, 1.0F, 1.0F);
+    protected static final VoxelShape SOUTH_AABB = Shapes.box(0F, 0F, 0F, 1.0F, 1.0F, boundsBack);
+    protected static final VoxelShape WEST_AABB = Shapes.box(boundsFront, 0F, 0F, 1.0F, 1.0F, 1.0F);
+    protected static final VoxelShape EAST_AABB = Shapes.box(0F, 0F, 0F, boundsBack, 1.0F, 1.0F);
 
     //Metadata: 0-5 = direction of screen back;  bit 3 = reserved for future use
     public BlockScreen(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH).with(LEFT, false).with(RIGHT, false).with(UP, false).with(DOWN, false));
+        this.registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LEFT, false).setValue(RIGHT, false).setValue(UP, false).setValue(DOWN, false));
     }
 
 //    @Override
@@ -59,10 +58,10 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
 //    }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        ((TileEntityScreen) worldIn.getTileEntity(pos)).breakScreen(state);
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        ((TileEntityScreen) worldIn.getBlockEntity(pos)).breakScreen(state);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
 //    @Override
@@ -92,20 +91,20 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
 //    }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public ActionResultType onUseWrench(World world, BlockPos pos, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onUseWrench(Level world, BlockPos pos, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        world.setBlockState(pos, world.getBlockState(pos).with(FACING, world.getBlockState(pos).get(FACING).rotateY()), 3);
-        return ActionResultType.SUCCESS;
+        world.setBlock(pos, world.getBlockState(pos).setValue(FACING, world.getBlockState(pos).getValue(FACING).getClockWise()), 3);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityScreen();
     }
@@ -123,21 +122,21 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
 //    }
 
     @Override
-    public ActionResultType onMachineActivated(World world, BlockPos pos, BlockState state, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onMachineActivated(Level world, BlockPos pos, BlockState state, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        TileEntity tile = world.getTileEntity(pos);
+        BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TileEntityScreen)
         {
             ((TileEntityScreen) tile).changeChannel();
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
-        TileEntity tile = worldIn.getTileEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof TileEntityScreen)
         {
             ((TileEntityScreen) tile).refreshConnections(true);
@@ -147,7 +146,7 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -157,15 +156,15 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
     }
 
     @Override
-    public boolean isSealed(World worldIn, BlockPos pos, Direction direction)
+    public boolean isSealed(Level worldIn, BlockPos pos, Direction direction)
     {
         return true;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
-        switch (state.get(FACING))
+        switch (state.getValue(FACING))
         {
         case EAST:
             return EAST_AABB;
@@ -191,7 +190,7 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(FACING, LEFT, RIGHT, UP, DOWN);
     }

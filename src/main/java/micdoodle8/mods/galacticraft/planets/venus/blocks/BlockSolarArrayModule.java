@@ -8,21 +8,21 @@ import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntitySolarArrayModule;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockSolarArrayModule extends BlockAdvanced implements IShiftDescription, IPartialSealableBlock, ISortable
 {
-    protected static final VoxelShape AABB = VoxelShapes.create(0.0, 0.375, 0.0, 1.0, 0.625, 1.0);
+    protected static final VoxelShape AABB = Shapes.box(0.0, 0.375, 0.0, 1.0, 0.625, 1.0);
 
     public BlockSolarArrayModule(Properties builder)
     {
@@ -30,17 +30,17 @@ public class BlockSolarArrayModule extends BlockAdvanced implements IShiftDescri
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         return AABB;
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 
-        TileEntity tile = worldIn.getTileEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
 
         if (tile instanceof INetworkConnection)
         {
@@ -49,7 +49,7 @@ public class BlockSolarArrayModule extends BlockAdvanced implements IShiftDescri
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntitySolarArrayModule();
     }
@@ -61,11 +61,11 @@ public class BlockSolarArrayModule extends BlockAdvanced implements IShiftDescri
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving)
+    public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving)
     {
-        super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+        super.onPlace(state, worldIn, pos, oldState, isMoving);
 
-        if (!worldIn.isRemote)
+        if (!worldIn.isClientSide)
         {
 //            boolean added = false;
 //            for (EnumFacing facing : EnumFacing.HORIZONTALS)
@@ -111,7 +111,7 @@ public class BlockSolarArrayModule extends BlockAdvanced implements IShiftDescri
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -121,7 +121,7 @@ public class BlockSolarArrayModule extends BlockAdvanced implements IShiftDescri
     }
 
     @Override
-    public boolean isSealed(World worldIn, BlockPos pos, Direction direction)
+    public boolean isSealed(Level worldIn, BlockPos pos, Direction direction)
     {
         return direction.getAxis() == Direction.Axis.Y;
     }

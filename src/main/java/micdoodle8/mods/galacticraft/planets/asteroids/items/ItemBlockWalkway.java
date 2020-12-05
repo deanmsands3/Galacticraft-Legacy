@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.items;
+package micdoodle8.mods.galacticraft.planets.asteroids.items;
 //
 //import micdoodle8.mods.galacticraft.core.GCBlocks;
 //import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;

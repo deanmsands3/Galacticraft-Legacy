@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.api.client;
 
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.level.dimension.Dimension;
 
 public interface IScreenManager
 {

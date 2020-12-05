@@ -7,21 +7,18 @@ import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class SlotSchematicCargoRocket extends Slot
 {
     private final int index;
     //    private final BlockPos pos;
-    private final PlayerEntity player;
+    private final Player player;
 
-    public SlotSchematicCargoRocket(IInventory par2IInventory, int par3, int par4, int par5, PlayerEntity player)
+    public SlotSchematicCargoRocket(Container par2IInventory, int par3, int par4, int par5, Player player)
     {
         super(par2IInventory, par3, par4, par5);
         this.index = par3;
@@ -30,7 +27,7 @@ public class SlotSchematicCargoRocket extends Slot
     }
 
     @Override
-    public void onSlotChanged()
+    public void setChanged()
     {
 //        if (this.player instanceof ServerPlayerEntity)
 //        {
@@ -40,7 +37,7 @@ public class SlotSchematicCargoRocket extends Slot
     }
 
     @Override
-    public boolean isItemValid(ItemStack par1ItemStack)
+    public boolean mayPlace(ItemStack par1ItemStack)
     {
         if (par1ItemStack == null)
         {
@@ -50,7 +47,7 @@ public class SlotSchematicCargoRocket extends Slot
         List<INasaWorkbenchRecipe> recipes = GalacticraftRegistry.getCargoRocketRecipes();
         for (INasaWorkbenchRecipe recipe : recipes)
         {
-            if (ItemStack.areItemsEqual(par1ItemStack, recipe.getRecipeInput().get(this.index)))
+            if (ItemStack.isSame(par1ItemStack, recipe.getRecipeInput().get(this.index)))
             {
                 return true;
             }
@@ -63,7 +60,7 @@ public class SlotSchematicCargoRocket extends Slot
      * getInventoryStackLimit(), but 1 in the case of armor slots)
      */
     @Override
-    public int getSlotStackLimit()
+    public int getMaxStackSize()
     {
         return 1;
     }

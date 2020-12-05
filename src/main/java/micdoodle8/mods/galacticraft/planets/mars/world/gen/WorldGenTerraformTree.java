@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.world.gen;
+package micdoodle8.mods.galacticraft.planets.mars.world.gen;
 //
 //import net.minecraft.block.*;
 //import net.minecraft.block.VineBlock;

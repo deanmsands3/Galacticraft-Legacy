@@ -3,34 +3,34 @@ package micdoodle8.mods.galacticraft.core.client.sounds;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntityAutoRocket;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase.EnumLaunchPhase;
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.TickableSound;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 
 /**
  * This file is part of the Galacticraft project
  *
  * @author micdoodle8
  */
-public class SoundUpdaterRocket extends TickableSound
+public class SoundUpdaterRocket extends AbstractTickableSoundInstance
 {
-    private final ClientPlayerEntity thePlayer;
+    private final LocalPlayer thePlayer;
     private final EntityAutoRocket theRocket;
     private boolean soundStopped;
     private boolean ignition = false;
 
-    public SoundUpdaterRocket(ClientPlayerEntity par1EntityPlayerSP, EntityAutoRocket par2Entity)
+    public SoundUpdaterRocket(LocalPlayer par1EntityPlayerSP, EntityAutoRocket par2Entity)
     {
-        super(GCSounds.shuttle, SoundCategory.NEUTRAL);
+        super(GCSounds.shuttle, SoundSource.NEUTRAL);
         this.theRocket = par2Entity;
         this.thePlayer = par1EntityPlayerSP;
-        this.attenuationType = ISound.AttenuationType.NONE;
+        this.attenuation = SoundInstance.Attenuation.NONE;
         this.volume = 0.00001F;  //If it's zero it won't start playing
         this.pitch = 0.0F;  //pitch
-        this.repeat = true;
-        this.repeatDelay = 0;  //repeat delay
+        this.looping = true;
+        this.delay = 0;  //repeat delay
         this.updateSoundLocation(par2Entity);
     }
 
@@ -69,17 +69,17 @@ public class SoundUpdaterRocket extends TickableSound
 
             if (this.theRocket.launchPhase >= EnumLaunchPhase.IGNITED.ordinal())
             {
-                if (this.theRocket.getPosY() > 1000)
+                if (this.theRocket.getY() > 1000)
                 {
                     this.volume = 0F;
                     if (this.theRocket.launchPhase != EnumLaunchPhase.LANDING.ordinal())
                     {
-                        this.donePlaying = true;
+                        this.stopped = true;
                     }
                 }
-                else if (this.theRocket.getPosY() > Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT)
+                else if (this.theRocket.getY() > Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT)
                 {
-                    this.volume = 1.0F - (float) ((this.theRocket.getPosY() - Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / (1000.0 - Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
+                    this.volume = 1.0F - (float) ((this.theRocket.getY() - Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / (1000.0 - Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
                 }
                 else
                 {
@@ -91,20 +91,20 @@ public class SoundUpdaterRocket extends TickableSound
         }
         else
         {
-            this.donePlaying = true;
+            this.stopped = true;
         }
     }
 
     public void stopRocketSound()
     {
-        this.donePlaying = true;
+        this.stopped = true;
         this.soundStopped = true;
     }
 
     public void updateSoundLocation(Entity e)
     {
-        this.x = (float) e.getPosX();
-        this.y = (float) e.getPosY();
-        this.z = (float) e.getPosZ();
+        this.x = (float) e.getX();
+        this.y = (float) e.getY();
+        this.z = (float) e.getZ();
     }
 }

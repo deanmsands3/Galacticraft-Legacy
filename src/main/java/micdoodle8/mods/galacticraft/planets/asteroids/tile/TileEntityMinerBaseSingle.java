@@ -3,18 +3,18 @@ package micdoodle8.mods.galacticraft.planets.asteroids.tile;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlockNames;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
-public class TileEntityMinerBaseSingle extends TileEntity implements ITickableTileEntity
+public class TileEntityMinerBaseSingle extends BlockEntity implements TickableBlockEntity
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.blockMinerBase)
-    public static TileEntityType<TileEntityMinerBaseSingle> TYPE;
+    public static BlockEntityType<TileEntityMinerBaseSingle> TYPE;
 
     private int corner = 0;
 
@@ -26,13 +26,13 @@ public class TileEntityMinerBaseSingle extends TileEntity implements ITickableTi
     @Override
     public void tick()
     {
-        if (!this.world.isRemote && this.corner == 0)
+        if (!this.level.isClientSide && this.corner == 0)
         {
-            final ArrayList<TileEntity> attachedBaseBlocks = new ArrayList<TileEntity>();
+            final ArrayList<BlockEntity> attachedBaseBlocks = new ArrayList<BlockEntity>();
 
-            final int thisX = this.getPos().getX();
-            final int thisY = this.getPos().getY();
-            final int thisZ = this.getPos().getZ();
+            final int thisX = this.getBlockPos().getX();
+            final int thisY = this.getBlockPos().getY();
+            final int thisZ = this.getBlockPos().getZ();
 
             boolean success = true;
             SEARCH:
@@ -43,7 +43,7 @@ public class TileEntityMinerBaseSingle extends TileEntity implements ITickableTi
                     for (int z = 0; z < 2; z++)
                     {
                         BlockPos pos = new BlockPos(x + thisX, y + thisY, z + thisZ);
-                        final TileEntity tile = this.world.isBlockLoaded(pos) ? this.world.getTileEntity(pos) : null;
+                        final BlockEntity tile = this.level.hasChunkAt(pos) ? this.level.getBlockEntity(pos) : null;
 
                         if (tile instanceof TileEntityMinerBaseSingle && !tile.isRemoved() && ((TileEntityMinerBaseSingle) tile).corner == 0)
                         {
@@ -60,11 +60,11 @@ public class TileEntityMinerBaseSingle extends TileEntity implements ITickableTi
 
             if (success)
             {
-                TileEntityMinerBase.addNewMinerBase(GCCoreUtil.getDimensionType(this), this.getPos());
-                for (final TileEntity tile : attachedBaseBlocks)
+                TileEntityMinerBase.addNewMinerBase(GCCoreUtil.getDimensionType(this), this.getBlockPos());
+                for (final BlockEntity tile : attachedBaseBlocks)
                 {
                     ((TileEntityMinerBaseSingle) tile).corner = 1;
-                    this.world.removeBlock(this.getPos(), false);
+                    this.level.removeBlock(this.getBlockPos(), false);
                 }
                 //Don't try setting a new block with a TileEntity, because new tiles can
                 //get removed after the end of this tileEntity.tick() tick - setting a new block

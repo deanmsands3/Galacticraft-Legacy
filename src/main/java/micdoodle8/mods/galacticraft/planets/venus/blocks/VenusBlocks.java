@@ -11,14 +11,13 @@ import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlockNames;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.*;
 import micdoodle8.mods.galacticraft.planets.venus.tile.*;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -32,42 +31,42 @@ import static micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBloc
 @ObjectHolder(Constants.MOD_ID_PLANETS)
 public class VenusBlocks
 {
-    public static final Block rockSoft = new BlockVenusRock(Block.Properties.create(Material.ROCK).hardnessAndResistance(2.2F));
-    public static final Block rockMagma = new BlockVenusRock(Block.Properties.from(rockSoft));
-    public static final Block rockVolcanicDeposit = new BlockVenusRock(Block.Properties.from(rockSoft));
-    public static final Block leadBlock = new BlockVenusRock(Block.Properties.from(rockSoft));
+    public static final Block rockSoft = new BlockVenusRock(Block.Properties.of(Material.STONE).strength(2.2F));
+    public static final Block rockMagma = new BlockVenusRock(Block.Properties.copy(rockSoft));
+    public static final Block rockVolcanicDeposit = new BlockVenusRock(Block.Properties.copy(rockSoft));
+    public static final Block leadBlock = new BlockVenusRock(Block.Properties.copy(rockSoft));
 
-    public static final Block rockHard = new BlockVenusRock(Block.Properties.from(rockSoft).hardnessAndResistance(3.0F));
+    public static final Block rockHard = new BlockVenusRock(Block.Properties.copy(rockSoft).strength(3.0F));
 
-    public static final Block oreAluminum = new BlockOreVenus(Block.Properties.from(rockSoft).hardnessAndResistance(5.0F));
+    public static final Block oreAluminum = new BlockOreVenus(Block.Properties.copy(rockSoft).strength(5.0F));
 
-    public static final Block oreCopper = new BlockOreVenus(Block.Properties.from(rockSoft));
-    public static final Block oreGalena = new BlockOreVenus(Block.Properties.from(rockSoft));
-    public static final Block oreQuartz = new BlockOreVenus(Block.Properties.from(rockSoft));
-    public static final Block oreSilicon = new BlockOreVenus(Block.Properties.from(rockSoft));
-    public static final Block oreTin = new BlockOreVenus(Block.Properties.from(rockSoft));
-    public static final Block oreSolarDust = new BlockOreVenus(Block.Properties.from(rockSoft));
+    public static final Block oreCopper = new BlockOreVenus(Block.Properties.copy(rockSoft));
+    public static final Block oreGalena = new BlockOreVenus(Block.Properties.copy(rockSoft));
+    public static final Block oreQuartz = new BlockOreVenus(Block.Properties.copy(rockSoft));
+    public static final Block oreSilicon = new BlockOreVenus(Block.Properties.copy(rockSoft));
+    public static final Block oreTin = new BlockOreVenus(Block.Properties.copy(rockSoft));
+    public static final Block oreSolarDust = new BlockOreVenus(Block.Properties.copy(rockSoft));
 
-    public static final Block dungeonBrick1 = new BlockDungeonBrick(Block.Properties.from(rockSoft).hardnessAndResistance(40.0F));
-    public static final Block dungeonBrick2 = new BlockDungeonBrick(Block.Properties.from(dungeonBrick1));
+    public static final Block dungeonBrick1 = new BlockDungeonBrick(Block.Properties.copy(rockSoft).strength(40.0F));
+    public static final Block dungeonBrick2 = new BlockDungeonBrick(Block.Properties.copy(dungeonBrick1));
 
-    public static final Block spout = new BlockSpout(Block.Properties.create(Material.ROCK).hardnessAndResistance(4.5F));
+    public static final Block spout = new BlockSpout(Block.Properties.of(Material.STONE).strength(4.5F));
 
-    public static final Block bossSpawner = new BlockBossSpawnerVenus(Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops());
+    public static final Block bossSpawner = new BlockBossSpawnerVenus(Block.Properties.of(Material.STONE).strength(1000000.0F).noDrops());
 
-    public static final Block treasureChestTier3 = new BlockTier3TreasureChest(Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13));
+    public static final Block treasureChestTier3 = new BlockTier3TreasureChest(Block.Properties.of(Material.STONE).strength(100000.0F).sound(SoundType.STONE).lightLevel(13));
 
-    public static final Block torchWebSupport = new BlockTorchWeb(Block.Properties.create(Material.WEB).doesNotBlockMovement());
-    public static final Block torchWebLight = new BlockTorchWeb(Block.Properties.from(torchWebSupport).lightValue(15));
+    public static final Block torchWebSupport = new BlockTorchWeb(Block.Properties.of(Material.WEB).noCollission());
+    public static final Block torchWebLight = new BlockTorchWeb(Block.Properties.copy(torchWebSupport).lightLevel(15));
 
-    public static final Block geothermalGenerator = new BlockGeothermalGenerator(Block.Properties.create(Material.ROCK).hardnessAndResistance(1.0F).sound(SoundType.METAL));
-    public static final Block solarArrayModule = new BlockSolarArrayModule(Block.Properties.from(geothermalGenerator));
-    public static final Block solarArrayController = new BlockSolarArrayController(Block.Properties.from(geothermalGenerator));
-    public static final Block laserTurret = new BlockLaserTurret(Block.Properties.from(geothermalGenerator));
+    public static final Block geothermalGenerator = new BlockGeothermalGenerator(Block.Properties.of(Material.STONE).strength(1.0F).sound(SoundType.METAL));
+    public static final Block solarArrayModule = new BlockSolarArrayModule(Block.Properties.copy(geothermalGenerator));
+    public static final Block solarArrayController = new BlockSolarArrayController(Block.Properties.copy(geothermalGenerator));
+    public static final Block laserTurret = new BlockLaserTurret(Block.Properties.copy(geothermalGenerator));
 
-    public static final Block crashedProbe = new BlockCrashedProbe(Block.Properties.create(Material.IRON).tickRandomly().hardnessAndResistance(4.5F).sound(SoundType.METAL));
+    public static final Block crashedProbe = new BlockCrashedProbe(Block.Properties.of(Material.METAL).randomTicks().strength(4.5F).sound(SoundType.METAL));
 
-    public static final Block scorchedRock = new BlockScorchedRock(Block.Properties.create(Material.ROCK).tickRandomly().hardnessAndResistance(0.9F, 2.5F));
+    public static final Block scorchedRock = new BlockScorchedRock(Block.Properties.of(Material.STONE).randomTicks().strength(0.9F, 2.5F));
 
     //    @ObjectHolder(VenusBlockNames.venusBlock) public static Block venusBlock;
 //    @ObjectHolder(VenusBlockNames.spout)
@@ -185,7 +184,7 @@ public class VenusBlocks
     public static void registerItemBlocks(RegistryEvent.Register<Item> evt)
     {
         IForgeRegistry<Item> r = evt.getRegistry();
-        Item.Properties props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
+        Item.Properties props = GCItems.defaultBuilder().tab(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(rockSoft), new BlockItem(rockSoft, props));
         register(r, Registry.BLOCK.getKey(rockMagma), new BlockItem(rockMagma, props));
         register(r, Registry.BLOCK.getKey(rockVolcanicDeposit), new BlockItem(rockVolcanicDeposit, props));
@@ -257,17 +256,17 @@ public class VenusBlocks
 //    }
 
     @SubscribeEvent
-    public static void initTileEntities(RegistryEvent.Register<TileEntityType<?>> evt)
+    public static void initTileEntities(RegistryEvent.Register<BlockEntityType<?>> evt)
     {
-        IForgeRegistry<TileEntityType<?>> r = evt.getRegistry();
+        IForgeRegistry<BlockEntityType<?>> r = evt.getRegistry();
 
-        register(r, TileEntityType.Builder.create(TileEntityCrashedProbe::new, crashedProbe).build(null), VenusBlockNames.crashedProbe);
-        register(r, TileEntityType.Builder.create(TileEntityDungeonSpawner::new, bossSpawner).build(null), VenusBlockNames.bossSpawner);
-        register(r, TileEntityType.Builder.create(TileEntityGeothermalGenerator::new, geothermalGenerator).build(null), VenusBlockNames.geothermalGenerator);
-        register(r, TileEntityType.Builder.create(TileEntityLaserTurret::new, laserTurret).build(null), VenusBlockNames.laserTurret);
-        register(r, TileEntityType.Builder.create(TileEntitySolarArrayController::new, solarArrayController).build(null), VenusBlockNames.solarArrayController);
-        register(r, TileEntityType.Builder.create(TileEntitySolarArrayModule::new, solarArrayModule).build(null), VenusBlockNames.solarArrayModule);
-        register(r, TileEntityType.Builder.create(TileEntitySpout::new, spout).build(null), VenusBlockNames.spout);
-        register(r, TileEntityType.Builder.create(TileEntityTreasureChestVenus::new, treasureChestTier3).build(null), VenusBlockNames.treasureChestTier3);
+        register(r, BlockEntityType.Builder.of(TileEntityCrashedProbe::new, crashedProbe).build(null), VenusBlockNames.crashedProbe);
+        register(r, BlockEntityType.Builder.of(TileEntityDungeonSpawner::new, bossSpawner).build(null), VenusBlockNames.bossSpawner);
+        register(r, BlockEntityType.Builder.of(TileEntityGeothermalGenerator::new, geothermalGenerator).build(null), VenusBlockNames.geothermalGenerator);
+        register(r, BlockEntityType.Builder.of(TileEntityLaserTurret::new, laserTurret).build(null), VenusBlockNames.laserTurret);
+        register(r, BlockEntityType.Builder.of(TileEntitySolarArrayController::new, solarArrayController).build(null), VenusBlockNames.solarArrayController);
+        register(r, BlockEntityType.Builder.of(TileEntitySolarArrayModule::new, solarArrayModule).build(null), VenusBlockNames.solarArrayModule);
+        register(r, BlockEntityType.Builder.of(TileEntitySpout::new, spout).build(null), VenusBlockNames.spout);
+        register(r, BlockEntityType.Builder.of(TileEntityTreasureChestVenus::new, treasureChestTier3).build(null), VenusBlockNames.treasureChestTier3);
     }
 }

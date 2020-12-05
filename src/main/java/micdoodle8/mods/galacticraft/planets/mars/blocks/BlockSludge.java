@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.blocks;
+package micdoodle8.mods.galacticraft.planets.mars.blocks;
 //
 //import micdoodle8.mods.galacticraft.api.vector.Vector3;
 //import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;

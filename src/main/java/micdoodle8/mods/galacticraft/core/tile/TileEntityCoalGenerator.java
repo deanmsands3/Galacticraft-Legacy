@@ -9,30 +9,30 @@ import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseUniversalElectrical
 import micdoodle8.mods.galacticraft.core.inventory.ContainerCoalGenerator;
 import micdoodle8.mods.galacticraft.core.inventory.IInventoryDefaults;
 import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Items;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 
-public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource implements IInventoryDefaults, ISidedInventory, IConnector, INamedContainerProvider
+public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource implements IInventoryDefaults, WorldlyContainer, IConnector, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.coalGenerator)
-    public static TileEntityType<TileEntityCoalGenerator> TYPE;
+    public static BlockEntityType<TileEntityCoalGenerator> TYPE;
 
     //New energy rates:
     //
@@ -70,14 +70,14 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     @Override
     public void tick()
     {
-        if (!this.world.isRemote && this.heatGJperTick - TileEntityCoalGenerator.MIN_GENERATE_GJ_PER_TICK > 0)
+        if (!this.level.isClientSide && this.heatGJperTick - TileEntityCoalGenerator.MIN_GENERATE_GJ_PER_TICK > 0)
         {
             this.receiveEnergyGC(null, (this.heatGJperTick - TileEntityCoalGenerator.MIN_GENERATE_GJ_PER_TICK), false);
         }
 
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.itemCookTime > 0)
             {
@@ -91,12 +91,12 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
                 if (this.getInventory().get(0).getItem() == Items.COAL && this.getInventory().get(0).getCount() > 0)
                 {
                     this.itemCookTime = 320;
-                    this.decrStackSize(0, 1);
+                    this.removeItem(0, 1);
                 }
-                else if (this.getInventory().get(0).getItem() == Item.getItemFromBlock(Blocks.COAL_BLOCK) && this.getInventory().get(0).getCount() > 0)
+                else if (this.getInventory().get(0).getItem() == Item.byBlock(Blocks.COAL_BLOCK) && this.getInventory().get(0).getCount() > 0)
                 {
                     this.itemCookTime = 320 * 10;
-                    this.decrStackSize(0, 1);
+                    this.removeItem(0, 1);
                 }
             }
 
@@ -112,17 +112,17 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.itemCookTime = nbt.getInt("itemCookTime");
         this.heatGJperTick = nbt.getInt("generateRateInt");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("itemCookTime", this.itemCookTime);
         nbt.putFloat("generateRate", this.heatGJperTick);
 
@@ -136,9 +136,9 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
 //    }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
-        return itemstack.getItem() == Items.COAL || itemstack.getItem() == Item.getItemFromBlock(Blocks.COAL_BLOCK);
+        return itemstack.getItem() == Items.COAL || itemstack.getItem() == Item.byBlock(Blocks.COAL_BLOCK);
     }
 
 //    @Override
@@ -154,7 +154,7 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction direction)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction direction)
     {
         return slotID == 0;
     }
@@ -199,13 +199,13 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
 
     public Direction getFront()
     {
-        return BlockMachineBase.getFront(this.world.getBlockState(getPos()));
+        return BlockMachineBase.getFront(this.level.getBlockState(getBlockPos()));
     }
 
     @Override
     public Direction getElectricOutputDirection()
     {
-        return getFront().rotateY();
+        return getFront().getClockWise();
     }
 
     @Override
@@ -220,14 +220,14 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerCoalGenerator(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.coal_generator");
+        return new TranslatableComponent("container.coal_generator");
     }
 }

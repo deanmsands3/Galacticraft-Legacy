@@ -8,15 +8,15 @@ import micdoodle8.mods.galacticraft.core.network.NetworkUtil;
 import micdoodle8.mods.galacticraft.core.network.PacketDynamic;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
-public abstract class TileEntityAdvanced extends TileEntityInventory implements IPacketReceiver, ITickableTileEntity
+public abstract class TileEntityAdvanced extends TileEntityInventory implements IPacketReceiver, TickableBlockEntity
 {
     public int ticks = 0;
     private LinkedHashSet<Field> fieldCacheClient;
@@ -24,7 +24,7 @@ public abstract class TileEntityAdvanced extends TileEntityInventory implements 
     private final Map<Field, Object> lastSentData = new HashMap<Field, Object>(4, 1F);
     private boolean networkDataChanged = false;
 
-    public TileEntityAdvanced(TileEntityType<?> type)
+    public TileEntityAdvanced(BlockEntityType<?> type)
     {
         super(type);
     }
@@ -43,7 +43,7 @@ public abstract class TileEntityAdvanced extends TileEntityInventory implements 
                     this.initFieldCache();
                 }
 
-                if (this.world != null && this.world.isRemote && this.fieldCacheClient.size() > 0)
+                if (this.level != null && this.level.isClientSide && this.fieldCacheClient.size() > 0)
                 {
                     //Request any networked information from server on first client tick (maybe client just logged on, but server networkdata didn't change recently)
                     GalacticraftCore.packetPipeline.sendToServer(new PacketDynamic(this));
@@ -55,7 +55,7 @@ public abstract class TileEntityAdvanced extends TileEntityInventory implements 
 
         if (this.isNetworkedTile() && this.ticks % this.getPacketCooldown() == 0)
         {
-            if (this.world.isRemote && this.fieldCacheServer.size() > 0)
+            if (this.level.isClientSide && this.fieldCacheServer.size() > 0)
             {
                 PacketDynamic packet = new PacketDynamic(this);
                 if (networkDataChanged)
@@ -63,12 +63,12 @@ public abstract class TileEntityAdvanced extends TileEntityInventory implements 
                     GalacticraftCore.packetPipeline.sendToServer(packet);
                 }
             }
-            else if (!this.world.isRemote && this.fieldCacheClient.size() > 0)
+            else if (!this.level.isClientSide && this.fieldCacheClient.size() > 0)
             {
                 PacketDynamic packet = new PacketDynamic(this);
                 if (networkDataChanged)
                 {
-                    GalacticraftCore.packetPipeline.sendToAllAround(packet, new TargetPoint(getPos().getX(), getPos().getY(), getPos().getZ(), this.getPacketRange(), GCCoreUtil.getDimensionType(this.world)));
+                    GalacticraftCore.packetPipeline.sendToAllAround(packet, new TargetPoint(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), this.getPacketRange(), GCCoreUtil.getDimensionType(this.level)));
                 }
             }
         }
@@ -133,7 +133,7 @@ public abstract class TileEntityAdvanced extends TileEntityInventory implements 
             this.initFieldCache();
         }
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             fieldList = this.fieldCacheServer;
         }
@@ -192,7 +192,7 @@ public abstract class TileEntityAdvanced extends TileEntityInventory implements 
     @Override
     public void decodePacketdata(ByteBuf buffer)
     {
-        if (this.world == null)
+        if (this.level == null)
         {
             GCLog.severe("World is NULL! Connot decode packet data!");
             return;
@@ -214,7 +214,7 @@ public abstract class TileEntityAdvanced extends TileEntityInventory implements 
 
         Set<Field> fieldSet = null;
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             fieldSet = this.fieldCacheClient;
         }
@@ -227,7 +227,7 @@ public abstract class TileEntityAdvanced extends TileEntityInventory implements 
         {
             try
             {
-                Object obj = NetworkUtil.getFieldValueFromStream(field, buffer, this.world);
+                Object obj = NetworkUtil.getFieldValueFromStream(field, buffer, this.level);
                 field.set(this, obj);
             }
             catch (Exception e)

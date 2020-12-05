@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.blocks;
+package micdoodle8.mods.galacticraft.core.blocks;
 //
 //import com.google.common.base.Predicates;
 //import com.google.common.collect.ImmutableMap;

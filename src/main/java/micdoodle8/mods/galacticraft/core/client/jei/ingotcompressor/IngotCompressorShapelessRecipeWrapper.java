@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei.ingotcompressor;
+package micdoodle8.mods.galacticraft.core.client.jei.ingotcompressor;
 //
 //import java.util.List;
 //

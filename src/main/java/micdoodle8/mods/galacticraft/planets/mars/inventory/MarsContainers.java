@@ -5,9 +5,7 @@ import micdoodle8.mods.galacticraft.core.inventory.ContainerRocketInventory;
 import micdoodle8.mods.galacticraft.planets.mars.client.gui.*;
 import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
 import micdoodle8.mods.galacticraft.planets.mars.tile.*;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -20,19 +18,19 @@ import static micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBloc
 public class MarsContainers
 {
     @SubscribeEvent
-    public static void initContainers(RegistryEvent.Register<ContainerType<?>> evt)
+    public static void initContainers(RegistryEvent.Register<MenuType<?>> evt)
     {
-        IForgeRegistry<ContainerType<?>> r = evt.getRegistry();
+        IForgeRegistry<MenuType<?>> r = evt.getRegistry();
 
-        ContainerType<ContainerElectrolyzer> electrolyzer = IForgeContainerType.create((windowId, inv, data) -> new ContainerElectrolyzer(windowId, inv, (TileEntityElectrolyzer) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
-        ContainerType<ContainerGasLiquefier> gasLiquefier = IForgeContainerType.create((windowId, inv, data) -> new ContainerGasLiquefier(windowId, inv, (TileEntityGasLiquefier) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
-        ContainerType<ContainerLaunchController> launchController = IForgeContainerType.create((windowId, inv, data) -> new ContainerLaunchController(windowId, inv, (TileEntityLaunchController) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
-        ContainerType<ContainerLaunchController> launchControllerAdvanced = IForgeContainerType.create((windowId, inv, data) -> new ContainerLaunchController(windowId, inv, (TileEntityLaunchController) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
-        ContainerType<ContainerMethaneSynthesizer> methaneSynthesizer = IForgeContainerType.create((windowId, inv, data) -> new ContainerMethaneSynthesizer(windowId, inv, (TileEntityMethaneSynthesizer) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
-        ContainerType<ContainerSchematicTier2Rocket> schematicT2Rocket = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicTier2Rocket(windowId, inv));
-        ContainerType<ContainerSchematicCargoRocket> schematicCargoRocket = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicCargoRocket(windowId, inv));
-        ContainerType<ContainerSlimeling> slimeling = IForgeContainerType.create((windowId, inv, data) -> new ContainerSlimeling(windowId, inv, (EntitySlimeling) inv.player.world.getEntityByID(data.readInt())));
-        ContainerType<ContainerTerraformer> terraformer = IForgeContainerType.create((windowId, inv, data) -> new ContainerTerraformer(windowId, inv, (TileEntityTerraformer) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerElectrolyzer> electrolyzer = IForgeContainerType.create((windowId, inv, data) -> new ContainerElectrolyzer(windowId, inv, (TileEntityElectrolyzer) inv.player.world.getBlockEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerGasLiquefier> gasLiquefier = IForgeContainerType.create((windowId, inv, data) -> new ContainerGasLiquefier(windowId, inv, (TileEntityGasLiquefier) inv.player.world.getBlockEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerLaunchController> launchController = IForgeContainerType.create((windowId, inv, data) -> new ContainerLaunchController(windowId, inv, (TileEntityLaunchController) inv.player.world.getBlockEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerLaunchController> launchControllerAdvanced = IForgeContainerType.create((windowId, inv, data) -> new ContainerLaunchController(windowId, inv, (TileEntityLaunchController) inv.player.world.getBlockEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerMethaneSynthesizer> methaneSynthesizer = IForgeContainerType.create((windowId, inv, data) -> new ContainerMethaneSynthesizer(windowId, inv, (TileEntityMethaneSynthesizer) inv.player.world.getBlockEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerSchematicTier2Rocket> schematicT2Rocket = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicTier2Rocket(windowId, inv));
+        MenuType<ContainerSchematicCargoRocket> schematicCargoRocket = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicCargoRocket(windowId, inv));
+        MenuType<ContainerSlimeling> slimeling = IForgeContainerType.create((windowId, inv, data) -> new ContainerSlimeling(windowId, inv, (EntitySlimeling) inv.player.world.getEntityById(data.readInt())));
+        MenuType<ContainerTerraformer> terraformer = IForgeContainerType.create((windowId, inv, data) -> new ContainerTerraformer(windowId, inv, (TileEntityTerraformer) inv.player.world.getBlockEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
 
         register(r, electrolyzer, MarsContainerNames.ELECTROLYZER);
         register(r, gasLiquefier, MarsContainerNames.GAS_LIQUEFIER);
@@ -46,15 +44,15 @@ public class MarsContainers
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
         {
-            ScreenManager.registerFactory(electrolyzer, GuiWaterElectrolyzer::new);
-            ScreenManager.registerFactory(gasLiquefier, GuiGasLiquefier::new);
-            ScreenManager.registerFactory(launchController, GuiLaunchController::new);
-            ScreenManager.registerFactory(launchControllerAdvanced, GuiLaunchController::new);
-            ScreenManager.registerFactory(methaneSynthesizer, GuiMethaneSynthesizer::new);
-            ScreenManager.registerFactory(schematicT2Rocket, GuiSchematicTier2Rocket::new);
-            ScreenManager.registerFactory(schematicCargoRocket, GuiSchematicCargoRocket::new);
-            ScreenManager.registerFactory(slimeling, GuiSlimelingInventory::new);
-            ScreenManager.registerFactory(terraformer, GuiTerraformer::new);
+            Screens.register(electrolyzer, GuiWaterElectrolyzer::new);
+            Screens.register(gasLiquefier, GuiGasLiquefier::new);
+            Screens.register(launchController, GuiLaunchController::new);
+            Screens.register(launchControllerAdvanced, GuiLaunchController::new);
+            Screens.register(methaneSynthesizer, GuiMethaneSynthesizer::new);
+            Screens.register(schematicT2Rocket, GuiSchematicTier2Rocket::new);
+            Screens.register(schematicCargoRocket, GuiSchematicCargoRocket::new);
+            Screens.register(slimeling, GuiSlimelingInventory::new);
+            Screens.register(terraformer, GuiTerraformer::new);
         });
     }
 }

@@ -4,15 +4,12 @@ import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.world.EnumAtmosphericGas;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -34,7 +31,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 //        }
     }
 
-    public DimensionSpace(World worldIn, DimensionType typeIn, float lightMod)
+    public DimensionSpace(Level worldIn, DimensionType typeIn, float lightMod)
     {
         super(worldIn, typeIn, lightMod);
     }
@@ -75,9 +72,9 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
     @Override
     public void updateWeather(Runnable defaultLogic)
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
-            long newTime = world.getWorldInfo().getDayTime();
+            long newTime = level.getLevelData().getDayTime();
 //            if (this.preTickTime == Long.MIN_VALUE)
 //            {
 //                //First tick: get the timeCurrentOffset from saved ticks in villages.dat :)
@@ -105,12 +102,12 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 
         if (this.shouldDisablePrecipitation())
         {
-            this.world.getWorldInfo().setRainTime(0);
-            this.world.getWorldInfo().setRaining(false);
-            this.world.getWorldInfo().setThunderTime(0);
-            this.world.getWorldInfo().setThundering(false);
-            this.world.rainingStrength = 0.0F;
-            this.world.thunderingStrength = 0.0F;
+            this.level.getLevelData().setRainTime(0);
+            this.level.getLevelData().setRaining(false);
+            this.level.getLevelData().setThunderTime(0);
+            this.level.getLevelData().setThundering(false);
+            this.level.rainLevel = 0.0F;
+            this.level.thunderLevel = 0.0F;
         }
         else
         {
@@ -208,13 +205,13 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 //    }
 
     @Override
-    public boolean canDoLightning(Chunk chunk)
+    public boolean canDoLightning(LevelChunk chunk)
     {
         return !this.shouldDisablePrecipitation();
     }
 
     @Override
-    public boolean canDoRainSnowIce(Chunk chunk)
+    public boolean canDoRainSnowIce(LevelChunk chunk)
     {
         return !this.shouldDisablePrecipitation();
     }
@@ -226,13 +223,13 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
     }
 
     @Override
-    public float[] calcSunriseSunsetColors(float var1, float var2)
+    public float[] getSunriseColor(float var1, float var2)
     {
-        return this.hasSunset() ? super.calcSunriseSunsetColors(var1, var2) : null;
+        return this.hasSunset() ? super.getSunriseColor(var1, var2) : null;
     }
 
     @Override
-    public float calculateCelestialAngle(long par1, float par3)
+    public float getTimeOfDay(long par1, float par3)
     {
         par1 = this.getWorldTime();
         int j = (int) (par1 % this.getDayLength());
@@ -249,7 +246,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
         }
 
         float f2 = f1;
-        f1 = 0.5F - MathHelper.cos(f1 * 3.1415927F) / 2.0F;
+        f1 = 0.5F - Mth.cos(f1 * 3.1415927F) / 2.0F;
         return f2 + (f1 - f2) / 3.0F;
     }
 
@@ -269,7 +266,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 //    }
 
     @Override
-    public boolean isSkyColored()
+    public boolean hasGround()
     {
         return true;
     }
@@ -281,9 +278,9 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
      * Returns false on servers (to disable Nether Portal mob spawning and sleeping in beds).
      */
     @Override
-    public boolean isSurfaceWorld()
+    public boolean isNaturalDimension()
     {
-        return (this.world != null) && this.world.isRemote;
+        return (this.level != null) && this.level.isClientSide;
     }
 
     /**
@@ -296,7 +293,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
      * If you want beds NOT to explode, you can override this, like in WorldProviderMoon.
      */
     @Override
-    public boolean canRespawnHere()
+    public boolean mayRespawn()
     {
         return false;
     }
@@ -308,7 +305,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
      * in accordance with the 'Force Overworld Respawn' setting on core.conf.
      */
     @Override
-    public DimensionType getRespawnDimension(ServerPlayerEntity player)
+    public DimensionType getRespawnDimension(ServerPlayer player)
     {
         return this.shouldForceRespawn() ? this.getType() : player.getSpawnDimension();
     }
@@ -400,8 +397,8 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
     @Override
     public void setWorldTime(long time)
     {
-        world.getWorldInfo().setDayTime(time);
-        if (!world.isRemote)
+        level.getLevelData().setDayTime(time);
+        if (!level.isClientSide)
         {
             // TODO
 //            if (JavaUtil.instance.isCalledBy(CommandTime.class))
@@ -412,7 +409,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 //            }
 //            else
 //            {
-            long newTCO = time - world.getWorldInfo().getDayTime();
+            long newTCO = time - level.getLevelData().getDayTime();
             long diff = newTCO - this.timeCurrentOffset;
             if (diff > 1L || diff < -1L)
             {
@@ -432,7 +429,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 //        {
 //            this.saveTCO  = this.timeCurrentOffset;
 //        } TODO
-        return world.getWorldInfo().getDayTime() + this.timeCurrentOffset;
+        return level.getLevelData().getDayTime() + this.timeCurrentOffset;
     }
 
     /**

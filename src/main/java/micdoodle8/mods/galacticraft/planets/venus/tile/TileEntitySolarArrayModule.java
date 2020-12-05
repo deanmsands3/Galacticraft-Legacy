@@ -3,15 +3,15 @@ package micdoodle8.mods.galacticraft.planets.venus.tile;
 import micdoodle8.mods.galacticraft.api.transmission.NetworkType;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlockNames;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntitySolarArrayModule extends TileEntitySolarTransmitter
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.solarArrayModule)
-    public static TileEntityType<TileEntitySolarArrayModule> TYPE;
+    public static BlockEntityType<TileEntitySolarArrayModule> TYPE;
 
     public TileEntitySolarArrayModule()
     {
@@ -37,15 +37,15 @@ public class TileEntitySolarArrayModule extends TileEntitySolarTransmitter
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(CompoundNBT compound)
+    public void load(CompoundTag compound)
     {
-        super.read(compound);
+        super.load(compound);
     }
 
     @Override

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.mars.client.render.entity;
+package micdoodle8.mods.galacticraft.planets.mars.client.render.entity;
 //
 //import micdoodle8.mods.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
 //import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;

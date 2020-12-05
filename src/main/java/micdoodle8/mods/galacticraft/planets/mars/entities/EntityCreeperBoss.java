@@ -16,35 +16,46 @@ import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.ConfigManagerPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BossInfo;
-import net.minecraft.world.World;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.monster.SharedMonsterAttributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathable, IRangedAttackMob
+public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathable, RangedAttackMob
 {
     protected long ticks = 0;
     public int headsRemaining = 3;
     private Entity targetEntity;
 
-    public EntityCreeperBoss(EntityType<? extends EntityCreeperBoss> type, World worldIn)
+    public EntityCreeperBoss(EntityType<? extends EntityCreeperBoss> type, Level worldIn)
     {
         super(type, worldIn);
 //        this.setSize(2.0F, 7.0F);
 //        this.isImmuneToFire = true;
     }
 
-    public static EntityCreeperBoss create(World world)
+    public static EntityCreeperBoss create(Level world)
     {
         return new EntityCreeperBoss(MarsEntities.CREEPER_BOSS, world);
     }
@@ -52,33 +63,33 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     @Override
     protected void registerGoals()
     {
-        this.goalSelector.addGoal(1, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new EntityAIArrowAttack(this, 1.0D, 25, 20.0F));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(3, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 0, true, false, null));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, 0, true, false, null));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float damage)
+    public boolean hurt(DamageSource damageSource, float damage)
     {
-        if (damageSource.getDamageType().equals("fireball"))
+        if (damageSource.getMsgId().equals("fireball"))
         {
             if (this.isInvulnerableTo(damageSource))
             {
                 return false;
             }
-            else if (super.attackEntityFrom(damageSource, damage))
+            else if (super.hurt(damageSource, damage))
             {
-                Entity entity = damageSource.getTrueSource();
+                Entity entity = damageSource.getEntity();
 
-                if (this.getPassengers().contains(entity) && this.getRidingEntity() != entity)
+                if (this.getPassengers().contains(entity) && this.getVehicle() != entity)
                 {
                     if (entity != this && entity instanceof LivingEntity)
                     {
-                        this.setAttackTarget((LivingEntity) entity);
+                        this.setTarget((LivingEntity) entity);
                     }
 
                     return true;
@@ -106,12 +117,12 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     }
 
     @Override
-    public void knockBack(Entity par1Entity, float par2, double par3, double par5)
+    public void knockback(Entity par1Entity, float par2, double par3, double par5)
     {
     }
 
     @Override
-    public boolean canBePushed()
+    public boolean isPushable()
     {
         return false;
     }
@@ -125,7 +136,7 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn)
     {
-        this.playSound(GCSounds.bossOuch, this.getSoundVolume(), this.getSoundPitch() - 0.15F);
+        this.playSound(GCSounds.bossOuch, this.getSoundVolume(), this.getVoicePitch() - 0.15F);
         return null;
     }
 
@@ -149,21 +160,21 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
 //    }
 
     @Override
-    protected void onDeathUpdate()
+    protected void tickDeath()
     {
-        super.onDeathUpdate();
+        super.tickDeath();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.deathTicks == 1)
             {
-                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_PLAY_SOUND_BOSS_DEATH, GCCoreUtil.getDimensionType(this.world), new Object[]{getSoundPitch() - 0.1F}), new PacketDistributor.TargetPoint(this.getPosX(), this.getPosY(), this.getPosZ(), 40.0D, GCCoreUtil.getDimensionType(this.world)));
+                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_PLAY_SOUND_BOSS_DEATH, GCCoreUtil.getDimensionType(this.level), new Object[]{getVoicePitch() - 0.1F}), new PacketDistributor.TargetPoint(this.getX(), this.getY(), this.getZ(), 40.0D, GCCoreUtil.getDimensionType(this.level)));
             }
         }
     }
 
     @Override
-    public void livingTick()
+    public void aiStep()
     {
         this.ticks++;
 
@@ -180,13 +191,13 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
             this.headsRemaining = 2;
         }
 
-        final PlayerEntity player = this.world.getClosestPlayer(this.getPosX(), this.getPosY(), this.getPosZ(), 20.0, false);
+        final Player player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 20.0, false);
 
         if (player != null && !player.equals(this.targetEntity))
         {
-            if (this.getDistanceSq(player) < 400.0D)
+            if (this.distanceToSqr(player) < 400.0D)
             {
-                this.getNavigator().getPathToEntity(player, 0);
+                this.getNavigation().createPath(player, 0);
                 this.targetEntity = player;
             }
         }
@@ -195,7 +206,7 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
             this.targetEntity = null;
         }
 
-        super.livingTick();
+        super.aiStep();
     }
 
 //    @Override
@@ -256,7 +267,7 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
         boolean hasAstroMiner = false;
         // Check if player seems to have Tier 3 rocket or Astro Miner already - in that case we don't want more
         // (we don't really want him giving powerful schematics to his friends who are still on Overworld) 
-        final PlayerEntity player = this.world.getClosestPlayer(this.getPosX(), this.getPosY(), this.getPosZ(), 20.0, false);
+        final Player player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 20.0, false);
         if (player != null)
         {
             GCPlayerStats stats = GCPlayerStats.get(player);
@@ -307,18 +318,18 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     }
 
     @Override
-    public void attackEntityWithRangedAttack(LivingEntity entitylivingbase, float f)
+    public void performRangedAttack(LivingEntity entitylivingbase, float f)
     {
-        this.world.playEvent(null, 1024, new BlockPos(this), 0);
-        double d3 = this.getPosX();
-        double d4 = this.getPosY() + 5.5D;
-        double d5 = this.getPosZ();
-        double d6 = entitylivingbase.getPosX() - d3;
-        double d7 = entitylivingbase.getPosY() + entitylivingbase.getEyeHeight() * 0.5D - d4;
-        double d8 = entitylivingbase.getPosZ() - d5;
-        EntityProjectileTNT projectileTNT = EntityProjectileTNT.createEntityProjectileTNT(this.world, this, d6 * 0.5D, d7 * 0.5D, d8 * 0.5D);
-        projectileTNT.setRawPosition(d3, d4, d5);
-        this.world.addEntity(projectileTNT);
+        this.level.levelEvent(null, 1024, new BlockPos(this), 0);
+        double d3 = this.getX();
+        double d4 = this.getY() + 5.5D;
+        double d5 = this.getZ();
+        double d6 = entitylivingbase.getX() - d3;
+        double d7 = entitylivingbase.getY() + entitylivingbase.getEyeHeight() * 0.5D - d4;
+        double d8 = entitylivingbase.getZ() - d5;
+        EntityProjectileTNT projectileTNT = EntityProjectileTNT.createEntityProjectileTNT(this.level, this, d6 * 0.5D, d7 * 0.5D, d8 * 0.5D);
+        projectileTNT.setPosRaw(d3, d4, d5);
+        this.level.addFreshEntity(projectileTNT);
     }
 
     @Override
@@ -330,20 +341,20 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     @Override
     public void dropKey()
     {
-        this.entityDropItem(new ItemStack(MarsItems.key, 1), 0.5F);
+        this.spawnAtLocation(new ItemStack(MarsItems.key, 1), 0.5F);
     }
 
     @Override
-    public BossInfo.Color getHealthBarColor()
+    public BossEvent.BossBarColor getHealthBarColor()
     {
-        return BossInfo.Color.YELLOW;
+        return BossEvent.BossBarColor.YELLOW;
     }
 
 //    @Override
 //    public void setSwingingArms(boolean swingingArms) {}
 
     @Override
-    public void onKillCommand()
+    public void kill()
     {
         this.setHealth(0.0F);
     }

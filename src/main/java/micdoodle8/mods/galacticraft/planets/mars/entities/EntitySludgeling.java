@@ -5,34 +5,33 @@ import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedCreeper;
 import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSkeleton;
 import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSpider;
 import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedZombie;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.SharedMonsterAttributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntitySludgeling extends MonsterEntity implements IEntityBreathable
+public class EntitySludgeling extends Monster implements IEntityBreathable
 {
-    public EntitySludgeling(EntityType<? extends EntitySludgeling> type, World worldIn)
+    public EntitySludgeling(EntityType<? extends EntitySludgeling> type, Level worldIn)
     {
         super(type, worldIn);
 //        this.setSize(0.3F, 0.2F);
-        this.goalSelector.goals.clear();
-        this.targetSelector.goals.clear();
+        this.goalSelector.availableGoals.clear();
+        this.targetSelector.availableGoals.clear();
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.25F, true));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 0, false, true, null));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, 0, false, true, null));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EntityEvolvedZombie.class, 0, false, true, null));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EntityEvolvedSkeleton.class, 0, false, true, null));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EntityEvolvedSpider.class, 0, false, true, null));
@@ -41,7 +40,7 @@ public class EntitySludgeling extends MonsterEntity implements IEntityBreathable
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -61,7 +60,7 @@ public class EntitySludgeling extends MonsterEntity implements IEntityBreathable
     }
 
     @Override
-    protected boolean canTriggerWalking()
+    protected boolean isMovementNoisy()
     {
         return false;
     }
@@ -69,19 +68,19 @@ public class EntitySludgeling extends MonsterEntity implements IEntityBreathable
     @Override
     protected SoundEvent getAmbientSound()
     {
-        return SoundEvents.ENTITY_SILVERFISH_AMBIENT;
+        return SoundEvents.SILVERFISH_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn)
     {
-        return SoundEvents.ENTITY_SILVERFISH_HURT;
+        return SoundEvents.SILVERFISH_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound()
     {
-        return SoundEvents.ENTITY_SILVERFISH_DEATH;
+        return SoundEvents.SILVERFISH_DEATH;
     }
 
 //    public PlayerEntity getClosestEntityToAttack(double par1, double par3, double par5, double par7)
@@ -119,7 +118,7 @@ public class EntitySludgeling extends MonsterEntity implements IEntityBreathable
     @Override
     public void tick()
     {
-        this.renderYawOffset = this.rotationYaw;
+        this.yBodyRot = this.yRot;
         super.tick();
     }
 
@@ -145,15 +144,15 @@ public class EntitySludgeling extends MonsterEntity implements IEntityBreathable
 
 
     @Override
-    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn)
+    public boolean checkSpawnRules(LevelAccessor worldIn, MobSpawnType spawnReasonIn)
     {
-        return super.canSpawn(worldIn, spawnReasonIn);
+        return super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
     @Override
-    public CreatureAttribute getCreatureAttribute()
+    public MobType getMobType()
     {
-        return CreatureAttribute.ARTHROPOD;
+        return MobType.ARTHROPOD;
     }
 
     @Override

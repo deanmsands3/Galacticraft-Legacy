@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.command;
+package micdoodle8.mods.galacticraft.core.command;
 //
 //import com.mojang.brigadier.CommandDispatcher;
 //import com.mojang.brigadier.context.CommandContext;

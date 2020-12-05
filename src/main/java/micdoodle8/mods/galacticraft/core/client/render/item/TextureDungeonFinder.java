@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.render.item;
+package micdoodle8.mods.galacticraft.core.client.render.item;
 //
 //import java.lang.reflect.Field;
 //import java.util.Map;

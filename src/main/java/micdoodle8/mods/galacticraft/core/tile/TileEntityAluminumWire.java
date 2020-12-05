@@ -3,8 +3,8 @@ package micdoodle8.mods.galacticraft.core.tile;
 import micdoodle8.mods.galacticraft.core.GCBlockNames;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseUniversalConductor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityAluminumWire extends TileBaseUniversalConductor
@@ -12,7 +12,7 @@ public class TileEntityAluminumWire extends TileBaseUniversalConductor
     public static class TileEntityAluminumWireT1 extends TileEntityAluminumWire
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWire)
-        public static TileEntityType<TileEntityAluminumWireT1> TYPE;
+        public static BlockEntityType<TileEntityAluminumWireT1> TYPE;
 
         public TileEntityAluminumWireT1()
         {
@@ -23,7 +23,7 @@ public class TileEntityAluminumWire extends TileBaseUniversalConductor
     public static class TileEntityAluminumWireT2 extends TileEntityAluminumWire
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireHeavy)
-        public static TileEntityType<TileEntityAluminumWireT2> TYPE;
+        public static BlockEntityType<TileEntityAluminumWireT2> TYPE;
 
         public TileEntityAluminumWireT2()
         {
@@ -33,7 +33,7 @@ public class TileEntityAluminumWire extends TileBaseUniversalConductor
 
     public int tier;
 
-    public TileEntityAluminumWire(TileEntityType<?> type, int tier)
+    public TileEntityAluminumWire(BlockEntityType<?> type, int tier)
     {
         super(type);
         this.tier = tier;
@@ -50,9 +50,9 @@ public class TileEntityAluminumWire extends TileBaseUniversalConductor
 //    }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.tier = nbt.getInt("tier");
         //For legacy worlds (e.g. converted from 1.6.4)
         if (this.tier == 0)
@@ -62,17 +62,17 @@ public class TileEntityAluminumWire extends TileBaseUniversalConductor
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("tier", this.tier);
         return nbt;
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override

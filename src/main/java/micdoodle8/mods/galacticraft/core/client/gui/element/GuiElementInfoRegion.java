@@ -2,19 +2,20 @@ package micdoodle8.mods.galacticraft.core.client.gui.element;
 
 import micdoodle8.mods.galacticraft.core.client.gui.container.GuiContainerGC;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-
+import com.mojang.blaze3d.platform.Lighting;
 import java.util.Iterator;
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
-public class GuiElementInfoRegion extends AbstractGui
+@Environment(EnvType.CLIENT)
+public class GuiElementInfoRegion extends GuiComponent
 {
     protected int width;
     protected int height;
@@ -62,7 +63,7 @@ public class GuiElementInfoRegion extends AbstractGui
     public void drawRegion(int par2, int par3)
     {
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        RenderHelper.disableStandardItemLighting();
+        Lighting.turnOff();
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
@@ -72,7 +73,7 @@ public class GuiElementInfoRegion extends AbstractGui
         {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             int k = this.getHoverState(this.withinRegion);
-            AbstractGui.fill(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height, ColorUtil.to32BitColor(100 * k, 255, 0, 0));
+            GuiComponent.fill(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height, ColorUtil.to32BitColor(100 * k, 255, 0, 0));
         }
 
         if (this.tooltipStrings != null && !this.tooltipStrings.isEmpty() && this.withinRegion)
@@ -83,7 +84,7 @@ public class GuiElementInfoRegion extends AbstractGui
             while (iterator.hasNext())
             {
                 String s = iterator.next();
-                int l = Minecraft.getInstance().fontRenderer.getStringWidth(s);
+                int l = Minecraft.getInstance().font.width(s);
 
                 if (l > k)
                 {
@@ -128,7 +129,7 @@ public class GuiElementInfoRegion extends AbstractGui
             for (int k2 = 0; k2 < this.tooltipStrings.size(); ++k2)
             {
                 String s1 = this.tooltipStrings.get(k2);
-                Minecraft.getInstance().fontRenderer.drawStringWithShadow(s1, i1, j1, -1);
+                Minecraft.getInstance().font.drawShadow(s1, i1, j1, -1);
 
                 j1 += 10;
             }
@@ -139,7 +140,7 @@ public class GuiElementInfoRegion extends AbstractGui
 
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        RenderHelper.enableStandardItemLighting();
+        Lighting.turnBackOn();
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
     }
 }

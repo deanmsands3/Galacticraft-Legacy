@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.items;
+package micdoodle8.mods.galacticraft.core.items;
 //
 //import net.minecraft.block.Block;
 //import net.minecraft.item.ItemStack;

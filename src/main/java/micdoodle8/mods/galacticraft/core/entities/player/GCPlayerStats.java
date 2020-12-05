@@ -6,15 +6,13 @@ import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.vector.Vector3D;
 import micdoodle8.mods.galacticraft.core.inventory.InventoryExtended;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.world.dimension.DimensionType;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.dimension.DimensionType;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
@@ -26,15 +24,15 @@ public abstract class GCPlayerStats
         return entity.getCapability(GCCapabilities.GC_STATS_CAPABILITY, null).orElseThrow(() -> new IllegalArgumentException("LazyOptional must not be empty!"));
     }
 
-    public abstract void saveNBTData(CompoundNBT nbt);
+    public abstract void saveNBTData(CompoundTag nbt);
 
-    public abstract void loadNBTData(CompoundNBT nbt);
+    public abstract void loadNBTData(CompoundTag nbt);
 
     public abstract void copyFrom(GCPlayerStats oldData, boolean keepInv);
 
-    public abstract WeakReference<ServerPlayerEntity> getPlayer();
+    public abstract WeakReference<ServerPlayer> getPlayer();
 
-    public abstract void setPlayer(WeakReference<ServerPlayerEntity> player);
+    public abstract void setPlayer(WeakReference<ServerPlayer> player);
 
     public abstract InventoryExtended getExtendedInventory();
 

@@ -2,9 +2,9 @@ package micdoodle8.mods.galacticraft.planets.asteroids.world.gen;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.planets.asteroids.world.gen.base.*;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -17,12 +17,12 @@ public class AsteroidFeatures
     public static final DeferredRegister<Feature<?>> FEATURES = new DeferredRegister<>(ForgeRegistries.FEATURES, Constants.MOD_ID_CORE);
 
     public static final RegistryObject<MapGenAbandonedBase> ASTEROID_BASE = register("asteroid_base", () -> new MapGenAbandonedBase(BaseConfiguration::deserialize));
-    public static IStructurePieceType CBASE_START = BaseStart::new;
-    public static IStructurePieceType CBASE_ROOM = BaseRoom::new;
-    public static IStructurePieceType CBASE_DECK = BaseDeck::new;
-    public static IStructurePieceType CBASE_PLATE = BasePlate::new;
-    public static IStructurePieceType CBASE_HANGAR = BaseHangar::new;
-    public static IStructurePieceType CBASE_LINKING = BaseLinking::new;
+    public static StructurePieceType CBASE_START = BaseStart::new;
+    public static StructurePieceType CBASE_ROOM = BaseRoom::new;
+    public static StructurePieceType CBASE_DECK = BaseDeck::new;
+    public static StructurePieceType CBASE_PLATE = BasePlate::new;
+    public static StructurePieceType CBASE_HANGAR = BaseHangar::new;
+    public static StructurePieceType CBASE_LINKING = BaseLinking::new;
 
     public static void registerFeatures(RegistryEvent.Register<Feature<?>> event)
     {

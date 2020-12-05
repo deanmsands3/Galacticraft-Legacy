@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.util;
+package micdoodle8.mods.galacticraft.core.util;
 //
 ///**
 // * This class was originally created by <williewillus> as

@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.command;
+package micdoodle8.mods.galacticraft.core.command;
 //
 //import com.google.common.collect.Sets;
 //import micdoodle8.mods.galacticraft.core.dimension.SpaceStationWorldData;

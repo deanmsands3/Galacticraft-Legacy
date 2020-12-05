@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.items;
+package micdoodle8.mods.galacticraft.core.items;
 //
 //import java.lang.reflect.Method;
 //

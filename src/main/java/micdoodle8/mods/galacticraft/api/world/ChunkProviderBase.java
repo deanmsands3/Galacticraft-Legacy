@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.api.world;
+package micdoodle8.mods.galacticraft.api.world;
 //
 //import javax.annotation.Nullable;
 //

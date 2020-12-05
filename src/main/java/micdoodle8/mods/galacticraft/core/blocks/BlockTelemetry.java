@@ -7,23 +7,22 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityTelemetry;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import java.util.UUID;
 
 public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescription, ISortable
@@ -37,7 +36,7 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
     {
 //        int angle = MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 //        int change = 0;
@@ -62,9 +61,9 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
     }
 
     @Override
-    public ActionResultType onUseWrench(World world, BlockPos pos, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onUseWrench(Level world, BlockPos pos, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        Direction facing = world.getBlockState(pos).get(FACING);
+        Direction facing = world.getBlockState(pos).getValue(FACING);
 
         int change = 0;
 
@@ -90,13 +89,13 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
             break;
         }
 //        change += (12 & metadata);
-        world.setBlockState(pos, this.getDefaultState().with(FACING, Direction.byIndex(change)), 2);
+        world.setBlock(pos, this.defaultBlockState().setValue(FACING, Direction.from3DDataValue(change)), 2);
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityTelemetry();
     }
@@ -114,31 +113,31 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
 //    }
 
     @Override
-    public ActionResultType onMachineActivated(World world, BlockPos pos, BlockState state, PlayerEntity entityPlayer, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onMachineActivated(Level world, BlockPos pos, BlockState state, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        if (!world.isRemote)
+        if (!world.isClientSide)
         {
-            TileEntity tile = world.getTileEntity(pos);
+            BlockEntity tile = world.getBlockEntity(pos);
             if (tile instanceof TileEntityTelemetry)
             {
-                ItemStack held = entityPlayer.inventory.getCurrentItem();
+                ItemStack held = entityPlayer.inventory.getSelected();
                 //Look for Frequency Module
                 if (!held.isEmpty() && held.getItem() == GCItems.frequencyModule)
                 {
-                    CompoundNBT fmData = held.getTag();
+                    CompoundTag fmData = held.getTag();
                     if (fmData != null && fmData.contains("linkedUUIDMost") && fmData.contains("linkedUUIDLeast"))
                     {
                         UUID uuid = new UUID(fmData.getLong("linkedUUIDMost"), fmData.getLong("linkedUUIDLeast"));
                         ((TileEntityTelemetry) tile).addTrackedEntity(uuid);
-                        entityPlayer.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.telemetry_succeed.message")));
+                        entityPlayer.sendMessage(new TextComponent(GCCoreUtil.translate("gui.telemetry_succeed.message")));
                     }
                     else
                     {
-                        entityPlayer.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.telemetry_fail.message")));
+                        entityPlayer.sendMessage(new TextComponent(GCCoreUtil.translate("gui.telemetry_fail.message")));
 
                         if (fmData == null)
                         {
-                            fmData = new CompoundNBT();
+                            fmData = new CompoundTag();
                             held.setTag(fmData);
                         }
                     }
@@ -146,7 +145,7 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
                     fmData.putInt("teCoordY", pos.getY());
                     fmData.putInt("teCoordZ", pos.getZ());
                     fmData.putString("teDim", GCCoreUtil.getDimensionType(world).getRegistryName().toString());
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
 
                 ItemStack wearing = GCPlayerStats.get(entityPlayer).getFrequencyModuleInSlot();
@@ -154,23 +153,23 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
                 {
                     if (wearing.hasTag() && wearing.getTag().contains("teDim"))
                     {
-                        return ActionResultType.PASS;
+                        return InteractionResult.PASS;
                     }
-                    entityPlayer.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.telemetry_fail_wearing_it.message")));
+                    entityPlayer.sendMessage(new TextComponent(GCCoreUtil.translate("gui.telemetry_fail_wearing_it.message")));
                 }
                 else
                 {
-                    entityPlayer.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.telemetry_fail_no_frequency_module.message")));
+                    entityPlayer.sendMessage(new TextComponent(GCCoreUtil.translate("gui.telemetry_fail_no_frequency_module.message")));
                 }
             }
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override

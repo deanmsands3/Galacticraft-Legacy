@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client;
+package micdoodle8.mods.galacticraft.core.client;
 //
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;

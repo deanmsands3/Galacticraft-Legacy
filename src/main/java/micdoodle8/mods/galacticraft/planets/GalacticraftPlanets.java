@@ -13,8 +13,10 @@ import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.venus.VenusModule;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
 import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -91,7 +93,7 @@ public class GalacticraftPlanets
         VenusItems.registerItems(evt);
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     private static Supplier<PlanetsProxy> getClientProxy()
     {
         //NOTE: This extra method is needed to avoid classloading issues on servers

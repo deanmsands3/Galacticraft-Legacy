@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.venus.client.render.entity;
+package micdoodle8.mods.galacticraft.planets.venus.client.render.entity;
 //
 //import com.google.common.base.Function;
 //import com.google.common.collect.ImmutableList;

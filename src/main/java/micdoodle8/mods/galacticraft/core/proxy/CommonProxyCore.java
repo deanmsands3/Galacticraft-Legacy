@@ -13,14 +13,14 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
 import micdoodle8.mods.galacticraft.core.wrappers.PlayerGearData;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.play.ServerPlayNetHandler;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.network.PacketListener;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.Fluid;
 
 public class CommonProxyCore
 {
@@ -35,7 +35,7 @@ public class CommonProxyCore
     {
     }
 
-    public World getClientWorld()
+    public Level getClientWorld()
     {
         return null;
     }
@@ -44,16 +44,16 @@ public class CommonProxyCore
 //    {
 //    }
 
-    public World getWorldForID(DimensionType dimensionID)
+    public Level getWorldForID(DimensionType dimensionID)
     {
         return WorldUtil.getWorldForDimensionServer(dimensionID);
     }
 
-    public PlayerEntity getPlayerFromNetHandler(INetHandler handler)
+    public Player getPlayerFromNetHandler(PacketListener handler)
     {
-        if (handler instanceof ServerPlayNetHandler)
+        if (handler instanceof ServerGamePacketListenerImpl)
         {
-            return ((ServerPlayNetHandler) handler).player;
+            return ((ServerGamePacketListenerImpl) handler).player;
         }
         else
         {
@@ -86,7 +86,7 @@ public class CommonProxyCore
         return false;
     }
 
-    public PlayerGearData getGearData(PlayerEntity player)
+    public PlayerGearData getGearData(Player player)
     {
         GCPlayerStats stats = GCPlayerStats.get(player);
 

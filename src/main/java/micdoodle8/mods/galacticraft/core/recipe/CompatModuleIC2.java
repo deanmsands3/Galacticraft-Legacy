@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.recipe;
+package micdoodle8.mods.galacticraft.core.recipe;
 //
 //import ic2.api.item.IC2Items;
 //import ic2.api.recipe.Recipes;

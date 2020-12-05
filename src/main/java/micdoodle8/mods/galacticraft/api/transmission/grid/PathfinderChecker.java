@@ -4,10 +4,9 @@ import micdoodle8.mods.galacticraft.api.transmission.NetworkType;
 import micdoodle8.mods.galacticraft.api.transmission.tile.INetworkConnection;
 import micdoodle8.mods.galacticraft.api.transmission.tile.ITransmitter;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.world.World;
-
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +18,7 @@ import java.util.Set;
  */
 public class PathfinderChecker extends Pathfinder
 {
-    public PathfinderChecker(final World world, final INetworkConnection targetConnector, final NetworkType networkType, final INetworkConnection... ignoreConnector)
+    public PathfinderChecker(final Level world, final INetworkConnection targetConnector, final NetworkType networkType, final INetworkConnection... ignoreConnector)
     {
         super(new IPathCallBack()
         {
@@ -30,9 +29,9 @@ public class PathfinderChecker extends Pathfinder
 
                 for (int i = 0; i < 6; i++)
                 {
-                    Direction direction = Direction.byIndex(i);
+                    Direction direction = Direction.from3DDataValue(i);
                     BlockVec3 position = currentNode.clone().modifyPositionFromSide(direction);
-                    TileEntity connectedBlock = position.getTileEntity(world);
+                    BlockEntity connectedBlock = position.getTileEntity(world);
 
                     if (connectedBlock instanceof ITransmitter && !Arrays.asList(ignoreConnector).contains(connectedBlock))
                     {

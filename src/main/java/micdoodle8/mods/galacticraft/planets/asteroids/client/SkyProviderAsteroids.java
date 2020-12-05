@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.asteroids.client;
+package micdoodle8.mods.galacticraft.planets.asteroids.client;
 //
 //import com.mojang.blaze3d.platform.GlStateManager;
 //import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;

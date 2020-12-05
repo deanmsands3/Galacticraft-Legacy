@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client;
+package micdoodle8.mods.galacticraft.core.client;
 //
 //import com.google.common.collect.ImmutableList;
 //import com.google.common.collect.Lists;

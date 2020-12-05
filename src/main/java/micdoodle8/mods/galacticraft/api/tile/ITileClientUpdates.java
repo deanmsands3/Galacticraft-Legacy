@@ -4,9 +4,11 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.dimension.DimensionType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,7 +35,7 @@ public interface ITileClientUpdates
      * The supplied data list has 4 ints
      * of data to use at positions 1 through 4.
      */
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     void updateClient(List<Object> data);
 
     /**
@@ -41,10 +43,10 @@ public interface ITileClientUpdates
      */
     default void clientOnLoad()
     {
-        TileEntity tile = (TileEntity) this;
-        if (tile.getWorld().isRemote)
+        BlockEntity tile = (BlockEntity) this;
+        if (tile.getLevel().isClientSide)
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_MACHINE_DATA, tile.getWorld(), new Object[]{tile.getPos()}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_MACHINE_DATA, tile.getLevel(), new Object[]{tile.getBlockPos()}));
         }
     }
 
@@ -54,11 +56,11 @@ public interface ITileClientUpdates
      * (If overriding this you must override all other methods in
      * ITileClientUpdates as well ... in which case, why are you using it?)
      */
-    default void sendUpdateToClient(ServerPlayerEntity player)
+    default void sendUpdateToClient(ServerPlayer player)
     {
         int[] data = new int[4];
         this.buildDataPacket(data);
-        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_MACHINE_DATA, GCCoreUtil.getDimensionType(player.world), new Object[]{((TileEntity) this).getPos(), data[0], data[1], data[2], data[3]}), player);
+        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_MACHINE_DATA, GCCoreUtil.getDimensionType(player.level), new Object[]{((BlockEntity) this).getBlockPos(), data[0], data[1], data[2], data[3]}), player);
     }
 
     /**
@@ -68,7 +70,7 @@ public interface ITileClientUpdates
     {
         int[] data = new int[4];
         this.buildDataPacket(data);
-        DimensionType dimID = GCCoreUtil.getDimensionType(((TileEntity) this).getWorld());
-        GalacticraftCore.packetPipeline.sendToDimension(new PacketSimple(EnumSimplePacket.C_UPDATE_MACHINE_DATA, dimID, new Object[]{((TileEntity) this).getPos(), data[0], data[1], data[2], data[3]}), dimID);
+        DimensionType dimID = GCCoreUtil.getDimensionType(((BlockEntity) this).getLevel());
+        GalacticraftCore.packetPipeline.sendToDimension(new PacketSimple(EnumSimplePacket.C_UPDATE_MACHINE_DATA, dimID, new Object[]{((BlockEntity) this).getBlockPos(), data[0], data[1], data[2], data[3]}), dimID);
     }
 }

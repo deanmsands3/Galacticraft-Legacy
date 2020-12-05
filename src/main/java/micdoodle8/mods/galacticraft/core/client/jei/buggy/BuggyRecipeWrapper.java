@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.core.client.jei.buggy;
+package micdoodle8.mods.galacticraft.core.client.jei.buggy;
 //
 //import com.google.common.collect.Lists;
 //import mezz.jei.api.ingredients.IIngredients;

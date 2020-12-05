@@ -1,19 +1,21 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.model.ModelParaChest;
 import micdoodle8.mods.galacticraft.core.entities.EntityParachest;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class RenderParaChest extends EntityRenderer<EntityParachest>
 {
     private static final ResourceLocation[] textures = {new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/parachute/plain.png"),
@@ -36,10 +38,10 @@ public class RenderParaChest extends EntityRenderer<EntityParachest>
 
     private final ModelParaChest chestModel;
 
-    public RenderParaChest(EntityRendererManager manager)
+    public RenderParaChest(EntityRenderDispatcher manager)
     {
         super(manager);
-        this.shadowSize = 1F;
+        this.shadowRadius = 1F;
         this.chestModel = new ModelParaChest();
     }
 
@@ -50,9 +52,9 @@ public class RenderParaChest extends EntityRenderer<EntityParachest>
     }
 
     @Override
-    public void render(EntityParachest entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn)
+    public void render(EntityParachest entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn)
     {
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 //        GL11.glPushMatrix();
 //        GL11.glTranslatef((float) x - 0.5F, (float) y, (float) z);
 
@@ -60,11 +62,11 @@ public class RenderParaChest extends EntityRenderer<EntityParachest>
 
         if (entityIn.isAlive())
         {
-            IVertexBuilder ivertexbuilder = bufferIn.getBuffer(this.chestModel.getRenderType(this.getEntityTexture(entityIn)));
-            this.chestModel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            VertexConsumer ivertexbuilder = bufferIn.getBuffer(this.chestModel.renderType(this.getEntityTexture(entityIn)));
+            this.chestModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         }
 
 //        GL11.glPopMatrix();
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 }

@@ -5,9 +5,8 @@ import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.core.inventory.InventoryBuggyBench;
 import micdoodle8.mods.galacticraft.core.inventory.InventoryRocketBench;
 import micdoodle8.mods.galacticraft.core.recipe.NasaWorkbenchRecipe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 
@@ -85,12 +84,12 @@ public class RecipeUtil
      */
     public static boolean areItemStackTagsEqual(ItemStack stackA, ItemStack stackB)
     {
-        if (ItemStack.areItemStackTagsEqual(stackA, stackB))
+        if (ItemStack.tagMatches(stackA, stackB))
         {
             return true;
         }
 
-        CompoundNBT query = null;
+        CompoundTag query = null;
         if (stackA.getTag() == null && stackB.getTag() != null)
         {
             query = stackB.getTag();
@@ -114,6 +113,6 @@ public class RecipeUtil
      */
     public static boolean stacksMatch(ItemStack itemstack, ItemStack itemstack1)
     {
-        return !itemstack1.isEmpty() && itemstack1.getItem() == itemstack.getItem() && (!itemstack.hasTag() || itemstack.getDamage() == itemstack1.getDamage()) && RecipeUtil.areItemStackTagsEqual(itemstack, itemstack1);
+        return !itemstack1.isEmpty() && itemstack1.getItem() == itemstack.getItem() && (!itemstack.hasTag() || itemstack.getDamageValue() == itemstack1.getDamageValue()) && RecipeUtil.areItemStackTagsEqual(itemstack, itemstack1);
     }
 }

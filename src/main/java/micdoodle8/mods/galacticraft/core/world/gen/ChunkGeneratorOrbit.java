@@ -1,17 +1,16 @@
 package micdoodle8.mods.galacticraft.core.world.gen;
 
 import micdoodle8.mods.galacticraft.core.dimension.chunk.OrbitGenSettings;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.WorldGenRegion;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome.SpawnerData;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
 import java.util.List;
 
 public class ChunkGeneratorOrbit extends ChunkGenerator<OrbitGenSettings>
@@ -20,7 +19,7 @@ public class ChunkGeneratorOrbit extends ChunkGenerator<OrbitGenSettings>
 //    private final Random rand;
 //    private final World world;
 
-    public ChunkGeneratorOrbit(IWorld worldIn, BiomeProvider dimension, OrbitGenSettings settingsIn)
+    public ChunkGeneratorOrbit(LevelAccessor worldIn, BiomeSource dimension, OrbitGenSettings settingsIn)
     {
         super(worldIn, dimension, settingsIn);
 //        this.rand = new Random(par2);
@@ -28,18 +27,18 @@ public class ChunkGeneratorOrbit extends ChunkGenerator<OrbitGenSettings>
     }
 
     @Override
-    public void generateSurface(WorldGenRegion region, IChunk chunk)
+    public void buildSurfaceAndBedrock(WorldGenRegion region, ChunkAccess chunk)
     {
     }
 
     @Override
-    public int getGroundHeight()
+    public int getSpawnHeight()
     {
-        return this.world.getSeaLevel() + 1;
+        return this.level.getSeaLevel() + 1;
     }
 
     @Override
-    public void makeBase(IWorld worldIn, IChunk chunkIn)
+    public void fillFromNoise(LevelAccessor worldIn, ChunkAccess chunkIn)
     {
         ChunkPos chunkPos = chunkIn.getPos();
         if (chunkPos.x == 0 && chunkPos.z == 0)
@@ -49,7 +48,7 @@ public class ChunkGeneratorOrbit extends ChunkGenerator<OrbitGenSettings>
     }
 
     @Override
-    public int func_222529_a(int p_222529_1_, int p_222529_2_, Heightmap.Type p_222529_3_)
+    public int getBaseHeight(int p_222529_1_, int p_222529_2_, Heightmap.Types p_222529_3_)
     {
         return 0;
     }
@@ -101,7 +100,7 @@ public class ChunkGeneratorOrbit extends ChunkGenerator<OrbitGenSettings>
 //    }
 
     @Override
-    public List<SpawnListEntry> getPossibleCreatures(EntityClassification creatureType, BlockPos pos)
+    public List<SpawnerData> getMobsAt(MobCategory creatureType, BlockPos pos)
     {
         return null;
     }

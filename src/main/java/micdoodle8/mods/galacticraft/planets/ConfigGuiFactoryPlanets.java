@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets;
+package micdoodle8.mods.galacticraft.planets;
 //
 //import micdoodle8.mods.galacticraft.core.Constants;
 //import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;

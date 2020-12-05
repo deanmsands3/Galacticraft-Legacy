@@ -11,18 +11,20 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti.EnumBlockMultiType;
-import net.minecraft.block.BlockState;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,7 +38,7 @@ import java.util.List;
 public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock, IFuelable, IFuelDock, ICargoEntity
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPadFull)
-    public static TileEntityType<TileEntityLandingPad> TYPE;
+    public static BlockEntityType<TileEntityLandingPad> TYPE;
 
     public TileEntityLandingPad()
     {
@@ -51,17 +53,17 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
     {
         if (!this.initialised)
         {
-            if (!this.world.isRemote)
+            if (!this.level.isClientSide)
             {
-                this.onCreate(this.world, this.getPos());
+                this.onCreate(this.level, this.getBlockPos());
             }
-            this.initialiseMultiTiles(this.getPos(), this.world);
+            this.initialiseMultiTiles(this.getBlockPos(), this.level);
             this.initialised = true;
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
-            final List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(this.getPos().getX() - 0.5D, this.getPos().getY(), this.getPos().getZ() - 0.5D, this.getPos().getX() + 0.5D, this.getPos().getY() + 1.0D, this.getPos().getZ() + 0.5D));
+            final List<Entity> list = this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos().getX() - 0.5D, this.getBlockPos().getY(), this.getBlockPos().getZ() - 0.5D, this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 1.0D, this.getBlockPos().getZ() + 0.5D));
 
             boolean docked = false;
 
@@ -79,7 +81,7 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
                         {
                             if (fuelable instanceof ILandable)
                             {
-                                ((ILandable) fuelable).landEntity(this.getPos());
+                                ((ILandable) fuelable).landEntity(this.getBlockPos());
                             }
                             else
                             {
@@ -106,16 +108,16 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
 //    }
 
     @Override
-    public ActionResultType onActivated(PlayerEntity entityPlayer)
+    public InteractionResult onActivated(Player entityPlayer)
     {
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void onCreate(World world, BlockPos placedPosition)
+    public void onCreate(Level world, BlockPos placedPosition)
     {
         this.mainBlockPosition = placedPosition;
-        this.markDirty();
+        this.setChanged();
 
         List<BlockPos> positions = new ArrayList<>();
         this.getPositions(placedPosition, positions);
@@ -123,7 +125,7 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
     }
 
     @Override
-    public BlockMulti.EnumBlockMultiType getMultiType()
+    public EnumBlockMultiType getMultiType()
     {
         return EnumBlockMultiType.ROCKET_PAD;
     }
@@ -146,26 +148,26 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
     }
 
     @Override
-    public void onDestroy(TileEntity callingBlock)
+    public void onDestroy(BlockEntity callingBlock)
     {
-        final BlockPos thisBlock = getPos();
+        final BlockPos thisBlock = getBlockPos();
         List<BlockPos> positions = new ArrayList<>();
         this.getPositions(thisBlock, positions);
 
         for (BlockPos pos : positions)
         {
-            BlockState stateAt = this.world.getBlockState(pos);
+            BlockState stateAt = this.level.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock && stateAt.get(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.ROCKET_PAD)
+            if (stateAt.getBlock() == GCBlocks.fakeBlock && stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.ROCKET_PAD)
             {
-                if (this.world.isRemote && this.world.rand.nextDouble() < 0.1D)
+                if (this.level.isClientSide && this.level.random.nextDouble() < 0.1D)
                 {
-                    Minecraft.getInstance().particles.addBlockDestroyEffects(pos, this.world.getBlockState(pos));
+                    Minecraft.getInstance().particleEngine.destroy(pos, this.level.getBlockState(pos));
                 }
-                this.world.destroyBlock(pos, false);
+                this.level.destroyBlock(pos, false);
             }
         }
-        this.world.destroyBlock(thisBlock, true);
+        this.level.destroyBlock(thisBlock, true);
 
         if (this.dockedEntity != null)
         {
@@ -202,16 +204,16 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
     {
         HashSet<ILandingPadAttachable> connectedTiles = new HashSet<ILandingPadAttachable>();
 
-        for (int x = this.getPos().getX() - 1; x < this.getPos().getX() + 2; x++)
+        for (int x = this.getBlockPos().getX() - 1; x < this.getBlockPos().getX() + 2; x++)
         {
-            this.testConnectedTile(x, this.getPos().getZ() - 2, connectedTiles);
-            this.testConnectedTile(x, this.getPos().getZ() + 2, connectedTiles);
+            this.testConnectedTile(x, this.getBlockPos().getZ() - 2, connectedTiles);
+            this.testConnectedTile(x, this.getBlockPos().getZ() + 2, connectedTiles);
         }
 
-        for (int z = this.getPos().getZ() - 1; z < this.getPos().getZ() + 2; z++)
+        for (int z = this.getBlockPos().getZ() - 1; z < this.getBlockPos().getZ() + 2; z++)
         {
-            this.testConnectedTile(this.getPos().getX() - 2, z, connectedTiles);
-            this.testConnectedTile(this.getPos().getX() + 2, z, connectedTiles);
+            this.testConnectedTile(this.getBlockPos().getX() - 2, z, connectedTiles);
+            this.testConnectedTile(this.getBlockPos().getX() + 2, z, connectedTiles);
         }
 
         return connectedTiles;
@@ -219,15 +221,15 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
 
     private void testConnectedTile(int x, int z, HashSet<ILandingPadAttachable> connectedTiles)
     {
-        BlockPos testPos = new BlockPos(x, this.getPos().getY(), z);
-        if (!this.world.isBlockLoaded(testPos))
+        BlockPos testPos = new BlockPos(x, this.getBlockPos().getY(), z);
+        if (!this.level.hasChunkAt(testPos))
         {
             return;
         }
 
-        final TileEntity tile = this.world.getTileEntity(testPos);
+        final BlockEntity tile = this.level.getBlockEntity(testPos);
 
-        if (tile instanceof ILandingPadAttachable && ((ILandingPadAttachable) tile).canAttachToLandingPad(this.world, this.getPos()))
+        if (tile instanceof ILandingPadAttachable && ((ILandingPadAttachable) tile).canAttachToLandingPad(this.level, this.getBlockPos()))
         {
             connectedTiles.add((ILandingPadAttachable) tile);
 //            if (GalacticraftCore.isPlanetsLoaded && tile instanceof TileEntityLaunchController)
@@ -260,20 +262,20 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
+    @Environment(EnvType.CLIENT)
+    public AABB getRenderBoundingBox()
     {
-        return new AxisAlignedBB(getPos().getX() - 1, getPos().getY(), getPos().getZ() - 1, getPos().getX() + 2, getPos().getY() + 0.4D, getPos().getZ() + 2);
+        return new AABB(getBlockPos().getX() - 1, getBlockPos().getY(), getBlockPos().getZ() - 1, getBlockPos().getX() + 2, getBlockPos().getY() + 0.4D, getBlockPos().getZ() + 2);
     }
 
     @Override
-    public boolean isBlockAttachable(IWorldReader world, BlockPos pos)
+    public boolean isBlockAttachable(LevelReader world, BlockPos pos)
     {
-        TileEntity tile = world.getTileEntity(pos);
+        BlockEntity tile = world.getBlockEntity(pos);
 
         if (tile != null && tile instanceof ILandingPadAttachable)
         {
-            return ((ILandingPadAttachable) tile).canAttachToLandingPad(world, this.getPos());
+            return ((ILandingPadAttachable) tile).canAttachToLandingPad(world, this.getBlockPos());
         }
 
         return false;

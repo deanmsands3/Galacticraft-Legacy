@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.api.prefab.world.gen;
+package micdoodle8.mods.galacticraft.api.prefab.world.gen;
 //
 //import micdoodle8.mods.galacticraft.api.event.wgen.GCCoreEventPopulate;
 //import net.minecraft.util.math.BlockPos;

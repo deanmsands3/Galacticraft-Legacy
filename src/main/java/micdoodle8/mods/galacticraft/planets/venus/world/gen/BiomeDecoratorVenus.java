@@ -1,4 +1,4 @@
-//package micdoodle8.mods.galacticraft.planets.venus.world.gen;
+package micdoodle8.mods.galacticraft.planets.venus.world.gen;
 //
 //import micdoodle8.mods.galacticraft.api.event.wgen.GCCoreEventPopulate;
 //import micdoodle8.mods.galacticraft.core.world.gen.WorldGenMinableMeta;

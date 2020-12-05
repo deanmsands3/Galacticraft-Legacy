@@ -4,11 +4,11 @@ import io.netty.buffer.Unpooled;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.event.RegistryEvent;
@@ -37,7 +37,7 @@ public class GCDimensions
         ModDimension modDimension = new ModDimension()
         {
             @Override
-            public BiFunction<World, DimensionType, ? extends Dimension> getFactory()
+            public BiFunction<Level, DimensionType, ? extends Dimension> getFactory()
             {
                 return DimensionMoon::new;
             }
@@ -47,7 +47,7 @@ public class GCDimensions
         modDimension = new ModDimension()
         {
             @Override
-            public BiFunction<World, DimensionType, ? extends Dimension> getFactory()
+            public BiFunction<Level, DimensionType, ? extends Dimension> getFactory()
             {
                 return DimensionOverworldOrbit::new;
             }
@@ -59,14 +59,14 @@ public class GCDimensions
     public static void onModDimensionRegister(final RegisterDimensionsEvent event)
     {
         ResourceLocation id = new ResourceLocation(Constants.MOD_ID_CORE, "moon");
-        if (DimensionType.byName(id) == null)
+        if (DimensionType.getByName(id) == null)
         {
-            MOON_DIMENSION = DimensionManager.registerDimension(id, MOON_MOD_DIMENSION, new PacketBuffer(Unpooled.buffer()), true);
+            MOON_DIMENSION = DimensionManager.registerDimension(id, MOON_MOD_DIMENSION, new FriendlyByteBuf(Unpooled.buffer()), true);
             DimensionManager.keepLoaded(MOON_DIMENSION, false);
         }
         else
         {
-            MOON_DIMENSION = DimensionType.byName(id);
+            MOON_DIMENSION = DimensionType.getByName(id);
         }
 
         GalacticraftCore.moonMoon.setDimensionInfo(GCDimensions.MOON_DIMENSION, DimensionMoon.class).setTierRequired(1);

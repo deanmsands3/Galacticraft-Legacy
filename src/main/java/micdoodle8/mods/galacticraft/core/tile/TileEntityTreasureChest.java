@@ -8,30 +8,41 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.DoubleSidedInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.ChestContainer;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameterSets;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.CompoundContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.LidBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
@@ -42,17 +53,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class TileEntityTreasureChest extends TileEntityAdvanced implements ITickableTileEntity, IInventory, IKeyable, ISidedInventory, IChestLid, INamedContainerProvider
+public class TileEntityTreasureChest extends TileEntityAdvanced implements TickableBlockEntity, Container, IKeyable, WorldlyContainer, LidBlockEntity, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.treasureChestTier1)
-    public static TileEntityType<TileEntityTreasureChest> TYPE;
+    public static BlockEntityType<TileEntityTreasureChest> TYPE;
 
     public boolean adjacentChestChecked;
     public float lidAngle;
     public float prevLidAngle;
     public int numPlayersUsing;
     private int ticksSinceSync;
-    private AxisAlignedBB renderAABB;
+    private AABB renderAABB;
 
     protected ResourceLocation lootTable;
     protected long lootTableSeed;
@@ -67,7 +78,7 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
         this(TYPE, 1);
     }
 
-    public TileEntityTreasureChest(TileEntityType<?> type, int tier)
+    public TileEntityTreasureChest(BlockEntityType<?> type, int tier)
     {
         super(type);
         this.tier = tier;
@@ -75,9 +86,9 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.locked = nbt.getBoolean("isLocked");
         this.tier = nbt.getInt("tier");
 
@@ -85,9 +96,9 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putBoolean("isLocked", this.locked);
         nbt.putInt("tier", this.tier);
 
@@ -97,15 +108,15 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void updateContainingBlockInfo()
+    public void clearCache()
     {
-        super.updateContainingBlockInfo();
+        super.clearCache();
         this.adjacentChestChecked = false;
     }
 
@@ -115,9 +126,9 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
     @Override
     public void tick()
     {
-        int i = this.pos.getX();
-        int j = this.pos.getY();
-        int k = this.pos.getZ();
+        int i = this.worldPosition.getX();
+        int j = this.worldPosition.getY();
+        int k = this.worldPosition.getZ();
         ++this.ticksSinceSync;
         float f;
 
@@ -126,22 +137,22 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
             this.numPlayersUsing = 0;
         }
 
-        if (!this.world.isRemote && this.numPlayersUsing != 0 && (this.ticksSinceSync + i + j + k) % 200 == 0)
+        if (!this.level.isClientSide && this.numPlayersUsing != 0 && (this.ticksSinceSync + i + j + k) % 200 == 0)
         {
             this.numPlayersUsing = 0;
             f = 5.0F;
-            List list = this.world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB((float) i - f, (float) j - f, (float) k - f, (float) (i + 1) + f, (float) (j + 1) + f, (float) (k + 1) + f));
+            List list = this.level.getEntitiesOfClass(Player.class, new AABB((float) i - f, (float) j - f, (float) k - f, (float) (i + 1) + f, (float) (j + 1) + f, (float) (k + 1) + f));
             Iterator iterator = list.iterator();
 
             while (iterator.hasNext())
             {
-                PlayerEntity entityplayer = (PlayerEntity) iterator.next();
+                Player entityplayer = (Player) iterator.next();
 
-                if (entityplayer.openContainer instanceof ChestContainer)
+                if (entityplayer.containerMenu instanceof ChestMenu)
                 {
-                    IInventory iinventory = ((ChestContainer) entityplayer.openContainer).getLowerChestInventory();
+                    Container iinventory = ((ChestMenu) entityplayer.containerMenu).getContainer();
 
-                    if (iinventory == this || iinventory instanceof DoubleSidedInventory && ((DoubleSidedInventory) iinventory).isPartOfLargeChest(this))
+                    if (iinventory == this || iinventory instanceof CompoundContainer && ((CompoundContainer) iinventory).contains(this))
                     {
                         ++this.numPlayersUsing;
                     }
@@ -158,7 +169,7 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
             double d1 = (double) i + 0.5D;
             d2 = (double) k + 0.5D;
 
-            this.world.playSound(null, d1, (double) j + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+            this.level.playSound(null, d1, (double) j + 0.5D, d2, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
         }
 
         if (((this.numPlayersUsing == 0 || this.locked) && this.lidAngle > 0.0F) || this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
@@ -186,7 +197,7 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
                 d2 = (double) i + 0.5D;
                 double d0 = (double) k + 0.5D;
 
-                this.world.playSound(null, d2, (double) j + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+                this.level.playSound(null, d2, (double) j + 0.5D, d0, SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
             }
 
             if (this.lidAngle < 0.0F)
@@ -199,7 +210,7 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
     }
 
     @Override
-    public boolean receiveClientEvent(int id, int type)
+    public boolean triggerEvent(int id, int type)
     {
         if (id == 1)
         {
@@ -208,12 +219,12 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
         }
         else
         {
-            return super.receiveClientEvent(id, type);
+            return super.triggerEvent(id, type);
         }
     }
 
     @Override
-    public void openInventory(PlayerEntity player)
+    public void startOpen(Player player)
     {
         if (!player.isSpectator())
         {
@@ -223,14 +234,14 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
             }
 
             ++this.numPlayersUsing;
-            this.world.addBlockEvent(this.pos, this.getBlockState().getBlock(), 1, this.numPlayersUsing);
-            this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockState().getBlock());
-            this.world.notifyNeighborsOfStateChange(this.pos.down(), this.getBlockState().getBlock());
+            this.level.blockEvent(this.worldPosition, this.getBlockState().getBlock(), 1, this.numPlayersUsing);
+            this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
+            this.level.updateNeighborsAt(this.worldPosition.below(), this.getBlockState().getBlock());
         }
     }
 
     @Override
-    public void closeInventory(PlayerEntity player)
+    public void stopOpen(Player player)
     {
         if (!player.isSpectator())
         {
@@ -245,7 +256,7 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
      */
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack)
+    public boolean canPlaceItem(int index, ItemStack stack)
     {
         return true;
     }
@@ -254,10 +265,10 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
      * invalidates a tile entity
      */
     @Override
-    public void remove()
+    public void setRemoved()
     {
-        super.remove();
-        this.updateContainingBlockInfo();
+        super.setRemoved();
+        this.clearCache();
     }
 
     public String getGuiID()
@@ -312,22 +323,22 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
     }
 
     @Override
-    public boolean onValidKeyActivated(PlayerEntity player, ItemStack key, Direction face)
+    public boolean onValidKeyActivated(Player player, ItemStack key, Direction face)
     {
         if (this.locked)
         {
             this.locked = false;
 
-            if (this.world.isRemote)
+            if (this.level.isClientSide)
             {
                 // player.playSound("galacticraft.player.unlockchest", 1.0F,
                 // 1.0F);
             }
             else
             {
-                if (!player.abilities.isCreativeMode)
+                if (!player.abilities.instabuild)
                 {
-                    player.inventory.getCurrentItem().shrink(1);
+                    player.inventory.getSelected().shrink(1);
                 }
 
                 return true;
@@ -338,13 +349,13 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
     }
 
     @Override
-    public boolean onActivatedWithoutKey(PlayerEntity player, Direction face)
+    public boolean onActivatedWithoutKey(Player player, Direction face)
     {
         if (this.locked)
         {
-            if (player.world.isRemote)
+            if (player.level.isClientSide)
             {
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_ON_FAILED_CHEST_UNLOCK, GCCoreUtil.getDimensionType(this.world), new Object[]{this.getTierOfKeyRequired()}));
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_ON_FAILED_CHEST_UNLOCK, GCCoreUtil.getDimensionType(this.level), new Object[]{this.getTierOfKeyRequired()}));
             }
             return true;
         }
@@ -362,11 +373,11 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
     {
         double distance = Double.MAX_VALUE;
         TileEntityTreasureChest chest = null;
-        for (final TileEntity tile : entity.world.loadedTileEntityList)
+        for (final BlockEntity tile : entity.level.blockEntityList)
         {
             if (tile instanceof TileEntityTreasureChest && ((TileEntityTreasureChest) tile).getTierOfKeyRequired() == tier)
             {
-                double dist = entity.getDistanceSq(tile.getPos().getX() + 0.5, tile.getPos().getY() + 0.5, tile.getPos().getZ() + 0.5);
+                double dist = entity.distanceToSqr(tile.getBlockPos().getX() + 0.5, tile.getBlockPos().getY() + 0.5, tile.getBlockPos().getZ() + 0.5);
                 if (dist < distance)
                 {
                     distance = dist;
@@ -377,7 +388,7 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
 
         if (chest != null)
         {
-            GCLog.debug("Found chest to generate boss loot in: " + chest.pos);
+            GCLog.debug("Found chest to generate boss loot in: " + chest.worldPosition);
         }
         else
         {
@@ -460,19 +471,19 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
 //    }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
+    @Environment(EnvType.CLIENT)
+    public AABB getRenderBoundingBox()
     {
         if (this.renderAABB == null)
         {
-            this.renderAABB = new AxisAlignedBB(pos, pos.add(1, 2, 1));
+            this.renderAABB = new AABB(worldPosition, worldPosition.offset(1, 2, 1));
         }
         return this.renderAABB;
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public double getMaxRenderDistanceSquared()
+    @Environment(EnvType.CLIENT)
+    public double getViewDistance()
     {
         return Constants.RENDERDISTANCE_MEDIUM;
     }
@@ -484,28 +495,28 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, Direction direction)
+    public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, Direction direction)
     {
         return false;
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction)
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction)
     {
         return false;
     }
 
-    public static void setLootTable(IBlockReader reader, Random rand, BlockPos p_195479_2_, ResourceLocation lootTableIn)
+    public static void setLootTable(BlockGetter reader, Random rand, BlockPos p_195479_2_, ResourceLocation lootTableIn)
     {
-        TileEntity tileentity = reader.getTileEntity(p_195479_2_);
-        if (tileentity instanceof LockableLootTileEntity)
+        BlockEntity tileentity = reader.getBlockEntity(p_195479_2_);
+        if (tileentity instanceof RandomizableContainerBlockEntity)
         {
-            ((LockableLootTileEntity) tileentity).setLootTable(lootTableIn, rand.nextLong());
+            ((RandomizableContainerBlockEntity) tileentity).setLootTable(lootTableIn, rand.nextLong());
         }
 
     }
 
-    protected boolean checkLootAndRead(CompoundNBT compound)
+    protected boolean checkLootAndRead(CompoundTag compound)
     {
         if (compound.contains("LootTable", 8))
         {
@@ -519,7 +530,7 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
         }
     }
 
-    protected boolean checkLootAndWrite(CompoundNBT compound)
+    protected boolean checkLootAndWrite(CompoundTag compound)
     {
         if (this.lootTable == null)
         {
@@ -537,19 +548,19 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
         }
     }
 
-    public void fillWithLoot(@Nullable PlayerEntity player)
+    public void fillWithLoot(@Nullable Player player)
     {
-        if (this.lootTable != null && this.world.getServer() != null)
+        if (this.lootTable != null && this.level.getServer() != null)
         {
-            LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(this.lootTable);
+            LootTable loottable = this.level.getServer().getLootTables().get(this.lootTable);
             this.lootTable = null;
-            LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld) this.world)).withParameter(LootParameters.POSITION, new BlockPos(this.pos)).withSeed(this.lootTableSeed);
+            LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel) this.level)).withParameter(LootContextParams.BLOCK_POS, new BlockPos(this.worldPosition)).withOptionalRandomSeed(this.lootTableSeed);
             if (player != null)
             {
-                lootcontext$builder.withLuck(player.getLuck()).withParameter(LootParameters.THIS_ENTITY, player);
+                lootcontext$builder.withLuck(player.getLuck()).withParameter(LootContextParams.THIS_ENTITY, player);
             }
 
-            loottable.fillInventory(this, lootcontext$builder.build(LootParameterSets.CHEST));
+            loottable.fill(this, lootcontext$builder.create(LootContextParamSets.CHEST));
         }
 
     }
@@ -564,7 +575,7 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
      * Returns the stack in the given slot.
      */
     @Override
-    public ItemStack getStackInSlot(int index)
+    public ItemStack getItem(int index)
     {
         this.fillWithLoot(null);
         return this.inventory.get(index);
@@ -574,13 +585,13 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
      * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
      */
     @Override
-    public ItemStack decrStackSize(int index, int count)
+    public ItemStack removeItem(int index, int count)
     {
         this.fillWithLoot(null);
-        ItemStack itemstack = ItemStackHelper.getAndSplit(this.inventory, index, count);
+        ItemStack itemstack = ContainerHelper.removeItem(this.inventory, index, count);
         if (!itemstack.isEmpty())
         {
-            this.markDirty();
+            this.setChanged();
         }
 
         return itemstack;
@@ -590,66 +601,66 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements ITick
      * Removes a stack from the given slot and returns it.
      */
     @Override
-    public ItemStack removeStackFromSlot(int index)
+    public ItemStack removeItemNoUpdate(int index)
     {
         this.fillWithLoot(null);
-        return ItemStackHelper.getAndRemove(this.inventory, index);
+        return ContainerHelper.takeItem(this.inventory, index);
     }
 
     /**
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
      */
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
+    public void setItem(int index, ItemStack stack)
     {
         this.fillWithLoot(null);
         this.inventory.set(index, stack);
-        if (stack.getCount() > this.getInventoryStackLimit())
+        if (stack.getCount() > this.getMaxStackSize())
         {
-            stack.setCount(this.getInventoryStackLimit());
+            stack.setCount(this.getMaxStackSize());
         }
 
-        this.markDirty();
+        this.setChanged();
     }
 
     /**
      * Don't rename this method to canInteractWith due to conflicts with Container
      */
     @Override
-    public boolean isUsableByPlayer(PlayerEntity player)
+    public boolean stillValid(Player player)
     {
-        if (this.world.getTileEntity(this.pos) != this)
+        if (this.level.getBlockEntity(this.worldPosition) != this)
         {
             return false;
         }
         else
         {
-            return !(player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) > 64.0D);
+            return !(player.distanceToSqr((double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D) > 64.0D);
         }
     }
 
     @Override
-    public void clear()
+    public void clearContent()
     {
         this.inventory.clear();
     }
 
     @Override
-    public ChestContainer createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public ChestMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         this.fillWithLoot(playerInv.player);
-        return ChestContainer.createGeneric9X3(containerId, playerInv, this);
+        return ChestMenu.threeRows(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.treasure_chest");
+        return new TranslatableComponent("container.treasure_chest");
     }
 
     @Override
-    public float getLidAngle(float partialTicks)
+    public float getOpenNess(float partialTicks)
     {
-        return MathHelper.lerp(partialTicks, this.prevLidAngle, this.lidAngle);
+        return Mth.lerp(partialTicks, this.prevLidAngle, this.lidAngle);
     }
 }

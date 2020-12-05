@@ -14,26 +14,24 @@ import micdoodle8.mods.galacticraft.planets.venus.dimension.VenusBiomeProvider;
 import micdoodle8.mods.galacticraft.planets.venus.dimension.VenusBiomeProviderSettings;
 import micdoodle8.mods.galacticraft.planets.venus.dimension.VenusBiomeProviderTypes;
 import micdoodle8.mods.galacticraft.planets.venus.world.gen.VenusChunkGenerator;
-import net.minecraft.block.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProviderType;
-import net.minecraft.world.biome.provider.SingleBiomeProviderSettings;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSourceType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 
 public class DimensionMoon extends DimensionSpace implements IGalacticraftDimension, ISolarLevel
 {
-    public DimensionMoon(World worldIn, DimensionType typeIn)
+    public DimensionMoon(Level worldIn, DimensionType typeIn)
     {
         super(worldIn, typeIn, 0.0F);
     }
@@ -45,9 +43,9 @@ public class DimensionMoon extends DimensionSpace implements IGalacticraftDimens
 //    }
 
     @Override
-    public Vec3d getFogColor(float celestialAngle, float partialTicks)
+    public Vec3 getFogColor(float celestialAngle, float partialTicks)
     {
-        return new Vec3d(0, 0, 0);
+        return new Vec3(0, 0, 0);
     }
 
 
@@ -76,12 +74,12 @@ public class DimensionMoon extends DimensionSpace implements IGalacticraftDimens
     }
 
     @Override
-    public ChunkGenerator createChunkGenerator()
+    public ChunkGenerator createRandomLevelGenerator()
     {
         MoonGenSettings settings = new MoonGenSettings();
-        BiomeProviderType<MoonBiomeProviderSettings, MoonBiomeProvider> type = MoonBiomeProviderTypes.MOON_TYPE;
-        MoonBiomeProviderSettings providerSettings = type.createSettings(world.getWorldInfo()).setGeneratorSettings(settings);
-        return new MoonChunkGenerator(this.world, type.create(providerSettings), settings);
+        BiomeSourceType<MoonBiomeProviderSettings, MoonBiomeProvider> type = MoonBiomeProviderTypes.MOON_TYPE;
+        MoonBiomeProviderSettings providerSettings = type.createSettings(level.getLevelData()).setGeneratorSettings(settings);
+        return new MoonChunkGenerator(this.level, type.create(providerSettings), settings);
     }
 
 //    @Override
@@ -105,7 +103,7 @@ public class DimensionMoon extends DimensionSpace implements IGalacticraftDimens
 //    }
 
     @Override
-    public boolean isSkyColored()
+    public boolean hasGround()
     {
         return false;
     }
@@ -124,13 +122,13 @@ public class DimensionMoon extends DimensionSpace implements IGalacticraftDimens
 
     @Override
     @Nullable
-    public BlockPos findSpawn(ChunkPos chunkPosIn, boolean checkValid)
+    public BlockPos getSpawnPosInChunk(ChunkPos chunkPosIn, boolean checkValid)
     {
-        for (int i = chunkPosIn.getXStart(); i <= chunkPosIn.getXEnd(); ++i)
+        for (int i = chunkPosIn.getMinBlockX(); i <= chunkPosIn.getMaxBlockX(); ++i)
         {
-            for (int j = chunkPosIn.getZStart(); j <= chunkPosIn.getZEnd(); ++j)
+            for (int j = chunkPosIn.getMinBlockZ(); j <= chunkPosIn.getMaxBlockZ(); ++j)
             {
-                BlockPos blockpos = this.findSpawn(i, j, checkValid);
+                BlockPos blockpos = this.getValidSpawnPosition(i, j, checkValid);
                 if (blockpos != null)
                 {
                     return blockpos;
@@ -143,24 +141,24 @@ public class DimensionMoon extends DimensionSpace implements IGalacticraftDimens
 
     @Override
     @Nullable
-    public BlockPos findSpawn(int posX, int posZ, boolean checkValid)
+    public BlockPos getValidSpawnPosition(int posX, int posZ, boolean checkValid)
     {
-        BlockPos.Mutable blockpos$mutableblockpos = new BlockPos.Mutable(posX, 0, posZ);
-        Biome biome = this.world.getBiome(blockpos$mutableblockpos);
-        BlockState blockstate = biome.getSurfaceBuilderConfig().getTop();
-        if (checkValid && !blockstate.getBlock().isIn(BlockTags.VALID_SPAWN))
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(posX, 0, posZ);
+        Biome biome = this.level.getBiome(blockpos$mutableblockpos);
+        BlockState blockstate = biome.getSurfaceBuilderConfig().getTopMaterial();
+        if (checkValid && !blockstate.getBlock().is(BlockTags.VALID_SPAWN))
         {
             return null;
         }
         else
         {
-            Chunk chunk = this.world.getChunk(posX >> 4, posZ >> 4);
-            int i = chunk.getTopBlockY(Heightmap.Type.MOTION_BLOCKING, posX & 15, posZ & 15);
+            LevelChunk chunk = this.level.getChunk(posX >> 4, posZ >> 4);
+            int i = chunk.getHeight(Heightmap.Types.MOTION_BLOCKING, posX & 15, posZ & 15);
             if (i < 0)
             {
                 return null;
             }
-            else if (chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE, posX & 15, posZ & 15) > chunk.getTopBlockY(Heightmap.Type.OCEAN_FLOOR, posX & 15, posZ & 15))
+            else if (chunk.getHeight(Heightmap.Types.WORLD_SURFACE, posX & 15, posZ & 15) > chunk.getHeight(Heightmap.Types.OCEAN_FLOOR, posX & 15, posZ & 15))
             {
                 return null;
             }
@@ -168,8 +166,8 @@ public class DimensionMoon extends DimensionSpace implements IGalacticraftDimens
             {
                 for (int j = i + 1; j >= 0; --j)
                 {
-                    blockpos$mutableblockpos.setPos(posX, j, posZ);
-                    BlockState blockstate1 = this.world.getBlockState(blockpos$mutableblockpos);
+                    blockpos$mutableblockpos.set(posX, j, posZ);
+                    BlockState blockstate1 = this.level.getBlockState(blockpos$mutableblockpos);
                     if (!blockstate1.getFluidState().isEmpty())
                     {
                         break;
@@ -177,7 +175,7 @@ public class DimensionMoon extends DimensionSpace implements IGalacticraftDimens
 
                     if (blockstate1.equals(blockstate))
                     {
-                        return blockpos$mutableblockpos.up().toImmutable();
+                        return blockpos$mutableblockpos.above().immutable();
                     }
                 }
 
@@ -188,7 +186,7 @@ public class DimensionMoon extends DimensionSpace implements IGalacticraftDimens
 
     //Overriding  so that beds do not explode on Moon
     @Override
-    public boolean canRespawnHere()
+    public boolean mayRespawn()
     {
         if (EventHandlerGC.bedActivated)
         {
@@ -247,7 +245,7 @@ public class DimensionMoon extends DimensionSpace implements IGalacticraftDimens
     }
 
     @Override
-    public boolean doesXZShowFog(int x, int z)
+    public boolean isFoggyAt(int x, int z)
     {
         return false;
     }

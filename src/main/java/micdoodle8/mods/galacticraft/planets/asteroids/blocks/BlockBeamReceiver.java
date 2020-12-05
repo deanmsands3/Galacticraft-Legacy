@@ -10,28 +10,30 @@ import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityBeamReceiver;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -40,12 +42,12 @@ import javax.annotation.Nullable;
 public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription, ISortable
 {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    protected static final VoxelShape UP_AABB = VoxelShapes.create(0.3F, 0.3F, 0.3F, 0.7F, 1.0F, 0.7F);
-    protected static final VoxelShape DOWN_AABB = VoxelShapes.create(0.2F, 0.0F, 0.2F, 0.8F, 0.42F, 0.8F);
-    protected static final VoxelShape EAST_AABB = VoxelShapes.create(0.58F, 0.2F, 0.2F, 1.0F, 0.8F, 0.8F);
-    protected static final VoxelShape WEST_AABB = VoxelShapes.create(0.0F, 0.2F, 0.2F, 0.42F, 0.8F, 0.8F);
-    protected static final VoxelShape NORTH_AABB = VoxelShapes.create(0.2F, 0.2F, 0.0F, 0.8F, 0.8F, 0.42F);
-    protected static final VoxelShape SOUTH_AABB = VoxelShapes.create(0.2F, 0.2F, 0.58F, 0.8F, 0.8F, 1.0F);
+    protected static final VoxelShape UP_AABB = Shapes.box(0.3F, 0.3F, 0.3F, 0.7F, 1.0F, 0.7F);
+    protected static final VoxelShape DOWN_AABB = Shapes.box(0.2F, 0.0F, 0.2F, 0.8F, 0.42F, 0.8F);
+    protected static final VoxelShape EAST_AABB = Shapes.box(0.58F, 0.2F, 0.2F, 1.0F, 0.8F, 0.8F);
+    protected static final VoxelShape WEST_AABB = Shapes.box(0.0F, 0.2F, 0.2F, 0.42F, 0.8F, 0.8F);
+    protected static final VoxelShape NORTH_AABB = Shapes.box(0.2F, 0.2F, 0.0F, 0.8F, 0.8F, 0.42F);
+    protected static final VoxelShape SOUTH_AABB = Shapes.box(0.2F, 0.2F, 0.58F, 0.8F, 0.8F, 1.0F);
 
     public BlockBeamReceiver(Properties builder)
     {
@@ -53,9 +55,9 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
-        switch (state.get(FACING))
+        switch (state.getValue(FACING))
         {
         case UP:
             return UP_AABB;
@@ -158,11 +160,11 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
 //        super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
 //    }
 
-    private int getMetadataFromAngle(World world, BlockPos pos, Direction side)
+    private int getMetadataFromAngle(Level world, BlockPos pos, Direction side)
     {
         Direction direction = side.getOpposite();
 
-        TileEntity tileAt = world.getTileEntity(pos.add(direction.getXOffset(), direction.getYOffset(), direction.getZOffset()));
+        BlockEntity tileAt = world.getBlockEntity(pos.offset(direction.getStepX(), direction.getStepY(), direction.getStepZ()));
 
         if (tileAt instanceof EnergyStorageTile)
         {
@@ -187,7 +189,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
             {
                 continue;
             }
-            tileAt = world.getTileEntity(pos.add(adjacentDir.getXOffset(), adjacentDir.getYOffset(), adjacentDir.getZOffset()));
+            tileAt = world.getBlockEntity(pos.offset(adjacentDir.getStepX(), adjacentDir.getStepY(), adjacentDir.getStepZ()));
 
             if (tileAt instanceof IConductor)
             {
@@ -230,10 +232,10 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
 //        return false;
 //    }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     private void sendIncorrectSideMessage()
     {
-        Minecraft.getInstance().player.sendMessage(new StringTextComponent(EnumColor.RED + GCCoreUtil.translate("gui.receiver.cannot_attach")));
+        Minecraft.getInstance().player.sendMessage(new TextComponent(EnumColor.RED + GCCoreUtil.translate("gui.receiver.cannot_attach")));
     }
 
 //    @Override
@@ -255,9 +257,9 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
 //    }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state)
+    public RenderShape getRenderShape(BlockState state)
     {
-        return BlockRenderType.INVISIBLE;
+        return RenderShape.INVISIBLE;
     }
 
 //    @Override
@@ -269,7 +271,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityBeamReceiver();
     }
@@ -288,22 +290,22 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
 //    }
 
     @Override
-    public ActionResultType onMachineActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onMachineActivated(Level worldIn, BlockPos pos, BlockState state, Player playerIn, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        TileEntity tile = worldIn.getTileEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
 
         if (tile instanceof TileEntityBeamReceiver)
         {
             return ((TileEntityBeamReceiver) tile).onMachineActivated(worldIn, pos, state, playerIn, hand, heldItem, hit);
         }
 
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -313,13 +315,13 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.getDefaultState().with(FACING, context.getPlayer().getHorizontalFacing());
+        return this.defaultBlockState().setValue(FACING, context.getPlayer().getDirection());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(FACING);
     }

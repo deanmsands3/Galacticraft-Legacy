@@ -12,24 +12,25 @@ import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.fx.AsteroidParticles;
 import micdoodle8.mods.galacticraft.planets.asteroids.dimension.ShortRangeTelepadHandler;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityShortRangeTelepad;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -37,7 +38,7 @@ import java.util.Random;
 
 public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescription, ISortable
 {
-    protected static final VoxelShape AABB_TELEPAD = VoxelShapes.create(0.0F, 0.0F, 0.0F, 1.0F, 0.45F, 1.0F);
+    protected static final VoxelShape AABB_TELEPAD = Shapes.box(0.0F, 0.0F, 0.0F, 1.0F, 0.45F, 1.0F);
 
     protected BlockShortRangeTelepad(Properties builder)
     {
@@ -52,9 +53,9 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
 //    }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state)
+    public RenderShape getRenderShape(BlockState state)
     {
-        return BlockRenderType.INVISIBLE;
+        return RenderShape.INVISIBLE;
     }
 
 //    @Override
@@ -76,7 +77,7 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
 //    }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityShortRangeTelepad();
     }
@@ -88,7 +89,7 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         return AABB_TELEPAD;
     }
@@ -107,11 +108,11 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
 //    }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
     {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
 
-        TileEntity tile = worldIn.getTileEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
 
         boolean validSpot = true;
 
@@ -123,7 +124,7 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
                 {
                     if (!(x == 0 && y == 0 && z == 0))
                     {
-                        BlockState stateAt = worldIn.getBlockState(pos.add(x, y, z));
+                        BlockState stateAt = worldIn.getBlockState(pos.offset(x, y, z));
 
                         if (!stateAt.getMaterial().isReplaceable())
                         {
@@ -138,13 +139,13 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
         {
             worldIn.removeBlock(pos, false);
 
-            if (placer instanceof PlayerEntity)
+            if (placer instanceof Player)
             {
-                if (!worldIn.isRemote)
+                if (!worldIn.isClientSide)
                 {
-                    placer.sendMessage(new StringTextComponent(EnumColor.RED + GCCoreUtil.translate("gui.warning.noroom")));
+                    placer.sendMessage(new TextComponent(EnumColor.RED + GCCoreUtil.translate("gui.warning.noroom")));
                 }
-                ((PlayerEntity) placer).inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(this), 1));
+                ((Player) placer).inventory.add(new ItemStack(Item.byBlock(this), 1));
             }
 
             return;
@@ -153,20 +154,20 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
         if (tile instanceof TileEntityShortRangeTelepad)
         {
             ((TileEntityShortRangeTelepad) tile).onCreate(worldIn, pos);
-            ((TileEntityShortRangeTelepad) tile).setOwner(PlayerUtil.getName(((PlayerEntity) placer)));
+            ((TileEntityShortRangeTelepad) tile).setOwner(PlayerUtil.getName(((Player) placer)));
         }
     }
 
     @Override
-    public ActionResultType onMachineActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onMachineActivated(Level worldIn, BlockPos pos, BlockState state, Player playerIn, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        return ((IMultiBlock) worldIn.getTileEntity(pos)).onActivated(playerIn);
+        return ((IMultiBlock) worldIn.getBlockEntity(pos)).onActivated(playerIn);
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        final TileEntity tileAt = worldIn.getTileEntity(pos);
+        final BlockEntity tileAt = worldIn.getBlockEntity(pos);
 
         int fakeBlockCount = 0;
 
@@ -178,7 +179,7 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
                 {
                     if (!(x == 0 && y == 0 && z == 0))
                     {
-                        if (worldIn.getBlockState(pos.add(x, y, z)).getBlock() == AsteroidBlocks.fakeTelepad)
+                        if (worldIn.getBlockState(pos.offset(x, y, z)).getBlock() == AsteroidBlocks.fakeTelepad)
                         {
                             fakeBlockCount++;
                         }
@@ -196,14 +197,14 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
             ShortRangeTelepadHandler.removeShortRangeTeleporter((TileEntityShortRangeTelepad) tileAt);
         }
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    @Environment(EnvType.CLIENT)
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand)
     {
-        final TileEntity tileAt = worldIn.getTileEntity(pos);
+        final BlockEntity tileAt = worldIn.getBlockEntity(pos);
 
         if (tileAt instanceof TileEntityShortRangeTelepad)
         {
@@ -230,7 +231,7 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override

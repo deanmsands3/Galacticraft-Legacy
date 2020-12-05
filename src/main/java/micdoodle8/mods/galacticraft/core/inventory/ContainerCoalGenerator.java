@@ -2,23 +2,21 @@ package micdoodle8.mods.galacticraft.core.inventory;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityCoalGenerator;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerCoalGenerator extends Container
+public class ContainerCoalGenerator extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.COAL_GENERATOR)
-    public static ContainerType<ContainerCoalGenerator> TYPE;
+    public static MenuType<ContainerCoalGenerator> TYPE;
 
     private final TileEntityCoalGenerator generator;
 
@@ -27,11 +25,11 @@ public class ContainerCoalGenerator extends Container
 //        this(containerId, playerInv, new Inventory(1));
 //    }
 
-    public ContainerCoalGenerator(int containerId, PlayerInventory playerInv, TileEntityCoalGenerator generator)
+    public ContainerCoalGenerator(int containerId, Inventory playerInv, TileEntityCoalGenerator generator)
     {
         super(TYPE, containerId);
         this.generator = generator;
-        this.addSlot(new SlotSpecific(generator, 0, 33, 34, new ItemStack(Items.COAL), new ItemStack(Item.getItemFromBlock(Blocks.COAL_BLOCK))));
+        this.addSlot(new SlotSpecific(generator, 0, 33, 34, new ItemStack(Items.COAL), new ItemStack(Item.byBlock(Blocks.COAL_BLOCK))));
         int var3;
 
         for (var3 = 0; var3 < 3; ++var3)
@@ -54,15 +52,15 @@ public class ContainerCoalGenerator extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity entityplayer)
+    public void removed(Player entityplayer)
     {
-        super.onContainerClosed(entityplayer);
+        super.removed(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.generator.isUsableByPlayer(par1EntityPlayer);
+        return this.generator.stillValid(par1EntityPlayer);
     }
 
     /**
@@ -70,50 +68,50 @@ public class ContainerCoalGenerator extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        Slot var3 = this.inventorySlots.get(par1);
+        Slot var3 = this.slots.get(par1);
 
-        if (var3 != null && var3.getHasStack())
+        if (var3 != null && var3.hasItem())
         {
-            ItemStack var4 = var3.getStack();
+            ItemStack var4 = var3.getItem();
             var2 = var4.copy();
 
             if (par1 != 0)
             {
                 if (var4.getItem() == Items.COAL)
                 {
-                    if (!this.mergeItemStack(var4, 0, 1, false))
+                    if (!this.moveItemStackTo(var4, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (par1 >= 28)
                 {
-                    if (!this.mergeItemStack(var4, 1, 28, false))
+                    if (!this.moveItemStackTo(var4, 1, 28, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (!this.mergeItemStack(var4, 28, 37, false))
+                else if (!this.moveItemStackTo(var4, 28, 37, false))
                 {
                     return ItemStack.EMPTY;
                 }
 
             }
-            else if (!this.mergeItemStack(var4, 1, 37, false))
+            else if (!this.moveItemStackTo(var4, 1, 37, false))
             {
                 return ItemStack.EMPTY;
             }
 
             if (var4.getCount() == 0)
             {
-                var3.putStack(ItemStack.EMPTY);
+                var3.set(ItemStack.EMPTY);
             }
             else
             {
-                var3.onSlotChanged();
+                var3.setChanged();
             }
 
             if (var4.getCount() == var2.getCount())

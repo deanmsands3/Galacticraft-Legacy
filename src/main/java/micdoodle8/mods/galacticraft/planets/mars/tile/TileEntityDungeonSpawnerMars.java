@@ -8,10 +8,10 @@ import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedZombie;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlockNames;
 import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCreeperBoss;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.List;
 public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<EntityCreeperBoss>
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.cryoChamber)
-    public static TileEntityType<TileEntityDungeonSpawnerMars> TYPE;
+    public static BlockEntityType<TileEntityDungeonSpawnerMars> TYPE;
 
     public TileEntityDungeonSpawnerMars()
     {
@@ -28,9 +28,9 @@ public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<Entit
     }
 
     @Override
-    public List<Class<? extends MobEntity>> getDisabledCreatures()
+    public List<Class<? extends Mob>> getDisabledCreatures()
     {
-        List<Class<? extends MobEntity>> list = new ArrayList<Class<? extends MobEntity>>();
+        List<Class<? extends Mob>> list = new ArrayList<Class<? extends Mob>>();
         list.add(EntityEvolvedSkeleton.class);
         list.add(EntityEvolvedZombie.class);
         list.add(EntityEvolvedSpider.class);
@@ -40,6 +40,6 @@ public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<Entit
     @Override
     public void playSpawnSound(Entity entity)
     {
-        this.world.playSound(null, entity.getPosX(), entity.getPosY(), entity.getPosZ(), GCSounds.scaryScape, SoundCategory.AMBIENT, 9.0F, 1.4F);
+        this.level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), GCSounds.scaryScape, SoundSource.AMBIENT, 9.0F, 1.4F);
     }
 }

@@ -10,9 +10,9 @@ import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,26 +31,26 @@ public class EventHandlerClient
     {
         GL11.glPushMatrix();
 
-        final PlayerEntity player = event.getPlayer();
+        final Player player = event.getPlayer();
 
-        if (player.getRidingEntity() instanceof ICameraZoomEntity && player == Minecraft.getInstance().player
-                && Minecraft.getInstance().gameSettings.thirdPersonView == 0)
+        if (player.getVehicle() instanceof ICameraZoomEntity && player == Minecraft.getInstance().player
+                && Minecraft.getInstance().options.thirdPersonView == 0)
         {
-            Entity entity = player.getRidingEntity();
+            Entity entity = player.getVehicle();
             float rotateOffset = ((ICameraZoomEntity) entity).getRotateOffset();
             if (rotateOffset > -10F)
             {
                 rotateOffset += ClientProxyCore.PLAYER_Y_OFFSET;
                 GL11.glTranslatef(0, -rotateOffset, 0);
-                float anglePitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * event.getPartialRenderTick();
-                float angleYaw = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * event.getPartialRenderTick();
+                float anglePitch = entity.xRotO + (entity.xRot - entity.xRotO) * event.getPartialRenderTick();
+                float angleYaw = entity.yRotO + (entity.yRot - entity.yRotO) * event.getPartialRenderTick();
                 GL11.glRotatef(-angleYaw, 0.0F, 1.0F, 0.0F);
                 GL11.glRotatef(anglePitch, 0.0F, 0.0F, 1.0F);
                 GL11.glTranslatef(0, rotateOffset, 0);
             }
         }
 
-        if (player instanceof ClientPlayerEntity)
+        if (player instanceof LocalPlayer)
         {
             sneakRenderOverride = true;
         }
@@ -64,7 +64,7 @@ public class EventHandlerClient
     {
         GL11.glPopMatrix();
 
-        if (event.getPlayer() instanceof ClientPlayerEntity)
+        if (event.getPlayer() instanceof LocalPlayer)
         {
             sneakRenderOverride = false;
         }
@@ -77,14 +77,14 @@ public class EventHandlerClient
         {
             if (!ClientProxyCore.overworldTextureRequestSent)
             {
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_REQUEST_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(mc.world), new Object[]{}));
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(PacketSimple.EnumSimplePacket.S_REQUEST_OVERWORLD_IMAGE, GCCoreUtil.getDimensionType(mc.level), new Object[]{}));
                 ClientProxyCore.overworldTextureRequestSent = true;
             }
 
             if (ClientProxyCore.overworldTexturesValid)
             {
                 event.celestialBodyTexture = null;
-                GlStateManager.bindTexture(ClientProxyCore.overworldTextureClient.getGlTextureId());
+                GlStateManager._bindTexture(ClientProxyCore.overworldTextureClient.getId());
             }
         }
     }
@@ -92,19 +92,19 @@ public class EventHandlerClient
     @SubscribeEvent
     public static void onRenderPlanetPost(CelestialBodyRenderEvent.Post event)
     {
-        if (mc.currentScreen instanceof GuiCelestialSelection)
+        if (mc.screen instanceof GuiCelestialSelection)
         {
             if (event.celestialBody == GalacticraftCore.planetSaturn)
             {
                 mc.textureManager.bindTexture(ClientProxyCore.saturnRingTexture);
-                float size = ((GuiCelestialSelection) mc.currentScreen).getWidthForCelestialBody(event.celestialBody) / 6.0F;
-                ((GuiCelestialSelection) mc.currentScreen).blit(-7.5F * size, -1.75F * size, 15.0F * size, 3.5F * size, 0, 0, 30, 7, false, false, 32, 32);
+                float size = ((GuiCelestialSelection) mc.screen).getWidthForCelestialBody(event.celestialBody) / 6.0F;
+                ((GuiCelestialSelection) mc.screen).blit(-7.5F * size, -1.75F * size, 15.0F * size, 3.5F * size, 0, 0, 30, 7, false, false, 32, 32);
             }
             else if (event.celestialBody == GalacticraftCore.planetUranus)
             {
                 mc.textureManager.bindTexture(ClientProxyCore.uranusRingTexture);
-                float size = ((GuiCelestialSelection) mc.currentScreen).getWidthForCelestialBody(event.celestialBody) / 6.0F;
-                ((GuiCelestialSelection) mc.currentScreen).blit(-1.75F * size, -7.0F * size, 3.5F * size, 14.0F * size, 0, 0, 7, 28, false, false, 32, 32);
+                float size = ((GuiCelestialSelection) mc.screen).getWidthForCelestialBody(event.celestialBody) / 6.0F;
+                ((GuiCelestialSelection) mc.screen).blit(-1.75F * size, -7.0F * size, 3.5F * size, 14.0F * size, 0, 0, 7, 28, false, false, 32, 32);
             }
         }
     }

@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.planets.mars.entities;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,49 +15,49 @@ public class MarsEntities
 {
 //    public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Constants.MOD_ID_PLANETS);
 
-    public static final EntityType<EntityCargoRocket> CARGO_ROCKET = EntityType.Builder.create(EntityCargoRocket::new, EntityClassification.MISC)
-            .size(0.98F, 2F)
-            .immuneToFire()
+    public static final EntityType<EntityCargoRocket> CARGO_ROCKET = EntityType.Builder.of(EntityCargoRocket::new, MobCategory.MISC)
+            .sized(0.98F, 2F)
+            .fireImmune()
             .setUpdateInterval(1)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntityCreeperBoss> CREEPER_BOSS = EntityType.Builder.create(EntityCreeperBoss::new, EntityClassification.MONSTER)
-            .size(2.0F, 7.0F)
-            .immuneToFire()
+    public static final EntityType<EntityCreeperBoss> CREEPER_BOSS = EntityType.Builder.of(EntityCreeperBoss::new, MobCategory.MONSTER)
+            .sized(2.0F, 7.0F)
+            .fireImmune()
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntityLandingBalloons> LANDING_BALLOONS = EntityType.Builder.create(EntityLandingBalloons::new, EntityClassification.MISC)
-            .size(2.0F, 2.0F)
-            .immuneToFire()
+    public static final EntityType<EntityLandingBalloons> LANDING_BALLOONS = EntityType.Builder.of(EntityLandingBalloons::new, MobCategory.MISC)
+            .sized(2.0F, 2.0F)
+            .fireImmune()
             .setUpdateInterval(5)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntityProjectileTNT> PROJECTILE_TNT = EntityType.Builder.create(EntityProjectileTNT::new, EntityClassification.MISC)
-            .size(1.0F, 1.0F)
-            .immuneToFire()
+    public static final EntityType<EntityProjectileTNT> PROJECTILE_TNT = EntityType.Builder.of(EntityProjectileTNT::new, MobCategory.MISC)
+            .sized(1.0F, 1.0F)
+            .fireImmune()
             .setUpdateInterval(1)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntitySlimeling> SLIMELING = EntityType.Builder.create(EntitySlimeling::new, EntityClassification.CREATURE)
-            .size(0.45F, 0.7F)
+    public static final EntityType<EntitySlimeling> SLIMELING = EntityType.Builder.of(EntitySlimeling::new, MobCategory.CREATURE)
+            .sized(0.45F, 0.7F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntitySludgeling> SLUDGELING = EntityType.Builder.create(EntitySludgeling::new, EntityClassification.MONSTER)
-            .size(0.3F, 0.2F)
+    public static final EntityType<EntitySludgeling> SLUDGELING = EntityType.Builder.of(EntitySludgeling::new, MobCategory.MONSTER)
+            .sized(0.3F, 0.2F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntityTier2Rocket> ROCKET_T2 = EntityType.Builder.create(EntityTier2Rocket::new, EntityClassification.MISC)
-            .size(1.2F, 4.5F)
-            .immuneToFire()
+    public static final EntityType<EntityTier2Rocket> ROCKET_T2 = EntityType.Builder.of(EntityTier2Rocket::new, MobCategory.MISC)
+            .sized(1.2F, 4.5F)
+            .fireImmune()
             .setUpdateInterval(1)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
