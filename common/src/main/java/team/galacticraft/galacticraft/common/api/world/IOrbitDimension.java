@@ -1,0 +1,14 @@
+package team.galacticraft.galacticraft.common.api.world;
+
+import net.minecraft.world.level.dimension.DimensionType;
+
+public interface IOrbitDimension extends IGalacticraftDimension
+{
+    /**
+     * @return the y-coordinate that entities will fall back into the world we
+     * are orbiting
+     */
+    int getYCoordToTeleportToPlanet();
+
+    DimensionType getPlanetIdToOrbit();
+}

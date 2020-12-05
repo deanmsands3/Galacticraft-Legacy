@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "team.galacticraft.galacticraft.fabric.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "LevelChunkMixin"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8.0",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

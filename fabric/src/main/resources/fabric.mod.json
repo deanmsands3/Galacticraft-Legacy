@@ -1,5 +1,6 @@
 {
     "schemaVersion": 1,
     "id": "galacticraft-fabric",
-    "version": "0.1.0-modulate"
+    "version": "0.1.0-modulate",
+    "mixins": [ "galacticraft-fabric.mixins.json" ]
 }

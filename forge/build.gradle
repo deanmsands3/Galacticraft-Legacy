@@ -1,11 +1,13 @@
 buildscript {
     repositories {
         maven { url "https://files.minecraftforge.net/maven" }
+        maven { url "https://dist.creeper.host/Sponge/maven" }
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath(group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true)
+        classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
     }
 }
 
@@ -15,6 +17,7 @@ plugins {
 }
 
 apply plugin: "net.minecraftforge.gradle"
+apply plugin: 'org.spongepowered.mixin'
 
 minecraft {
     mappings(channel: "official", version: rootProject.architect.minecraft)
@@ -23,7 +26,7 @@ minecraft {
         client {
             workingDirectory project.file("run")
             mods {
-                examplemod {
+                galacticraftforge {
                     source sourceSets.main
                 }
             }
@@ -31,7 +34,7 @@ minecraft {
         server {
             workingDirectory project.file("run")
             mods {
-                examplemod {
+                galacticraftforge {
                     source sourceSets.main
                 }
             }
@@ -68,4 +71,8 @@ shadowJar {
 
 reobf {
     shadowJar {}
+}
+
+mixin {
+    add sourceSets.main, "galacticraft-forge.refmap.json"
 }
