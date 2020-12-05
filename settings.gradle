@@ -1,2 +1,13 @@
-rootProject.name = 'Galacticraft'
+pluginManagement {
+    repositories {
+        jcenter()
+        maven { url "https://maven.fabricmc.net/" }
+        maven { url "https://dl.bintray.com/shedaniel/cloth" }
+        gradlePluginPortal()
+    }
+}
+
+include("common")
+include("fabric")
+include("forge")
 

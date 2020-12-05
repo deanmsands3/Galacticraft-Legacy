@@ -1,0 +1,6 @@
+{
+    "_comment": "This file is here to make fabric loader load this on the Knot classloader.",
+    "schemaVersion": 1,
+    "id": "galacticraft-common",
+    "version": "0.1.0-modulate"
+}
