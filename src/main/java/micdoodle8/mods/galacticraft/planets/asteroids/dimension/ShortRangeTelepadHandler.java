@@ -8,10 +8,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.WorldSavedData;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class ShortRangeTelepadHandler extends WorldSavedData
 {
@@ -37,20 +36,18 @@ public class ShortRangeTelepadHandler extends WorldSavedData
         }
 
         @Override
-        public int hashCode()
+        public boolean equals(Object o)
         {
-            return new HashCodeBuilder().append(dimensionID).append(position.hashCode()).append(enabled).toHashCode();
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TelepadEntry that = (TelepadEntry) o;
+            return enabled == that.enabled && Objects.equals(dimensionID, that.dimensionID) && Objects.equals(position, that.position);
         }
 
         @Override
-        public boolean equals(Object other)
+        public int hashCode()
         {
-            if (other instanceof TelepadEntry)
-            {
-                return new EqualsBuilder().append(((TelepadEntry) other).dimensionID, this.dimensionID).append(((TelepadEntry) other).position, this.position).append(((TelepadEntry) other).enabled, this.enabled).isEquals();
-            }
-
-            return false;
+            return Objects.hash(dimensionID, position, enabled);
         }
     }
 

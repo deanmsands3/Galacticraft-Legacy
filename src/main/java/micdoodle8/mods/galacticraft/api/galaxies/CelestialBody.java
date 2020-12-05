@@ -11,7 +11,6 @@ import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.registries.IForgeRegistry;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -283,14 +282,12 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
     }
 
     @Override
-    public boolean equals(Object other)
+    public boolean equals(Object o)
     {
-        if (other instanceof CelestialBody)
-        {
-            return new EqualsBuilder().append(this.getUnlocalizedName(), ((CelestialBody) other).getUnlocalizedName()).isEquals();
-        }
-
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CelestialBody that = (CelestialBody) o;
+        return Objects.equals(getUnlocalizedName(), that.getUnlocalizedName());
     }
 
     @Override

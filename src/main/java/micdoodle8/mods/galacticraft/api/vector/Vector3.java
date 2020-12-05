@@ -1,6 +1,5 @@
 package micdoodle8.mods.galacticraft.api.vector;
 
-import com.sun.javafx.geom.Vec3f;
 import micdoodle8.mods.galacticraft.core.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,10 +11,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -70,11 +67,6 @@ public class Vector3 implements Cloneable
     public Vector3(Vec3d par1)
     {
         this((float) par1.x, (float) par1.y, (float) par1.z);
-    }
-
-    public Vector3(Vec3f par1)
-    {
-        this(par1.x, par1.y, par1.z);
     }
 
     public Vector3(RayTraceResult par1)
@@ -777,21 +769,18 @@ public class Vector3 implements Cloneable
     }
 
     @Override
-    public int hashCode()
+    public boolean equals(Object o)
     {
-        return new HashCodeBuilder().append(this.x).append(this.y).append(this.z).hashCode();
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector3 vector3 = (Vector3) o;
+        return Float.compare(vector3.x, x) == 0 && Float.compare(vector3.y, y) == 0 && Float.compare(vector3.z, z) == 0;
     }
 
     @Override
-    public boolean equals(Object o)
+    public int hashCode()
     {
-        if (o instanceof Vector3)
-        {
-            Vector3 vector3 = (Vector3) o;
-            return new EqualsBuilder().append(this.x, vector3.x).append(this.y, vector3.y).append(this.z, vector3.z).isEquals();
-        }
-
-        return false;
+        return Objects.hash(x, y, z);
     }
 
     @Override

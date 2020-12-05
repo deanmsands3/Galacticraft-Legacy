@@ -2,8 +2,8 @@ package micdoodle8.mods.galacticraft.core.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.Objects;
 
 public class StackSorted
 {
@@ -31,32 +31,20 @@ public class StackSorted
 //        return meta;
 //    }
 
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (!(obj instanceof StackSorted))
-        {
-            return false;
-        }
-        if (obj == this)
-        {
-            return true;
-        }
 
-        StackSorted other = (StackSorted) obj;
-        return new EqualsBuilder()
-                .append(item, other.item)
-//                .append(meta, other.meta)
-                .isEquals();
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StackSorted that = (StackSorted) o;
+        return Objects.equals(getItem(), that.getItem());
     }
 
     @Override
     public int hashCode()
     {
-        return new HashCodeBuilder()
-                .append(item)
-//                .append(meta)
-                .toHashCode();
+        return Objects.hash(getItem());
     }
 
     @Override
