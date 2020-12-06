@@ -1,8 +1,7 @@
 package team.galacticraft.galacticraft.common.api.prefab.entity;
 
 import io.netty.buffer.ByteBuf;
-import me.shedaniel.architectury.networking.NetworkChannel;
-import team.galacticraft.galacticraft.common.GalacticraftCommon;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 import team.galacticraft.galacticraft.common.api.entity.IEntityNoisy;
 import team.galacticraft.galacticraft.common.api.entity.ILandable;
 import team.galacticraft.galacticraft.common.api.tile.IFuelDock;
@@ -77,7 +76,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
         }
         catch (ClassNotFoundException e)
         {
-            GalacticraftCommon.getLogger().info("Galacticraft-Planets' LaunchController not present, rockets will not be launch controlled.");
+            PlatformSpecific.getLogger().info("Galacticraft-Planets' LaunchController not present, rockets will not be launch controlled.");
         }
     }
 
@@ -164,7 +163,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
                         if (foundPad)
                         {
                             this.destinationFrequency = controllerFrequency;
-                            GalacticraftCommon.getLogger().debug("Rocket under launch control: going to target frequency " + controllerFrequency);
+                            PlatformSpecific.getLogger().debug("Rocket under launch control: going to target frequency " + controllerFrequency);
                             return true;
                         }
                     }
@@ -354,8 +353,8 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
                     double angleYaw = Math.atan(motZ / motX);
                     double signed = motX < 0 ? 50D : -50D;
                     double anglePitch = Math.atan(Math.sqrt(motZ * motZ + motX * motX) / signed) * 100D;
-                    this.yRot = (float) angleYaw * MathUtil.RADIANS_TO_DEGREES;
-                    this.xRot = (float) anglePitch * MathUtil.RADIANS_TO_DEGREES;
+                    this.yRot = (float) angleYaw * Constants.RADIANS_TO_DEGREES;
+                    this.xRot = (float) anglePitch * Constants.RADIANS_TO_DEGREES;
                 }
                 else
                 {

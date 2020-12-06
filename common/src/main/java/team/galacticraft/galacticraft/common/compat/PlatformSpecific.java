@@ -1,4 +1,4 @@
-package team.galacticraft.galacticraft.common;
+package team.galacticraft.galacticraft.common.compat;
 
 import me.shedaniel.architectury.ExpectPlatform;
 import me.shedaniel.architectury.networking.NetworkChannel;
@@ -7,15 +7,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalacticraftCommon
+public class PlatformSpecific
 {
-    public static final List<Biome> biomesList = new ArrayList<>();
-    public static final NetworkChannel networkchannel = NetworkChannel.create(new ResourceLocation("galacticraft", "channel"));
+    public static final List<Biome> BIOMES_LIST = new ArrayList<>();
+    public static final NetworkChannel NETWORK_CHANNEL = NetworkChannel.create(new ResourceLocation("galacticraft", "channel"));
 
     @ExpectPlatform
     public static Logger getLogger()

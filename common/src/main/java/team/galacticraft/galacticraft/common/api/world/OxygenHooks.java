@@ -1,5 +1,6 @@
 package team.galacticraft.galacticraft.common.api.world;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,13 +12,30 @@ import net.minecraft.world.phys.AABB;
 
 public class OxygenHooks
 {
-    private static Class<?> oxygenUtilClass;
     private static Method combusionTestMethod;
     private static Method breathableAirBlockMethod;
     private static Method breathableAirBlockEntityMethod;
     private static Method torchHasOxygenMethod;
     private static Method oxygenBubbleMethod;
     private static Method validOxygenSetupMethod;
+
+    static
+    {
+        try
+        {
+            Class<?> oxygenUtilClass = Class.forName("team.galacticraft.galacticraft.common.core.util.OxygenUtil");
+            combusionTestMethod = oxygenUtilClass.getDeclaredMethod("noAtmosphericCombustion", Dimension.class);
+            breathableAirBlockMethod = oxygenUtilClass.getDeclaredMethod("isAABBInBreathableAirBlock", Level.class, AABB.class);
+            breathableAirBlockEntityMethod = oxygenUtilClass.getDeclaredMethod("isAABBInBreathableAirBlock", LivingEntity.class);
+            torchHasOxygenMethod = oxygenUtilClass.getDeclaredMethod("checkTorchHasOxygen", Level.class, BlockPos.class);
+            oxygenBubbleMethod = oxygenUtilClass.getDeclaredMethod("inOxygenBubble", Level.class, double.class, double.class, double.class);
+            validOxygenSetupMethod = oxygenUtilClass.getDeclaredMethod("hasValidOxygenSetup", ServerPlayer.class);
+        }
+        catch (ClassNotFoundException | NoSuchMethodException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Test whether fire can burn in this world's atmosphere (outside any oxygen bubble).
@@ -28,21 +46,15 @@ public class OxygenHooks
      */
     public static boolean noAtmosphericCombustion(Dimension dimension)
     {
-        try
+        if (combusionTestMethod != null)
         {
-            if (combusionTestMethod == null)
+            try
             {
-                if (oxygenUtilClass == null)
-                {
-                    oxygenUtilClass = Class.forName("team.galacticraft.galacticraft.common.core.util.OxygenUtil");
-                }
-                combusionTestMethod = oxygenUtilClass.getDeclaredMethod("noAtmosphericCombustion", Dimension.class);
+                return (Boolean) combusionTestMethod.invoke(null, dimension);
+            } catch (IllegalAccessException | InvocationTargetException e)
+            {
+                e.printStackTrace();
             }
-            return (Boolean) combusionTestMethod.invoke(null, dimension);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
 
         return false;
@@ -68,21 +80,14 @@ public class OxygenHooks
      */
     public static boolean isAABBInBreathableAirBlock(Level world, AABB bb)
     {
-        try
+        if (breathableAirBlockMethod != null)
         {
-            if (breathableAirBlockMethod == null)
+            try
             {
-                if (oxygenUtilClass == null)
-                {
-                    oxygenUtilClass = Class.forName("team.galacticraft.galacticraft.common.core.util.OxygenUtil");
-                }
-                breathableAirBlockMethod = oxygenUtilClass.getDeclaredMethod("isAABBInBreathableAirBlock", Level.class, AABB.class);
+                return (Boolean) breathableAirBlockMethod.invoke(null, world, bb);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
             }
-            return (Boolean) breathableAirBlockMethod.invoke(null, world, bb);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
 
         return false;
@@ -101,21 +106,16 @@ public class OxygenHooks
      */
     public static boolean isAABBInBreathableAirBlock(LivingEntity entity)
     {
-        try
+        if (breathableAirBlockEntityMethod != null)
         {
-            if (breathableAirBlockEntityMethod == null)
+            try
             {
-                if (oxygenUtilClass == null)
-                {
-                    oxygenUtilClass = Class.forName("team.galacticraft.galacticraft.common.core.util.OxygenUtil");
-                }
-                breathableAirBlockEntityMethod = oxygenUtilClass.getDeclaredMethod("isAABBInBreathableAirBlock", LivingEntity.class);
+                return (Boolean) breathableAirBlockEntityMethod.invoke(null, entity);
             }
-            return (Boolean) breathableAirBlockEntityMethod.invoke(null, entity);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            catch (IllegalAccessException | InvocationTargetException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return false;
@@ -137,21 +137,16 @@ public class OxygenHooks
      */
     public static boolean checkTorchHasOxygen(Level world, Block block, BlockPos pos)
     {
-        try
+        if (torchHasOxygenMethod != null)
         {
-            if (torchHasOxygenMethod == null)
+            try
             {
-                if (oxygenUtilClass == null)
-                {
-                    oxygenUtilClass = Class.forName("team.galacticraft.galacticraft.common.core.util.OxygenUtil");
-                }
-                torchHasOxygenMethod = oxygenUtilClass.getDeclaredMethod("checkTorchHasOxygen", Level.class, BlockPos.class);
+                return (Boolean) torchHasOxygenMethod.invoke(null, world, pos);
             }
-            return (Boolean) torchHasOxygenMethod.invoke(null, world, pos);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            catch (IllegalAccessException | InvocationTargetException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return false;
@@ -169,21 +164,16 @@ public class OxygenHooks
      */
     public static boolean inOxygenBubble(Level worldObj, double avgX, double avgY, double avgZ)
     {
-        try
+        if (oxygenBubbleMethod != null)
         {
-            if (oxygenBubbleMethod == null)
+            try
             {
-                if (oxygenUtilClass == null)
-                {
-                    oxygenUtilClass = Class.forName("team.galacticraft.galacticraft.common.core.util.OxygenUtil");
-                }
-                oxygenBubbleMethod = oxygenUtilClass.getDeclaredMethod("inOxygenBubble", Level.class, double.class, double.class, double.class);
+                return (Boolean) oxygenBubbleMethod.invoke(null, worldObj, avgX, avgY, avgZ);
             }
-            return (Boolean) oxygenBubbleMethod.invoke(null, worldObj, avgX, avgY, avgZ);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            catch (IllegalAccessException | InvocationTargetException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return false;
@@ -198,21 +188,16 @@ public class OxygenHooks
      */
     public static boolean hasValidOxygenSetup(ServerPlayer player)
     {
-        try
+        if (validOxygenSetupMethod != null)
         {
-            if (validOxygenSetupMethod == null)
+            try
             {
-                if (oxygenUtilClass == null)
-                {
-                    oxygenUtilClass = Class.forName("team.galacticraft.galacticraft.common.core.util.OxygenUtil");
-                }
-                validOxygenSetupMethod = oxygenUtilClass.getDeclaredMethod("hasValidOxygenSetup", ServerPlayer.class);
+                return (Boolean) validOxygenSetupMethod.invoke(null, player);
             }
-            return (Boolean) validOxygenSetupMethod.invoke(null, player);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            catch (IllegalAccessException | InvocationTargetException e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return false;

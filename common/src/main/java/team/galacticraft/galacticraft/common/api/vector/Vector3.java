@@ -14,7 +14,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import team.galacticraft.galacticraft.common.api.util.MathUtil;
+import team.galacticraft.galacticraft.common.Constants;
 
 import java.util.List;
 import java.util.Objects;
@@ -531,7 +531,7 @@ public class Vector3 implements Cloneable
         float x = axis.x;
         float y = axis.y;
         float z = axis.z;
-        angle /= MathUtil.RADIANS_TO_DEGREES;
+        angle /= Constants.RADIANS_TO_DEGREES;
         float cos = Mth.cos(angle);
         float ocos = 1.0F - cos;
         float sin = Mth.sin(angle);

@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.dimension.DimensionType;
-import team.galacticraft.galacticraft.common.GalacticraftCommon;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 
 /* BlockVec3 is similar to galacticraft.api.vector.Vector3?
  *
@@ -111,7 +111,7 @@ public class BlockVec3Dim implements Cloneable
         {
             // In a typical inner loop, 80% of the time consecutive calls to
             // this will be within the same chunk
-            if (BlockVec3Dim.chunkCacheX == chunkx && BlockVec3Dim.chunkCacheZ == chunkz && BlockVec3Dim.chunkCacheDim == world.getDimension().getType() && GalacticraftCommon.chunkLoaded(BlockVec3Dim.chunkCached))
+            if (BlockVec3Dim.chunkCacheX == chunkx && BlockVec3Dim.chunkCacheZ == chunkz && BlockVec3Dim.chunkCacheDim == world.getDimension().getType() && PlatformSpecific.chunkLoaded(BlockVec3Dim.chunkCached))
             {
                 return BlockVec3Dim.chunkCached.getBlockState(new BlockPos(this.x & 15, this.y, this.z & 15));
             }
@@ -163,7 +163,7 @@ public class BlockVec3Dim implements Cloneable
             {
                 // In a typical inner loop, 80% of the time consecutive calls to
                 // this will be within the same chunk
-                if (BlockVec3Dim.chunkCacheX == chunkx && BlockVec3Dim.chunkCacheZ == chunkz && BlockVec3Dim.chunkCacheDim == world.getDimension().getType() && GalacticraftCommon.chunkLoaded(BlockVec3Dim.chunkCached))
+                if (BlockVec3Dim.chunkCacheX == chunkx && BlockVec3Dim.chunkCacheZ == chunkz && BlockVec3Dim.chunkCacheDim == world.getDimension().getType() && PlatformSpecific.chunkLoaded(BlockVec3Dim.chunkCached))
                 {
                     return BlockVec3Dim.chunkCached.getBlockState(new BlockPos(this.x & 15, this.y, this.z & 15));
                 }

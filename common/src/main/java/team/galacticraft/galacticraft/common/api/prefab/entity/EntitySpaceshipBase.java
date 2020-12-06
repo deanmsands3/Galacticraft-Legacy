@@ -7,7 +7,7 @@ import team.galacticraft.galacticraft.common.api.entity.IIgnoreShift;
 import team.galacticraft.galacticraft.common.api.entity.ITelemetry;
 import team.galacticraft.galacticraft.common.api.event.GalacticraftEvents;
 import team.galacticraft.galacticraft.common.api.tile.ITelemetryReceiver;
-import team.galacticraft.galacticraft.common.api.util.MathUtil;
+import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3Dim;
 import team.galacticraft.galacticraft.common.api.world.IExitHeight;
 import net.fabricmc.api.EnvType;
@@ -338,9 +338,9 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
             this.xRot = -90;
         }
 
-        double motionX = -(50 * Math.cos(this.yRot / MathUtil.RADIANS_TO_DEGREES_D) * Math.sin(this.xRot * 0.01 / MathUtil.RADIANS_TO_DEGREES_D));
+        double motionX = -(50 * Math.cos(this.yRot / Constants.RADIANS_TO_DEGREES_D) * Math.sin(this.xRot * 0.01 / Constants.RADIANS_TO_DEGREES_D));
         double motionY = getDeltaMovement().y;
-        double motionZ = -(50 * Math.sin(this.yRot / MathUtil.RADIANS_TO_DEGREES_D) * Math.sin(this.xRot * 0.01 / MathUtil.RADIANS_TO_DEGREES_D));
+        double motionZ = -(50 * Math.sin(this.yRot / Constants.RADIANS_TO_DEGREES_D) * Math.sin(this.xRot * 0.01 / Constants.RADIANS_TO_DEGREES_D));
 
         if (this.launchPhase < EnumLaunchPhase.LAUNCHED.ordinal())
         {

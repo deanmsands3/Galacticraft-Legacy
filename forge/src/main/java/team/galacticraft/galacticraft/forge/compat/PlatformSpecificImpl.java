@@ -1,4 +1,4 @@
-package team.galacticraft.galacticraft.forge;
+package team.galacticraft.galacticraft.forge.compat;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -10,7 +10,7 @@ import team.galacticraft.galacticraft.forge.mixin.ChunkMixin;
 
 import javax.annotation.Nullable;
 
-public class GalacticraftCommonImpl
+public class PlatformSpecificImpl
 {
     private static final Logger LOGGER = LogManager.getLogger("Galacticraft");
 

@@ -1,7 +1,35 @@
 {
     "schemaVersion": 1,
-    "id": "galacticraft-fabric",
+
+    "id": "galacticraft",
     "version": "0.1.0-modulate",
+    "name": "Galacticraft: Fabric",
+    "description": "An advanced space mod for Minecraft.",
+    "license": "custom",
+    "icon": "assets/galacticraft-common/logo.png",
+    "contact": {
+        "sources": "https://github.com/TeamGalacticraft/Galacticraft",
+        "homepage": "https://galacticraft.team",
+        "issues": "https://github.com/TeamGalacticraft/Galacticraft/issues"
+    },
+    "authors": [
+    ],
+    "contributors": [
+    ],
+    "environment": "*",
     "mixins": [ "galacticraft-fabric.mixins.json" ],
-    "accessWidener": "galacticraft-fabric.accesswidener"
+    "accessWidener": "galacticraft-fabric.accesswidener",
+
+    "entrypoints": {
+        "main": [
+            "team.galacticraft.galacticraft.fabric.GalacticraftFabric"
+        ]
+    },
+    "depends": {
+        "fabricloader": ">=0.9.0",
+        "minecraft": "1.15.2"
+    },
+    "suggests": {
+        "modmenu": "*"
+    },
 }

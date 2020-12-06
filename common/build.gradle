@@ -3,18 +3,17 @@ plugins {
 }
 
 repositories {
-    maven { url = "https://dl.bintray.com/shedaniel/cloth/" }
+    maven {
+        name = "Shedaniel"
+        url = "https://dl.bintray.com/shedaniel/cloth/"
+    }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${rootProject.architect.minecraft}"
     mappings minecraft.officialMojangMappings()
-    // We depend on fabric loader here to use the fabric @Environment annotations
-    // Do NOT use other classes from fabric loader
     modCompile "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-
-    modCompile "me.shedaniel:architectury:2.0.57"
-    include "me.shedaniel:architectury:2.0.57" //fixme - does this work?
+    modCompile "me.shedaniel:architectury:${rootProject.architectury_version}"
 }
 
 architect {

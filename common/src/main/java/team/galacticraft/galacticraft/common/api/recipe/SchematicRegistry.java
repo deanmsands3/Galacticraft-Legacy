@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.api.recipe;
 
-import team.galacticraft.galacticraft.common.GalacticraftCommon;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 import team.galacticraft.galacticraft.common.api.recipe.SchematicEvent.FlipPage;
 import team.galacticraft.galacticraft.common.api.recipe.SchematicEvent.Unlock;
 import net.fabricmc.api.EnvType;
@@ -154,7 +154,7 @@ public class SchematicRegistry
             return textures.get(index);
         }
 
-        GalacticraftCommon.getLogger().debug("couldn't find render texture for " + index);
+        PlatformSpecific.getLogger().debug("couldn't find render texture for " + index);
         return textures.get(0);
     }
 
@@ -172,7 +172,7 @@ public class SchematicRegistry
             return schematicItems.get(index).copy();
         }
 
-        GalacticraftCommon.getLogger().debug("couldn't find schematic item for " + index);
+        PlatformSpecific.getLogger().debug("couldn't find schematic item for " + index);
         return schematicItems.get(0).copy();
     }
 }

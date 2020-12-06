@@ -1,4 +1,4 @@
-package team.galacticraft.galacticraft.fabric;
+package team.galacticraft.galacticraft.fabric.compat;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import team.galacticraft.galacticraft.fabric.mixin.LevelChunkMixin;
 
-public class GalacticraftCommonImpl
+public class PlatformSpecificImpl
 {
     private static final Logger LOGGER = LogManager.getLogger("Galacticraft");
 
