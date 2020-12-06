@@ -5,19 +5,11 @@ import net.minecraft.server.level.ServerLevel;
 import team.galacticraft.galacticraft.common.api.GalacticraftRegistry;
 import team.galacticraft.galacticraft.common.api.entity.IIgnoreShift;
 import team.galacticraft.galacticraft.common.api.entity.ITelemetry;
+import team.galacticraft.galacticraft.common.api.event.GalacticraftEvents;
+import team.galacticraft.galacticraft.common.api.tile.ITelemetryReceiver;
+import team.galacticraft.galacticraft.common.api.util.MathUtil;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3Dim;
 import team.galacticraft.galacticraft.common.api.world.IExitHeight;
-import team.galacticraft.galacticraft.common.core.Constants;
-import team.galacticraft.galacticraft.common.core.GalacticraftCore;
-import team.galacticraft.galacticraft.common.core.advancement.GCTriggers;
-import team.galacticraft.galacticraft.common.core.client.screen.GameScreenText;
-import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerStats;
-import team.galacticraft.galacticraft.common.core.network.IPacketReceiver;
-import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.common.core.tile.TileEntityTelemetry;
-import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.common.core.util.DamageSourceGC;
-import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -40,10 +32,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityEvent;
 
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.base.Predicate;
@@ -233,12 +222,12 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
             this.addToTelemetry = false;
             for (BlockVec3Dim vec : new ArrayList<BlockVec3Dim>(this.telemetryList))
             {
-                BlockEntity t1 = this.level instanceof ServerLevel ? vec.getTileEntityNoLoad(this.level.getServer()) : vec.getTileEntityNoLoad(null);
-                if (t1 instanceof TileEntityTelemetry && !t1.isRemoved())
+                BlockEntity t1 = vec.getTileEntityNoLoad();
+                if (t1 instanceof ITelemetryReceiver && !t1.isRemoved())
                 {
-                    if (((TileEntityTelemetry) t1).linkedEntity == this)
+                    if (((ITelemetryReceiver) t1).getLinkedEntity() == this)
                     {
-                        ((TileEntityTelemetry) t1).addTrackedEntity(this);
+                        ((ITelemetryReceiver) t1).addTrackedEntity(this);
                     }
                 }
             }
@@ -393,16 +382,16 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
             // this.world.getDimension().getType());
         }
 
-        if (this.launchPhase >= EnumLaunchPhase.LAUNCHED.ordinal())
-        {
-            if (getPassengers().size() >= 1) //When the screen changes to the map, the player is not riding the rocket anymore.
-            {
-                if (getPassengers().get(0) instanceof ServerPlayer)
-                {
-                    GCTriggers.LAUNCH_ROCKET.trigger(((ServerPlayer) getPassengers().get(0)));
-                }
-            }
-        }
+//        if (this.launchPhase >= EnumLaunchPhase.LAUNCHED.ordinal()) //TODO: advancement triggers should be packed with api 
+//        {
+//            if (getPassengers().size() >= 1) //When the screen changes to the map, the player is not riding the rocket anymore.
+//            {
+//                if (getPassengers().get(0) instanceof ServerPlayer)
+//                {
+//                    GCTriggers.LAUNCH_ROCKET.trigger(((ServerPlayer) getPassengers().get(0)));
+//                }
+//            }
+//        }
     }
 
     protected boolean shouldMoveClientSide()
@@ -655,7 +644,7 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
 
     public void onLaunch()
     {
-        MinecraftForge.EVENT_BUS.post(new RocketLaunchEvent(this));
+        GalacticraftEvents.ROCKET_LAUNCH_EVENT.invoker().invoke(this);
     }
 
     public void onReachAtmosphere()
@@ -684,33 +673,23 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
         return this.launchPhase >= EnumLaunchPhase.LAUNCHED.ordinal();
     }
 
-    public static class RocketLaunchEvent extends EntityEvent
-    {
-        public final EntitySpaceshipBase rocket;
 
-        public RocketLaunchEvent(EntitySpaceshipBase entity)
-        {
-            super(entity);
-            rocket = entity;
-        }
-    }
-
-    public void addTelemetry(TileEntityTelemetry tile)
+    public void addTelemetry(ITelemetryReceiver tile)
     {
         this.telemetryList.add(new BlockVec3Dim(tile));
     }
 
-    public ArrayList<TileEntityTelemetry> getTelemetry()
+    public ArrayList<ITelemetryReceiver> getTelemetry()
     {
-        ArrayList<TileEntityTelemetry> returnList = new ArrayList<TileEntityTelemetry>();
+        ArrayList<ITelemetryReceiver> returnList = new ArrayList<ITelemetryReceiver>();
         for (BlockVec3Dim vec : new ArrayList<BlockVec3Dim>(this.telemetryList))
         {
             BlockEntity t1 = this.level instanceof ServerLevel ? vec.getTileEntity(this.level.getServer()) : null;
-            if (t1 instanceof TileEntityTelemetry && !t1.isRemoved())
+            if (t1 instanceof ITelemetryReceiver && !t1.isRemoved())
             {
-                if (((TileEntityTelemetry) t1).linkedEntity == this)
+                if (((ITelemetryReceiver) t1).linkedEntity == this)
                 {
-                    returnList.add((TileEntityTelemetry) t1);
+                    returnList.add((ITelemetryReceiver) t1);
                 }
             }
         }
@@ -722,7 +701,7 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
     {
         data[0] = this.timeUntilLaunch;
         data[1] = (int) this.getY();
-        //data[2] is entity speed already set as default by TileEntityTelemetry
+        //data[2] is entity speed already set as default by ITelemetryReceiver
         data[3] = this.getScaledFuelLevel(100);
         data[4] = (int) this.xRot;
     }

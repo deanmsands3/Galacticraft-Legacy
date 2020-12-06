@@ -1,7 +1,6 @@
 package team.galacticraft.galacticraft.common.api.entity;
 
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import me.shedaniel.architectury.fluid.FluidStack;
 
 /**
  * Implement into entities that can be fueled when placed on fuel docks

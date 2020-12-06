@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.api.recipe;
 
+import team.galacticraft.galacticraft.common.GalacticraftCommon;
 import team.galacticraft.galacticraft.common.api.recipe.SchematicEvent.FlipPage;
 import team.galacticraft.galacticraft.common.api.recipe.SchematicEvent.Unlock;
-import team.galacticraft.galacticraft.common.core.util.GCLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -10,7 +10,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
 
@@ -155,7 +154,7 @@ public class SchematicRegistry
             return textures.get(index);
         }
 
-        GCLog.debug("couldn't find render texture for " + index);
+        GalacticraftCommon.getLogger().debug("couldn't find render texture for " + index);
         return textures.get(0);
     }
 
@@ -173,7 +172,7 @@ public class SchematicRegistry
             return schematicItems.get(index).copy();
         }
 
-        GCLog.debug("couldn't find schematic item for " + index);
+        GalacticraftCommon.getLogger().debug("couldn't find schematic item for " + index);
         return schematicItems.get(0).copy();
     }
 }

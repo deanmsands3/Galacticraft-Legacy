@@ -3,7 +3,7 @@ package team.galacticraft.galacticraft.common.api.prefab.world.gen;
 //import team.galacticraft.galacticraft.common.api.prefab.core.BlockMetaPair;
 //import team.galacticraft.galacticraft.common.api.world.ChunkProviderBase;
 //import team.galacticraft.galacticraft.common.core.perlin.generator.Gradient;
-//import team.galacticraft.galacticraft.common.core.util.GCLog;
+//import team.galacticraft.galacticraft.common.GalacticraftCommon;
 //import team.galacticraft.galacticraft.common.core.world.gen.EnumCraterSize;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.Blocks;
@@ -253,7 +253,7 @@ package team.galacticraft.galacticraft.common.api.prefab.world.gen;
 //        }
 //        catch (Exception e)
 //        {
-//            GCLog.severe("Error caught in planetary worldgen at coords " + x + "," + z + ".  If the next 2 lines are showing an Add-On mod name, please report to that mod's author!");
+//            GalacticraftCommon.getLogger().severe("Error caught in planetary worldgen at coords " + x + "," + z + ".  If the next 2 lines are showing an Add-On mod name, please report to that mod's author!");
 //            e.printStackTrace();
 //        }
 //

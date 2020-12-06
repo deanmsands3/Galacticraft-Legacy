@@ -1,9 +1,7 @@
 package team.galacticraft.galacticraft.common.api.prefab.world.gen;
 
-import team.galacticraft.galacticraft.common.api.vector.Vector3;
 import team.galacticraft.galacticraft.common.api.world.EnumAtmosphericGas;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
-import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -104,8 +102,8 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
             this.level.getLevelData().setRaining(false);
             this.level.getLevelData().setThunderTime(0);
             this.level.getLevelData().setThundering(false);
-            this.level.rainLevel = 0.0F;
-            this.level.thunderLevel = 0.0F;
+            this.level.setRainLevel(0.0F);
+            this.level.setThunderLevel(0.0F);
         }
         else
         {

@@ -21,6 +21,10 @@ dependencies {
     }
 }
 
+loom {
+    accessWidener file("src/main/resources/galacticraft-fabric.accesswidener")
+}
+
 shadowJar {
     configurations = [project.configurations.shadow]
     classifier "shadow"

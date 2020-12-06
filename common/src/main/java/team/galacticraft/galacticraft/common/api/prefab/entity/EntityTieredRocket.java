@@ -10,13 +10,6 @@ import team.galacticraft.galacticraft.common.api.galaxies.Planet;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3Dim;
 import team.galacticraft.galacticraft.common.api.world.IExitHeight;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
-import team.galacticraft.galacticraft.common.core.GalacticraftCore;
-import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerStats;
-import team.galacticraft.galacticraft.common.core.network.PacketSimple;
-import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.common.core.util.GCLog;
-import team.galacticraft.galacticraft.common.core.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
@@ -32,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.Dimension;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -120,7 +112,7 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
 //                    this.preGenList.add(new BlockVec3Dim(cx, 0, cz, dimID));
 //                    if (ConfigManagerCore.enableDebug.get())
 //                    {
-//                        GCLog.info("Starting terrain pregen for dimension " + dimID + " at " + (cx * 16 + 8) + ", " + (cz * 16 + 8));
+//                        GalacticraftCommon.getLogger().info("Starting terrain pregen for dimension " + dimID + " at " + (cx * 16 + 8) + ", " + (cz * 16 + 8));
 //                    }
 //                }
 //                for (int r = 1; r < 12; r++)  //concentric squares with radius r
@@ -165,7 +157,7 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
                     {
                         this.ejectPassengers();
                         passenger.startRiding(this, true);
-                        GCLog.debug("Remounting player in rocket.");
+                        GalacticraftCommon.getLogger().debug("Remounting player in rocket.");
                     }
 
                     this.setWaitForPlayer(false);
@@ -354,7 +346,7 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
                                 }
                                 else
                                 {
-                                    GCLog.info("Error: failed to recreate the unmanned rocket in landing mode on target planet.");
+                                    GalacticraftCommon.getLogger().info("Error: failed to recreate the unmanned rocket in landing mode on target planet.");
                                     e.remove();
                                     this.remove();
                                 }
@@ -377,7 +369,7 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
                         {
 //                            WorldUtil.forceMoveEntityToPos(passenger, (ServerWorld) this.world, new Vector3(this.targetVec.getX() + 0.5F, this.targetVec.getY() + 800, this.targetVec.getZ() + 0.5F), false); TODO Force load chunk when tp in same dimension?
                             this.setWaitForPlayer(true);
-                            GCLog.debug("Rocket repositioned, waiting for player");
+                            GalacticraftCommon.getLogger().debug("Rocket repositioned, waiting for player");
                         }
                     }
                     this.setLaunchPhase(EnumLaunchPhase.LANDING);
@@ -388,7 +380,7 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
             else
             {
                 //Launch controlled launch but no valid target frequency = rocket loss [INVESTIGATE]
-                GCLog.info("Error: the launch controlled rocket failed to find a valid landing spot when it reached space.");
+                GalacticraftCommon.getLogger().info("Error: the launch controlled rocket failed to find a valid landing spot when it reached space.");
                 this.fuelTank.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
                 this.setPosRaw(this.getX(), Math.max(255, (this.level.getDimension() instanceof IExitHeight ? ((IExitHeight) this.level.getDimension()).getYCoordinateToTeleport() : 1200) - 200), this.getZ());
                 return;

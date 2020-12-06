@@ -20,10 +20,10 @@ public interface ICargoEntity
     class RemovalResult
     {
         public final EnumCargoLoadingState resultState;
-        @Nonnull
+        @NotNull
         public final ItemStack resultStack;
 
-        public RemovalResult(EnumCargoLoadingState resultState, @Nonnull ItemStack resultStack)
+        public RemovalResult(EnumCargoLoadingState resultState, @NotNull ItemStack resultStack)
         {
             this.resultState = resultState;
             this.resultStack = resultStack;

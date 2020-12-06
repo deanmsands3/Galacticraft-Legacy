@@ -1,6 +1,8 @@
 package team.galacticraft.galacticraft.common.api.prefab.entity;
 
 import io.netty.buffer.ByteBuf;
+import me.shedaniel.architectury.networking.NetworkChannel;
+import team.galacticraft.galacticraft.common.GalacticraftCommon;
 import team.galacticraft.galacticraft.common.api.entity.IEntityNoisy;
 import team.galacticraft.galacticraft.common.api.entity.ILandable;
 import team.galacticraft.galacticraft.common.api.tile.IFuelDock;
@@ -8,17 +10,6 @@ import team.galacticraft.galacticraft.common.api.tile.ILandingPadAttachable;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
 import team.galacticraft.galacticraft.common.api.world.IOrbitDimension;
-import team.galacticraft.galacticraft.common.core.Constants;
-import team.galacticraft.galacticraft.common.core.GCBlocks;
-import team.galacticraft.galacticraft.common.core.GalacticraftCore;
-import team.galacticraft.galacticraft.common.core.blocks.BlockPadFull;
-import team.galacticraft.galacticraft.common.core.client.sounds.SoundUpdaterRocket;
-import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerStats;
-import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.common.core.network.NetworkUtil;
-import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.common.core.tile.TileEntityLandingPad;
-import team.galacticraft.galacticraft.common.core.util.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -46,8 +37,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import me.shedaniel.architectury.fluid.FluidStack;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -87,7 +77,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
         }
         catch (ClassNotFoundException e)
         {
-            GCLog.info("Galacticraft-Planets' LaunchController not present, rockets will not be launch controlled.");
+            GalacticraftCommon.getLogger().info("Galacticraft-Planets' LaunchController not present, rockets will not be launch controlled.");
         }
     }
 
@@ -97,6 +87,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
 
         if (level != null && level.isClientSide)
         {
+
             GalacticraftCore.packetPipeline.sendToServer(new PacketDynamic(this));
         }
 
@@ -173,7 +164,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
                         if (foundPad)
                         {
                             this.destinationFrequency = controllerFrequency;
-                            GCLog.debug("Rocket under launch control: going to target frequency " + controllerFrequency);
+                            GalacticraftCommon.getLogger().debug("Rocket under launch control: going to target frequency " + controllerFrequency);
                             return true;
                         }
                     }
