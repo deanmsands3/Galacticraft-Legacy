@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.dimension.DimensionType;
 import me.shedaniel.architectury.fluid.FluidStack;
+import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -927,7 +928,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
         this.timeUntilLaunch = 0;
         if (!this.level.isClientSide && !this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof ServerPlayer)
         {
-            this.getPassengers().get(0).sendMessage(new TextComponent(GCCoreUtil.translate("gui.rocket.warning.nogyroscope")));
+            this.getPassengers().get(0).sendMessage(new TextComponent(I18n.get("gui.rocket.warning.nogyroscope")));
         }
     }
 
@@ -935,7 +936,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     {
         if (!this.level.isClientSide && !this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof ServerPlayer)
         {
-            this.getPassengers().get(0).sendMessage(new TextComponent(GCCoreUtil.translate("gui.rocket.warning.launchcontroller")));
+            this.getPassengers().get(0).sendMessage(new TextComponent(I18n.get("gui.rocket.warning.launchcontroller")));
         }
     }
 
@@ -943,7 +944,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     {
         if (!this.level.isClientSide && !this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof ServerPlayer)
         {
-            this.getPassengers().get(0).sendMessage(new TextComponent(GCCoreUtil.translate("gui.rocket.warning.fuelinsufficient")));
+            this.getPassengers().get(0).sendMessage(new TextComponent(I18n.get("gui.rocket.warning.fuelinsufficient")));
         }
     }
 
@@ -1103,7 +1104,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     }
 
     @Override
-    public int addFuel(FluidStack liquid, IFluidHandler.FluidAction action)
+    public int addFuel(FluidStack liquid, ActionType action)
     {
         return FluidUtil.fillWithGCFuel(this.fuelTank, liquid, action);
     }
@@ -1111,7 +1112,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     @Override
     public FluidStack removeFuel(int amount)
     {
-        return this.fuelTank.drain(amount * ConfigManagerCore.rocketFuelFactor.get(), IFluidHandler.FluidAction.EXECUTE);
+        return this.fuelTank.drain(amount * ConfigManagerCore.rocketFuelFactor.get(), ActionType.EXECUTE);
     }
 
     @Override
@@ -1438,7 +1439,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
 
         public String getTitle()
         {
-            return GCCoreUtil.translate("gui.message." + this.title + "");
+            return I18n.get("gui.message." + this.title + "");
         }
     }
 

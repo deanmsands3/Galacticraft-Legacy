@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 
 /* BlockVec3 is similar to galacticraft.api.vector.Vector3?
  *
@@ -109,7 +110,7 @@ public class BlockVec3 implements Cloneable
         {
             if (world.isClientSide)
             {
-                if (BlockVec3.chunkCacheX_Client == chunkx && BlockVec3.chunkCacheZ_Client == chunkz && BlockVec3.chunkCacheDim_Client == world.getDimension().getType() && BlockVec3.chunkCached_Client.loaded)
+                if (BlockVec3.chunkCacheX_Client == chunkx && BlockVec3.chunkCacheZ_Client == chunkz && BlockVec3.chunkCacheDim_Client == world.getDimension().getType() && PlatformSpecific.chunkLoaded(BlockVec3.chunkCached_Client))
                 {
                     return BlockVec3.chunkCached_Client.getBlockState(new BlockPos(this.x & 15, this.y, this.z & 15));
                 }
@@ -127,7 +128,7 @@ public class BlockVec3 implements Cloneable
             {
                 // In a typical inner loop, 80% of the time consecutive calls to
                 // this will be within the same chunk
-                if (BlockVec3.chunkCacheX == chunkx && BlockVec3.chunkCacheZ == chunkz && BlockVec3.chunkCacheDim == world.getDimension().getType() && BlockVec3.chunkCached.loaded)
+                if (BlockVec3.chunkCacheX == chunkx && BlockVec3.chunkCacheZ == chunkz && BlockVec3.chunkCacheDim == world.getDimension().getType() && PlatformSpecific.chunkLoaded(BlockVec3.chunkCached))
                 {
                     return BlockVec3.chunkCached.getBlockState(new BlockPos(this.x & 15, this.y, this.z & 15));
                 }
@@ -175,7 +176,7 @@ public class BlockVec3 implements Cloneable
             {
                 if (world.isClientSide)
                 {
-                    if (BlockVec3.chunkCacheX_Client == chunkx && BlockVec3.chunkCacheZ_Client == chunkz && BlockVec3.chunkCacheDim_Client == world.getDimension().getType() && BlockVec3.chunkCached_Client.loaded)
+                    if (BlockVec3.chunkCacheX_Client == chunkx && BlockVec3.chunkCacheZ_Client == chunkz && BlockVec3.chunkCacheDim_Client == world.getDimension().getType() && PlatformSpecific.chunkLoaded(BlockVec3.chunkCached_Client))
                     {
                         return BlockVec3.chunkCached_Client.getBlockState(new BlockPos(this.x & 15, this.y, this.z & 15));
                     }
@@ -193,7 +194,7 @@ public class BlockVec3 implements Cloneable
                 {
                     // In a typical inner loop, 80% of the time consecutive calls to
                     // this will be within the same chunk
-                    if (BlockVec3.chunkCacheX == chunkx && BlockVec3.chunkCacheZ == chunkz && BlockVec3.chunkCacheDim == world.getDimension().getType() && BlockVec3.chunkCached.loaded)
+                    if (BlockVec3.chunkCacheX == chunkx && BlockVec3.chunkCacheZ == chunkz && BlockVec3.chunkCacheDim == world.getDimension().getType() && PlatformSpecific.chunkLoaded(BlockVec3.chunkCached))
                     {
                         return BlockVec3.chunkCached.getBlockState(new BlockPos(this.x & 15, this.y, this.z & 15));
                     }
@@ -251,7 +252,7 @@ public class BlockVec3 implements Cloneable
             {
                 if (world.isClientSide)
                 {
-                    if (BlockVec3.chunkCacheX_Client == chunkx && BlockVec3.chunkCacheZ_Client == chunkz && BlockVec3.chunkCacheDim_Client == world.getDimension().getType() && BlockVec3.chunkCached_Client.loaded)
+                    if (BlockVec3.chunkCacheX_Client == chunkx && BlockVec3.chunkCacheZ_Client == chunkz && BlockVec3.chunkCacheDim_Client == world.getDimension().getType() && PlatformSpecific.chunkLoaded(BlockVec3.chunkCached_Client))
                     {
                         return BlockVec3.chunkCached_Client.getBlockState(new BlockPos(this.x & 15, this.y, this.z & 15));
                     }
@@ -269,7 +270,7 @@ public class BlockVec3 implements Cloneable
                 {
                     // In a typical inner loop, 80% of the time consecutive calls to
                     // this will be within the same chunk
-                    if (BlockVec3.chunkCacheX == chunkx && BlockVec3.chunkCacheZ == chunkz && BlockVec3.chunkCacheDim == world.getDimension().getType() && BlockVec3.chunkCached.loaded)
+                    if (BlockVec3.chunkCacheX == chunkx && BlockVec3.chunkCacheZ == chunkz && BlockVec3.chunkCacheDim == world.getDimension().getType() && PlatformSpecific.chunkLoaded(BlockVec3.chunkCached))
                     {
                         return BlockVec3.chunkCached.getBlockState(new BlockPos(this.x & 15, this.y, this.z & 15));
                     }

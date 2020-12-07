@@ -1,6 +1,7 @@
 package team.galacticraft.galacticraft.common.api.entity;
 
 import me.shedaniel.architectury.fluid.FluidStack;
+import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
 /**
  * Implement into entities that can be fueled when placed on fuel docks
@@ -16,7 +17,7 @@ public interface IFuelable
      *               test.
      * @return the amount of fluid that was added to the entity.
      */
-    int addFuel(FluidStack fluid, IFluidHandler.FluidAction action);
+    int addFuel(FluidStack fluid, ActionType action);
 
     /**
      * Remove fuel from an entity

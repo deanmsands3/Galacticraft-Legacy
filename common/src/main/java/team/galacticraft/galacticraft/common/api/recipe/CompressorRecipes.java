@@ -1,7 +1,6 @@
 package team.galacticraft.galacticraft.common.api.recipe;
 
 import team.galacticraft.galacticraft.common.api.GalacticraftConfigAccess;
-import team.galacticraft.galacticraft.common.core.GCItems;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -182,23 +181,23 @@ public class CompressorRecipes
             }
         }
 
-        if (i == 2 && itemstack.getItem() == itemstack1.getItem() && itemstack.getCount() == 1 && itemstack1.getCount() == 1 && itemstack.getItem().isRepairable(itemstack))
-        {
-            int k = itemstack.getItem().getMaxDamage() - itemstack.getDamageValue();
-            int l = itemstack.getItem().getMaxDamage() - itemstack1.getDamageValue();
-            int i1 = k + l + itemstack.getItem().getMaxDamage() * 5 / 100;
-            int j1 = itemstack.getItem().getMaxDamage() - i1;
-
-            if (j1 < 0)
-            {
-                j1 = 0;
-            }
-
-            ItemStack stack = new ItemStack(itemstack.getItem(), 1);
-            stack.setDamageValue(j1);
-            return stack;
-        }
-        else
+//        if (i == 2 && itemstack.getItem() == itemstack1.getItem() && itemstack.getCount() == 1 && itemstack1.getCount() == 1 && itemstack.getItem().isRepairable(itemstack)) //FIXME - this doesn't make sense.
+//        {
+//            int k = itemstack.getItem().getMaxDamage() - itemstack.getDamageValue();
+//            int l = itemstack.getItem().getMaxDamage() - itemstack1.getDamageValue();
+//            int i1 = k + l + itemstack.getItem().getMaxDamage() * 5 / 100;
+//            int j1 = itemstack.getItem().getMaxDamage() - i1;
+//
+//            if (j1 < 0)
+//            {
+//                j1 = 0;
+//            }
+//
+//            ItemStack stack = new ItemStack(itemstack.getItem(), 1);
+//            stack.setDamageValue(j1);
+//            return stack;
+//        }
+//        else
         {
             List<Recipe> theRecipes = CompressorRecipes.getRecipeList();
 
@@ -263,7 +262,7 @@ public class CompressorRecipes
                 {
                     continue;  //Intentional ItemStack null check
                 }
-                if (output.getItem() == GCItems.compressedSteel && recipe instanceof ShapelessOreRecipeGC)
+                if (recipe instanceof ShapelessOreRecipeGC)
                 {
                     if (((ShapelessOreRecipeGC) recipe).matches(steelRecipeGC))
                     {
@@ -295,7 +294,7 @@ public class CompressorRecipes
                 {
                     continue;  //Intentional ItemStack null check
                 }
-                if (output.getItem() == GCItems.compressedSteel && recipe instanceof ShapelessOreRecipeGC)
+                if (recipe instanceof ShapelessOreRecipeGC)
                 {
                     if (((ShapelessOreRecipeGC) recipe).matches(steelRecipeGC))
                     {

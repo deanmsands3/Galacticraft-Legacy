@@ -1,8 +1,7 @@
 package team.galacticraft.galacticraft.common.api.recipe;
 
+import team.galacticraft.galacticraft.common.api.event.GalacticraftEvents;
 import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
-import team.galacticraft.galacticraft.common.api.recipe.SchematicEvent.FlipPage;
-import team.galacticraft.galacticraft.common.api.recipe.SchematicEvent.Unlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -82,7 +81,7 @@ public class SchematicRegistry
         // No need to subscribe to this event
         if (page != null)
         {
-            MinecraftForge.EVENT_BUS.post(new Unlock(player, page));
+            GalacticraftEvents.SCHEMATIC_UNLOCK_EVENT.invoker().invoke(player, page);
         }
     }
 
@@ -123,7 +122,7 @@ public class SchematicRegistry
 
         // Used internally inside Galacticraft to flip to the next page. No need
         // to subscribe to this event.
-        MinecraftForge.EVENT_BUS.post(new FlipPage(cs, null, currentIndex, 1));
+        GalacticraftEvents.Client.SCHEMATIC_PAGE_TURN_EVENT.invoker().invoke(cs, null, currentIndex, 1);
     }
 
     /**
@@ -139,7 +138,7 @@ public class SchematicRegistry
 
         // Used internally inside Galacticraft to flip to the last page. No need
         // to subscribe to this event.
-        MinecraftForge.EVENT_BUS.post(new FlipPage(cs, null, currentIndex, -1));
+        GalacticraftEvents.Client.SCHEMATIC_PAGE_TURN_EVENT.invoker().invoke(cs, null, currentIndex, -1);
     }
 
     public static void registerTexture(ResourceLocation loc)

@@ -1,8 +1,10 @@
 package team.galacticraft.galacticraft.common.api.prefab.entity;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.client.resources.language.I18n;
 import team.galacticraft.galacticraft.common.api.GalacticraftRegistry;
+import team.galacticraft.galacticraft.common.api.client.GameScreenText;
+import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
 import team.galacticraft.galacticraft.common.api.entity.IIgnoreShift;
 import team.galacticraft.galacticraft.common.api.entity.ITelemetry;
 import team.galacticraft.galacticraft.common.api.event.GalacticraftEvents;
@@ -36,6 +38,8 @@ import net.minecraft.world.phys.AABB;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.base.Predicate;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
+import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +47,7 @@ import java.util.List;
 /**
  * Do not include this prefab class in your released mod download.
  */
-public abstract class EntitySpaceshipBase extends Entity implements IPacketReceiver, IIgnoreShift, ITelemetry
+public abstract class EntitySpaceshipBase extends Entity implements /*IPacketReceiver,*/ IIgnoreShift, ITelemetry
 {
     public enum EnumLaunchPhase
     {
@@ -61,9 +65,9 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
     public float timeSinceLaunch;
     public float rollAmplitude;
     public float shipDamage;
-    private final ArrayList<BlockVec3Dim> telemetryList = new ArrayList<BlockVec3Dim>();
+    private final ArrayList<BlockVec3Dim> telemetryList = new ArrayList<>();
     private boolean addToTelemetry = false;
-    public FluidTank fuelTank = new FluidTank(this.getFuelTankCapacity());
+    public FluidTank fuelTank = PlatformSpecific.createFluidInv(1, this.getFuelTankCapacity());
     private double syncAdjustX = 0D;
     private double syncAdjustY = 0D;
     private double syncAdjustZ = 0D;
@@ -178,7 +182,7 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
             return;
         }
 
-        for (final ItemStack item : this.getItemsDropped(new ArrayList<ItemStack>()))
+        for (final ItemStack item : this.getItemsDropped(new ArrayList<>()))
         {
             ItemEntity entityItem = this.spawnAtLocation(item, 0);
 
@@ -204,11 +208,11 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
         return this.isAlive();
     }
 
-    @Override
-    public boolean shouldRiderSit()
-    {
-        return false;
-    }
+//    @Override
+//    public boolean shouldRiderSit()
+//    {
+//        return false;
+//    }
 
     @Override
     public void tick()
@@ -220,7 +224,7 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
         if (this.addToTelemetry)
         {
             this.addToTelemetry = false;
-            for (BlockVec3Dim vec : new ArrayList<BlockVec3Dim>(this.telemetryList))
+            for (BlockVec3Dim vec : new ArrayList<>(this.telemetryList))
             {
                 BlockEntity t1 = vec.getTileEntityNoLoad();
                 if (t1 instanceof ITelemetryReceiver && !t1.isRemoved())
@@ -267,7 +271,7 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
                 {
                     if (e instanceof ServerPlayer)
                     {
-                        GCPlayerStats stats = GCPlayerStats.get(e);
+                        GCPlayerStats stats = GCPlayerStats.get((ServerPlayer) e);
                         if (stats.isUsingPlanetSelectionGui())
                         {
                             this.remove();
@@ -376,7 +380,8 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
 
         if (!this.level.isClientSide && this.ticks % 3 == 0)
         {
-            GalacticraftCore.packetPipeline.sendToDimension(new PacketDynamic(this), this.level.getDimension().getType());
+            //todo networking
+//            GalacticraftCore.packetPipeline.sendToDimension(new PacketDynamic(this), this.level.getDimension().getType());
             // PacketDispatcher.sendPacketToAllInDimension(GCCorePacketManager.getPacket(GalacticraftCore.CHANNELENTITIES,
             // this, this.getNetworkedData(new ArrayList())),
             // this.world.getDimension().getType());
@@ -401,7 +406,7 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
 
     public abstract boolean hasValidFuel();
 
-    @Override
+//    @Override //todo
     public void decodePacketdata(ByteBuf buffer)
     {
         if (!this.level.isClientSide)
@@ -440,7 +445,7 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
         this.timeUntilLaunch = buffer.readInt();
     }
 
-    @Override
+//    @Override
     public void getNetworkedData(ArrayList<Object> list)
     {
         if (this.level.isClientSide)
@@ -540,7 +545,7 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
         if (telemetryList.size() > 0)
         {
             ListTag teleNBTList = new ListTag();
-            for (BlockVec3Dim vec : new ArrayList<BlockVec3Dim>(this.telemetryList))
+            for (BlockVec3Dim vec : new ArrayList<>(this.telemetryList))
             {
                 CompoundTag tag = new CompoundTag();
                 vec.writeToNBT(tag);
@@ -651,11 +656,11 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
     {
     }
 
-    @Override
-    public boolean canRiderInteract()
-    {
-        return true;
-    }
+//    @Override
+//    public boolean canRiderInteract()
+//    {
+//        return true;
+//    }
 
     public ResourceLocation getSpaceshipGui()
     {
@@ -676,18 +681,18 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
 
     public void addTelemetry(ITelemetryReceiver tile)
     {
-        this.telemetryList.add(new BlockVec3Dim(tile));
+        this.telemetryList.add(new BlockVec3Dim((BlockEntity) tile));
     }
 
     public ArrayList<ITelemetryReceiver> getTelemetry()
     {
-        ArrayList<ITelemetryReceiver> returnList = new ArrayList<ITelemetryReceiver>();
-        for (BlockVec3Dim vec : new ArrayList<BlockVec3Dim>(this.telemetryList))
+        ArrayList<ITelemetryReceiver> returnList = new ArrayList<>();
+        for (BlockVec3Dim vec : new ArrayList<>(this.telemetryList))
         {
-            BlockEntity t1 = this.level instanceof ServerLevel ? vec.getTileEntity(this.level.getServer()) : null;
+            BlockEntity t1 = vec.getTileEntity();
             if (t1 instanceof ITelemetryReceiver && !t1.isRemoved())
             {
-                if (((ITelemetryReceiver) t1).linkedEntity == this)
+                if (((ITelemetryReceiver) t1).getLinkedEntity() == this)
                 {
                     returnList.add((ITelemetryReceiver) t1);
                 }
@@ -717,10 +722,10 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
         //  data4 = pitch angle
         int countdown = data[0];
         str[0] = "";
-        str[1] = (countdown == 400) ? GCCoreUtil.translate("gui.rocket.on_launchpad") : ((countdown > 0) ? GCCoreUtil.translate("gui.rocket.countdown") + ": " + countdown / 20 : GCCoreUtil.translate("gui.rocket.launched"));
-        str[2] = GCCoreUtil.translate("gui.rocket.height") + ": " + data[1];
+        str[1] = (countdown == 400) ? I18n.get("gui.rocket.on_launchpad") : ((countdown > 0) ? I18n.get("gui.rocket.countdown") + ": " + countdown / 20 : I18n.get("gui.rocket.launched"));
+        str[2] = I18n.get("gui.rocket.height") + ": " + data[1];
         str[3] = GameScreenText.makeSpeedString(data[2]);
-        str[4] = GCCoreUtil.translate("gui.message.fuel") + ": " + data[3] + "%";
+        str[4] = I18n.get("gui.message.fuel") + ": " + data[3] + "%";
     }
 
     @Override

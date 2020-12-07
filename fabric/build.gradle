@@ -19,6 +19,10 @@ repositories {
         name = "Shedaniel"
         url = "https://dl.bintray.com/shedaniel/cloth/"
     }
+    maven {
+        name = "Ladysnake Libs"
+        url = 'https://dl.bintray.com/ladysnake/libs'
+    }
 }
 
 dependencies {
@@ -32,6 +36,13 @@ dependencies {
     modCompile("alexiil.mc.lib:libblockattributes-items:${rootProject.lba_version}") { transitive = false }
     modCompile("alexiil.mc.lib:libblockattributes-fluids:${rootProject.lba_version}") { transitive = false }
     modApi("teamreborn:energy:${rootProject.tr_energy_version}") { transitive = false }
+
+    modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${rootProject.cardinal_components_version}"
+    include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${rootProject.cardinal_components_version}"
+    modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${rootProject.cardinal_components_version}"
+    include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${rootProject.cardinal_components_version}"
+    modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${rootProject.cardinal_components_version}"
+    include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${rootProject.cardinal_components_version}"
 
     compile(project(":common")) {
         transitive = false

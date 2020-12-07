@@ -4,7 +4,7 @@ import java.util.Map;
 
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
-import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
+import team.galacticraft.galacticraft.common.compat.GalacticraftCommon;
 
 /**
  * This extension of BiomeGenBase contains the default initialiseMobLists()
@@ -17,7 +17,7 @@ public abstract class BiomeGC extends Biome implements IMobSpawnBiome
     protected BiomeGC(Biome.BiomeBuilder biomeBuilder)
     {
         super(biomeBuilder);
-        PlatformSpecific.BIOMES_LIST.add(this);
+        GalacticraftCommon.BIOMES_LIST.add(this);
 //        this.isAdaptiveBiome = false;
     }
 

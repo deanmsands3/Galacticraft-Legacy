@@ -218,7 +218,7 @@ public class GalaxyRegistry
 
         GalaxyRegistry.satellites.put(satellite.getName(), satellite);
         GalaxyRegistry.satelliteIDs.put(satellite.getName(), ++GalaxyRegistry.maxSatelliteID);
-        SATELLITE_REGISTER_EVENT.register(satellite.getName(), GalaxyRegistry.maxSatelliteID);
+        SATELLITE_REGISTER_EVENT.invoker().invoke(satellite.getName(), GalaxyRegistry.maxSatelliteID);
         return true;
     }
 

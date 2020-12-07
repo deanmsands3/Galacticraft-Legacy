@@ -65,12 +65,13 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
      */
     public abstract long getDayLength();
 
-    @Override
-    public void updateWeather(Runnable defaultLogic)
-    {
-        if (!this.level.isClientSide)
-        {
-            long newTime = level.getLevelData().getDayTime();
+
+//TODO WEATHER STUFF //    @Override
+//    public void updateWeather(Runnable defaultLogic)
+//    {
+//        if (!this.level.isClientSide)
+//        {
+//            long newTime = level.getLevelData().getDayTime();
 //            if (this.preTickTime == Long.MIN_VALUE)
 //            {
 //                //First tick: get the timeCurrentOffset from saved ticks in villages.dat :)
@@ -92,32 +93,32 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 //                    this.saveTime();
 //                }
 //            } TODO I don't know what this is doing
-            this.preTickTime = newTime;
-            this.saveTCO = 0L;
-        }
-
-        if (this.shouldDisablePrecipitation())
-        {
-            this.level.getLevelData().setRainTime(0);
-            this.level.getLevelData().setRaining(false);
-            this.level.getLevelData().setThunderTime(0);
-            this.level.getLevelData().setThundering(false);
-            this.level.setRainLevel(0.0F);
-            this.level.setThunderLevel(0.0F);
-        }
-        else
-        {
-            this.updateWeatherOverride(defaultLogic);
-        }
-    }
-
-    /*
-     * Override this to circumvent vanilla updateWeather()
-     */
-    protected void updateWeatherOverride(Runnable defaultLogic)
-    {
-        super.updateWeather(defaultLogic);
-    }
+//TODO WEATHER STUFF cont //            this.preTickTime = newTime;
+//            this.saveTCO = 0L;
+//        }
+//
+//        if (this.shouldDisablePrecipitation())
+//        {
+//            this.level.getLevelData().setRainTime(0);
+//            this.level.getLevelData().setRaining(false);
+//            this.level.getLevelData().setThunderTime(0);
+//            this.level.getLevelData().setThundering(false);
+//            this.level.setRainLevel(0.0F);
+//            this.level.setThunderLevel(0.0F);
+//        }
+//        else
+//        {
+//            this.updateWeatherOverride(defaultLogic);
+//        }
+//    }
+//
+//    /*
+//     * Override this to circumvent vanilla updateWeather()
+//     */
+//    protected void updateWeatherOverride(Runnable defaultLogic)
+//    {
+//        super.updateWeather(defaultLogic);
+//    }
 
 //    @Override
 //    public String getSaveFolder()
@@ -200,17 +201,18 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 //        return super.canBlockFreeze(pos, byWater);
 //    }
 
-    @Override
-    public boolean canDoLightning(LevelChunk chunk)
-    {
-        return !this.shouldDisablePrecipitation();
-    }
 
-    @Override
-    public boolean canDoRainSnowIce(LevelChunk chunk)
-    {
-        return !this.shouldDisablePrecipitation();
-    }
+//TODO  //    @Override
+//    public boolean canDoLightning(LevelChunk chunk)
+//    {
+//        return !this.shouldDisablePrecipitation();
+//    }
+//
+//    @Override
+//    public boolean canDoRainSnowIce(LevelChunk chunk)
+//    {
+//        return !this.shouldDisablePrecipitation();
+//    }
 
     @Override
     public float getSolarSize()
@@ -224,27 +226,27 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
         return this.hasSunset() ? super.getSunriseColor(var1, var2) : null;
     }
 
-    @Override
-    public float getTimeOfDay(long par1, float par3)
-    {
-        par1 = this.getWorldTime();
-        int j = (int) (par1 % this.getDayLength());
-        float f1 = (j + par3) / this.getDayLength() - 0.25F;
-
-        if (f1 < 0.0F)
-        {
-            ++f1;
-        }
-
-        if (f1 > 1.0F)
-        {
-            --f1;
-        }
-
-        float f2 = f1;
-        f1 = 0.5F - Mth.cos(f1 * 3.1415927F) / 2.0F;
-        return f2 + (f1 - f2) / 3.0F;
-    }
+//todo time //  @Override
+//    public float getTimeOfDay(long par1, float par3)
+//    {
+//        par1 = this.getWorldTime();
+//        int j = (int) (par1 % this.getDayLength());
+//        float f1 = (j + par3) / this.getDayLength() - 0.25F;
+//
+//        if (f1 < 0.0F)
+//        {
+//            ++f1;
+//        }
+//
+//        if (f1 > 1.0F)
+//        {
+//            --f1;
+//        }
+//
+//        float f2 = f1;
+//        f1 = 0.5F - Mth.cos(f1 * 3.1415927F) / 2.0F;
+//        return f2 + (f1 - f2) / 3.0F;
+//    }
 
 //    @OnlyIn(Dist.CLIENT)
 //    @Override
@@ -294,29 +296,31 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
         return false;
     }
 
-    /**
-     * Do NOT override this in your add-ons.
-     * <p>
-     * This controls whether the player will respawn in the space dimension or the Overworld
-     * in accordance with the 'Force Overworld Respawn' setting on core.conf.
-     */
-    @Override
-    public DimensionType getRespawnDimension(ServerPlayer player)
-    {
-        return this.shouldForceRespawn() ? this.getType() : player.getSpawnDimension();
-    }
 
-    /**
-     * If true, the the player should respawn in this dimension upon death.
-     * <p>
-     * Obeying the 'Force Overworld Respawn' setting from core.conf is an important protection
-     * for players are endlessly dying in a space dimension: for example respawning
-     * in an airless environment with no oxygen tanks and no oxygen machinery.
-     */
-    public boolean shouldForceRespawn()
-    {
-        return !ConfigManagerCore.forceOverworldRespawn.get();
-    }
+
+//todo //    /**
+//     * Do NOT override this in your add-ons.
+//     * <p>
+//     * This controls whether the player will respawn in the space dimension or the Overworld
+//     * in accordance with the 'Force Overworld Respawn' setting on core.conf.
+//     */
+//    @Override
+//    public DimensionType getRespawnDimension(ServerPlayer player)
+//    {
+//        return this.shouldForceRespawn() ? this.getType() : player.getSpawnDimension();
+//    }
+//
+//    /**
+//     * If true, the the player should respawn in this dimension upon death.
+//     * <p>
+//     * Obeying the 'Force Overworld Respawn' setting from core.conf is an important protection
+//     * for players are endlessly dying in a space dimension: for example respawning
+//     * in an airless environment with no oxygen tanks and no oxygen machinery.
+//     */
+//    public boolean shouldForceRespawn()
+//    {
+//        return !ConfigManagerCore.forceOverworldRespawn.get();
+//    }
 
     /**
      * If false (the default) then Nether Portals will have no function on this world.
@@ -382,51 +386,51 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 //        return biomeProvider;
 //    }
 
-    @Override
-    public boolean shouldMapSpin(String entity, double x, double y, double z)
-    {
-        return false;
-    }
-
-    //Work around vanilla feature: worlds which are not the Overworld cannot change the time, as the worldInfo is a DerivedWorldInfo
-    //Therefore each Galacticraft dimension maintains its own timeCurrentOffset
-    @Override
-    public void setWorldTime(long time)
-    {
-        level.getLevelData().setDayTime(time);
-        if (!level.isClientSide)
-        {
-            // TODO
-//            if (JavaUtil.instance.isCalledBy(CommandTime.class))
+    //todo //    @Override
+//    public boolean shouldMapSpin(String entity, double x, double y, double z)
+//    {
+//        return false;
+//    }
+//
+//    //Work around vanilla feature: worlds which are not the Overworld cannot change the time, as the worldInfo is a DerivedWorldInfo
+//    //Therefore each Galacticraft dimension maintains its own timeCurrentOffset
+//    @Override
+//    public void setWorldTime(long time)
+//    {
+//        level.getLevelData().setDayTime(time);
+//        if (!level.isClientSide)
+//        {
+//            // TODO
+////            if (JavaUtil.instance.isCalledBy(CommandTime.class))
+////            {
+////                this.timeCurrentOffset = this.saveTCO;
+////                this.saveTime();
+////                this.preTickTime = time;
+////            }
+////            else
+////            {
+//            long newTCO = time - level.getLevelData().getDayTime();
+//            long diff = newTCO - this.timeCurrentOffset;
+//            if (diff > 1L || diff < -1L)
 //            {
-//                this.timeCurrentOffset = this.saveTCO;
-//                this.saveTime();
+//                this.timeCurrentOffset = newTCO;
+////                    this.saveTime();
 //                this.preTickTime = time;
 //            }
-//            else
-//            {
-            long newTCO = time - level.getLevelData().getDayTime();
-            long diff = newTCO - this.timeCurrentOffset;
-            if (diff > 1L || diff < -1L)
-            {
-                this.timeCurrentOffset = newTCO;
-//                    this.saveTime();
-                this.preTickTime = time;
-            }
-//            }
-            this.saveTCO = 0;
-        }
-    }
-
-    @Override
-    public long getWorldTime()
-    {
-//        if (JavaUtil.instance.isCalledBy(CommandTime.class))
-//        {
-//            this.saveTCO  = this.timeCurrentOffset;
-//        } TODO
-        return level.getLevelData().getDayTime() + this.timeCurrentOffset;
-    }
+////            }
+//            this.saveTCO = 0;
+//        }
+//    }
+//
+//    @Override
+//    public long getWorldTime()
+//    {
+////        if (JavaUtil.instance.isCalledBy(CommandTime.class))
+////        {
+////            this.saveTCO  = this.timeCurrentOffset;
+////        } TODO
+//        return level.getLevelData().getDayTime() + this.timeCurrentOffset;
+//    }
 
     /**
      * Adjust time offset on Galacticraft worlds when the Overworld time jumps and you don't want the time

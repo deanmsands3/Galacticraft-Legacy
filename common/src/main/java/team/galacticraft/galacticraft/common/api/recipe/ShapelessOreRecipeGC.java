@@ -1,6 +1,5 @@
 package team.galacticraft.galacticraft.common.api.recipe;
 
-import team.galacticraft.galacticraft.common.core.util.RecipeUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -76,7 +75,7 @@ public class ShapelessOreRecipeGC implements IRecipeUpdatable, Recipe<CraftingCo
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingContainer var1)
+    public ItemStack assemble(CraftingContainer var1)
     {
         return output.copy();
     }
@@ -229,7 +228,7 @@ public class ShapelessOreRecipeGC implements IRecipeUpdatable, Recipe<CraftingCo
         for (int i = 0; i < this.input.size(); i++)
         {
             Object test = this.input.get(i);
-            if (test instanceof ItemStack && ItemStack.isSame(inputA, (ItemStack) test) && RecipeUtil.areItemStackTagsEqual(inputA, (ItemStack) test))
+            if (test instanceof ItemStack && ItemStack.isSame(inputA, (ItemStack) test) && ItemStack.tagMatches(inputA, (ItemStack) test))
             {
                 this.input.set(i, inputB);
             }
@@ -257,7 +256,7 @@ public class ShapelessOreRecipeGC implements IRecipeUpdatable, Recipe<CraftingCo
     {
         for (Object b : test)
         {
-            if (b instanceof ItemStack && ItemStack.isSame(stack, (ItemStack) b) && RecipeUtil.areItemStackTagsEqual(stack, (ItemStack) b))
+            if (b instanceof ItemStack && ItemStack.isSame(stack, (ItemStack) b) && ItemStack.tagMatches(stack, (ItemStack) b))
             {
                 return true;
             }

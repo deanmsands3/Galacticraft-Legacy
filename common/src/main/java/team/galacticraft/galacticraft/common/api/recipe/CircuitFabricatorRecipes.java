@@ -1,6 +1,5 @@
 package team.galacticraft.galacticraft.common.api.recipe;
 
-import team.galacticraft.galacticraft.common.core.util.RecipeUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
@@ -140,7 +139,7 @@ public class CircuitFabricatorRecipes
                 else if (recipeStack instanceof ItemStack)
                 {
                     ItemStack stack = ((ItemStack) recipeStack);
-                    if (stack.getItem() != inputStack.getItem() || stack.getDamageValue() != inputStack.getDamageValue() || !RecipeUtil.areItemStackTagsEqual(stack, inputStack))
+                    if (stack.getItem() != inputStack.getItem() || stack.getDamageValue() != inputStack.getDamageValue() || !ItemStack.tagMatches(stack, inputStack))
                     {
                         found = false;
                         break;
@@ -151,7 +150,7 @@ public class CircuitFabricatorRecipes
                     boolean listMatchOne = false;
                     for (ItemStack stack : (List<ItemStack>) recipeStack)
                     {
-                        if (stack.getItem() == inputStack.getItem() && stack.getDamageValue() == inputStack.getDamageValue() && RecipeUtil.areItemStackTagsEqual(stack, inputStack))
+                        if (stack.getItem() == inputStack.getItem() && stack.getDamageValue() == inputStack.getDamageValue() && ItemStack.tagMatches(stack, inputStack))
                         {
                             listMatchOne = true;
                             break;

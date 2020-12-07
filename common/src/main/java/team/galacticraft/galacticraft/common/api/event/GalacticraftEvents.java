@@ -4,13 +4,16 @@ import me.shedaniel.architectury.event.Event;
 import me.shedaniel.architectury.event.EventFactory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import team.galacticraft.galacticraft.common.api.galaxies.CelestialBody;
 import team.galacticraft.galacticraft.common.api.prefab.entity.EntitySpaceshipBase;
+import team.galacticraft.galacticraft.common.api.recipe.ISchematicPage;
 
 import java.util.Random;
 
@@ -30,6 +33,8 @@ public class GalacticraftEvents
 
     public static final Event<RocketEvent> ROCKET_LAUNCH_EVENT = EventFactory.createLoop(RocketEvent.class);
 
+    public static final Event<SchematicUnlockEvent> SCHEMATIC_UNLOCK_EVENT = EventFactory.createLoop(SchematicUnlockEvent.class);
+
     @FunctionalInterface
     public interface LivingEntityEvent
     {
@@ -48,6 +53,12 @@ public class GalacticraftEvents
         void invoke(EntitySpaceshipBase spaceshipBase);
     }
 
+    @FunctionalInterface
+    public interface SchematicUnlockEvent
+    {
+        void invoke(ServerPlayer player, ISchematicPage page);
+    }
+
     @Environment(EnvType.CLIENT)
     public static class Client
     {
@@ -59,6 +70,13 @@ public class GalacticraftEvents
         public static final Event<CelestialBodyEvent> CELESTIAL_RING_RENDER_EVENT = EventFactory.createLoop(CelestialBodyEvent.class);
         public static final Event<CelestialBodyEvent> POST_CELESTIAL_RING_RENDER_EVENT = EventFactory.createLoop(CelestialBodyEvent.class);
 
+        public static final Event<SchematicPageTurnEvent> SCHEMATIC_PAGE_TURN_EVENT = EventFactory.createLoop(SchematicPageTurnEvent.class);
+
+        @FunctionalInterface
+        public interface SchematicPageTurnEvent
+        {
+            void invoke(Screen cs, ISchematicPage page, int index, int direction);
+        }
 
         @FunctionalInterface
         public interface CelestialBodyEvent

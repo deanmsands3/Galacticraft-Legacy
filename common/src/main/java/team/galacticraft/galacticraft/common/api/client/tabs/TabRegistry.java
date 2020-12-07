@@ -135,14 +135,7 @@ public class TabRegistry
 
 	public static boolean doPotionOffsetVanilla()
 	{
-	    for (MobEffectInstance potioneffect : mc.player.getActiveEffects())
-	    {
-	        if (potioneffect.getEffect().shouldRender(potioneffect))
-	        {
-	            return true;
-	        }
-	    }
-	    return false;
+	    return !mc.player.getActiveEffects().isEmpty();
 	}
 
     public static int getPotionOffsetJEI()
@@ -204,6 +197,6 @@ public class TabRegistry
     {
         boolean widthTooNarrow = gui.width < 379;
         gui.getRecipeBookComponent().init(gui.width, gui.height, mc, widthTooNarrow, Minecraft.getInstance().player.inventoryMenu);
-        return gui.getRecipeBookComponent().updateScreenPosition(widthTooNarrow, gui.width, gui.getXSize()) - (gui.width - 176) / 2;
+        return gui.getRecipeBookComponent().updateScreenPosition(widthTooNarrow, gui.width, gui.imageWidth) - (gui.width - 176) / 2;
     }
 }

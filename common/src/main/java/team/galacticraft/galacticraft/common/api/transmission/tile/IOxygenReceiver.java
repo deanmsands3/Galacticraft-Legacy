@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.api.transmission.tile;
 
 import net.minecraft.core.Direction;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
 /**
  * Applied to all TileEntities that can interact with oxygen.
@@ -20,7 +20,7 @@ public interface IOxygenReceiver extends IConnector
      * @param action  Whether the transfer will be executed.
      * @return Amount of oxygen that was accepted by the block.
      */
-    int receiveOxygen(Direction from, int receive, IFluidHandler.FluidAction action);
+    int receiveOxygen(Direction from, int receive, ActionType action);
 
     /**
      * Adds oxygen provision to a block. Returns the quantity of oxygen
@@ -32,7 +32,7 @@ public interface IOxygenReceiver extends IConnector
      * @param action  Whether the transfer will be executed.
      * @return Amount of oxygen that was given out by the block.
      */
-    int provideOxygen(Direction from, int request, IFluidHandler.FluidAction action);
+    int provideOxygen(Direction from, int request, ActionType action);
 
     /**
      * @return How much oxygen does this TileEntity want?
