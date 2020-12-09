@@ -1,6 +1,7 @@
 package team.galacticraft.galacticraft.common.api.prefab.entity;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.resources.language.I18n;
 import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 import team.galacticraft.galacticraft.common.api.entity.IEntityNoisy;
 import team.galacticraft.galacticraft.common.api.entity.ILandable;

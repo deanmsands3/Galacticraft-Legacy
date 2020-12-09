@@ -1,0 +1,83 @@
+package team.galacticraft.galacticraft.common.core.recipe;
+
+import com.google.gson.JsonObject;
+import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.core.util.CompatibilityManager;
+import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.core.util.GCLog;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+
+public class ConditionEnabled implements ICondition
+{
+    private static final ResourceLocation NAME = new ResourceLocation(Constants.MOD_ID_CORE, "condition");
+    private final String subCondition;
+
+    public ConditionEnabled(String subCondition)
+    {
+        this.subCondition = subCondition;
+    }
+
+    @Override
+    public ResourceLocation getID()
+    {
+        return NAME;
+    }
+
+    @Override
+    public boolean test()
+    {
+        if (subCondition.equals("can_default"))
+        {
+            return !ConfigManagerCore.alternateCanisterRecipe.get();
+        }
+        if (subCondition.equals("can_alt"))
+        {
+            return ConfigManagerCore.alternateCanisterRecipe.get();
+        }
+        if (subCondition.equals("aa_loaded"))
+        {
+            return !CompatibilityManager.modAALoaded;
+        }
+        GCLog.severe("Unrecognised condition data: " + subCondition);
+        return false;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ConditionEnabled(\"" + subCondition + "\")";
+    }
+
+    public static class Serializer implements IConditionSerializer<ConditionEnabled>
+    {
+        public static final Serializer INSTANCE = new Serializer();
+
+        @Override
+        public void write(JsonObject json, ConditionEnabled value)
+        {
+            json.addProperty("data", value.subCondition);
+        }
+
+        @Override
+        public ConditionEnabled read(JsonObject json)
+        {
+            if(GsonHelper.isValidNode(json, "sub_cond"))
+            {
+                String data = GsonHelper.getAsString(json, "sub_cond");
+                return new ConditionEnabled(data);
+            }
+
+            throw new IllegalStateException("Galacticraft recipe JSON condition error in recipe for " + CraftingHelper.getItemStack(json, false));
+        }
+
+        @Override
+        public ResourceLocation getID()
+        {
+            return ConditionEnabled.NAME;
+        }
+    }
+}

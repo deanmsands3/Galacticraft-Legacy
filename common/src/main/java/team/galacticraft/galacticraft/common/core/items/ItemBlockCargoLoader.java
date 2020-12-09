@@ -1,0 +1,37 @@
+package team.galacticraft.galacticraft.common.core.items;
+//
+//import net.minecraft.block.Block;
+//import net.minecraft.item.ItemStack;
+//
+//public class ItemBlockCargoLoader extends ItemBlockDesc
+//{
+//    public ItemBlockCargoLoader(Block block)
+//    {
+//        super(block);
+//        this.setMaxDamage(0);
+//        this.setHasSubtypes(true);
+//    }
+//
+//    @Override
+//    public String getUnlocalizedName(ItemStack par1ItemStack)
+//    {
+//        String name = "";
+//
+//        if (par1ItemStack.getDamage() < 4)
+//        {
+//            name = "loader";
+//        }
+//        else
+//        {
+//            name = "unloader";
+//        }
+//
+//        return this.getBlock().getUnlocalizedName() + "." + name;
+//    }
+//
+//    @Override
+//    public int getMetadata(int damage)
+//    {
+//        return damage;
+//    }
+//}
