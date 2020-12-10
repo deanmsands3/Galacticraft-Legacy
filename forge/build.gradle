@@ -1,44 +1,86 @@
-plugins {
-    id 'forgified-fabric-loom'
+buildscript {
+    repositories {
+        maven { url "https://files.minecraftforge.net/maven" }
+        maven { url "https://dist.creeper.host/Sponge/maven" }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath(group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true)
+        classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
+    }
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+plugins {
+    id "com.github.johnrengelman.shadow" version "5.0.0"
+    id "eclipse"
+}
+
+apply plugin: "net.minecraftforge.gradle"
+apply plugin: 'org.spongepowered.mixin'
+
+minecraft {
+    mappings(channel: "official", version: rootProject.architect.minecraft)
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    runs {
+        client {
+            workingDirectory project.file("run")
+            mods {
+                galacticraftforge {
+                    source sourceSets.main
+                }
+            }
+        }
+        server {
+            workingDirectory project.file("run")
+            mods {
+                galacticraftforge {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    jcenter()
+    maven {
+        name = "MinecraftForge"
+        url = "https://files.minecraftforge.net/maven"
+    }
+    maven {
+        name = "Shedaniel"
+        url = "https://dl.bintray.com/shedaniel/cloth/"
+    }
+}
+
+configurations {
+    shadow
+}
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    minecraft("net.minecraftforge:forge:${rootProject.architect.minecraft}-${rootProject.forge_version}")
+    compile "me.shedaniel:architectury:${rootProject.architectury_version}:forge"
 
-    mappings(minecraft.officialMojangMappings())
-}
-
-loom {
-    mixinConfig = "galacticraft-forge.mixins.json"
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("mods.toml") {
-        expand "version": project.version
+    compile(project(path: ":common", configuration: "mcpGenerateMod")) {
+        transitive = false
+    }
+    shadow(project(path: ":common", configuration: "mcp")) {
+        transitive = false
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
+shadowJar {
+    exclude "fabric.mod.json"
 
-    def targetVersion = 8
-    if (JavaVersion.current().isJava9Compatible()) {
-        it.options.release = targetVersion
-    }
+    configurations = [project.configurations.shadow]
+    classifier null
 }
 
-//java {
-//    withSourcesJar()
-//}
+reobf {
+    shadowJar {}
+}
 
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
-    }
+mixin {
+    add sourceSets.main, "galacticraft-forge.refmap.json"
 }
