@@ -6,15 +6,15 @@ import team.galacticraft.galacticraft.common.api.item.IItemOxygenSupply;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3Dim;
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockOxygenDistributor;
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.entities.IBubbleProviderColored;
-import team.galacticraft.galacticraft.core.inventory.ContainerOxygenDistributor;
-import team.galacticraft.galacticraft.core.network.NetworkUtil;
-import team.galacticraft.galacticraft.core.util.FluidUtil;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockOxygenDistributor;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.entities.IBubbleProviderColored;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerOxygenDistributor;
+import team.galacticraft.galacticraft.common.core.network.NetworkUtil;
+import team.galacticraft.galacticraft.common.core.util.FluidUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -35,9 +35,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
@@ -54,7 +51,7 @@ public class TileEntityOxygenDistributor extends TileEntityOxygen implements IBu
 
     public static HashSet<BlockVec3Dim> loadedTiles = new HashSet<>();
     public float bubbleSize;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean shouldRenderBubble = true;
 
     public TileEntityOxygenDistributor()

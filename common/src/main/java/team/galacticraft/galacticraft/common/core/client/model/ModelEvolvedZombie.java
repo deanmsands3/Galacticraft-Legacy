@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.client.model;
 
 import com.google.common.collect.ImmutableList;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedZombie;
-import team.galacticraft.galacticraft.core.util.ClientUtil;
-import team.galacticraft.galacticraft.core.util.WorldUtil;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedZombie;
+import team.galacticraft.galacticraft.common.core.util.ClientUtil;
+import team.galacticraft.galacticraft.common.core.util.WorldUtil;
 import net.minecraft.client.model.ZombieModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;

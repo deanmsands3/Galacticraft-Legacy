@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.client.render.tile;
 //
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.tile.TileEntityDish;
-//import team.galacticraft.galacticraft.core.util.ClientUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityDish;
+//import team.galacticraft.galacticraft.common.core.util.ClientUtil;
 //import net.minecraft.client.renderer.model.IBakedModel;
 //import net.minecraft.client.renderer.texture.TextureManager;
 //import net.minecraft.client.renderer.tileentity.TileEntityRenderer;

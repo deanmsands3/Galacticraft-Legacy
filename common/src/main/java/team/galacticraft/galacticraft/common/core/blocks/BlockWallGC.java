@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategory;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.FenceGateBlock;
@@ -20,7 +20,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import net.minecraft.util.math.AxisAlignedBB;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.world.IBlockReader;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //public class BlockWallGC extends Block /* Do not extend BlockWall */ implements ISortable
@@ -234,7 +234,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    @Override
 //    public boolean shouldSideBeRendered(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side)
 //    {
-//        return LogicalSide == Direction.DOWN ? super.shouldSideBeRendered(blockState, blockAccess, pos, LogicalSide) : true;
+//        return EnvType == Direction.DOWN ? super.shouldSideBeRendered(blockState, blockAccess, pos, EnvType) : true;
 //    }
 //
 //    @Override

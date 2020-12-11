@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.IPacketReceiver;
-import team.galacticraft.galacticraft.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.IPacketReceiver;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;

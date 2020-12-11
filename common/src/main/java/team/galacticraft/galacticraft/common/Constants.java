@@ -2,7 +2,8 @@ package team.galacticraft.galacticraft.common;
 
 public class Constants
 {
-    public static final String MOD_ID = "galacticraft";
+    public static final String MOD_ID_CORE = "galacticraft";
+
     public static final String MOD_NAME_SIMPLE = "Galacticraft";
 
     public static final int MAJOR_VERSION = 5;
@@ -33,10 +34,10 @@ public class Constants
     public static final String POWER_CONFIG_FILE = "Galacticraft/power-GC3.conf";
     public static final String CHUNKLOADER_CONFIG_FILE = "Galacticraft/chunkloading.conf";
 
-    public static final String TEXTURE_PREFIX = MOD_ID + ":";
+    public static final String TEXTURE_PREFIX = MOD_ID_CORE + ":";
     public static final String PREFIX = "micdoodle8.";
     public static final String GCDATAFOLDER = "../galacticraft/";
-    public static final String SS_PREFiX = MOD_ID + ":spacestation_";
+    public static final String SS_PREFiX = MOD_ID_CORE + ":spacestation_";
 
     public static final int GEAR_ID_OXYGEN_MASK = 0;
     public static final int GEAR_ID_OXYGEN_GEAR = 1;

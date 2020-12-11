@@ -1,11 +1,12 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
+import net.minecraft.client.resources.language.I18n;
 import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
-import team.galacticraft.galacticraft.core.items.IShiftDescription;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.tile.TileEntityEmergencyBox;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityEmergencyBox;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -47,7 +48,7 @@ public class BlockEmergencyBox extends BlockAdvancedTile implements IShiftDescri
 //    }
 
 //    @Override
-//    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+//    public ItemStack getCloneItemStack(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
 //    {
 //        return new ItemStack(this, 1, this.getMetaFromState(state));
 //    }
@@ -85,13 +86,13 @@ public class BlockEmergencyBox extends BlockAdvancedTile implements IShiftDescri
 //    } TODO
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityEmergencyBox();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

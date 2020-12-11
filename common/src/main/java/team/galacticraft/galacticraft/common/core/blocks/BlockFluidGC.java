@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
 //import team.galacticraft.galacticraft.common.api.vector.Vector3;
-//import team.galacticraft.galacticraft.core.fluid.GCFluids;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
 //import net.minecraft.block.BlockLiquid;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.material.Material;
@@ -26,7 +26,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //
 //import java.util.Random;
 //
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
 //public class BlockFluidGC extends BlockFluidClassic
 //{
@@ -62,7 +62,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //            ClientProxyCore.playerClientHandler.onBuild(7, (ClientPlayerEntity) playerIn);
 //        }
 //
-//        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, LogicalSide, hitX, hitY, hitZ);
+//        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, EnvType, hitX, hitY, hitZ);
 //    }
 //
 //    @Override

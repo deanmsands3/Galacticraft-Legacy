@@ -6,7 +6,7 @@ package team.galacticraft.galacticraft.common.core.client.jei;
 //import net.minecraft.inventory.container.Slot;
 //import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 //import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
-//import team.galacticraft.galacticraft.core.inventory.ContainerCrafting;
+//import team.galacticraft.galacticraft.common.core.inventory.ContainerCrafting;
 //
 //public class MagneticCraftingTransferInfo implements IRecipeTransferInfo<ContainerCrafting>
 //{

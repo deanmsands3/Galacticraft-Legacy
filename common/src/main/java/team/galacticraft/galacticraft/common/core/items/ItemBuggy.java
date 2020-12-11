@@ -1,13 +1,13 @@
 package team.galacticraft.galacticraft.common.core.items;
 
 import team.galacticraft.galacticraft.common.api.item.IHoldableItem;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.entities.EntityBuggy;
-import team.galacticraft.galacticraft.core.entities.GCEntities;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.entities.EntityBuggy;
+import team.galacticraft.galacticraft.common.core.entities.GCEntities;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -31,7 +31,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import me.shedaniel.architectury.fluid.FluidStack;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ItemBuggy extends Item implements IHoldableItem, ISortable
@@ -170,12 +170,12 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortable
         EntityBuggy.BuggyType type = EntityBuggy.getTypeFromItem(item.getItem());
         if (type.getInvSize() != 0)
         {
-            tooltip.add(new TextComponent(I18n.get("gui.buggy.storage_space") + ": " + type.getInvSize()));
+            tooltip.add(new TranslatableComponent(("gui.buggy.storage_space") + ": " + type.getInvSize()));
         }
 
         if (item.hasTag() && item.getTag().contains("BuggyFuel"))
         {
-            tooltip.add(new TextComponent(I18n.get("gui.message.fuel") + ": " + item.getTag().getInt("BuggyFuel") + " / " + EntityBuggy.tankCapacity));
+            tooltip.add(new TranslatableComponent(("gui.message.fuel") + ": " + item.getTag().getInt("BuggyFuel") + " / " + EntityBuggy.tankCapacity));
         }
     }
 

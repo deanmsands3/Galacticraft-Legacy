@@ -4,12 +4,12 @@ import team.galacticraft.galacticraft.common.api.galaxies.CelestialBody;
 import team.galacticraft.galacticraft.common.api.prefab.world.gen.DimensionSpace;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
 import team.galacticraft.galacticraft.common.api.world.ISolarLevel;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.dimension.chunk.MoonChunkGenerator;
-import team.galacticraft.galacticraft.core.dimension.chunk.MoonGenSettings;
-import team.galacticraft.galacticraft.core.event.EventHandlerGC;
-import team.galacticraft.galacticraft.core.world.gen.BiomeMoonHills;
-import team.galacticraft.galacticraft.core.world.gen.dungeon.RoomTreasure;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.dimension.chunk.MoonChunkGenerator;
+import team.galacticraft.galacticraft.common.core.dimension.chunk.MoonGenSettings;
+import team.galacticraft.galacticraft.common.core.event.EventHandlerGC;
+import team.galacticraft.galacticraft.common.core.world.gen.BiomeMoonHills;
+import team.galacticraft.galacticraft.common.core.world.gen.dungeon.RoomTreasure;
 import team.galacticraft.galacticraft.planets.venus.dimension.VenusBiomeProvider;
 import team.galacticraft.galacticraft.planets.venus.dimension.VenusBiomeProviderSettings;
 import team.galacticraft.galacticraft.planets.venus.dimension.VenusBiomeProviderTypes;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class DimensionMoon extends DimensionSpace implements IGalacticraftDimension, ISolarLevel
 {

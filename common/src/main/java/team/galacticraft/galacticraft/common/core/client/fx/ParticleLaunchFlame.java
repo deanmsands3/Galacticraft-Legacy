@@ -1,11 +1,11 @@
 package team.galacticraft.galacticraft.common.core.client.fx;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.client.GCParticles;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.client.GCParticles;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
@@ -13,11 +13,9 @@ import net.minecraft.client.particle.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.List;
 import java.util.UUID;
@@ -158,7 +156,7 @@ public class ParticleLaunchFlame extends TextureSheetParticle
 
         @Nullable
         @Override
-        public Particle makeParticle(EntityParticleData typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(EntityParticleData typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
         {
             return new ParticleLaunchFlame(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, true, typeIn, this.spriteSet);
         }

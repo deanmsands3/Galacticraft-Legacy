@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.entities.*;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.entities.*;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -194,7 +194,7 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
         catch (Exception e)
         {
             // This exception will be thrown when read is called from TileEntity.handleUpdateTag
-            // but we only care if an exception is thrown on server LogicalSide read
+            // but we only care if an exception is thrown on server EnvType read
             if (!this.level.isClientSide)
             {
                 e.printStackTrace();

@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.recipe;
 
 import com.google.gson.JsonObject;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.planets.asteroids.items.AsteroidsItems;
 import team.galacticraft.galacticraft.planets.mars.items.MarsItems;
 import team.galacticraft.galacticraft.planets.venus.items.VenusItems;

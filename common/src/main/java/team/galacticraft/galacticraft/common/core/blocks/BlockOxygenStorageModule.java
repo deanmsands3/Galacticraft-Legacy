@@ -1,20 +1,20 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.tile.IMachineSidesProperties;
-import team.galacticraft.galacticraft.core.tile.TileEntityOxygenStorageModule;
+import team.galacticraft.galacticraft.common.core.tile.IMachineSidesProperties;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityOxygenStorageModule;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockOxygenStorageModule extends BlockMachineBase
 {
     //    public static final EnumProperty<EnumMachineExtendedType> TYPE = EnumProperty.create("type", EnumMachineExtendedType.class);
     public static IMachineSidesProperties MACHINESIDES_RENDERTYPE = IMachineSidesProperties.TWOFACES_HORIZ;
-    public static final EnumProperty SIDES = MACHINESIDES_RENDERTYPE.asProperty;
+    public static final EnumProperty<IMachineSidesProperties.MachineSidesModel> SIDES = MACHINESIDES_RENDERTYPE.asProperty;
 
     public BlockOxygenStorageModule(Properties builder)
     {
@@ -23,13 +23,13 @@ public class BlockOxygenStorageModule extends BlockMachineBase
 
     @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityOxygenStorageModule();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

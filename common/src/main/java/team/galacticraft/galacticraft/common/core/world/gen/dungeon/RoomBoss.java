@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.world.gen.dungeon;
 
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.tile.TileEntityDungeonSpawner;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityDungeonSpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
-import static team.galacticraft.galacticraft.core.world.gen.GCFeatures.CMOON_DUNGEON_BOSS;
+import static team.galacticraft.galacticraft.common.core.world.gen.GCFeatures.CMOON_DUNGEON_BOSS;
 
 public class RoomBoss extends SizedPiece
 {

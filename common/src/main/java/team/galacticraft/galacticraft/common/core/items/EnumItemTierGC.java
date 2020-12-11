@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.items;
 
-import team.galacticraft.galacticraft.core.GCItems;
+import team.galacticraft.galacticraft.common.core.GCItems;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;

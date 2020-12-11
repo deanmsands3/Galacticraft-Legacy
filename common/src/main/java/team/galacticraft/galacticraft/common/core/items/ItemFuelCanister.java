@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.items;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -12,12 +12,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemFuelCanister extends ItemCanisterGeneric implements ISortable
 {
@@ -82,7 +80,7 @@ public class ItemFuelCanister extends ItemCanisterGeneric implements ISortable
     {
         if (stack.getMaxDamage() - stack.getDamageValue() > 0)
         {
-            tooltip.add(new TextComponent(I18n.get("gui.message.fuel") + ": " + (stack.getMaxDamage() - stack.getDamageValue())));
+            tooltip.add(new TranslatableComponent(("gui.message.fuel") + ": " + (stack.getMaxDamage() - stack.getDamageValue())));
         }
     }
 

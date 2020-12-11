@@ -1,15 +1,15 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import io.netty.buffer.ByteBuf;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.entities.IScaleableFuelLevel;
-import team.galacticraft.galacticraft.core.inventory.ContainerParaChest;
-import team.galacticraft.galacticraft.core.inventory.IInventorySettable;
-import team.galacticraft.galacticraft.core.network.PacketDynamicInventory;
-import team.galacticraft.galacticraft.core.util.FluidUtil;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.entities.IScaleableFuelLevel;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerParaChest;
+import team.galacticraft.galacticraft.common.core.inventory.IInventorySettable;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamicInventory;
+import team.galacticraft.galacticraft.common.core.util.FluidUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -22,8 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
 import me.shedaniel.architectury.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.fml.LogicalSide;
+import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.Iterator;
@@ -35,14 +34,14 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     public static BlockEntityType<TileEntityParaChest> TYPE;
 
     private final int tankCapacity = 5000;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public FluidTank fuelTank = new FluidTank(this.tankCapacity);
 
     public boolean adjacentChestChecked = false;
     public float lidAngle;
     public float prevLidAngle;
     public int numUsingPlayers;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public DyeColor color = DyeColor.RED;
 
     public TileEntityParaChest()

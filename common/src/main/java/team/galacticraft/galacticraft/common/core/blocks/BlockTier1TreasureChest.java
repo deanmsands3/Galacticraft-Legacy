@@ -1,10 +1,12 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.items.IShiftDescription;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.tile.TileEntityTreasureChest;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.level.block.EntityBlock;
+import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityTreasureChest;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,12 +34,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fml.network.NetworkHooks;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
-public class BlockTier1TreasureChest extends Block implements IShiftDescription, ISortable
+public class BlockTier1TreasureChest extends Block implements IShiftDescription, ISortable, EntityBlock
 {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     protected static final VoxelShape AABB = Shapes.box(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
@@ -244,7 +246,7 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
         if (!worldIn.isClientSide)
         {
 //            TileEntity tile = worldIn.getTileEntity(pos);
-            NetworkHooks.openGui((ServerPlayer) playerIn, getMenuProvider(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
+            PlatformSpecific.openContainer((ServerPlayer) playerIn, getMenuProvider(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
 //            playerIn.displayGUIChest((IInventory) tile);
             return InteractionResult.SUCCESS;
         }
@@ -252,13 +254,13 @@ public class BlockTier1TreasureChest extends Block implements IShiftDescription,
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityTreasureChest();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

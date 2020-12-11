@@ -1,17 +1,15 @@
 package team.galacticraft.galacticraft.common.core.dimension;
 
 import team.galacticraft.galacticraft.common.api.prefab.world.gen.DimensionSpace;
-import team.galacticraft.galacticraft.core.dimension.chunk.OrbitGenSettings;
-import team.galacticraft.galacticraft.core.world.gen.BiomeOrbit;
-import team.galacticraft.galacticraft.core.world.gen.ChunkGeneratorOrbit;
+import team.galacticraft.galacticraft.common.core.dimension.chunk.OrbitGenSettings;
+import team.galacticraft.galacticraft.common.core.world.gen.BiomeOrbit;
+import team.galacticraft.galacticraft.common.core.world.gen.ChunkGeneratorOrbit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeSourceType;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 /***
  * Properties of a WorldProviderSpaceStation

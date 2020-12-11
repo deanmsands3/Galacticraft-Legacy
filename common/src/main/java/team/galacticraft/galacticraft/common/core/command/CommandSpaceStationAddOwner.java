@@ -3,9 +3,9 @@ package team.galacticraft.galacticraft.common.core.command;
 //import com.mojang.brigadier.CommandDispatcher;
 //import com.mojang.brigadier.context.CommandContext;
 //import com.mojang.brigadier.exceptions.CommandSyntaxException;
-//import team.galacticraft.galacticraft.core.dimension.SpaceStationWorldData;
+//import team.galacticraft.galacticraft.common.core.dimension.SpaceStationWorldData;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.command.CommandSource;
 //import net.minecraft.command.Commands;
 //import net.minecraft.command.arguments.EntityArgument;
@@ -37,7 +37,7 @@ package team.galacticraft.galacticraft.common.core.command;
 //
 //        if (stats.getSpaceStationDimensionData().isEmpty())
 //        {
-//            source.sendErrorMessage(new StringTextComponent(I18n.get("commands.ssinvite.not_found")));
+//            source.sendErrorMessage(new StringTranslatableComponent(("commands.ssinvite.not_found")));
 //        }
 //        else
 //        {

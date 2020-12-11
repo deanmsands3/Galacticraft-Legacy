@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.tile.TileEntityParaChest;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityParaChest;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

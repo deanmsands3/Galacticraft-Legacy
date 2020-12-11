@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 //
-//import team.galacticraft.galacticraft.core.items.ItemFuelCanister;
+//import team.galacticraft.galacticraft.common.core.items.ItemFuelCanister;
 //import net.minecraft.inventory.IInventory;
 //import net.minecraft.inventory.container.Slot;
 //import net.minecraft.item.ItemStack;

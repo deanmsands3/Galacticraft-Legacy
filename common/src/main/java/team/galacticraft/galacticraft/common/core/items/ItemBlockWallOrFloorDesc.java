@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.items;
 
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -13,7 +13,7 @@ import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import com.mojang.blaze3d.platform.InputConstants;
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class ItemBlockWallOrFloorDesc extends StandingAndWallBlockItem
             {
                 /*if (this.getBlock() instanceof BlockTileGC)
                 {
-                    TileEntity te = ((BlockTileGC) this.getBlock()).createTileEntity(null, getBlock().getStateFromMeta(stack.getDamage() & 12));
+                    TileEntity te = ((BlockTileGC) this.getBlock()).newBlockEntity(null, getBlock().getStateFromMeta(stack.getDamage() & 12));
                     if (te instanceof TileBaseElectricBlock)
                     {
                         float powerDrawn = ((TileBaseElectricBlock) te).storage.getMaxExtract();
@@ -75,7 +75,7 @@ public class ItemBlockWallOrFloorDesc extends StandingAndWallBlockItem
                 }
                 else if (this.getBlock() instanceof BlockAdvancedTile)
                 {
-                    TileEntity te = ((BlockAdvancedTile) this.getBlock()).createTileEntity(worldIn, getBlock().getStateFromMeta(stack.getDamage() & 12));
+                    TileEntity te = ((BlockAdvancedTile) this.getBlock()).newBlockEntity(worldIn, getBlock().getStateFromMeta(stack.getDamage() & 12));
                     if (te instanceof TileBaseElectricBlock)
                     {
                         float powerDrawn = ((TileBaseElectricBlock) te).storage.getMaxExtract();
@@ -85,7 +85,7 @@ public class ItemBlockWallOrFloorDesc extends StandingAndWallBlockItem
                         }
                     }
                 }*/
-                tooltip.add(new TextComponent(I18n.getWithFormat("item_desc.shift", Minecraft.getInstance().options.keyShift.getTranslatedKeyMessage())));
+                tooltip.add(new TranslatableComponent(WithFormat("item_desc.shift", Minecraft.getInstance().options.keyShift.getTranslatedKeyMessage())));
             }
         }
     }

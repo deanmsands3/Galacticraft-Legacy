@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.network;
 
 import io.netty.buffer.ByteBuf;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.inventory.IInventorySettable;
-import team.galacticraft.galacticraft.core.tile.TileEntityCrafting;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.inventory.IInventorySettable;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityCrafting;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,7 +13,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.io.IOException;
@@ -84,7 +83,7 @@ public class PacketDynamicInventory extends PacketBase
     {
         ctx.get().enqueueWork(() ->
         {
-            if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+            if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
             {
                 message.handleClientSide(MinecraftClient.getInstance().player);
             }

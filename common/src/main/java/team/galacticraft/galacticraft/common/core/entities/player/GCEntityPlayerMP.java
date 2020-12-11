@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.entities.player;
 
 import com.mojang.authlib.GameProfile;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

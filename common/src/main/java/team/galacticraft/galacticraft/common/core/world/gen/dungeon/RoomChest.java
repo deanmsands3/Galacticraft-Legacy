@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.world.gen.dungeon;
 
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
-import team.galacticraft.galacticraft.core.blocks.BlockTier1TreasureChest;
+import team.galacticraft.galacticraft.common.core.blocks.BlockTier1TreasureChest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
-import static team.galacticraft.galacticraft.core.world.gen.GCFeatures.CMOON_DUNGEON_CHEST;
+import static team.galacticraft.galacticraft.common.core.world.gen.GCFeatures.CMOON_DUNGEON_CHEST;
 
 public class RoomChest extends RoomEmpty
 {

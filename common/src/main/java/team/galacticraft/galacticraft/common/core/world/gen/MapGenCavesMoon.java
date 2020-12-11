@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 //
 //import team.galacticraft.galacticraft.common.api.prefab.world.gen.MapGenBaseMeta;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.Blocks;

@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
-import team.galacticraft.galacticraft.core.items.ItemOxygenTank;
+import team.galacticraft.galacticraft.common.core.items.ItemOxygenTank;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;

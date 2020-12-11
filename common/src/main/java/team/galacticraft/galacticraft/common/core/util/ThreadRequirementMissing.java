@@ -1,26 +1,23 @@
 package team.galacticraft.galacticraft.common.core.util;
 
-import team.galacticraft.galacticraft.core.client.gui.screen.GuiMissingCore;
+import team.galacticraft.galacticraft.common.core.client.gui.screen.GuiMissingCore;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.LogicalSide;
 
 public class ThreadRequirementMissing extends Thread
 {
-    private static LogicalSide threadSide;
+    private static EnvType threadSide;
     public static ThreadRequirementMissing INSTANCE;
 
-    public ThreadRequirementMissing(LogicalSide threadSide)
+    public ThreadRequirementMissing(EnvType threadSide)
     {
         super("Galacticraft Requirement Check Thread");
         this.setDaemon(true);
         ThreadRequirementMissing.threadSide = threadSide;
     }
 
-    public static void beginCheck(LogicalSide threadSide)
+    public static void beginCheck(EnvType threadSide)
     {
         INSTANCE = new ThreadRequirementMissing(threadSide);
         INSTANCE.start();

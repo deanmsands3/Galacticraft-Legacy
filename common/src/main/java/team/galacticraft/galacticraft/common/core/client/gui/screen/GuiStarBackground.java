@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.client.gui.screen;
 //
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.util.ClientUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.util.ClientUtil;
 //import net.minecraft.client.gui.screen.Screen;
 //import net.minecraft.client.gui.ScaledResolution;
 //import net.minecraft.client.renderer.Tessellator;

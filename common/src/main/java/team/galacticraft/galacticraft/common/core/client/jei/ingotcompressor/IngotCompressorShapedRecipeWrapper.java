@@ -3,14 +3,14 @@ package team.galacticraft.galacticraft.common.core.client.jei.ingotcompressor;
 //import mezz.jei.api.ingredients.IIngredients;
 //import mezz.jei.api.recipe.IRecipeWrapper;
 //import team.galacticraft.galacticraft.common.api.recipe.ShapedRecipesGC;
-//import team.galacticraft.galacticraft.core.client.jei.GalacticraftJEI;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.client.jei.GalacticraftJEI;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.FontRenderer;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.item.crafting.FurnaceRecipes;
 //
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //import java.util.Arrays;
 //import java.awt.Color;

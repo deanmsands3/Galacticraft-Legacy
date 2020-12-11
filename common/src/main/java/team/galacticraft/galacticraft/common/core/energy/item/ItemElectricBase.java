@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.energy.item;
 
 import team.galacticraft.galacticraft.common.api.item.IItemElectricBase;
-import team.galacticraft.galacticraft.core.energy.EnergyConfigHandler;
-import team.galacticraft.galacticraft.core.energy.EnergyDisplayHelper;
+import team.galacticraft.galacticraft.common.core.energy.EnergyConfigHandler;
+import team.galacticraft.galacticraft.common.core.energy.EnergyDisplayHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.FloatTag;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class ItemElectricBase extends Item implements IItemElectricBase

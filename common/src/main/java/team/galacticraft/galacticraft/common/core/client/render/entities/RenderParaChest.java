@@ -2,9 +2,9 @@ package team.galacticraft.galacticraft.common.core.client.render.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.client.model.ModelParaChest;
-import team.galacticraft.galacticraft.core.entities.EntityParachest;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.client.model.ModelParaChest;
+import team.galacticraft.galacticraft.common.core.entities.EntityParachest;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,8 +12,6 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class RenderParaChest extends EntityRenderer<EntityParachest>

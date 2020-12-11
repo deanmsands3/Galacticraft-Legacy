@@ -2,9 +2,9 @@ package team.galacticraft.galacticraft.common.core.recipe;
 //
 //import java.util.ArrayList;
 //
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.GCItems;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.GCItems;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 //import team.galacticraft.galacticraft.planets.mars.blocks.MarsBlocks;
 //import team.galacticraft.galacticraft.planets.mars.items.MarsItems;
 //import net.minecraft.item.ItemStack;

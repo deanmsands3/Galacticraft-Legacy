@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
 import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;

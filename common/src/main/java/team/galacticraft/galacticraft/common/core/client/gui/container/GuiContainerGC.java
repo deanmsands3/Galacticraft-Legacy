@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.client.gui.container;
 
-import team.galacticraft.galacticraft.core.client.gui.element.GuiElementInfoRegion;
-import team.galacticraft.galacticraft.core.util.CompatibilityManager;
+import team.galacticraft.galacticraft.common.core.client.gui.element.GuiElementInfoRegion;
+import team.galacticraft.galacticraft.common.core.util.CompatibilityManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;

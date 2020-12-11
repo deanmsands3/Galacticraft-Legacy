@@ -5,7 +5,7 @@ package team.galacticraft.galacticraft.common.core.client.fx;
 //import net.minecraft.client.particle.Particle;
 //import net.minecraft.entity.LivingEntity;
 //import net.minecraftforge.fml.client.FMLClientHandler;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //@OnlyIn(Dist.CLIENT)

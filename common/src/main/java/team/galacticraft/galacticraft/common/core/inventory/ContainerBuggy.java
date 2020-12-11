@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.entities.EntityBuggy;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.entities.EntityBuggy;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;

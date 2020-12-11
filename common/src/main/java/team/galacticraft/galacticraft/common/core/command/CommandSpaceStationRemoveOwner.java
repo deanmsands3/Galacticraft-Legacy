@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.command;
 //
 //import com.google.common.collect.Sets;
-//import team.galacticraft.galacticraft.core.dimension.SpaceStationWorldData;
+//import team.galacticraft.galacticraft.common.core.dimension.SpaceStationWorldData;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-//import team.galacticraft.galacticraft.core.util.PlayerUtil;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
 //import net.minecraft.command.CommandBase;
 //import net.minecraft.command.CommandException;
 //import net.minecraft.command.ICommandSender;
@@ -106,7 +106,7 @@ package team.galacticraft.galacticraft.common.core.command;
 //
 //        if (playerBase != null)
 //        {
-//            playerBase.sendMessage(new StringTextComponent(I18n.getWithFormat("gui.spacestation.removesuccess", var3)));
+//            playerBase.sendMessage(new StringTranslatableComponent(WithFormat("gui.spacestation.removesuccess", var3)));
 //        }
 //    }
 //

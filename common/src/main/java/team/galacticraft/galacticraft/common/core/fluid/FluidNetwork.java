@@ -14,23 +14,22 @@ import team.galacticraft.galacticraft.common.api.transmission.tile.INetworkConne
 import team.galacticraft.galacticraft.common.api.transmission.tile.INetworkProvider;
 import team.galacticraft.galacticraft.common.api.transmission.tile.ITransmitter;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.IPacket;
-import team.galacticraft.galacticraft.core.network.PacketFluidNetworkUpdate;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.IPacket;
+import team.galacticraft.galacticraft.common.core.network.PacketFluidNetworkUpdate;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -435,7 +434,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
     {
         List<Pair<BlockPos, Map<Direction, IFluidHandler>>> toReturn = new LinkedList<>();
 
-        if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+        if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
         {
             return toReturn;
         }

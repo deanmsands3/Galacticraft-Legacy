@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.client.gui.screen;
 
-import team.galacticraft.galacticraft.core.dimension.DimensionSpaceStation;
-import team.galacticraft.galacticraft.core.tick.TickHandlerClient;
-import team.galacticraft.galacticraft.core.util.ColorUtil;
+import team.galacticraft.galacticraft.common.core.dimension.DimensionSpaceStation;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerClient;
+import team.galacticraft.galacticraft.common.core.util.ColorUtil;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.dimension.DimensionType;

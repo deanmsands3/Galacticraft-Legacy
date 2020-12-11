@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.items;
 
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.EnumColor;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.EnumColor;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -14,10 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ItemBase extends Item implements ISortable
@@ -50,7 +48,7 @@ public class ItemBase extends Item implements ISortable
     {
         if (stack != null && this == GCItems.heavyPlatingTier1)
         {
-            tooltip.add(new TextComponent(I18n.get("item.tier1.desc")));
+            tooltip.add(new TranslatableComponent(("item.tier1.desc")));
         }
         else if (stack != null && this == GCItems.dungeonFinder)
         {

@@ -6,10 +6,10 @@ import team.galacticraft.galacticraft.common.api.event.client.CelestialBodyRende
 import team.galacticraft.galacticraft.common.api.galaxies.*;
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.client.render.RenderPlanet;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.client.render.RenderPlanet;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.Mth;

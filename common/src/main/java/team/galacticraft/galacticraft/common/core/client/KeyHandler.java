@@ -1,13 +1,11 @@
 package team.galacticraft.galacticraft.common.core.client;
 
-import team.galacticraft.galacticraft.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

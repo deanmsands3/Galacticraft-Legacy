@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.items;
 
-import team.galacticraft.galacticraft.core.blocks.BlockAdvanced;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.blocks.BlockAdvanced;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.player.LocalPlayer;
@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.Collection;

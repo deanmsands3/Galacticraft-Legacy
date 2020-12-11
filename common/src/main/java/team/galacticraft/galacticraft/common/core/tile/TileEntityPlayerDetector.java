@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.blocks.BlockConcealedDetector;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.blocks.BlockConcealedDetector;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;

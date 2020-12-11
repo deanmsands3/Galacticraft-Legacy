@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.world.gen.dungeon;
 
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.blocks.BlockUnlitTorch;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.blocks.BlockUnlitTorch;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ChunkPos;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureMana
 import java.lang.reflect.Constructor;
 import java.util.Random;
 
-import static team.galacticraft.galacticraft.core.world.gen.GCFeatures.CMOON_DUNGEON_CORRIDOR;
+import static team.galacticraft.galacticraft.common.core.world.gen.GCFeatures.CMOON_DUNGEON_CORRIDOR;
 
 public class Corridor extends SizedPiece
 {

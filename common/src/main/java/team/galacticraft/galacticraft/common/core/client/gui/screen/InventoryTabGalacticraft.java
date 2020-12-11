@@ -1,12 +1,12 @@
 package team.galacticraft.galacticraft.common.core.client.gui.screen;
 
 import team.galacticraft.galacticraft.common.api.client.tabs.AbstractTab;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 

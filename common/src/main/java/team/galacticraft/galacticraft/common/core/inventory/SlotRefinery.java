@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
-import team.galacticraft.galacticraft.core.util.FluidUtil;
+import team.galacticraft.galacticraft.common.core.util.FluidUtil;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;

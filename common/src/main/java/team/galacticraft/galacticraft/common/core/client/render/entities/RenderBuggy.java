@@ -6,10 +6,10 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.client.obj.GCModelCache;
-import team.galacticraft.galacticraft.core.entities.EntityBuggy;
-import team.galacticraft.galacticraft.core.util.ClientUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.client.obj.GCModelCache;
+import team.galacticraft.galacticraft.common.core.entities.EntityBuggy;
+import team.galacticraft.galacticraft.common.core.util.ClientUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -21,8 +21,6 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)

@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.dimension;
 
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;

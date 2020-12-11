@@ -1,16 +1,15 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import io.netty.buffer.ByteBuf;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.IPacketReceiver;
-import team.galacticraft.galacticraft.core.network.NetworkUtil;
-import team.galacticraft.galacticraft.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.IPacketReceiver;
+import team.galacticraft.galacticraft.common.core.network.NetworkUtil;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 
 import java.lang.reflect.Field;
@@ -87,7 +86,7 @@ public abstract class TileEntityAdvanced extends TileEntityInventory implements 
                 {
                     NetworkedField f = field.getAnnotation(NetworkedField.class);
 
-                    if (f.targetSide() == LogicalSide.CLIENT)
+                    if (f.targetSide() == EnvType.CLIENT)
                     {
                         this.fieldCacheClient.add(field);
                     }

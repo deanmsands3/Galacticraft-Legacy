@@ -1,17 +1,18 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
+import net.minecraft.client.resources.language.I18n;
 import team.galacticraft.galacticraft.common.api.tile.IColorable;
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.transmission.tile.ITransmitter;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.items.IShiftDescription;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.tile.TileEntityFluidPipe;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.OxygenUtil;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityFluidPipe;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.OxygenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -36,7 +37,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Random;
 
@@ -321,13 +321,13 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
 //    }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityFluidPipe();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

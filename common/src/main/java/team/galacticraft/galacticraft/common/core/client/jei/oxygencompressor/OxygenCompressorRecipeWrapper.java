@@ -5,7 +5,7 @@ package team.galacticraft.galacticraft.common.core.client.jei.oxygencompressor;
 //import mezz.jei.api.recipe.wrapper.ICraftingRecipeWrapper;
 //import net.minecraft.item.ItemStack;
 //
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //public class OxygenCompressorRecipeWrapper extends BlankRecipeWrapper implements ICraftingRecipeWrapper
 //{

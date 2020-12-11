@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.client.jei.refinery;
 //
-//import team.galacticraft.galacticraft.core.GCItems;
+//import team.galacticraft.galacticraft.common.core.GCItems;
 //import net.minecraft.item.ItemStack;
 //
 //import java.util.ArrayList;

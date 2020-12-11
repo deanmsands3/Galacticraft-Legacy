@@ -4,7 +4,7 @@ import java.util.List;
 
 import team.galacticraft.galacticraft.common.api.GalacticraftRegistry;
 import team.galacticraft.galacticraft.common.api.recipe.INasaWorkbenchRecipe;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +16,7 @@ public class SlotBuggyBench extends Slot
 {
     private final int index;
     //    @Nullable
-//    private final BlockPos pos; // Null client LogicalSide
+//    private final BlockPos pos; // Null client EnvType
     private final Player player;
 
     public SlotBuggyBench(Container par2IInventory, int par3, int par4, int par5, Player player)

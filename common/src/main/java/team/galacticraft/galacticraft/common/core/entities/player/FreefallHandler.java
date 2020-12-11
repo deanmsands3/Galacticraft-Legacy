@@ -3,14 +3,14 @@ package team.galacticraft.galacticraft.common.core.entities.player;
 //import team.galacticraft.galacticraft.common.api.event.ZeroGravityEvent;
 //import team.galacticraft.galacticraft.common.api.prefab.entity.EntitySpaceshipBase;
 //import team.galacticraft.galacticraft.common.api.world.IZeroGDimension;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.TransformerHooks;
-//import team.galacticraft.galacticraft.core.dimension.SpinManager;
-//import team.galacticraft.galacticraft.core.dimension.DimensionSpaceStation;
-//import team.galacticraft.galacticraft.core.entities.EntityLanderBase;
-//import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-//import team.galacticraft.galacticraft.core.util.GCLog;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.TransformerHooks;
+//import team.galacticraft.galacticraft.common.core.dimension.SpinManager;
+//import team.galacticraft.galacticraft.common.core.dimension.DimensionSpaceStation;
+//import team.galacticraft.galacticraft.common.core.entities.EntityLanderBase;
+//import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+//import team.galacticraft.galacticraft.common.core.util.GCLog;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockLiquid;
 //import net.minecraft.block.Blocks;
@@ -29,7 +29,7 @@ package team.galacticraft.galacticraft.common.core.entities.player;
 //import net.minecraft.world.World;
 //import net.minecraft.world.dimension.Dimension;
 //import net.minecraftforge.common.MinecraftForge;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //public class FreefallHandler
@@ -257,7 +257,7 @@ package team.galacticraft.galacticraft.common.core.entities.player;
 //				break;
 //			}
 //
-//			//This block search could cost a lot of CPU (but client LogicalSide) - maybe optimise later
+//			//This block search could cost a lot of CPU (but client EnvType) - maybe optimise later
 //			BLOCKCHECK0:
 //			for(int x = xmin; x <= xmax; x++)
 //				for (int z = zmin; z <= zmax; z++)

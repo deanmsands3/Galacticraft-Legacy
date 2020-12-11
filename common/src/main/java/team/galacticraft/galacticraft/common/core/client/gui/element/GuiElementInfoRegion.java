@@ -1,13 +1,11 @@
 package team.galacticraft.galacticraft.common.core.client.gui.element;
 
-import team.galacticraft.galacticraft.core.client.gui.container.GuiContainerGC;
-import team.galacticraft.galacticraft.core.util.ColorUtil;
+import team.galacticraft.galacticraft.common.core.client.gui.container.GuiContainerGC;
+import team.galacticraft.galacticraft.common.core.util.ColorUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import com.mojang.blaze3d.platform.Lighting;

@@ -6,17 +6,17 @@ package team.galacticraft.galacticraft.common.core.network;
 //import io.netty.channel.ChannelHandler.Sharable;
 //import io.netty.channel.ChannelHandlerContext;
 //import io.netty.channel.SimpleChannelInboundHandler;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.tick.TickHandlerClient;
-//import team.galacticraft.galacticraft.core.tick.TickHandlerServer;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.tick.TickHandlerClient;
+//import team.galacticraft.galacticraft.common.core.tick.TickHandlerServer;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.network.INetHandler;
 //import net.minecraft.network.NetworkManager;
 //import net.minecraft.util.ResourceLocation;
 //import net.minecraft.world.World;
 //import net.minecraft.world.dimension.DimensionType;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.network.NetworkRegistry;
 //import net.minecraftforge.fml.network.simple.SimpleChannel;
 //
@@ -27,20 +27,20 @@ package team.galacticraft.galacticraft.common.core.network;
 //@Sharable
 //public class GalacticraftPacketHandler extends SimpleChannelInboundHandler<IPacket>
 //{
-//    private final Map<LogicalSide, Map<Integer, Queue<PacketPlayerPair>>> packetMap;
+//    private final Map<EnvType, Map<Integer, Queue<PacketPlayerPair>>> packetMap;
 //    private static volatile int livePacketCount = 0;
 //
 //    public GalacticraftPacketHandler()
 //    {
-//        Map<LogicalSide, Map<Integer, Queue<PacketPlayerPair>>> map = Maps.newHashMap();
-//        for (LogicalSide LogicalSide : LogicalSide.values())
+//        Map<EnvType, Map<Integer, Queue<PacketPlayerPair>>> map = Maps.newHashMap();
+//        for (EnvType EnvType : EnvType.values())
 //        {
 //            Map<Integer, Queue<PacketPlayerPair>> sideMap = new ConcurrentHashMap<Integer, Queue<PacketPlayerPair>>();
-//            map.put(LogicalSide, sideMap);
+//            map.put(EnvType, sideMap);
 //        }
 //
 //        packetMap = ImmutableMap.copyOf(map);
-//        if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+//        if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
 //        {
 //            TickHandlerClient.addPacketHandler(this);
 //        }
@@ -49,7 +49,7 @@ package team.galacticraft.galacticraft.common.core.network;
 //
 //    public void unload(World world)
 //    {
-//        LogicalSide side = world.isRemote ? LogicalSide.CLIENT : LogicalSide.SERVER;
+//        EnvType side = world.isRemote ? EnvType.CLIENT : EnvType.SERVER;
 //        DimensionType dimID = GCCoreUtil.getDimensionID(world);
 //        Queue<PacketPlayerPair> queue = getQueue(side, dimId);
 //        queue.clear();
@@ -58,9 +58,9 @@ package team.galacticraft.galacticraft.common.core.network;
 //    public void tick(World world)
 //    {
 //        PacketPlayerPair pair;
-//        LogicalSide side = world.isRemote ? LogicalSide.CLIENT : LogicalSide.SERVER;
+//        EnvType side = world.isRemote ? EnvType.CLIENT : EnvType.SERVER;
 //        DimensionType dimID = GCCoreUtil.getDimensionType(world);
-//        Queue<PacketPlayerPair> queue = getQueue(LogicalSide, dimID);
+//        Queue<PacketPlayerPair> queue = getQueue(EnvType, dimID);
 //        while ((pair = queue.poll()) != null)
 //        {
 //            switch (side)
@@ -85,16 +85,16 @@ package team.galacticraft.galacticraft.common.core.network;
 //            return;
 //        }
 //
-//        if (LogicalSide != null)
+//        if (EnvType != null)
 //        {
-//            getQueue(LogicalSide, msg.getDimensionID()).add(new PacketPlayerPair(msg, player));
+//            getQueue(EnvType, msg.getDimensionID()).add(new PacketPlayerPair(msg, player));
 //            livePacketCount++;
 //        }
 //    }
 //
-//    private Queue<PacketPlayerPair> getQueue(LogicalSide LogicalSide, DimensionType dimID)
+//    private Queue<PacketPlayerPair> getQueue(EnvType EnvType, DimensionType dimID)
 //    {
-//        Map<Integer, Queue<PacketPlayerPair>> map = packetMap.get(LogicalSide);
+//        Map<Integer, Queue<PacketPlayerPair>> map = packetMap.get(EnvType);
 //        if (!map.containsKey(dimID))
 //        {
 //            map.put(dimID, Queues.<PacketPlayerPair>newConcurrentLinkedQueue());

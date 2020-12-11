@@ -1,12 +1,15 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.GCItems;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import team.galacticraft.galacticraft.common.core.GCItems;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-import team.galacticraft.galacticraft.core.items.IShiftDescription;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.tile.TileEntityTelemetry;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityTelemetry;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -95,13 +98,13 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityTelemetry();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }
@@ -115,7 +118,7 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
     @Override
     public InteractionResult onMachineActivated(Level world, BlockPos pos, BlockState state, Player entityPlayer, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
-        if (!world.isClientSide)
+        if (!world.isClientSide && entityPlayer instanceof ServerPlayer)
         {
             BlockEntity tile = world.getBlockEntity(pos);
             if (tile instanceof TileEntityTelemetry)
@@ -129,11 +132,11 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
                     {
                         UUID uuid = new UUID(fmData.getLong("linkedUUIDMost"), fmData.getLong("linkedUUIDLeast"));
                         ((TileEntityTelemetry) tile).addTrackedEntity(uuid);
-                        entityPlayer.sendMessage(new TextComponent(I18n.get("gui.telemetry_succeed.message")));
+                        entityPlayer.sendMessage(new TranslatableComponent(("gui.telemetry_succeed.message")));
                     }
                     else
                     {
-                        entityPlayer.sendMessage(new TextComponent(I18n.get("gui.telemetry_fail.message")));
+                        entityPlayer.sendMessage(new TranslatableComponent(("gui.telemetry_fail.message")));
 
                         if (fmData == null)
                         {
@@ -148,18 +151,18 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
                     return InteractionResult.SUCCESS;
                 }
 
-                ItemStack wearing = GCPlayerStats.get(entityPlayer).getFrequencyModuleInSlot();
+                ItemStack wearing = GCPlayerStats.get((ServerPlayer) entityPlayer).getFrequencyModuleInSlot();
                 if (wearing != null)
                 {
                     if (wearing.hasTag() && wearing.getTag().contains("teDim"))
                     {
                         return InteractionResult.PASS;
                     }
-                    entityPlayer.sendMessage(new TextComponent(I18n.get("gui.telemetry_fail_wearing_it.message")));
+                    entityPlayer.sendMessage(new TranslatableComponent(("gui.telemetry_fail_wearing_it.message")));
                 }
                 else
                 {
-                    entityPlayer.sendMessage(new TextComponent(I18n.get("gui.telemetry_fail_no_frequency_module.message")));
+                    entityPlayer.sendMessage(new TranslatableComponent(("gui.telemetry_fail_no_frequency_module.message")));
                 }
             }
         }

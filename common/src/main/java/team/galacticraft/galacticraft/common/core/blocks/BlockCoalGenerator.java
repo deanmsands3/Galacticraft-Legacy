@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.tile.TileEntityCoalGenerator;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityCoalGenerator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -11,10 +11,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class BlockCoalGenerator extends BlockMachineBase
@@ -66,13 +64,13 @@ public class BlockCoalGenerator extends BlockMachineBase
 
     @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityCoalGenerator();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

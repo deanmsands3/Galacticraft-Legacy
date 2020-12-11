@@ -1,11 +1,11 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
 //import team.galacticraft.galacticraft.common.api.item.IPaintable;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-//import team.galacticraft.galacticraft.core.items.IShiftDescription;
-//import team.galacticraft.galacticraft.core.tile.TileEntityPanelLight;
-//import team.galacticraft.galacticraft.core.util.*;
+//import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityPanelLight;
+//import team.galacticraft.galacticraft.common.core.util.*;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockRenderType;
 //import net.minecraft.block.BlockState;
@@ -25,7 +25,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import net.minecraftforge.common.property.ExtendedBlockState;
 //import net.minecraftforge.common.property.IExtendedBlockState;
 //import net.minecraftforge.common.property.IUnlistedProperty;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //import java.util.ArrayList;
@@ -166,7 +166,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    }
 //
 //    @Override
-//    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+//    public TileEntity newBlockEntity(IBlockReader world)
 //    {
 //        return new TileEntityPanelLight();
 //    }
@@ -246,14 +246,14 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //        worldIn.checkLightFor(LightType.BLOCK, pos);
 //    }
 //
-//    @SideOnly(value=LogicalSide.CLIENT)
+//    @SideOnly(value=EnvType.CLIENT)
 //    public static void updateClient(int type, BlockState state)
 //    {
 //        if (type >= PANELTYPES_LENGTH) type = 0;
 //        superState[type] = state;
 //    }
 //
-//    @SideOnly(value=LogicalSide.CLIENT)
+//    @SideOnly(value=EnvType.CLIENT)
 //    public static void updateClient(List<Object> data)
 //    {
 //        BlockState state;
@@ -285,9 +285,9 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    }
 //
 //    @Override
-//    public int setColor(int color, PlayerEntity p, LogicalSide LogicalSide)
+//    public int setColor(int color, PlayerEntity p, EnvType EnvType)
 //    {
-//        if (LogicalSide == LogicalSide.CLIENT)
+//        if (EnvType == EnvType.CLIENT)
 //        {
 //            BlockPanelLighting.color = ColorUtil.lighten(ColorUtil.lightenFully(color, 255), 0.1F);
 //        }

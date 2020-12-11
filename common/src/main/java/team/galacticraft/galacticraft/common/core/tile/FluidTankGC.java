@@ -3,7 +3,7 @@ package team.galacticraft.galacticraft.common.core.tile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import me.shedaniel.architectury.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 
 public class FluidTankGC extends FluidTank
 {

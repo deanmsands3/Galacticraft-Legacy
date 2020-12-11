@@ -12,24 +12,24 @@ import team.galacticraft.galacticraft.common.api.prefab.entity.EntitySpaceshipBa
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.client.*;
-import team.galacticraft.galacticraft.core.client.gui.overlay.*;
-import team.galacticraft.galacticraft.core.client.gui.screen.GuiCelestialSelection;
-import team.galacticraft.galacticraft.core.client.gui.screen.GuiTeleporting;
-import team.galacticraft.galacticraft.core.dimension.DimensionMoon;
-import team.galacticraft.galacticraft.core.entities.IBubbleProviderColored;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.client.*;
+import team.galacticraft.galacticraft.common.core.client.gui.overlay.*;
+import team.galacticraft.galacticraft.common.core.client.gui.screen.GuiCelestialSelection;
+import team.galacticraft.galacticraft.common.core.client.gui.screen.GuiTeleporting;
+import team.galacticraft.galacticraft.common.core.dimension.DimensionMoon;
+import team.galacticraft.galacticraft.common.core.entities.IBubbleProviderColored;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStatsClient;
-import team.galacticraft.galacticraft.core.fluid.FluidNetwork;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.tile.TileEntityOxygenSealer;
-import team.galacticraft.galacticraft.core.tile.TileEntityScreen;
-import team.galacticraft.galacticraft.core.util.*;
-import team.galacticraft.galacticraft.core.wrappers.Footprint;
+import team.galacticraft.galacticraft.common.core.fluid.FluidNetwork;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityOxygenSealer;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityScreen;
+import team.galacticraft.galacticraft.common.core.util.*;
+import team.galacticraft.galacticraft.common.core.wrappers.Footprint;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -49,12 +49,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.NormalDimension;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.opengl.GL11;
 
@@ -86,7 +83,7 @@ public class TickHandlerClient
 
         if (TickHandlerClient.missingRequirementThread == null)
         {
-            TickHandlerClient.missingRequirementThread = new ThreadRequirementMissing(LogicalSide.CLIENT);
+            TickHandlerClient.missingRequirementThread = new ThreadRequirementMissing(EnvType.CLIENT);
             TickHandlerClient.missingRequirementThread.start();
         }
 

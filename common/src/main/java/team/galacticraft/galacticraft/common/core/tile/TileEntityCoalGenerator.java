@@ -2,13 +2,13 @@ package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IConnector;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockMachineBase;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseUniversalElectricalSource;
-import team.galacticraft.galacticraft.core.inventory.ContainerCoalGenerator;
-import team.galacticraft.galacticraft.core.inventory.IInventoryDefaults;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMachineBase;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseUniversalElectricalSource;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerCoalGenerator;
+import team.galacticraft.galacticraft.common.core.inventory.IInventoryDefaults;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -24,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
@@ -54,10 +53,10 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
 
     public float prevGenerateWatts = 0;
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public float heatGJperTick = 0;
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int itemCookTime = 0;
 
     public TileEntityCoalGenerator()

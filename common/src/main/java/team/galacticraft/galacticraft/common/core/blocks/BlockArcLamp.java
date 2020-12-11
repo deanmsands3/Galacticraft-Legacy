@@ -1,11 +1,13 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.items.IShiftDescription;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.tile.TileEntityArclamp;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.RedstoneUtil;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.level.block.EntityBlock;
+import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityArclamp;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.RedstoneUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -27,7 +29,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, ISortable
+public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, ISortable, EntityBlock
 {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 //    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
@@ -39,7 +41,7 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
     protected static final VoxelShape WEST_AABB = Shapes.box(0.0F, 0.2F, 0.2F, 0.6F, 0.8F, 0.8F);
     protected static final VoxelShape EAST_AABB = Shapes.box(0.4F, 0.2F, 0.2F, 1.0F, 0.8F, 0.8F);
 
-    //Metadata: bits 0-2 are the LogicalSide of the base plate using standard LogicalSide convention (0-5)
+    //Metadata: bits 0-2 are the EnvType of the base plate using standard EnvType convention (0-5)
 
     public BlockArcLamp(Properties builder)
     {
@@ -68,25 +70,25 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
         }
     }
 
-    @Override
-    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos)
-    {
-        Block block = state.getBlock();
-        if (block != this)
-        {
-            return block.getLightEmission(state);
-        }
-        /**
-         * Gets the light value of the specified block coords. Args: x, y, z
-         */
-
-        if (world instanceof Level)
-        {
-            return RedstoneUtil.isBlockReceivingRedstone((Level) world, pos) ? 0 : this.lightEmission;
-        }
-
-        return 0;
-    }
+//    @Override //todo(marcus): only passes state now. re-impl this
+//    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos)
+//    {
+//        Block block = state.getBlock();
+//        if (block != this)
+//        {
+//            return block.getLightEmission(state);
+//        }
+//        /**
+//         * Gets the light value of the specified block coords. Args: x, y, z
+//         */
+//
+//        if (world instanceof Level)
+//        {
+//            return RedstoneUtil.isBlockReceivingRedstone((Level) world, pos) ? 0 : this.lightEmission;
+//        }
+//
+//        return 0;
+//    }
 
     @Override
     public int getLightBlock(BlockState state, BlockGetter worldIn, BlockPos pos)
@@ -125,7 +127,7 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
 //    {
 //        for (Direction side : Direction.values())
 //        {
-//            BlockPos offsetPos = pos.offset(LogicalSide);
+//            BlockPos offsetPos = pos.offset(EnvType);
 //            BlockState state = worldIn.getBlockState(offsetPos);
 //            if (state.getBlock().isSideSolid(state, worldIn, offsetPos, side.getOpposite()))
 //            {
@@ -152,9 +154,9 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
 //    {
 //        Direction side = state.get(FACING);
 //
-//        BlockPos offsetPos = pos.offset(LogicalSide);
+//        BlockPos offsetPos = pos.offset(EnvType);
 //        BlockState state1 = worldIn.getBlockState(offsetPos);
-//        if (state1.getBlock().isSideSolid(state1, worldIn, offsetPos, Direction.byIndex(LogicalSide.getIndex() ^ 1)))
+//        if (state1.getBlock().isSideSolid(state1, worldIn, offsetPos, Direction.byIndex(EnvType.getIndex() ^ 1)))
 //        {
 //            return;
 //        }
@@ -166,26 +168,26 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
 //    @Override
 //    public RayTraceResult collisionRayTrace(World worldIn, BlockPos pos, Vec3d start, Vec3d end)
 //    {
-//        EnumFacing LogicalSide = worldIn.getBlockState(pos).getValue(FACING);
+//        EnumFacing EnvType = worldIn.getBlockState(pos).getValue(FACING);
 //        float var8 = 0.3F;
 //
-//        if (LogicalSide == EnumFacing.WEST)
+//        if (EnvType == EnumFacing.WEST)
 //        {
 //            this.setBlockBounds(0.0F, 0.2F, 0.5F - var8, var8 * 2.0F, 0.8F, 0.5F + var8);
 //        }
-//        else if (LogicalSide == EnumFacing.EAST)
+//        else if (EnvType == EnumFacing.EAST)
 //        {
 //            this.setBlockBounds(1.0F - var8 * 2.0F, 0.2F, 0.5F - var8, 1.0F, 0.8F, 0.5F + var8);
 //        }
-//        else if (LogicalSide == EnumFacing.NORTH)
+//        else if (EnvType == EnumFacing.NORTH)
 //        {
 //            this.setBlockBounds(0.5F - var8, 0.2F, 0.0F, 0.5F + var8, 0.8F, var8 * 2.0F);
 //        }
-//        else if (LogicalSide == EnumFacing.SOUTH)
+//        else if (EnvType == EnumFacing.SOUTH)
 //        {
 //            this.setBlockBounds(0.5F - var8, 0.2F, 1.0F - var8 * 2.0F, 0.5F + var8, 0.8F, 1.0F);
 //        }
-//        else if (LogicalSide == EnumFacing.DOWN)
+//        else if (EnvType == EnumFacing.DOWN)
 //        {
 //            this.setBlockBounds(0.5F - var8, 0.0F, 0.5F - var8, 0.5F + var8, 0.6F, 0.5F + var8);
 //        }
@@ -212,13 +214,13 @@ public class BlockArcLamp extends BlockAdvanced implements IShiftDescription, IS
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityArclamp();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

@@ -9,10 +9,10 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.blocks.BlockPlatform;
-import team.galacticraft.galacticraft.core.tile.TileEntityPlatform;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.blocks.BlockPlatform;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
@@ -23,8 +23,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
@@ -167,7 +165,7 @@ public class TileEntityPlatformRenderer extends BlockEntityRenderer<TileEntityPl
 //                BufferBuilder worldRenderer = tess.getBuffer();
                 float frameA, frameB, frameC, frameD;
 
-                // Draw the moving platform LogicalSide-lights
+                // Draw the moving platform EnvType-lights
                 if (platform.isMoving() && renderPlatformForThisTE)
                 {
 //                    GlStateManager.pushMatrix();

@@ -22,9 +22,9 @@ public class ParticleSparks extends TextureSheetParticle
         this.xd += par8;
         this.yd += 0.06;
         this.zd += par12;
-        this.rCol = 255F / 255F;
-        this.gCol = 255F / 255F;
-        this.bCol = 0F / 255F + this.random.nextFloat() / 6;
+        this.rCol = 1.0f;
+        this.gCol = 1.0f;
+        this.bCol = this.random.nextFloat() / 6;
         this.quadSize *= 0.15F;
         this.quadSize *= 1.0F * 3;
         this.smokeParticleScale = this.quadSize;

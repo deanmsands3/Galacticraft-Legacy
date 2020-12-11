@@ -3,14 +3,14 @@ package team.galacticraft.galacticraft.common.core.entities.player;
 //import api.player.client.ClientPlayerAPI;
 //import api.player.client.ClientPlayerBase;
 //import team.galacticraft.galacticraft.common.api.world.IZeroGDimension;
-//import team.galacticraft.galacticraft.core.TransformerHooks;
-//import team.galacticraft.galacticraft.core.client.EventHandlerClient;
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.TransformerHooks;
+//import team.galacticraft.galacticraft.common.core.client.EventHandlerClient;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
 //import net.minecraft.entity.MoverType;
 //import net.minecraft.util.math.AxisAlignedBB;
 //import net.minecraft.util.math.BlockPos;
-//import team.galacticraft.galacticraft.core.util.CompatibilityManager;
-//import net.minecraftforge.fml.LogicalSide;
+//import team.galacticraft.galacticraft.common.core.util.CompatibilityManager;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //public class GCPlayerBaseSP extends ClientPlayerBase

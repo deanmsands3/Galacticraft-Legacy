@@ -1,13 +1,13 @@
 package team.galacticraft.galacticraft.common.core.util;
 
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.client.DynamicTextureProper;
-import team.galacticraft.galacticraft.core.client.screen.DrawGameScreen;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.client.DynamicTextureProper;
+import team.galacticraft.galacticraft.common.core.client.screen.DrawGameScreen;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -26,8 +26,6 @@ import net.minecraft.world.level.dimension.NormalDimension;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.io.FileUtils;
 
@@ -62,7 +60,7 @@ public class MapUtil
 
     public static ArrayList<BlockVec3> biomeColours = new ArrayList<BlockVec3>(40);
     private static final Random rand = new Random();
-    private static byte[] overworldImageBytesPart; //Used client LogicalSide only
+    private static byte[] overworldImageBytesPart; //Used client EnvType only
     private static byte[] overworldImageCompressed = null;
 
     //Map size definitions

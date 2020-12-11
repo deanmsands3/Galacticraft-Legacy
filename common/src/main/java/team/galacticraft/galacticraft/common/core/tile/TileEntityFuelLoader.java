@@ -1,21 +1,23 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
+import net.fabricmc.api.EnvType;
 import team.galacticraft.galacticraft.common.api.entity.IFuelable;
 import team.galacticraft.galacticraft.common.api.tile.ILandingPadAttachable;
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockFuelLoader;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.core.inventory.ContainerFuelLoader;
-import team.galacticraft.galacticraft.core.util.FluidUtil;
-import team.galacticraft.galacticraft.core.wrappers.FluidHandlerWrapper;
-import team.galacticraft.galacticraft.core.wrappers.IFluidHandlerWrapper;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockFuelLoader;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseElectricBlockWithInventory;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerFuelLoader;
+import team.galacticraft.galacticraft.common.core.util.FluidUtil;
+import team.galacticraft.galacticraft.common.core.wrappers.FluidHandlerWrapper;
+import team.galacticraft.galacticraft.common.core.wrappers.IFluidHandlerWrapper;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -34,17 +36,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.fml.LogicalSide;
+import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 import net.minecraftforge.registries.ObjectHolder;
-import FluidStack;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import me.shedaniel.architectury.fluid.FluidStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IFluidHandlerWrapper, ILandingPadAttachable, IMachineSides, MenuProvider
 {
@@ -52,7 +53,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     public static BlockEntityType<TileEntityFuelLoader> TYPE;
 
     private final int tankCapacity = 12000;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public FluidTank fuelTank = new FluidTank(this.tankCapacity);
     public IFuelable attachedFuelable;
     private boolean loadedFuelLastTick = false;

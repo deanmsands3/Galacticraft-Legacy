@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
 import team.galacticraft.galacticraft.common.api.item.IItemElectric;
-import team.galacticraft.galacticraft.core.energy.EnergyConfigHandler;
+import team.galacticraft.galacticraft.common.core.energy.EnergyConfigHandler;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;

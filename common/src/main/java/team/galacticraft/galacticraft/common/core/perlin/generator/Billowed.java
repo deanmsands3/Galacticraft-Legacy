@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.perlin.generator;
 
-import team.galacticraft.galacticraft.core.perlin.FishyNoise;
-import team.galacticraft.galacticraft.core.perlin.NoiseModule;
+import team.galacticraft.galacticraft.common.core.perlin.FishyNoise;
+import team.galacticraft.galacticraft.common.core.perlin.NoiseModule;
 
 import java.util.Random;
 

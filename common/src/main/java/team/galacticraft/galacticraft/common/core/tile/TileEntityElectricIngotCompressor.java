@@ -2,18 +2,18 @@ package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.recipe.CompressorRecipes;
 import team.galacticraft.galacticraft.common.api.recipe.ShapedRecipesGC;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockMachineBase;
-import team.galacticraft.galacticraft.core.client.sounds.GCSounds;
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseElectricBlock;
-import team.galacticraft.galacticraft.core.inventory.ContainerElectricIngotCompressor;
-import team.galacticraft.galacticraft.core.inventory.IInventoryDefaults;
-import team.galacticraft.galacticraft.core.inventory.PersistantInventoryCrafting;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMachineBase;
+import team.galacticraft.galacticraft.common.core.client.sounds.GCSounds;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseElectricBlock;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerElectricIngotCompressor;
+import team.galacticraft.galacticraft.common.core.inventory.IInventoryDefaults;
+import team.galacticraft.galacticraft.common.core.inventory.PersistantInventoryCrafting;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +31,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -73,9 +72,9 @@ public class TileEntityElectricIngotCompressor extends TileBaseElectricBlock imp
 
     private static final int PROCESS_TIME_REQUIRED_BASE = 200;
     protected int processTimeRequiredBase;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int processTimeRequired = PROCESS_TIME_REQUIRED_BASE;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int processTicks = 0;
     private ItemStack producingStack = ItemStack.EMPTY;
     private static final int[] allSlots = new int[]{0, 3, 4, 5, 6, 7, 8, 9, 10, 11};

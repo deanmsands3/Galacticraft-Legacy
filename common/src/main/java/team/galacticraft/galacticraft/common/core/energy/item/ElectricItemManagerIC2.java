@@ -3,7 +3,7 @@ package team.galacticraft.galacticraft.common.core.energy.item;
 //import ic2.api.item.IElectricItem;
 //import ic2.api.item.IElectricItemManager;
 //import team.galacticraft.galacticraft.common.api.item.IItemElectricBase;
-//import team.galacticraft.galacticraft.core.energy.EnergyConfigHandler;
+//import team.galacticraft.galacticraft.common.core.energy.EnergyConfigHandler;
 //import net.minecraft.entity.LivingEntity;
 //import net.minecraft.item.ItemStack;
 //

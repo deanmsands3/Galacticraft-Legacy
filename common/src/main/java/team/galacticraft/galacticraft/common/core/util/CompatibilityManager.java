@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.util;
 
-import team.galacticraft.galacticraft.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

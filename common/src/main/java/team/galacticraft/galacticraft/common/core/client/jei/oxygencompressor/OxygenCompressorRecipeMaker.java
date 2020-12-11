@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.client.jei.oxygencompressor;
 //
 //import team.galacticraft.galacticraft.common.api.GalacticraftRegistry;
 //import team.galacticraft.galacticraft.common.api.item.EnumExtendedInventorySlot;
-//import team.galacticraft.galacticraft.core.items.ItemOxygenTank;
+//import team.galacticraft.galacticraft.common.core.items.ItemOxygenTank;
 //import net.minecraft.item.ItemStack;
 //
 //import java.util.ArrayList;

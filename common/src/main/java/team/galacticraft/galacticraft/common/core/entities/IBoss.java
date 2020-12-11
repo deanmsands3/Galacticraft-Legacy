@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
-import team.galacticraft.galacticraft.core.tile.TileEntityDungeonSpawner;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityDungeonSpawner;
 
 public interface IBoss
 {

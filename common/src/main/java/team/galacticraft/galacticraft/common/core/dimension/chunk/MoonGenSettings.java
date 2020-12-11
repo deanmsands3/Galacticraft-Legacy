@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.dimension.chunk;
 
-import team.galacticraft.galacticraft.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.ChunkGeneratorSettings;
 

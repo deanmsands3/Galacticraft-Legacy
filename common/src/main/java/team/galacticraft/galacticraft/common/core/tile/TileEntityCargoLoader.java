@@ -6,13 +6,13 @@ import team.galacticraft.galacticraft.common.api.entity.ICargoEntity.RemovalResu
 import team.galacticraft.galacticraft.common.api.tile.ILandingPadAttachable;
 import team.galacticraft.galacticraft.common.api.tile.ILockable;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockCargoLoader;
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.inventory.ContainerCargoBase.ContainerCargoLoader;
-import team.galacticraft.galacticraft.core.util.RecipeUtil;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockCargoLoader;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerCargoBase.ContainerCargoLoader;
+import team.galacticraft.galacticraft.common.core.util.RecipeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -29,7 +29,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityCargoLoader extends TileEntityCargoBase implements WorldlyContainer, ILandingPadAttachable, ILockable, MenuProvider
@@ -38,13 +37,13 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements Worldl
     public static BlockEntityType<TileEntityCargoLoader> TYPE;
 
     public boolean outOfItems;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean targetFull;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean targetNoInventory;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean noTarget;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean locked;
 
     public ICargoEntity attachedFuelable;

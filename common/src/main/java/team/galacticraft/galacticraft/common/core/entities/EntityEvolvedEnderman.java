@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
 import team.galacticraft.galacticraft.common.api.entity.IEntityBreathable;
-import team.galacticraft.galacticraft.core.GCItems;
+import team.galacticraft.galacticraft.common.core.GCItems;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.level.Level;

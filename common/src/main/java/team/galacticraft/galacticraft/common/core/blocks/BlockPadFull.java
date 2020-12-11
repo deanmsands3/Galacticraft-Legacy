@@ -1,10 +1,11 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
+import team.galacticraft.galacticraft.common.api.block.IFullLaunchPad;
 import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.tile.IMultiBlock;
-import team.galacticraft.galacticraft.core.tile.TileEntityBuggyFueler;
-import team.galacticraft.galacticraft.core.tile.TileEntityLandingPad;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.tile.IMultiBlock;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityBuggyFueler;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityLandingPad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -19,9 +20,9 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
-public class BlockPadFull extends BlockAdvancedTile implements IPartialSealableBlock
+public class BlockPadFull extends BlockAdvancedTile implements IPartialSealableBlock, IFullLaunchPad
 {
 //    public static final EnumProperty<EnumLandingPadFullType> PAD_TYPE = EnumProperty.create("type", EnumLandingPadFullType.class);
     private final VoxelShape AABB = Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
@@ -139,13 +140,13 @@ public class BlockPadFull extends BlockAdvancedTile implements IPartialSealableB
 
     @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return this == GCBlocks.landingPadFull ? new TileEntityLandingPad() : new TileEntityBuggyFueler();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }
@@ -188,7 +189,7 @@ public class BlockPadFull extends BlockAdvancedTile implements IPartialSealableB
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(BlockGetter world, BlockPos pos, BlockState state)
     {
         return new ItemStack(Item.byBlock(GCBlocks.landingPad), 1);
     }

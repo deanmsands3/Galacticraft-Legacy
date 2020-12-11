@@ -1,13 +1,12 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
+import net.minecraft.client.resources.language.I18n;
 import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
 import team.galacticraft.galacticraft.common.api.world.IZeroGDimension;
-import team.galacticraft.galacticraft.core.items.IShiftDescription;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.tile.TileEntityPlatform;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.planets.venus.blocks.VenusBlocks;
+import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityPlatform;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -109,7 +108,7 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
 //            return false;
 //        }
 //
-//        if (worldIn.getBlockState(pos.offset(Direction.DOWN)).getBlock() == GCBlocks.platform && LogicalSide == Direction.UP)
+//        if (worldIn.getBlockState(pos.offset(Direction.DOWN)).getBlock() == GCBlocks.platform && EnvType == Direction.UP)
 //        {
 //            return false;
 //        }
@@ -164,13 +163,13 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
 //    }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
-        return new TileEntityPlatform(state.getValue(CORNER));
+        return new TileEntityPlatform(state.getValue(CORNER)); //todo(marcus): check for corner when given pos
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

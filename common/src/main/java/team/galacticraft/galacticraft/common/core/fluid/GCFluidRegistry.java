@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.fluid;
 
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;

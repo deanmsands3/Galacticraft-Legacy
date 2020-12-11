@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.fluid;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
+import javax.annotation.ParametersAreNotNullByDefault;
 
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -15,7 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 /**
  * Credit to pupnewfster from the Mekanism project
  */
-@ParametersAreNonnullByDefault
+@ParametersAreNotNullByDefault
 public class FluidRegistrationEntry<STILL extends Fluid, FLOWING extends Fluid, BLOCK extends LiquidBlock, BUCKET extends Item>
 {
     private RegistryObject<STILL> stillRO;

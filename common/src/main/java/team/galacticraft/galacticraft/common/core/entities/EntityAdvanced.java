@@ -1,17 +1,16 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
 import io.netty.buffer.ByteBuf;
-import team.galacticraft.galacticraft.core.Annotations;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.IPacketReceiver;
-import team.galacticraft.galacticraft.core.network.NetworkUtil;
-import team.galacticraft.galacticraft.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.Annotations;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.IPacketReceiver;
+import team.galacticraft.galacticraft.common.core.network.NetworkUtil;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.lang.reflect.Field;
@@ -47,11 +46,11 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
     /**
      * Get the amount of ticks between each packet send
      *
-     * @param LogicalSide The target LogicalSide.
+     * @param EnvType The target EnvType.
      * @return The amount of ticks to wait before sending another packet to this
      * target
      */
-    public abstract int getPacketCooldown(LogicalSide LogicalSide);
+    public abstract int getPacketCooldown(EnvType EnvType);
 
     /**
      * Add any additional data to the stream
@@ -76,21 +75,21 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
 //    }
 
     /**
-     * Called after a packet is read, only on client LogicalSide.
+     * Called after a packet is read, only on client EnvType.
      *
      * @param player The player associated with the received packet
      */
     public abstract void onPacketClient(Player player);
 
     /**
-     * Called after a packet is read, only on server LogicalSide.
+     * Called after a packet is read, only on server EnvType.
      *
      * @param player The player associated with the received packet
      */
     public abstract void onPacketServer(Player player);
 
     /**
-     * Packets will be sent to all (client-LogicalSide) players within this range
+     * Packets will be sent to all (client-EnvType) players within this range
      *
      * @return Maximum distance to send packets to client players
      */
@@ -105,7 +104,7 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
 
         if (this.isNetworkedEntity())
         {
-            if (!this.level.isClientSide && this.ticks % this.getPacketCooldown(LogicalSide.CLIENT) == 0)
+            if (!this.level.isClientSide && this.ticks % this.getPacketCooldown(EnvType.CLIENT) == 0)
             {
                 if (this.fieldCacheClient == null)
                 {
@@ -126,7 +125,7 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
                 }
             }
 
-            if (this.level.isClientSide && this.ticks % this.getPacketCooldown(LogicalSide.SERVER) == 0)
+            if (this.level.isClientSide && this.ticks % this.getPacketCooldown(EnvType.SERVER) == 0)
             {
                 if (this.fieldCacheClient == null)  //The target server cache may have been initialised to an empty set
                 {
@@ -160,7 +159,7 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
             {
                 Annotations.NetworkedField f = field.getAnnotation(Annotations.NetworkedField.class);
 
-                if (f.targetSide() == LogicalSide.CLIENT)
+                if (f.targetSide() == EnvType.CLIENT)
                 {
                     this.fieldCacheClient.add(field);
                 }

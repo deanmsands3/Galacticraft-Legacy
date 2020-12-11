@@ -2,9 +2,9 @@ package team.galacticraft.galacticraft.common.core.dimension;
 
 import team.galacticraft.galacticraft.common.api.galaxies.GalaxyRegistry;
 import team.galacticraft.galacticraft.common.api.galaxies.Satellite;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.util.GCLog;
-import team.galacticraft.galacticraft.core.util.PlayerUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;

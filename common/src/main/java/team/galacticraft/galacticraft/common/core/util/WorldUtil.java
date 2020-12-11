@@ -16,18 +16,18 @@ import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
 import team.galacticraft.galacticraft.common.api.world.IOrbitDimension;
 import team.galacticraft.galacticraft.common.api.world.ITeleportType;
 import team.galacticraft.galacticraft.common.api.world.SpaceStationType;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.dimension.GCDimensions;
-import team.galacticraft.galacticraft.core.dimension.SpaceStationWorldData;
-import team.galacticraft.galacticraft.core.entities.EntityCelestialFake;
-import team.galacticraft.galacticraft.core.entities.player.GCPlayerHandler;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.dimension.GCDimensions;
+import team.galacticraft.galacticraft.common.core.dimension.SpaceStationWorldData;
+import team.galacticraft.galacticraft.common.core.entities.EntityCelestialFake;
+import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerHandler;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-import team.galacticraft.galacticraft.core.items.ItemParaChute;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.items.ItemParaChute;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -57,8 +57,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.Dimension;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.LevelData;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.registries.DeferredRegister;
@@ -413,7 +411,7 @@ public class WorldUtil
         MinecraftServer theServer = GCCoreUtil.getServer();
         if (theServer == null)
         {
-            GCLog.debug("Called WorldUtil server LogicalSide method but FML returned no server - is this a bug?");
+            GCLog.debug("Called WorldUtil server EnvType method but FML returned no server - is this a bug?");
             return null;
         }
         return theServer.getLevel(id);

@@ -1,11 +1,11 @@
 package team.galacticraft.galacticraft.common.core.items;
 //
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-//import team.galacticraft.galacticraft.core.util.EnumColor;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategoryItem;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.util.EnumColor;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategoryItem;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.client.util.ITooltipFlag;
 //import net.minecraft.item.ItemGroup;
 //import net.minecraft.entity.Entity;
@@ -20,12 +20,12 @@ package team.galacticraft.galacticraft.common.core.items;
 //import net.minecraft.world.World;
 //import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.api.distmarker.OnlyIn;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //import java.util.List;
 //
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
 //public class ItemBasic extends Item implements ISortableItem
 //{
@@ -152,7 +152,7 @@ package team.galacticraft.galacticraft.common.core.items;
 //            itemStack.getTag().setLong("linkedUUIDMost", entity.getUniqueID().getMostSignificantBits());
 //            itemStack.getTag().setLong("linkedUUIDLeast", entity.getUniqueID().getLeastSignificantBits());
 //
-//            player.sendMessage(new StringTextComponent(I18n.get("gui.tracking.message")));
+//            player.sendMessage(new StringTranslatableComponent(("gui.tracking.message")));
 //            return true;
 //        }
 //        return false;

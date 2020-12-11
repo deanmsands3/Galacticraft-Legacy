@@ -3,19 +3,19 @@ package team.galacticraft.galacticraft.common.core.entities.player;
 import team.galacticraft.galacticraft.common.api.entity.ICameraZoomEntity;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
 import team.galacticraft.galacticraft.common.api.world.IZeroGDimension;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.client.sounds.GCSounds;
-import team.galacticraft.galacticraft.core.dimension.DimensionMoon;
-import team.galacticraft.galacticraft.core.entities.EntityLanderBase;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.core.tick.TickHandlerClient;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.core.util.EnumColor;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.wrappers.PlayerGearData;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.client.sounds.GCSounds;
+import team.galacticraft.galacticraft.common.core.dimension.DimensionMoon;
+import team.galacticraft.galacticraft.common.core.entities.EntityLanderBase;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerClient;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.util.EnumColor;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.wrappers.PlayerGearData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -391,7 +391,7 @@ public class PlayerClient implements IPlayerClient
         case 2:
         case 3:
             player.sendMessage(Component.Serializer.fromJson("[{\"text\":\"" + I18n.get("gui.message.help1") + ": \",\"color\":\"white\"}," + "{\"text\":\" " + EnumColor.BRIGHT_GREEN + "wiki." + Constants.PREFIX + "com/wiki/1" + "\"," + "\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":" + "{\"text\":\"" + I18n.get("gui.message.clicklink") + "\",\"color\":\"yellow\"}}," + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + "http://wiki." + Constants.PREFIX + "com/wiki/1" + "\"}}]"));
-            player.sendMessage(new TextComponent(I18n.get("gui.message.help1a") + EnumColor.AQUA + " /gchelp"));
+            player.sendMessage(new TranslatableComponent(("gui.message.help1a") + EnumColor.AQUA + " /gchelp"));
             break;
         case 4:
         case 5:

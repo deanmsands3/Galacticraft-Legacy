@@ -3,7 +3,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.Dynamic;
-import team.galacticraft.galacticraft.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;

@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
-//import team.galacticraft.galacticraft.core.tile.IMachineSidesProperties;
-//import team.galacticraft.galacticraft.core.tile.TileEntityElectricFurnace;
-//import team.galacticraft.galacticraft.core.tile.TileEntityEnergyStorageModule;
+//import team.galacticraft.galacticraft.common.core.tile.IMachineSidesProperties;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityElectricFurnace;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityEnergyStorageModule;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.state.EnumProperty;
@@ -12,7 +12,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import net.minecraft.util.IStringSerializable;
 //import net.minecraft.world.IBlockReader;
 //
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
 //public class BlockMachineTiered extends BlockMachineBase
 //{
@@ -102,11 +102,11 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //
 //    @Nullable
 //    @Override
-//    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+//    public TileEntity newBlockEntity(IBlockReader world)
 //    {
-////        TileEntity tile = super.createTileEntity(state, world);
+////        TileEntity tile = super.newBlockEntity(state, world);
 ////        tile.setWorld(world); TODO Needed?
-//        return super.createTileEntity(state, world);
+//        return super.newBlockEntity(state, world);
 //    }
 //
 ////    @Override

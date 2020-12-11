@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.network;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.planets.asteroids.network.PacketSimpleAsteroids;
 import team.galacticraft.galacticraft.planets.mars.network.PacketSimpleMars;
 import team.galacticraft.galacticraft.planets.venus.network.PacketSimpleVenus;
@@ -140,8 +140,8 @@ public class GalacticraftChannelHandler
 //     */
 //    public void sendToAll(IPacket message)
 //    {
-//        this.channels.get(LogicalSide.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
-//        this.channels.get(LogicalSide.SERVER).writeOutbound(message);
+//        this.channels.get(EnvType.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+//        this.channels.get(EnvType.SERVER).writeOutbound(message);
 //    }
 //
 //    /**
@@ -155,9 +155,9 @@ public class GalacticraftChannelHandler
 //     */
 //    public void sendTo(IPacket message, ServerPlayerEntity player)
 //    {
-//        this.channels.get(LogicalSide.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
-//        this.channels.get(LogicalSide.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-//        this.channels.get(LogicalSide.SERVER).writeOutbound(message);
+//        this.channels.get(EnvType.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
+//        this.channels.get(EnvType.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+//        this.channels.get(EnvType.SERVER).writeOutbound(message);
 //    }
 //
 //    /**
@@ -175,9 +175,9 @@ public class GalacticraftChannelHandler
 //    {
 //        try
 //        {
-//            this.channels.get(LogicalSide.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
-//            this.channels.get(LogicalSide.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
-//            this.channels.get(LogicalSide.SERVER).writeOutbound(message);
+//            this.channels.get(EnvType.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
+//            this.channels.get(EnvType.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
+//            this.channels.get(EnvType.SERVER).writeOutbound(message);
 //        }
 //        catch (Exception e)
 //        {
@@ -199,9 +199,9 @@ public class GalacticraftChannelHandler
 //    {
 //        try
 //        {
-//            this.channels.get(LogicalSide.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
-//            this.channels.get(LogicalSide.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionID);
-//            this.channels.get(LogicalSide.SERVER).writeOutbound(message);
+//            this.channels.get(EnvType.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
+//            this.channels.get(EnvType.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionID);
+//            this.channels.get(EnvType.SERVER).writeOutbound(message);
 //        }
 //        catch (Exception e)
 //        {
@@ -220,11 +220,11 @@ public class GalacticraftChannelHandler
 //     */
 //    public void sendToServer(IPacket message)
 //    {
-//        if (FMLCommonHandler.instance().getSide() != LogicalSide.CLIENT)
+//        if (FMLCommonHandler.instance().getSide() != EnvType.CLIENT)
 //        {
 //            return;
 //        }
-//        this.channels.get(LogicalSide.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
-//        this.channels.get(LogicalSide.CLIENT).writeOutbound(message);
+//        this.channels.get(EnvType.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+//        this.channels.get(EnvType.CLIENT).writeOutbound(message);
 //    }
 }

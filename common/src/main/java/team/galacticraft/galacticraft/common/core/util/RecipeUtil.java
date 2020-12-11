@@ -2,12 +2,12 @@ package team.galacticraft.galacticraft.common.core.util;
 
 import team.galacticraft.galacticraft.common.api.GalacticraftRegistry;
 import team.galacticraft.galacticraft.common.api.recipe.INasaWorkbenchRecipe;
-import team.galacticraft.galacticraft.core.inventory.InventoryBuggyBench;
-import team.galacticraft.galacticraft.core.inventory.InventoryRocketBench;
-import team.galacticraft.galacticraft.core.recipe.NasaWorkbenchRecipe;
+import team.galacticraft.galacticraft.common.core.inventory.InventoryBuggyBench;
+import team.galacticraft.galacticraft.common.core.inventory.InventoryRocketBench;
+import team.galacticraft.galacticraft.common.core.recipe.NasaWorkbenchRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 public class RecipeUtil

@@ -2,10 +2,10 @@ package team.galacticraft.galacticraft.common.core.util;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;

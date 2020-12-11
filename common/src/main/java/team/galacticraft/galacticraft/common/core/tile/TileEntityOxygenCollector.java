@@ -2,13 +2,13 @@ package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.world.EnumAtmosphericGas;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockOxygenCollector;
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.core.inventory.ContainerOxygenCollector;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockOxygenCollector;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerOxygenCollector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -27,7 +27,6 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import me.shedaniel.architectury.fluid.FluidStack;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
@@ -40,7 +39,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements MenuP
     public boolean active;
     public static final int OUTPUT_PER_TICK = 100;
     public static float OXYGEN_PER_PLANT = 0.75F;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public float lastOxygenCollected;
     private boolean noAtmosphericOxygen = true;
     private boolean isInitialised = false;
@@ -260,19 +259,19 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements MenuP
     }
 
 //    @Override
-//    public boolean canReceiveGas(EnumFacing LogicalSide, Gas type)
+//    public boolean canReceiveGas(EnumFacing EnvType, Gas type)
 //    {
 //    	return false;
 //    }
 //
 //    @Override
-//    public int receiveGas(EnumFacing LogicalSide, GasStack stack, boolean doTransfer)
+//    public int receiveGas(EnumFacing EnvType, GasStack stack, boolean doTransfer)
 //    {
 //    	return 0;
 //    }
 //
 //    @Override
-//    public int receiveGas(EnumFacing LogicalSide, GasStack stack)
+//    public int receiveGas(EnumFacing EnvType, GasStack stack)
 //    {
 //    	return 0;
 //    }

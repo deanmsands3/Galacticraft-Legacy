@@ -1,9 +1,10 @@
 package team.galacticraft.galacticraft.common.core;
 
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.items.*;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.wrappers.PartialCanister;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.items.*;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.wrappers.PartialCanister;
 import net.minecraft.item.*;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
@@ -20,7 +21,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.*;
 
-import static team.galacticraft.galacticraft.core.GCBlocks.register;
+import static team.galacticraft.galacticraft.common.core.GCBlocks.register;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
 @ObjectHolder(Constants.MOD_ID_CORE)

@@ -4,10 +4,10 @@ package team.galacticraft.galacticraft.common.core.items;
 //
 //import appeng.api.AEApi;
 //import appeng.api.util.AEColor;
-//import team.galacticraft.galacticraft.core.blocks.BlockEnclosed;
-//import team.galacticraft.galacticraft.core.blocks.BlockEnclosed.EnumEnclosedBlockType;
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-//import team.galacticraft.galacticraft.core.util.CompatibilityManager;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockEnclosed;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockEnclosed.EnumEnclosedBlockType;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.util.CompatibilityManager;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.SoundType;
 //import net.minecraft.block.BlockState;
@@ -19,7 +19,7 @@ package team.galacticraft.galacticraft.common.core.items;
 //import net.minecraft.util.Hand;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.world.World;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //public class ItemBlockEnclosed extends ItemBlockDesc
@@ -62,23 +62,23 @@ package team.galacticraft.galacticraft.common.core.items;
 //
 //            if (!block.isReplaceable(worldIn, pos))
 //            {
-//                pos = pos.offset(LogicalSide);
+//                pos = pos.offset(EnvType);
 //            }
 //
 //            if (itemstack.getCount() == 0)
 //            {
 //                return ActionResultType.FAIL;
 //            }
-//            else if (!playerIn.canPlayerEdit(pos, LogicalSide, itemstack))
+//            else if (!playerIn.canPlayerEdit(pos, EnvType, itemstack))
 //            {
 //                return ActionResultType.FAIL;
 //            }
-//            else if (worldIn.mayPlace(this.block, pos, false, LogicalSide, null))
+//            else if (worldIn.mayPlace(this.block, pos, false, EnvType, null))
 //            {
 //                int i = this.getMetadata(itemstack.getMetadata());
-//                BlockState iblockstate1 = this.block.getStateForPlacement(worldIn, pos, LogicalSide, hitX, hitY, hitZ, i, playerIn);
+//                BlockState iblockstate1 = this.block.getStateForPlacement(worldIn, pos, EnvType, hitX, hitY, hitZ, i, playerIn);
 //
-//                if (placeBlockAt(itemstack, playerIn, worldIn, pos, LogicalSide, hitX, hitY, hitZ, iblockstate1))
+//                if (placeBlockAt(itemstack, playerIn, worldIn, pos, EnvType, hitX, hitY, hitZ, iblockstate1))
 //                {
 //                    SoundType soundType = this.getBlock().getSoundType(iblockstate, worldIn, pos, playerIn);
 //                    worldIn.playSound(playerIn, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, soundType.getPlaceSound(), SoundCategory.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
@@ -86,14 +86,14 @@ package team.galacticraft.galacticraft.common.core.items;
 //
 //                    ItemStack itemME = AEApi.instance().definitions().parts().cableGlass().stack(AEColor.TRANSPARENT, 1);
 //                    itemME.setCount(2); //Fool AppEng into not destroying anything in the player inventory
-//                    AEApi.instance().partHelper().placeBus( itemME, origPos, LogicalSide, playerIn, hand, worldIn );
-//                    //Emulate appeng.parts.PartPlacement.place( is, pos, LogicalSide, player, w, PartPlacement.PlaceType.INTERACT_SECOND_PASS, 0 );
+//                    AEApi.instance().partHelper().placeBus( itemME, origPos, EnvType, playerIn, hand, worldIn );
+//                    //Emulate appeng.parts.PartPlacement.place( is, pos, EnvType, player, w, PartPlacement.PlaceType.INTERACT_SECOND_PASS, 0 );
 //                    try
 //                    {
 //                        Class clazzpp = Class.forName("appeng.parts.PartPlacement");
 //                        Class enumPlaceType = Class.forName("appeng.parts.PartPlacement$PlaceType");
 //                        Method methPl = clazzpp.getMethod("place", ItemStack.class, BlockPos.class, Direction.class, PlayerEntity.class, Hand.class, World.class, enumPlaceType, int.class);
-//                        methPl.invoke(null, itemME, origPos, LogicalSide, playerIn, hand, worldIn, enumPlaceType.getEnumConstants()[2], 0 );
+//                        methPl.invoke(null, itemME, origPos, EnvType, playerIn, hand, worldIn, enumPlaceType.getEnumConstants()[2], 0 );
 //                    } catch (Exception e)
 //                    {
 //                        e.printStackTrace();
@@ -108,7 +108,7 @@ package team.galacticraft.galacticraft.common.core.items;
 //        }
 //        else
 //        {
-//            return super.onItemUse(playerIn, worldIn, pos, hand, LogicalSide, hitX, hitY, hitZ);
+//            return super.onItemUse(playerIn, worldIn, pos, hand, EnvType, hitX, hitY, hitZ);
 //        }
 //    }
 //

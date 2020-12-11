@@ -1,12 +1,12 @@
 package team.galacticraft.galacticraft.common.core.network;
 
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.dimension.DimensionSpaceStation;
-import team.galacticraft.galacticraft.core.dimension.SpaceRace;
-import team.galacticraft.galacticraft.core.dimension.SpaceRaceManager;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.dimension.DimensionSpaceStation;
+import team.galacticraft.galacticraft.common.core.dimension.SpaceRace;
+import team.galacticraft.galacticraft.common.core.dimension.SpaceRaceManager;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.core.util.*;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.util.*;
 import net.minecraft.network.Connection;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.protocol.Packet;

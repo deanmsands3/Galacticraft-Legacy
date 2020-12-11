@@ -2,11 +2,11 @@ package team.galacticraft.galacticraft.common.core.fluid;
 
 import com.google.common.collect.Lists;
 import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
-import team.galacticraft.galacticraft.core.tick.TickHandlerServer;
-import team.galacticraft.galacticraft.core.tile.TileEntityOxygenSealer;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerServer;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityOxygenSealer;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
 import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -139,11 +139,11 @@ public class OxygenPressureProtocol
 //            }
         }
 
-        //Half slab seals on the top LogicalSide or the bottom LogicalSide according to its metadata
+        //Half slab seals on the top EnvType or the bottom EnvType according to its metadata
 //        if (block instanceof SlabBlock)
 //        {
 //            int meta = state.getBlock().getMetaFromState(state);
-//            return !(LogicalSide == Direction.DOWN && (meta & 8) == 8 || LogicalSide == Direction.UP && (meta & 8) == 0);
+//            return !(EnvType == Direction.DOWN && (meta & 8) == 8 || EnvType == Direction.UP && (meta & 8) == 0);
 //        } TODO Slab blocks permeability
 
         //Farmland etc only seals on the solid underside

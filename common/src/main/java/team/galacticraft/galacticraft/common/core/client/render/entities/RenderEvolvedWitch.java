@@ -2,19 +2,17 @@ package team.galacticraft.galacticraft.common.core.client.render.entities;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
-import team.galacticraft.galacticraft.core.client.model.ModelEvolvedWitch;
-import team.galacticraft.galacticraft.core.client.render.entities.layer.LayerHeldItemEvolvedWitch;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedWitch;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.client.gui.overlay.OverlaySensorGlasses;
+import team.galacticraft.galacticraft.common.core.client.model.ModelEvolvedWitch;
+import team.galacticraft.galacticraft.common.core.client.render.entities.layer.LayerHeldItemEvolvedWitch;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedWitch;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class RenderEvolvedWitch extends MobRenderer<EntityEvolvedWitch, ModelEvolvedWitch>

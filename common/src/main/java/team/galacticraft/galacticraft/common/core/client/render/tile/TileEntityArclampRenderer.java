@@ -10,11 +10,11 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockArcLamp;
-import team.galacticraft.galacticraft.core.client.obj.GCModelCache;
-import team.galacticraft.galacticraft.core.tile.TileEntityArclamp;
-import team.galacticraft.galacticraft.core.util.ClientUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockArcLamp;
+import team.galacticraft.galacticraft.common.core.client.obj.GCModelCache;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityArclamp;
+import team.galacticraft.galacticraft.common.core.util.ClientUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.*;
@@ -22,8 +22,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)

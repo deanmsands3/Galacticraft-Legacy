@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.recipe;
 //
 //import java.util.HashMap;
 //
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
 //import net.minecraft.block.Block;
 //import net.minecraft.inventory.CraftingInventory;

@@ -1,14 +1,14 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.tile.IMachineSidesProperties;
-import team.galacticraft.galacticraft.core.tile.TileEntityCircuitFabricator;
+import team.galacticraft.galacticraft.common.core.tile.IMachineSidesProperties;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityCircuitFabricator;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockCircuitFabricator extends BlockMachineBase
 {
@@ -23,13 +23,13 @@ public class BlockCircuitFabricator extends BlockMachineBase
 
     @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityCircuitFabricator();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

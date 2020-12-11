@@ -2,10 +2,10 @@ package team.galacticraft.galacticraft.common.core.command;
 //
 //import java.util.List;
 //
-//import team.galacticraft.galacticraft.core.GCItems;
-//import team.galacticraft.galacticraft.core.util.EnumColor;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-//import team.galacticraft.galacticraft.core.util.PlayerUtil;
+//import team.galacticraft.galacticraft.common.core.GCItems;
+//import team.galacticraft.galacticraft.common.core.util.EnumColor;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
 //import net.minecraft.command.CommandBase;
 //import net.minecraft.command.CommandException;
 //import net.minecraft.command.ICommandSender;

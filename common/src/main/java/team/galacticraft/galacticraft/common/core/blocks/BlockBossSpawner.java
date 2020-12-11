@@ -1,7 +1,8 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.entities.EntitySkeletonBoss;
-import team.galacticraft.galacticraft.core.tile.TileEntityDungeonSpawner;
+import net.minecraft.world.level.block.EntityBlock;
+import team.galacticraft.galacticraft.common.core.entities.EntitySkeletonBoss;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityDungeonSpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -14,9 +15,9 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
-public class BlockBossSpawner extends Block
+public class BlockBossSpawner extends Block implements EntityBlock
 {
     public BlockBossSpawner(Properties builder)
     {
@@ -43,20 +44,19 @@ public class BlockBossSpawner extends Block
 
     @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityDungeonSpawner<>(EntitySkeletonBoss.class);
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
-    {
+    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
         return ItemStack.EMPTY;
     }
 }

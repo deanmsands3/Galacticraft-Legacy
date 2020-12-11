@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
-//import team.galacticraft.galacticraft.core.util.JavaUtil;
+//import team.galacticraft.galacticraft.common.core.util.JavaUtil;
 //import net.minecraft.block.BlockDynamicLiquid;
 //import net.minecraft.block.BlockLiquid;
 //import net.minecraft.block.BlockStaticLiquid;

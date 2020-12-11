@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.entities.player;
 //
 //import api.player.server.ServerPlayerAPI;
 //import api.player.server.ServerPlayerBase;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 //import net.minecraft.entity.Entity;
 //import net.minecraft.entity.MoverType;
 //import net.minecraft.util.DamageSource;

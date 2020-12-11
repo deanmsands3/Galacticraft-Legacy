@@ -7,16 +7,14 @@ import team.galacticraft.galacticraft.common.api.transmission.tile.IConductor;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IConnector;
 import team.galacticraft.galacticraft.common.api.transmission.tile.INetworkProvider;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.energy.grid.EnergyNetwork;
-import team.galacticraft.galacticraft.core.tick.TickHandlerServer;
+import team.galacticraft.galacticraft.common.core.energy.grid.EnergyNetwork;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerServer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * This tile entity pre-fabricated for all conductors.

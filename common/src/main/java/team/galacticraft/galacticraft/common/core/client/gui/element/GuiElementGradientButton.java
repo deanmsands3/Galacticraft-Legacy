@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.client.gui.element;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import team.galacticraft.galacticraft.core.util.ColorUtil;
+import team.galacticraft.galacticraft.common.core.util.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;

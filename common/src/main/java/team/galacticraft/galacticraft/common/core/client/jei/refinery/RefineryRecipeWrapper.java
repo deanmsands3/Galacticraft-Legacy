@@ -3,7 +3,7 @@ package team.galacticraft.galacticraft.common.core.client.jei.refinery;
 //import mezz.jei.api.ingredients.IIngredients;
 //import mezz.jei.api.recipe.IRecipeWrapper;
 //import net.minecraft.item.ItemStack;
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //public class RefineryRecipeWrapper implements IRecipeWrapper
 //{

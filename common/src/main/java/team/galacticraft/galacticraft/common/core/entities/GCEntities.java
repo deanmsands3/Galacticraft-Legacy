@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.event.RegistryEvent;
@@ -13,7 +13,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.function.Supplier;
 
-import static team.galacticraft.galacticraft.core.GCBlocks.register;
+import static team.galacticraft.galacticraft.common.core.GCBlocks.register;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class GCEntities

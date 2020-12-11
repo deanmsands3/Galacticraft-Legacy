@@ -2,18 +2,18 @@ package team.galacticraft.galacticraft.common.core.items;
 //
 //import java.util.List;
 //
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-//import team.galacticraft.galacticraft.core.util.EnumColor;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.util.EnumColor;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.client.util.ITooltipFlag;
 //import net.minecraft.item.BlockItem;
 //import net.minecraft.item.Rarity;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.world.World;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //public class ItemBlockCreativeGC extends BlockItem

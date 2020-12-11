@@ -1,12 +1,12 @@
 package team.galacticraft.galacticraft.common.core.client.render.entities.layer;
 //
 //import com.mojang.blaze3d.platform.GlStateManager;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.client.render.entities.RenderPlayerGC;
-//import team.galacticraft.galacticraft.core.entities.player.GCPlayerHandler;
-//import team.galacticraft.galacticraft.core.util.ClientUtil;
-//import team.galacticraft.galacticraft.core.wrappers.PlayerGearData;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.client.render.entities.RenderPlayerGC;
+//import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerHandler;
+//import team.galacticraft.galacticraft.common.core.util.ClientUtil;
+//import team.galacticraft.galacticraft.common.core.wrappers.PlayerGearData;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 //import net.minecraft.client.renderer.entity.PlayerRenderer;

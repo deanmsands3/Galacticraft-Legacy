@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.client.model;
 
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
-import team.galacticraft.galacticraft.core.entities.EntityFlag;
+import team.galacticraft.galacticraft.common.core.entities.EntityFlag;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import org.lwjgl.opengl.GL11;

@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.client.model;
 //
-//import team.galacticraft.galacticraft.core.Constants;
+//import team.galacticraft.galacticraft.common.Constants;
 //import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 //import net.minecraft.client.entity.player.ClientPlayerEntity;
 //import net.minecraft.client.renderer.entity.model.PlayerModel;

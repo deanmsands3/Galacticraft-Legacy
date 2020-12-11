@@ -1,15 +1,15 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
 import io.netty.buffer.ByteBuf;
-import team.galacticraft.galacticraft.core.fluid.GCFluidRegistry;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluidRegistry;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.core.inventory.IInventorySettable;
-import team.galacticraft.galacticraft.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.core.network.PacketDynamicInventory;
-import team.galacticraft.galacticraft.core.util.FluidUtil;
-import team.galacticraft.galacticraft.core.util.WorldUtil;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.inventory.IInventorySettable;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamicInventory;
+import team.galacticraft.galacticraft.common.core.util.FluidUtil;
+import team.galacticraft.galacticraft.common.core.util.WorldUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -27,10 +27,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import me.shedaniel.architectury.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 
 import java.util.ArrayList;
 import java.util.List;

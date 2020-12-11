@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
 import team.galacticraft.galacticraft.common.api.entity.IEntityBreathable;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.core.util.WorldUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.util.WorldUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

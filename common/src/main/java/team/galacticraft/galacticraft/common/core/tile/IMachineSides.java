@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.tile.ITileClientUpdates;
-import team.galacticraft.galacticraft.core.tile.IMachineSidesProperties.MachineSidesModel;
+import team.galacticraft.galacticraft.common.core.tile.IMachineSidesProperties.MachineSidesModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -11,8 +11,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +65,7 @@ public interface IMachineSides extends ITileClientUpdates
     }
 
     /*
-     * All the different possible types of configurable LogicalSide.
+     * All the different possible types of configurable EnvType.
      *
      * Each of these can correspond to a texture and a function
      * according to the block type.  Many may be unused.
@@ -154,7 +152,7 @@ public interface IMachineSides extends ITileClientUpdates
      * Returns false if the MachineSide is not configurable.
      *
      * Use isValidForSide() first to test whether the setting
-     * is valid for the LogicalSide here.
+     * is valid for the EnvType here.
      */
     default boolean setSide(MachineSide sideToSet, Face newSide)
     {
@@ -247,7 +245,7 @@ public interface IMachineSides extends ITileClientUpdates
     }
 
     /**
-     * Returns true if the machine LogicalSide can be set to this face
+     * Returns true if the machine EnvType can be set to this face
      * <p>
      * By default, returns all allowable configurable faces
      * <p>

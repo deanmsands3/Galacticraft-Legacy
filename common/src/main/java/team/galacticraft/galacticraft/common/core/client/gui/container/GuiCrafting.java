@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.client.gui.element.GuiElementInfoRegion;
-import team.galacticraft.galacticraft.core.inventory.ContainerCrafting;
-import team.galacticraft.galacticraft.core.tile.TileEntityCrafting;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.client.gui.element.GuiElementInfoRegion;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerCrafting;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityCrafting;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

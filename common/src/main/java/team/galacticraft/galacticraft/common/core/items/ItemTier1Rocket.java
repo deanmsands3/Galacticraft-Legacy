@@ -2,15 +2,15 @@ package team.galacticraft.galacticraft.common.core.items;
 
 import team.galacticraft.galacticraft.common.api.entity.IRocketType.EnumRocketType;
 import team.galacticraft.galacticraft.common.api.item.IHoldableItem;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.entities.EntityTier1Rocket;
-import team.galacticraft.galacticraft.core.entities.GCEntities;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.tile.TileEntityLandingPad;
-import team.galacticraft.galacticraft.core.util.EnumColor;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.entities.EntityTier1Rocket;
+import team.galacticraft.galacticraft.common.core.entities.GCEntities;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityLandingPad;
+import team.galacticraft.galacticraft.common.core.util.EnumColor;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.player.LocalPlayer;
@@ -27,12 +27,10 @@ import net.minecraft.world.item.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import me.shedaniel.architectury.fluid.FluidStack;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
@@ -188,7 +186,7 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
 
         if (stack.hasTag() && stack.getTag().contains("RocketFuel"))
         {
-            tooltip.add(new TextComponent(I18n.get("gui.message.fuel") + ": " + stack.getTag().getInt("RocketFuel") + " / " + EntityTier1Rocket.FUEL_CAPACITY));
+            tooltip.add(new TranslatableComponent(("gui.message.fuel") + ": " + stack.getTag().getInt("RocketFuel") + " / " + EntityTier1Rocket.FUEL_CAPACITY));
         }
     }
 

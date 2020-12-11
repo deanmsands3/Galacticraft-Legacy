@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.client.render.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
-import team.galacticraft.galacticraft.core.wrappers.ModelTransformWrapper;
+import team.galacticraft.galacticraft.common.core.wrappers.ModelTransformWrapper;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;

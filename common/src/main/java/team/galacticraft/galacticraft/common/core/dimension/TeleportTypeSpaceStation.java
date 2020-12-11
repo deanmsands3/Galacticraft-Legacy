@@ -2,9 +2,9 @@ package team.galacticraft.galacticraft.common.core.dimension;
 
 import team.galacticraft.galacticraft.common.api.vector.Vector3D;
 import team.galacticraft.galacticraft.common.api.world.ITeleportType;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.core.util.EnumColor;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.util.EnumColor;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

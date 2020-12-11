@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.entities.player;
 
 import team.galacticraft.galacticraft.common.api.entity.IIgnoreShift;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.dimension.DimensionMoon;
-import team.galacticraft.galacticraft.core.entities.EntityCelestialFake;
-import team.galacticraft.galacticraft.core.util.DamageSourceGC;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.dimension.DimensionMoon;
+import team.galacticraft.galacticraft.common.core.entities.EntityCelestialFake;
+import team.galacticraft.galacticraft.common.core.util.DamageSourceGC;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;

@@ -5,22 +5,21 @@ import team.galacticraft.galacticraft.common.api.power.EnergySource.EnergySource
 import team.galacticraft.galacticraft.common.api.power.IEnergyHandlerGC;
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IElectrical;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.tile.ReceiverMode;
-import team.galacticraft.galacticraft.core.tile.TileEntityAdvanced;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.tile.ReceiverMode;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityAdvanced;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.LogicalSide;
 
 public abstract class EnergyStorageTile extends TileEntityAdvanced implements IEnergyHandlerGC, IElectrical
 {
     public static final float STANDARD_CAPACITY = 16000F;
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public EnergyStorage storage = new EnergyStorage(STANDARD_CAPACITY, 10);
     public int tierGC = 1;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int poweredByTierGC = 1;
 
     public EnergyStorageTile(BlockEntityType<?> type)

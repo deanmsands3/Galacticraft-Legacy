@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.dimension;
 
-import team.galacticraft.galacticraft.core.world.gen.BiomeMoonFlat;
-import team.galacticraft.galacticraft.core.world.gen.BiomeMoonHills;
-import team.galacticraft.galacticraft.core.world.gen.BiomeMoonSuperFlat;
+import team.galacticraft.galacticraft.common.core.world.gen.BiomeMoonFlat;
+import team.galacticraft.galacticraft.common.core.world.gen.BiomeMoonHills;
+import team.galacticraft.galacticraft.common.core.world.gen.BiomeMoonSuperFlat;
 import team.galacticraft.galacticraft.planets.venus.VenusModule;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.biome.Biome;

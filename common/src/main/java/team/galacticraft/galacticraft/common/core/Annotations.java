@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core;
 
-import net.minecraftforge.fml.LogicalSide;
+import net.fabricmc.api.EnvType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -33,7 +33,7 @@ public interface Annotations
     @Target(ElementType.FIELD)
     @interface NetworkedField
     {
-        LogicalSide targetSide();
+        EnvType targetSide();
     }
 
 //    @Retention(RetentionPolicy.RUNTIME)

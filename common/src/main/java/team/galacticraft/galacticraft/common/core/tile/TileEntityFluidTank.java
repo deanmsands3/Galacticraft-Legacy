@@ -1,17 +1,17 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
-import FluidStack;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.NetworkUtil;
-import team.galacticraft.galacticraft.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.core.util.DelayTimer;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.wrappers.FluidHandlerWrapper;
-import team.galacticraft.galacticraft.core.wrappers.IFluidHandlerWrapper;
+import org.jetbrains.annotations.NotNull;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.NetworkUtil;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
+import team.galacticraft.galacticraft.common.core.util.DelayTimer;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.wrappers.FluidHandlerWrapper;
+import team.galacticraft.galacticraft.common.core.wrappers.IFluidHandlerWrapper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -26,20 +26,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHandlerWrapper
@@ -354,7 +351,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
             this.fluidTank.readFromNBT(nbt.getCompound("fuelTank"));
         }
 
-        this.updateClient = GCCoreUtil.getEffectiveSide() == LogicalSide.SERVER;
+        this.updateClient = GCCoreUtil.getEffectiveSide() == EnvType.SERVER;
     }
 
     @Override

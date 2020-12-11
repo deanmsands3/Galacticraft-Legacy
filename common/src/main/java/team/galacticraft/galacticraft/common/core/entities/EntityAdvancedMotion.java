@@ -2,11 +2,11 @@ package team.galacticraft.galacticraft.common.core.entities;
 
 import io.netty.buffer.ByteBuf;
 import team.galacticraft.galacticraft.common.api.vector.Vector3D;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.PacketEntityUpdate;
-import team.galacticraft.galacticraft.core.network.PacketEntityUpdate.IEntityFullSync;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.PacketEntityUpdate;
+import team.galacticraft.galacticraft.common.core.network.PacketEntityUpdate.IEntityFullSync;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -20,8 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.ArrayList;

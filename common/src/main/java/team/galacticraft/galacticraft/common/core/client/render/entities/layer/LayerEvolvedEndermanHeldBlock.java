@@ -2,8 +2,8 @@ package team.galacticraft.galacticraft.common.core.client.render.entities.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import team.galacticraft.galacticraft.core.client.model.ModelEvolvedEnderman;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedEnderman;
+import team.galacticraft.galacticraft.common.core.client.model.ModelEvolvedEnderman;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedEnderman;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -12,8 +12,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class LayerEvolvedEndermanHeldBlock extends RenderLayer<EntityEvolvedEnderman, ModelEvolvedEnderman>

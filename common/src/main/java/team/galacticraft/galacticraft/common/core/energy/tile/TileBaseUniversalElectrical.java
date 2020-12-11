@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.energy.tile;
 
 import team.galacticraft.galacticraft.common.api.item.ElectricItemHelper;
 import team.galacticraft.galacticraft.common.api.item.IItemElectric;
-import team.galacticraft.galacticraft.core.tile.ReceiverMode;
+import team.galacticraft.galacticraft.common.core.tile.ReceiverMode;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
@@ -16,7 +16,7 @@ public abstract class TileBaseUniversalElectrical extends EnergyStorageTile
     protected boolean isAddedToEnergyNet;
     protected Object powerHandlerBC;
 
-    //	@NetworkedField(targetSide = LogicalSide.CLIENT)
+    //	@NetworkedField(targetSide = EnvType.CLIENT)
     //	public float energyStored = 0;
     private final float IC2surplusInGJ = 0F;
 
@@ -92,7 +92,7 @@ public abstract class TileBaseUniversalElectrical extends EnergyStorageTile
     //	}
 
     /**
-     * A non-LogicalSide specific version of receiveElectricity for you to optionally
+     * A non-EnvType specific version of receiveElectricity for you to optionally
      * use it internally.
      */
     //	public float receiveElectricity(ElectricityPack receive, boolean doReceive)
@@ -501,7 +501,7 @@ public abstract class TileBaseUniversalElectrical extends EnergyStorageTile
 //    @RuntimeInterface(clazz = "mekanism.api.energy.IStrictEnergyAcceptor", modID = CompatibilityManager.modidMekanism)
 //    public boolean canReceiveEnergy(Direction side)
 //    {
-//        return this.getElectricalInputDirections().contains(LogicalSide);
+//        return this.getElectricalInputDirections().contains(EnvType);
 //    }
 //
 //    @RuntimeInterface(clazz = "mekanism.api.energy.IStrictEnergyAcceptor", modID = CompatibilityManager.modidMekanism)
@@ -512,12 +512,12 @@ public abstract class TileBaseUniversalElectrical extends EnergyStorageTile
 //            return 0.0;
 //        }
 //
-//        if (!this.getElectricalInputDirections().contains(LogicalSide))
+//        if (!this.getElectricalInputDirections().contains(EnvType))
 //        {
 //            return 0;
 //        }
 //
-//        return this.receiveElectricity(LogicalSide, (float) amount * EnergyConfigHandler.MEKANISM_RATIO, 1, simulate) / EnergyConfigHandler.MEKANISM_RATIO;
+//        return this.receiveElectricity(EnvType, (float) amount * EnergyConfigHandler.MEKANISM_RATIO, 1, simulate) / EnergyConfigHandler.MEKANISM_RATIO;
 //    }
 //
 //    @RuntimeInterface(clazz = "mekanism.api.energy.IStrictEnergyAcceptor", modID = CompatibilityManager.modidMekanism)

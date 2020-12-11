@@ -5,9 +5,9 @@ import team.galacticraft.galacticraft.common.api.entity.ICameraZoomEntity;
 import team.galacticraft.galacticraft.common.api.event.ZeroGravityEvent;
 import team.galacticraft.galacticraft.common.api.item.IHoldableItem;
 import team.galacticraft.galacticraft.common.api.world.IZeroGDimension;
-import team.galacticraft.galacticraft.core.client.EventHandlerClient;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.client.EventHandlerClient;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
 import net.minecraft.client.ClientRecipeBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -41,12 +41,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ClientPlayerEntityGC extends LocalPlayer

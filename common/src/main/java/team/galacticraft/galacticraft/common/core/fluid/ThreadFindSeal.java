@@ -2,15 +2,15 @@ package team.galacticraft.galacticraft.common.core.fluid;
 
 import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.blocks.BlockThermalAir;
-import team.galacticraft.galacticraft.core.blocks.BlockUnlitTorch;
-import team.galacticraft.galacticraft.core.tick.TickHandlerServer;
-import team.galacticraft.galacticraft.core.tile.TileEntityOxygenSealer;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.GCLog;
-import team.galacticraft.galacticraft.core.wrappers.ScheduledBlockChange;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.blocks.BlockThermalAir;
+import team.galacticraft.galacticraft.common.core.blocks.BlockUnlitTorch;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerServer;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityOxygenSealer;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.wrappers.ScheduledBlockChange;
 import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -466,21 +466,21 @@ public class ThreadFindSeal
         List<BlockVec3> toReplaceLocalBright = this.breatheableToReplaceBright;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
         Level world = this.world;
-        int LogicalSide, bits;
+        int EnvType, bits;
 
         while (this.currentLayer.size() > 0)
         {
             for (BlockVec3 vec : this.currentLayer)
             {
-                LogicalSide = 0;
+                EnvType = 0;
                 bits = vec.sideDoneBits;
                 do
                 {
-                    if ((bits & (1 << LogicalSide)) == 0)
+                    if ((bits & (1 << EnvType)) == 0)
                     {
-                        if (!checkedContains(vec, LogicalSide))
+                        if (!checkedContains(vec, EnvType))
                         {
-                            BlockVec3 sideVec = vec.newVecSide(LogicalSide);
+                            BlockVec3 sideVec = vec.newVecSide(EnvType);
                             BlockState state = sideVec.getBlockStateSafe_noChunkLoad(world);
                             Block block = state == null ? null : state.getBlock();
 
@@ -508,13 +508,13 @@ public class ThreadFindSeal
 
                                 if (sealer != null && !this.sealers.contains(sealer))
                                 {
-                                    if (LogicalSide == 0)
+                                    if (EnvType == 0)
                                     {
-                                        //Accessing the vent LogicalSide of the sealer, so add it
+                                        //Accessing the vent EnvType of the sealer, so add it
                                         this.otherSealers.add(sealer);
                                         checkedAdd(sideVec);
                                     }
-                                    //if LogicalSide is not 0, do not add to checked so can be rechecked from other sides
+                                    //if EnvType is not 0, do not add to checked so can be rechecked from other sides
                                 }
                                 else
                                 {
@@ -526,7 +526,7 @@ public class ThreadFindSeal
                                 if (block != null && block != airBlock && block != airBlockBright)
                                 {
                                     //This test applies any necessary checkedAdd();
-                                    if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
+                                    if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(EnvType)))
                                     {
                                         //Look outbound through partially sealable blocks in case there is breatheableAir to clear beyond
                                         nextLayer.add(sideVec);
@@ -542,9 +542,9 @@ public class ThreadFindSeal
                             }
                         }
                     }
-                    LogicalSide++;
+                    EnvType++;
                 }
-                while (LogicalSide < 6);
+                while (EnvType < 6);
             }
 
             // Set up the next layer as current layer for the while loop
@@ -573,21 +573,21 @@ public class ThreadFindSeal
         List<BlockVec3> toReplaceLocal = this.breatheableToReplace;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
         Level world = this.world;
-        int LogicalSide, bits;
+        int EnvType, bits;
 
         while (this.currentLayer.size() > 0)
         {
             for (BlockVec3 vec : this.currentLayer)
             {
-                LogicalSide = 0;
+                EnvType = 0;
                 bits = vec.sideDoneBits;
                 do
                 {
-                    if ((bits & (1 << LogicalSide)) == 0)
+                    if ((bits & (1 << EnvType)) == 0)
                     {
-                        if (!checkedContains(vec, LogicalSide))
+                        if (!checkedContains(vec, EnvType))
                         {
-                            BlockVec3 sideVec = vec.newVecSide(LogicalSide);
+                            BlockVec3 sideVec = vec.newVecSide(EnvType);
                             BlockState state = sideVec.getBlockState_noChunkLoad(world);
                             Block block = state == null ? null : state.getBlock();
 
@@ -615,13 +615,13 @@ public class ThreadFindSeal
 
                                 if (sealer != null && !this.sealers.contains(sealer))
                                 {
-                                    if (LogicalSide == 0)
+                                    if (EnvType == 0)
                                     {
-                                        //Accessing the vent LogicalSide of the sealer, so add it
+                                        //Accessing the vent EnvType of the sealer, so add it
                                         this.otherSealers.add(sealer);
                                         checkedAdd(sideVec);
                                     }
-                                    //if LogicalSide is not 0, do not add to checked so can be rechecked from other sides
+                                    //if EnvType is not 0, do not add to checked so can be rechecked from other sides
                                 }
                                 else
                                 {
@@ -633,7 +633,7 @@ public class ThreadFindSeal
                                 if (block != null && block != airBlock && block != airBlockBright)
                                 {
                                     //This test applies any necessary checkedAdd();
-                                    if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
+                                    if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(EnvType)))
                                     {
                                         //Look outbound through partially sealable blocks in case there is breatheableAir to clear beyond
                                         nextLayer.add(sideVec);
@@ -649,9 +649,9 @@ public class ThreadFindSeal
                             }
                         }
                     }
-                    LogicalSide++;
+                    EnvType++;
                 }
-                while (LogicalSide < 6);
+                while (EnvType < 6);
             }
 
             // Set up the next layer as current layer for the while loop
@@ -670,27 +670,27 @@ public class ThreadFindSeal
         Block oxygenSealerID = GCBlocks.oxygenSealer;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
         Level world = this.world;
-        int LogicalSide, bits;
+        int EnvType, bits;
 
         while (this.sealed && this.currentLayer.size() > 0)
         {
             for (BlockVec3 vec : this.currentLayer)
             {
-                //This is for LogicalSide = 0 to 5 - but using do...while() is fractionally quicker
-                LogicalSide = 0;
+                //This is for EnvType = 0 to 5 - but using do...while() is fractionally quicker
+                EnvType = 0;
                 bits = vec.sideDoneBits;
                 do
                 {
-                    //Skip the LogicalSide which this was entered from
+                    //Skip the EnvType which this was entered from
                     //This is also used to skip looking on the solid sides of partially sealable blocks
-                    if ((bits & (1 << LogicalSide)) == 0)
+                    if ((bits & (1 << EnvType)) == 0)
                     {
                         // The sides 0 to 5 correspond with the EnumFacings
                         // but saves a bit of time not to call EnumFacing
 
-                        if (!checkedContains(vec, LogicalSide))
+                        if (!checkedContains(vec, EnvType))
                         {
-                            BlockVec3 sideVec = vec.newVecSide(LogicalSide);
+                            BlockVec3 sideVec = vec.newVecSide(EnvType);
                             if (this.checkCount > 0)
                             {
                                 this.checkCount--;
@@ -737,7 +737,7 @@ public class ThreadFindSeal
 
                                     if (sealer != null && !this.sealers.contains(sealer))
                                     {
-                                        if (LogicalSide == 0)
+                                        if (EnvType == 0)
                                         {
                                             checkedAdd(sideVec);
                                             this.sealers.add(sealer);
@@ -747,10 +747,10 @@ public class ThreadFindSeal
                                             }
                                             this.checkCount += sealer.getFindSealChecks();
                                         }
-                                        //if LogicalSide != 0, no checkedAdd() - allows this sealer to be checked again from other sides
+                                        //if EnvType != 0, no checkedAdd() - allows this sealer to be checked again from other sides
                                     }
                                 }
-                                else if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
+                                else if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(EnvType)))
                                 {
                                     nextLayer.add(sideVec);
                                 }
@@ -765,12 +765,12 @@ public class ThreadFindSeal
                                 Block block = state == null ? null : state.getBlock();
                                 // id == null means the void or height y>255, both
                                 // of which are unsealed obviously
-                                if (block == null || block == airID || block == breatheableAirID || block == airIDBright || block == breatheableAirIDBright || this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
+                                if (block == null || block == airID || block == breatheableAirID || block == airIDBright || block == breatheableAirIDBright || this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(EnvType)))
                                 {
                                     this.sealed = false;
                                     if (this.sealers.size() > 0)
                                     {
-                                        vec.sideDoneBits = LogicalSide << 6;
+                                        vec.sideDoneBits = EnvType << 6;
                                         traceLeak(vec);
                                     }
                                     return;
@@ -778,9 +778,9 @@ public class ThreadFindSeal
                             }
                         }
                     }
-                    LogicalSide++;
+                    EnvType++;
                 }
-                while (LogicalSide < 6);
+                while (EnvType < 6);
             }
 
             // Is there a further layer of air/permeable blocks to test?
@@ -807,27 +807,27 @@ public class ThreadFindSeal
         Block oxygenSealerID = GCBlocks.oxygenSealer;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
         Level world = this.world;
-        int LogicalSide, bits;
+        int EnvType, bits;
 
         while (this.sealed && this.currentLayer.size() > 0)
         {
             for (BlockVec3 vec : this.currentLayer)
             {
-                //This is for LogicalSide = 0 to 5 - but using do...while() is fractionally quicker
-                LogicalSide = 0;
+                //This is for EnvType = 0 to 5 - but using do...while() is fractionally quicker
+                EnvType = 0;
                 bits = vec.sideDoneBits;
                 do
                 {
-                    //Skip the LogicalSide which this was entered from
+                    //Skip the EnvType which this was entered from
                     //This is also used to skip looking on the solid sides of partially sealable blocks
-                    if ((bits & (1 << LogicalSide)) == 0)
+                    if ((bits & (1 << EnvType)) == 0)
                     {
                         // The sides 0 to 5 correspond with the EnumFacings
                         // but saves a bit of time not to call EnumFacing
 
-                        if (!checkedContains(vec, LogicalSide))
+                        if (!checkedContains(vec, EnvType))
                         {
-                            BlockVec3 sideVec = vec.newVecSide(LogicalSide);
+                            BlockVec3 sideVec = vec.newVecSide(EnvType);
                             if (this.checkCount > 0)
                             {
                                 this.checkCount--;
@@ -874,7 +874,7 @@ public class ThreadFindSeal
 
                                     if (sealer != null && !this.sealers.contains(sealer))
                                     {
-                                        if (LogicalSide == 0)
+                                        if (EnvType == 0)
                                         {
                                             checkedAdd(sideVec);
                                             this.sealers.add(sealer);
@@ -884,10 +884,10 @@ public class ThreadFindSeal
                                             }
                                             this.checkCount += sealer.getFindSealChecks();
                                         }
-                                        //if LogicalSide != 0, no checkedAdd() - allows this sealer to be checked again from other sides
+                                        //if EnvType != 0, no checkedAdd() - allows this sealer to be checked again from other sides
                                     }
                                 }
-                                else if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
+                                else if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(EnvType)))
                                 {
                                     nextLayer.add(sideVec);
                                 }
@@ -902,12 +902,12 @@ public class ThreadFindSeal
                                 Block block = state == null ? null : state.getBlock();
                                 // id == null means the void or height y>255, both
                                 // of which are unsealed obviously
-                                if (block == null || block == airID || block == breatheableAirID || block == airIDBright || block == breatheableAirIDBright || this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
+                                if (block == null || block == airID || block == breatheableAirID || block == airIDBright || block == breatheableAirIDBright || this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(EnvType)))
                                 {
                                     this.sealed = false;
                                     if (this.sealers.size() > 0)
                                     {
-                                        vec.sideDoneBits = LogicalSide << 6;
+                                        vec.sideDoneBits = EnvType << 6;
                                         traceLeak(vec);
                                     }
                                     return;
@@ -915,9 +915,9 @@ public class ThreadFindSeal
                             }
                         }
                     }
-                    LogicalSide++;
+                    EnvType++;
                 }
-                while (LogicalSide < 6);
+                while (EnvType < 6);
             }
 
             // Is there a further layer of air/permeable blocks to test?
@@ -962,12 +962,12 @@ public class ThreadFindSeal
         return bucket.contains(vec.y + ((dx & 0x3FF0) + ((dz & 0x3FF0) << 10) << 4));
     }
 
-    private boolean checkedContains(BlockVec3 vec, int LogicalSide)
+    private boolean checkedContains(BlockVec3 vec, int EnvType)
     {
         int y = vec.y;
         int dx = this.head.x - vec.x;
         int dz = this.head.z - vec.z;
-        switch (LogicalSide)
+        switch (EnvType)
         {
         case 0:
             y--;
@@ -1020,11 +1020,11 @@ public class ThreadFindSeal
             return null;
         }
         intBucket bucket = buckets[((dx & 15) << 4) + (dz & 15)];
-        int LogicalSide = bucket.getMSB4shifted(y + ((dx & 0x3FF0) + ((dz & 0x3FF0) << 10) << 4));
-        if (LogicalSide >= 0)
+        int EnvType = bucket.getMSB4shifted(y + ((dx & 0x3FF0) + ((dz & 0x3FF0) << 10) << 4));
+        if (EnvType >= 0)
         {
             BlockVec3 vec = new BlockVec3(x, y, z);
-            vec.sideDoneBits = LogicalSide;
+            vec.sideDoneBits = EnvType;
             return vec;
         }
         return null;

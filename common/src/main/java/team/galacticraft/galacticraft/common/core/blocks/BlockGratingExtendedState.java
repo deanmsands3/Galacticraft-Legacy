@@ -4,7 +4,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import com.google.common.collect.ImmutableMap;
 //import com.google.common.collect.ImmutableTable;
 //import com.google.common.collect.Iterables;
-//import team.galacticraft.galacticraft.core.util.JavaUtil;
+//import team.galacticraft.galacticraft.common.core.util.JavaUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.properties.IProperty;
@@ -14,8 +14,8 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import net.minecraftforge.fluids.BlockFluidBase;
 //import net.minecraftforge.fluids.BlockFluidClassic;
 //
-//import javax.annotation.Nonnull;
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.Nullable;
 //import java.util.*;
 //
 //public class BlockGratingExtendedState extends ExtendedBlockState

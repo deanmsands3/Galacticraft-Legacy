@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.util.RecipeUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.util.RecipeUtil;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

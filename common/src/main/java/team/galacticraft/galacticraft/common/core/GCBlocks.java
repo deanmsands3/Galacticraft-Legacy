@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core;
 
-import team.galacticraft.galacticraft.core.blocks.*;
-import team.galacticraft.galacticraft.core.items.ItemBlockDesc;
-import team.galacticraft.galacticraft.core.items.ItemBlockWallOrFloorDesc;
-import team.galacticraft.galacticraft.core.tile.*;
+import team.galacticraft.galacticraft.common.core.blocks.*;
+import team.galacticraft.galacticraft.common.core.items.ItemBlockDesc;
+import team.galacticraft.galacticraft.common.core.items.ItemBlockWallOrFloorDesc;
+import team.galacticraft.galacticraft.common.core.tile.*;
 import team.galacticraft.galacticraft.planets.venus.blocks.BlockDungeonBrick;
 import net.minecraft.core.Registry;
 import net.minecraft.item.*;

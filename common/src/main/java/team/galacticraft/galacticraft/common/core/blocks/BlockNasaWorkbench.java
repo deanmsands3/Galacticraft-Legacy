@@ -1,17 +1,19 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.level.block.EntityBlock;
 import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
 import team.galacticraft.galacticraft.common.api.recipe.SchematicRegistry;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.inventory.ContainerFuelLoader;
-import team.galacticraft.galacticraft.core.inventory.ContainerSchematic;
-import team.galacticraft.galacticraft.core.items.IShiftDescription;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.tile.IMultiBlock;
-import team.galacticraft.galacticraft.core.tile.TileEntityFuelLoader;
-import team.galacticraft.galacticraft.core.tile.TileEntityNasaWorkbench;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerFuelLoader;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerSchematic;
+import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.tile.IMultiBlock;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityFuelLoader;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityNasaWorkbench;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,11 +30,11 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fml.network.NetworkHooks;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
-public class BlockNasaWorkbench extends Block implements IShiftDescription, IPartialSealableBlock, ISortable
+public class BlockNasaWorkbench extends Block implements IShiftDescription, IPartialSealableBlock, ISortable, EntityBlock
 {
     public BlockNasaWorkbench(Properties builder)
     {
@@ -155,7 +157,7 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
         if (!worldIn.isClientSide)
         {
             SimpleMenuProvider container = SchematicRegistry.getMatchingRecipeForID(0).getContainerProvider(playerIn);
-            NetworkHooks.openGui((ServerPlayer) playerIn, container, buf -> buf.writeBlockPos(pos));
+            PlatformSpecific.openContainer((ServerPlayer) playerIn, container, buf -> buf.writeBlockPos(pos));
         }
         return InteractionResult.SUCCESS;
     }
@@ -167,13 +169,13 @@ public class BlockNasaWorkbench extends Block implements IShiftDescription, IPar
 //    }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityNasaWorkbench();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

@@ -5,7 +5,7 @@ package team.galacticraft.galacticraft.common.core.recipe;
 //import java.util.Set;
 //import java.util.Map.Entry;
 //
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //import com.google.common.collect.Maps;
 //import com.google.common.collect.Sets;
@@ -15,7 +15,7 @@ package team.galacticraft.galacticraft.common.core.recipe;
 //import com.google.gson.JsonSyntaxException;
 //
 //import team.galacticraft.galacticraft.common.api.recipe.IRecipeUpdatable;
-//import team.galacticraft.galacticraft.core.util.RecipeUtil;
+//import team.galacticraft.galacticraft.common.core.util.RecipeUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.item.Item;
 //import net.minecraft.item.ItemStack;

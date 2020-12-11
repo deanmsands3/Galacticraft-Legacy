@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.client.gui.element;
 
-import team.galacticraft.galacticraft.core.util.ColorUtil;
+import team.galacticraft.galacticraft.common.core.util.ColorUtil;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;

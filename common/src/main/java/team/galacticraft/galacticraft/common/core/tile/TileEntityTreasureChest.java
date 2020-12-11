@@ -1,13 +1,13 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.item.IKeyable;
-import team.galacticraft.galacticraft.core.Annotations;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.Annotations;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -43,12 +43,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -68,9 +65,9 @@ public class TileEntityTreasureChest extends TileEntityAdvanced implements Ticka
     protected ResourceLocation lootTable;
     protected long lootTableSeed;
 
-    @Annotations.NetworkedField(targetSide = LogicalSide.CLIENT)
+    @Annotations.NetworkedField(targetSide = EnvType.CLIENT)
     public boolean locked = true;
-    @Annotations.NetworkedField(targetSide = LogicalSide.CLIENT)
+    @Annotations.NetworkedField(targetSide = EnvType.CLIENT)
     public int tier = 1;
 
     public TileEntityTreasureChest()

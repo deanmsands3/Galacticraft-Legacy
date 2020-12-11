@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategory;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.StairsBlock;
 //import net.minecraft.item.ItemGroup;
@@ -96,7 +96,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //
 //    private static boolean isDifferentStairs(BlockState state, IBlockReader worldIn, BlockPos pos, Direction side)
 //    {
-//        BlockState iblockstate = worldIn.getBlockState(pos.offset(LogicalSide));
+//        BlockState iblockstate = worldIn.getBlockState(pos.offset(EnvType));
 //        return !isBlockStairs(iblockstate) || iblockstate.get(FACING) != state.get(FACING) || iblockstate.get(HALF) != state.get(HALF);
 //    }
 //}

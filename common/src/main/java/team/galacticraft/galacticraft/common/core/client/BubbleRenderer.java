@@ -5,10 +5,10 @@ package team.galacticraft.galacticraft.common.core.client;
 //
 //import com.mojang.blaze3d.platform.GLX;
 //import team.galacticraft.galacticraft.common.api.vector.Vector3;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.entities.IBubbleProviderColored;
-//import team.galacticraft.galacticraft.core.util.ClientUtil;
-//import team.galacticraft.galacticraft.core.util.ColorUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.entities.IBubbleProviderColored;
+//import team.galacticraft.galacticraft.common.core.util.ClientUtil;
+//import team.galacticraft.galacticraft.common.core.util.ColorUtil;
 //import net.minecraft.client.Minecraft;
 //import com.mojang.blaze3d.platform.GlStateManager;
 //import net.minecraft.client.renderer.model.IBakedModel;

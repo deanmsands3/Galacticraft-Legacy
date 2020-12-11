@@ -13,23 +13,23 @@ import team.galacticraft.galacticraft.common.api.recipe.SchematicRegistry;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
 import team.galacticraft.galacticraft.common.api.world.IZeroGDimension;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.TransformerHooks;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedZombie;
-import team.galacticraft.galacticraft.core.entities.EntityLanderBase;
-import team.galacticraft.galacticraft.core.entities.EntityMeteor;
-import team.galacticraft.galacticraft.core.entities.GCEntities;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.TransformerHooks;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedZombie;
+import team.galacticraft.galacticraft.common.core.entities.EntityLanderBase;
+import team.galacticraft.galacticraft.common.core.entities.EntityMeteor;
+import team.galacticraft.galacticraft.common.core.entities.GCEntities;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStatsClient;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.tick.TickHandlerServer;
-import team.galacticraft.galacticraft.core.util.*;
-import team.galacticraft.galacticraft.core.wrappers.PlayerGearData;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerServer;
+import team.galacticraft.galacticraft.common.core.util.*;
+import team.galacticraft.galacticraft.common.core.wrappers.PlayerGearData;
 import team.galacticraft.galacticraft.planets.asteroids.AsteroidsModule;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -70,8 +70,6 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
@@ -259,7 +257,7 @@ public class EventHandlerGC
                 GCPlayerStats stats = GCPlayerStats.get(event.getPlayer());
                 if (!stats.hasReceivedBedWarning())
                 {
-                    event.getPlayer().sendMessage(new TextComponent(I18n.get("gui.bed_fail.message")));
+                    event.getPlayer().sendMessage(new TranslatableComponent(("gui.bed_fail.message")));
                     stats.setReceivedBedWarning(true);
                 }
             }

@@ -2,15 +2,15 @@ package team.galacticraft.galacticraft.common.core.items;
 
 import team.galacticraft.galacticraft.common.api.recipe.ISchematicItem;
 import team.galacticraft.galacticraft.common.api.recipe.SchematicRegistry;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.entities.EntityHangingSchematic;
-import team.galacticraft.galacticraft.core.entities.GCEntities;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.EnumColor;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.entities.EntityHangingSchematic;
+import team.galacticraft.galacticraft.common.core.entities.GCEntities;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.EnumColor;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -27,12 +27,10 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemSchematic extends Item implements ISchematicItem, ISortable
 {
@@ -83,11 +81,11 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
     {
         if (stack.getItem() == GCItems.schematicBuggy)
         {
-            tooltip.add(new TextComponent(I18n.get("schematic.moonbuggy")));
+            tooltip.add(new TranslatableComponent(("schematic.moonbuggy")));
         }
         else if (stack.getItem() == GCItems.schematicRocketT2)
         {
-            tooltip.add(new TextComponent(I18n.get("schematic.rocket_t2")));
+            tooltip.add(new TranslatableComponent(("schematic.rocket_t2")));
 
             if (!GalacticraftCore.isPlanetsLoaded)
             {

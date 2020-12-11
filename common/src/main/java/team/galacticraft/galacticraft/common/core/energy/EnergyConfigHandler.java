@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.energy;
 
-import team.galacticraft.galacticraft.core.util.CompatibilityManager;
-import team.galacticraft.galacticraft.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.util.CompatibilityManager;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;

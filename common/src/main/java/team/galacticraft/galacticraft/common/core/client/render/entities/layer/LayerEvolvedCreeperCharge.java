@@ -1,14 +1,12 @@
 package team.galacticraft.galacticraft.common.core.client.render.entities.layer;
 
-import team.galacticraft.galacticraft.core.client.model.ModelEvolvedCreeper;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedCreeper;
+import team.galacticraft.galacticraft.common.core.client.model.ModelEvolvedCreeper;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedCreeper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EnergySwirlLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class LayerEvolvedCreeperCharge extends EnergySwirlLayer<EntityEvolvedCreeper, ModelEvolvedCreeper>

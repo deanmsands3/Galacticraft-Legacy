@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.dimension.chunk;
 
 import java.util.function.Supplier;
 
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.world.level.chunk.ChunkGeneratorType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;

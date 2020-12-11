@@ -1,19 +1,19 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockRefinery;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.core.inventory.ContainerRefinery;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.core.util.FluidUtil;
-import team.galacticraft.galacticraft.core.wrappers.FluidHandlerWrapper;
-import team.galacticraft.galacticraft.core.wrappers.IFluidHandlerWrapper;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockRefinery;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseElectricBlockWithInventory;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerRefinery;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.util.FluidUtil;
+import team.galacticraft.galacticraft.common.core.wrappers.FluidHandlerWrapper;
+import team.galacticraft.galacticraft.common.core.wrappers.IFluidHandlerWrapper;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -30,17 +30,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.fml.LogicalSide;
+import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 import net.minecraftforge.registries.ObjectHolder;
-import FluidStack;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import me.shedaniel.architectury.fluid.FluidStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class TileEntityRefinery extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IFluidHandlerWrapper, MenuProvider
 {
@@ -48,14 +47,14 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     public static BlockEntityType<TileEntityRefinery> TYPE;
 
     private final int tankCapacity = 24000;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public FluidTank oilTank = new FluidTank(this.tankCapacity);
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public FluidTank fuelTank = new FluidTank(this.tankCapacity);
 
     public static final int PROCESS_TIME_REQUIRED = 2;
     public static final int OUTPUT_PER_SECOND = 1;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int processTicks = 0;
 
     public TileEntityRefinery()

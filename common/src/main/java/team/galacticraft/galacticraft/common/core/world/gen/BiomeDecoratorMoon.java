@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 //
 //import team.galacticraft.galacticraft.common.api.event.wgen.GCCoreEventPopulate;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.blocks.BlockBasicMoon;
-//import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockBasicMoon;
+//import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.pattern.BlockMatcher;
 //import net.minecraft.block.Blocks;

@@ -2,8 +2,8 @@ package team.galacticraft.galacticraft.common.core.client.render.entities.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import team.galacticraft.galacticraft.core.client.model.ModelEvolvedWitch;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedWitch;
+import team.galacticraft.galacticraft.common.core.client.model.ModelEvolvedWitch;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedWitch;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -11,8 +11,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.CrossedArmsItemLayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class LayerHeldItemEvolvedWitch extends CrossedArmsItemLayer<EntityEvolvedWitch, ModelEvolvedWitch>

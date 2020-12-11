@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.client.jei.tier1rocket;
 //
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //import com.google.common.collect.Lists;
 //import mezz.jei.api.ingredients.IIngredients;

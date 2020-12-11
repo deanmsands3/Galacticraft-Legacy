@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.dimension;
 
-import team.galacticraft.galacticraft.core.dimension.chunk.MoonGenSettings;
+import team.galacticraft.galacticraft.common.core.dimension.chunk.MoonGenSettings;
 import net.minecraft.world.level.biome.BiomeSourceSettings;
 import net.minecraft.world.level.storage.LevelData;
 

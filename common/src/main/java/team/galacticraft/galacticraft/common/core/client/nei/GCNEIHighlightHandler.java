@@ -2,11 +2,11 @@ package team.galacticraft.galacticraft.common.core.client.nei;
 //
 //import codechicken.nei.api.IHighlightHandler;
 //import codechicken.nei.api.ItemInfo;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.blocks.BlockFluidPipe;
-//import team.galacticraft.galacticraft.core.fluid.FluidNetwork;
-//import team.galacticraft.galacticraft.core.tile.TileEntityFluidPipe;
-//import team.galacticraft.galacticraft.core.tile.TileEntityFluidTank;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockFluidPipe;
+//import team.galacticraft.galacticraft.common.core.fluid.FluidNetwork;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityFluidPipe;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityFluidTank;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.state.IBlockState;
 //import net.minecraft.entity.player.EntityPlayer;

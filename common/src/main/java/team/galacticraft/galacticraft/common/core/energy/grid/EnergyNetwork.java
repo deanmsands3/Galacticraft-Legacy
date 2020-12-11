@@ -5,11 +5,11 @@ import team.galacticraft.galacticraft.common.api.transmission.grid.IElectricityN
 import team.galacticraft.galacticraft.common.api.transmission.tile.IConductor;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IElectrical;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.energy.EnergyConfigHandler;
-import team.galacticraft.galacticraft.core.energy.EnergyUtil;
-import team.galacticraft.galacticraft.core.tick.TickHandlerServer;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.energy.EnergyConfigHandler;
+import team.galacticraft.galacticraft.common.core.energy.EnergyUtil;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerServer;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -247,7 +247,7 @@ public class EnergyNetwork implements IElectricityNetwork
                 //This tries all sides of the acceptor which are connected (see refreshAcceptors())
                 Direction sideFrom = acceptorDirection.next();
 
-                //But the grid will only put energy into the acceptor from one LogicalSide - once it's in availableAcceptors
+                //But the grid will only put energy into the acceptor from one EnvType - once it's in availableAcceptors
                 if (!this.ignoreAcceptors.contains(acceptor) && !this.availableAcceptors.contains(acceptor))
                 {
                     e = 0.0F;

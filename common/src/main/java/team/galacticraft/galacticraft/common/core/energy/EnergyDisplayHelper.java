@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.energy;
 
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.Mth;
 import java.util.List;

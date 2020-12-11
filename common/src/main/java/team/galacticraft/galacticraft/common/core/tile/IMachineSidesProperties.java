@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.tile;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import team.galacticraft.galacticraft.core.tile.IMachineSides.Face;
+import team.galacticraft.galacticraft.common.core.tile.IMachineSides.Face;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 

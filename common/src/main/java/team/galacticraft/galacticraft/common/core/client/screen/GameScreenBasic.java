@@ -3,12 +3,12 @@ package team.galacticraft.galacticraft.common.core.client.screen;
 import com.mojang.blaze3d.platform.GlStateManager;
 import team.galacticraft.galacticraft.common.api.client.IGameScreen;
 import team.galacticraft.galacticraft.common.api.client.IScreenManager;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.client.render.RenderPlanet;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.client.render.RenderPlanet;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.lwjgl.opengl.GL11;
@@ -28,7 +28,7 @@ public class GameScreenBasic implements IGameScreen
     public GameScreenBasic()
     {
         //This can be called from either server or client, so don't include
-        //client-LogicalSide only code on the server.
+        //client-EnvType only code on the server.
         if (GCCoreUtil.getEffectiveSide().isClient())
         {
             textureManager = Minecraft.getInstance().textureManager;

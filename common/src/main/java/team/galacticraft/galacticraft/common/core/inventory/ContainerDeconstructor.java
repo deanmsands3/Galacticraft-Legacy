@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
 import team.galacticraft.galacticraft.common.api.item.IItemElectric;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.energy.EnergyUtil;
-import team.galacticraft.galacticraft.core.tile.TileEntityDeconstructor;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.energy.EnergyUtil;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityDeconstructor;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

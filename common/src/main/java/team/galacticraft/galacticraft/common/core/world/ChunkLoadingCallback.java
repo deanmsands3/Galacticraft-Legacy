@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.world;
 //
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-//import team.galacticraft.galacticraft.core.util.GCLog;
-//import team.galacticraft.galacticraft.core.util.PlayerUtil;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.GCLog;
+//import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
 //import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.nbt.CompoundNBT;
 //import net.minecraft.tileentity.TileEntity;

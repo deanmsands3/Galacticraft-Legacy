@@ -2,8 +2,8 @@ package team.galacticraft.galacticraft.common.core.blocks;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -24,10 +24,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.RedstoneSide;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
@@ -42,9 +40,11 @@ public class BlockConcealedRedstone extends Block implements ISortable
     public BlockConcealedRedstone(Properties properties)
     {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(POWER, Integer.valueOf(0)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(POWER, 0));
     }
 
+
+    //VANILLA COPY RedStoneWireBlock
     protected static boolean canConnectTo(BlockState blockState, BlockGetter world, BlockPos pos, @Nullable Direction side)
     {
         Block block = blockState.getBlock();
@@ -63,7 +63,7 @@ public class BlockConcealedRedstone extends Block implements ISortable
         }
         else
         {
-            return blockState.canConnectRedstone(world, pos, side) && side != null;
+            return blockState.isSignalSource() && side != null;
         }
     }
 
@@ -128,7 +128,7 @@ public class BlockConcealedRedstone extends Block implements ISortable
 
     private BlockState updateSurroundingRedstone(Level worldIn, BlockPos pos, BlockState state)
     {
-        state = this.func_212568_b(worldIn, pos, state);
+        state = this.updatePowerStrengthImpl(worldIn, pos, state);
         List<BlockPos> list = Lists.newArrayList(this.blocksNeedingUpdate);
         this.blocksNeedingUpdate.clear();
 
@@ -140,7 +140,7 @@ public class BlockConcealedRedstone extends Block implements ISortable
         return state;
     }
 
-    private BlockState func_212568_b(Level p_212568_1_, BlockPos p_212568_2_, BlockState p_212568_3_)
+    private BlockState updatePowerStrengthImpl(Level p_212568_1_, BlockPos p_212568_2_, BlockState p_212568_3_)
     {
         BlockState blockstate = p_212568_3_;
         int i = p_212568_3_.getValue(POWER);
@@ -175,7 +175,7 @@ public class BlockConcealedRedstone extends Block implements ISortable
 
         if (i != l)
         {
-            p_212568_3_ = p_212568_3_.setValue(POWER, Integer.valueOf(l));
+            p_212568_3_ = p_212568_3_.setValue(POWER, l);
             if (p_212568_1_.getBlockState(p_212568_2_) == blockstate)
             {
                 p_212568_1_.setBlock(p_212568_2_, p_212568_3_, 2);
@@ -285,7 +285,7 @@ public class BlockConcealedRedstone extends Block implements ISortable
         else
         {
             int i = neighbor.getValue(POWER);
-            return i > existingSignal ? i : existingSignal;
+            return Math.max(i, existingSignal);
         }
     }
 

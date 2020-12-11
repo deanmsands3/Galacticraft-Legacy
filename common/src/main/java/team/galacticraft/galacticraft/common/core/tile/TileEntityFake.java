@@ -3,11 +3,11 @@ package team.galacticraft.galacticraft.common.core.tile;
 import java.util.ArrayList;
 import java.util.List;
 
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.blocks.BlockAdvanced;
-import team.galacticraft.galacticraft.core.blocks.BlockMulti;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.blocks.BlockAdvanced;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMulti;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;

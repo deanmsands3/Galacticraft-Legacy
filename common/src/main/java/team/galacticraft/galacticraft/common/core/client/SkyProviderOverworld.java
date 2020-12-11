@@ -1,13 +1,13 @@
 package team.galacticraft.galacticraft.common.core.client;
 //
 //import com.mojang.blaze3d.platform.GlStateManager;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.TransformerHooks;
-//import team.galacticraft.galacticraft.core.network.PacketSimple;
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-//import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.TransformerHooks;
+//import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.renderer.BufferBuilder;
 //import net.minecraft.client.renderer.GLAllocation;

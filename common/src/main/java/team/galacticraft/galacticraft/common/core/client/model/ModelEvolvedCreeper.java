@@ -1,15 +1,13 @@
 package team.galacticraft.galacticraft.common.core.client.model;
 
 import com.google.common.collect.ImmutableList;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedCreeper;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedCreeper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)

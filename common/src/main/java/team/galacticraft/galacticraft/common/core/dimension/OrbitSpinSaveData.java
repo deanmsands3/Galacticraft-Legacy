@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.dimension;
 //
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.nbt.CompoundNBT;
 //import net.minecraft.world.World;
 //import net.minecraft.world.storage.WorldSavedData;

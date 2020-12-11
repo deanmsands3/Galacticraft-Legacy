@@ -1,11 +1,11 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.dimension.WorldProviderSpaceStation;
-//import team.galacticraft.galacticraft.core.items.IShiftDescription;
-//import team.galacticraft.galacticraft.core.tile.TileEntityThruster;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.dimension.WorldProviderSpaceStation;
+//import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityThruster;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.ITileEntityProvider;
@@ -23,7 +23,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.world.IBlockReader;
 //import net.minecraft.world.World;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //import java.util.Random;
@@ -256,7 +256,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    }
 //
 //    @Override
-//    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+//    public TileEntity newBlockEntity(IBlockReader world)
 //    {
 //        return new TileEntityThruster();
 //    }

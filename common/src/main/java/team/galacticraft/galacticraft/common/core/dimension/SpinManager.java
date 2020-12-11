@@ -3,16 +3,16 @@ package team.galacticraft.galacticraft.common.core.dimension;
 //import com.google.common.collect.Lists;
 //
 //import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.blocks.BlockSpinThruster;
-//import team.galacticraft.galacticraft.core.entities.ITumblable;
-//import team.galacticraft.galacticraft.core.entities.player.FreefallHandler;
-//import team.galacticraft.galacticraft.core.network.PacketSimple;
-//import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-//import team.galacticraft.galacticraft.core.util.GCLog;
-//import team.galacticraft.galacticraft.core.util.RedstoneUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockSpinThruster;
+//import team.galacticraft.galacticraft.common.core.entities.ITumblable;
+//import team.galacticraft.galacticraft.common.core.entities.player.FreefallHandler;
+//import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+//import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.GCLog;
+//import team.galacticraft.galacticraft.common.core.util.RedstoneUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockDynamicLiquid;
 //import net.minecraft.block.BlockLiquid;
@@ -32,7 +32,7 @@ package team.galacticraft.galacticraft.common.core.dimension;
 //import net.minecraft.util.math.MathHelper;
 //import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.api.distmarker.OnlyIn;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //import java.util.ArrayList;
@@ -111,7 +111,7 @@ package team.galacticraft.galacticraft.common.core.dimension;
 //        this.angularVelocityRadians = angle;
 //        this.skyAngularVelocity = angle * 180F / 3.1415927F;
 //
-//        if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+//        if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
 //        {
 //            this.updateSkyProviderSpinRate();
 //        }
@@ -177,7 +177,7 @@ package team.galacticraft.galacticraft.common.core.dimension;
 //     * player cannot place thrusters on outlying disconnected blocks and expect
 //     * them to have an effect.
 //     * <p/>
-//     * Note: this check will briefly load, server-LogicalSide, all chunks which have
+//     * Note: this check will briefly load, server-EnvType, all chunks which have
 //     * spacestation blocks in them or 1 block adjacent to those.
 //     *
 //     * @param baseBlock
@@ -255,13 +255,13 @@ package team.galacticraft.galacticraft.common.core.dimension;
 //                    thisssBoundsMaxZ = vec.z;
 //                }
 //
-//                for (int LogicalSide = 0; LogicalSide < 6; LogicalSide++)
+//                for (int EnvType = 0; EnvType < 6; EnvType++)
 //                {
-//                    if ((bits & (1 << LogicalSide)) == 1)
+//                    if ((bits & (1 << EnvType)) == 1)
 //                    {
 //                        continue;
 //                    }
-//                    BlockVec3 sideVec = vec.newVecSide(LogicalSide);
+//                    BlockVec3 sideVec = vec.newVecSide(EnvType);
 //
 //                    if (sideVec != null && !this.checked.contains(sideVec))
 //                    {

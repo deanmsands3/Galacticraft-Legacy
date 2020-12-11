@@ -3,16 +3,15 @@ package team.galacticraft.galacticraft.common.core.energy.tile;
 import team.galacticraft.galacticraft.common.api.tile.IDisableableMachine;
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IConnector;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.util.EnumColor;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.RedstoneUtil;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.util.EnumColor;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.RedstoneUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.LogicalSide;
 
 import java.util.EnumSet;
 
@@ -21,11 +20,11 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
     //	public int energyPerTick = 200;
     //	private final float ueMaxEnergy;
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean disabled = false;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int disableCooldown = 0;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean hasEnoughEnergyToRun = false;
     public boolean noRedstoneControl = false;
 
@@ -202,7 +201,7 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
 //    public List<ItemStack> getWrenchDrops(World world, BlockPos pos, BlockState state, TileEntity te, PlayerEntity player, int fortune)
 //    {
 //        List<ItemStack> drops = Lists.newArrayList();
-//        drops.add(this.getBlockType().getPickBlock(state, null, this.world, this.getPos(), player));
+//        drops.add(this.getBlockType().getCloneItemStack(state, null, this.world, this.getPos(), player));
 //        return drops;
 //    } TODO IC Support
 

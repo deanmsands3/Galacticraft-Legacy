@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.entities.player;
 
 import team.galacticraft.galacticraft.common.api.recipe.ISchematicPage;
-import team.galacticraft.galacticraft.core.tile.TileEntityPlatform;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityPlatform;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;

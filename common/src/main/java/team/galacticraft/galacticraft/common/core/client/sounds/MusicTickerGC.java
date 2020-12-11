@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.client.sounds;
 
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.sounds.MusicManager;
 import net.minecraft.util.Mth;

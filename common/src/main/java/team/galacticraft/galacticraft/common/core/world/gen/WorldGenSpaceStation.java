@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 
-import team.galacticraft.galacticraft.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CrossCollisionBlock;

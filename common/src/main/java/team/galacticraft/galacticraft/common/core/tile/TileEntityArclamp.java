@@ -3,15 +3,15 @@ package team.galacticraft.galacticraft.common.core.tile;
 import io.netty.buffer.ByteBuf;
 import team.galacticraft.galacticraft.common.api.tile.ITileClientUpdates;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.blocks.BlockArcLamp;
-import team.galacticraft.galacticraft.core.network.IPacketReceiver;
-import team.galacticraft.galacticraft.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.RedstoneUtil;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.blocks.BlockArcLamp;
+import team.galacticraft.galacticraft.common.core.network.IPacketReceiver;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.RedstoneUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -36,9 +36,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -320,7 +317,7 @@ public class TileEntityArclamp extends BlockEntity implements TickableBlockEntit
         Level world = this.level;
         int sideskip1 = this.sideRear.get3DDataValue();
         int sideskip2 = this.facingSide.get3DDataValue() ^ 1;
-        int LogicalSide, bits;
+        int EnvType, bits;
         for (int i = 0; i < 6; i++)
         {
             if (i != sideskip1 && i != sideskip2 && i != (sideskip1 ^ 1) && i != (sideskip2 ^ 1))
@@ -427,18 +424,18 @@ public class TileEntityArclamp extends BlockEntity implements TickableBlockEntit
 
                 //Now process each layer outwards from the source, finding new blocks to light (similar to ThreadFindSeal)
                 //This is high performance code using our own custom HashSet (that's intBucket)
-                LogicalSide = 0;
+                EnvType = 0;
                 bits = vec.sideDoneBits;
                 boolean doShine = false;
                 do
                 {
-                    //Skip the LogicalSide which this was entered from
+                    //Skip the EnvType which this was entered from
                     //and never go 'backwards'
-                    if ((bits & (1 << LogicalSide)) == 0)
+                    if ((bits & (1 << EnvType)) == 0)
                     {
-                        BlockVec3 sideVec = vec.newVecSide(LogicalSide);
+                        BlockVec3 sideVec = vec.newVecSide(EnvType);
                         boolean toAdd = false;
-                        if (!checkedContains(vec, LogicalSide))
+                        if (!checkedContains(vec, EnvType))
                         {
                             checkedAdd(sideVec);
                             toAdd = true;
@@ -447,13 +444,13 @@ public class TileEntityArclamp extends BlockEntity implements TickableBlockEntit
                         BlockState bs = sideVec.getBlockStateSafe_noChunkLoad(world);
                         if (bs == null)
                         {
-                            LogicalSide++;
+                            EnvType++;
                             continue;
                         }
                         Block b = bs.getBlock();
                         if (b instanceof AirBlock)
                         {
-                            if (toAdd && LogicalSide != sideskip1 && LogicalSide != sideskip2)
+                            if (toAdd && EnvType != sideskip1 && EnvType != sideskip2)
                             {
                                 nextLayer.add(sideVec);
                             }
@@ -462,7 +459,7 @@ public class TileEntityArclamp extends BlockEntity implements TickableBlockEntit
                         {
                             doShine = true;
                             //Glass blocks go through to the next layer as well
-                            if (LogicalSide != sideskip1 && LogicalSide != sideskip2)
+                            if (EnvType != sideskip1 && EnvType != sideskip2)
                             {
                                 if (toAdd && b != null && b.getLightBlock(bs, world, sideVec.toBlockPos()) == 0)
                                 {
@@ -471,9 +468,9 @@ public class TileEntityArclamp extends BlockEntity implements TickableBlockEntit
                             }
                         }
                     }
-                    LogicalSide++;
+                    EnvType++;
                 }
-                while (LogicalSide < 6);
+                while (EnvType < 6);
 
                 if (doShine)
                 {
@@ -536,7 +533,7 @@ public class TileEntityArclamp extends BlockEntity implements TickableBlockEntit
         super.load(nbt);
 
         this.facing = nbt.getInt("Facing");
-        if (GCCoreUtil.getEffectiveSide() == LogicalSide.SERVER)
+        if (GCCoreUtil.getEffectiveSide() == EnvType.SERVER)
         {
             this.airToRestore.clear();
             ListTag airBlocks = nbt.getList("AirBlocks", 10);
@@ -1015,12 +1012,12 @@ public class TileEntityArclamp extends BlockEntity implements TickableBlockEntit
         return bucket.contains(vec.y + ((dx & 0x3FF0) + ((dz & 0x3FF0) << 10) << 4));
     }
 
-    private boolean checkedContains(BlockVec3 vec, int LogicalSide)
+    private boolean checkedContains(BlockVec3 vec, int EnvType)
     {
         int y = vec.y;
         int dx = this.worldPosition.getX() - vec.x;
         int dz = this.worldPosition.getZ() - vec.z;
-        switch (LogicalSide)
+        switch (EnvType)
         {
         case 0:
             y--;

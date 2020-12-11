@@ -3,20 +3,20 @@ package team.galacticraft.galacticraft.common.core.client.gui;
 //import team.galacticraft.galacticraft.common.api.prefab.entity.EntityTieredRocket;
 //import team.galacticraft.galacticraft.common.api.recipe.ISchematicPage;
 //import team.galacticraft.galacticraft.common.api.recipe.ISchematicResultPage;
-//import team.galacticraft.galacticraft.core.GCItems;
-//import team.galacticraft.galacticraft.core.client.gui.container.*;
-//import team.galacticraft.galacticraft.core.client.gui.screen.GuiCelestialSelection;
-//import team.galacticraft.galacticraft.core.client.gui.screen.GuiJoinSpaceRace;
-//import team.galacticraft.galacticraft.core.client.gui.screen.GuiNewSpaceRace;
-//import team.galacticraft.galacticraft.core.client.gui.screen.GuiPreLaunchChecklist;
+//import team.galacticraft.galacticraft.common.core.GCItems;
+//import team.galacticraft.galacticraft.common.core.client.gui.container.*;
+//import team.galacticraft.galacticraft.common.core.client.gui.screen.GuiCelestialSelection;
+//import team.galacticraft.galacticraft.common.core.client.gui.screen.GuiJoinSpaceRace;
+//import team.galacticraft.galacticraft.common.core.client.gui.screen.GuiNewSpaceRace;
+//import team.galacticraft.galacticraft.common.core.client.gui.screen.GuiPreLaunchChecklist;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStatsClient;
-//import team.galacticraft.galacticraft.core.inventory.*;
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-//import team.galacticraft.galacticraft.core.tile.*;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-//import team.galacticraft.galacticraft.core.util.PlayerUtil;
-//import team.galacticraft.galacticraft.core.util.WorldUtil;
+//import team.galacticraft.galacticraft.common.core.inventory.*;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.tile.*;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
+//import team.galacticraft.galacticraft.common.core.util.WorldUtil;
 //import net.minecraft.client.entity.player.ClientPlayerEntity;
 //import net.minecraft.client.gui.screen.Screen;
 //import net.minecraft.entity.player.PlayerEntity;
@@ -29,7 +29,7 @@ package team.galacticraft.galacticraft.common.core.client.gui;
 //import net.minecraft.world.World;
 //import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.api.distmarker.OnlyIn;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.common.network.IGuiHandler;
 //
 //public class GuiHandler implements IGuiHandler
@@ -41,7 +41,7 @@ package team.galacticraft.galacticraft.common.core.client.gui;
 //
 //        if (playerBase == null)
 //        {
-//            player.sendMessage(new StringTextComponent("Galacticraft player instance null server-LogicalSide. This is a bug."));
+//            player.sendMessage(new StringTextComponent("Galacticraft player instance null server-EnvType. This is a bug."));
 //            return null;
 //        }
 //
@@ -161,7 +161,7 @@ package team.galacticraft.galacticraft.common.core.client.gui;
 //    @Override
 //    public Object getClientGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z)
 //    {
-//        if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+//        if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
 //        {
 //            return this.getClientGuiElement(ID, player, world, new BlockPos(x, y, z));
 //        }

@@ -4,14 +4,14 @@ import team.galacticraft.galacticraft.common.api.tile.IColorable;
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.transmission.grid.IGridNetwork;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.blocks.BlockFluidPipe;
-import team.galacticraft.galacticraft.core.fluid.FluidNetwork;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.blocks.BlockFluidPipe;
+import team.galacticraft.galacticraft.common.core.fluid.FluidNetwork;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
@@ -23,15 +23,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import me.shedaniel.architectury.fluid.FluidStack;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements IColorable
 {
@@ -377,14 +375,14 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
 //        {
 //            return 0;
 //        }
-//        return this.fill(LogicalSide, mekEquivalent, doTransfer);
+//        return this.fill(EnvType, mekEquivalent, doTransfer);
 //    }
 //
 //    @Override
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.IGasHandler", modID = CompatibilityManager.modidMekanism)
 //    public int receiveGas(Direction side, GasStack stack)
 //    {
-//        return this.receiveGas(LogicalSide, stack, true);
+//        return this.receiveGas(EnvType, stack, true);
 //    }
 //
 //    @Override

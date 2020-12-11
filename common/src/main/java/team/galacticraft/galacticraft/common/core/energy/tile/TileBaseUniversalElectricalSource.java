@@ -6,8 +6,8 @@ import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.transmission.grid.IElectricityNetwork;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IConductor;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.energy.EnergyConfigHandler;
-import team.galacticraft.galacticraft.core.energy.EnergyUtil;
+import team.galacticraft.galacticraft.common.core.energy.EnergyConfigHandler;
+import team.galacticraft.galacticraft.common.core.energy.EnergyUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
@@ -15,13 +15,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 
 public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversalElectrical
@@ -216,7 +216,7 @@ public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversa
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.energy.IStrictEnergyOutputter", modID = CompatibilityManager.modidMekanism)
 //    public double pullEnergy(Direction side, double amount, boolean simulate)
 //    {
-//        if (this.canOutputEnergy(LogicalSide))
+//        if (this.canOutputEnergy(EnvType))
 //        {
 //            float amountGC = (float) amount / EnergyConfigHandler.TO_MEKANISM_RATIO;
 //            return this.storage.extractEnergyGC(amountGC, simulate) * EnergyConfigHandler.TO_MEKANISM_RATIO;
@@ -247,16 +247,16 @@ public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversa
 //    @Override
 //    public boolean hasCapability(Capability<?> cap, Direction side)
 //    {
-//        if (cap == CapabilityEnergy.ENERGY && this.canOutputEnergy(LogicalSide)) return true;
+//        if (cap == CapabilityEnergy.ENERGY && this.canOutputEnergy(EnvType)) return true;
 //        if (cap == EnergyUtil.mekCableOutput || cap == EnergyUtil.mekEnergyStorage)
 //        {
-//            return this.canOutputEnergy(LogicalSide);
+//            return this.canOutputEnergy(EnvType);
 //        }
-//        if (EnergyConfigHandler.isBuildcraftLoaded() && cap == MjAPI.CAP_CONNECTOR && this.canOutputEnergy(LogicalSide))
+//        if (EnergyConfigHandler.isBuildcraftLoaded() && cap == MjAPI.CAP_CONNECTOR && this.canOutputEnergy(EnvType))
 //        {
 //            return true;
 //        }
-//        return super.hasCapability(cap, LogicalSide);
+//        return super.hasCapability(cap, EnvType);
 //    }
 
     private LazyOptional<IEnergyStorage> holder = null;

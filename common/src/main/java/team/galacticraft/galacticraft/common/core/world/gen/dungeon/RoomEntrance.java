@@ -10,7 +10,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
-import static team.galacticraft.galacticraft.core.world.gen.GCFeatures.CMOON_DUNGEON_ENTRANCE;
+import static team.galacticraft.galacticraft.common.core.world.gen.GCFeatures.CMOON_DUNGEON_ENTRANCE;
 
 public class RoomEntrance extends SizedPiece
 {

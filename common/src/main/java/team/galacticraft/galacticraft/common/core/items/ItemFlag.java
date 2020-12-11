@@ -2,11 +2,11 @@ package team.galacticraft.galacticraft.common.core.items;
 
 import team.galacticraft.galacticraft.common.api.item.IHoldableItemCustom;
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.entities.EntityFlag;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.PlayerUtil;
+import team.galacticraft.galacticraft.common.core.entities.EntityFlag;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -28,8 +28,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemFlag extends Item implements IHoldableItemCustom, ISortable
 {
@@ -93,7 +91,7 @@ public class ItemFlag extends Item implements IHoldableItemCustom, ISortable
                 }
                 else
                 {
-                    entity.sendMessage(new TextComponent(I18n.get("gui.flag.already_placed")));
+                    entity.sendMessage(new TranslatableComponent(("gui.flag.already_placed")));
                 }
             }
 

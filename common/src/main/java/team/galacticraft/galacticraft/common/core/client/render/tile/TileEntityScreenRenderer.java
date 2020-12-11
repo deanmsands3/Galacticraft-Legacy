@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.client.render.tile;
 //
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.blocks.BlockScreen;
-//import team.galacticraft.galacticraft.core.tile.TileEntityScreen;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockScreen;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityScreen;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.renderer.GLAllocation;
 //import net.minecraft.client.renderer.texture.TextureManager;

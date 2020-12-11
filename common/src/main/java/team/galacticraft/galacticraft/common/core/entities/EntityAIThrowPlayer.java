@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import java.util.EnumSet;

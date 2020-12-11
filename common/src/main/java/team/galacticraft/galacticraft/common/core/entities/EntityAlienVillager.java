@@ -1,14 +1,14 @@
 package team.galacticraft.galacticraft.common.core.entities;
 //
 //import team.galacticraft.galacticraft.common.api.entity.IEntityBreathable;
-//import team.galacticraft.galacticraft.core.GCItems;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.entities.player.GCPlayerHandler;
+//import team.galacticraft.galacticraft.common.core.GCItems;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerHandler;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-//import team.galacticraft.galacticraft.core.items.ItemBasic;
-//import team.galacticraft.galacticraft.core.items.ItemCanisterGeneric;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-//import team.galacticraft.galacticraft.core.wrappers.PlayerGearData;
+//import team.galacticraft.galacticraft.common.core.items.ItemBasic;
+//import team.galacticraft.galacticraft.common.core.items.ItemCanisterGeneric;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.wrappers.PlayerGearData;
 //import net.minecraft.block.Blocks;
 //import net.minecraft.entity.*;
 //import net.minecraft.entity.ai.goal.*;
@@ -40,7 +40,7 @@ package team.galacticraft.galacticraft.common.core.entities;
 //import net.minecraft.village.Village;
 //import net.minecraft.world.DifficultyInstance;
 //import net.minecraft.world.World;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //import java.util.Random;
@@ -192,7 +192,7 @@ package team.galacticraft.galacticraft.common.core.entities;
 //                        GCPlayerStats stats = GCPlayerStats.get(playerMP);
 //                        if (stats.getChatCooldown() == 0)
 //                        {
-//                            player.sendMessage(new StringTextComponent(I18n.get("gui.village.warning.no_freq_mod")));
+//                            player.sendMessage(new StringTranslatableComponent(("gui.village.warning.no_freq_mod")));
 //                            stats.setChatCooldown(20);
 //                        }
 //                    }

@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategory;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.SlabBlock;
@@ -19,7 +19,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.util.math.RayTraceResult;
 //import net.minecraft.world.World;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //import java.util.Random;
@@ -95,7 +95,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    }
 //
 //    @Override
-//    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+//    public ItemStack getCloneItemStack(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
 //    {
 //        return new ItemStack(this, 1, this.getMetaFromState(state) & 7);
 //    }

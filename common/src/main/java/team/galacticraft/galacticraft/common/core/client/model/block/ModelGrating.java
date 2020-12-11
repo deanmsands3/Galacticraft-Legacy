@@ -2,8 +2,8 @@ package team.galacticraft.galacticraft.common.core.client.model.block;
 //
 //import com.google.common.collect.ImmutableList;
 //
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.TransformerHooks;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.TransformerHooks;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.renderer.BufferBuilder;
@@ -15,8 +15,8 @@ package team.galacticraft.galacticraft.common.core.client.model.block;
 //import net.minecraftforge.client.MinecraftForgeClient;
 //import net.minecraftforge.client.model.data.IModelData;
 //
-//import javax.annotation.Nonnull;
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.Nullable;
 //import java.util.List;
 //import java.util.Random;
 //
@@ -33,7 +33,7 @@ package team.galacticraft.galacticraft.common.core.client.model.block;
 //    @Override
 //    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData)
 //    {
-//        if (LogicalSide == Direction.DOWN && state.getBlock() instanceof BlockGrating)
+//        if (EnvType == Direction.DOWN && state.getBlock() instanceof BlockGrating)
 //        {
 //            BlockState baseState = ((IExtendedBlockState) state).getValue(BlockGrating.BASE_STATE);
 //            if (baseState != null)
@@ -52,7 +52,7 @@ package team.galacticraft.galacticraft.common.core.client.model.block;
 //        }
 //        if (MinecraftForgeClient.getRenderLayer() == BlockRenderLayer.CUTOUT)
 //        {
-//            return this.gratingMetal.getQuads(state, LogicalSide, rand);
+//            return this.gratingMetal.getQuads(state, EnvType, rand);
 //        }
 //
 //        return ImmutableList.of();

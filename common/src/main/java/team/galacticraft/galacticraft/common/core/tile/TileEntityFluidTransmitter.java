@@ -6,12 +6,12 @@ import team.galacticraft.galacticraft.common.api.transmission.tile.IBufferTransm
 import team.galacticraft.galacticraft.common.api.transmission.tile.INetworkProvider;
 import team.galacticraft.galacticraft.common.api.transmission.tile.ITransmitter;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.blocks.BlockFluidPipe;
-import team.galacticraft.galacticraft.core.fluid.FluidNetwork;
-import team.galacticraft.galacticraft.core.tick.TickHandlerServer;
-import team.galacticraft.galacticraft.core.util.OxygenUtil;
-import team.galacticraft.galacticraft.core.wrappers.FluidHandlerWrapper;
-import team.galacticraft.galacticraft.core.wrappers.IFluidHandlerWrapper;
+import team.galacticraft.galacticraft.common.core.blocks.BlockFluidPipe;
+import team.galacticraft.galacticraft.common.core.fluid.FluidNetwork;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerServer;
+import team.galacticraft.galacticraft.common.core.util.OxygenUtil;
+import team.galacticraft.galacticraft.common.core.wrappers.FluidHandlerWrapper;
+import team.galacticraft.galacticraft.common.core.wrappers.IFluidHandlerWrapper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
@@ -19,17 +19,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced implements IBufferTransmitter<FluidStack>, IFluidHandlerWrapper
 {
@@ -279,7 +277,7 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.IGasHandler", modID = CompatibilityManager.modidMekanism)
 //    public int receiveGas(Direction side, GasStack stack)
 //    {
-//        return this.receiveGas(LogicalSide, stack, true);
+//        return this.receiveGas(EnvType, stack, true);
 //    }
 //
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.IGasHandler", modID = CompatibilityManager.modidMekanism)

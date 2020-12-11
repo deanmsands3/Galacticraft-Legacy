@@ -11,7 +11,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
-import static team.galacticraft.galacticraft.core.world.gen.GCFeatures.CMOON_DUNGEON_EMPTY;
+import static team.galacticraft.galacticraft.common.core.world.gen.GCFeatures.CMOON_DUNGEON_EMPTY;
 
 public class RoomEmpty extends SizedPiece
 {

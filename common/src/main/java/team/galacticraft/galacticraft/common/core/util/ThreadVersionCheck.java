@@ -1,9 +1,8 @@
 package team.galacticraft.galacticraft.common.core.util;
 
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 
 import java.io.BufferedReader;
@@ -35,7 +34,7 @@ public class ThreadVersionCheck extends Thread
     @Override
     public void run()
     {
-        final LogicalSide sideToCheck = EffectiveSide.get();
+        final EnvType sideToCheck = EffectiveSide.get();
 
         if (sideToCheck == null || ConfigManagerCore.disableUpdateCheck.get())
         {
@@ -75,11 +74,11 @@ public class ThreadVersionCheck extends Thread
                         {
                             Thread.sleep(5000);
 
-                            if (sideToCheck.equals(LogicalSide.CLIENT))
+                            if (sideToCheck.equals(EnvType.CLIENT))
                             {
                                 Minecraft.getInstance().player.sendMessage(new TextComponent(EnumColor.GREY + "New " + EnumColor.DARK_AQUA + Constants.MOD_NAME_SIMPLE + EnumColor.GREY + " version available! v" + remoteMajVer + "." + remoteMinVer + "." + remotePatchVer + ".xxx" + EnumColor.DARK_BLUE + " http://micdoodle8.com/"));
                             }
-                            else if (sideToCheck.equals(LogicalSide.SERVER))
+                            else if (sideToCheck.equals(EnvType.SERVER))
                             {
                                 GCLog.severe("New Galacticraft version available! v" + remoteMajVer + "." + remoteMinVer + "." + remotePatchVer + ".xxx" + " http://micdoodle8.com/");
                             }

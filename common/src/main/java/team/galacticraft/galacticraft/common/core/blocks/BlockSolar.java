@@ -1,14 +1,15 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
+import net.minecraft.client.resources.language.I18n;
 import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
-import team.galacticraft.galacticraft.core.inventory.ContainerRefinery;
-import team.galacticraft.galacticraft.core.inventory.ContainerSolar;
-import team.galacticraft.galacticraft.core.items.IShiftDescription;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.tile.TileEntityRefinery;
-import team.galacticraft.galacticraft.core.tile.TileEntitySolar;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerRefinery;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerSolar;
+import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityRefinery;
+import team.galacticraft.galacticraft.common.core.tile.TileEntitySolar;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,9 +29,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fml.network.NetworkHooks;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockSolar extends BlockTileGC implements IShiftDescription, IPartialSealableBlock, ISortable
 {
@@ -90,7 +91,7 @@ public class BlockSolar extends BlockTileGC implements IShiftDescription, IParti
 //        }
 //
 //        return true;
-//        // return new BlockVec3(x1, y1, z1).newVecSide(LogicalSide ^ 1).getBlock(world) != GCBlocks.fakeBlock; TODO
+//        // return new BlockVec3(x1, y1, z1).newVecSide(EnvType ^ 1).getBlock(world) != GCBlocks.fakeBlock; TODO
 //    }
 
     @Override
@@ -123,7 +124,7 @@ public class BlockSolar extends BlockTileGC implements IShiftDescription, IParti
     {
         if (!worldIn.isClientSide)
         {
-            NetworkHooks.openGui((ServerPlayer) playerIn, getMenuProvider(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
+            PlatformSpecific.openContainer((ServerPlayer) playerIn, getMenuProvider(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
         }
         return InteractionResult.SUCCESS;
     }
@@ -150,13 +151,13 @@ public class BlockSolar extends BlockTileGC implements IShiftDescription, IParti
 
     @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntitySolar.TileEntitySolarT1();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fml.network.NetworkHooks;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 
 import java.util.*;
 

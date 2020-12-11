@@ -1,13 +1,13 @@
 package team.galacticraft.galacticraft.common.core.client.render.entities;
 //
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
-//import team.galacticraft.galacticraft.core.client.model.ModelAlienVillager;
-//import team.galacticraft.galacticraft.core.entities.EntityAlienVillager;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.client.gui.overlay.OverlaySensorGlasses;
+//import team.galacticraft.galacticraft.common.core.client.model.ModelAlienVillager;
+//import team.galacticraft.galacticraft.common.core.entities.EntityAlienVillager;
 //import net.minecraft.client.renderer.entity.MobRenderer;
 //import net.minecraft.client.renderer.entity.EntityRendererManager;
 //import net.minecraft.util.ResourceLocation;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //import org.lwjgl.opengl.GL11;

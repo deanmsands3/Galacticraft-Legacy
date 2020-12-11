@@ -1,18 +1,16 @@
 package team.galacticraft.galacticraft.common.core.client.render.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
-import team.galacticraft.galacticraft.core.client.model.ModelEvolvedSpider;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedSpider;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.client.gui.overlay.OverlaySensorGlasses;
+import team.galacticraft.galacticraft.common.core.client.model.ModelEvolvedSpider;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedSpider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)

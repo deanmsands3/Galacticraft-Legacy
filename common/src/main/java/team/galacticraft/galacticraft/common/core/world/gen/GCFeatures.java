@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.world.gen.dungeon.*;
-import team.galacticraft.galacticraft.core.world.gen.placement.SapphirePlacement;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.world.gen.dungeon.*;
+import team.galacticraft.galacticraft.common.core.world.gen.placement.SapphirePlacement;
 import net.minecraft.core.Registry;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.level.levelgen.feature.Feature;

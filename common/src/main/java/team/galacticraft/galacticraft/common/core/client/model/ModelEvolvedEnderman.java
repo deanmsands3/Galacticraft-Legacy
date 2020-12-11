@@ -1,13 +1,11 @@
 package team.galacticraft.galacticraft.common.core.client.model;
 
 import com.google.common.collect.ImmutableList;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedEnderman;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedEnderman;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class ModelEvolvedEnderman extends HumanoidModel<EntityEvolvedEnderman>

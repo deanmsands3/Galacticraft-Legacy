@@ -6,11 +6,11 @@ import team.galacticraft.galacticraft.common.api.transmission.tile.IConductor;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IConnector;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IElectrical;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.energy.tile.EnergyStorageTile;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseConductor;
-import team.galacticraft.galacticraft.core.util.CompatibilityManager;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.core.util.GCLog;
+import team.galacticraft.galacticraft.common.core.energy.tile.EnergyStorageTile;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseConductor;
+import team.galacticraft.galacticraft.common.core.util.CompatibilityManager;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.util.GCLog;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -275,7 +275,7 @@ public class EnergyUtil
      * Similar to getAdjacentPowerConnections but specific to energy receivers only
      * Adds the adjacent power connections found to the passed acceptors, directions parameter Lists
      * (Note: an acceptor can therefore sometimes be entered in the Lists more than once, with a different direction each time:
-     * this would represent GC wires connected to the acceptor on more than one LogicalSide.)
+     * this would represent GC wires connected to the acceptor on more than one EnvType.)
      *
      * @param conductor
      * @param connectedAcceptors
@@ -580,7 +580,7 @@ public class EnergyUtil
      * Parameters:
      *
      * @param tileAdj  - the tile under test, it might be an energy tile from another mod
-     * @param inputAdj - the energy input LogicalSide for that tile which is under test
+     * @param inputAdj - the energy input EnvType for that tile which is under test
      */
     public static boolean otherModCanReceive(BlockEntity tileAdj, Direction inputAdj)
     {
@@ -622,7 +622,7 @@ public class EnergyUtil
      * Parameters:
      *
      * @param tileAdj - the tile under test, it might be an energy tile from another mod
-     * @param side    - the energy output LogicalSide for that tile which is under test
+     * @param side    - the energy output EnvType for that tile which is under test
      */
     public static boolean otherModCanProduce(BlockEntity tileAdj, Direction side)
     {
@@ -633,10 +633,10 @@ public class EnergyUtil
 
 //        if (isIC2Loaded && tileAdj instanceof IEnergyEmitter)
 //        {
-//            return ((IEnergyEmitter) tileAdj).emitsEnergyTo(null, LogicalSide);
+//            return ((IEnergyEmitter) tileAdj).emitsEnergyTo(null, EnvType);
 //        }
 //
-//        if (isBCReallyLoaded && hasCapability(tileAdj, MjAPI.CAP_PASSIVE_PROVIDER, LogicalSide))
+//        if (isBCReallyLoaded && hasCapability(tileAdj, MjAPI.CAP_PASSIVE_PROVIDER, EnvType))
 //        {
 //            return true;
 //        }
@@ -911,7 +911,7 @@ public class EnergyUtil
 
 //    public static boolean hasCapability(ICapabilityProvider dimension, Capability<?> capability, Direction side)
 //    {
-//        return (dimension == null || capability == null) ? false : dimension.hasCapability(capability, LogicalSide);
+//        return (dimension == null || capability == null) ? false : dimension.hasCapability(capability, EnvType);
 //    }
 
     public static <T> LazyOptional<T> getCapability(ICapabilityProvider dimension, Capability<T> capability, Direction side)

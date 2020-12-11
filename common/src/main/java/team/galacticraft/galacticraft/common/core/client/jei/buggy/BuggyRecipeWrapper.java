@@ -6,7 +6,7 @@ package team.galacticraft.galacticraft.common.core.client.jei.buggy;
 //import team.galacticraft.galacticraft.common.api.recipe.INasaWorkbenchRecipe;
 //import net.minecraft.item.ItemStack;
 //
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //public class BuggyRecipeWrapper implements IRecipeWrapper
 //{

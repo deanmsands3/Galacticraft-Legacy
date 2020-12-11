@@ -4,7 +4,7 @@ package team.galacticraft.galacticraft.common.core.client.jei.circuitfabricator;
 //import mezz.jei.api.recipe.IRecipeWrapper;
 //import net.minecraft.item.ItemStack;
 //
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //import java.util.List;
 //

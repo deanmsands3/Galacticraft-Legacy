@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.tile;
 
 import java.util.List;
 
-import team.galacticraft.galacticraft.core.blocks.BlockMulti;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMulti;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;

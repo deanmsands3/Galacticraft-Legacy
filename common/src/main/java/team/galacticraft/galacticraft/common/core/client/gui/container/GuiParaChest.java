@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.client.gui.container;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.entities.IScaleableFuelLevel;
-import team.galacticraft.galacticraft.core.inventory.ContainerParaChest;
-import team.galacticraft.galacticraft.core.tile.TileEntityParaChest;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.entities.IScaleableFuelLevel;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerParaChest;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityParaChest;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;

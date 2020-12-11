@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.items;
 //
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.entity.player.PlayerEntity;
@@ -41,7 +41,7 @@ package team.galacticraft.galacticraft.common.core.items;
 //                                {
 //                                    if (world.isRemote)
 //                                    {
-//                                        Minecraft.getInstance().ingameGUI.setOverlayMessage(new StringTextComponent(I18n.get("gui.warning.noroom")).setStyle(new Style().setColor(TextFormatting.RED)).getFormattedText(), false);
+//                                        Minecraft.getInstance().ingameGUI.setOverlayMessage(new StringTranslatableComponent(("gui.warning.noroom")).setStyle(new Style().setColor(TextFormatting.RED)).getFormattedText(), false);
 //                                    }
 //                                    return false;
 //                                }
@@ -52,7 +52,7 @@ package team.galacticraft.galacticraft.common.core.items;
 //                                {
 //                                    if (world.isRemote)
 //                                    {
-//                                        Minecraft.getInstance().ingameGUI.setOverlayMessage(new StringTextComponent(I18n.get("gui.warning.noroom")).setStyle(new Style().setColor(TextFormatting.RED)).getFormattedText(), false);
+//                                        Minecraft.getInstance().ingameGUI.setOverlayMessage(new StringTranslatableComponent(("gui.warning.noroom")).setStyle(new Style().setColor(TextFormatting.RED)).getFormattedText(), false);
 //                                    }
 //                                    return false;
 //                                }

@@ -1,15 +1,15 @@
 package team.galacticraft.galacticraft.common.core.client.gui.container;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.client.gui.element.GuiElementInfoRegion;
-import team.galacticraft.galacticraft.core.energy.EnergyDisplayHelper;
-import team.galacticraft.galacticraft.core.inventory.ContainerRefinery;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import team.galacticraft.galacticraft.core.tile.TileEntityRefinery;
-import team.galacticraft.galacticraft.core.util.EnumColor;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.client.gui.element.GuiElementInfoRegion;
+import team.galacticraft.galacticraft.common.core.energy.EnergyDisplayHelper;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerRefinery;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityRefinery;
+import team.galacticraft.galacticraft.common.core.util.EnumColor;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

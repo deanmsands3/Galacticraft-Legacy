@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 
 import team.galacticraft.galacticraft.common.api.world.BiomeGC;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.world.gen.dungeon.DungeonConfiguration;
-import team.galacticraft.galacticraft.core.world.gen.dungeon.RoomBoss;
-import team.galacticraft.galacticraft.core.world.gen.dungeon.RoomTreasure;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.world.gen.dungeon.DungeonConfiguration;
+import team.galacticraft.galacticraft.common.core.world.gen.dungeon.RoomBoss;
+import team.galacticraft.galacticraft.common.core.world.gen.dungeon.RoomTreasure;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.CountRangeDecoratorConfiguration;

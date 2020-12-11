@@ -5,12 +5,13 @@ import team.galacticraft.galacticraft.common.api.entity.IDockable;
 import team.galacticraft.galacticraft.common.api.entity.IFuelable;
 import team.galacticraft.galacticraft.common.api.entity.ILandable;
 import team.galacticraft.galacticraft.common.api.tile.IFuelDock;
+import team.galacticraft.galacticraft.common.api.tile.ILandingPad;
 import team.galacticraft.galacticraft.common.api.tile.ILandingPadAttachable;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.blocks.BlockMulti;
-import team.galacticraft.galacticraft.core.blocks.BlockMulti.EnumBlockMultiType;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMulti;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMulti.EnumBlockMultiType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -25,8 +26,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import me.shedaniel.architectury.fluid.FluidStack;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 import net.minecraftforge.registries.ObjectHolder;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock, IFuelable, IFuelDock, ICargoEntity
+public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock, IFuelable, IFuelDock, ICargoEntity, ILandingPad
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPadFull)
     public static BlockEntityType<TileEntityLandingPad> TYPE;

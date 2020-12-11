@@ -1,12 +1,12 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.item.IItemOxygenSupply;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockMachineBase;
-import team.galacticraft.galacticraft.core.inventory.ContainerOxygenStorageModule;
-import team.galacticraft.galacticraft.core.inventory.IInventoryDefaults;
-import team.galacticraft.galacticraft.core.util.FluidUtil;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMachineBase;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerOxygenStorageModule;
+import team.galacticraft.galacticraft.common.core.inventory.IInventoryDefaults;
+import team.galacticraft.galacticraft.common.core.util.FluidUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -273,9 +273,9 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
 //    {
 ////        FluidTankInfo[] tankInfo = new FluidTankInfo[] {};
 ////        int metaside = this.getBlockMetadata() - BlockMachine2.OXYGEN_STORAGE_MODULE_METADATA + 2;
-////        int LogicalSide = from.ordinal();
+////        int EnvType = from.ordinal();
 ////
-////        if (metaside == LogicalSide && GalacticraftCore.isPlanetsLoaded)
+////        if (metaside == EnvType && GalacticraftCore.isPlanetsLoaded)
 ////        {
 ////            tankInfo = new FluidTankInfo[] { new FluidTankInfo(new FluidStack(AsteroidsModule.fluidLiquidOxygen, (int) (this.getOxygenStored() * Constants.LOX_GAS_RATIO)), (int) (OXYGEN_CAPACITY * Constants.LOX_GAS_RATIO)) };
 ////        }

@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import team.galacticraft.galacticraft.forge.compat.cap.ForgeCapability;
 import team.galacticraft.galacticraft.forge.mixin.ChunkMixin;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class PlatformSpecificImpl
 {

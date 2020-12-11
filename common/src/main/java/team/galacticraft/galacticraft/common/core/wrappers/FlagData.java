@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.wrappers;
 
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.util.ColorUtil;
+import team.galacticraft.galacticraft.common.core.util.ColorUtil;
 import net.minecraft.nbt.CompoundTag;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;

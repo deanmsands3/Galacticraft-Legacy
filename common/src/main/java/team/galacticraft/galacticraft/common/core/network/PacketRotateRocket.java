@@ -1,14 +1,14 @@
 package team.galacticraft.galacticraft.common.core.network;
 //
 //import io.netty.buffer.ByteBuf;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-//import team.galacticraft.galacticraft.core.util.GCLog;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.GCLog;
 //import net.minecraft.entity.Entity;
 //import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.network.PacketBuffer;
 //import net.minecraft.util.ResourceLocation;
 //import net.minecraft.world.dimension.DimensionType;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.network.NetworkEvent;
 //
 //import java.io.IOException;
@@ -78,7 +78,7 @@ package team.galacticraft.galacticraft.common.core.network;
 //
 //    public static void handle(final PacketRotateRocket message, Supplier<NetworkEvent.Context> ctx) {
 //        ctx.get().enqueueWork(() -> {
-//            if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT) {
+//            if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT) {
 //                message.handleClientSide(ctx.get().getSender());
 //            } else {
 //                message.handleServerSide(ctx.get().getSender());

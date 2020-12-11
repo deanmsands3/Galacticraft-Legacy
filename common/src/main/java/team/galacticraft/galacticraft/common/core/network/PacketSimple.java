@@ -21,38 +21,38 @@ import team.galacticraft.galacticraft.common.api.tile.ITileClientUpdates;
 import team.galacticraft.galacticraft.common.api.transmission.tile.INetworkProvider;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.advancement.GCTriggers;
-import team.galacticraft.galacticraft.core.client.FootprintRenderer;
-import team.galacticraft.galacticraft.core.client.gui.screen.GuiCelestialSelection;
-import team.galacticraft.galacticraft.core.client.sounds.GCSounds;
-import team.galacticraft.galacticraft.core.dimension.SpaceRace;
-import team.galacticraft.galacticraft.core.dimension.SpaceRaceManager;
-import team.galacticraft.galacticraft.core.dimension.SpaceStationWorldData;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseConductor;
-import team.galacticraft.galacticraft.core.entities.EntityBuggy;
-import team.galacticraft.galacticraft.core.entities.IBubbleProvider;
-import team.galacticraft.galacticraft.core.entities.IControllableEntity;
-import team.galacticraft.galacticraft.core.entities.player.GCEntityPlayerMP;
-import team.galacticraft.galacticraft.core.entities.player.GCPlayerHandler;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.advancement.GCTriggers;
+import team.galacticraft.galacticraft.common.core.client.FootprintRenderer;
+import team.galacticraft.galacticraft.common.core.client.gui.screen.GuiCelestialSelection;
+import team.galacticraft.galacticraft.common.core.client.sounds.GCSounds;
+import team.galacticraft.galacticraft.common.core.dimension.SpaceRace;
+import team.galacticraft.galacticraft.common.core.dimension.SpaceRaceManager;
+import team.galacticraft.galacticraft.common.core.dimension.SpaceStationWorldData;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseConductor;
+import team.galacticraft.galacticraft.common.core.entities.EntityBuggy;
+import team.galacticraft.galacticraft.common.core.entities.IBubbleProvider;
+import team.galacticraft.galacticraft.common.core.entities.IControllableEntity;
+import team.galacticraft.galacticraft.common.core.entities.player.GCEntityPlayerMP;
+import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerHandler;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStatsClient;
-import team.galacticraft.galacticraft.core.fluid.FluidNetwork;
-import team.galacticraft.galacticraft.core.inventory.ContainerBuggy;
-import team.galacticraft.galacticraft.core.inventory.ContainerExtendedInventory;
-import team.galacticraft.galacticraft.core.inventory.ContainerSchematic;
-import team.galacticraft.galacticraft.core.items.ItemParaChute;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.tick.TickHandlerClient;
-import team.galacticraft.galacticraft.core.tick.TickHandlerServer;
-import team.galacticraft.galacticraft.core.tile.*;
-import team.galacticraft.galacticraft.core.util.*;
-import team.galacticraft.galacticraft.core.wrappers.FlagData;
-import team.galacticraft.galacticraft.core.wrappers.Footprint;
-import team.galacticraft.galacticraft.core.wrappers.PlayerGearData;
-import team.galacticraft.galacticraft.core.wrappers.ScheduledDimensionChange;
+import team.galacticraft.galacticraft.common.core.fluid.FluidNetwork;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerBuggy;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerExtendedInventory;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerSchematic;
+import team.galacticraft.galacticraft.common.core.items.ItemParaChute;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerClient;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerServer;
+import team.galacticraft.galacticraft.common.core.tile.*;
+import team.galacticraft.galacticraft.common.core.util.*;
+import team.galacticraft.galacticraft.common.core.wrappers.FlagData;
+import team.galacticraft.galacticraft.common.core.wrappers.Footprint;
+import team.galacticraft.galacticraft.common.core.wrappers.PlayerGearData;
+import team.galacticraft.galacticraft.common.core.wrappers.ScheduledDimensionChange;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -85,11 +85,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.LevelData;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkHooks;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -101,97 +98,97 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
     public enum EnumSimplePacket
     {
         // SERVER
-        S_RESPAWN_PLAYER(LogicalSide.SERVER, String.class),
-        S_TELEPORT_ENTITY(LogicalSide.SERVER, DimensionType.class),
-        S_IGNITE_ROCKET(LogicalSide.SERVER),
-        S_OPEN_SCHEMATIC_PAGE(LogicalSide.SERVER, Integer.class, Integer.class, Integer.class, Integer.class),
-        S_OPEN_FUEL_GUI(LogicalSide.SERVER, String.class),
-        S_UPDATE_SHIP_YAW(LogicalSide.SERVER, Float.class),
-        S_UPDATE_SHIP_PITCH(LogicalSide.SERVER, Float.class),
-        S_SET_ENTITY_FIRE(LogicalSide.SERVER, Integer.class),
-        S_BIND_SPACE_STATION_ID(LogicalSide.SERVER, DimensionType.class),
-        S_UNLOCK_NEW_SCHEMATIC(LogicalSide.SERVER),
-        S_UPDATE_DISABLEABLE_BUTTON(LogicalSide.SERVER, BlockPos.class, Integer.class),
-        S_ON_FAILED_CHEST_UNLOCK(LogicalSide.SERVER, Integer.class),
-        S_RENAME_SPACE_STATION(LogicalSide.SERVER, String.class, Integer.class),
-        S_OPEN_EXTENDED_INVENTORY(LogicalSide.SERVER),
-        S_ON_ADVANCED_GUI_CLICKED_INT(LogicalSide.SERVER, Integer.class, BlockPos.class, Integer.class),
-        S_ON_ADVANCED_GUI_CLICKED_STRING(LogicalSide.SERVER, Integer.class, BlockPos.class, String.class),
-        S_UPDATE_SHIP_MOTION_Y(LogicalSide.SERVER, Integer.class, Boolean.class),
-        S_START_NEW_SPACE_RACE(LogicalSide.SERVER, Integer.class, String.class, FlagData.class, Vector3.class, String[].class),
-        S_REQUEST_FLAG_DATA(LogicalSide.SERVER, String.class),
-        S_INVITE_RACE_PLAYER(LogicalSide.SERVER, String.class, Integer.class),
-        S_REMOVE_RACE_PLAYER(LogicalSide.SERVER, String.class, Integer.class),
-        S_ADD_RACE_PLAYER(LogicalSide.SERVER, String.class, Integer.class),
-        S_COMPLETE_CBODY_HANDSHAKE(LogicalSide.SERVER, String.class),
-        S_REQUEST_GEAR_DATA1(LogicalSide.SERVER, UUID.class),
-        S_REQUEST_GEAR_DATA2(LogicalSide.SERVER, UUID.class),
-        S_REQUEST_OVERWORLD_IMAGE(LogicalSide.SERVER),
-        S_REQUEST_MAP_IMAGE(LogicalSide.SERVER, Integer.class, Integer.class, Integer.class),
-        S_REQUEST_PLAYERSKIN(LogicalSide.SERVER, String.class),
-        S_BUILDFLAGS_UPDATE(LogicalSide.SERVER, Integer.class),
-        S_CONTROL_ENTITY(LogicalSide.SERVER, Integer.class),
-        S_NOCLIP_PLAYER(LogicalSide.SERVER, Boolean.class),
-        S_REQUEST_DATA(LogicalSide.SERVER, DimensionType.class, BlockPos.class),
-        S_UPDATE_CHECKLIST(LogicalSide.SERVER, CompoundTag.class),
-        S_REQUEST_MACHINE_DATA(LogicalSide.SERVER, BlockPos.class),
-        S_REQUEST_CONTAINER_SLOT_REFRESH(LogicalSide.SERVER, Integer.class),
-        S_ROTATE_ROCKET(LogicalSide.SERVER, Integer.class, Float.class, Float.class),
+        S_RESPAWN_PLAYER(EnvType.SERVER, String.class),
+        S_TELEPORT_ENTITY(EnvType.SERVER, DimensionType.class),
+        S_IGNITE_ROCKET(EnvType.SERVER),
+        S_OPEN_SCHEMATIC_PAGE(EnvType.SERVER, Integer.class, Integer.class, Integer.class, Integer.class),
+        S_OPEN_FUEL_GUI(EnvType.SERVER, String.class),
+        S_UPDATE_SHIP_YAW(EnvType.SERVER, Float.class),
+        S_UPDATE_SHIP_PITCH(EnvType.SERVER, Float.class),
+        S_SET_ENTITY_FIRE(EnvType.SERVER, Integer.class),
+        S_BIND_SPACE_STATION_ID(EnvType.SERVER, DimensionType.class),
+        S_UNLOCK_NEW_SCHEMATIC(EnvType.SERVER),
+        S_UPDATE_DISABLEABLE_BUTTON(EnvType.SERVER, BlockPos.class, Integer.class),
+        S_ON_FAILED_CHEST_UNLOCK(EnvType.SERVER, Integer.class),
+        S_RENAME_SPACE_STATION(EnvType.SERVER, String.class, Integer.class),
+        S_OPEN_EXTENDED_INVENTORY(EnvType.SERVER),
+        S_ON_ADVANCED_GUI_CLICKED_INT(EnvType.SERVER, Integer.class, BlockPos.class, Integer.class),
+        S_ON_ADVANCED_GUI_CLICKED_STRING(EnvType.SERVER, Integer.class, BlockPos.class, String.class),
+        S_UPDATE_SHIP_MOTION_Y(EnvType.SERVER, Integer.class, Boolean.class),
+        S_START_NEW_SPACE_RACE(EnvType.SERVER, Integer.class, String.class, FlagData.class, Vector3.class, String[].class),
+        S_REQUEST_FLAG_DATA(EnvType.SERVER, String.class),
+        S_INVITE_RACE_PLAYER(EnvType.SERVER, String.class, Integer.class),
+        S_REMOVE_RACE_PLAYER(EnvType.SERVER, String.class, Integer.class),
+        S_ADD_RACE_PLAYER(EnvType.SERVER, String.class, Integer.class),
+        S_COMPLETE_CBODY_HANDSHAKE(EnvType.SERVER, String.class),
+        S_REQUEST_GEAR_DATA1(EnvType.SERVER, UUID.class),
+        S_REQUEST_GEAR_DATA2(EnvType.SERVER, UUID.class),
+        S_REQUEST_OVERWORLD_IMAGE(EnvType.SERVER),
+        S_REQUEST_MAP_IMAGE(EnvType.SERVER, Integer.class, Integer.class, Integer.class),
+        S_REQUEST_PLAYERSKIN(EnvType.SERVER, String.class),
+        S_BUILDFLAGS_UPDATE(EnvType.SERVER, Integer.class),
+        S_CONTROL_ENTITY(EnvType.SERVER, Integer.class),
+        S_NOCLIP_PLAYER(EnvType.SERVER, Boolean.class),
+        S_REQUEST_DATA(EnvType.SERVER, DimensionType.class, BlockPos.class),
+        S_UPDATE_CHECKLIST(EnvType.SERVER, CompoundTag.class),
+        S_REQUEST_MACHINE_DATA(EnvType.SERVER, BlockPos.class),
+        S_REQUEST_CONTAINER_SLOT_REFRESH(EnvType.SERVER, Integer.class),
+        S_ROTATE_ROCKET(EnvType.SERVER, Integer.class, Float.class, Float.class),
         // CLIENT
-        C_AIR_REMAINING(LogicalSide.CLIENT, Integer.class, Integer.class, String.class),
-        C_UPDATE_DIMENSION_LIST(LogicalSide.CLIENT, String.class, String.class, Boolean.class),
-        C_SPAWN_SPARK_PARTICLES(LogicalSide.CLIENT, BlockPos.class),
-        C_UPDATE_GEAR_SLOT(LogicalSide.CLIENT, UUID.class, Integer.class, Integer.class, Integer.class),
-        C_CLOSE_GUI(LogicalSide.CLIENT),
-        C_RESET_THIRD_PERSON(LogicalSide.CLIENT),
-        C_UPDATE_SPACESTATION_LIST(LogicalSide.CLIENT, Integer[].class),
-        //        C_UPDATE_SPACESTATION_DATA(LogicalSide.CLIENT, Integer.class, CompoundNBT.class),
-        C_UPDATE_SPACESTATION_CLIENT_ID(LogicalSide.CLIENT, String.class),
-        C_UPDATE_PLANETS_LIST(LogicalSide.CLIENT, Integer[].class),
-        C_UPDATE_CONFIGS(LogicalSide.CLIENT, Integer.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, Float.class, Float.class, Float.class, Float.class, Integer.class, String[].class),
-        C_UPDATE_STATS(LogicalSide.CLIENT, Integer.class, String.class, Integer.class, String.class, Integer.class, String.class, Integer.class, String.class, Integer.class, String.class, Integer.class, Integer.class), //Note: Integer, PANELTYPES_LENGTH * <String, Integer>, Integer - see StatsCapability.getMiscNetworkedStats()
-        C_ADD_NEW_SCHEMATIC(LogicalSide.CLIENT, Integer.class),
-        C_UPDATE_SCHEMATIC_LIST(LogicalSide.CLIENT, Integer[].class),
-        C_PLAY_SOUND_BOSS_DEATH(LogicalSide.CLIENT, Float.class),
-        C_PLAY_SOUND_EXPLODE(LogicalSide.CLIENT),
-        C_PLAY_SOUND_BOSS_LAUGH(LogicalSide.CLIENT),
-        C_PLAY_SOUND_BOW(LogicalSide.CLIENT),
-        C_UPDATE_OXYGEN_VALIDITY(LogicalSide.CLIENT, Boolean.class),
-        C_OPEN_PARACHEST_GUI(LogicalSide.CLIENT, Integer.class, Integer.class, Integer.class),
-        C_UPDATE_WIRE_BOUNDS(LogicalSide.CLIENT, BlockPos.class),
-        C_OPEN_SPACE_RACE_GUI(LogicalSide.CLIENT),
-        C_UPDATE_SPACE_RACE_DATA(LogicalSide.CLIENT, Integer.class, String.class, FlagData.class, Vector3.class, String[].class),
-        C_OPEN_JOIN_RACE_GUI(LogicalSide.CLIENT, Integer.class),
-        C_UPDATE_FOOTPRINT_LIST(LogicalSide.CLIENT, Long.class, Footprint[].class),
-        C_UPDATE_DUNGEON_DIRECTION(LogicalSide.CLIENT, Float.class),
-        C_FOOTPRINTS_REMOVED(LogicalSide.CLIENT, Long.class, BlockVec3.class),
-        C_UPDATE_STATION_SPIN(LogicalSide.CLIENT, Float.class, Boolean.class),
-        C_UPDATE_STATION_DATA(LogicalSide.CLIENT, Double.class, Double.class),
-        C_UPDATE_STATION_BOX(LogicalSide.CLIENT, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class),
-        C_UPDATE_THERMAL_LEVEL(LogicalSide.CLIENT, Integer.class, Boolean.class),
-        C_DISPLAY_ROCKET_CONTROLS(LogicalSide.CLIENT),
-        C_GET_CELESTIAL_BODY_LIST(LogicalSide.CLIENT),
-        C_UPDATE_ENERGYUNITS(LogicalSide.CLIENT, Integer.class),
-        C_RESPAWN_PLAYER(LogicalSide.CLIENT, String.class, Integer.class, String.class, Integer.class),
-        C_UPDATE_TELEMETRY(LogicalSide.CLIENT, BlockPos.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class),
-        C_SEND_PLAYERSKIN(LogicalSide.CLIENT, String.class, String.class, String.class, String.class),
-        C_SEND_OVERWORLD_IMAGE(LogicalSide.CLIENT, Integer.class, Integer.class, byte[].class),
-        C_RECOLOR_PIPE(LogicalSide.CLIENT, BlockPos.class),
-        C_RECOLOR_ALL_GLASS(LogicalSide.CLIENT, Integer.class, Integer.class, Integer.class),  //Number of integers to match number of different blocks of PLAIN glass individually instanced and registered in GCBlocks
-        C_UPDATE_MACHINE_DATA(LogicalSide.CLIENT, BlockPos.class, Integer.class, Integer.class, Integer.class, Integer.class),
-        C_SPAWN_HANGING_SCHEMATIC(LogicalSide.CLIENT, BlockPos.class, Integer.class, Integer.class, Integer.class),
-        C_LEAK_DATA(LogicalSide.CLIENT, BlockPos.class, Integer[].class);
+        C_AIR_REMAINING(EnvType.CLIENT, Integer.class, Integer.class, String.class),
+        C_UPDATE_DIMENSION_LIST(EnvType.CLIENT, String.class, String.class, Boolean.class),
+        C_SPAWN_SPARK_PARTICLES(EnvType.CLIENT, BlockPos.class),
+        C_UPDATE_GEAR_SLOT(EnvType.CLIENT, UUID.class, Integer.class, Integer.class, Integer.class),
+        C_CLOSE_GUI(EnvType.CLIENT),
+        C_RESET_THIRD_PERSON(EnvType.CLIENT),
+        C_UPDATE_SPACESTATION_LIST(EnvType.CLIENT, Integer[].class),
+        //        C_UPDATE_SPACESTATION_DATA(EnvType.CLIENT, Integer.class, CompoundNBT.class),
+        C_UPDATE_SPACESTATION_CLIENT_ID(EnvType.CLIENT, String.class),
+        C_UPDATE_PLANETS_LIST(EnvType.CLIENT, Integer[].class),
+        C_UPDATE_CONFIGS(EnvType.CLIENT, Integer.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, Float.class, Float.class, Float.class, Float.class, Integer.class, String[].class),
+        C_UPDATE_STATS(EnvType.CLIENT, Integer.class, String.class, Integer.class, String.class, Integer.class, String.class, Integer.class, String.class, Integer.class, String.class, Integer.class, Integer.class), //Note: Integer, PANELTYPES_LENGTH * <String, Integer>, Integer - see StatsCapability.getMiscNetworkedStats()
+        C_ADD_NEW_SCHEMATIC(EnvType.CLIENT, Integer.class),
+        C_UPDATE_SCHEMATIC_LIST(EnvType.CLIENT, Integer[].class),
+        C_PLAY_SOUND_BOSS_DEATH(EnvType.CLIENT, Float.class),
+        C_PLAY_SOUND_EXPLODE(EnvType.CLIENT),
+        C_PLAY_SOUND_BOSS_LAUGH(EnvType.CLIENT),
+        C_PLAY_SOUND_BOW(EnvType.CLIENT),
+        C_UPDATE_OXYGEN_VALIDITY(EnvType.CLIENT, Boolean.class),
+        C_OPEN_PARACHEST_GUI(EnvType.CLIENT, Integer.class, Integer.class, Integer.class),
+        C_UPDATE_WIRE_BOUNDS(EnvType.CLIENT, BlockPos.class),
+        C_OPEN_SPACE_RACE_GUI(EnvType.CLIENT),
+        C_UPDATE_SPACE_RACE_DATA(EnvType.CLIENT, Integer.class, String.class, FlagData.class, Vector3.class, String[].class),
+        C_OPEN_JOIN_RACE_GUI(EnvType.CLIENT, Integer.class),
+        C_UPDATE_FOOTPRINT_LIST(EnvType.CLIENT, Long.class, Footprint[].class),
+        C_UPDATE_DUNGEON_DIRECTION(EnvType.CLIENT, Float.class),
+        C_FOOTPRINTS_REMOVED(EnvType.CLIENT, Long.class, BlockVec3.class),
+        C_UPDATE_STATION_SPIN(EnvType.CLIENT, Float.class, Boolean.class),
+        C_UPDATE_STATION_DATA(EnvType.CLIENT, Double.class, Double.class),
+        C_UPDATE_STATION_BOX(EnvType.CLIENT, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class),
+        C_UPDATE_THERMAL_LEVEL(EnvType.CLIENT, Integer.class, Boolean.class),
+        C_DISPLAY_ROCKET_CONTROLS(EnvType.CLIENT),
+        C_GET_CELESTIAL_BODY_LIST(EnvType.CLIENT),
+        C_UPDATE_ENERGYUNITS(EnvType.CLIENT, Integer.class),
+        C_RESPAWN_PLAYER(EnvType.CLIENT, String.class, Integer.class, String.class, Integer.class),
+        C_UPDATE_TELEMETRY(EnvType.CLIENT, BlockPos.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class),
+        C_SEND_PLAYERSKIN(EnvType.CLIENT, String.class, String.class, String.class, String.class),
+        C_SEND_OVERWORLD_IMAGE(EnvType.CLIENT, Integer.class, Integer.class, byte[].class),
+        C_RECOLOR_PIPE(EnvType.CLIENT, BlockPos.class),
+        C_RECOLOR_ALL_GLASS(EnvType.CLIENT, Integer.class, Integer.class, Integer.class),  //Number of integers to match number of different blocks of PLAIN glass individually instanced and registered in GCBlocks
+        C_UPDATE_MACHINE_DATA(EnvType.CLIENT, BlockPos.class, Integer.class, Integer.class, Integer.class, Integer.class),
+        C_SPAWN_HANGING_SCHEMATIC(EnvType.CLIENT, BlockPos.class, Integer.class, Integer.class, Integer.class),
+        C_LEAK_DATA(EnvType.CLIENT, BlockPos.class, Integer[].class);
 
-        private final LogicalSide targetSide;
+        private final EnvType targetSide;
         private final Class<?>[] decodeAs;
 
-        EnumSimplePacket(LogicalSide targetSide, Class<?>... decodeAs)
+        EnumSimplePacket(EnvType targetSide, Class<?>... decodeAs)
         {
             this.targetSide = targetSide;
             this.decodeAs = decodeAs;
         }
 
-        public LogicalSide getTargetSide()
+        public EnvType getTargetSide()
         {
             return this.targetSide;
         }
@@ -820,14 +817,14 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
                         }
                         else if (stats.getChatCooldown() == 0 && stats.getLaunchAttempts() == 0)
                         {
-                            player.sendMessage(new TextComponent(I18n.get("gui.rocket.warning.noparachute")));
+                            player.sendMessage(new TranslatableComponent(("gui.rocket.warning.noparachute")));
                             stats.setChatCooldown(80);
                             stats.setLaunchAttempts(1);
                         }
                     }
                     else if (stats.getChatCooldown() == 0)
                     {
-                        player.sendMessage(new TextComponent(I18n.get("gui.rocket.warning.nofuel")));
+                        player.sendMessage(new TranslatableComponent(("gui.rocket.warning.nofuel")));
                         stats.setChatCooldown(250);
                     }
                 }
@@ -837,7 +834,7 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
             if (player != null)
             {
                 final ISchematicPage page = SchematicRegistry.getMatchingRecipeForID((Integer) this.data.get(0));
-                NetworkHooks.openGui((ServerPlayer) player, page.getContainerProvider(player));
+                PlatformSpecific.openContainer((ServerPlayer) player, page.getContainerProvider(player));
 
 //                player.openGui(GalacticraftCore.instance, page.getGuiID(), player.world, (Integer) this.data.get(1), (Integer) this.data.get(2), (Integer) this.data.get(3)); TODO
             }
@@ -846,7 +843,7 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
             if (player.getVehicle() instanceof EntityBuggy)
             {
                 MenuProvider container = new SimpleMenuProvider((w, p, pl) -> new ContainerBuggy(w, p, ((EntityBuggy) player.getVehicle()).getBuggyType()), new TranslatableComponent("container.buggy"));
-                NetworkHooks.openGui((ServerPlayer) player, container);
+                PlatformSpecific.openContainer((ServerPlayer) player, container);
             }
             else if (player.getVehicle() instanceof EntitySpaceshipBase)
             {
@@ -940,7 +937,7 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
         case S_ON_FAILED_CHEST_UNLOCK:
             if (stats.getChatCooldown() == 0)
             {
-                player.sendMessage(new TextComponent(I18n.getWithFormat("gui.chest.warning.wrongkey", this.data.get(0))));
+                player.sendMessage(new TranslatableComponent(WithFormat("gui.chest.warning.wrongkey", this.data.get(0))));
                 stats.setChatCooldown(100);
             }
             break;
@@ -955,7 +952,7 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
             break;
         case S_OPEN_EXTENDED_INVENTORY:
             MenuProvider containerExtended = new SimpleMenuProvider((w, p, pl) -> new ContainerExtendedInventory(w, p, stats.getExtendedInventory()), new TranslatableComponent("container.cargo_loader"));
-            NetworkHooks.openGui((ServerPlayer) player, containerExtended);
+            PlatformSpecific.openContainer((ServerPlayer) player, containerExtended);
             break;
         case S_ON_ADVANCED_GUI_CLICKED_INT:
             BlockEntity tile1 = player.level.getBlockEntity((BlockPos) this.data.get(1));
@@ -1109,7 +1106,7 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
 
                 if (!race.getPlayerNames().remove(playerToRemove))
                 {
-                    player.sendMessage(new TextComponent(I18n.getWithFormat("gui.space_race.chat.not_found", playerToRemove)));
+                    player.sendMessage(new TranslatableComponent(WithFormat("gui.space_race.chat.not_found", playerToRemove)));
                 }
                 else
                 {
@@ -1148,7 +1145,7 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
                 }
                 else
                 {
-                    player.sendMessage(new TextComponent(I18n.get("gui.space_race.chat.already_part")).setStyle(new Style().setColor(ChatFormatting.DARK_RED)));
+                    player.sendMessage(new TranslatableComponent(("gui.space_race.chat.already_part")).setStyle(new Style().setColor(ChatFormatting.DARK_RED)));
                 }
             }
             break;
@@ -1375,7 +1372,7 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
     {
         ctx.get().enqueueWork(() ->
         {
-            if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+            if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
             {
                 message.handleClientSide(MinecraftClient.getInstance().player);
             }
@@ -1402,7 +1399,7 @@ public class PacketSimple extends PacketBase implements Packet<PacketListener>, 
             return;
         }
 
-        if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+        if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
         {
             this.handleClientSide(Minecraft.getInstance().player);
         }

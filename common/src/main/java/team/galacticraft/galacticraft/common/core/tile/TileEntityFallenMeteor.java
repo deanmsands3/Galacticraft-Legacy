@@ -1,13 +1,12 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import io.netty.buffer.ByteBuf;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class TileEntityFallenMeteor extends TileEntityAdvanced
     public static BlockEntityType<TileEntityFallenMeteor> TYPE;
 
     public static final int MAX_HEAT_LEVEL = 5000;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int heatLevel = TileEntityFallenMeteor.MAX_HEAT_LEVEL;
     private boolean sentOnePacket = false;
 

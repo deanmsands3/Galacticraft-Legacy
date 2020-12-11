@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.client.model;
 //
-//import team.galacticraft.galacticraft.core.Constants;
+//import team.galacticraft.galacticraft.common.Constants;
 //import net.minecraft.client.renderer.GLAllocation;
 //import net.minecraft.client.renderer.Tessellator;
 //import net.minecraft.client.renderer.model.ModelRenderer;

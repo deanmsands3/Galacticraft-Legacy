@@ -2,8 +2,8 @@ package team.galacticraft.galacticraft.common.core.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedSkeleton;
-import team.galacticraft.galacticraft.core.util.ClientUtil;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedSkeleton;
+import team.galacticraft.galacticraft.common.core.util.ClientUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.SkeletonModel;
 import net.minecraft.client.model.geom.ModelPart;

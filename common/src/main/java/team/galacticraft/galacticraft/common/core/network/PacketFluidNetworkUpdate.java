@@ -3,8 +3,8 @@ package team.galacticraft.galacticraft.common.core.network;
 import com.google.common.collect.Sets;
 import io.netty.buffer.ByteBuf;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IBufferTransmitter;
-import team.galacticraft.galacticraft.core.fluid.FluidNetwork;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.fluid.FluidNetwork;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Fluid;
 import me.shedaniel.architectury.fluid.FluidStack;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -63,7 +62,7 @@ public class PacketFluidNetworkUpdate extends PacketBase
     {
         ctx.get().enqueueWork(() ->
         {
-            if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+            if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
             {
                 message.handleClientSide(MinecraftClient.getInstance().player);
             }

@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.energy.tile;
 
-import team.galacticraft.galacticraft.core.inventory.IInventoryDefaults;
+import team.galacticraft.galacticraft.common.core.inventory.IInventoryDefaults;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 

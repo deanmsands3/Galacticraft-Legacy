@@ -1,13 +1,13 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.blocks.BlockAirLockWall;
-import team.galacticraft.galacticraft.core.client.sounds.GCSounds;
-import team.galacticraft.galacticraft.core.util.PlayerUtil;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.blocks.BlockAirLockWall;
+import team.galacticraft.galacticraft.common.core.client.sounds.GCSounds;
+import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
@@ -28,25 +27,25 @@ public class TileEntityAirLockController extends TileEntityAdvanced
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.airLockController)
     public static BlockEntityType<TileEntityAirLockController> TYPE;
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean redstoneActivation;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean playerDistanceActivation = true;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int playerDistanceSelection;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean playerNameMatches;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public String playerToOpenFor = "";
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean invertSelection;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean horizontalModeEnabled;
     public boolean lastHorizontalModeEnabled;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public String ownerName = "";
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean active;
     public boolean lastActive;
     private int otherAirLocks;
@@ -258,7 +257,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
         {
             if (this.protocol.minY == this.protocol.maxY && this.protocol.minX != this.protocol.maxX && this.protocol.minZ != this.protocol.maxZ)
             {
-                // First test if there is sealed air to either LogicalSide
+                // First test if there is sealed air to either EnvType
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++)
                 {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++)
@@ -314,7 +313,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
         {
             if (this.lastProtocol.minX != this.lastProtocol.maxX)
             {
-                // First test if there is sealed air to either LogicalSide
+                // First test if there is sealed air to either EnvType
                 for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
@@ -367,7 +366,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
             }
             else if (this.lastProtocol.minZ != this.lastProtocol.maxZ)
             {
-                // First test if there is sealed air to either LogicalSide
+                // First test if there is sealed air to either EnvType
                 for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)

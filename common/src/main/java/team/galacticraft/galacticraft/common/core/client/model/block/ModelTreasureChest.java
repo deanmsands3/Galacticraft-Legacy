@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.client.model.block;
 //
-//import team.galacticraft.galacticraft.core.Constants;
+//import team.galacticraft.galacticraft.common.Constants;
 //import net.minecraft.client.renderer.model.ModelRenderer;
 //import net.minecraft.client.renderer.tileentity.model.ChestModel;
 //

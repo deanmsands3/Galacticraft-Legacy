@@ -1,12 +1,12 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
 import team.galacticraft.galacticraft.common.api.prefab.entity.EntityTieredRocket;
-import team.galacticraft.galacticraft.core.client.gui.container.*;
-import team.galacticraft.galacticraft.core.entities.EntityBuggy;
-import team.galacticraft.galacticraft.core.inventory.ContainerCargoBase.ContainerCargoLoader;
-import team.galacticraft.galacticraft.core.inventory.ContainerCargoBase.ContainerCargoUnloader;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.tile.*;
+import team.galacticraft.galacticraft.common.core.client.gui.container.*;
+import team.galacticraft.galacticraft.common.core.entities.EntityBuggy;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerCargoBase.ContainerCargoLoader;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerCargoBase.ContainerCargoUnloader;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.tile.*;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import static team.galacticraft.galacticraft.core.GCBlocks.register;
+import static team.galacticraft.galacticraft.common.core.GCBlocks.register;
 
 public class GCContainers
 {

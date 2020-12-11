@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 //
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.blocks.BlockGlowstoneTorch;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockGlowstoneTorch;
 //import net.minecraft.block.Blocks;
 //import net.minecraft.nbt.CompoundNBT;
 //import net.minecraft.util.Direction;

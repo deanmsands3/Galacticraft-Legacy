@@ -1,8 +1,10 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelReader;
@@ -17,14 +19,12 @@ public class OreBlock extends Block implements ISortable
     }
 
     @Override
-    public int getExpDrop(BlockState state, LevelReader world, BlockPos pos, int fortune, int silktouch)
+    public void spawnAfterBreak(BlockState state, Level world, BlockPos pos, ItemStack stack)
     {
         if (this == GCBlocks.oreSilicon)
         {
-            Mth.nextInt(RANDOM, 2, 5);
+            this.popExperience(world, pos, Mth.nextInt(world.getRandom(), 2, 5));
         }
-
-        return super.getExpDrop(state, world, pos, fortune, silktouch);
     }
 
     @Override

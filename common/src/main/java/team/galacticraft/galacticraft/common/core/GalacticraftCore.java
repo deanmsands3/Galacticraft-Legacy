@@ -16,39 +16,39 @@ import team.galacticraft.galacticraft.common.api.vector.Vector3;
 import team.galacticraft.galacticraft.common.api.world.AtmosphereInfo;
 import team.galacticraft.galacticraft.common.api.world.BiomeGC;
 import team.galacticraft.galacticraft.common.api.world.EnumAtmosphericGas;
-import team.galacticraft.galacticraft.core.advancement.GCTriggers;
-import team.galacticraft.galacticraft.core.client.screen.GameScreenBasic;
-import team.galacticraft.galacticraft.core.client.screen.GameScreenCelestial;
-import team.galacticraft.galacticraft.core.client.screen.GameScreenText;
-import team.galacticraft.galacticraft.core.command.CommandPlanetTeleport;
-import team.galacticraft.galacticraft.core.dimension.*;
-import team.galacticraft.galacticraft.core.energy.grid.ChunkPowerHandler;
-import team.galacticraft.galacticraft.core.entities.GCEntities;
-import team.galacticraft.galacticraft.core.entities.player.GCCapabilities;
-import team.galacticraft.galacticraft.core.entities.player.GCPlayerHandler;
-import team.galacticraft.galacticraft.core.event.EventHandlerGC;
-import team.galacticraft.galacticraft.core.event.LootHandlerGC;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.core.inventory.GCContainers;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.items.ItemSchematic;
-import team.galacticraft.galacticraft.core.network.ConnectionEvents;
-import team.galacticraft.galacticraft.core.network.GalacticraftChannelHandler;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.proxy.CommonProxyCore;
-import team.galacticraft.galacticraft.core.recipe.ConditionEnabled;
-import team.galacticraft.galacticraft.core.recipe.IngredientAdvancedMetalSerializer;
-import team.galacticraft.galacticraft.core.recipe.RecipeManagerGC;
-import team.galacticraft.galacticraft.core.schematic.SchematicAdd;
-import team.galacticraft.galacticraft.core.schematic.SchematicMoonBuggy;
-import team.galacticraft.galacticraft.core.schematic.SchematicRocketT1;
-import team.galacticraft.galacticraft.core.tick.TickHandlerServer;
-import team.galacticraft.galacticraft.core.tile.TileEntityDeconstructor;
-import team.galacticraft.galacticraft.core.util.*;
-import team.galacticraft.galacticraft.core.world.gen.BiomeMoonFlat;
-import team.galacticraft.galacticraft.core.world.gen.BiomeMoonHills;
-import team.galacticraft.galacticraft.core.world.gen.BiomeMoonSuperFlat;
-import team.galacticraft.galacticraft.core.world.gen.BiomeOrbit;
+import team.galacticraft.galacticraft.common.core.advancement.GCTriggers;
+import team.galacticraft.galacticraft.common.core.client.screen.GameScreenBasic;
+import team.galacticraft.galacticraft.common.core.client.screen.GameScreenCelestial;
+import team.galacticraft.galacticraft.common.core.client.screen.GameScreenText;
+import team.galacticraft.galacticraft.common.core.command.CommandPlanetTeleport;
+import team.galacticraft.galacticraft.common.core.dimension.*;
+import team.galacticraft.galacticraft.common.core.energy.grid.ChunkPowerHandler;
+import team.galacticraft.galacticraft.common.core.entities.GCEntities;
+import team.galacticraft.galacticraft.common.core.entities.player.GCCapabilities;
+import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerHandler;
+import team.galacticraft.galacticraft.common.core.event.EventHandlerGC;
+import team.galacticraft.galacticraft.common.core.event.LootHandlerGC;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.inventory.GCContainers;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.items.ItemSchematic;
+import team.galacticraft.galacticraft.common.core.network.ConnectionEvents;
+import team.galacticraft.galacticraft.common.core.network.GalacticraftChannelHandler;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.proxy.CommonProxyCore;
+import team.galacticraft.galacticraft.common.core.recipe.ConditionEnabled;
+import team.galacticraft.galacticraft.common.core.recipe.IngredientAdvancedMetalSerializer;
+import team.galacticraft.galacticraft.common.core.recipe.RecipeManagerGC;
+import team.galacticraft.galacticraft.common.core.schematic.SchematicAdd;
+import team.galacticraft.galacticraft.common.core.schematic.SchematicMoonBuggy;
+import team.galacticraft.galacticraft.common.core.schematic.SchematicRocketT1;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerServer;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityDeconstructor;
+import team.galacticraft.galacticraft.common.core.util.*;
+import team.galacticraft.galacticraft.common.core.world.gen.BiomeMoonFlat;
+import team.galacticraft.galacticraft.common.core.world.gen.BiomeMoonHills;
+import team.galacticraft.galacticraft.common.core.world.gen.BiomeMoonSuperFlat;
+import team.galacticraft.galacticraft.common.core.world.gen.BiomeOrbit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Registry;
@@ -64,8 +64,6 @@ import net.minecraft.world.level.biome.Biome.SpawnerData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.NormalDimension;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -74,7 +72,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -100,14 +97,14 @@ import java.util.function.Supplier;
 import static net.minecraftforge.common.BiomeDictionary.Type.RARE;
 import static net.minecraftforge.common.BiomeDictionary.Type.WET;
 
-//@Mod(modid = Constants.MOD_ID_CORE, name = GalacticraftCore.NAME, version = Constants.COMBINEDVERSION, useMetadata = true, acceptedMinecraftVersions = Constants.MCVERSION, dependencies = Constants.DEPENDENCIES_FORGE + Constants.DEPENDENCIES_MICCORE + Constants.DEPENDENCIES_MODS, guiFactory = "team.galacticraft.galacticraft.core.client.gui.screen.ConfigGuiFactoryCore")
+//@Mod(modid = Constants.MOD_ID_CORE, name = GalacticraftCore.NAME, version = Constants.COMBINEDVERSION, useMetadata = true, acceptedMinecraftVersions = Constants.MCVERSION, dependencies = Constants.DEPENDENCIES_FORGE + Constants.DEPENDENCIES_MICCORE + Constants.DEPENDENCIES_MODS, guiFactory = "team.galacticraft.galacticraft.common.core.client.gui.screen.ConfigGuiFactoryCore")
 @Mod(Constants.MOD_ID_CORE)
 public class GalacticraftCore
 {
     public static final String NAME = "Galacticraft Core";
 //    private File GCCoreSource;
 
-//    @SidedProxy(clientSide = "team.galacticraft.galacticraft.core.proxy.ClientProxyCore", serverSide = "team.galacticraft.galacticraft.core.proxy.CommonProxyCore")
+//    @SidedProxy(clientSide = "team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore", serverSide = "team.galacticraft.galacticraft.common.core.proxy.CommonProxyCore")
 //    public static CommonProxyCore proxy;
 
     public static CommonProxyCore proxy = DistExecutor.runForDist(() -> getClientProxy(), () -> () -> new CommonProxyCore());
@@ -237,7 +234,7 @@ public class GalacticraftCore
 
 //        GCFluidRegistry.registerFluids();
 
-//        if (FMLCommonHandler.instance().getSide() == LogicalSide.CLIENT)
+//        if (FMLCommonHandler.instance().getSide() == EnvType.CLIENT)
 //        {
 //            GCBlocks.finalizeSort();
 //            GCItems.finalizeSort();
@@ -488,7 +485,7 @@ public class GalacticraftCore
         GalacticraftCore.galacticraftBlocksTab.setItemForTab(new ItemStack(GCBlocks.oxygenCompressor));
         GalacticraftCore.galacticraftItemsTab.setItemForTab(new ItemStack(GCItems.rocketTierOne));
 
-//        if (event.getSide() == LogicalSide.SERVER)
+//        if (event.getSide() == EnvType.SERVER)
 //        {
 //            this.loadLanguageCore("en_US");
 //        } TODO ?
@@ -736,7 +733,7 @@ public class GalacticraftCore
 
     private static void registerCoreGameScreens()
     {
-        if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+        if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
         {
             IGameScreen rendererBasic = new GameScreenBasic();
             IGameScreen rendererCelest = new GameScreenCelestial();
@@ -903,7 +900,7 @@ public class GalacticraftCore
 //        @SubscribeEvent
 //        public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
 //        {
-//            if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+//            if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
 //            {
 //                GCSounds.registerSounds(event.getRegistry());
 //            }

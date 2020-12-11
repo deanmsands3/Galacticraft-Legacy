@@ -2,8 +2,8 @@ package team.galacticraft.galacticraft.common.core.energy.tile;
 //
 //import java.lang.reflect.Field;
 //import java.lang.reflect.Method;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.util.CompatibilityManager;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.util.CompatibilityManager;
 //import micdoodle8.mods.miccore.Annotations.RuntimeInterface;
 //import net.minecraft.tileentity.TileEntity;
 //import net.minecraft.world.World;

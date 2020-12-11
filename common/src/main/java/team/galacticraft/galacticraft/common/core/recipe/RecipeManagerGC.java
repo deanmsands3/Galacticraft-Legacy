@@ -6,13 +6,13 @@ import team.galacticraft.galacticraft.common.api.recipe.CompressorRecipes;
 import team.galacticraft.galacticraft.common.api.recipe.IRecipeUpdatable;
 import team.galacticraft.galacticraft.common.api.recipe.SpaceStationRecipe;
 import team.galacticraft.galacticraft.common.api.world.SpaceStationType;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.dimension.GCDimensions;
-import team.galacticraft.galacticraft.core.items.ItemEmergencyKit;
-import team.galacticraft.galacticraft.core.tick.TickHandlerClient;
-import team.galacticraft.galacticraft.core.util.*;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.dimension.GCDimensions;
+import team.galacticraft.galacticraft.common.core.items.ItemEmergencyKit;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerClient;
+import team.galacticraft.galacticraft.common.core.util.*;
 import team.galacticraft.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import team.galacticraft.galacticraft.planets.asteroids.items.AsteroidsItems;
 import team.galacticraft.galacticraft.planets.mars.items.MarsItems;
@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -380,7 +379,7 @@ public class RecipeManagerGC
 
 //    public static void setConfigurableRecipes()
 //    {
-//        if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT && CompatibilityManager.modJEILoaded) TickHandlerClient.updateJEIhiding = true;
+//        if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT && CompatibilityManager.modJEILoaded) TickHandlerClient.updateJEIhiding = true;
 //
 //        // Update Aluminium Wire and Battery crafting recipes and GC Advanced Metals recipes
 //        boolean doQuickMode = ConfigManagerCore.quickMode.get() != configSaved_QuickMode;

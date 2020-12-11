@@ -1,15 +1,13 @@
 package team.galacticraft.galacticraft.common.core.client.render.entities.layer;
 
-import team.galacticraft.galacticraft.core.client.model.ModelEvolvedEnderman;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedEnderman;
+import team.galacticraft.galacticraft.common.core.client.model.ModelEvolvedEnderman;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedEnderman;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class LayerEvolvedEndermanEyes extends EyesLayer<EntityEvolvedEnderman, ModelEvolvedEnderman>

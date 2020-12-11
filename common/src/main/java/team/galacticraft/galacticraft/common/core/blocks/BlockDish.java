@@ -1,12 +1,12 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
 //import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.items.IShiftDescription;
-//import team.galacticraft.galacticraft.core.tile.TileEntityDish;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityDish;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockRenderType;
 //import net.minecraft.block.BlockState;
@@ -55,7 +55,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //            }
 //        }
 //
-//        Direction facing = Direction.byIndex(LogicalSide.getIndex() ^ 1);
+//        Direction facing = Direction.byIndex(EnvType.getIndex() ^ 1);
 //        return world.getBlockState(pos.add(facing.getXOffset(), facing.getYOffset(), facing.getZOffset())).getBlock() != GCBlocks.fakeBlock;
 //    }
 //
@@ -126,7 +126,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    }
 //
 //    @Override
-//    public TileEntity createTileEntity(World world, BlockState metadata)
+//    public TileEntity newBlockEntity(World world, BlockState metadata)
 //    {
 //        return new TileEntityDish();
 //    }

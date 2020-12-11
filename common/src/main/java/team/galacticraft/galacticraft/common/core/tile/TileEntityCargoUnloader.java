@@ -5,13 +5,13 @@ import team.galacticraft.galacticraft.common.api.entity.ICargoEntity.EnumCargoLo
 import team.galacticraft.galacticraft.common.api.entity.ICargoEntity.RemovalResult;
 import team.galacticraft.galacticraft.common.api.tile.ILandingPadAttachable;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockCargoLoader;
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.inventory.ContainerCargoBase.ContainerCargoUnloader;
-import team.galacticraft.galacticraft.core.util.RecipeUtil;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockCargoLoader;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerCargoBase.ContainerCargoUnloader;
+import team.galacticraft.galacticraft.common.core.util.RecipeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -26,7 +26,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityCargoUnloader extends TileEntityCargoBase implements ILandingPadAttachable, MenuProvider
@@ -34,11 +33,11 @@ public class TileEntityCargoUnloader extends TileEntityCargoBase implements ILan
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.cargoUnloader)
     public static BlockEntityType<TileEntityCargoUnloader> TYPE;
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean targetEmpty;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean targetNoInventory;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean noTarget;
 
     public ICargoEntity attachedFuelable;

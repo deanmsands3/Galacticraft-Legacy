@@ -1,6 +1,7 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import javax.annotation.Nullable;
+import net.minecraft.world.level.block.EntityBlock;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
@@ -9,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class BlockAdvancedTile extends BlockAdvanced
+public abstract class BlockAdvancedTile extends BlockAdvanced implements EntityBlock
 {
     public BlockAdvancedTile(Properties builder)
     {
@@ -18,13 +19,13 @@ public abstract class BlockAdvancedTile extends BlockAdvanced
 
     @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return null;
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

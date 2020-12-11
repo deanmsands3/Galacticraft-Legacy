@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.util;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
@@ -21,12 +21,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.dimension.Dimension;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.io.Charsets;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -372,14 +371,14 @@ public class GCCoreUtil
     /**
      * Custom getEffectiveSide method, covering more cases than FMLCommonHandler
      */
-    public static LogicalSide getEffectiveSide()
+    public static EnvType getEffectiveSide()
     {
-        if (EffectiveSide.get() == LogicalSide.SERVER || Thread.currentThread().getName().startsWith("Netty Epoll Server IO"))
+        if (EffectiveSide.get() == EnvType.SERVER || Thread.currentThread().getName().startsWith("Netty Epoll Server IO"))
         {
-            return LogicalSide.SERVER;
+            return EnvType.SERVER;
         }
 
-        return LogicalSide.CLIENT;
+        return EnvType.CLIENT;
     }
 
     public static MinecraftServer getServer()

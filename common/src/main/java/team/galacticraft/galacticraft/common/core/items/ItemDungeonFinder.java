@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.items;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStatsClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,8 +19,6 @@ import net.minecraft.world.item.ItemPropertyFunction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemDungeonFinder extends ItemBase
 {

@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.world.gen.dungeon;
 
-import team.galacticraft.galacticraft.core.entities.GCEntities;
+import team.galacticraft.galacticraft.common.core.entities.GCEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
-import static team.galacticraft.galacticraft.core.world.gen.GCFeatures.CMOON_DUNGEON_SPAWNER;
+import static team.galacticraft.galacticraft.common.core.world.gen.GCFeatures.CMOON_DUNGEON_SPAWNER;
 
 public class RoomSpawner extends RoomEmpty
 {

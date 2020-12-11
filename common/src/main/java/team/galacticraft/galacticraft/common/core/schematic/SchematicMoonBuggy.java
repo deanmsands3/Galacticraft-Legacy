@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.schematic;
 
 import team.galacticraft.galacticraft.common.api.recipe.SchematicPage;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.client.gui.container.GuiSchematicBuggy;
-import team.galacticraft.galacticraft.core.inventory.ContainerSchematicBuggy;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.client.gui.container.GuiSchematicBuggy;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerSchematicBuggy;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -13,8 +13,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class SchematicMoonBuggy extends SchematicPage
 {

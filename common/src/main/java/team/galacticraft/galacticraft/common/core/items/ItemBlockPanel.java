@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.items;
 //
-//import team.galacticraft.galacticraft.core.blocks.BlockPanelLighting;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockPanelLighting;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;

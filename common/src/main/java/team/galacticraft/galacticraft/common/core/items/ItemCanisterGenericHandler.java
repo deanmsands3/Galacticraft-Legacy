@@ -1,15 +1,15 @@
 package team.galacticraft.galacticraft.common.core.items;
 
-import FluidStack;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import me.shedaniel.architectury.fluid.FluidStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import team.galacticraft.galacticraft.core.GCItems;
+import team.galacticraft.galacticraft.common.core.GCItems;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;

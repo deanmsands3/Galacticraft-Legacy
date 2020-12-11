@@ -3,11 +3,11 @@ package team.galacticraft.galacticraft.common.core.tile;
 import io.netty.buffer.ByteBuf;
 import team.galacticraft.galacticraft.common.api.entity.IEntityBreathable;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.*;
-import team.galacticraft.galacticraft.core.items.ItemEmergencyKit;
-import team.galacticraft.galacticraft.core.network.IPacketReceiver;
-import team.galacticraft.galacticraft.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.*;
+import team.galacticraft.galacticraft.common.core.items.ItemEmergencyKit;
+import team.galacticraft.galacticraft.common.core.network.IPacketReceiver;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +31,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ObjectHolder;
@@ -499,7 +498,7 @@ public class TileEntityEmergencyBox extends BlockEntity implements TickableBlock
         this.openW = (data & 2) == 2;
         this.openS = (data & 4) == 4;
         this.openE = (data & 8) == 8;
-        if (GCCoreUtil.getEffectiveSide() == LogicalSide.SERVER)
+        if (GCCoreUtil.getEffectiveSide() == EnvType.SERVER)
         {
             this.airToRestore.clear();
             ListTag airBlocks = nbt.getList("air", 10);

@@ -3,11 +3,11 @@ package team.galacticraft.galacticraft.common.core.tile;
 import team.galacticraft.galacticraft.common.api.GalacticraftRegistry;
 import team.galacticraft.galacticraft.common.api.tile.ITileClientUpdates;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockScreen;
-import team.galacticraft.galacticraft.core.client.screen.DrawGameScreen;
-import team.galacticraft.galacticraft.core.tick.TickHandlerClient;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockScreen;
+import team.galacticraft.galacticraft.common.core.client.screen.DrawGameScreen;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
@@ -16,8 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     private final int requiresUpdate = 0;
     private boolean doneClientUpdate = false;
-    //Used on client LogicalSide only
+    //Used on client EnvType only
     public boolean refreshOnUpdate = false;
     private AABB renderAABB;
     private static final boolean LOGGING = false;
@@ -875,7 +873,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     }
 
     /**
-     * Get the Minecraft direction which is on the left LogicalSide
+     * Get the Minecraft direction which is on the left EnvType
      * for the block orientation given by metadata
      */
     private Direction getLeft(Direction direction)
@@ -896,7 +894,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     }
 
     /**
-     * Get the Minecraft direction which is on the right LogicalSide
+     * Get the Minecraft direction which is on the right EnvType
      * for the block orientation given by metadata
      */
     private Direction getRight(Direction direction)
@@ -1110,7 +1108,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     private void joinUp()
     {
         Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
-//    	EnumFacing LogicalSide = EnumFacing.getFront(this.getRight(facing));
+//    	EnumFacing EnvType = EnumFacing.getFront(this.getRight(facing));
         Direction side = getFront().getClockWise();
         BlockVec3 vec = new BlockVec3(this);
         for (int x = -this.connectionsLeft; x <= this.connectionsRight; x++)
@@ -1142,7 +1140,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     private void joinDown()
     {
         Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
-//    	EnumFacing LogicalSide = EnumFacing.getFront(this.getRight(facing));
+//    	EnumFacing EnvType = EnumFacing.getFront(this.getRight(facing));
         Direction side = getFront().getClockWise();
         BlockVec3 vec = new BlockVec3(this);
         for (int x = -this.connectionsLeft; x <= this.connectionsRight; x++)

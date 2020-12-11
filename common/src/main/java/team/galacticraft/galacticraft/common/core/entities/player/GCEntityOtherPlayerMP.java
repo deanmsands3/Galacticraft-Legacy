@@ -5,15 +5,13 @@ import team.galacticraft.galacticraft.common.api.entity.ICameraZoomEntity;
 import team.galacticraft.galacticraft.common.api.item.IHoldableItem;
 import team.galacticraft.galacticraft.common.api.prefab.entity.EntitySpaceshipBase;
 import team.galacticraft.galacticraft.common.api.world.IZeroGDimension;
-import team.galacticraft.galacticraft.core.client.EventHandlerClient;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.client.EventHandlerClient;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GCEntityOtherPlayerMP extends RemotePlayer
 {

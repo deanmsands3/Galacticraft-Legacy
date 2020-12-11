@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 
 import team.galacticraft.galacticraft.common.api.world.BiomeGC;
-import team.galacticraft.galacticraft.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;

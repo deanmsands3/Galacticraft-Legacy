@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
-//import team.galacticraft.galacticraft.core.tile.TileEntityPainter;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityPainter;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.state.BlockStateContainer;
 //import net.minecraft.tileentity.TileEntity;

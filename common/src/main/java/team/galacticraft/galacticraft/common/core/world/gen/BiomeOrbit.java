@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 
 import team.galacticraft.galacticraft.common.api.world.BiomeGC;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedSpider;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedZombie;
-import team.galacticraft.galacticraft.core.entities.GCEntities;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedSpider;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedZombie;
+import team.galacticraft.galacticraft.common.core.entities.GCEntities;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;

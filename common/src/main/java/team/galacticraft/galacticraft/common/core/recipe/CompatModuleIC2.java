@@ -2,10 +2,10 @@ package team.galacticraft.galacticraft.common.core.recipe;
 //
 //import ic2.api.item.IC2Items;
 //import ic2.api.recipe.Recipes;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.GCItems;
-//import team.galacticraft.galacticraft.core.blocks.BlockEnclosed;
-//import team.galacticraft.galacticraft.core.util.RecipeUtil;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.GCItems;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockEnclosed;
+//import team.galacticraft.galacticraft.common.core.util.RecipeUtil;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.item.crafting.FurnaceRecipes;
 //import net.minecraft.nbt.CompoundNBT;

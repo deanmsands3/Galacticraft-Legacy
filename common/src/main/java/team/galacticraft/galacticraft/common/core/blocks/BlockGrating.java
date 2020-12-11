@@ -9,14 +9,14 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import java.util.Random;
 //import java.util.Set;
 //
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
 //import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-//import team.galacticraft.galacticraft.core.util.JavaUtil;
-//import team.galacticraft.galacticraft.core.util.PropertyObject;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+//import team.galacticraft.galacticraft.common.core.util.JavaUtil;
+//import team.galacticraft.galacticraft.common.core.util.PropertyObject;
 //import net.minecraft.block.*;
 //import net.minecraft.block.BlockDynamicLiquid;
 //import net.minecraft.block.BlockLiquid;
@@ -50,7 +50,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import net.minecraftforge.common.property.IUnlistedProperty;
 //import net.minecraftforge.fluids.BlockFluidBase;
 //import net.minecraftforge.fluids.BlockFluidClassic;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //import net.minecraftforge.registries.IForgeRegistry;
 //
@@ -263,7 +263,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    }
 //    
 //    @Override
-//    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+//    public ItemStack getCloneItemStack(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
 //    {
 //        return new ItemStack(Item.getItemFromBlock(GCBlocks.grating), 1, 0);
 //    }

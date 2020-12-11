@@ -1,14 +1,14 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.blocks.BlockMachineBase;
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.energy.tile.EnergyStorageTile;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
-import team.galacticraft.galacticraft.core.inventory.ContainerElectricFurnace;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMachineBase;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.energy.tile.EnergyStorageTile;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseElectricBlockWithInventory;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerElectricFurnace;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +25,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.HashSet;
@@ -66,10 +65,10 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
 
     public static int PROCESS_TIME_REQUIRED = 130;
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int processTimeRequired = PROCESS_TIME_REQUIRED;
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int processTicks = 0;
 
     public final Set<Player> playersUsing = new HashSet<Player>();
@@ -155,7 +154,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
         }
         else
         {
-            //Smoother client LogicalSide animation before the networked fields get updated
+            //Smoother client EnvType animation before the networked fields get updated
             if (this.processTicks > 0 && this.processTicks < this.processTimeRequired)
             {
                 this.processTicks--;

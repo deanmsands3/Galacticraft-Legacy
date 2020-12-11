@@ -1,7 +1,12 @@
 package team.galacticraft.galacticraft.common.api.prefab.entity;
 
 import io.netty.buffer.ByteBuf;
+import me.shedaniel.architectury.utils.Fraction;
 import net.minecraft.client.resources.language.I18n;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.api.block.IFullLaunchPad;
+import team.galacticraft.galacticraft.common.api.tile.ILandingPad;
+import team.galacticraft.galacticraft.common.api.tile.ILaunchController;
 import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 import team.galacticraft.galacticraft.common.api.entity.IEntityNoisy;
 import team.galacticraft.galacticraft.common.api.entity.ILandable;
@@ -42,6 +47,7 @@ import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -68,19 +74,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     private boolean waitForPlayer;
     protected AbstractTickableSoundInstance rocketSoundUpdater;
     private boolean rocketSoundToStop = false;
-    private static Class<?> controllerClass = null;
 
-    static
-    {
-        try
-        {
-            controllerClass = Class.forName("team.galacticraft.galacticraft.planets.mars.tile.TileEntityLaunchController");
-        }
-        catch (ClassNotFoundException e)
-        {
-            PlatformSpecific.getLogger().info("Galacticraft-Planets' LaunchController not present, rockets will not be launch controlled.");
-        }
-    }
 
     public EntityAutoRocket(EntityType<? extends EntityAutoRocket> type, Level worldIn)
     {
@@ -143,23 +137,16 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
 
     public boolean setFrequency()
     {
-        if (!GalacticraftCore.isPlanetsLoaded || controllerClass == null)
-        {
-            return false;
-        }
-
         if (this.activeLaunchController != null)
         {
             BlockEntity launchController = this.activeLaunchController.getTileEntity(this.level);
-            if (controllerClass.isInstance(launchController))
+            if (launchController instanceof ILaunchController)
             {
                 try
                 {
-                    Boolean b = (Boolean) controllerClass.getMethod("validFrequency").invoke(launchController);
-
-                    if (b != null && b)
+                    if (((ILaunchController) launchController).isValidFrequency())
                     {
-                        int controllerFrequency = controllerClass.getField("destFrequency").getInt(launchController);
+                        int controllerFrequency = ((ILaunchController) launchController).getDestinationFrequency();
                         boolean foundPad = this.setTarget(false, controllerFrequency);
 
                         if (foundPad)
@@ -184,29 +171,25 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     protected boolean setTarget(boolean doSet, int destFreq)
     {
         Iterable<ServerLevel> worlds = GCCoreUtil.getWorldServerList(this.level);
-        if (!GalacticraftCore.isPlanetsLoaded || controllerClass == null)
-        {
-            return false;
-        }
 
         for (ServerLevel world : worlds)
         {
             try
             {
-                for (BlockEntity tile : new ArrayList<BlockEntity>(world.blockEntityList))
+                for (BlockEntity tile : new LinkedList<>(world.blockEntityList))
                 {
-                    if (!controllerClass.isInstance(tile))
+                    if (!(tile instanceof ILaunchController))
                     {
                         continue;
                     }
 
                     tile = world.getBlockEntity(tile.getBlockPos());
-                    if (!controllerClass.isInstance(tile))
+                    if (!(tile instanceof ILaunchController))
                     {
                         continue;
                     }
 
-                    int controllerFrequency = controllerClass.getField("frequency").getInt(tile);
+                    int controllerFrequency = ((ILaunchController) tile).getFrequency();
 
                     if (destFreq == controllerFrequency)
                     {
@@ -220,7 +203,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
                                 BlockPos pos = new BlockPos(tile.getBlockPos().offset(x, 0, z));
                                 Block block = world.getBlockState(pos).getBlock();
 
-                                if (block instanceof BlockPadFull)
+                                if (block instanceof IFullLaunchPad)
                                 {
                                     if (doSet)
                                     {
@@ -271,7 +254,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
             return 0;
         }
 
-        return this.fuelTank.getFluidAmount() * scale / this.getFuelTankCapacity() / ConfigManagerCore.rocketFuelFactor.get();
+        return this.fuelTank.get(0).getAmount().multiply(Fraction.ofWhole(scale)).divide(Fraction.ofWhole(this.getFuelTankCapacity())).divide(Fraction.ofWhole(ConfigManagerCore.rocketFuelFactor.get())); //todo(marcus): api config
     }
 
     @Override
@@ -291,12 +274,12 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
         //this entity from the WorldClient.loadedEntityList - this entity stays in the world loadedEntityList.
         //That's why an onUpdate() tick is active for it, still!
         //Weird, huh?
-        if (this.level.isClientSide && this.inChunk && !CompatibilityManager.isCubicChunksLoaded)
+        if (this.level.isClientSide && this.inChunk/* && !CompatibilityManager.isCubicChunksLoaded*/) //todo(marcus): compatibility manager
         {
             LevelChunk chunk = this.level.getChunk(this.xChunk, this.zChunk);
             int cx = Mth.floor(this.getX()) >> 4;
             int cz = Mth.floor(this.getZ()) >> 4;
-            if (chunk.loaded && this.xChunk == cx && this.zChunk == cz)
+            if (PlatformSpecific.chunkLoaded(chunk) && this.xChunk == cx && this.zChunk == cz)
             {
                 boolean thisfound = false;
                 ClassInstanceMultiMap<Entity> mapEntities = chunk.getEntitySections()[this.yChunk];
@@ -929,7 +912,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
         this.timeUntilLaunch = 0;
         if (!this.level.isClientSide && !this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof ServerPlayer)
         {
-            this.getPassengers().get(0).sendMessage(new TextComponent(I18n.get("gui.rocket.warning.nogyroscope")));
+            this.getPassengers().get(0).sendMessage(new TranslatableComponent(("gui.rocket.warning.nogyroscope")));
         }
     }
 
@@ -937,7 +920,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     {
         if (!this.level.isClientSide && !this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof ServerPlayer)
         {
-            this.getPassengers().get(0).sendMessage(new TextComponent(I18n.get("gui.rocket.warning.launchcontroller")));
+            this.getPassengers().get(0).sendMessage(new TranslatableComponent(("gui.rocket.warning.launchcontroller")));
         }
     }
 
@@ -945,7 +928,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     {
         if (!this.level.isClientSide && !this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof ServerPlayer)
         {
-            this.getPassengers().get(0).sendMessage(new TextComponent(I18n.get("gui.rocket.warning.fuelinsufficient")));
+            this.getPassengers().get(0).sendMessage(new TranslatableComponent(("gui.rocket.warning.fuelinsufficient")));
         }
     }
 
@@ -1130,10 +1113,10 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
             {
                 this.setLaunchPhase(EnumLaunchPhase.UNIGNITED);
                 this.targetVec = null;
-                if (GalacticraftCore.isPlanetsLoaded)
-                {
+//                if (GalacticraftCore.isPlanetsLoaded)
+//                {
                     this.updateControllerSettings(pad);
-                }
+//                }
             }
         }
     }
@@ -1153,7 +1136,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     @Override
     public boolean isDockValid(IFuelDock dock)
     {
-        return (dock instanceof TileEntityLandingPad);
+        return (dock instanceof ILandingPad);
     }
 
     @Override

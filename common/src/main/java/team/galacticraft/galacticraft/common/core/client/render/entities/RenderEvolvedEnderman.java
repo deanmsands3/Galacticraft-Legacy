@@ -1,11 +1,11 @@
 package team.galacticraft.galacticraft.common.core.client.render.entities;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
-import team.galacticraft.galacticraft.core.client.model.ModelEvolvedEnderman;
-import team.galacticraft.galacticraft.core.client.render.entities.layer.LayerEvolvedEndermanEyes;
-import team.galacticraft.galacticraft.core.client.render.entities.layer.LayerEvolvedEndermanHeldBlock;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedEnderman;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.client.gui.overlay.OverlaySensorGlasses;
+import team.galacticraft.galacticraft.common.core.client.model.ModelEvolvedEnderman;
+import team.galacticraft.galacticraft.common.core.client.render.entities.layer.LayerEvolvedEndermanEyes;
+import team.galacticraft.galacticraft.common.core.client.render.entities.layer.LayerEvolvedEndermanHeldBlock;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedEnderman;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,8 +14,6 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.Random;
 

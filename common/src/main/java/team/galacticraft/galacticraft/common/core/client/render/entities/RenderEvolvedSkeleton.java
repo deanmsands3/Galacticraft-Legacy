@@ -4,10 +4,10 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
-import team.galacticraft.galacticraft.core.client.model.ModelEvolvedSkeleton;
-import team.galacticraft.galacticraft.core.entities.EntityEvolvedSkeleton;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.client.gui.overlay.OverlaySensorGlasses;
+import team.galacticraft.galacticraft.common.core.client.model.ModelEvolvedSkeleton;
+import team.galacticraft.galacticraft.common.core.entities.EntityEvolvedSkeleton;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.SkeletonModel;
@@ -17,8 +17,6 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)

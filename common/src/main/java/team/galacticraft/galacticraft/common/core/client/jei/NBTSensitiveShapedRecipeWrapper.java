@@ -3,9 +3,9 @@ package team.galacticraft.galacticraft.common.core.client.jei;
 //import mezz.jei.api.ingredients.IIngredients;
 //import mezz.jei.api.recipe.BlankRecipeWrapper;
 //import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
-//import team.galacticraft.galacticraft.core.recipe.ShapedRecipeNBT;
+//import team.galacticraft.galacticraft.common.core.recipe.ShapedRecipeNBT;
 //import net.minecraft.item.ItemStack;
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //import java.util.Arrays;
 //import java.util.List;

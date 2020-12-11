@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.event;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import net.minecraft.resources.ResourceLocation;
 
 public class LootHandlerGC

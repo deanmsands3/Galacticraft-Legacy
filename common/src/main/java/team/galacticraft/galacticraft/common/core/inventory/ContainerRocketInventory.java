@@ -3,7 +3,7 @@ package team.galacticraft.galacticraft.common.core.inventory;
 import team.galacticraft.galacticraft.common.api.entity.IRocketType.EnumRocketType;
 import team.galacticraft.galacticraft.common.api.prefab.entity.EntityAutoRocket;
 import team.galacticraft.galacticraft.common.api.prefab.entity.EntityTieredRocket;
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

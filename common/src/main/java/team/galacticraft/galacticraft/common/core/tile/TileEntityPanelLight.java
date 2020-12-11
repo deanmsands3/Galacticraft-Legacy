@@ -4,17 +4,17 @@ package team.galacticraft.galacticraft.common.core.tile;
 //
 //import java.util.ArrayList;
 //
-//import team.galacticraft.galacticraft.core.BlockNames;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.blocks.BlockPanelLighting;
-//import team.galacticraft.galacticraft.core.blocks.BlockPanelLighting.PanelType;
+//import team.galacticraft.galacticraft.common.core.BlockNames;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockPanelLighting;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockPanelLighting.PanelType;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-//import team.galacticraft.galacticraft.core.network.IPacketReceiver;
-//import team.galacticraft.galacticraft.core.network.NetworkUtil;
-//import team.galacticraft.galacticraft.core.network.PacketDynamic;
-//import team.galacticraft.galacticraft.core.util.RedstoneUtil;
+//import team.galacticraft.galacticraft.common.core.network.IPacketReceiver;
+//import team.galacticraft.galacticraft.common.core.network.NetworkUtil;
+//import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
+//import team.galacticraft.galacticraft.common.core.util.RedstoneUtil;
 //import team.galacticraft.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
@@ -29,7 +29,7 @@ package team.galacticraft.galacticraft.common.core.tile;
 //import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.api.distmarker.OnlyIn;
 //import net.minecraftforge.fml.common.network.ByteBufUtils;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //import net.minecraftforge.registries.ObjectHolder;
 //

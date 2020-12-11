@@ -5,14 +5,14 @@ package team.galacticraft.galacticraft.common.core.client.jei.oxygencompressor;
 //import mezz.jei.api.ingredients.IIngredients;
 //import mezz.jei.api.recipe.BlankRecipeCategory;
 //import mezz.jei.api.recipe.IRecipeWrapper;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.client.jei.RecipeCategories;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.client.jei.RecipeCategories;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.util.ResourceLocation;
 //
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //public class OxygenCompressorRecipeCategory extends BlankRecipeCategory
 //{

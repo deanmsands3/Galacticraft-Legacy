@@ -3,12 +3,11 @@ package team.galacticraft.galacticraft.common.core.network;
 import io.netty.buffer.ByteBuf;
 import team.galacticraft.galacticraft.common.api.vector.Vector2;
 import team.galacticraft.galacticraft.common.api.vector.Vector3D;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
@@ -60,7 +59,7 @@ public class PacketEntityUpdate extends PacketBase
     {
         ctx.get().enqueueWork(() ->
         {
-            if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+            if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
             {
                 message.handleClientSide(MinecraftClient.getInstance().player);
             }

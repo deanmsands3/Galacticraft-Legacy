@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.client.fx;
 
-import team.galacticraft.galacticraft.core.client.GCParticles;
-import team.galacticraft.galacticraft.core.client.fx.DripParticleGC.DrippingOil;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.client.GCParticles;
+import team.galacticraft.galacticraft.common.core.client.fx.DripParticleGC.DrippingOil;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
@@ -12,8 +12,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class DripParticleGC extends TextureSheetParticle
@@ -137,7 +135,7 @@ public class DripParticleGC extends TextureSheetParticle
         }
 
         @Override
-        public Particle makeParticle(SimpleParticleType typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
         {
             DrippingOil oilDrip = new DrippingOil(worldIn, x, y, z, GCFluids.OIL.getFluid(), GCParticles.OIL_DRIP);
             oilDrip.pickSprite(this.spriteSet);

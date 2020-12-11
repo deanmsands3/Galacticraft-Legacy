@@ -1,9 +1,13 @@
 package team.galacticraft.galacticraft.common.compat;
 
+import io.netty.buffer.ByteBuf;
 import me.shedaniel.architectury.ExpectPlatform;
 import me.shedaniel.architectury.networking.NetworkChannel;
 import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
@@ -17,6 +21,7 @@ import team.galacticraft.galacticraft.common.compat.item.ItemInventory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class PlatformSpecific
@@ -57,6 +62,12 @@ public class PlatformSpecific
 
     @ExpectPlatform
     public static ItemInventory createInventory(int invSize, List<Predicate<ItemStack>> filters)
+    {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void openContainer(ServerPlayer player, MenuProvider provider, Consumer<FriendlyByteBuf> consumer)
     {
         throw new AssertionError();
     }

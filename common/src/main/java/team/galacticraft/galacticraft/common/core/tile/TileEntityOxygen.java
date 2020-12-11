@@ -4,31 +4,30 @@ import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IOxygenReceiver;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IOxygenStorage;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseElectricBlock;
-import team.galacticraft.galacticraft.core.fluid.FluidNetwork;
-import team.galacticraft.galacticraft.core.fluid.GCFluids;
-import team.galacticraft.galacticraft.core.fluid.NetworkHelper;
-import team.galacticraft.galacticraft.core.wrappers.IFluidHandlerWrapper;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseElectricBlock;
+import team.galacticraft.galacticraft.common.core.fluid.FluidNetwork;
+import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
+import team.galacticraft.galacticraft.common.core.fluid.NetworkHelper;
+import team.galacticraft.galacticraft.common.core.wrappers.IFluidHandlerWrapper;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import net.minecraftforge.fml.LogicalSide;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.EnumSet;
 
 public abstract class TileEntityOxygen extends TileBaseElectricBlock implements IOxygenReceiver, IOxygenStorage, IFluidHandlerWrapper
 {
     public int oxygenPerTick;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public FluidTankGC tank;
     public float lastStoredOxygen;
     public static int timeSinceOxygenRequest;
@@ -365,7 +364,7 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.IGasHandler", modID = CompatibilityManager.modidMekanism)
 //    public int receiveGas(Direction side, GasStack stack)
 //    {
-//        return this.receiveGas(LogicalSide, stack, true);
+//        return this.receiveGas(EnvType, stack, true);
 //    }
 //
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.IGasHandler", modID = CompatibilityManager.modidMekanism)
@@ -377,19 +376,19 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.IGasHandler", modID = CompatibilityManager.modidMekanism)
 //    public GasStack drawGas(Direction side, int amount)
 //    {
-//        return this.drawGas(LogicalSide, amount, true);
+//        return this.drawGas(EnvType, amount, true);
 //    }
 //
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.IGasHandler", modID = CompatibilityManager.modidMekanism)
 //    public boolean canReceiveGas(Direction side, Gas type)
 //    {
-//        return type.getName().equals("oxygen") && this.getOxygenInputDirections().contains(LogicalSide);
+//        return type.getName().equals("oxygen") && this.getOxygenInputDirections().contains(EnvType);
 //    }
 //
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.IGasHandler", modID = CompatibilityManager.modidMekanism)
 //    public boolean canDrawGas(Direction side, Gas type)
 //    {
-//        return type.getName().equals("oxygen") && this.getOxygenOutputDirections().contains(LogicalSide);
+//        return type.getName().equals("oxygen") && this.getOxygenOutputDirections().contains(EnvType);
 //    }
 //
 //    @Annotations.RuntimeInterface(clazz = "mekanism.api.gas.ITubeConnection", modID = CompatibilityManager.modidMekanism)

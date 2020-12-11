@@ -1,4 +1,8 @@
 accessWidener   v1  named
-accessible   class   net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
-accessible   field   net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageWidth I
-accessible   field   net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageHeight I
+accessible class  net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
+
+accessible field  net/minecraft/client/gui/screens/inventory/AbstractContainerScreen      imageWidth          I
+accessible field  net/minecraft/client/gui/screens/inventory/AbstractContainerScreen      imageHeight         I
+accessible field  net/minecraft/world/level/dimension/Dimension                           level               Lnet/minecraft/world/level/Level;
+
+accessible method net/minecraft/advancements/CriteriaTriggers                             register            (Lnet/minecraft/advancements/CriterionTrigger;)Lnet/minecraft/advancements/CriterionTrigger;

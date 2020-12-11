@@ -6,17 +6,17 @@ import team.galacticraft.galacticraft.common.api.transmission.tile.IConnector;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
 import team.galacticraft.galacticraft.common.api.world.ISolarLevel;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.blocks.BlockMulti;
-import team.galacticraft.galacticraft.core.blocks.BlockMulti.EnumBlockMultiType;
-import team.galacticraft.galacticraft.core.blocks.BlockSolar;
-import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseUniversalElectricalSource;
-import team.galacticraft.galacticraft.core.inventory.ContainerSolar;
-import team.galacticraft.galacticraft.core.inventory.IInventoryDefaults;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMulti;
+import team.galacticraft.galacticraft.common.core.blocks.BlockMulti.EnumBlockMultiType;
+import team.galacticraft.galacticraft.common.core.blocks.BlockSolar;
+import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseUniversalElectricalSource;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerSolar;
+import team.galacticraft.galacticraft.common.core.inventory.IInventoryDefaults;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -39,9 +39,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -96,16 +93,16 @@ public abstract class TileEntitySolar extends TileBaseUniversalElectricalSource 
         }
     }
 
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int solarStrength = 0;
     public float targetAngle;
     public float currentAngle;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public boolean disabled = false;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int disableCooldown = 0;
     public static final int MAX_GENERATE_WATTS = 200;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int generateWatts = 0;
 
     //    protected boolean initialised = false;

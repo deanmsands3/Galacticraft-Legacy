@@ -3,16 +3,16 @@ package team.galacticraft.galacticraft.common.core.tile;
 import java.util.Optional;
 import java.util.Random;
 
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.inventory.ContainerCrafting;
-import team.galacticraft.galacticraft.core.inventory.IInventoryDefaults;
-import team.galacticraft.galacticraft.core.inventory.IInventorySettable;
-import team.galacticraft.galacticraft.core.inventory.PersistantInventoryCrafting;
-import team.galacticraft.galacticraft.core.network.PacketDynamicInventory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.RecipeUtil;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerCrafting;
+import team.galacticraft.galacticraft.common.core.inventory.IInventoryDefaults;
+import team.galacticraft.galacticraft.common.core.inventory.IInventorySettable;
+import team.galacticraft.galacticraft.common.core.inventory.PersistantInventoryCrafting;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamicInventory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.RecipeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -32,7 +32,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityCrafting extends BlockEntity implements IInventoryDefaults, WorldlyContainer, IInventorySettable, MenuProvider
@@ -120,7 +119,7 @@ public class TileEntityCrafting extends BlockEntity implements IInventoryDefault
         }
 
         // Crafting Manager can produce concurrent modification exception in single player
-        // if a server-LogicalSide tick (e.g. from a Hopper) calls this while client-LogicalSide is still initialising recipes
+        // if a server-EnvType tick (e.g. from a Hopper) calls this while client-EnvType is still initialising recipes
         try
         {
             Optional<CraftingRecipe> optional = this.getLevel().getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, this.craftMatrix, this.getLevel());
@@ -318,7 +317,7 @@ public class TileEntityCrafting extends BlockEntity implements IInventoryDefault
     public void load(CompoundTag nbt)
     {
         super.load(nbt);
-        if (GCCoreUtil.getEffectiveSide() == LogicalSide.SERVER)
+        if (GCCoreUtil.getEffectiveSide() == EnvType.SERVER)
         {
             this.craftMatrix.clearContent();
             for (int i = 0; i < SIZEINVENTORY; ++i)

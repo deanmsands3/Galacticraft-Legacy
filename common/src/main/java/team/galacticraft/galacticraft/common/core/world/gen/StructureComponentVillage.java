@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 //
-//import team.galacticraft.galacticraft.core.entities.EntityAlienVillager;
+//import team.galacticraft.galacticraft.common.core.entities.EntityAlienVillager;
 //import net.minecraft.nbt.CompoundNBT;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.util.Direction;

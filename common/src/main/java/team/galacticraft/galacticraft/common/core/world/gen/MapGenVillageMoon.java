@@ -4,7 +4,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //import net.minecraft.world.World;
 //import net.minecraft.world.biome.Biome;
 //import team.galacticraft.galacticraft.common.api.prefab.world.gen.BiomeAdaptive;
-//import team.galacticraft.galacticraft.core.util.GCLog;
+//import team.galacticraft.galacticraft.common.core.util.GCLog;
 //import net.minecraft.world.gen.feature.Structure;
 //import net.minecraft.world.gen.feature.StructureIO;
 //import net.minecraft.world.gen.feature.StructureStart;

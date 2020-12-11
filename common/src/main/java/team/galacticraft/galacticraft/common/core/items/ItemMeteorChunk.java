@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.items;
 
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.entities.EntityMeteorChunk;
-import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.entities.EntityMeteorChunk;
+import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ItemMeteorChunk extends Item implements ISortable
@@ -113,7 +113,7 @@ public class ItemMeteorChunk extends Item implements ISortable
                 burnTime = 45.0F;
             }
 
-            tooltip.add(new TextComponent(I18n.get("item.hot_description") + " " + burnTime + I18n.get("gui.seconds")));
+            tooltip.add(new TranslatableComponent(("item.hot_description") + " " + burnTime + I18n.get("gui.seconds")));
         }
     }
 

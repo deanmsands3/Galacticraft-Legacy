@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
 import team.galacticraft.galacticraft.common.api.item.IItemOxygenSupply;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.tile.TileEntityOxygenStorageModule;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityOxygenStorageModule;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

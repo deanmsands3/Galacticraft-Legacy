@@ -3,7 +3,7 @@ package team.galacticraft.galacticraft.common.core.client.gui.overlay;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
-import team.galacticraft.galacticraft.core.entities.EntityTier1Rocket;
+import team.galacticraft.galacticraft.common.core.entities.EntityTier1Rocket;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.opengl.GL11;
 

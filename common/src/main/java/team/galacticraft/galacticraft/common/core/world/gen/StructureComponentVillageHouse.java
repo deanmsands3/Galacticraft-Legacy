@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 //
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.blocks.BlockGlowstoneTorch;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockGlowstoneTorch;
 //import net.minecraft.block.Blocks;
 //import net.minecraft.nbt.CompoundNBT;
 //import net.minecraft.util.Direction;
@@ -218,7 +218,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 2, yLevel, 4, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 2, yLevel, 5, par3StructureBoundingBox);
 //
-//        // LogicalSide 1
+//        // EnvType 1
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 1, yLevel, 6, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 1, yLevel, 7, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 1, yLevel, 8, par3StructureBoundingBox);
@@ -232,7 +232,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 4, yLevel, 14, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 5, yLevel, 14, par3StructureBoundingBox);
 //
-//        // LogicalSide 2
+//        // EnvType 2
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 6, yLevel, 15, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 7, yLevel, 15, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 8, yLevel, 15, par3StructureBoundingBox);
@@ -246,7 +246,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 14, yLevel, 12, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 14, yLevel, 11, par3StructureBoundingBox);
 //
-//        // LogicalSide 3
+//        // EnvType 3
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 15, yLevel, 10, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 15, yLevel, 9, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 15, yLevel, 8, par3StructureBoundingBox);
@@ -260,7 +260,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 12, yLevel, 2, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 11, yLevel, 2, par3StructureBoundingBox);
 //
-//        // LogicalSide 4
+//        // EnvType 4
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 10, yLevel, 1, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 9, yLevel, 1, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 8, yLevel, 1, par3StructureBoundingBox);
@@ -273,7 +273,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 4, yLevel, 3, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 3, yLevel, 4, par3StructureBoundingBox);
 //
-//        // LogicalSide 1
+//        // EnvType 1
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 2, yLevel, 5, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 2, yLevel, 6, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 2, yLevel, 7, par3StructureBoundingBox);
@@ -286,7 +286,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 3, yLevel, 12, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 4, yLevel, 13, par3StructureBoundingBox);
 //
-//        // LogicalSide 2
+//        // EnvType 2
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 5, yLevel, 14, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 6, yLevel, 14, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 7, yLevel, 14, par3StructureBoundingBox);
@@ -299,7 +299,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 12, yLevel, 13, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 13, yLevel, 12, par3StructureBoundingBox);
 //
-//        // LogicalSide 3
+//        // EnvType 3
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 14, yLevel, 11, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 14, yLevel, 10, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 14, yLevel, 9, par3StructureBoundingBox);
@@ -312,7 +312,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 13, yLevel, 4, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 12, yLevel, 3, par3StructureBoundingBox);
 //
-//        // LogicalSide 4
+//        // EnvType 4
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 11, yLevel, 2, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 10, yLevel, 2, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 9, yLevel, 2, par3StructureBoundingBox);
@@ -330,7 +330,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 3, yLevel, 5, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 3, yLevel, 6, par3StructureBoundingBox);
 //
-//        // LogicalSide 1
+//        // EnvType 1
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 2, yLevel, 7, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 2, yLevel, 8, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 2, yLevel, 9, par3StructureBoundingBox);
@@ -342,7 +342,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 5, yLevel, 13, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 6, yLevel, 13, par3StructureBoundingBox);
 //
-//        // LogicalSide 2
+//        // EnvType 2
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 7, yLevel, 14, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 8, yLevel, 14, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 9, yLevel, 14, par3StructureBoundingBox);
@@ -354,7 +354,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 13, yLevel, 11, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 13, yLevel, 10, par3StructureBoundingBox);
 //
-//        // LogicalSide 3
+//        // EnvType 3
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 14, yLevel, 9, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 14, yLevel, 8, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 14, yLevel, 7, par3StructureBoundingBox);
@@ -366,7 +366,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 11, yLevel, 3, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 10, yLevel, 3, par3StructureBoundingBox);
 //
-//        // LogicalSide 4
+//        // EnvType 4
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 9, yLevel, 2, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 8, yLevel, 2, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 7, yLevel, 2, par3StructureBoundingBox);
@@ -379,7 +379,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 4, yLevel, 5, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 4, yLevel, 6, par3StructureBoundingBox);
 //
-//        // LogicalSide 1
+//        // EnvType 1
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 3, yLevel, 7, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 3, yLevel, 8, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 3, yLevel, 9, par3StructureBoundingBox);
@@ -390,7 +390,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 5, yLevel, 12, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 6, yLevel, 12, par3StructureBoundingBox);
 //
-//        // LogicalSide 2
+//        // EnvType 2
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 7, yLevel, 13, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 8, yLevel, 13, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 9, yLevel, 13, par3StructureBoundingBox);
@@ -401,7 +401,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 12, yLevel, 11, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 12, yLevel, 10, par3StructureBoundingBox);
 //
-//        // LogicalSide 3
+//        // EnvType 3
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 13, yLevel, 9, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 13, yLevel, 8, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 13, yLevel, 7, par3StructureBoundingBox);
@@ -412,7 +412,7 @@ package team.galacticraft.galacticraft.common.core.world.gen;
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 11, yLevel, 4, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 10, yLevel, 4, par3StructureBoundingBox);
 //
-//        // LogicalSide 4
+//        // EnvType 4
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 9, yLevel, 3, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 8, yLevel, 3, par3StructureBoundingBox);
 //        this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 7, yLevel, 3, par3StructureBoundingBox);

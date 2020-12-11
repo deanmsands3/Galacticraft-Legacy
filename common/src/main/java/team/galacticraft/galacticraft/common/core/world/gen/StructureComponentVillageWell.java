@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 //
-//import team.galacticraft.galacticraft.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
 //import net.minecraft.block.BlockPlanks;
 //import net.minecraft.block.Blocks;
 //import net.minecraft.nbt.CompoundNBT;

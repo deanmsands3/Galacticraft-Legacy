@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.tile.IMachineSidesProperties;
-import team.galacticraft.galacticraft.core.tile.TileEntityElectricFurnace;
+import team.galacticraft.galacticraft.common.core.tile.IMachineSidesProperties;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityElectricFurnace;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockFurnaceArc extends BlockMachineBase
 {
@@ -32,15 +32,15 @@ public class BlockFurnaceArc extends BlockMachineBase
 
     @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
-//        TileEntity tile = super.createTileEntity(state, world);
+//        TileEntity tile = super.newBlockEntity(state, world);
 //        tile.setWorld(world); TODO Needed?
         return new TileEntityElectricFurnace.TileEntityElectricFurnaceT2();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }

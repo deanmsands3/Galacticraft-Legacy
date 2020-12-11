@@ -1,17 +1,14 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
+import net.minecraft.client.resources.language.I18n;
 import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.tile.IMultiBlock;
-import team.galacticraft.galacticraft.core.tile.TileEntityFake;
-import team.galacticraft.galacticraft.core.util.EnumColor;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.planets.mars.blocks.BlockCryoChamber;
-import team.galacticraft.galacticraft.planets.mars.blocks.MarsBlocks;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.tile.IMultiBlock;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityFake;
+import team.galacticraft.galacticraft.common.core.util.EnumColor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,10 +43,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -364,7 +359,7 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
 //    }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(BlockGetter world, BlockPos pos, BlockState state)
     {
         BlockEntity tileEntity = world.getBlockEntity(pos);
         if (tileEntity instanceof TileEntityFake)
@@ -377,142 +372,142 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
 
                 if (Blocks.AIR != mainBlockState.getBlock())
                 {
-                    return mainBlockState.getBlock().getPickBlock(mainBlockState, target, world, mainBlockPosition, player);
+                    return mainBlockState.getBlock().getCloneItemStack(world, mainBlockPosition, mainBlockState);
                 }
             }
         }
 
         return ItemStack.EMPTY;
     }
-
-    @Override
-    public Direction getBedDirection(BlockState state, LevelReader world, BlockPos pos)
-    {
-        BlockEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof TileEntityFake)
-        {
-            BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
-
-            if (mainBlockPosition != null && !mainBlockPosition.equals(pos))
-            {
-                BlockState mainState = world.getBlockState(mainBlockPosition);
-                return mainState.getBlock().getBedDirection(mainState, world, mainBlockPosition);
-            }
-        }
-
-        return Direction.UP; // TODO
-    }
-
-    @Override
-    public boolean isBed(BlockState state, BlockGetter world, BlockPos pos, Entity player)
-    {
-        BlockEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof TileEntityFake)
-        {
-            BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
-
-            if (mainBlockPosition != null && !mainBlockPosition.equals(pos))
-            {
-                BlockState mainState = world.getBlockState(mainBlockPosition);
-                return mainState.getBlock().isBed(state, world, mainBlockPosition, player);
-            }
-        }
-
-        return super.isBed(state, world, pos, player);
-    }
-
-    @Override
-    public void setBedOccupied(BlockState state, LevelReader world, BlockPos pos, LivingEntity sleeper, boolean occupied)
-    {
-        BlockEntity tileEntity = world.getBlockEntity(pos);
-        BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
-
-        if (mainBlockPosition != null && !mainBlockPosition.equals(pos))
-        {
-            world.getBlockState(mainBlockPosition).getBlock().setBedOccupied(state, world, pos, sleeper, occupied);
-        }
-        else
-        {
-            super.setBedOccupied(state, world, pos, sleeper, occupied);
-        }
-    }
-
-    @Override
-    public Optional<Vec3> getBedSpawnPosition(EntityType<?> entityType, BlockState state, LevelReader world, BlockPos pos, @Nullable LivingEntity sleeper)
-    {
-        if (!(world instanceof Level))
-        {
-            return Optional.empty();
-        }
-        int tries = 3;
-        Level worldIn = (Level) world;
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
-        BlockState cryoChamber = worldIn.getBlockState(mainBlockPosition);
-        Direction enumfacing = Direction.NORTH;
-        if (GalacticraftCore.isPlanetsLoaded && cryoChamber.getBlock() == MarsBlocks.cryoChamber)
-        {
-            enumfacing = cryoChamber.getValue(BlockCryoChamber.FACING);
-        }
-        int i = pos.getX();
-        int j = pos.getY();
-        int k = pos.getZ();
-
-        for (int l = 0; l <= 1; ++l)
-        {
-            int i1 = i - enumfacing.getStepX() * l - 1;
-            int j1 = k - enumfacing.getStepZ() * l - 1;
-            int k1 = i1 + 2;
-            int l1 = j1 + 2;
-
-            for (int i2 = i1; i2 <= k1; ++i2)
-            {
-                for (int j2 = j1; j2 <= l1; ++j2)
-                {
-                    BlockPos blockpos = new BlockPos(i2, j, j2);
-
-                    if (hasRoomForPlayer(worldIn, blockpos))
-                    {
-                        if (tries <= 0)
-                        {
-                            return Optional.of(new Vec3(blockpos));
-                        }
-
-                        --tries;
-                    }
-                }
-            }
-        }
-
-        return Optional.empty();
-    }
+//todo(marcus): this isn't a bed?!
+//    @Override
+//    public Direction getBedDirection(BlockState state, LevelReader world, BlockPos pos)
+//    {
+//        BlockEntity tileEntity = world.getBlockEntity(pos);
+//        if (tileEntity instanceof TileEntityFake)
+//        {
+//            BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
+//
+//            if (mainBlockPosition != null && !mainBlockPosition.equals(pos))
+//            {
+//                BlockState mainState = world.getBlockState(mainBlockPosition);
+//                return mainState.getBlock().getBedDirection(mainState, world, mainBlockPosition);
+//            }
+//        }
+//
+//        return Direction.UP; // TODO
+//    }
+//
+//    @Override
+//    public boolean isBed(BlockState state, BlockGetter world, BlockPos pos, Entity player)
+//    {
+//        BlockEntity tileEntity = world.getBlockEntity(pos);
+//        if (tileEntity instanceof TileEntityFake)
+//        {
+//            BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
+//
+//            if (mainBlockPosition != null && !mainBlockPosition.equals(pos))
+//            {
+//                BlockState mainState = world.getBlockState(mainBlockPosition);
+//                return mainState.getBlock().isBed(state, world, mainBlockPosition, player);
+//            }
+//        }
+//
+//        return super.isBed(state, world, pos, player);
+//    }
+//
+//    @Override
+//    public void setBedOccupied(BlockState state, LevelReader world, BlockPos pos, LivingEntity sleeper, boolean occupied)
+//    {
+//        BlockEntity tileEntity = world.getBlockEntity(pos);
+//        BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
+//
+//        if (mainBlockPosition != null && !mainBlockPosition.equals(pos))
+//        {
+//            world.getBlockState(mainBlockPosition).getBlock().setBedOccupied(state, world, pos, sleeper, occupied);
+//        }
+//        else
+//        {
+//            super.setBedOccupied(state, world, pos, sleeper, occupied);
+//        }
+//    }
+//
+//    @Override
+//    public Optional<Vec3> getBedSpawnPosition(EntityType<?> entityType, BlockState state, LevelReader world, BlockPos pos, @Nullable LivingEntity sleeper)
+//    {
+//        if (!(world instanceof Level))
+//        {
+//            return Optional.empty();
+//        }
+//        int tries = 3;
+//        Level worldIn = (Level) world;
+//        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+//        BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
+//        BlockState cryoChamber = worldIn.getBlockState(mainBlockPosition);
+//        Direction enumfacing = Direction.NORTH;
+//        if (GalacticraftCore.isPlanetsLoaded && cryoChamber.getBlock() == MarsBlocks.cryoChamber)
+//        {
+//            enumfacing = cryoChamber.getValue(BlockCryoChamber.FACING);
+//        }
+//        int i = pos.getX();
+//        int j = pos.getY();
+//        int k = pos.getZ();
+//
+//        for (int l = 0; l <= 1; ++l)
+//        {
+//            int i1 = i - enumfacing.getStepX() * l - 1;
+//            int j1 = k - enumfacing.getStepZ() * l - 1;
+//            int k1 = i1 + 2;
+//            int l1 = j1 + 2;
+//
+//            for (int i2 = i1; i2 <= k1; ++i2)
+//            {
+//                for (int j2 = j1; j2 <= l1; ++j2)
+//                {
+//                    BlockPos blockpos = new BlockPos(i2, j, j2);
+//
+//                    if (hasRoomForPlayer(worldIn, blockpos))
+//                    {
+//                        if (tries <= 0)
+//                        {
+//                            return Optional.of(new Vec3(blockpos));
+//                        }
+//
+//                        --tries;
+//                    }
+//                }
+//            }
+//        }
+//
+//        return Optional.empty();
+//    }
 
     private static boolean hasRoomForPlayer(Level worldIn, BlockPos pos)
     {
         return /*worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos.down(), Direction.UP) &&*/ !worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.above()).getMaterial().isSolid();
     }
 
-    @Override
-    public boolean addHitEffects(BlockState state, Level worldObj, HitResult target, ParticleEngine manager)
-    {
-        if (target.getType() == HitResult.Type.BLOCK)
-        {
-            BlockHitResult result = (BlockHitResult) target;
-            BlockEntity tileEntity = worldObj.getBlockEntity(result.getBlockPos());
-
-            if (tileEntity instanceof TileEntityFake)
-            {
-                BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
-
-                if (mainBlockPosition != null && !mainBlockPosition.equals(result.getBlockPos()))
-                {
-                    manager.addBlockHitEffects(mainBlockPosition, result);
-                }
-            }
-        }
-
-        return super.addHitEffects(state, worldObj, target, manager);
-    }
+//    @Override //todo(marcus): hit effects?
+//    public boolean addHitEffects(BlockState state, Level worldObj, HitResult target, ParticleEngine manager)
+//    {
+//        if (target.getType() == HitResult.Type.BLOCK)
+//        {
+//            BlockHitResult result = (BlockHitResult) target;
+//            BlockEntity tileEntity = worldObj.getBlockEntity(result.getBlockPos());
+//
+//            if (tileEntity instanceof TileEntityFake)
+//            {
+//                BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
+//
+//                if (mainBlockPosition != null && !mainBlockPosition.equals(result.getBlockPos()))
+//                {
+//                    manager.addBlockHitEffects(mainBlockPosition, result);
+//                }
+//            }
+//        }
+//
+//        return super.addHitEffects(state, worldObj, target, manager);
+//    }
 
 //    @Override
 //    public BlockState getStateFromMeta(int meta)

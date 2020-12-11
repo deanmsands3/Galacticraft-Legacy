@@ -2,12 +2,12 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //
 //import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
 //import team.galacticraft.galacticraft.common.api.item.IPaintable;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.items.IShiftDescription;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-//import team.galacticraft.galacticraft.core.util.JavaUtil;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.JavaUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.Blocks;
@@ -31,10 +31,10 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.world.IBlockReader;
 //import net.minecraft.world.World;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //import java.util.ArrayList;
 //import java.util.List;
 //import java.util.Random;
@@ -56,7 +56,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    public BlockSpaceGlass(Properties builder, GlassType newType, GlassFrame newFrame, Block base)
 //    {
 //        super(builder);
-//        this.isClient = GalacticraftCore.proxy.getClass().getName().equals("team.galacticraft.galacticraft.core.proxy.ClientProxyCore");
+//        this.isClient = GalacticraftCore.proxy.getClass().getName().equals("team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore");
 //        this.type = newType;
 //        this.frame = newFrame;
 //        this.baseBlock = base == null ? this : base;
@@ -132,7 +132,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    {
 //        return Item.getItemFromBlock(this.baseBlock);
 //        //TODO: override getItemDropped() to return null if we make a broken Space Glass variant...
-//        // (if doing that, also update EntityAstroMiner.getPickBlock()
+//        // (if doing that, also update EntityAstroMiner.getCloneItemStack()
 //    }
 //
 //    @Override
@@ -549,11 +549,11 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //            return false;
 //        }
 //
-//        //Non-matching planes of connection, including all singles not already dealt with -> solid LogicalSide
+//        //Non-matching planes of connection, including all singles not already dealt with -> solid EnvType
 //        if (connThis != connOther)
 //            return true;
 //
-//        //One LogicalSide of connection only - and matches plane of the one above/below -> no solid LogicalSide
+//        //One EnvType of connection only - and matches plane of the one above/below -> no solid EnvType
 //        if (trueThis < 3 || trueThis == 4 || trueThis == 8)
 //        {
 //            return false;
@@ -563,7 +563,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //            return false;
 //        }
 //        
-//        //Special cases: T junctions above/below 2-way corners, or similar -> solid LogicalSide because the glass can't connect properly
+//        //Special cases: T junctions above/below 2-way corners, or similar -> solid EnvType because the glass can't connect properly
 //        if ((trueThis & 7) != (trueOther & 7))
 //        {
 //            return true;
@@ -581,7 +581,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //            return true;
 //        }
 //
-//        //Anything still left, it's matching planes of connection and not a special case -> no solid LogicalSide
+//        //Anything still left, it's matching planes of connection and not a special case -> no solid EnvType
 //        return false;
 //    }
 //    
@@ -701,7 +701,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 ////            testUD = EnumFacing.UP;
 ////        }
 //
-//        // Two glass connections in a flat plane - this also covers connected flat on one LogicalSide only
+//        // Two glass connections in a flat plane - this also covers connected flat on one EnvType only
 //        if (connectW && connectE || connections == 1 && (connectW || connectE))
 //        {
 //            rot = GlassRotation.E;
@@ -869,7 +869,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    }
 //
 //    @Override
-//    public int setColor(int newColor, PlayerEntity p, LogicalSide LogicalSide)
+//    public int setColor(int newColor, PlayerEntity p, EnvType EnvType)
 //    {
 //        if (newColor >= 0 && this.color != newColor)
 //        {
@@ -888,9 +888,9 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    public static void updateGlassColors(int color1, int color2, int color3)
 //    {
 //        int changes = 0;
-//        changes += GCBlocks.spaceGlassVanilla.setColor(color1, null, LogicalSide.CLIENT);
-//        changes += GCBlocks.spaceGlassClear.setColor(color2, null, LogicalSide.CLIENT);
-//        changes += GCBlocks.spaceGlassStrong.setColor(color3, null, LogicalSide.CLIENT);
+//        changes += GCBlocks.spaceGlassVanilla.setColor(color1, null, EnvType.CLIENT);
+//        changes += GCBlocks.spaceGlassClear.setColor(color2, null, EnvType.CLIENT);
+//        changes += GCBlocks.spaceGlassStrong.setColor(color3, null, EnvType.CLIENT);
 //        
 //        if (changes > 0)
 //            BlockSpaceGlass.updateClientRender();

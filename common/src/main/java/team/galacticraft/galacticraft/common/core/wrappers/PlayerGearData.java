@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.wrappers;
 
-import team.galacticraft.galacticraft.core.entities.player.GCPlayerHandler;
-import team.galacticraft.galacticraft.core.util.PlayerUtil;
+import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerHandler;
+import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 

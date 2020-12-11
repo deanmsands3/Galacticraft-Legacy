@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.command;
 //
-//import team.galacticraft.galacticraft.core.Constants;
+//import team.galacticraft.galacticraft.common.Constants;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.nbt.CompoundNBT;
 //import net.minecraft.nbt.ListNBT;

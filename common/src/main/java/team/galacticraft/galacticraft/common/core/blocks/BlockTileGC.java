@@ -4,13 +4,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * An advanced block class that is to be extended for wrenching capabilities.
  */
-public abstract class BlockTileGC extends BlockAdvanced
+public abstract class BlockTileGC extends BlockAdvanced implements EntityBlock
 {
     public BlockTileGC(Properties builder)
     {

@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.items;
 //
-//import team.galacticraft.galacticraft.core.blocks.BlockOxygenCompressor;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockOxygenCompressor;
 //import net.minecraft.block.Block;
 //import net.minecraft.item.ItemStack;
 //

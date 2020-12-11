@@ -1,13 +1,13 @@
 package team.galacticraft.galacticraft.common.core.energy.tile;
 
-import team.galacticraft.galacticraft.core.energy.EnergyConfigHandler;
-import team.galacticraft.galacticraft.core.energy.EnergyUtil;
+import team.galacticraft.galacticraft.common.core.energy.EnergyConfigHandler;
+import team.galacticraft.galacticraft.common.core.energy.EnergyUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 
 public abstract class TileBaseUniversalConductor extends TileBaseConductor implements net.minecraftforge.energy.IEnergyStorage
 {
@@ -355,7 +355,7 @@ public abstract class TileBaseUniversalConductor extends TileBaseConductor imple
 //            return 0.0;
 //        }
 //
-//        if (!this.canReceiveEnergy(LogicalSide))
+//        if (!this.canReceiveEnergy(EnvType))
 //        {
 //            return 0.0;
 //        }
@@ -371,7 +371,7 @@ public abstract class TileBaseUniversalConductor extends TileBaseConductor imple
 //            return 0.0;
 //        }
 //
-//        if (!this.canReceiveEnergy(LogicalSide))
+//        if (!this.canReceiveEnergy(EnvType))
 //        {
 //            return 0.0;
 //        }

@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.recipe.craftguide;
 //
 //import team.galacticraft.galacticraft.common.api.recipe.CompressorRecipes;
-//import team.galacticraft.galacticraft.core.blocks.BlockMachine;
-//import team.galacticraft.galacticraft.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockMachine;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.item.crafting.IRecipe;
 //import net.minecraft.item.crafting.ShapedRecipes;

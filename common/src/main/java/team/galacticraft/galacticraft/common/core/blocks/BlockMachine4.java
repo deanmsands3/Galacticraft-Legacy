@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 //
-//import team.galacticraft.galacticraft.core.tile.IMachineSides;
-//import team.galacticraft.galacticraft.core.tile.IMachineSidesProperties;
-//import team.galacticraft.galacticraft.core.tile.TileEntityElectricIngotCompressor;
+//import team.galacticraft.galacticraft.common.core.tile.IMachineSides;
+//import team.galacticraft.galacticraft.common.core.tile.IMachineSidesProperties;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityElectricIngotCompressor;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.properties.PropertyEnum;
 //import net.minecraft.block.state.BlockStateContainer;

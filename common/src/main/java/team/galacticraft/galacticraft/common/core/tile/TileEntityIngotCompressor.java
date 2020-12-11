@@ -2,14 +2,14 @@ package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.recipe.CompressorRecipes;
 import team.galacticraft.galacticraft.common.api.recipe.ShapedRecipesGC;
-import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.inventory.ContainerIngotCompressor;
-import team.galacticraft.galacticraft.core.inventory.IInventoryDefaults;
-import team.galacticraft.galacticraft.core.inventory.PersistantInventoryCrafting;
-import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerIngotCompressor;
+import team.galacticraft.galacticraft.common.core.inventory.IInventoryDefaults;
+import team.galacticraft.galacticraft.common.core.inventory.PersistantInventoryCrafting;
+import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +28,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -42,11 +41,11 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     public static BlockEntityType<TileEntityIngotCompressor> TYPE;
 
     public static final int PROCESS_TIME_REQUIRED = 200;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int processTicks = 0;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int furnaceBurnTime = 0;
-    @NetworkedField(targetSide = LogicalSide.CLIENT)
+    @NetworkedField(targetSide = EnvType.CLIENT)
     public int currentItemBurnTime = 0;
     private long ticks;
 

@@ -2,13 +2,13 @@ package team.galacticraft.galacticraft.common.core.items;
 //
 //import java.util.HashMap;
 //
-//import javax.annotation.Nonnull;
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.Nullable;
 //
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategoryItem;
-//import team.galacticraft.galacticraft.core.util.FluidUtil;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategoryItem;
+//import team.galacticraft.galacticraft.common.core.util.FluidUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.fluid.Fluid;
 //import net.minecraft.item.ItemGroup;

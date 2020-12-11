@@ -1,7 +1,8 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.tile.IMultiBlock;
-import team.galacticraft.galacticraft.core.tile.TileEntitySpaceStationBase;
+import net.minecraft.world.level.block.EntityBlock;
+import team.galacticraft.galacticraft.common.core.tile.IMultiBlock;
+import team.galacticraft.galacticraft.common.core.tile.TileEntitySpaceStationBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,9 +14,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
-public class BlockSpaceStationBase extends Block
+public class BlockSpaceStationBase extends Block implements EntityBlock
 {
     public BlockSpaceStationBase(Properties builder)
     {
@@ -60,13 +61,13 @@ public class BlockSpaceStationBase extends Block
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntitySpaceStationBase();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }
@@ -85,7 +86,7 @@ public class BlockSpaceStationBase extends Block
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(BlockGetter world, BlockPos pos, BlockState state)
     {
         return ItemStack.EMPTY;
     }

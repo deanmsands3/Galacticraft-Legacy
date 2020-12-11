@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.dimension;
 
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.world.level.biome.BiomeSourceType;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraftforge.registries.DeferredRegister;
@@ -10,7 +10,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
 
-import static team.galacticraft.galacticraft.core.GCBlocks.register;
+import static team.galacticraft.galacticraft.common.core.GCBlocks.register;
 
 public class MoonBiomeProviderTypes
 {

@@ -7,34 +7,34 @@ import com.google.common.collect.Sets;
 import team.galacticraft.galacticraft.common.api.client.tabs.InventoryTabVanilla;
 import team.galacticraft.galacticraft.common.api.client.tabs.TabRegistry;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GCBlocks;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.client.DynamicTextureProper;
-import team.galacticraft.galacticraft.core.client.EventHandlerClient;
-import team.galacticraft.galacticraft.core.client.fx.*;
-import team.galacticraft.galacticraft.core.client.gui.screen.InventoryTabGalacticraft;
-import team.galacticraft.galacticraft.core.client.model.ModelRocketTier1;
-import team.galacticraft.galacticraft.core.client.obj.GCModelCache;
-import team.galacticraft.galacticraft.core.client.render.entities.*;
-import team.galacticraft.galacticraft.core.client.render.item.*;
-import team.galacticraft.galacticraft.core.client.render.tile.*;
-import team.galacticraft.galacticraft.core.client.sounds.MusicTickerGC;
-import team.galacticraft.galacticraft.core.entities.EntityTier1Rocket;
-import team.galacticraft.galacticraft.core.entities.GCEntities;
-import team.galacticraft.galacticraft.core.entities.player.IPlayerClient;
-import team.galacticraft.galacticraft.core.entities.player.PlayerClient;
-import team.galacticraft.galacticraft.core.fluid.FluidNetwork;
-import team.galacticraft.galacticraft.core.inventory.InventoryExtended;
-import team.galacticraft.galacticraft.core.items.ItemSchematic;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.tick.KeyHandlerClient;
-import team.galacticraft.galacticraft.core.tick.TickHandlerClient;
-import team.galacticraft.galacticraft.core.tile.*;
-import team.galacticraft.galacticraft.core.util.*;
-import team.galacticraft.galacticraft.core.wrappers.PartialCanister;
-import team.galacticraft.galacticraft.core.wrappers.PlayerGearData;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GCBlocks;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.client.DynamicTextureProper;
+import team.galacticraft.galacticraft.common.core.client.EventHandlerClient;
+import team.galacticraft.galacticraft.common.core.client.fx.*;
+import team.galacticraft.galacticraft.common.core.client.gui.screen.InventoryTabGalacticraft;
+import team.galacticraft.galacticraft.common.core.client.model.ModelRocketTier1;
+import team.galacticraft.galacticraft.common.core.client.obj.GCModelCache;
+import team.galacticraft.galacticraft.common.core.client.render.entities.*;
+import team.galacticraft.galacticraft.common.core.client.render.item.*;
+import team.galacticraft.galacticraft.common.core.client.render.tile.*;
+import team.galacticraft.galacticraft.common.core.client.sounds.MusicTickerGC;
+import team.galacticraft.galacticraft.common.core.entities.EntityTier1Rocket;
+import team.galacticraft.galacticraft.common.core.entities.GCEntities;
+import team.galacticraft.galacticraft.common.core.entities.player.IPlayerClient;
+import team.galacticraft.galacticraft.common.core.entities.player.PlayerClient;
+import team.galacticraft.galacticraft.common.core.fluid.FluidNetwork;
+import team.galacticraft.galacticraft.common.core.inventory.InventoryExtended;
+import team.galacticraft.galacticraft.common.core.items.ItemSchematic;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.tick.KeyHandlerClient;
+import team.galacticraft.galacticraft.common.core.tick.TickHandlerClient;
+import team.galacticraft.galacticraft.common.core.tile.*;
+import team.galacticraft.galacticraft.common.core.util.*;
+import team.galacticraft.galacticraft.common.core.wrappers.PartialCanister;
+import team.galacticraft.galacticraft.common.core.wrappers.PlayerGearData;
 import team.galacticraft.galacticraft.planets.GalacticraftPlanets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -59,15 +59,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -81,7 +78,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
 
-import static team.galacticraft.galacticraft.core.client.GCParticles.*;
+import static team.galacticraft.galacticraft.common.core.client.GCParticles.*;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientProxyCore extends CommonProxyCore implements ResourceManagerReloadListener
@@ -358,7 +355,7 @@ public class ClientProxyCore extends CommonProxyCore implements ResourceManagerR
     @Override
     public Level getWorldForID(DimensionType dimensionID)
     {
-        if (GCCoreUtil.getEffectiveSide() == LogicalSide.SERVER)
+        if (GCCoreUtil.getEffectiveSide() == EnvType.SERVER)
         {
             return WorldUtil.getWorldForDimensionServer(dimensionID);
         }

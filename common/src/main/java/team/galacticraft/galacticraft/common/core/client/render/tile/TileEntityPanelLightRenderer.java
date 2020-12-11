@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.client.render.tile;
 //
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.blocks.BlockPanelLighting;
-//import team.galacticraft.galacticraft.core.tile.TileEntityPanelLight;
-//import team.galacticraft.galacticraft.core.util.ColorUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockPanelLighting;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityPanelLight;
+//import team.galacticraft.galacticraft.common.core.util.ColorUtil;
 //import net.minecraft.client.renderer.*;
 //import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 //import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -11,7 +11,7 @@ package team.galacticraft.galacticraft.common.core.client.render.tile;
 //import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.api.distmarker.OnlyIn;
 //import net.minecraftforge.fml.relauncher.SideOnly;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //
 //import org.lwjgl.opengl.GL11;
 //
@@ -23,15 +23,15 @@ package team.galacticraft.galacticraft.common.core.client.render.tile;
 //    @Override
 //    public void render(TileEntityPanelLight tileEntity, double d, double d1, double d2, float f, int par9, float alpha)
 //    {
-//        int LogicalSide = tileEntity.meta;
-//        int rot = LogicalSide >> 3;
-//        LogicalSide = (LogicalSide & 7) ^ 1;
+//        int EnvType = tileEntity.meta;
+//        int rot = EnvType >> 3;
+//        EnvType = (EnvType & 7) ^ 1;
 //        BlockPanelLighting.PanelType type = tileEntity.getType();
 //
 //        GlStateManager.pushMatrix();
 //        GlStateManager.translatef((float) d + 0.5F, (float) d1 + 0.5F, (float) d2 + 0.5F);
 //
-//        switch (LogicalSide)
+//        switch (EnvType)
 //        {
 //        case 0:
 //            break;

@@ -26,6 +26,7 @@ import net.minecraft.world.level.dimension.Dimension;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec3;
 import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
+import team.galacticraft.galacticraft.common.core.util.WorldUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -299,7 +300,7 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
                 if (this.targetDimension != this.level.getDimension().getType())
                 {
                     Dimension targetDim = WorldUtil.getProviderForDimensionServer(this.targetDimension);
-                    if (targetDim != null && targetDim.getWorld() instanceof ServerLevel)
+                    if (targetDim != null && targetDim.level instanceof ServerLevel)
                     {
                         boolean dimensionAllowed = this.targetDimension == DimensionType.OVERWORLD;
 
@@ -332,13 +333,13 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
                                 {
                                     if (passenger instanceof ServerPlayer)
                                     {
-                                        WorldUtil.transferEntityToDimension(passenger, this.targetDimension, (ServerLevel) targetDim.getWorld(), false, this);
+                                        WorldUtil.transferEntityToDimension(passenger, this.targetDimension, (ServerLevel) targetDim.level, false, this);
                                     }
                                 }
                             }
                             else
                             {
-                                Entity e = WorldUtil.transferEntityToDimension(this, this.targetDimension, (ServerLevel) targetDim.getWorld(), false, null);
+                                Entity e = WorldUtil.transferEntityToDimension(this, this.targetDimension, (ServerLevel) targetDim.level, false, null);
                                 if (e instanceof EntityAutoRocket)
                                 {
                                     e.setPos(this.targetVec.getX() + 0.5F, this.targetVec.getY() + 800, this.targetVec.getZ() + 0.5f);

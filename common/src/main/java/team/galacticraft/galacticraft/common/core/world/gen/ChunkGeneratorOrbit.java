@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.world.gen;
 
-import team.galacticraft.galacticraft.core.dimension.chunk.OrbitGenSettings;
+import team.galacticraft.galacticraft.common.core.dimension.chunk.OrbitGenSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.entity.MobCategory;

@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.tile.TileEntityDungeonSpawner;
-import team.galacticraft.galacticraft.core.tile.TileEntityTreasureChest;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityDungeonSpawner;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityTreasureChest;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
@@ -185,7 +185,7 @@ public abstract class EntityBossBase extends Monster implements IBoss
 
                 for (Player p : entitiesWithin2)
                 {
-                    p.sendMessage(new TextComponent(I18n.get("gui.skeleton_boss.message")));
+                    p.sendMessage(new TranslatableComponent(("gui.skeleton_boss.message")));
                 }
 
                 this.remove();

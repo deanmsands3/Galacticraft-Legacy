@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.client.render;
 //
 //import com.mojang.blaze3d.platform.TextureUtil;
-//import team.galacticraft.galacticraft.core.util.GCLog;
+//import team.galacticraft.galacticraft.common.core.util.GCLog;
 //import net.minecraft.client.renderer.IImageBuffer;
 //import net.minecraft.client.renderer.texture.NativeImage;
 //import net.minecraft.client.renderer.texture.SimpleTexture;

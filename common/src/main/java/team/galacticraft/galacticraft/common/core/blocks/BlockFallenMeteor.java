@@ -1,12 +1,14 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.level.block.EntityBlock;
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.items.IShiftDescription;
-import team.galacticraft.galacticraft.core.items.ISortable;
-import team.galacticraft.galacticraft.core.tile.TileEntityFallenMeteor;
-import team.galacticraft.galacticraft.core.util.ColorUtil;
-import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+import team.galacticraft.galacticraft.common.core.items.ISortable;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityFallenMeteor;
+import team.galacticraft.galacticraft.common.core.util.ColorUtil;
+import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -29,7 +31,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.Random;
 
-public class BlockFallenMeteor extends Block implements IShiftDescription, ISortable
+public class BlockFallenMeteor extends Block implements IShiftDescription, ISortable, EntityBlock
 {
     private static final VoxelShape BOUNDS = Shapes.box(0.15, 0.05, 0.15, 0.85, 0.75, 0.85);
 
@@ -218,13 +220,13 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
+    public BlockEntity newBlockEntity(BlockGetter world)
     {
         return new TileEntityFallenMeteor();
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public boolean isEntityBlock()
     {
         return true;
     }
@@ -286,14 +288,12 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
     }
 
     @Override
-    public int getExpDrop(BlockState state, LevelReader world, BlockPos pos, int fortune, int silktouch)
+    public void spawnAfterBreak(BlockState state, Level world, BlockPos pos, ItemStack stack)
     {
         if (state.getBlock() != this)
         {
-            return 0;
+            return;
         }
-
-        Random rand = world instanceof Level ? ((Level) world).random : new Random();
-        return Mth.nextInt(rand, 3, 7);
+        this.popExperience(world, pos, Mth.nextInt(world.getRandom(), 3, 7));
     }
 }

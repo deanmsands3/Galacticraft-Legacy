@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import team.galacticraft.galacticraft.core.entities.EntityTier1Rocket;
+import team.galacticraft.galacticraft.common.core.entities.EntityTier1Rocket;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 

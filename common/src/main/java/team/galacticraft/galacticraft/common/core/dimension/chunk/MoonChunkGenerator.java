@@ -1,7 +1,7 @@
 package team.galacticraft.galacticraft.common.core.dimension.chunk;
 
-import team.galacticraft.galacticraft.core.world.gen.CraterFeature;
-import team.galacticraft.galacticraft.core.world.gen.GCFeatures;
+import team.galacticraft.galacticraft.common.core.world.gen.CraterFeature;
+import team.galacticraft.galacticraft.common.core.world.gen.GCFeatures;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.WorldGenRegion;

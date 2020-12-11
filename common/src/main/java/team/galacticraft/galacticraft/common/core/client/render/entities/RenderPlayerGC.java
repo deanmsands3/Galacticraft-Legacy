@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.client.render.entities;
 //
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.client.render.entities.layer.*;
-//import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.client.render.entities.layer.*;
+//import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 //import net.minecraft.client.renderer.entity.PlayerRenderer;

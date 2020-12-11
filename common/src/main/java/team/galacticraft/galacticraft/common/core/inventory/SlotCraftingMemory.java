@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
-import team.galacticraft.galacticraft.core.tile.TileEntityCrafting;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityCrafting;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;

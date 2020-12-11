@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.client.gui.overlay;
 //
 //import com.mojang.blaze3d.platform.GlStateManager;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.util.ColorUtil;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.util.ColorUtil;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.renderer.BufferBuilder;
 //import net.minecraft.client.renderer.Tessellator;

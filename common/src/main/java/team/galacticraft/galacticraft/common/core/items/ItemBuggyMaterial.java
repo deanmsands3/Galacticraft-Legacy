@@ -1,14 +1,14 @@
 package team.galacticraft.galacticraft.common.core.items;
 //
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategoryItem;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategoryItem;
 //import net.minecraft.item.ItemGroup;
 //import net.minecraft.item.Rarity;
 //import net.minecraft.item.Item;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.util.NonNullList;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //public class ItemBuggyMaterial extends Item implements ISortableItem

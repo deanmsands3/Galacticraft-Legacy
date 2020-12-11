@@ -1,9 +1,9 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.GCItems;
-import team.galacticraft.galacticraft.core.util.ClientUtil;
-import team.galacticraft.galacticraft.core.wrappers.FlagData;
+import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.common.core.util.ClientUtil;
+import team.galacticraft.galacticraft.common.core.wrappers.FlagData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.fml.network.NetworkHooks;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 
 public class EntityFlag extends Entity
 {

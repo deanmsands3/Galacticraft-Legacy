@@ -1,12 +1,12 @@
 package team.galacticraft.galacticraft.common.core.command;
 //
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.dimension.SpaceRaceManager;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.dimension.SpaceRaceManager;
 //import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-//import team.galacticraft.galacticraft.core.network.PacketSimple;
-//import team.galacticraft.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-//import team.galacticraft.galacticraft.core.util.PlayerUtil;
+//import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+//import team.galacticraft.galacticraft.common.core.network.PacketSimple.EnumSimplePacket;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
 //import net.minecraft.command.CommandBase;
 //import net.minecraft.command.CommandException;
 //import net.minecraft.command.ICommandSender;

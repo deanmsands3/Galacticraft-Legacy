@@ -6,16 +6,16 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import team.galacticraft.galacticraft.common.api.block.IPartialSealableBlock;
 //import team.galacticraft.galacticraft.common.api.transmission.tile.IConductor;
 //import team.galacticraft.galacticraft.common.api.transmission.tile.INetworkConnection;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.GalacticraftCore;
-//import team.galacticraft.galacticraft.core.energy.tile.TileCableIC2Sealed;
-//import team.galacticraft.galacticraft.core.items.IShiftDescription;
-//import team.galacticraft.galacticraft.core.tile.TileEntityAluminumWire;
-//import team.galacticraft.galacticraft.core.tile.TileEntityFluidPipe;
-//import team.galacticraft.galacticraft.core.tile.TileEntityNull;
-//import team.galacticraft.galacticraft.core.util.CompatibilityManager;
-//import team.galacticraft.galacticraft.core.util.EnumSortCategory;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+//import team.galacticraft.galacticraft.common.core.energy.tile.TileCableIC2Sealed;
+//import team.galacticraft.galacticraft.common.core.items.IShiftDescription;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityAluminumWire;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityFluidPipe;
+//import team.galacticraft.galacticraft.common.core.tile.TileEntityNull;
+//import team.galacticraft.galacticraft.common.core.util.CompatibilityManager;
+//import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.block.Block;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.block.ITileEntityProvider;
@@ -34,7 +34,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.util.math.RayTraceResult;
 //import net.minecraft.world.World;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //import java.lang.reflect.Constructor;
@@ -501,7 +501,7 @@ package team.galacticraft.galacticraft.common.core.blocks;
 //    }
 //
 //    @Override
-//    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+//    public ItemStack getCloneItemStack(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
 //    {
 //        return new ItemStack(Item.getItemFromBlock(this), 1, this.getMetaFromState(state));
 //    }

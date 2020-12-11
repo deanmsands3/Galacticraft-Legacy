@@ -1,17 +1,17 @@
 package team.galacticraft.galacticraft.common.core.items;
 //
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.blocks.BlockMachine;
-//import team.galacticraft.galacticraft.core.blocks.BlockMachine2;
-//import team.galacticraft.galacticraft.core.blocks.BlockMachineBase;
-//import team.galacticraft.galacticraft.core.proxy.ClientProxyCore;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockMachine;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockMachine2;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockMachineBase;
+//import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
 //import net.minecraft.block.Block;
 //import net.minecraft.client.entity.player.ClientPlayerEntity;
 //import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.item.Rarity;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.world.World;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //public class ItemBlockMachine extends ItemBlockDesc

@@ -2,14 +2,14 @@ package team.galacticraft.galacticraft.common.core.tile;
 //
 //import team.galacticraft.galacticraft.common.api.tile.IDisableableMachine;
 //import team.galacticraft.galacticraft.common.api.transmission.tile.IConnector;
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.GCBlocks;
-//import team.galacticraft.galacticraft.core.blocks.BlockMulti;
-//import team.galacticraft.galacticraft.core.blocks.BlockMulti.EnumBlockMultiType;
-//import team.galacticraft.galacticraft.core.energy.item.ItemElectricBase;
-//import team.galacticraft.galacticraft.core.energy.tile.TileBaseUniversalElectrical;
-//import team.galacticraft.galacticraft.core.inventory.IInventoryDefaults;
-//import team.galacticraft.galacticraft.core.Annotations.NetworkedField;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.GCBlocks;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockMulti;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockMulti.EnumBlockMultiType;
+//import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
+//import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseUniversalElectrical;
+//import team.galacticraft.galacticraft.common.core.inventory.IInventoryDefaults;
+//import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.inventory.ISidedInventory;
@@ -23,7 +23,7 @@ package team.galacticraft.galacticraft.common.core.tile;
 //import net.minecraft.util.math.MathHelper;
 //import net.minecraft.world.World;
 //import net.minecraftforge.fml.client.FMLClientHandler;
-//import net.minecraftforge.fml.LogicalSide;
+//import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
 //
 //import java.util.ArrayList;
@@ -35,9 +35,9 @@ package team.galacticraft.galacticraft.common.core.tile;
 //{
 //    public float targetAngle;
 //    public float currentAngle;
-//    @NetworkedField(targetSide = LogicalSide.CLIENT)
+//    @NetworkedField(targetSide = EnvType.CLIENT)
 //    public boolean disabled = false;
-//    @NetworkedField(targetSide = LogicalSide.CLIENT)
+//    @NetworkedField(targetSide = EnvType.CLIENT)
 //    public int disableCooldown = 0;
 //
 //    private boolean initialised = false;

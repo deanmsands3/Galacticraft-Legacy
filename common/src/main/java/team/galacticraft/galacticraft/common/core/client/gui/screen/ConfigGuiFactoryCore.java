@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.core.client.gui.screen;
 //
-//import team.galacticraft.galacticraft.core.Constants;
-//import team.galacticraft.galacticraft.core.util.ConfigManagerCore;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.Constants;
+//import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.screen.Screen;
 //import net.minecraftforge.fml.client.IModGuiFactory;

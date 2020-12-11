@@ -1,16 +1,16 @@
 package team.galacticraft.galacticraft.common.core.advancement.criterion;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.advancement.criterion.GenericTrigger.Listeners;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
+import team.galacticraft.galacticraft.common.Constants;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -95,7 +95,7 @@ public abstract class GenericTrigger implements CriterionTrigger
     static class Listeners
     {
         private final PlayerAdvancements playerAdvancements;
-        private final Set<Listener> listeners = Sets.newHashSet();
+        private final Set<Listener<?>> listeners = Sets.newHashSet();
 
         public Listeners(PlayerAdvancements advancements)
         {
@@ -107,21 +107,21 @@ public abstract class GenericTrigger implements CriterionTrigger
             return listeners.isEmpty();
         }
 
-        public void add(Listener listener)
+        public void add(Listener<?> listener)
         {
             listeners.add(listener);
         }
 
-        public void remove(Listener listener)
+        public void remove(Listener<?> listener)
         {
             listeners.remove(listener);
         }
 
         public void trigger(ServerPlayer player)
         {
-            ArrayList<Listener> list = null;
+            List<Listener<?>> list = null;
 
-            for (Listener listener : listeners)
+            for (Listener<?> listener : listeners)
             {
                 if (listener.getTriggerInstance() instanceof Instance)
                 {
@@ -129,7 +129,7 @@ public abstract class GenericTrigger implements CriterionTrigger
                     {
                         if (list == null)
                         {
-                            list = Lists.newArrayList();
+                            list = new ArrayList<>(1);
                         }
 
                         list.add(listener);
@@ -139,7 +139,7 @@ public abstract class GenericTrigger implements CriterionTrigger
 
             if (list != null)
             {
-                for (Listener listener1 : list)
+                for (Listener<?> listener1 : list)
                 {
                     listener1.run(playerAdvancements);
                 }

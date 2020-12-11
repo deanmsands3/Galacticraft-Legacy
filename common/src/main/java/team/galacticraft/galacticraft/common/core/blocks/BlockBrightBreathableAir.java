@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.blocks;
 
-import team.galacticraft.galacticraft.core.fluid.OxygenPressureProtocol;
+import team.galacticraft.galacticraft.common.core.fluid.OxygenPressureProtocol;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;

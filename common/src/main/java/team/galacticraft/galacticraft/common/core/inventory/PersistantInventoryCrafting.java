@@ -1,6 +1,6 @@
 package team.galacticraft.galacticraft.common.core.inventory;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;

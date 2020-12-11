@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.client.sounds;
 
 import team.galacticraft.galacticraft.common.api.prefab.entity.EntityAutoRocket;
 import team.galacticraft.galacticraft.common.api.prefab.entity.EntitySpaceshipBase.EnumLaunchPhase;
-import team.galacticraft.galacticraft.core.Constants;
+import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;

@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.entities.player;
 
 import team.galacticraft.galacticraft.common.api.recipe.ISchematicPage;
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import team.galacticraft.galacticraft.core.inventory.InventoryExtended;
+import team.galacticraft.galacticraft.common.core.inventory.InventoryExtended;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;

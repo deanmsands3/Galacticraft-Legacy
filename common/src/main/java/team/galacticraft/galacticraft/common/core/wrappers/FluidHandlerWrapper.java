@@ -5,7 +5,7 @@ import net.minecraft.world.level.material.Fluids;
 import me.shedaniel.architectury.fluid.FluidStack;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class FluidHandlerWrapper implements IFluidHandler
 {

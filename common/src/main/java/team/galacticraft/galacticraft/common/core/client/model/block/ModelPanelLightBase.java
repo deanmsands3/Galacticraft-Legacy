@@ -2,7 +2,7 @@ package team.galacticraft.galacticraft.common.core.client.model.block;
 //
 //import com.google.common.collect.ImmutableList;
 //
-//import team.galacticraft.galacticraft.core.blocks.BlockPanelLighting;
+//import team.galacticraft.galacticraft.common.core.blocks.BlockPanelLighting;
 //import net.minecraft.block.BlockState;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -17,7 +17,7 @@ package team.galacticraft.galacticraft.common.core.client.model.block;
 //import net.minecraftforge.client.MinecraftForgeClient;
 //import net.minecraftforge.common.property.IExtendedBlockState;
 //
-//import javax.annotation.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //import java.util.List;
 //import java.util.Random;
 //
@@ -41,12 +41,12 @@ package team.galacticraft.galacticraft.common.core.client.model.block;
 //            {
 //                if (layer == null || layer == BlockRenderLayer.SOLID)
 //                {
-//                    return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModelManager().getModel(this.callingBlock).getQuads(state, LogicalSide, rand);
+//                    return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModelManager().getModel(this.callingBlock).getQuads(state, EnvType, rand);
 //                }
 //            }
 //            else if (layer == null || baseState.getBlock().canRenderInLayer(baseState, layer))
 //            {
-//                return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(baseState).getQuads(baseState, LogicalSide, rand);
+//                return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(baseState).getQuads(baseState, EnvType, rand);
 //            }
 //        }
 //        return ImmutableList.of();

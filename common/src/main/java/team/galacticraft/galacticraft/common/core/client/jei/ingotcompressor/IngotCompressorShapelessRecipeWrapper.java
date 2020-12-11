@@ -6,14 +6,14 @@ package team.galacticraft.galacticraft.common.core.client.jei.ingotcompressor;
 //import mezz.jei.api.recipe.IRecipeWrapper;
 //import mezz.jei.api.recipe.IStackHelper;
 //import team.galacticraft.galacticraft.common.api.recipe.ShapelessOreRecipeGC;
-//import team.galacticraft.galacticraft.core.client.jei.GalacticraftJEI;
-//import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+//import team.galacticraft.galacticraft.common.core.client.jei.GalacticraftJEI;
+//import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.FontRenderer;
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.item.crafting.FurnaceRecipes;
 //
-//import javax.annotation.Nonnull;
+//import org.jetbrains.annotations.NotNull;
 //
 //import java.awt.Color;
 //

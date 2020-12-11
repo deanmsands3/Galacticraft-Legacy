@@ -4,17 +4,15 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.client.model.ModelEvolvedSkeletonBoss;
-import team.galacticraft.galacticraft.core.client.render.entities.layer.LayerHeldItemEvolvedSkeletonBoss;
-import team.galacticraft.galacticraft.core.entities.EntitySkeletonBoss;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.client.model.ModelEvolvedSkeletonBoss;
+import team.galacticraft.galacticraft.common.core.client.render.entities.layer.LayerHeldItemEvolvedSkeletonBoss;
+import team.galacticraft.galacticraft.common.core.entities.EntitySkeletonBoss;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class RenderEvolvedSkeletonBoss extends MobRenderer<EntitySkeletonBoss, ModelEvolvedSkeletonBoss>

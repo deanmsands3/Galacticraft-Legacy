@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.core.entities.player;
 
 import team.galacticraft.galacticraft.common.api.recipe.ISchematicPage;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.network.PacketSimple;
-import team.galacticraft.galacticraft.core.tile.TileEntityPlatform;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.network.PacketSimple;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityPlatform;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 

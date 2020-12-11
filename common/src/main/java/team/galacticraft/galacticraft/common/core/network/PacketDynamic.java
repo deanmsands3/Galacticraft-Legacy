@@ -2,8 +2,8 @@ package team.galacticraft.galacticraft.common.core.network;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,7 +11,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.io.IOException;
@@ -72,7 +71,7 @@ public class PacketDynamic extends PacketBase
     {
         ctx.get().enqueueWork(() ->
         {
-            if (GCCoreUtil.getEffectiveSide() == LogicalSide.CLIENT)
+            if (GCCoreUtil.getEffectiveSide() == EnvType.CLIENT)
             {
                 message.handleClientSide(MinecraftClient.getInstance().player);
             }
@@ -158,16 +157,16 @@ public class PacketDynamic extends PacketBase
     @Override
     public void handleClientSide(Player player)
     {
-        this.handleData(LogicalSide.CLIENT, player);
+        this.handleData(EnvType.CLIENT, player);
     }
 
     @Override
     public void handleServerSide(Player player)
     {
-        this.handleData(LogicalSide.SERVER, player);
+        this.handleData(EnvType.SERVER, player);
     }
 
-    private void handleData(LogicalSide LogicalSide, Player player)
+    private void handleData(EnvType EnvType, Player player)
     {
         switch (this.type)
         {
@@ -182,7 +181,7 @@ public class PacketDynamic extends PacketBase
                 }
 
                 //Treat any packet received by a server from a client as an update request specifically to that client
-                if (LogicalSide == net.minecraftforge.fml.LogicalSide.SERVER && player instanceof ServerPlayer && entity != null)
+                if (EnvType == net.minecraftforge.fml.EnvType.SERVER && player instanceof ServerPlayer && entity != null)
                 {
                     GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(entity), (ServerPlayer) player);
                 }
@@ -203,7 +202,7 @@ public class PacketDynamic extends PacketBase
                     }
 
                     //Treat any packet received by a server from a client as an update request specifically to that client
-                    if (LogicalSide == net.minecraftforge.fml.LogicalSide.SERVER && player instanceof ServerPlayer && tile != null)
+                    if (EnvType == net.minecraftforge.fml.EnvType.SERVER && player instanceof ServerPlayer && tile != null)
                     {
                         GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(tile), (ServerPlayer) player);
                     }

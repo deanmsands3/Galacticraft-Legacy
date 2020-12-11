@@ -2,8 +2,8 @@ package team.galacticraft.galacticraft.common.core.client.jei.oxygencompressor;
 //
 //import mezz.jei.api.recipe.IRecipeHandler;
 //import mezz.jei.api.recipe.IRecipeWrapper;
-//import team.galacticraft.galacticraft.core.client.jei.RecipeCategories;
-//import javax.annotation.Nonnull;
+//import team.galacticraft.galacticraft.common.core.client.jei.RecipeCategories;
+//import org.jetbrains.annotations.NotNull;
 //
 //public class OxygenCompressorRecipeHandler implements IRecipeHandler<OxygenCompressorRecipeWrapper>
 //{

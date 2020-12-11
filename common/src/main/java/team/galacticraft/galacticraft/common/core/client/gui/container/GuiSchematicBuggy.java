@@ -2,9 +2,9 @@ package team.galacticraft.galacticraft.common.core.client.gui.container;
 
 import team.galacticraft.galacticraft.common.api.recipe.ISchematicResultPage;
 import team.galacticraft.galacticraft.common.api.recipe.SchematicRegistry;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.inventory.ContainerSchematicBuggy;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerSchematicBuggy;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

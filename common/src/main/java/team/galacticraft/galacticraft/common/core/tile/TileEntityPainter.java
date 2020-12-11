@@ -4,16 +4,16 @@ import io.netty.buffer.ByteBuf;
 import team.galacticraft.galacticraft.common.api.item.IPaintable;
 import team.galacticraft.galacticraft.common.api.tile.IDisableableMachine;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.GalacticraftCore;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-import team.galacticraft.galacticraft.core.inventory.ContainerPainter;
-import team.galacticraft.galacticraft.core.network.IPacketReceiver;
-import team.galacticraft.galacticraft.core.network.PacketDynamic;
-import team.galacticraft.galacticraft.core.util.ColorUtil;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
-import team.galacticraft.galacticraft.core.util.PlayerUtil;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerPainter;
+import team.galacticraft.galacticraft.common.core.network.IPacketReceiver;
+import team.galacticraft.galacticraft.common.core.network.PacketDynamic;
+import team.galacticraft.galacticraft.common.core.util.ColorUtil;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.core.util.PlayerUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -130,7 +130,7 @@ public class TileEntityPainter extends TileEntityInventory implements IDisableab
 //            {
 //                int type = ((BlockSpaceGlass)b).type.ordinal();
 //                this.glassColor[type] = color;
-//                if (result > 0 && LogicalSide == LogicalSide.CLIENT)
+//                if (result > 0 && EnvType == EnvType.CLIENT)
 //                {
 //                    BlockSpaceGlass.updateClientRender();
 //                }

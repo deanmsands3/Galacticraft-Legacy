@@ -1,12 +1,12 @@
 package team.galacticraft.galacticraft.common.core.client.gui.container;
 
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.client.gui.element.GuiElementInfoRegion;
-import team.galacticraft.galacticraft.core.inventory.ContainerFuelLoader;
-import team.galacticraft.galacticraft.core.inventory.ContainerIngotCompressor;
-import team.galacticraft.galacticraft.core.tile.TileEntityIngotCompressor;
-import team.galacticraft.galacticraft.core.util.EnumColor;
-import team.galacticraft.galacticraft.core.util.GCCoreUtil;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.client.gui.element.GuiElementInfoRegion;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerFuelLoader;
+import team.galacticraft.galacticraft.common.core.inventory.ContainerIngotCompressor;
+import team.galacticraft.galacticraft.common.core.tile.TileEntityIngotCompressor;
+import team.galacticraft.galacticraft.common.core.util.EnumColor;
+import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;

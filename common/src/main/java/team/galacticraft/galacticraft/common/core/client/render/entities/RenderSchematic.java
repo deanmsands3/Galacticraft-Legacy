@@ -8,7 +8,7 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import team.galacticraft.galacticraft.common.api.recipe.SchematicRegistry;
-import team.galacticraft.galacticraft.core.entities.EntityHangingSchematic;
+import team.galacticraft.galacticraft.common.core.entities.EntityHangingSchematic;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.*;
@@ -20,8 +20,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.decoration.HangingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 @Environment(EnvType.CLIENT)
 public class RenderSchematic extends EntityRenderer<EntityHangingSchematic>

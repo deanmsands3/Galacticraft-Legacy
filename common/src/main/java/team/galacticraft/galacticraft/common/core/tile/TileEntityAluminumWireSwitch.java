@@ -6,12 +6,12 @@ import team.galacticraft.galacticraft.common.api.transmission.grid.IGridNetwork;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IConnector;
 import team.galacticraft.galacticraft.common.api.transmission.tile.INetworkProvider;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.core.GCBlockNames;
-import team.galacticraft.galacticraft.core.Constants;
-import team.galacticraft.galacticraft.core.energy.grid.EnergyNetwork;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseConductor;
-import team.galacticraft.galacticraft.core.energy.tile.TileBaseUniversalConductor;
-import team.galacticraft.galacticraft.core.util.RedstoneUtil;
+import team.galacticraft.galacticraft.common.core.GCBlockNames;
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.core.energy.grid.EnergyNetwork;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseConductor;
+import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseUniversalConductor;
+import team.galacticraft.galacticraft.common.core.util.RedstoneUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -101,7 +101,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
             this.disableConnections = newDisableConnections;
             if (!this.level.isClientSide)
             {
-                this.setNetwork(null);  //Force a full network refresh of this and conductors either LogicalSide
+                this.setNetwork(null);  //Force a full network refresh of this and conductors either EnvType
             }
         }
 
@@ -208,7 +208,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
 //    @Override
 //    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction side)
 //    {
-//    	return this.disableConnections() ? false : super.acceptsEnergyFrom(emitter, LogicalSide);
+//    	return this.disableConnections() ? false : super.acceptsEnergyFrom(emitter, EnvType);
 //    }
 //
 //    //IC2
@@ -222,7 +222,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
 //    @Override
 //    public boolean emitsEnergyTo(IEnergyAcceptor receiver, Direction side)
 //    {
-//    	return this.disableConnections() ? false : super.emitsEnergyTo(receiver, LogicalSide);
+//    	return this.disableConnections() ? false : super.emitsEnergyTo(receiver, EnvType);
 //    }
 //
 //    //RF
@@ -243,6 +243,6 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
 //    @Override
 //    public boolean canReceiveEnergy(Direction side)
 //    {
-//    	return this.disableConnections() ? false : super.canReceiveEnergy(LogicalSide);
+//    	return this.disableConnections() ? false : super.canReceiveEnergy(EnvType);
 //    }
 }
