@@ -1,12 +1,12 @@
 package team.galacticraft.galacticraft.common.core;
 
+import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.compat.registry.IRegistryWrapper;
 import team.galacticraft.galacticraft.common.core.blocks.*;
 import team.galacticraft.galacticraft.common.core.items.ItemBlockDesc;
 import team.galacticraft.galacticraft.common.core.items.ItemBlockWallOrFloorDesc;
 import team.galacticraft.galacticraft.common.core.tile.*;
-import team.galacticraft.galacticraft.planets.venus.blocks.BlockDungeonBrick;
 import net.minecraft.core.Registry;
-import net.minecraft.item.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -15,17 +15,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
-import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
-@ObjectHolder(Constants.MOD_ID_CORE)
 public class GCBlocks
 {
     public static final Block breatheableAir = new BlockBreathableAir(Block.Properties.of(Material.AIR).noCollission().noDrops().strength(0.0F, 10000.0F));
@@ -239,9 +231,9 @@ public class GCBlocks
 
     public static HashMap<Block, Block> itemChanges = new HashMap<>(4, 1.0F);
 
-    public static <V extends IForgeRegistryEntry<V>> void register(IForgeRegistry<V> reg, IForgeRegistryEntry<V> thing, ResourceLocation name)
+    public static <V> void register(IRegistryWrapper<V> reg, V thing, ResourceLocation name)
     {
-        reg.register(thing.setRegistryName(name));
+        reg.register(thing, name);
         if (thing instanceof BlockItem)
         {
             GalacticraftCore.blocksList.add(name);
@@ -252,25 +244,23 @@ public class GCBlocks
         }
     }
 
-    public static <V extends IForgeRegistryEntry<V>> void register(IForgeRegistry<V> reg, IForgeRegistryEntry<V> thing, String name)
+    public static <V> void register(IRegistryWrapper<V> reg, V thing, String name)
     {
         ResourceLocation location = new ResourceLocation(Constants.MOD_ID_CORE, name);
         register(reg, thing, location);
     }
 
-    public static <V extends IForgeRegistryEntry<V>> void register(IForgeRegistry<V> reg, String name, IForgeRegistryEntry<V> thing) {
+    public static <V> void register(IRegistryWrapper<V> reg, String name, V thing) {
         ResourceLocation location = new ResourceLocation(Constants.MOD_ID_CORE, name);
         register(reg, thing, location);
     }
 
-    public static <V extends IForgeRegistryEntry<V>> void register(IForgeRegistry<V> reg, ResourceLocation name, IForgeRegistryEntry<V> thing) {
+    public static <V> void register(IRegistryWrapper<V> reg, ResourceLocation name, V thing) {
         register(reg, thing, name);
     }
 
-    @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> evt)
+    public static void registerBlocks(IRegistryWrapper<Block> r)
     {
-        IForgeRegistry<Block> r = evt.getRegistry();
         register(r, GCBlockNames.breatheableAir, breatheableAir);
         register(r, GCBlockNames.brightAir, brightAir);
         register(r, GCBlockNames.brightBreatheableAir, brightBreatheableAir);
@@ -469,10 +459,8 @@ public class GCBlocks
         BlockUnlitTorchWall.register((BlockUnlitTorchWall) GCBlocks.unlitTorchWall, (BlockUnlitTorchWall) GCBlocks.unlitTorchWallLit, Blocks.WALL_TORCH);
     }
 
-    @SubscribeEvent
-    public static void registerItemBlocks(RegistryEvent.Register<Item> evt)
+    public static void registerItemBlocks(IRegistryWrapper<Item> r)
     {
-        IForgeRegistry<Item> r = evt.getRegistry();
         Item.Properties props = GCItems.defaultBuilder().tab(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(arcLamp), new BlockItem(arcLamp, props));
         register(r, Registry.BLOCK.getKey(treasureChestTier1), new ItemBlockDesc(treasureChestTier1, props));
@@ -577,7 +565,7 @@ public class GCBlocks
 //        block.setHarvestLevel(toolClass, level, block.getStateFromMeta(meta));
 //    }
 
-//    public static void doOtherModsTorches(IForgeRegistry<Block> registry)
+//    public static void doOtherModsTorches(IRegistryWrapper<Block> registry)
 //    {
 //        BlockUnlitTorch torch;
 //        BlockUnlitTorch torchLit;
@@ -717,7 +705,7 @@ public class GCBlocks
 //        }
 //    }
 
-//    public static void registerBlocks(IForgeRegistry<Block> registry)
+//    public static void registerBlocks(IRegistryWrapper<Block> registry)
 //    {
 //        for (Block block : GalacticraftCore.blocksList)
 //        {
@@ -803,11 +791,8 @@ public class GCBlocks
 ////        GCCoreUtil.sortBlock(GCBlocks.oxygenPipe, 0, new StackSorted(GCBlocks.aluminumWire, 1));
 //    }
 
-    @SubscribeEvent
-    public static void initTileEntities(RegistryEvent.Register<BlockEntityType<?>> evt)
+    public static void initTileEntities(IRegistryWrapper<BlockEntityType<?>> r)
     {
-        IForgeRegistry<BlockEntityType<?>> r = evt.getRegistry();
-
         register(r, BlockEntityType.Builder.of(TileEntityTreasureChest::new, treasureChestTier1).build(null), GCBlockNames.treasureChestTier1);
         register(r, BlockEntityType.Builder.of(TileEntityOxygenDistributor::new, oxygenDistributor).build(null), GCBlockNames.oxygenDistributor);
         register(r, BlockEntityType.Builder.of(TileEntityOxygenCollector::new, oxygenCollector).build(null), GCBlockNames.oxygenCollector);

@@ -6,3 +6,8 @@ accessible field  net/minecraft/client/gui/screens/inventory/AbstractContainerSc
 accessible field  net/minecraft/world/level/dimension/Dimension                           level               Lnet/minecraft/world/level/Level;
 
 accessible method net/minecraft/advancements/CriteriaTriggers                             register            (Lnet/minecraft/advancements/CriterionTrigger;)Lnet/minecraft/advancements/CriterionTrigger;
+accessible method net/minecraft/world/level/block/Block$Properties                        strength            (F)Lnet/minecraft/world/level/block/Block$Properties;
+accessible method net/minecraft/world/level/block/Block$Properties                        lightLevel          (I)Lnet/minecraft/world/level/block/Block$Properties;
+accessible method net/minecraft/world/level/block/Block$Properties                        noDrops             ()Lnet/minecraft/world/level/block/Block$Properties;
+accessible method net/minecraft/world/level/block/Block$Properties                        sound               (Lnet/minecraft/world/level/block/SoundType;)Lnet/minecraft/world/level/block/Block$Properties;
+accessible method net/minecraft/world/level/block/Block$Properties                        randomTicks         ()Lnet/minecraft/world/level/block/Block$Properties;

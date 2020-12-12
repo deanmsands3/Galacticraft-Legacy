@@ -225,24 +225,24 @@ public class ClientProxyCore extends CommonProxyCore implements ResourceManagerR
             e.printStackTrace();
         }
 
-        setCustomModel(GCItems.rocketTierOne.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCargo1.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCargo2.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCargo3.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCreative.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.buggy.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.buggyInventory1.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.buggyInventory2.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.buggyInventory3.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.flag.getRegistryName(), modelToWrap -> new ItemModelFlag(modelToWrap));
-        setCustomModel(GCBlocks.nasaWorkbench.getRegistryName(), modelToWrap -> new ItemModelWorkbench(modelToWrap));
+        setCustomModel(GCItems.rocketTierOne.getRegistryName(), ItemModelRocket::new);
+        setCustomModel(GCItems.rocketTierOneCargo1.getRegistryName(), ItemModelRocket::new);
+        setCustomModel(GCItems.rocketTierOneCargo2.getRegistryName(), ItemModelRocket::new);
+        setCustomModel(GCItems.rocketTierOneCargo3.getRegistryName(), ItemModelRocket::new);
+        setCustomModel(GCItems.rocketTierOneCreative.getRegistryName(), ItemModelRocket::new);
+        setCustomModel(GCItems.buggy.getRegistryName(), ItemModelBuggy::new);
+        setCustomModel(GCItems.buggyInventory1.getRegistryName(), ItemModelBuggy::new);
+        setCustomModel(GCItems.buggyInventory2.getRegistryName(), ItemModelBuggy::new);
+        setCustomModel(GCItems.buggyInventory3.getRegistryName(), ItemModelBuggy::new);
+        setCustomModel(GCItems.flag.getRegistryName(), ItemModelFlag::new);
+        setCustomModel(GCBlocks.nasaWorkbench.getRegistryName(), ItemModelWorkbench::new);
 
         for (PartialCanister container : ClientProxyCore.canisters)
         {
             for (int i = 0; i < container.getTextureCount(); ++i)
             {
                 ModelResourceLocation modelResourceLocation = new ModelResourceLocation(container.getModID() + ":" + container.getBaseName() + "_" + i, "inventory");
-                setCustomModel(modelResourceLocation, i_modelToWrap -> new ItemLiquidCanisterModel(i_modelToWrap));
+                setCustomModel(modelResourceLocation, ItemLiquidCanisterModel::new);
             }
         }
     }

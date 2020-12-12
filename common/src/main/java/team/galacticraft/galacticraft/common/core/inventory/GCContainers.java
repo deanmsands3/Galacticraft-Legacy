@@ -86,7 +86,7 @@ public class GCContainers
         register(r, solar, GCContainerNames.SOLAR);
         register(r, treasureT1, GCContainerNames.TREASURE_CHEST_T1);
 
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+        PlatformSpecific.executeSided(EnvType.CLIENT, () -> () ->
         {
             Screens.register(buggy, GuiBuggy::new);
             Screens.register(cargoLoader, GuiCargoLoader::new);

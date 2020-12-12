@@ -1,6 +1,8 @@
 package team.galacticraft.galacticraft.fabric.compat;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -21,6 +23,7 @@ import team.galacticraft.galacticraft.fabric.mixin.LevelChunkMixin;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class PlatformSpecificImpl
 {
@@ -53,5 +56,12 @@ public class PlatformSpecificImpl
     public static ItemInventory createInventory(int invSize, List<Predicate<ItemStack>> filters)
     {
         return new FabricItemInventory(invSize, filters);
+    }
+
+    public static void executeSided(EnvType envType, Supplier<Runnable> supplier)
+    {
+        if (FabricLoader.getInstance().getEnvironmentType() == envType) {
+            supplier.get().run();
+        }
     }
 }

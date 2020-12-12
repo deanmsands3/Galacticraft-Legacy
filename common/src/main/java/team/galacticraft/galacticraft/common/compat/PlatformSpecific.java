@@ -3,6 +3,7 @@ package team.galacticraft.galacticraft.common.compat;
 import io.netty.buffer.ByteBuf;
 import me.shedaniel.architectury.ExpectPlatform;
 import me.shedaniel.architectury.networking.NetworkChannel;
+import net.fabricmc.api.EnvType;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class PlatformSpecific
 {
@@ -68,6 +70,12 @@ public class PlatformSpecific
 
     @ExpectPlatform
     public static void openContainer(ServerPlayer player, MenuProvider provider, Consumer<FriendlyByteBuf> consumer)
+    {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void executeSided(EnvType envType, Supplier<Runnable> supplier)
     {
         throw new AssertionError();
     }

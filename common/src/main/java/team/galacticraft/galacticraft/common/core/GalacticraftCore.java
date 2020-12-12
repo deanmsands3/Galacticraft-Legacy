@@ -195,7 +195,7 @@ public class GalacticraftCore
 
     private void clientSetup(FMLClientSetupEvent event)
     {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientProxyCore::clientInit);
+        PlatformSpecific.executeSided(EnvType.CLIENT, () -> ClientProxyCore::clientInit);
     }
 
     private void commonSetup(FMLCommonSetupEvent event)
@@ -490,7 +490,7 @@ public class GalacticraftCore
 //            this.loadLanguageCore("en_US");
 //        } TODO ?
 
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+        PlatformSpecific.executeSided(EnvType.CLIENT, () -> () ->
         {
             setupSortedTab(blocksList, galacticraftBlocksTab);
             setupSortedTab(itemList, galacticraftItemsTab);

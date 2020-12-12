@@ -1,6 +1,9 @@
 package team.galacticraft.galacticraft.common.core;
 
+import net.fabricmc.api.EnvType;
 import team.galacticraft.galacticraft.common.Constants;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
+import team.galacticraft.galacticraft.common.compat.registry.IRegistryWrapper;
 import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
 import team.galacticraft.galacticraft.common.core.items.*;
 import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
@@ -11,232 +14,120 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.*;
 
 import static team.galacticraft.galacticraft.common.core.GCBlocks.register;
 
-@Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
-@ObjectHolder(Constants.MOD_ID_CORE)
+//@Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class GCItems
 {
-    @ObjectHolder(GCItemNames.oxTankLight)
     public static Item oxTankLight;
-    @ObjectHolder(GCItemNames.oxTankMedium)
     public static Item oxTankMedium;
-    @ObjectHolder(GCItemNames.oxTankHeavy)
     public static Item oxTankHeavy;
-    @ObjectHolder(GCItemNames.oxMask)
     public static Item oxMask;
-    @ObjectHolder(GCItemNames.rocketTierOne)
     public static Item rocketTierOne;
-    @ObjectHolder(GCItemNames.rocketTierOneCargo1)
     public static Item rocketTierOneCargo1;
-    @ObjectHolder(GCItemNames.rocketTierOneCargo2)
     public static Item rocketTierOneCargo2;
-    @ObjectHolder(GCItemNames.rocketTierOneCargo3)
     public static Item rocketTierOneCargo3;
-    @ObjectHolder(GCItemNames.rocketTierOneCreative)
     public static Item rocketTierOneCreative;
-    @ObjectHolder(GCItemNames.sensorGlasses)
     public static Item sensorGlasses;
-    @ObjectHolder(GCItemNames.sensorLens)
     public static Item sensorLens;
-    @ObjectHolder(GCItemNames.steelPickaxe)
     public static Item steelPickaxe;
-    @ObjectHolder(GCItemNames.steelAxe)
     public static Item steelAxe;
-    @ObjectHolder(GCItemNames.steelHoe)
     public static Item steelHoe;
-    @ObjectHolder(GCItemNames.steelSpade)
     public static Item steelSpade;
-    @ObjectHolder(GCItemNames.steelSword)
     public static Item steelSword;
-    @ObjectHolder(GCItemNames.steelHelmet)
     public static Item steelHelmet;
-    @ObjectHolder(GCItemNames.steelChestplate)
     public static Item steelChestplate;
-    @ObjectHolder(GCItemNames.steelLeggings)
     public static Item steelLeggings;
-    @ObjectHolder(GCItemNames.steelBoots)
     public static Item steelBoots;
-    @ObjectHolder(GCItemNames.oxygenVent)
     public static Item oxygenVent;
-    @ObjectHolder(GCItemNames.oxygenFan)
     public static Item oxygenFan;
-    @ObjectHolder(GCItemNames.oxygenConcentrator)
     public static Item oxygenConcentrator;
     //    @ObjectHolder(ItemNames.rocketEngine) public static Item rocketEngine;
-    @ObjectHolder(GCItemNames.heavyPlatingTier1)
     public static Item heavyPlatingTier1;
-    @ObjectHolder(GCItemNames.partNoseCone)
     public static Item partNoseCone;
-    @ObjectHolder(GCItemNames.partFins)
     public static Item partFins;
-    @ObjectHolder(GCItemNames.buggy)
     public static Item buggy;
-    @ObjectHolder(GCItemNames.buggyInventory1)
     public static Item buggyInventory1;
-    @ObjectHolder(GCItemNames.buggyInventory2)
     public static Item buggyInventory2;
-    @ObjectHolder(GCItemNames.buggyInventory3)
     public static Item buggyInventory3;
-    @ObjectHolder(GCItemNames.flag)
     public static Item flag;
-    @ObjectHolder(GCItemNames.oxygenGear)
     public static Item oxygenGear;
-    @ObjectHolder(GCItemNames.canvas)
     public static Item canvas;
-    @ObjectHolder(GCItemNames.flagPole)
     public static Item flagPole;
-    @ObjectHolder(GCItemNames.oilCanister)
     public static Item oilCanister;
-    @ObjectHolder(GCItemNames.fuelCanister)
     public static Item fuelCanister;
-    @ObjectHolder(GCItemNames.oxygenCanisterInfinite)
     public static Item oxygenCanisterInfinite;
-    @ObjectHolder(GCItemNames.schematicBuggy)
     public static Item schematicBuggy;
-    @ObjectHolder(GCItemNames.schematicRocketT2)
     public static Item schematicRocketT2;
-    @ObjectHolder(GCItemNames.key)
     public static Item key;
     //    @ObjectHolder(ItemNames.foodItem) public static Item foodItem;
-    @ObjectHolder(GCItemNames.battery)
     public static Item battery;
-    @ObjectHolder(GCItemNames.infiniteBatery)
     public static Item infiniteBatery;
-    @ObjectHolder(GCItemNames.wrench)
     public static Item wrench;
-    @ObjectHolder(GCItemNames.cheeseCurd)
     public static Item cheeseCurd;
-    @ObjectHolder(GCItemNames.meteoricIronRaw)
     public static Item meteoricIronRaw;
-    @ObjectHolder(GCItemNames.cheeseBlock)
     public static Item cheeseBlock;
-    @ObjectHolder(GCItemNames.prelaunchChecklist)
     public static Item prelaunchChecklist;
-    @ObjectHolder(GCItemNames.dungeonFinder)
     public static Item dungeonFinder;
     //    @ObjectHolder(ItemNames.ic2compat) public static Item ic2compat;
-    @ObjectHolder(GCItemNames.emergencyKit)
     public static Item emergencyKit;
-    @ObjectHolder(GCItemNames.solarModule0)
     public static Item solarModule0;
-    @ObjectHolder(GCItemNames.solarModule1)
     public static Item solarModule1;
-    @ObjectHolder(GCItemNames.rawSilicon)
     public static Item rawSilicon;
-    @ObjectHolder(GCItemNames.ingotCopper)
     public static Item ingotCopper;
-    @ObjectHolder(GCItemNames.ingotTin)
     public static Item ingotTin;
-    @ObjectHolder(GCItemNames.ingotAluminum)
     public static Item ingotAluminum;
-    @ObjectHolder(GCItemNames.compressedCopper)
     public static Item compressedCopper;
-    @ObjectHolder(GCItemNames.compressedTin)
     public static Item compressedTin;
-    @ObjectHolder(GCItemNames.compressedAluminum)
     public static Item compressedAluminum;
-    @ObjectHolder(GCItemNames.compressedSteel)
     public static Item compressedSteel;
-    @ObjectHolder(GCItemNames.compressedBronze)
     public static Item compressedBronze;
-    @ObjectHolder(GCItemNames.compressedIron)
     public static Item compressedIron;
-    @ObjectHolder(GCItemNames.compressedWaferSolar)
     public static Item compressedWaferSolar;
-    @ObjectHolder(GCItemNames.compressedWaferBasic)
     public static Item compressedWaferBasic;
-    @ObjectHolder(GCItemNames.compressedWaferAdvanced)
     public static Item compressedWaferAdvanced;
-    @ObjectHolder(GCItemNames.frequencyModule)
     public static Item frequencyModule;
-    @ObjectHolder(GCItemNames.ambientThermalController)
     public static Item ambientThermalController;
-    @ObjectHolder(GCItemNames.buggyMaterialWheel)
     public static Item buggyMaterialWheel;
-    @ObjectHolder(GCItemNames.buggyMaterialSeat)
     public static Item buggyMaterialSeat;
-    @ObjectHolder(GCItemNames.buggyMaterialStorage)
     public static Item buggyMaterialStorage;
-    @ObjectHolder(GCItemNames.canisterTin)
     public static Item canisterTin;
-    @ObjectHolder(GCItemNames.canisterCopper)
     public static Item canisterCopper;
-    @ObjectHolder(GCItemNames.dehydratedApple)
     public static Item dehydratedApple;
-    @ObjectHolder(GCItemNames.dehydratedCarrot)
     public static Item dehydratedCarrot;
-    @ObjectHolder(GCItemNames.dehydratedMelon)
     public static Item dehydratedMelon;
-    @ObjectHolder(GCItemNames.dehydratedPotato)
     public static Item dehydratedPotato;
-    @ObjectHolder(GCItemNames.cheeseSlice)
     public static Item cheeseSlice;
-    @ObjectHolder(GCItemNames.burgerBun)
     public static Item burgerBun;
-    @ObjectHolder(GCItemNames.beefPattyRaw)
     public static Item beefPattyRaw;
-    @ObjectHolder(GCItemNames.beefPattyCooked)
     public static Item beefPattyCooked;
-    @ObjectHolder(GCItemNames.cheeseburger)
     public static Item cheeseburger;
-    @ObjectHolder(GCItemNames.cannedBeef)
     public static Item cannedBeef;
-    @ObjectHolder(GCItemNames.meteorChunk)
     public static Item meteorChunk;
-    @ObjectHolder(GCItemNames.meteorChunkHot)
     public static Item meteorChunkHot;
-    @ObjectHolder(GCItemNames.ingotMeteoricIron)
     public static Item ingotMeteoricIron;
-    @ObjectHolder(GCItemNames.compressedMeteoricIron)
     public static Item compressedMeteoricIron;
-    @ObjectHolder(GCItemNames.lunarSapphire)
     public static Item lunarSapphire;
-    @ObjectHolder(GCItemNames.parachuteWhite)
     public static Item parachutePlain;
-    @ObjectHolder(GCItemNames.parachuteBlack)
     public static Item parachuteBlack;
-    @ObjectHolder(GCItemNames.parachuteLightBlue)
     public static Item parachuteBlue;
-    @ObjectHolder(GCItemNames.parachuteLime)
     public static Item parachuteLime;
-    @ObjectHolder(GCItemNames.parachuteBrown)
     public static Item parachuteBrown;
-    @ObjectHolder(GCItemNames.parachuteBlue)
     public static Item parachuteDarkBlue;
-    @ObjectHolder(GCItemNames.parachuteGray)
     public static Item parachuteDarkGray;
-    @ObjectHolder(GCItemNames.parachuteGreen)
     public static Item parachuteDarkGreen;
-    @ObjectHolder(GCItemNames.parachuteLightGray)
     public static Item parachuteGray;
-    @ObjectHolder(GCItemNames.parachuteMagenta)
     public static Item parachuteMagenta;
-    @ObjectHolder(GCItemNames.parachuteOrange)
     public static Item parachuteOrange;
-    @ObjectHolder(GCItemNames.parachutePink)
     public static Item parachutePink;
-    @ObjectHolder(GCItemNames.parachutePurple)
     public static Item parachutePurple;
-    @ObjectHolder(GCItemNames.parachuteRed)
     public static Item parachuteRed;
-    @ObjectHolder(GCItemNames.parachuteTeal)
     public static Item parachuteTeal;
-    @ObjectHolder(GCItemNames.parachuteYellow)
     public static Item parachuteYellow;
-    @ObjectHolder(GCItemNames.rocketEngineT1)
     public static Item rocketEngineT1;
-    @ObjectHolder(GCItemNames.rocketBoosterT1)
     public static Item rocketBoosterT1;
 
 //    public static ArmorMaterial ARMOR_SENSOR_GLASSES = EnumHelper.addArmorMaterial("SENSORGLASSES", "", 200, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F);
@@ -252,10 +143,8 @@ public class GCItems
         return new Item.Properties().tab(GalacticraftCore.galacticraftItemsTab);
     }
 
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> evt)
+    public static void registerItems(IRegistryWrapper<Item> r)
     {
-        IForgeRegistry<Item> r = evt.getRegistry();
         register(r, new ItemOxygenTank(defaultBuilder().durability(900)), GCItemNames.oxTankLight);
         register(r, new ItemOxygenTank(defaultBuilder().durability(1800)), GCItemNames.oxTankMedium);
         register(r, new ItemOxygenTank(defaultBuilder().durability(2700)), GCItemNames.oxTankHeavy);
@@ -372,7 +261,7 @@ public class GCItems
 //        GCItems.itemChanges.put(new ItemStack(GCItems.basicItem, 1, 17), new ItemStack(GCItems.foodItem, 1, 2));
 //        GCItems.itemChanges.put(new ItemStack(GCItems.basicItem, 1, 18), new ItemStack(GCItems.foodItem, 1, 3));
 
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () ->
+        PlatformSpecific.executeSided(EnvType.CLIENT, () -> () ->
         {
             ClientProxyCore.registerCanister(new PartialCanister(GCItems.oilCanister, Constants.MOD_ID_CORE, "oil_canister_partial", 7));
             ClientProxyCore.registerCanister(new PartialCanister(GCItems.fuelCanister, Constants.MOD_ID_CORE, "fuel_canister_partial", 7));
