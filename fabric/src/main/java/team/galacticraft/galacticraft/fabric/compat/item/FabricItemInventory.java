@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 import team.galacticraft.galacticraft.common.compat.item.ItemInventory;
+import team.galacticraft.galacticraft.common.compat.item.SingleSlotAccessor;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -72,5 +73,20 @@ public class FabricItemInventory extends FullFixedItemInv implements ItemInvento
     @Override
     public ItemStack insert(ItemStack stack, ActionType actionType) {
         return super.attemptInsertion(stack, actionType == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION);
+    }
+
+    @Override
+    public SingleSlotAccessor getSingleSlot(int slot) {
+        return new SingleSlotAccessor() {
+            @Override
+            public void set(ItemStack stack) {
+                FabricItemInventory.this.setInvStack(slot, stack, Simulation.ACTION);
+            }
+
+            @Override
+            public ItemStack get() {
+                return FabricItemInventory.this.getInvStack(slot).copy();
+            }
+        };
     }
 }

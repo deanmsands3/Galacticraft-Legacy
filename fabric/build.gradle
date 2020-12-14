@@ -50,6 +50,8 @@ dependencies {
     shadow(project(":common")) {
         transitive = false
     }
+
+    modCompile("com.google.code.findbugs:jsr305:3.0.1") //REQUIRED for LBA genSources to work. Use jetbrains annotations in code.
 }
 
 loom {

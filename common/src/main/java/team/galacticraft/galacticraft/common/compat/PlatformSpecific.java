@@ -1,8 +1,6 @@
 package team.galacticraft.galacticraft.common.compat;
 
-import io.netty.buffer.ByteBuf;
 import me.shedaniel.architectury.ExpectPlatform;
-import me.shedaniel.architectury.networking.NetworkChannel;
 import net.fabricmc.api.EnvType;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -11,16 +9,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.apache.logging.log4j.Logger;
 import team.galacticraft.galacticraft.common.api.util.LazyOptional;
-import team.galacticraft.galacticraft.common.compat.cap.ComponentWrapper;
-import team.galacticraft.galacticraft.common.compat.cap.NbtSerializable;
+import team.galacticraft.galacticraft.common.compat.component.ComponentWrapper;
+import team.galacticraft.galacticraft.common.compat.component.NbtSerializable;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 import team.galacticraft.galacticraft.common.compat.item.ItemInventory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;

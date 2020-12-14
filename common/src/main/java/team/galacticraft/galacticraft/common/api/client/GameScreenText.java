@@ -20,7 +20,7 @@ public class GameScreenText implements IGameScreen
     private float frameBy;
     private int yPos;
     private DoubleBuffer planes;
-//    private Method renderModelMethod; ///todo access transformer
+//    private Method renderModelMethod; ///todo(marcus): access transformer
 //    private Method renderLayersMethod;
 
     public GameScreenText()
@@ -73,7 +73,7 @@ public class GameScreenText implements IGameScreen
     @Environment(EnvType.CLIENT)
     public void render(int type, float ticks, float sizeX, float sizeY, IScreenManager scr)
     {
-//        DrawGameScreen screen = (DrawGameScreen) scr; //todo
+//        DrawGameScreen screen = (DrawGameScreen) scr; //todo(marcus): core file exists too
 //
 //        frameBx = sizeX - frameA;
 //        frameBy = sizeY - frameA;

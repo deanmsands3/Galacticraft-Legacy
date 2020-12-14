@@ -1,4 +1,4 @@
-package team.galacticraft.galacticraft.common.compat.cap;
+package team.galacticraft.galacticraft.common.compat.component;
 
 import net.minecraft.nbt.CompoundTag;
 

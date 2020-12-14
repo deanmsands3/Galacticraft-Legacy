@@ -1,11 +1,17 @@
-package team.galacticraft.galacticraft.common.compat.cap;
+package team.galacticraft.galacticraft.common.compat.component;
 
 import me.shedaniel.architectury.ExpectPlatform;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
+import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 
 public class GCApiComponents {
     @ExpectPlatform
     public static ComponentWrapper<GCPlayerStats> getPlayerStats() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static ComponentWrapper<FluidTank> getTank() {
         throw new AssertionError();
     }
 }

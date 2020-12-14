@@ -1,9 +1,9 @@
-package team.galacticraft.galacticraft.fabric.compat.cap;
+package team.galacticraft.galacticraft.fabric.compat.component;
 
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.extension.TypeAwareComponent;
 import net.minecraft.nbt.CompoundTag;
-import team.galacticraft.galacticraft.common.compat.cap.NbtSerializable;
+import team.galacticraft.galacticraft.common.compat.component.NbtSerializable;
 
 public class FabricComponent<T extends NbtSerializable> implements TypeAwareComponent {
     private final ComponentType<FabricComponent<T>> type;

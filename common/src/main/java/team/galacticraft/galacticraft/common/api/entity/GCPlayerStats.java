@@ -15,8 +15,8 @@ import team.galacticraft.galacticraft.common.api.recipe.SchematicRegistry;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
 import team.galacticraft.galacticraft.common.api.vector.Vector3D;
 import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
-import team.galacticraft.galacticraft.common.compat.cap.GCApiComponents;
-import team.galacticraft.galacticraft.common.compat.cap.NbtSerializable;
+import team.galacticraft.galacticraft.common.compat.component.GCApiComponents;
+import team.galacticraft.galacticraft.common.compat.component.NbtSerializable;
 import team.galacticraft.galacticraft.common.compat.item.ItemInventory;
 
 import java.lang.ref.WeakReference;
@@ -28,7 +28,7 @@ public class GCPlayerStats implements NbtSerializable {
 
     public ItemInventory extendedInventory = PlatformSpecific.createInventory(11, Lists.asList(stack -> true,
             new Predicate[]{stack -> true, stack -> true, stack -> true, stack -> true, stack -> true, stack -> true,
-                    stack -> true, stack -> true, stack -> true, stack -> true})); //todo CORE ITEMS
+                    stack -> true, stack -> true, stack -> true, stack -> true})); //todo(marcus): CORE ITEMS
 
     public int airRemaining;
     public int airRemaining2;
@@ -859,7 +859,7 @@ public class GCPlayerStats implements NbtSerializable {
         nbt.putDouble("coordsTeleportedFromX", this.coordsTeleportedFromX);
         nbt.putDouble("coordsTeleportedFromZ", this.coordsTeleportedFromZ);
         nbt.putString("startDimension", this.startDimension);
-//        nbt.putString("spaceStationDimensionInfo", WorldUtil.spaceStationDataToString(this.spaceStationDimensionData)); //todo worldutil
+//        nbt.putString("spaceStationDimensionInfo", WorldUtil.spaceStationDataToString(this.spaceStationDimensionData)); //todo(marcus): worldutil
         nbt.putInt("thermalLevel", this.thermalLevel);
 
         Collections.sort(this.unlockedSchematics);
@@ -1192,7 +1192,7 @@ public class GCPlayerStats implements NbtSerializable {
         }
         if (changes)
         {
-//            ColorUtil.sendUpdatedColorsToPlayer(this); //todo colorutil
+//            ColorUtil.sendUpdatedColorsToPlayer(this); //todo(marcus): colorutil
         }
     }
 
@@ -1258,7 +1258,7 @@ loadNBTData(var1);
         return saveNBTData(var1);
     }
 
-//    private EnumExtendedInventorySlot getTypeFromSlot() //todo CORE ITEMS (see ext inv)
+//    private EnumExtendedInventorySlot getTypeFromSlot() //todo(marcus): CORE ITEMS (see top of file - filters)
 //    {
 //        switch (this.getSlotIndex())
 //        {

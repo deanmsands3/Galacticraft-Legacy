@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
 import team.galacticraft.galacticraft.common.core.GCBlocks;
 import team.galacticraft.galacticraft.common.core.GCItems;
+import team.galacticraft.galacticraft.fabric.compat.component.GCApiComponentsImpl;
 import team.galacticraft.galacticraft.fabric.compat.registry.RegistryWrapperFabric;
 
 public class GalacticraftFabric implements ModInitializer {
@@ -13,5 +14,6 @@ public class GalacticraftFabric implements ModInitializer {
         GCBlocks.registerItemBlocks(new RegistryWrapperFabric<>(Registry.ITEM));
         GCBlocks.initTileEntities(new RegistryWrapperFabric<>(Registry.BLOCK_ENTITY_TYPE));
         GCItems.registerItems(new RegistryWrapperFabric<>(Registry.ITEM));
+        GCApiComponentsImpl.init();
     }
 }

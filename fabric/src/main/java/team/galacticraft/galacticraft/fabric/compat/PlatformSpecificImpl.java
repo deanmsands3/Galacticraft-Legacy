@@ -12,11 +12,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import team.galacticraft.galacticraft.common.api.util.LazyOptional;
-import team.galacticraft.galacticraft.common.compat.cap.ComponentWrapper;
-import team.galacticraft.galacticraft.common.compat.cap.NbtSerializable;
+import team.galacticraft.galacticraft.common.compat.component.ComponentWrapper;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 import team.galacticraft.galacticraft.common.compat.item.ItemInventory;
-import team.galacticraft.galacticraft.fabric.compat.cap.FabricComponentWrapper;
+import team.galacticraft.galacticraft.fabric.compat.component.FabricComponentWrapper;
 import team.galacticraft.galacticraft.fabric.compat.fluid.FluidTankImpl;
 import team.galacticraft.galacticraft.fabric.compat.item.FabricItemInventory;
 import team.galacticraft.galacticraft.fabric.mixin.LevelChunkMixin;
@@ -48,7 +47,7 @@ public class PlatformSpecificImpl
         return new FluidTankImpl(tanks, FluidAmount.of(millibuckets, 1000));
     }
 
-    public static <T extends NbtSerializable> LazyOptional<T> getComponent(Entity entity, ComponentWrapper<T> wrapper)
+    public static <T> LazyOptional<T> getComponent(Entity entity, ComponentWrapper<T> wrapper)
     {
         return ((FabricComponentWrapper) wrapper).get(entity);
     }

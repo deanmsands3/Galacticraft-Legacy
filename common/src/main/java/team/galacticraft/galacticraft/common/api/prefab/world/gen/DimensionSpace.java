@@ -226,7 +226,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
         return this.hasSunset() ? super.getSunriseColor(var1, var2) : null;
     }
 
-//todo time //  @Override
+//todo(marcus): //  @Override
 //    public float getTimeOfDay(long par1, float par3)
 //    {
 //        par1 = this.getWorldTime();
@@ -298,7 +298,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 
 
 
-//todo //    /**
+//todo(marcus): doesn't exist? //    /**
 //     * Do NOT override this in your add-ons.
 //     * <p>
 //     * This controls whether the player will respawn in the space dimension or the Overworld
@@ -386,7 +386,7 @@ public abstract class DimensionSpace extends Dimension implements IGalacticraftD
 //        return biomeProvider;
 //    }
 
-    //todo //    @Override
+    //todo(marcus): //    @Override
 //    public boolean shouldMapSpin(String entity, double x, double y, double z)
 //    {
 //        return false;

@@ -1,7 +1,6 @@
 package team.galacticraft.galacticraft.forge.compat.cap;
 
 import com.mojang.datafixers.types.templates.Tag;
-import me.shedaniel.architectury.ExpectPlatform;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,7 +11,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-import team.galacticraft.galacticraft.common.compat.cap.ComponentWrapper;
+import team.galacticraft.galacticraft.common.compat.component.ComponentWrapper;
 
 public class GCApiComponentsImpl {
     @CapabilityInject(GCPlayerStats.class)

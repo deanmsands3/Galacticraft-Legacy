@@ -1,11 +1,10 @@
-package team.galacticraft.galacticraft.fabric.compat.cap;
+package team.galacticraft.galacticraft.fabric.compat.component;
 
 import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.component.Component;
 import net.minecraft.nbt.CompoundTag;
 import team.galacticraft.galacticraft.common.api.util.LazyOptional;
-import team.galacticraft.galacticraft.common.compat.cap.ComponentWrapper;
-import team.galacticraft.galacticraft.common.compat.cap.NbtSerializable;
+import team.galacticraft.galacticraft.common.compat.component.ComponentWrapper;
+import team.galacticraft.galacticraft.common.compat.component.NbtSerializable;
 
 public class FabricComponentWrapper<T extends NbtSerializable> implements ComponentWrapper<T> {
     private final ComponentType<FabricComponent<T>> type;
@@ -27,5 +26,9 @@ public class FabricComponentWrapper<T extends NbtSerializable> implements Compon
     @Override
     public LazyOptional<T> get(Object provider) {
         return LazyOptional.create(() -> type.maybeGet(provider).get().getValue());
+    }
+
+    public ComponentType<FabricComponent<T>> getType() {
+        return type;
     }
 }

@@ -380,7 +380,7 @@ public abstract class EntitySpaceshipBase extends Entity implements /*IPacketRec
 
         if (!this.level.isClientSide && this.ticks % 3 == 0)
         {
-            //todo networking
+            //todo(marcus): networking
 //            GalacticraftCore.packetPipeline.sendToDimension(new PacketDynamic(this), this.level.getDimension().getType());
             // PacketDispatcher.sendPacketToAllInDimension(GCCorePacketManager.getPacket(GalacticraftCore.CHANNELENTITIES,
             // this, this.getNetworkedData(new ArrayList())),
@@ -406,7 +406,7 @@ public abstract class EntitySpaceshipBase extends Entity implements /*IPacketRec
 
     public abstract boolean hasValidFuel();
 
-//    @Override //todo
+//    @Override //todo(marcus): IPacket somethinganother, either keep it semi-abstreacted or dont
     public void decodePacketdata(ByteBuf buffer)
     {
         if (!this.level.isClientSide)

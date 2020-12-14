@@ -5,8 +5,6 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidKey;
 import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.utils.Fraction;
 import net.minecraft.nbt.CompoundTag;
@@ -35,8 +33,7 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank {
      */
     @Override
     public @NotNull FluidStack get(int tank) {
-        FluidVolume fluid = this.getTank(tank).get();
-        return FluidStack.create(super.getTank(tank).get().getRawFluid(), Fraction.of(fluid.getAmount_F().numerator, fluid.getAmount_F().denominator), null);
+        return FluidUtilFabric.toVolumeA(this.getTank(tank).get());
     }
 
     /**
@@ -47,8 +44,7 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank {
      */
     @Override
     public FluidStack extract(Fraction amount, ActionType action) {
-        FluidVolume volume = this.attemptExtraction(ConstantFluidFilter.ANYTHING, FluidAmount.of(amount.getNumerator(), amount.getDenominator()), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION);
-        return FluidStack.create(volume.getRawFluid(), Fraction.of(volume.getAmount_F().numerator, volume.getAmount_F().denominator));
+        return FluidUtilFabric.toVolumeA(this.attemptExtraction(ConstantFluidFilter.ANYTHING, FluidUtilFabric.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     /**
@@ -60,8 +56,7 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank {
      */
     @Override
     public FluidStack extract(int tank, Fraction amount, ActionType action) {
-        FluidVolume volume = this.getTank(tank).attemptExtraction(ConstantFluidFilter.ANYTHING, FluidAmount.of(amount.getNumerator(), amount.getDenominator()), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION);
-        return FluidStack.create(volume.getRawFluid(), Fraction.of(volume.getAmount_F().numerator, volume.getAmount_F().denominator));
+        return FluidUtilFabric.toVolumeA(this.getTank(tank).attemptExtraction(ConstantFluidFilter.ANYTHING, FluidUtilFabric.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     /**
@@ -72,9 +67,7 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank {
      */
     @Override
     public FluidStack extract(FluidStack stack, ActionType action) {
-        Fraction amount = stack.getAmount();
-        FluidVolume volume = this.attemptExtraction(fluidKey -> stack.getFluid().equals(fluidKey.getRawFluid()), FluidAmount.of(amount.getNumerator(), amount.getDenominator()), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION);
-        return FluidStack.create(volume.getRawFluid(), Fraction.of(volume.getAmount_F().numerator, volume.getAmount_F().denominator));
+        return FluidUtilFabric.toVolumeA(this.attemptExtraction(fluidKey -> stack.getFluid().equals(fluidKey.getRawFluid()), FluidUtilFabric.toAmountLBA(stack.getAmount()), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     /**
@@ -86,8 +79,7 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank {
      */
     @Override
     public FluidStack insert(int tank, FluidStack stack, ActionType action) {
-        FluidVolume volume = this.getTank(tank).attemptInsertion(new SimpleFluidKey(new FluidKey.FluidKeyBuilder(stack.getFluid())).withAmount(FluidAmount.of(stack.getAmount().getNumerator(), stack.getAmount().getDenominator())), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION);
-        return FluidStack.create(volume.getRawFluid(), Fraction.of(volume.getAmount_F().numerator, volume.getAmount_F().denominator));
+        return FluidUtilFabric.toVolumeA(this.getTank(tank).attemptInsertion(FluidUtilFabric.toVolumeLBA(stack), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     /**

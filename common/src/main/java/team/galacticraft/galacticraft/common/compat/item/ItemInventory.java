@@ -27,4 +27,6 @@ public interface ItemInventory {
     ItemStack extract(int maxAmount, ActionType simulation);
 
     ItemStack insert(ItemStack stack, ActionType simulation);
+
+    SingleSlotAccessor getSingleSlot(int slot);
 }

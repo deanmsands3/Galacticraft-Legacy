@@ -1,5 +1,8 @@
 package team.galacticraft.galacticraft.common.core.util;
 
+import net.fabricmc.api.EnvType;
+import net.minecraft.client.resources.language.I18n;
+import org.jetbrains.annotations.NotNull;
 import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.common.core.network.PacketSimple;
@@ -210,8 +213,7 @@ public class GCCoreUtil
         return I18n.get(string).toLowerCase();
     }
 
-    @Nullable
-    public static InputStream supplementEntityKeys(InputStream inputstream, String assetprefix) throws IOException
+    public static @NotNull InputStream supplementEntityKeys(InputStream inputstream, String assetprefix) throws IOException
     {
         ArrayList<String> langLines = new ArrayList<String>();
         BufferedReader br = new BufferedReader(new InputStreamReader(inputstream, StandardCharsets.UTF_8));

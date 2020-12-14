@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityProvider;
 import team.galacticraft.galacticraft.common.api.util.LazyOptional;
-import team.galacticraft.galacticraft.common.compat.cap.ComponentWrapper;
+import team.galacticraft.galacticraft.common.compat.component.ComponentWrapper;
 
 public class ForgeCapability<T> implements ComponentWrapper<T> {
     private final Capability<T> capability;
@@ -20,7 +20,7 @@ public class ForgeCapability<T> implements ComponentWrapper<T> {
 
     @Override
     public CompoundNBT toTag(CompoundNBT tag, T instance) {
-        return capability.getStorage().writeNBT(capability, instance, null);
+        return (CompoundNBT) capability.getStorage().writeNBT(capability, instance, null);
     }
 
     @Override

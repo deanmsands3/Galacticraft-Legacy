@@ -31,7 +31,7 @@ public interface ITileClientUpdates
      */
     @Environment(EnvType.CLIENT)
     void updateClient(List<Object> data);
-//todo scary networking
+//todo(marcus): networking
 //    /**
 //     * Implement validate() in the tile and call this!
 //     */

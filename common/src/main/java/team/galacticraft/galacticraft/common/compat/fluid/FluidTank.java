@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Fractional Fluid API-API
+ * Fluid api-api, values in millibuckets
  */
 public interface FluidTank {
     /**
@@ -20,7 +20,7 @@ public interface FluidTank {
      * Returns the fluid in the tank at index zero
      * @return The amount of fluid that is inside the tank at index zero
      */
-    default @NotNull FluidStack get() {
+    default FluidStack get() {
         return get(0);
     }
 
@@ -29,7 +29,7 @@ public interface FluidTank {
      * @param tank The index of the tank to get the fluid from
      * @return The amount of fluid that is inside the tank
      */
-    @NotNull FluidStack get(int tank);
+    FluidStack get(int tank);
 
     /**
      * Extracts fluid from a tank
@@ -80,6 +80,7 @@ public interface FluidTank {
      * @return The amount of fluid that was NOT inserted
      */
     FluidStack insert(int tank, FluidStack stack, ActionType action);
+
 
     /**
      * Deserializes data from a tag into this fluid tank
