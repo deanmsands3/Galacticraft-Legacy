@@ -1,12 +1,11 @@
 package team.galacticraft.galacticraft.common.core.items;
 
+import net.minecraft.network.chat.TranslatableComponent;
 import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
-import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +24,7 @@ public class ItemFuelCanister extends ItemCanisterGeneric implements ISortable
     {
         super(builder);
 //        this.setAllowedFluid(ConfigManagerCore.useOldFuelFluidID.get() ? "fuelgc" : "fuel");
-        this.setAllowedFluid(new ResourceLocation(Constants.MOD_ID_CORE, "fuel")); // TODO Other oil support
+        this.setAllowed(stack -> fuel); //todo(marcus): fluids
 //        this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 
@@ -64,7 +63,7 @@ public class ItemFuelCanister extends ItemCanisterGeneric implements ISortable
     }*/
 
     @Override
-    public String getTranslationKey(ItemStack stack)
+    public String getDescriptionId(ItemStack stack)
     {
         if (stack.getDamageValue() == 1)
         {
@@ -76,7 +75,7 @@ public class ItemFuelCanister extends ItemCanisterGeneric implements ISortable
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         if (stack.getMaxDamage() - stack.getDamageValue() > 0)
         {

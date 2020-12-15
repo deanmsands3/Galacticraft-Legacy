@@ -4,7 +4,9 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanFunction;
 import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.utils.Fraction;
 import net.minecraft.nbt.CompoundTag;
@@ -13,8 +15,15 @@ import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 
 public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank {
+    private final Int2ObjectMap<Object2BooleanFunction<FluidStack>> validMap;
+
     public FluidTankImpl(int invSize, FluidAmount tankCapacity) {
+        this(invSize, tankCapacity, new Int2ObjectArrayMap<>());
+    }
+
+    public FluidTankImpl(int invSize, FluidAmount tankCapacity, Int2ObjectMap<Object2BooleanFunction<FluidStack>> allowed) {
         super(invSize, tankCapacity);
+        this.validMap = allowed;
     }
 
     /**
@@ -80,6 +89,11 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank {
     @Override
     public FluidStack insert(int tank, FluidStack stack, ActionType action) {
         return FluidUtilFabric.toVolumeA(this.getTank(tank).attemptInsertion(FluidUtilFabric.toVolumeLBA(stack), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+    }
+
+    @Override
+    public boolean isValid(int tank, FluidStack stack) {
+        return validMap.getOrDefault(tank, s -> true).getBoolean(stack);
     }
 
     /**

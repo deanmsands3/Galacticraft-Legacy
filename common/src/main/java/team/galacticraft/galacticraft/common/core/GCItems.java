@@ -8,7 +8,6 @@ import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
 import team.galacticraft.galacticraft.common.core.items.*;
 import team.galacticraft.galacticraft.common.core.proxy.ClientProxyCore;
 import team.galacticraft.galacticraft.common.core.wrappers.PartialCanister;
-import net.minecraft.item.*;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.DyeColor;
@@ -180,8 +179,8 @@ public class GCItems
         register(r, new ItemFlag(defaultBuilder().durability(0)), GCItemNames.flag);
         register(r, new ItemOxygenGear(defaultBuilder()), GCItemNames.oxygenGear);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.canvas);
-        register(r, new ItemOilCanister(defaultBuilder().durability(ItemCanisterGeneric.EMPTY_CAPACITY)), GCItemNames.oilCanister);
-        register(r, new ItemFuelCanister(defaultBuilder().durability(ItemCanisterGeneric.EMPTY_CAPACITY)), GCItemNames.fuelCanister);
+        register(r, new ItemOilCanister(defaultBuilder()), GCItemNames.oilCanister);
+        register(r, new ItemFuelCanister(defaultBuilder()), GCItemNames.fuelCanister);
         register(r, new ItemCanisterOxygenInfinite(defaultBuilder()), GCItemNames.oxygenCanisterInfinite);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.flagPole);
         register(r, new ItemSchematic(defaultBuilder().durability(0).stacksTo(1)), GCItemNames.schematicBuggy);

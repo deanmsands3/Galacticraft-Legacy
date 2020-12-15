@@ -21,7 +21,6 @@ import team.galacticraft.galacticraft.common.core.items.ItemOxygenTank;
 import team.galacticraft.galacticraft.common.core.tile.TileEntityOxygenDistributor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -383,7 +382,7 @@ public class OxygenUtil
 
         GCPlayerStats stats = GCPlayerStats.get(player);
 
-        if (!OxygenUtil.isItemValidForPlayerTankInv(0, stats.getExtendedInventory().getItem(0)))
+        if (!OxygenUtil.isItemValidForPlayerTankInv(0, stats.getExtendedInventory().getSingleSlot(0).get()))
         {
             boolean handled = false;
 
@@ -409,7 +408,7 @@ public class OxygenUtil
             }
         }
 
-        if (!OxygenUtil.isItemValidForPlayerTankInv(1, stats.getExtendedInventory().getItem(1)))
+        if (!OxygenUtil.isItemValidForPlayerTankInv(1, stats.getExtendedInventory().getSingleSlot(1).get()))
         {
             boolean handled = false;
 
@@ -435,7 +434,7 @@ public class OxygenUtil
             }
         }
 
-        if (!OxygenUtil.isItemValidForPlayerTankInv(2, stats.getExtendedInventory().getItem(2)) && !OxygenUtil.isItemValidForPlayerTankInv(3, stats.getExtendedInventory().getItem(3)))
+        if (!OxygenUtil.isItemValidForPlayerTankInv(2, stats.getExtendedInventory().getSingleSlot(2).get()) && !OxygenUtil.isItemValidForPlayerTankInv(3, stats.getExtendedInventory().getItem(3)))
         {
             boolean handled = false;
 

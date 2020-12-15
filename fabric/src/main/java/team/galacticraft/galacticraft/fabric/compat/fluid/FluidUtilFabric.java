@@ -23,6 +23,10 @@ public class FluidUtilFabric {
         return new SimpleFluidKey(new FluidKey.FluidKeyBuilder(stack.getFluid())).withAmount(toAmountLBA(stack.getAmount()));
     }
 
+    public static @NotNull SimpleFluidKey toFluidKey(@NotNull FluidStack stack) {
+        return new SimpleFluidKey(new FluidKey.FluidKeyBuilder(stack.getFluid()));
+    }
+
     public static @NotNull FluidStack toVolumeA(@NotNull FluidVolume stack) {
         return FluidStack.create(stack.getRawFluid(), toFractionA(stack.getAmount_F()));
     }

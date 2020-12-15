@@ -5,11 +5,12 @@ import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.utils.Fraction;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
+import team.galacticraft.galacticraft.common.compat.component.NbtSerializable;
 
 /**
- * Fluid api-api, values in millibuckets
+ * Fluid api-api, fractional
  */
-public interface FluidTank {
+public interface FluidTank extends NbtSerializable {
     /**
      * Returns the number of internal tanks in this tank
      * @return The number of internal tanks in this tank
@@ -81,6 +82,7 @@ public interface FluidTank {
      */
     FluidStack insert(int tank, FluidStack stack, ActionType action);
 
+    boolean isValid(int tank, FluidStack stack);
 
     /**
      * Deserializes data from a tag into this fluid tank
@@ -92,6 +94,5 @@ public interface FluidTank {
      * Serializes this fluid tank into NBT form
      * @param tag The tag serialize the data onto
      */
-    @ExpectPlatform
     @NotNull CompoundTag toTag(@NotNull CompoundTag tag);
 }

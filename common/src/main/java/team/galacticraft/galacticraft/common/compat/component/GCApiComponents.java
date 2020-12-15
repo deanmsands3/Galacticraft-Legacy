@@ -6,12 +6,12 @@ import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 
 public class GCApiComponents {
     @ExpectPlatform
-    public static ComponentWrapper<GCPlayerStats> getPlayerStats() {
+    public static ComponentWrapper<? extends GCPlayerStats> getPlayerStats() {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static ComponentWrapper<FluidTank> getTank() {
+    public static ComponentWrapper<? extends FluidTank> getTank() {
         throw new AssertionError();
     }
 }

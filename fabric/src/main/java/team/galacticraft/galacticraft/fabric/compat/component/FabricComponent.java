@@ -30,7 +30,6 @@ public class FabricComponent<T extends NbtSerializable> implements TypeAwareComp
     }
 
     public T getValue() {
-
-
+        return value;
     }
 }

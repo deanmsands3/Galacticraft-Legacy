@@ -1,6 +1,9 @@
 package team.galacticraft.galacticraft.fabric.compat;
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanFunction;
+import me.shedaniel.architectury.fluid.FluidStack;
+import me.shedaniel.architectury.utils.Fraction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
@@ -17,6 +20,7 @@ import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 import team.galacticraft.galacticraft.common.compat.item.ItemInventory;
 import team.galacticraft.galacticraft.fabric.compat.component.FabricComponentWrapper;
 import team.galacticraft.galacticraft.fabric.compat.fluid.FluidTankImpl;
+import team.galacticraft.galacticraft.fabric.compat.fluid.FluidUtilFabric;
 import team.galacticraft.galacticraft.fabric.compat.item.FabricItemInventory;
 import team.galacticraft.galacticraft.fabric.mixin.LevelChunkMixin;
 
@@ -42,9 +46,14 @@ public class PlatformSpecificImpl
         return ((LevelChunkMixin)chunk).isLoaded();
     }
 
-    public static FluidTank createFluidInv(int tanks, int millibuckets)
+    public static FluidTank createFluidInv(int tanks, Fraction fraction)
     {
-        return new FluidTankImpl(tanks, FluidAmount.of(millibuckets, 1000));
+        return new FluidTankImpl(tanks, FluidUtilFabric.toAmountLBA(fraction));
+    }
+
+    public static FluidTank createFluidInv(int tanks, Fraction fraction, Int2ObjectMap<Object2BooleanFunction<FluidStack>> validFluids)
+    {
+        return new FluidTankImpl(tanks, FluidUtilFabric.toAmountLBA(fraction), validFluids);
     }
 
     public static <T> LazyOptional<T> getComponent(Entity entity, ComponentWrapper<T> wrapper)
