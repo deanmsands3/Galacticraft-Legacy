@@ -19,11 +19,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityFake extends BlockEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fakeBlock)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fakeBlock)
     public static BlockEntityType<TileEntityFake> TYPE;
     //NOTE: No need for networking in 1.8+: see comment in initialiseMultiTiles()
 

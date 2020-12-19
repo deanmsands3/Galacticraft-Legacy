@@ -29,11 +29,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityCargoLoader extends TileEntityCargoBase implements WorldlyContainer, ILandingPadAttachable, ILockable, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.cargoLoader)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.cargoLoader)
     public static BlockEntityType<TileEntityCargoLoader> TYPE;
 
     public boolean outOfItems;

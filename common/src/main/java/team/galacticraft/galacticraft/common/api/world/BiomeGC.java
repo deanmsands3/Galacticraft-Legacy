@@ -1,10 +1,10 @@
 package team.galacticraft.galacticraft.common.api.world;
 
-import java.util.Map;
-
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import team.galacticraft.galacticraft.common.compat.GalacticraftCommon;
+
+import java.util.Map;
 
 /**
  * This extension of BiomeGenBase contains the default initialiseMobLists()

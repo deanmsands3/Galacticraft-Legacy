@@ -41,7 +41,7 @@ import net.minecraft.world.level.dimension.Dimension;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +51,7 @@ import java.util.stream.Stream;
 
 public class TileEntityTelemetry extends BlockEntity implements TickableBlockEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.telemetry)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.telemetry)
     public static BlockEntityType<TileEntityTelemetry> TYPE;
 
     //    public Class<?> clientClass;

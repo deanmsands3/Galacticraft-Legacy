@@ -7,13 +7,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
 public class TileEntityLandingPadSingle extends BlockEntity implements TickableBlockEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPad)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPad)
     public static BlockEntityType<TileEntityLandingPadSingle> TYPE;
 
     private int corner = 0;

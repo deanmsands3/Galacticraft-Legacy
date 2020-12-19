@@ -10,11 +10,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerEnergyStorageModule extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.ENERGY_STORAGE_MODULE)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.ENERGY_STORAGE_MODULE)
     public static MenuType<ContainerEnergyStorageModule> TYPE;
 
     private final TileEntityEnergyStorageModule storageModule;

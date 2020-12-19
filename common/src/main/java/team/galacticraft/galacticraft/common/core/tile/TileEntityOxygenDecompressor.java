@@ -20,13 +20,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 
 public class TileEntityOxygenDecompressor extends TileEntityOxygen implements IInventoryDefaults, WorldlyContainer, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenDecompressor)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenDecompressor)
     public static BlockEntityType<TileEntityOxygenDecompressor> TYPE;
 
     public static final int OUTPUT_PER_TICK = 100;

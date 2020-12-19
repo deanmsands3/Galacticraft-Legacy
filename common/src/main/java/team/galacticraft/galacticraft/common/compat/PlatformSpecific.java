@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 
 public class PlatformSpecific
 {
+    private PlatformSpecific() {}
 
     @ExpectPlatform
     public static Logger getLogger()

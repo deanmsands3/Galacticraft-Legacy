@@ -24,13 +24,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 
 public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource implements IInventoryDefaults, WorldlyContainer, IConnector, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.coalGenerator)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.coalGenerator)
     public static BlockEntityType<TileEntityCoalGenerator> TYPE;
 
     //New energy rates:

@@ -25,13 +25,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 
 public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IMachineSides, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.circuitFabricator)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.circuitFabricator)
     public static BlockEntityType<TileEntityCircuitFabricator> TYPE;
 
     public static final int PROCESS_TIME_REQUIRED = 300;

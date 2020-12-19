@@ -17,7 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class ContainerCircuitFabricator extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CIRCUIT_FABRICATOR)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CIRCUIT_FABRICATOR)
     public static MenuType<ContainerCircuitFabricator> TYPE;
 
     private final TileEntityCircuitFabricator fabricator;

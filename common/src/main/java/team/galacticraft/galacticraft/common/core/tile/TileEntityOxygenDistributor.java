@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -43,7 +43,7 @@ import java.util.List;
 
 public class TileEntityOxygenDistributor extends TileEntityOxygen implements IBubbleProviderColored, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenDistributor)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenDistributor)
     public static BlockEntityType<TileEntityOxygenDistributor> TYPE;
 
     public boolean active;

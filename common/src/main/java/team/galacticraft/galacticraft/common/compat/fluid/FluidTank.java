@@ -1,6 +1,5 @@
 package team.galacticraft.galacticraft.common.compat.fluid;
 
-import me.shedaniel.architectury.ExpectPlatform;
 import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.utils.Fraction;
 import net.minecraft.nbt.CompoundTag;
@@ -47,7 +46,6 @@ public interface FluidTank extends NbtSerializable {
      * @param action The action type
      * @return The amount of fluid that was successfully extracted
      */
-    @ExpectPlatform
     FluidStack extract(Fraction amount, ActionType action);
 
     /**
@@ -56,7 +54,6 @@ public interface FluidTank extends NbtSerializable {
      * @param action The action type
      * @return The amount of fluid that was successfully extracted
      */
-    @ExpectPlatform
     FluidStack extract(FluidStack stack, ActionType action);
 
     /**

@@ -9,10 +9,12 @@ import team.galacticraft.galacticraft.common.compat.item.SingleSlotAccessor;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class ComponentProvidingItem extends Item {
+public abstract class ComponentProvidingItem extends Item
+{
     public static final List<ComponentProvidingItem> COMPONENT_PROVIDING_ITEMS = new LinkedList<>();
 
-    public ComponentProvidingItem(Properties properties) {
+    public ComponentProvidingItem(Properties properties)
+    {
         super(properties);
         COMPONENT_PROVIDING_ITEMS.add(this);
     }
@@ -24,7 +26,8 @@ public abstract class ComponentProvidingItem extends Item {
      */
     public abstract Object[] createInstances();
 
-    public <T> T getComponent(ComponentWrapper<T> componentWrapper, Either<ItemStack, SingleSlotAccessor> accessor) {
+    public <T> T getComponent(ComponentWrapper<T> componentWrapper, Either<ItemStack, SingleSlotAccessor> accessor)
+    {
         return PlatformSpecific.getItemComponent(componentWrapper, accessor);
     }
 }

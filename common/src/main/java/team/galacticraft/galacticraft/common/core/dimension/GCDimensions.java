@@ -16,7 +16,7 @@ import net.minecraftforge.event.world.RegisterDimensionsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.function.BiFunction;
 
@@ -26,9 +26,9 @@ public class GCDimensions
 {
     public static DimensionType MOON_DIMENSION;
 
-    @ObjectHolder("moon")
+//    @ObjectHolder("moon")
     public static final ModDimension MOON_MOD_DIMENSION = null;
-    @ObjectHolder("space_station_overworld")
+//    @ObjectHolder("space_station_overworld")
     public static final ModDimension SPACE_STATION_MOD_DIMENSION = null;
 
     @SubscribeEvent

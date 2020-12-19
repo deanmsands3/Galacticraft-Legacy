@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,7 +47,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 //ITileClientUpdates for changing in facing;  IPacketReceiver for initial transfer of NBT Data (airToRestore)
 public class TileEntityArclamp extends BlockEntity implements TickableBlockEntity, ITileClientUpdates, IPacketReceiver
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.arcLamp)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.arcLamp)
     public static BlockEntityType<TileEntityArclamp> TYPE;
 
     private static final int LIGHTRANGE = 14;

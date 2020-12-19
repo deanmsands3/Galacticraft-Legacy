@@ -43,7 +43,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
@@ -52,7 +52,7 @@ import java.util.Random;
 
 public class TileEntityTreasureChest extends TileEntityAdvanced implements TickableBlockEntity, Container, IKeyable, WorldlyContainer, LidBlockEntity, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.treasureChestTier1)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.treasureChestTier1)
     public static BlockEntityType<TileEntityTreasureChest> TYPE;
 
     public boolean adjacentChestChecked;

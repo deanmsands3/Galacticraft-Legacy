@@ -4,11 +4,11 @@ import team.galacticraft.galacticraft.common.core.GCBlockNames;
 import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityAirLock extends TileEntityAdvanced
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.airLockFrame)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.airLockFrame)
     public static BlockEntityType<TileEntityAirLock> TYPE;
 
     public TileEntityAirLock()

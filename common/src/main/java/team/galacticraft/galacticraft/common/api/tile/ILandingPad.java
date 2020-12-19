@@ -1,4 +1,5 @@
 package team.galacticraft.galacticraft.common.api.tile;
 
-public interface ILandingPad {
+public interface ILandingPad
+{
 }

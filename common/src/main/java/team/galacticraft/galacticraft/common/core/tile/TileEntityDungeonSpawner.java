@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanced
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.bossSpawner)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.bossSpawner)
     public static BlockEntityType<TileEntityDungeonSpawner<?>> TYPE;
 
     public Class<E> bossClass;

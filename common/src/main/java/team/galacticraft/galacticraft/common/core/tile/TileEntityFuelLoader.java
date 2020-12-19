@@ -42,14 +42,14 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 import me.shedaniel.architectury.fluid.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IFluidHandlerWrapper, ILandingPadAttachable, IMachineSides, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fuelLoader)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fuelLoader)
     public static BlockEntityType<TileEntityFuelLoader> TYPE;
 
     private final int tankCapacity = 12000;

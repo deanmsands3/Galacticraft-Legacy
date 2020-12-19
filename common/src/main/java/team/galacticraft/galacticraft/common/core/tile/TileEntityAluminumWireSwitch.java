@@ -16,13 +16,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
 {
     public static class TileEntityAluminumWireSwitchableT1 extends TileEntityAluminumWireSwitch
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireSwitchable)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireSwitchable)
         public static BlockEntityType<TileEntityAluminumWireSwitchableT1> TYPE;
 
         public TileEntityAluminumWireSwitchableT1()
@@ -33,7 +33,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
 
     public static class TileEntityAluminumWireSwitchableT2 extends TileEntityAluminumWireSwitch
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireSwitchableHeavy)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireSwitchableHeavy)
         public static BlockEntityType<TileEntityAluminumWireSwitchableT2> TYPE;
 
         public TileEntityAluminumWireSwitchableT2()

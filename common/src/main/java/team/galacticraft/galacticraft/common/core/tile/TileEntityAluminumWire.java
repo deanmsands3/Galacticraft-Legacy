@@ -5,13 +5,13 @@ import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.core.energy.tile.TileBaseUniversalConductor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityAluminumWire extends TileBaseUniversalConductor
 {
     public static class TileEntityAluminumWireT1 extends TileEntityAluminumWire
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWire)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWire)
         public static BlockEntityType<TileEntityAluminumWireT1> TYPE;
 
         public TileEntityAluminumWireT1()
@@ -22,7 +22,7 @@ public class TileEntityAluminumWire extends TileBaseUniversalConductor
 
     public static class TileEntityAluminumWireT2 extends TileEntityAluminumWire
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireHeavy)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireHeavy)
         public static BlockEntityType<TileEntityAluminumWireT2> TYPE;
 
         public TileEntityAluminumWireT2()

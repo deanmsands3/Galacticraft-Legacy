@@ -12,13 +12,13 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerCargoBase extends AbstractContainerMenu
 {
     public static class ContainerCargoLoader extends ContainerCargoBase
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CARGO_LOADER)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CARGO_LOADER)
         public static MenuType<ContainerCargoLoader> TYPE;
 
         public ContainerCargoLoader(int containerId, Inventory playerInv, TileEntityCargoBase cargoTile)
@@ -29,7 +29,7 @@ public class ContainerCargoBase extends AbstractContainerMenu
 
     public static class ContainerCargoUnloader extends ContainerCargoBase
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CARGO_UNLOADER)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CARGO_UNLOADER)
         public static MenuType<ContainerCargoUnloader> TYPE;
 
         public ContainerCargoUnloader(int containerId, Inventory playerInv, TileEntityCargoBase cargoTile)

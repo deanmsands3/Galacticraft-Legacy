@@ -32,11 +32,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityCrafting extends BlockEntity implements IInventoryDefaults, WorldlyContainer, IInventorySettable, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.crafting)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.crafting)
     public static BlockEntityType<TileEntityCrafting> TYPE;
 
     private static final int SIZEINVENTORY = 9;

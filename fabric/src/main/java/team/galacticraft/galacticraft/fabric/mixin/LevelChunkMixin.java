@@ -5,7 +5,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(LevelChunk.class)
-public interface LevelChunkMixin {
+public interface LevelChunkMixin
+{
     @Accessor
     boolean isLoaded();
 }

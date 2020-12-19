@@ -11,11 +11,11 @@ import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerSchematic extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.SCHEMATIC)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.SCHEMATIC)
     public static MenuType<ContainerSchematic> TYPE;
 
     public InventorySchematic craftMatrix = new InventorySchematic(this);

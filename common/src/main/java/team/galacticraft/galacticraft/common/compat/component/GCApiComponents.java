@@ -4,14 +4,17 @@ import me.shedaniel.architectury.ExpectPlatform;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 
-public class GCApiComponents {
+public class GCApiComponents
+{
     @ExpectPlatform
-    public static ComponentWrapper<? extends GCPlayerStats> getPlayerStats() {
+    public static ComponentWrapper<? extends GCPlayerStats> getPlayerStats()
+    {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static ComponentWrapper<? extends FluidTank> getTank() {
+    public static ComponentWrapper<? extends FluidTank> getTank()
+    {
         throw new AssertionError();
     }
 }

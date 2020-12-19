@@ -1,8 +1,8 @@
 package team.galacticraft.galacticraft.common.api.power;
 
+import net.minecraft.world.level.block.entity.BlockEntity;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
 import team.galacticraft.galacticraft.common.api.vector.Vector3;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 public interface ILaserNode extends IEnergyHandlerGC
 {

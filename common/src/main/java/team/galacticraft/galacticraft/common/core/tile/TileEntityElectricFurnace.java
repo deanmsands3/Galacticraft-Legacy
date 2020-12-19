@@ -25,7 +25,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +34,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
 {
     public static class TileEntityElectricFurnaceT1 extends TileEntityElectricFurnace
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.furnaceElectric)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.furnaceElectric)
         public static BlockEntityType<TileEntityElectricFurnaceT1> TYPE;
 
         public TileEntityElectricFurnaceT1()
@@ -46,7 +46,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
 
     public static class TileEntityElectricFurnaceT2 extends TileEntityElectricFurnace
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.furanceArc)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.furanceArc)
         public static BlockEntityType<TileEntityElectricFurnaceT2> TYPE;
 
         public TileEntityElectricFurnaceT2()

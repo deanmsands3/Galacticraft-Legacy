@@ -1,6 +1,7 @@
 package team.galacticraft.galacticraft.common.compat.fluid;
 
-public enum ActionType {
+public enum ActionType
+{
     /**
      * Perform the action - change the contents
      */
@@ -9,5 +10,5 @@ public enum ActionType {
     /**
      * Simulate the action - don't change the contents
      */
-    SIMULATE;
+    SIMULATE
 }

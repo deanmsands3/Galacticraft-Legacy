@@ -29,14 +29,19 @@ public abstract class ItemCanisterGenericForge extends ItemFluidContainer
 //        this.setUnlocalizedName(assetName);
 //        this.setContainerItem(GCItems.oilCanister);
 //        this.setHasSubtypes(true);
-        this.addProperty(new ResourceLocation(Constants.MOD_ID_CORE, "fluid_level"), new ItemPropertyFunction() {
+        this.addProperty(new ResourceLocation(Constants.MOD_ID_CORE, "fluid_level"), new ItemPropertyFunction()
+        {
             @Override
-            public float call(ItemStack stack, World world, LivingEntity entity) {
+            public float call(ItemStack stack, World world, LivingEntity entity)
+            {
                 float damagePercentage;
-                if (stack.getDamageValue() == EMPTY_CAPACITY) {
+                if (stack.getDamageValue() == EMPTY_CAPACITY)
+                {
                     damagePercentage = 0.0F;
-                } else {
-                    damagePercentage = 1.0F - (stack.getDamageValue() - 1) / (float)VALID_CAPACITY;
+                }
+                else
+                {
+                    damagePercentage = 1.0F - (stack.getDamageValue() - 1) / (float) VALID_CAPACITY;
                 }
                 return Math.min(Math.max(damagePercentage, 0.0F), 1.0F);
             }
@@ -114,14 +119,14 @@ public abstract class ItemCanisterGenericForge extends ItemFluidContainer
         }
     }
 
-    public void setAllowedFluid(ResourceLocation name)
-    {
-        this.allowedFluid = name;
-    }
-
     public ResourceLocation getAllowedFluid()
     {
         return this.allowedFluid;
+    }
+
+    public void setAllowedFluid(ResourceLocation name)
+    {
+        this.allowedFluid = name;
     }
 
     public int fill(ItemStack container, FluidStack resource, ActionType action)

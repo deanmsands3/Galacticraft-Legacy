@@ -7,13 +7,13 @@ import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
 
 public class TileEntityFallenMeteor extends TileEntityAdvanced
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fallenMeteor)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fallenMeteor)
     public static BlockEntityType<TileEntityFallenMeteor> TYPE;
 
     public static final int MAX_HEAT_LEVEL = 5000;

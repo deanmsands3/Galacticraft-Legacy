@@ -11,11 +11,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerFuelLoader extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.FUEL_LOADER)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.FUEL_LOADER)
     public static MenuType<ContainerFuelLoader> TYPE;
 
     private final TileEntityFuelLoader fuelLoader;

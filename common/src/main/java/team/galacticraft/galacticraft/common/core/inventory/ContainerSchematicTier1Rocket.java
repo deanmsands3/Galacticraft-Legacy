@@ -12,11 +12,11 @@ import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerSchematicTier1Rocket extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.SCHEMATIC_T1_ROCKET)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.SCHEMATIC_T1_ROCKET)
     public static MenuType<ContainerSchematicTier1Rocket> TYPE;
 
     public InventoryRocketBench craftMatrix = new InventoryRocketBench(this);

@@ -14,11 +14,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerElectricFurnace extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.ELECTRIC_FURNACE)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.ELECTRIC_FURNACE)
     public static MenuType<ContainerElectricFurnace> TYPE;
 
     private final TileEntityElectricFurnace furnace;

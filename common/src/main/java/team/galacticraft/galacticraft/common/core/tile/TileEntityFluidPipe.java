@@ -27,13 +27,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import me.shedaniel.architectury.fluid.FluidStack;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import org.jetbrains.annotations.NotNull;
 
 public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements IColorable
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fluidPipe)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fluidPipe)
     public static BlockEntityType<TileEntityFluidPipe> TYPE;
 
     public FluidTankGC buffer = new FluidTankGC(1000, this);

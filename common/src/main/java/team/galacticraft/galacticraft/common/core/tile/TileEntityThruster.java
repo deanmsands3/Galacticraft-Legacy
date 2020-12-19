@@ -4,11 +4,11 @@ import team.galacticraft.galacticraft.common.core.GCBlockNames;
 import team.galacticraft.galacticraft.common.Constants;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityThruster extends BlockEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.spinThruster)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.spinThruster)
     public static BlockEntityType<TileEntityThruster> TYPE;
 
     public TileEntityThruster()

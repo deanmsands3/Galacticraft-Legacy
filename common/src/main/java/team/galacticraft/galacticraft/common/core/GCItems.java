@@ -44,7 +44,7 @@ public class GCItems
     public static Item oxygenVent;
     public static Item oxygenFan;
     public static Item oxygenConcentrator;
-    //    @ObjectHolder(ItemNames.rocketEngine) public static Item rocketEngine;
+    ////    @ObjectHolder(ItemNames.rocketEngine) public static Item rocketEngine;
     public static Item heavyPlatingTier1;
     public static Item partNoseCone;
     public static Item partFins;
@@ -62,7 +62,7 @@ public class GCItems
     public static Item schematicBuggy;
     public static Item schematicRocketT2;
     public static Item key;
-    //    @ObjectHolder(ItemNames.foodItem) public static Item foodItem;
+    ////    @ObjectHolder(ItemNames.foodItem) public static Item foodItem;
     public static Item battery;
     public static Item infiniteBatery;
     public static Item wrench;
@@ -71,7 +71,7 @@ public class GCItems
     public static Item cheeseBlock;
     public static Item prelaunchChecklist;
     public static Item dungeonFinder;
-    //    @ObjectHolder(ItemNames.ic2compat) public static Item ic2compat;
+    ////    @ObjectHolder(ItemNames.ic2compat) public static Item ic2compat;
     public static Item emergencyKit;
     public static Item solarModule0;
     public static Item solarModule1;

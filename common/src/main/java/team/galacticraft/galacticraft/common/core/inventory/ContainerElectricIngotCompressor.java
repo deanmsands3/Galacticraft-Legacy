@@ -12,11 +12,11 @@ import net.minecraft.world.inventory.FurnaceResultSlot;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerElectricIngotCompressor extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.ELECTRIC_INGOT_COMPRESSOR)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.ELECTRIC_INGOT_COMPRESSOR)
     public static MenuType<ContainerElectricIngotCompressor> TYPE;
 
     private final TileEntityElectricIngotCompressor compressor;

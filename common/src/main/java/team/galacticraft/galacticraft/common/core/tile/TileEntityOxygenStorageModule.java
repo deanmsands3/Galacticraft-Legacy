@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import me.shedaniel.architectury.fluid.FluidStack;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class TileEntityOxygenStorageModule extends TileEntityOxygen implements IInventoryDefaults, WorldlyContainer, IMachineSides, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenStorageModule)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenStorageModule)
     public static BlockEntityType<TileEntityOxygenStorageModule> TYPE;
 
     public final Set<Player> playersUsing = new HashSet<Player>();

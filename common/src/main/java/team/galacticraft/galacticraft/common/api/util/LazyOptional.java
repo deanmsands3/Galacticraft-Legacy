@@ -2,39 +2,47 @@ package team.galacticraft.galacticraft.common.api.util;
 
 import org.jetbrains.annotations.Nullable;
 
-public class LazyOptional<T> {
-    private final Provider<T> provider;
+public class LazyOptional<T>
+{
     private static final LazyOptional<?> EMPTY = new LazyOptional<>(null);
+    private final Provider<T> provider;
 
-    private LazyOptional(Provider<T> provider) {
+    private LazyOptional(Provider<T> provider)
+    {
         this.provider = provider;
     }
 
-    public static <T> LazyOptional<T> create(@Nullable Provider<T> provider) {
+    public static <T> LazyOptional<T> create(@Nullable Provider<T> provider)
+    {
         if (provider == null) return (LazyOptional<T>) EMPTY;
         return new LazyOptional<>(provider);
     }
 
-    public boolean isPresent() {
+    public boolean isPresent()
+    {
         return this.provider != null;
     }
 
-    public T orElse(T other) {
+    public T orElse(T other)
+    {
         if (!isPresent()) return other;
         return provider.apply();
     }
 
-    public <t extends Throwable> T orElseThrow(t throwable) throws t {
+    public <t extends Throwable> T orElseThrow(t throwable) throws t
+    {
         if (!isPresent()) throw throwable;
         return provider.apply();
     }
 
-    public T get() {
+    public T get()
+    {
         return this.provider.apply();
     }
 
     @FunctionalInterface
-    public interface Provider<T> {
+    public interface Provider<T>
+    {
         T apply();
     }
 }

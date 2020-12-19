@@ -31,11 +31,11 @@ package team.galacticraft.galacticraft.common.core.tile;
 //import net.minecraftforge.fml.common.network.ByteBufUtils;
 //import net.minecraftforge.fml.EnvType;
 //import net.minecraftforge.fml.relauncher.SideOnly;
-//import net.minecraftforge.registries.ObjectHolder;
+////import net.minecraftforge.registries.ObjectHolder;
 //
 //public class TileEntityPanelLight extends TileEntity implements IPacketReceiver
 //{
-//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + BlockNames.panelLighting)
+////    @ObjectHolder(Constants.MOD_ID_CORE + ":" + BlockNames.panelLighting)
 //    public static TileEntityType<TileEntityPanelLight> TYPE;
 //
 //    public int meta;

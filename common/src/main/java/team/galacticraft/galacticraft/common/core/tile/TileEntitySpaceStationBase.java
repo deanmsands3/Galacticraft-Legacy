@@ -15,11 +15,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntitySpaceStationBase extends TileEntityFake implements IMultiBlock
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.spaceStationBase)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.spaceStationBase)
     public static BlockEntityType<TileEntitySpaceStationBase> TYPE;
 
     public TileEntitySpaceStationBase()

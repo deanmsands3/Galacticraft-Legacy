@@ -19,13 +19,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 
 public class TileEntityOxygenCompressor extends TileEntityOxygen implements MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenCompressor)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenCompressor)
     public static BlockEntityType<TileEntityOxygenCompressor> TYPE;
 
     public static final int TANK_TRANSFER_SPEED = 2;

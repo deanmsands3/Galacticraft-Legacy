@@ -27,13 +27,13 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import me.shedaniel.architectury.fluid.FluidStack;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 
 public class TileEntityOxygenCollector extends TileEntityOxygen implements MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenCollector)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenCollector)
     public static BlockEntityType<TileEntityOxygenCollector> TYPE;
 
     public boolean active;

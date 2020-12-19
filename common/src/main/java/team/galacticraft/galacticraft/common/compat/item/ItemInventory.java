@@ -6,8 +6,9 @@ import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
 import java.util.function.Predicate;
 
-public interface ItemInventory {
-    
+public interface ItemInventory
+{
+
     int size();
 
     boolean isItemValidForSlot(int slot, ItemStack item);

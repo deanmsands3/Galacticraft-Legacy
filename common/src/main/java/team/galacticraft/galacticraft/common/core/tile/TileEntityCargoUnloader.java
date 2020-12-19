@@ -26,11 +26,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityCargoUnloader extends TileEntityCargoBase implements ILandingPadAttachable, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.cargoUnloader)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.cargoUnloader)
     public static BlockEntityType<TileEntityCargoUnloader> TYPE;
 
     @NetworkedField(targetSide = EnvType.CLIENT)

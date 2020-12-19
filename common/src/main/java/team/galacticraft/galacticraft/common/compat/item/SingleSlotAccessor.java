@@ -2,7 +2,8 @@ package team.galacticraft.galacticraft.common.compat.item;
 
 import net.minecraft.world.item.ItemStack;
 
-public interface SingleSlotAccessor {
+public interface SingleSlotAccessor
+{
     void set(ItemStack stack);
 
     /**

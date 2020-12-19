@@ -8,14 +8,6 @@ import net.minecraft.world.item.ItemStack;
  */
 public interface IBreathableArmor
 {
-    enum EnumGearType
-    {
-        HELMET,
-        GEAR,
-        TANK1,
-        TANK2
-    }
-
     /**
      * @param gearType The gear type to be handled
      * @return true if the passed gear type should be handled by this armor item
@@ -32,4 +24,12 @@ public interface IBreathableArmor
      * type
      */
     boolean canBreathe(ItemStack helmetInSlot, Player playerWearing, EnumGearType type);
+
+    enum EnumGearType
+    {
+        HELMET,
+        GEAR,
+        TANK1,
+        TANK2
+    }
 }

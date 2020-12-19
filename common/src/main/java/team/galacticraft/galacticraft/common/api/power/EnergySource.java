@@ -1,7 +1,8 @@
 package team.galacticraft.galacticraft.common.api.power;
 
-import java.util.List;
 import net.minecraft.core.Direction;
+
+import java.util.List;
 
 public abstract class EnergySource
 {

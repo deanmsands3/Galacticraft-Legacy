@@ -10,31 +10,31 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
 @ObjectHolder(Constants.MOD_ID_CORE)
 public class GCParticles
 {
-    @ObjectHolder(ParticleTypeNames.whiteSmoke)
+//    @ObjectHolder(ParticleTypeNames.whiteSmoke)
     public static SimpleParticleType WHITE_SMOKE_IDLE;
-    @ObjectHolder(ParticleTypeNames.whiteSmokeLaunched)
+//    @ObjectHolder(ParticleTypeNames.whiteSmokeLaunched)
     public static SimpleParticleType WHITE_SMOKE_LAUNCHED;
-    @ObjectHolder(ParticleTypeNames.whiteSmokeLarge)
+//    @ObjectHolder(ParticleTypeNames.whiteSmokeLarge)
     public static SimpleParticleType WHITE_SMOKE_IDLE_LARGE;
-    @ObjectHolder(ParticleTypeNames.whiteSmokeLaunchedLarge)
+//    @ObjectHolder(ParticleTypeNames.whiteSmokeLaunchedLarge)
     public static SimpleParticleType WHITE_SMOKE_LAUNCHED_LARGE;
-    @ObjectHolder(ParticleTypeNames.launchFlame)
+//    @ObjectHolder(ParticleTypeNames.launchFlame)
     public static ParticleType<EntityParticleData> LAUNCH_FLAME_IDLE;
-    @ObjectHolder(ParticleTypeNames.launchFlameLaunched)
+//    @ObjectHolder(ParticleTypeNames.launchFlameLaunched)
     public static ParticleType<EntityParticleData> LAUNCH_FLAME_LAUNCHED;
-    @ObjectHolder(ParticleTypeNames.launchSmoke)
+//    @ObjectHolder(ParticleTypeNames.launchSmoke)
     public static SimpleParticleType LAUNCH_SMOKE_TINY;
-    @ObjectHolder(ParticleTypeNames.oilDrip)
+//    @ObjectHolder(ParticleTypeNames.oilDrip)
     public static SimpleParticleType OIL_DRIP;
-    @ObjectHolder(ParticleTypeNames.oxygen)
+//    @ObjectHolder(ParticleTypeNames.oxygen)
     public static SimpleParticleType OXYGEN;
-    @ObjectHolder(ParticleTypeNames.landerFlame)
+//    @ObjectHolder(ParticleTypeNames.landerFlame)
     public static ParticleType<EntityParticleData> LANDER_FLAME;
 
     public static <V extends IForgeRegistryEntry<V>> void register(IForgeRegistry<V> reg, IForgeRegistryEntry<V> thing, ResourceLocation name)

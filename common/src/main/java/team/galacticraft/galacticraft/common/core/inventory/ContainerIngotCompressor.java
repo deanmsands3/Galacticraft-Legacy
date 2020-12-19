@@ -11,11 +11,11 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerIngotCompressor extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.INGOT_COMPRESSOR)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.INGOT_COMPRESSOR)
     public static MenuType<ContainerIngotCompressor> TYPE;
 
     private final TileEntityIngotCompressor compressor;

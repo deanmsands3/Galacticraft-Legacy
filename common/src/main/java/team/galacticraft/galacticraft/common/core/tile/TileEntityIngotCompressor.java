@@ -28,7 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,7 +37,7 @@ import java.util.Set;
 
 public class TileEntityIngotCompressor extends TileEntityAdvanced implements IInventoryDefaults, WorldlyContainer, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ingotCompressor)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ingotCompressor)
     public static BlockEntityType<TileEntityIngotCompressor> TYPE;
 
     public static final int PROCESS_TIME_REQUIRED = 200;

@@ -18,13 +18,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
 
 public class TileEntityAirLockController extends TileEntityAdvanced
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.airLockController)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.airLockController)
     public static BlockEntityType<TileEntityAirLockController> TYPE;
 
     @NetworkedField(targetSide = EnvType.CLIENT)

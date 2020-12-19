@@ -1,26 +1,25 @@
 package team.galacticraft.galacticraft.forge.compat.cap;
 
 import com.mojang.datafixers.types.templates.Tag;
-import nerdhub.cardinal.components.api.ComponentRegistry;
-import nerdhub.cardinal.components.api.ComponentType;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
 import team.galacticraft.galacticraft.common.compat.component.ComponentWrapper;
 
-public class GCApiComponentsImpl {
+public class GCApiComponentsImpl
+{
     @CapabilityInject(GCPlayerStats.class)
     public static Capability<GCPlayerStats> GC_STATS_CAPABILITY = null;
 
-    public static ComponentWrapper<GCPlayerStats> getPlayerStats() {
+    public static ComponentWrapper<GCPlayerStats> getPlayerStats()
+    {
     }
 
-    public static void register() {
+    public static void register()
+    {
         CapabilityManager.INSTANCE.register(GCPlayerStats.class, new Capability.IStorage<GCPlayerStats>()
         {
             @Override

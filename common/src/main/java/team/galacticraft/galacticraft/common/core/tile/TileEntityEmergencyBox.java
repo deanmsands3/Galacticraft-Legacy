@@ -33,7 +33,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,7 +41,7 @@ import java.util.List;
 
 public class TileEntityEmergencyBox extends BlockEntity implements TickableBlockEntity, IPacketReceiver
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.emergencyBox)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.emergencyBox)
     public static BlockEntityType<TileEntityEmergencyBox> TYPE;
 
     private static final float SPEED = 4F;

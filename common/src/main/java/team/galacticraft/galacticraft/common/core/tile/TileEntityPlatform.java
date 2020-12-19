@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class TileEntityPlatform extends BlockEntity implements TickableBlockEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.platform)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.platform)
     public static BlockEntityType<TileEntityPlatform> TYPE;
 
     private static final int MAXRANGE = 16;

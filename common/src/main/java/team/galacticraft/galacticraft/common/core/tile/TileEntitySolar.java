@@ -39,7 +39,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -50,7 +50,7 @@ public abstract class TileEntitySolar extends TileBaseUniversalElectricalSource 
 {
     public static class TileEntitySolarT1 extends TileEntitySolar
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.solarPanel)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.solarPanel)
         public static BlockEntityType<TileEntitySolarT1> TYPE;
 
         public TileEntitySolarT1()
@@ -72,7 +72,7 @@ public abstract class TileEntitySolar extends TileBaseUniversalElectricalSource 
 
     public static class TileEntitySolarT2 extends TileEntitySolar
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.solarPanelAdvanced)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.solarPanelAdvanced)
         public static BlockEntityType<TileEntitySolarT2> TYPE;
 
         public TileEntitySolarT2()

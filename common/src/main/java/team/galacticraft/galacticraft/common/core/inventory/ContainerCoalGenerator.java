@@ -11,11 +11,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerCoalGenerator extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.COAL_GENERATOR)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.COAL_GENERATOR)
     public static MenuType<ContainerCoalGenerator> TYPE;
 
     private final TileEntityCoalGenerator generator;

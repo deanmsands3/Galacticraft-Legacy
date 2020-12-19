@@ -33,7 +33,7 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ import java.util.List;
 
 public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHandlerWrapper
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fluidTank)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fluidTank)
     public static BlockEntityType<TileEntityFluidTank> TYPE;
 
     public FluidTankGC fluidTank = new FluidTankGC(16000, this);

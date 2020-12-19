@@ -31,7 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -40,7 +40,7 @@ public class TileEntityElectricIngotCompressor extends TileBaseElectricBlock imp
 {
     public static class TileEntityElectricIngotCompressorT1 extends TileEntityElectricIngotCompressor
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ingotCompressorElectric)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ingotCompressorElectric)
         public static BlockEntityType<TileEntityElectricIngotCompressorT1> TYPE;
 
         public TileEntityElectricIngotCompressorT1()
@@ -55,7 +55,7 @@ public class TileEntityElectricIngotCompressor extends TileBaseElectricBlock imp
 
     public static class TileEntityElectricIngotCompressorT2 extends TileEntityElectricIngotCompressor
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ingotCompressorElectricAdvanced)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ingotCompressorElectricAdvanced)
         public static BlockEntityType<TileEntityElectricIngotCompressorT2> TYPE;
 
         public TileEntityElectricIngotCompressorT2()

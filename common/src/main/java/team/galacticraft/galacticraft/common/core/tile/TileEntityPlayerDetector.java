@@ -11,11 +11,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityPlayerDetector extends BlockEntity implements TickableBlockEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.concealedDetector)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.concealedDetector)
     public static BlockEntityType<TileEntityPlayerDetector> TYPE;
 
     private int ticks = 24;

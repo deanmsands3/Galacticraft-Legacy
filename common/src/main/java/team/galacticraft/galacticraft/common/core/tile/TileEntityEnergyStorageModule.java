@@ -22,7 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
 {
     public static class TileEntityEnergyStorageModuleT1 extends TileEntityEnergyStorageModule
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.energyStorage)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.energyStorage)
         public static BlockEntityType<TileEntityEnergyStorageModuleT1> TYPE;
 
         public TileEntityEnergyStorageModuleT1()
@@ -45,7 +45,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
 
     public static class TileEntityEnergyStorageModuleT2 extends TileEntityEnergyStorageModule
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.energyStorage)
+    //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.energyStorage)
         public static BlockEntityType<TileEntityEnergyStorageModuleT2> TYPE;
 
         public TileEntityEnergyStorageModuleT2()

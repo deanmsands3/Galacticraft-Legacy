@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import me.shedaniel.architectury.fluid.FluidStack;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,7 +36,7 @@ import java.util.List;
 
 public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock, IFuelable, IFuelDock, ICargoEntity, ILandingPad
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPadFull)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPadFull)
     public static BlockEntityType<TileEntityLandingPad> TYPE;
 
     public TileEntityLandingPad()

@@ -36,14 +36,14 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 import me.shedaniel.architectury.fluid.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TileEntityRefinery extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IFluidHandlerWrapper, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.refinery)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.refinery)
     public static BlockEntityType<TileEntityRefinery> TYPE;
 
     private final int tankCapacity = 24000;

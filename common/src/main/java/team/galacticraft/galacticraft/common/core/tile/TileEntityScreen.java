@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class TileEntityScreen extends TileEntityAdvanced implements ITileClientUpdates
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.screen)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.screen)
     public static BlockEntityType<TileEntityScreen> TYPE;
 
     public static float FRAMEBORDER = 0.098F;  //used for rendering

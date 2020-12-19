@@ -2,6 +2,7 @@ package team.galacticraft.galacticraft.common.api.world;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -51,7 +52,8 @@ public class OxygenHooks
             try
             {
                 return (Boolean) combusionTestMethod.invoke(null, dimension);
-            } catch (IllegalAccessException | InvocationTargetException e)
+            }
+            catch (IllegalAccessException | InvocationTargetException e)
             {
                 e.printStackTrace();
             }
@@ -85,7 +87,9 @@ public class OxygenHooks
             try
             {
                 return (Boolean) breathableAirBlockMethod.invoke(null, world, bb);
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            }
+            catch (IllegalAccessException | InvocationTargetException e)
+            {
                 e.printStackTrace();
             }
         }

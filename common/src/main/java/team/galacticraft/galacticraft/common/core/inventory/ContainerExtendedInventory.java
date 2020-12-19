@@ -7,11 +7,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerExtendedInventory extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.EXTENDED_INVENTORY)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.EXTENDED_INVENTORY)
     public static MenuType<ContainerExtendedInventory> TYPE;
 
     public Inventory inventoryPlayer;

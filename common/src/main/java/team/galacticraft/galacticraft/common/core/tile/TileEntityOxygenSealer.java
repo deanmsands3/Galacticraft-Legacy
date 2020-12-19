@@ -32,7 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -41,7 +41,7 @@ import java.util.List;
 
 public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileClientUpdates, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenSealer)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenSealer)
     public static BlockEntityType<TileEntityOxygenSealer> TYPE;
 
     @NetworkedField(targetSide = EnvType.CLIENT)

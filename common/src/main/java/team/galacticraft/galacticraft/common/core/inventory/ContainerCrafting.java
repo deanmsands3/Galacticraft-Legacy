@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class ContainerCrafting extends AbstractContainerMenu
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CRAFTING)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CRAFTING)
     public static MenuType<ContainerCrafting> TYPE;
 
     public TileEntityCrafting tileCrafting;

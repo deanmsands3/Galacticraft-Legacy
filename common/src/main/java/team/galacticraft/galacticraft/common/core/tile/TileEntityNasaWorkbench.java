@@ -16,14 +16,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TileEntityNasaWorkbench extends TileEntityFake implements IMultiBlock
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.nasaWorkbench)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.nasaWorkbench)
     public static BlockEntityType<TileEntityNasaWorkbench> TYPE;
 
     private boolean initialised;

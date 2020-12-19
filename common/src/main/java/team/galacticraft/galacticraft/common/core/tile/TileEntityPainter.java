@@ -34,7 +34,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.*;
 
@@ -42,7 +42,7 @@ import java.util.*;
 
 public class TileEntityPainter extends TileEntityInventory implements IDisableableMachine, IPacketReceiver, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.painter)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.painter)
     public static BlockEntityType<TileEntityPainter> TYPE;
 
     private static final int RANGE_DEFAULT = 96;

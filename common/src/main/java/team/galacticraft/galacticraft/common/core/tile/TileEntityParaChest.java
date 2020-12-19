@@ -23,14 +23,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
 import me.shedaniel.architectury.fluid.FluidStack;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.Iterator;
 import java.util.List;
 
 public class TileEntityParaChest extends TileEntityAdvanced implements IInventorySettable, IScaleableFuelLevel
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.parachest)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.parachest)
     public static BlockEntityType<TileEntityParaChest> TYPE;
 
     private final int tankCapacity = 5000;

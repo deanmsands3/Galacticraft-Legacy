@@ -30,7 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ObjectHolder;
+//import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -39,7 +39,7 @@ import java.util.List;
 
 public class TileEntityDeconstructor extends TileBaseElectricBlock implements IInventoryDefaults, WorldlyContainer, IMachineSides, MenuProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.deconstructor)
+//    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.deconstructor)
     public static BlockEntityType<TileEntityDeconstructor> TYPE;
 
     public static final float SALVAGE_CHANCE = 0.75F;
