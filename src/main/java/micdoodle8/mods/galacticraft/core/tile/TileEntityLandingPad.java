@@ -35,7 +35,7 @@ import java.util.List;
 
 public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock, IFuelable, IFuelDock, ICargoEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPadFull)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.FULL_LANDING_PAD)
     public static TileEntityType<TileEntityLandingPad> TYPE;
 
     public TileEntityLandingPad()
@@ -119,7 +119,7 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
 
         List<BlockPos> positions = new ArrayList<>();
         this.getPositions(placedPosition, positions);
-        ((BlockMulti) GCBlocks.fakeBlock).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
+        ((BlockMulti) GCBlocks.MULTI_BLOCK).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
     }
 
     @Override
@@ -156,7 +156,7 @@ public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock,
         {
             BlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock && stateAt.get(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.ROCKET_PAD)
+            if (stateAt.getBlock() == GCBlocks.MULTI_BLOCK && stateAt.get(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.ROCKET_PAD)
             {
                 if (this.world.isRemote && this.world.rand.nextDouble() < 0.1D)
                 {

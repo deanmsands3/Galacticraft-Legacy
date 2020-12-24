@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 //ITileClientUpdates for changing in facing;  IPacketReceiver for initial transfer of NBT Data (airToRestore)
 public class TileEntityArclamp extends TileEntity implements ITickableTileEntity, ITileClientUpdates, IPacketReceiver
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.arcLamp)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ARC_LAMP)
     public static TileEntityType<TileEntityArclamp> TYPE;
 
     private static final int LIGHTRANGE = 14;

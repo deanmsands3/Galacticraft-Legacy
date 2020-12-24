@@ -42,7 +42,7 @@ import java.util.List;
 
 public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileClientUpdates, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenSealer)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_SEALER)
     public static TileEntityType<TileEntityOxygenSealer> TYPE;
 
     @NetworkedField(targetSide = LogicalSide.CLIENT)

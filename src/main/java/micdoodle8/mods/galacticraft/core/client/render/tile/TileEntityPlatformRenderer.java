@@ -102,7 +102,7 @@ public class TileEntityPlatformRenderer extends TileEntityRenderer<TileEntityPla
         }
         BlockState state = platform.getWorld().getBlockState(platform.getPos());
         float yOffset = platform.getYOffset(partialTicks);
-        if (state.getBlock() == GCBlocks.platform && state.get(BlockPlatform.CORNER) == BlockPlatform.EnumCorner.NW)
+        if (state.getBlock() == GCBlocks.PLATFORM && state.get(BlockPlatform.CORNER) == BlockPlatform.EnumCorner.NW)
         {
 //            GlStateManager.pushMatrix();
             matStack.push();

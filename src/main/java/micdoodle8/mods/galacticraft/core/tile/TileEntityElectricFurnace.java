@@ -35,7 +35,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
 {
     public static class TileEntityElectricFurnaceT1 extends TileEntityElectricFurnace
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.furnaceElectric)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ELECTRIC_FURNACE)
         public static TileEntityType<TileEntityElectricFurnaceT1> TYPE;
 
         public TileEntityElectricFurnaceT1()
@@ -47,7 +47,7 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
 
     public static class TileEntityElectricFurnaceT2 extends TileEntityElectricFurnace
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.furanceArc)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ARC_FURNACE)
         public static TileEntityType<TileEntityElectricFurnaceT2> TYPE;
 
         public TileEntityElectricFurnaceT2()

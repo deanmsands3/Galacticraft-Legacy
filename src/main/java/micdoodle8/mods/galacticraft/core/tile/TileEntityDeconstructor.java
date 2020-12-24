@@ -40,7 +40,7 @@ import java.util.List;
 
 public class TileEntityDeconstructor extends TileBaseElectricBlock implements IInventoryDefaults, ISidedInventory, IMachineSides, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.deconstructor)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.DECONSTRUCTOR)
     public static TileEntityType<TileEntityDeconstructor> TYPE;
 
     public static final float SALVAGE_CHANCE = 0.75F;

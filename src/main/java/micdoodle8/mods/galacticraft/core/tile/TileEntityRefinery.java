@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
 
 public class TileEntityRefinery extends TileBaseElectricBlockWithInventory implements ISidedInventory, IFluidHandlerWrapper, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.refinery)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.REFINERY)
     public static TileEntityType<TileEntityRefinery> TYPE;
 
     private final int tankCapacity = 24000;

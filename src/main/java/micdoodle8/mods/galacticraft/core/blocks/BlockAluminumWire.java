@@ -259,7 +259,7 @@ public class BlockAluminumWire extends BlockTransmitter implements IShiftDescrip
         }
 
         // Is heavy:
-        if (state.getBlock() == GCBlocks.aluminumWireHeavy || state.getBlock() == GCBlocks.aluminumWireSwitchableHeavy)
+        if (state.getBlock() == GCBlocks.HEAVY_ALUMINUM_WIRE || state.getBlock() == GCBlocks.SWITCHABLE_HEAVY_ALUMINUM_WIRE)
         {
             i |= 1 << 6;
         }
@@ -322,19 +322,19 @@ public class BlockAluminumWire extends BlockTransmitter implements IShiftDescrip
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
-        if (this == GCBlocks.aluminumWire)
+        if (this == GCBlocks.ALUMINUM_WIRE)
         {
             return new TileEntityAluminumWire.TileEntityAluminumWireT1();
         }
-        else if (this == GCBlocks.aluminumWireHeavy)
+        else if (this == GCBlocks.HEAVY_ALUMINUM_WIRE)
         {
             return new TileEntityAluminumWire.TileEntityAluminumWireT2();
         }
-        else if (this == GCBlocks.aluminumWireSwitchable)
+        else if (this == GCBlocks.SWITCHABLE_ALUMINUM_WIRE)
         {
             return new TileEntityAluminumWireSwitch.TileEntityAluminumWireSwitchableT1();
         }
-        else if (this == GCBlocks.aluminumWireSwitchableHeavy)
+        else if (this == GCBlocks.SWITCHABLE_HEAVY_ALUMINUM_WIRE)
         {
             return new TileEntityAluminumWireSwitch.TileEntityAluminumWireSwitchableT2();
         }

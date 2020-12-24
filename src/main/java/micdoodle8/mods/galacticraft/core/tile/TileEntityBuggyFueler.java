@@ -30,7 +30,7 @@ import java.util.List;
 
 public class TileEntityBuggyFueler extends TileEntityFake implements IMultiBlock, IFuelable, IFuelDock, ICargoEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.buggyPadFull)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.FULL_BUGGY_PAD)
     public static TileEntityType<TileEntityBuggyFueler> TYPE;
 
     public TileEntityBuggyFueler()

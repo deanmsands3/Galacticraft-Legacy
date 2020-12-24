@@ -11,7 +11,7 @@ public class TileEntityAluminumWire extends TileBaseUniversalConductor
 {
     public static class TileEntityAluminumWireT1 extends TileEntityAluminumWire
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWire)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ALUMINUM_WIRE)
         public static TileEntityType<TileEntityAluminumWireT1> TYPE;
 
         public TileEntityAluminumWireT1()
@@ -22,7 +22,7 @@ public class TileEntityAluminumWire extends TileBaseUniversalConductor
 
     public static class TileEntityAluminumWireT2 extends TileEntityAluminumWire
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireHeavy)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.HEAVY_ALUMINUM_WIRE)
         public static TileEntityType<TileEntityAluminumWireT2> TYPE;
 
         public TileEntityAluminumWireT2()

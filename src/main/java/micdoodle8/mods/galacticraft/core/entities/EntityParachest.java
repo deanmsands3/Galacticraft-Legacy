@@ -187,7 +187,7 @@ public class EntityParachest extends Entity implements IPacketReceiver
 
     private boolean placeChest(BlockPos pos)
     {
-        if (this.world.setBlockState(pos, GCBlocks.parachest.getDefaultState(), 3))
+        if (this.world.setBlockState(pos, GCBlocks.PARACHEST.getDefaultState(), 3))
         {
             if (this.cargo != null)
             {

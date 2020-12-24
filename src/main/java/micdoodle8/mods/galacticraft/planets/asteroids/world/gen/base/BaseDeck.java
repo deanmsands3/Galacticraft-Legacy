@@ -241,8 +241,8 @@ public class BaseDeck extends SizedPiece
                         if (this.configuration.isHangarDeck() && this.deckTier == 1 && (this.getDirection() == Direction.NORTH && z == endZ || this.getDirection() == Direction.SOUTH && z == startZ || this.getDirection() == Direction.WEST && x == endX || this.getDirection() == Direction.EAST && x == startX))
                         {
                             //Make airlock at the hangar end, if it's a hangar deck
-                            BlockState blockLintel = GCBlocks.airLockFrame.getDefaultState();
-                            BlockState blockAirlock = GCBlocks.airLockController.getDefaultState();
+                            BlockState blockLintel = GCBlocks.AIR_LOCK_FRAME.getDefaultState();
+                            BlockState blockAirlock = GCBlocks.AIR_LOCK_CONTROLLER.getDefaultState();
                             if ((!directionNS && (z == startZ + 1 || z == endZ - 1) || directionNS && (x == startX + 1 || x == endX - 1)) && y < sizeY - 1)
                             {
                                 this.setBlockState(worldIn, blockLintel, x, y, z, this.boundingBox);
@@ -549,7 +549,7 @@ public class BaseDeck extends SizedPiece
             }
 
 //            BlockState lever = GCBlocks.concealedDetector.getStateFromMeta(8 + facing + (this.configuration.getDeckType() == EnumBaseType.HUMANOID ? 0 : 4));
-            BlockState lever = GCBlocks.concealedDetector.getDefaultState().with(BlockConcealedDetector.DETECTED, true).with(BlockConcealedDetector.FACING, this.direction).with(BlockConcealedDetector.VARIANT, this.configuration.getDeckType() == EnumBaseType.HUMANOID ? 0 : 4);
+            BlockState lever = GCBlocks.PLAYER_DETECTOR.getDefaultState().with(BlockConcealedDetector.DETECTED, true).with(BlockConcealedDetector.FACING, this.direction).with(BlockConcealedDetector.VARIANT, this.configuration.getDeckType() == EnumBaseType.HUMANOID ? 0 : 4);
             this.setBlockState(worldIn, lever, endX / 2 - 2, this.sizeY - 1, endZ, this.boundingBox);
             this.setBlockState(worldIn, lever, endX / 2 + 2, this.sizeY - 1, endZ, this.boundingBox);
             lever = Blocks.LEVER.getDefaultState().with(LeverBlock.FACE, AttachFace.WALL).with(LeverBlock.HORIZONTAL_FACING, this.direction.getAxis() == Direction.Axis.Z ? Direction.NORTH : Direction.SOUTH);
@@ -557,8 +557,8 @@ public class BaseDeck extends SizedPiece
             this.setBlockState(worldIn, lever, endX / 2 + 2, this.sizeY - 1, endZ - 1, this.boundingBox);
 
             //Create two redstone blocks
-            this.setBlockState(worldIn, GCBlocks.concealedRedstone.getDefaultState().with(StairsBlock.HALF, Half.TOP).with(StairsBlock.FACING, Direction.NORTH), endX / 2 - 2, this.sizeY, endZ, this.boundingBox);
-            this.setBlockState(worldIn, GCBlocks.concealedRedstone.getDefaultState().with(StairsBlock.HALF, Half.TOP).with(StairsBlock.FACING, Direction.NORTH), endX / 2 + 2, this.sizeY, endZ, this.boundingBox);
+            this.setBlockState(worldIn, GCBlocks.CONCEALED_REDSTONE.getDefaultState().with(StairsBlock.HALF, Half.TOP).with(StairsBlock.FACING, Direction.NORTH), endX / 2 - 2, this.sizeY, endZ, this.boundingBox);
+            this.setBlockState(worldIn, GCBlocks.CONCEALED_REDSTONE.getDefaultState().with(StairsBlock.HALF, Half.TOP).with(StairsBlock.FACING, Direction.NORTH), endX / 2 + 2, this.sizeY, endZ, this.boundingBox);
 
             //Create an access hole between the floors
             this.setBlockState(worldIn, blockAir, 2, 0, 1, this.boundingBox);
@@ -700,8 +700,8 @@ public class BaseDeck extends SizedPiece
     protected void makeDoorway(IWorld worldIn, int x, int z, boolean directionNS, MutableBoundingBox chunkBounds)
     {
 //        System.out.println("Making doorway at " + x + "," + z + " NS:" + directionNS + " Tier " + this.deckTier);
-        BlockState blockLintel = GCBlocks.airLockFrame.getDefaultState();
-        BlockState blockAirlock = GCBlocks.airLockController.getDefaultState();
+        BlockState blockLintel = GCBlocks.AIR_LOCK_FRAME.getDefaultState();
+        BlockState blockAirlock = GCBlocks.AIR_LOCK_CONTROLLER.getDefaultState();
 //        Block blockStair = GCBlocks.moonStoneStairs;
         BlockState blockAir = Blocks.AIR.getDefaultState();
         int meta = directionNS ? 2 : 0;

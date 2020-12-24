@@ -16,7 +16,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityOxygenDetector extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenDetector)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_DETECTOR)
     public static TileEntityType<TileEntityOxygenDetector> TYPE;
 
     private int ticks = 49;

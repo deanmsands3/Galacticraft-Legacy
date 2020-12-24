@@ -52,7 +52,7 @@ public abstract class TileEntitySolar extends TileBaseUniversalElectricalSource 
 {
     public static class TileEntitySolarT1 extends TileEntitySolar
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.solarPanel)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.SOLAR_PANEL)
         public static TileEntityType<TileEntitySolarT1> TYPE;
 
         public TileEntitySolarT1()
@@ -74,7 +74,7 @@ public abstract class TileEntitySolar extends TileBaseUniversalElectricalSource 
 
     public static class TileEntitySolarT2 extends TileEntitySolar
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.solarPanelAdvanced)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ADVANCED_SOLAR_PANEL)
         public static TileEntityType<TileEntitySolarT2> TYPE;
 
         public TileEntitySolarT2()
@@ -360,10 +360,10 @@ public abstract class TileEntitySolar extends TileBaseUniversalElectricalSource 
         this.getPositions(placedPosition, positions);
         if (positions.size() > 0)
         {
-            ((BlockMulti) GCBlocks.fakeBlock).makeFakeBlock(world, positions.get(0), placedPosition, EnumBlockMultiType.SOLAR_PANEL_0);
+            ((BlockMulti) GCBlocks.MULTI_BLOCK).makeFakeBlock(world, positions.get(0), placedPosition, EnumBlockMultiType.SOLAR_PANEL_0);
             positions.remove(0);
         }
-        ((BlockMulti) GCBlocks.fakeBlock).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
+        ((BlockMulti) GCBlocks.MULTI_BLOCK).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
     }
 
     @Override
@@ -408,14 +408,14 @@ public abstract class TileEntitySolar extends TileBaseUniversalElectricalSource 
         {
             BlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock)
+            if (stateAt.getBlock() == GCBlocks.MULTI_BLOCK)
             {
                 EnumBlockMultiType type = stateAt.get(BlockMulti.MULTI_TYPE);
                 if ((type == EnumBlockMultiType.SOLAR_PANEL_0 || type == EnumBlockMultiType.SOLAR_PANEL_1))
                 {
                     if (this.world.isRemote && this.world.rand.nextDouble() < 0.1D)
                     {
-                        Minecraft.getInstance().particles.addBlockDestroyEffects(pos, GCBlocks.solarPanel.getDefaultState());
+                        Minecraft.getInstance().particles.addBlockDestroyEffects(pos, GCBlocks.SOLAR_PANEL.getDefaultState());
                     }
 
                     this.world.removeBlock(pos, false);

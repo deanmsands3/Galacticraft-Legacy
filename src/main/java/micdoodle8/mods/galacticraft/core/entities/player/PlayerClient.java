@@ -298,7 +298,7 @@ public class PlayerClient implements IPlayerClient
             BlockState state = player.world.getBlockState(pos1);
 
             // If the block below is the moon block
-            if (state.getBlock() == GCBlocks.moonTurf)
+            if (state.getBlock() == GCBlocks.MOON_TURF)
             {
                 // And is the correct metadata (moon turf)
 //                if (state.get(BlockBasicMoon.BASIC_TYPE_MOON) == BlockBasicMoon.EnumBlockBasicMoon.MOON_TURF)

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.buggyPad)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.BUGGY_PAD)
     public static TileEntityType<TileEntityBuggyFuelerSingle> TYPE;
 
     private int corner = 0;
@@ -51,7 +51,7 @@ public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickable
                     ((TileEntityBuggyFuelerSingle) tile).corner = 1;
                 }
 
-                this.world.setBlockState(this.getPos(), GCBlocks.buggyPadFull.getDefaultState(), 2);
+                this.world.setBlockState(this.getPos(), GCBlocks.FULL_BUGGY_PAD.getDefaultState(), 2);
             }
         }
     }

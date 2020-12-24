@@ -31,7 +31,7 @@ import java.util.List;
 
 public class TileEntityParaChest extends TileEntityAdvanced implements IInventorySettable, IScaleableFuelLevel
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.parachest)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.PARACHEST)
     public static TileEntityType<TileEntityParaChest> TYPE;
 
     private final int tankCapacity = 5000;

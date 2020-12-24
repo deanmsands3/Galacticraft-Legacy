@@ -8,7 +8,7 @@ public class MoonGenSettings extends GenerationSettings
 {
     public MoonGenSettings()
     {
-        this.defaultBlock = GCBlocks.moonStone.getDefaultState();
+        this.defaultBlock = GCBlocks.MOON_ROCK.getDefaultState();
         this.defaultFluid = Blocks.AIR.getDefaultState();
     }
 

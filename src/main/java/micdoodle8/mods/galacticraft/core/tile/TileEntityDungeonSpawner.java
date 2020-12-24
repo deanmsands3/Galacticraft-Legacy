@@ -25,7 +25,7 @@ import java.util.List;
 
 public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanced
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.bossSpawner)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.BOSS_SPAWNER)
     public static TileEntityType<TileEntityDungeonSpawner<?>> TYPE;
 
     public Class<E> bossClass;

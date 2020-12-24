@@ -448,7 +448,7 @@ public class ThreadFindSeal
         //Local variables are fractionally faster than statics
         Block breatheableAirID = GCBlocks.breatheableAir;
         Block breatheableAirIDBright = GCBlocks.brightBreatheableAir;
-        Block oxygenSealerID = GCBlocks.oxygenSealer;
+        Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         Block fireBlock = Blocks.FIRE;
         Block airBlock = Blocks.AIR;
         Block airBlockBright = GCBlocks.brightAir;
@@ -556,7 +556,7 @@ public class ThreadFindSeal
         //Local variables are fractionally faster than statics
         Block breatheableAirID = GCBlocks.breatheableAir;
         Block breatheableAirIDBright = GCBlocks.brightBreatheableAir;
-        Block oxygenSealerID = GCBlocks.oxygenSealer;
+        Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         Block fireBlock = Blocks.FIRE;
         Block airBlock = Blocks.AIR;
         Block airBlockBright = GCBlocks.brightAir;
@@ -657,7 +657,7 @@ public class ThreadFindSeal
         Block airID = Blocks.AIR;
         Block breatheableAirIDBright = GCBlocks.brightBreatheableAir;
         Block airIDBright = GCBlocks.brightAir;
-        Block oxygenSealerID = GCBlocks.oxygenSealer;
+        Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
         World world = this.world;
         int LogicalSide, bits;
@@ -794,7 +794,7 @@ public class ThreadFindSeal
         Block airID = Blocks.AIR;
         Block breatheableAirIDBright = GCBlocks.brightBreatheableAir;
         Block airIDBright = GCBlocks.brightAir;
-        Block oxygenSealerID = GCBlocks.oxygenSealer;
+        Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
         World world = this.world;
         int LogicalSide, bits;

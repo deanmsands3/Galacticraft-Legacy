@@ -15,7 +15,7 @@ public class BiomeMoonHills extends BiomeMoon
 
     BiomeMoonHills()
     {
-        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(GCBlocks.moonTurf.getDefaultState(), GCBlocks.moonDirt.getDefaultState(), GCBlocks.moonDirt.getDefaultState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(1.1F).scale(0.0F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
+        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(GCBlocks.MOON_TURF.getDefaultState(), GCBlocks.MOON_DIRT.getDefaultState(), GCBlocks.MOON_DIRT.getDefaultState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(1.1F).scale(0.0F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
         addDefaultFeatures();
     }
 

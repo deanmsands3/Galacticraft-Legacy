@@ -44,7 +44,7 @@ import java.util.Random;
 
 public class TileEntityTreasureChest extends TileEntityAdvanced implements ITickableTileEntity, IInventory, IKeyable, ISidedInventory, IChestLid, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.treasureChestTier1)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.TIER_1_TREASURE_CHEST)
     public static TileEntityType<TileEntityTreasureChest> TYPE;
 
     public boolean adjacentChestChecked;

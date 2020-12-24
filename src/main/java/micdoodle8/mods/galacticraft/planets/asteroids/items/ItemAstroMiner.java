@@ -70,7 +70,7 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortable
         {
             final Block id = worldIn.getBlockState(pos).getBlock();
 
-            if (id == GCBlocks.fakeBlock)
+            if (id == GCBlocks.MULTI_BLOCK)
             {
                 tile = worldIn.getTileEntity(pos);
 

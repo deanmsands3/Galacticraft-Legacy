@@ -19,7 +19,7 @@ public class OreBlock extends Block implements ISortable
     @Override
     public int getExpDrop(BlockState state, IWorldReader world, BlockPos pos, int fortune, int silktouch)
     {
-        if (this == GCBlocks.oreSilicon)
+        if (this == GCBlocks.SILICON_ORE)
         {
             MathHelper.nextInt(RANDOM, 2, 5);
         }

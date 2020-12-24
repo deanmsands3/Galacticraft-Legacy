@@ -26,7 +26,7 @@ import java.util.EnumSet;
 
 public class TileEntityOxygenDecompressor extends TileEntityOxygen implements IInventoryDefaults, ISidedInventory, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenDecompressor)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_DECOMPRESSOR)
     public static TileEntityType<TileEntityOxygenDecompressor> TYPE;
 
     public static final int OUTPUT_PER_TICK = 100;

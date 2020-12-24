@@ -86,7 +86,7 @@ public class CraterFeature extends Feature<NoFeatureConfig>
                         this.setBlockState(world, mutable, Blocks.AIR.getDefaultState());
                         if (++dug >= toDig && !largestIsFresh)
                         {
-                            this.setBlockState(world, mutable.down(), GCBlocks.moonTurf.getDefaultState());
+                            this.setBlockState(world, mutable.down(), GCBlocks.MOON_TURF.getDefaultState());
                         }
                     }
                 }

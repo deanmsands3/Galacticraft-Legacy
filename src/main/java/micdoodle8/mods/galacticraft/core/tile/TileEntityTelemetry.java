@@ -51,7 +51,7 @@ import java.util.stream.Stream;
 
 public class TileEntityTelemetry extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.telemetry)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.TELEMETRY)
     public static TileEntityType<TileEntityTelemetry> TYPE;
 
     //    public Class<?> clientClass;

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInventory implements ISidedInventory, IMachineSides, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.circuitFabricator)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.CIRCUIT_FABRICATOR)
     public static TileEntityType<TileEntityCircuitFabricator> TYPE;
 
     public static final int PROCESS_TIME_REQUIRED = 300;

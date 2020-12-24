@@ -20,7 +20,7 @@ sourceSets.main {
         srcDirs = ['src/main/java', 'dependencies/main/java']
     }
     resources {
-        srcDirs = ['src/main/resources', 'dependencies/main/resources']
+        srcDirs = ['src/main/resources', 'dependencies/main/resources', 'src/generated/resources/']
     }
 }
 
@@ -91,7 +91,7 @@ minecraft {
 			// Recommended logging level for the console
 			property 'forge.logging.console.level', 'debug'
 
-			args '--mod', 'galacticraftcore', '--all', '--output', file('src/generated/resources/')
+			args '--mod', 'galacticraftcore', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
 			mods {
 				galacticraftcore {
@@ -103,7 +103,7 @@ minecraft {
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
+	minecraft 'net.minecraftforge:forge:1.15.2-31.2.47'
 }
 
 repositories {

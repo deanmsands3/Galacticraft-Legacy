@@ -42,7 +42,7 @@ import java.util.*;
 
 public class TileEntityPainter extends TileEntityInventory implements IDisableableMachine, IPacketReceiver, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.painter)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.PAINTER)
     public static TileEntityType<TileEntityPainter> TYPE;
 
     private static final int RANGE_DEFAULT = 96;

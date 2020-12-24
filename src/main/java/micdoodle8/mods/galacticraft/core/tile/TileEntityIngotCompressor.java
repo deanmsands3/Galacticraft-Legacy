@@ -38,7 +38,7 @@ import java.util.Set;
 
 public class TileEntityIngotCompressor extends TileEntityAdvanced implements IInventoryDefaults, ISidedInventory, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ingotCompressor)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.INGOT_COMPRESSOR)
     public static TileEntityType<TileEntityIngotCompressor> TYPE;
 
     public static final int PROCESS_TIME_REQUIRED = 200;

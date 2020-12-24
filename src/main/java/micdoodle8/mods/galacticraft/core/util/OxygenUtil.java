@@ -108,7 +108,7 @@ public class OxygenUtil
 
         // If entity is within air lock wall, check adjacent blocks for oxygen
         // The value is equal to the max distance from an adjacent oxygen block to the edge of a sealer wall
-        if (entity.world.getBlockState(entity.getPosition()).getBlock() == GCBlocks.airLockSeal)
+        if (entity.world.getBlockState(entity.getPosition()).getBlock() == GCBlocks.AIR_LOCK_SEAL)
         {
             offsetXZ = 0.75F;
         }

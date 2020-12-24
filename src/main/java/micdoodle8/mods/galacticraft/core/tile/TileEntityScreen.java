@@ -24,7 +24,7 @@ import java.util.List;
 
 public class TileEntityScreen extends TileEntityAdvanced implements ITileClientUpdates
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.screen)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.DISPLAY_SCREEN)
     public static TileEntityType<TileEntityScreen> TYPE;
 
     public static float FRAMEBORDER = 0.098F;  //used for rendering

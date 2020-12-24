@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class TileEntityOxygenStorageModule extends TileEntityOxygen implements IInventoryDefaults, ISidedInventory, IMachineSides, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenStorageModule)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_STORAGE_MODULE)
     public static TileEntityType<TileEntityOxygenStorageModule> TYPE;
 
     public final Set<PlayerEntity> playersUsing = new HashSet<PlayerEntity>();

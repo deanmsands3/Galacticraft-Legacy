@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class TileEntityLandingPadSingle extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPad)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.LANDING_PAD)
     public static TileEntityType<TileEntityLandingPadSingle> TYPE;
 
     private int corner = 0;
@@ -51,7 +51,7 @@ public class TileEntityLandingPadSingle extends TileEntity implements ITickableT
                     ((TileEntityLandingPadSingle) tile).corner = 1;
                 }
 
-                this.world.setBlockState(this.getPos(), GCBlocks.landingPadFull.getDefaultState(), 2);
+                this.world.setBlockState(this.getPos(), GCBlocks.FULL_LANDING_PAD.getDefaultState(), 2);
             }
         }
     }

@@ -1503,7 +1503,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
         }
 
         boolean gtFlag = false;
-        if (b != GCBlocks.fallenMeteor)
+        if (b != GCBlocks.FALLEN_METEOR)
         {
             if (b instanceof IPlantable && b != Blocks.LARGE_FERN && b != Blocks.DEAD_BUSH && b != Blocks.TALL_GRASS && b != Blocks.LILY_PAD && !(b instanceof FlowerBlock) && b != Blocks.SUGAR_CANE)
             {
@@ -1647,7 +1647,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
 
     private ItemStack getPickBlock(World world, BlockPos pos, Block b)
     {
-        if (b == GCBlocks.fallenMeteor)
+        if (b == GCBlocks.FALLEN_METEOR)
         {
             return new ItemStack(GCItems.meteoricIronRaw);
         }

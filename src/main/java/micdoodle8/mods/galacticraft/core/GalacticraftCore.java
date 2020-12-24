@@ -260,7 +260,7 @@ public class GalacticraftCore
         GalacticraftCore.moonMoon.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_CREEPER, 8, 2, 3), EntityClassification.MONSTER);
         GalacticraftCore.moonMoon.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), EntityClassification.MONSTER);
         GalacticraftCore.moonMoon.addChecklistKeys("equip_oxygen_suit");
-        GalacticraftCore.moonMoon.setSurfaceBlocks(Lists.newArrayList(GCBlocks.moonTurf));
+        GalacticraftCore.moonMoon.setSurfaceBlocks(Lists.newArrayList(GCBlocks.MOON_TURF));
 
         //Satellites must always have a WorldProvider implementing IOrbitDimension
         GalacticraftCore.satelliteSpaceStation.setTierRequired(1);
@@ -483,7 +483,7 @@ public class GalacticraftCore
             e.printStackTrace();
         }
 
-        GalacticraftCore.galacticraftBlocksTab.setItemForTab(new ItemStack(GCBlocks.oxygenCompressor));
+        GalacticraftCore.galacticraftBlocksTab.setItemForTab(new ItemStack(GCBlocks.OXYGEN_COMPRESSOR));
         GalacticraftCore.galacticraftItemsTab.setItemForTab(new ItemStack(GCItems.rocketTierOne));
 
 //        if (event.getSide() == LogicalSide.SERVER)

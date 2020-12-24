@@ -8,7 +8,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityAirLock extends TileEntityAdvanced
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.airLockFrame)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.AIR_LOCK_FRAME)
     public static TileEntityType<TileEntityAirLock> TYPE;
 
     public TileEntityAirLock()

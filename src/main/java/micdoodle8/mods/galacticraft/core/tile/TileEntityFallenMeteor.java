@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TileEntityFallenMeteor extends TileEntityAdvanced
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fallenMeteor)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.FALLEN_METEOR)
     public static TileEntityType<TileEntityFallenMeteor> TYPE;
 
     public static final int MAX_HEAT_LEVEL = 5000;

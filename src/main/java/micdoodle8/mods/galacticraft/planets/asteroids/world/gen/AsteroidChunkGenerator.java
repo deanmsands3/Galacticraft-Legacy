@@ -168,10 +168,10 @@ public class AsteroidChunkGenerator extends ChunkGenerator<AsteroidGenSettings>
         }
         if (ConfigManagerCore.enableSiliconOreGen.get())
         {
-            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.oreSilicon.getDefaultState(), 2, .15)); //TODO: Asteroids version of silicon ore
+            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.SILICON_ORE.getDefaultState(), 2, .15)); //TODO: Asteroids version of silicon ore
         }
         //Solid Meteoric Iron - has no config to disable
-        this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.decoBlockMeteorIron.getDefaultState(), 2, .13));
+        this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.METEORIC_IRON_BLOCK.getDefaultState(), 2, .13));
         //Diamond ore - has no config to disable
         this.coreHandler.addBlock(new SpecialAsteroidBlock(Blocks.DIAMOND_ORE.getDefaultState(), 1, .1));  //TODO: Asteroids version of diamond ore
 

@@ -710,7 +710,7 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
     {
         List<BlockPos> positions = new LinkedList<>();
         this.getPositions(placedPosition, positions);
-        ((BlockMulti) GCBlocks.fakeBlock).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
+        ((BlockMulti) GCBlocks.MULTI_BLOCK).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
     }
 
     @Override
@@ -724,7 +724,7 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
         {
             BlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock)
+            if (stateAt.getBlock() == GCBlocks.MULTI_BLOCK)
             {
                 BlockMulti.EnumBlockMultiType type = stateAt.get(BlockMulti.MULTI_TYPE);
                 if (type == BlockMulti.EnumBlockMultiType.LASER_TURRET)

@@ -238,7 +238,7 @@ public class TileEntityEmergencyBoxRenderer extends TileEntityRenderer<TileEntit
         flapD.angle = emergencyBox.getAngleD(partialTicks);
         float height = Math.max(Math.max(flapA.angle, flapB.angle), Math.max(flapC.angle, flapD.angle)) / 90F;
 
-        if (height > 0F && state.getBlock() == GCBlocks.emergencyBoxKit)
+        if (height > 0F && state.getBlock() == GCBlocks.EMERGENCY_POST_KIT)
         {
 //            GlStateManager.pushMatrix();
             matStack.push();

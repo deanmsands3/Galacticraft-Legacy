@@ -43,11 +43,11 @@ public class ItemBlockDesc extends BlockItem
         //The player could be a FakePlayer made by another mod e.g. LogisticsPipes
         if (player instanceof ClientPlayerEntity)
         {
-            if (this.getBlock() == GCBlocks.fuelLoader)
+            if (this.getBlock() == GCBlocks.FUEL_LOADER)
             {
                 ClientProxyCore.playerClientHandler.onBuild(4, (ClientPlayerEntity) player);
             }
-            else if (this.getBlock() == GCBlocks.fuelLoader)
+            else if (this.getBlock() == GCBlocks.FUEL_LOADER)
             {
                 ClientProxyCore.playerClientHandler.onBuild(6, (ClientPlayerEntity) player);
             }
