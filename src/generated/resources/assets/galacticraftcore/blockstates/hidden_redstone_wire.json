@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraftcore:block/hidden_redstone_wire"
+    }
+  }
+}

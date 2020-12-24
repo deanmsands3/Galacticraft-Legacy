@@ -1,9 +1,9 @@
 {
     "textures": {
-        "particle": "galacticraftcore:blocks/platform_base",
-        "bottom": "galacticraftcore:blocks/platform_base",
-        "top": "galacticraftcore:blocks/platform_top",
-        "side": "galacticraftcore:blocks/platform_side"
+        "particle": "galacticraftcore:block/platform_base",
+        "bottom": "galacticraftcore:block/platform_base",
+        "top": "galacticraftcore:block/platform_top",
+        "side": "galacticraftcore:block/platform_side"
     },
     "elements": [
         {

@@ -13,12 +13,12 @@
         }
     ],
     "textures": {
-        "particle": "galacticraftcore:blocks/buggy_pad_full",
-        "down": "galacticraftcore:blocks/buggy_pad_full",
-        "up": "galacticraftcore:blocks/buggy_pad_full",
-        "north": "galacticraftcore:blocks/buggy_pad_full",
-        "east": "galacticraftcore:blocks/buggy_pad_full",
-        "south": "galacticraftcore:blocks/buggy_pad_full",
-        "west": "galacticraftcore:blocks/buggy_pad_full"
+        "particle": "galacticraftcore:block/buggy_pad_full",
+        "down": "galacticraftcore:block/buggy_pad_full",
+        "up": "galacticraftcore:block/buggy_pad_full",
+        "north": "galacticraftcore:block/buggy_pad_full",
+        "east": "galacticraftcore:block/buggy_pad_full",
+        "south": "galacticraftcore:block/buggy_pad_full",
+        "west": "galacticraftcore:block/buggy_pad_full"
     }
 }

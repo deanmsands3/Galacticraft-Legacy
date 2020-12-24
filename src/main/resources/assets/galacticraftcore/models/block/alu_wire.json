@@ -1,7 +1,7 @@
 {
 "textures": {
-    "aluminum_wire": "galacticraftcore:blocks/aluminum_wire",
-	"particle": "galacticraftcore:blocks/aluminum_wire"
+    "aluminum_wire": "galacticraftcore:block/aluminum_wire",
+	"particle": "galacticraftcore:block/aluminum_wire"
 },
 "elements": [ 
 {

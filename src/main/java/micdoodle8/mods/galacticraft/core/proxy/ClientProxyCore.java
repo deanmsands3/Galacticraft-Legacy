@@ -180,8 +180,8 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
         RenderType cutout = RenderType.getCutout();
         RenderTypeLookup.setRenderLayer(GCBlocks.FLUID_PIPE, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.PULLED_FLUID_PIPE, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.CHEESE, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.CONCEALED_REDSTONE, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.CHEESE_BLOCK, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.HIDDEN_REDSTONE_WIRE, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.EMERGENCY_POST, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.EMERGENCY_POST_KIT, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.GLOWSTONE_TORCH, cutout);
@@ -190,8 +190,8 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 //        RenderTypeLookup.setRenderLayer(GCBlocks.platform, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.UNLIT_TORCH, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.WALL_UNLIT_TORCH, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.UNLIT_TORCH_LIT, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.WALL_UNLIT_TORCH_LIT, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.LIT_UNLIT_TORCH, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.WALL_LIT_UNLIT_TORCH, cutout);
         RenderTypeLookup.setRenderLayer(GCBlocks.FLUID_TANK, cutout);
 
         ClientProxyCore.registerInventoryTabs();

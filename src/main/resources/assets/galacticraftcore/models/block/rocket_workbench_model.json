@@ -4,7 +4,7 @@
     "model": "galacticraftcore:models/block/workbench.obj",
     "flip-v": true,
     "textures": {
-        "all": "galacticraftcore:blocks/rocket_workbench",
-		"particle": "galacticraftcore:blocks/rocket_workbench"
+        "all": "galacticraftcore:block/rocket_workbench",
+		"particle": "galacticraftcore:block/rocket_workbench"
     }
 }

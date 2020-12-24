@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/basic_item.wafer_solar"
+        "layer0": "galacticraftcore:item/basic_item.wafer_solar"
     },
     "display": {
         "thirdperson": {

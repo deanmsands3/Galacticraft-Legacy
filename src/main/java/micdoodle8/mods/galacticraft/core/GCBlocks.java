@@ -35,15 +35,15 @@ public class GCBlocks
 
     public static final Block TIER_1_TREASURE_CHEST = new BlockTier1TreasureChest(Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13));
 
-    public static final Block LANDING_PAD = new BlockPad(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
-    public static final Block BUGGY_PAD = new BlockPad(Block.Properties.from(LANDING_PAD));
-    public static final Block FULL_LANDING_PAD = new BlockPadFull(Block.Properties.from(LANDING_PAD));
-    public static final Block FULL_BUGGY_PAD = new BlockPadFull(Block.Properties.from(LANDING_PAD));
+    public static final Block ROCKET_LAUNCH_PAD = new BlockPad(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
+    public static final Block BUGGY_FUELING_PAD = new BlockPad(Block.Properties.from(ROCKET_LAUNCH_PAD));
+    public static final Block FULL_LANDING_PAD = new BlockPadFull(Block.Properties.from(ROCKET_LAUNCH_PAD));
+    public static final Block FULL_BUGGY_PAD = new BlockPadFull(Block.Properties.from(ROCKET_LAUNCH_PAD));
 
     public static final Block UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.0F).lightValue(3).sound(SoundType.WOOD));
     public static final Block WALL_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH));
-    public static final Block UNLIT_TORCH_LIT = new BlockUnlitTorch(Block.Properties.from(UNLIT_TORCH).lightValue(14));
-    public static final Block WALL_UNLIT_TORCH_LIT = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(14));
+    public static final Block LIT_UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.from(UNLIT_TORCH).lightValue(14));
+    public static final Block WALL_LIT_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(14));
     public static final Block GLOWSTONE_TORCH = new BlockGlowstoneTorch(Block.Properties.from(UNLIT_TORCH).lightValue(12));
     public static final Block WALL_GLOWSTONE_TORCH = new BlockGlowstoneTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(12));
 
@@ -79,8 +79,8 @@ public class GCBlocks
 //    public static final Block panelLighting = new BlockPanelLighting(Block.Properties.from(oxygenDistributor));
 //    public static final Block spinThruster = new BlockSpinThruster(Block.Properties.from(oxygenDistributor));
     public static final Block TELEMETRY = new BlockTelemetry(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block CONCEALED_REDSTONE = new BlockConcealedRedstone(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block CONCEALED_REPEATER = new BlockConcealedRepeater(Block.Properties.from(OXYGEN_DISTRIBUTOR));
+    public static final Block HIDDEN_REDSTONE_WIRE = new BlockConcealedRedstone(Block.Properties.from(OXYGEN_DISTRIBUTOR));
+    public static final Block HIDDEN_REDSTONE_REPEATER = new BlockConcealedRepeater(Block.Properties.from(OXYGEN_DISTRIBUTOR));
     public static final Block PLAYER_DETECTOR = new BlockConcealedDetector(Block.Properties.from(OXYGEN_DISTRIBUTOR));
 
     public static final Block AIR_LOCK_SEAL = new BlockAirLockWall(Block.Properties.from(OXYGEN_DISTRIBUTOR).hardnessAndResistance(1000.0F).tickRandomly());
@@ -110,13 +110,13 @@ public class GCBlocks
     public static final Block SWITCHABLE_HEAVY_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.from(ALUMINUM_WIRE));
 //    public static final Block blockMoon = new BlockBasicMoon(builder);
 
-    public static final Block CHEESE = new BlockCheese(Block.Properties.create(Material.CAKE).hardnessAndResistance(0.5F).sound(SoundType.CLOTH));
+    public static final Block CHEESE_BLOCK = new BlockCheese(Block.Properties.create(Material.CAKE).hardnessAndResistance(0.5F).sound(SoundType.CLOTH));
 
     public static final Block DISPLAY_SCREEN = new BlockScreen(Block.Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(1.0F).sound(SoundType.STONE));
 
     public static final Block FLUID_TANK = new BlockFluidTank(Block.Properties.create(Material.GLASS).hardnessAndResistance(3.0F, 8.0F).sound(SoundType.GLASS));
 
-    public static final Block BOSS_SPAWNER = new BlockBossSpawner(Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops());
+    public static final Block MOON_BOSS_SPAWNER = new BlockBossSpawner(Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops());
 
 //    public static final Block slabGCHalf = new BlockSlabGC(builder);
 //    public static final Block slabGCDouble = new BlockDoubleSlabGC(builder);
@@ -275,14 +275,14 @@ public class GCBlocks
         register(r, GCBlockNames.brightBreatheableAir, brightBreatheableAir);
         register(r, GCBlockNames.ARC_LAMP, ARC_LAMP);
         register(r, GCBlockNames.TIER_1_TREASURE_CHEST, TIER_1_TREASURE_CHEST);
-        register(r, GCBlockNames.LANDING_PAD, LANDING_PAD);
-        register(r, GCBlockNames.BUGGY_PAD, BUGGY_PAD);
+        register(r, GCBlockNames.ROCKET_LAUNCH_PAD, ROCKET_LAUNCH_PAD);
+        register(r, GCBlockNames.BUGGY_FUELING_PAD, BUGGY_FUELING_PAD);
         register(r, GCBlockNames.FULL_LANDING_PAD, FULL_LANDING_PAD);
         register(r, GCBlockNames.FULL_BUGGY_PAD, FULL_BUGGY_PAD);
         register(r, GCBlockNames.UNLIT_TORCH, UNLIT_TORCH);
         register(r, GCBlockNames.WALL_UNLIT_TORCH, WALL_UNLIT_TORCH);
-        register(r, GCBlockNames.UNLIT_TORCH_LIT, UNLIT_TORCH_LIT);
-        register(r, GCBlockNames.WALL_UNLIT_TORCH_LIT, WALL_UNLIT_TORCH_LIT);
+        register(r, GCBlockNames.LIT_UNLIT_TORCH, LIT_UNLIT_TORCH);
+        register(r, GCBlockNames.WALL_LIT_UNLIT_TORCH, WALL_LIT_UNLIT_TORCH);
         register(r, GCBlockNames.GLOWSTONE_TORCH, GLOWSTONE_TORCH);
         register(r, GCBlockNames.WALL_GLOWSTONE_TORCH, WALL_GLOWSTONE_TORCH);
         register(r, GCBlockNames.OXYGEN_DISTRIBUTOR, OXYGEN_DISTRIBUTOR);
@@ -317,8 +317,8 @@ public class GCBlocks
 //        register(r, BlockNames.panelLighting, panelLighting);
 //        register(r, BlockNames.spinThruster, spinThruster);
         register(r, GCBlockNames.TELEMETRY, TELEMETRY);
-        register(r, GCBlockNames.CONCEALED_REDSTONE, CONCEALED_REDSTONE);
-        register(r, GCBlockNames.CONCEALED_REPEATER, CONCEALED_REPEATER);
+        register(r, GCBlockNames.HIDDEN_REDSTONE_WIRE, HIDDEN_REDSTONE_WIRE);
+        register(r, GCBlockNames.HIDDEN_REDSTONE_REPEATER, HIDDEN_REDSTONE_REPEATER);
         register(r, GCBlockNames.PLAYER_DETECTOR, PLAYER_DETECTOR);
         register(r, GCBlockNames.AIR_LOCK_SEAL, AIR_LOCK_SEAL);
         register(r, GCBlockNames.FLUID_PIPE, FLUID_PIPE);
@@ -338,10 +338,10 @@ public class GCBlocks
         register(r, GCBlockNames.HEAVY_ALUMINUM_WIRE, HEAVY_ALUMINUM_WIRE);
         register(r, GCBlockNames.SWITCHABLE_ALUMINUM_WIRE, SWITCHABLE_ALUMINUM_WIRE);
         register(r, GCBlockNames.SWITCHABLE_HEAVY_ALUMINUM_WIRE, SWITCHABLE_HEAVY_ALUMINUM_WIRE);
-        register(r, GCBlockNames.CHEESE, CHEESE);
+        register(r, GCBlockNames.CHEESE_BLOCK, CHEESE_BLOCK);
         register(r, GCBlockNames.DISPLAY_SCREEN, DISPLAY_SCREEN);
         register(r, GCBlockNames.FLUID_TANK, FLUID_TANK);
-        register(r, GCBlockNames.BOSS_SPAWNER, BOSS_SPAWNER);
+        register(r, GCBlockNames.MOON_BOSS_SPAWNER, MOON_BOSS_SPAWNER);
 //        register(r, BlockNames.slabGCHalf, slabGCHalf);
 //        register(r, BlockNames.slabGCDouble, slabGCDouble);
 //        register(r, BlockNames.tinStairs1, tinStairs1);
@@ -454,18 +454,18 @@ public class GCBlocks
         GCBlocks.hiddenBlocks.add(GCBlocks.AIR_LOCK_SEAL);
         GCBlocks.hiddenBlocks.add(GCBlocks.PULLED_FLUID_PIPE);
         GCBlocks.hiddenBlocks.add(GCBlocks.UNLIT_TORCH);
-        GCBlocks.hiddenBlocks.add(GCBlocks.UNLIT_TORCH_LIT);
+        GCBlocks.hiddenBlocks.add(GCBlocks.LIT_UNLIT_TORCH);
         GCBlocks.hiddenBlocks.add(GCBlocks.FULL_LANDING_PAD);
         GCBlocks.hiddenBlocks.add(GCBlocks.SPACE_STATION_BASE);
-        GCBlocks.hiddenBlocks.add(GCBlocks.BOSS_SPAWNER);
+        GCBlocks.hiddenBlocks.add(GCBlocks.MOON_BOSS_SPAWNER);
 //        GCBlocks.hiddenBlocks.add(GCBlocks.slabGCDouble);
 
         // Register blocks before register ores, so that the ItemStack picks up the correct item
 //        GCBlocks.registerBlocks();
 //        GCBlocks.setHarvestLevels();
 
-        BlockUnlitTorch.register((BlockUnlitTorch) GCBlocks.UNLIT_TORCH, (BlockUnlitTorch) GCBlocks.UNLIT_TORCH_LIT, Blocks.TORCH);
-        BlockUnlitTorchWall.register((BlockUnlitTorchWall) GCBlocks.WALL_UNLIT_TORCH, (BlockUnlitTorchWall) GCBlocks.WALL_UNLIT_TORCH_LIT, Blocks.WALL_TORCH);
+        BlockUnlitTorch.register((BlockUnlitTorch) GCBlocks.UNLIT_TORCH, (BlockUnlitTorch) GCBlocks.LIT_UNLIT_TORCH, Blocks.TORCH);
+        BlockUnlitTorchWall.register((BlockUnlitTorchWall) GCBlocks.WALL_UNLIT_TORCH, (BlockUnlitTorchWall) GCBlocks.WALL_LIT_UNLIT_TORCH, Blocks.WALL_TORCH);
     }
 
     @SubscribeEvent
@@ -475,8 +475,8 @@ public class GCBlocks
         Item.Properties props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(ARC_LAMP), new BlockItem(ARC_LAMP, props));
         register(r, Registry.BLOCK.getKey(TIER_1_TREASURE_CHEST), new ItemBlockDesc(TIER_1_TREASURE_CHEST, props.setISTER(() -> ItemStackTileEntityRendererGC::new)));
-        register(r, Registry.BLOCK.getKey(LANDING_PAD), new BlockItem(LANDING_PAD, props));
-        register(r, Registry.BLOCK.getKey(BUGGY_PAD), new BlockItem(BUGGY_PAD, props));
+        register(r, Registry.BLOCK.getKey(ROCKET_LAUNCH_PAD), new BlockItem(ROCKET_LAUNCH_PAD, props));
+        register(r, Registry.BLOCK.getKey(BUGGY_FUELING_PAD), new BlockItem(BUGGY_FUELING_PAD, props));
         register(r, Registry.BLOCK.getKey(GLOWSTONE_TORCH), new ItemBlockWallOrFloorDesc(GLOWSTONE_TORCH, WALL_GLOWSTONE_TORCH, props));
         register(r, Registry.BLOCK.getKey(OXYGEN_DISTRIBUTOR), new ItemBlockDesc(OXYGEN_DISTRIBUTOR, props));
         register(r, Registry.BLOCK.getKey(OXYGEN_COLLECTOR), new ItemBlockDesc(OXYGEN_COLLECTOR, props));
@@ -507,8 +507,8 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(ELECTRIC_FURNACE), new ItemBlockDesc(ELECTRIC_FURNACE, props));
         register(r, Registry.BLOCK.getKey(ARC_FURNACE), new ItemBlockDesc(ARC_FURNACE, props));
         register(r, Registry.BLOCK.getKey(TELEMETRY), new ItemBlockDesc(TELEMETRY, props));
-        register(r, Registry.BLOCK.getKey(CONCEALED_REDSTONE), new BlockItem(CONCEALED_REDSTONE, props));
-        register(r, Registry.BLOCK.getKey(CONCEALED_REPEATER), new BlockItem(CONCEALED_REPEATER, props));
+        register(r, Registry.BLOCK.getKey(HIDDEN_REDSTONE_WIRE), new BlockItem(HIDDEN_REDSTONE_WIRE, props));
+        register(r, Registry.BLOCK.getKey(HIDDEN_REDSTONE_REPEATER), new BlockItem(HIDDEN_REDSTONE_REPEATER, props));
         register(r, Registry.BLOCK.getKey(PLAYER_DETECTOR), new BlockItem(PLAYER_DETECTOR, props));
         register(r, Registry.BLOCK.getKey(FLUID_PIPE), new ItemBlockDesc(FLUID_PIPE, props));
         register(r, Registry.BLOCK.getKey(PULLED_FLUID_PIPE), new ItemBlockDesc(PULLED_FLUID_PIPE, props));
@@ -518,7 +518,7 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(HEAVY_ALUMINUM_WIRE), new BlockItem(HEAVY_ALUMINUM_WIRE, props));
         register(r, Registry.BLOCK.getKey(SWITCHABLE_ALUMINUM_WIRE), new BlockItem(SWITCHABLE_ALUMINUM_WIRE, props));
         register(r, Registry.BLOCK.getKey(SWITCHABLE_HEAVY_ALUMINUM_WIRE), new BlockItem(SWITCHABLE_HEAVY_ALUMINUM_WIRE, props));
-        register(r, Registry.BLOCK.getKey(CHEESE), new BlockItem(CHEESE, props));
+        register(r, Registry.BLOCK.getKey(CHEESE_BLOCK), new BlockItem(CHEESE_BLOCK, props));
         register(r, Registry.BLOCK.getKey(DISPLAY_SCREEN), new ItemBlockDesc(DISPLAY_SCREEN, props));
         register(r, Registry.BLOCK.getKey(FLUID_TANK), new ItemBlockDesc(FLUID_TANK, props));
         register(r, Registry.BLOCK.getKey(EMERGENCY_POST), new BlockItem(EMERGENCY_POST, props));
@@ -546,7 +546,7 @@ public class GCBlocks
         props = props.group(null);
         register(r, Registry.BLOCK.getKey(AIR_LOCK_SEAL), new BlockItem(AIR_LOCK_SEAL, props));
         register(r, Registry.BLOCK.getKey(UNLIT_TORCH), new ItemBlockWallOrFloorDesc(UNLIT_TORCH, WALL_UNLIT_TORCH, props));
-        register(r, Registry.BLOCK.getKey(UNLIT_TORCH_LIT), new ItemBlockWallOrFloorDesc(UNLIT_TORCH_LIT, WALL_UNLIT_TORCH_LIT, props));
+        register(r, Registry.BLOCK.getKey(LIT_UNLIT_TORCH), new ItemBlockWallOrFloorDesc(LIT_UNLIT_TORCH, WALL_LIT_UNLIT_TORCH, props));
     }
 
     public static void oreDictRegistrations()
@@ -818,15 +818,15 @@ public class GCBlocks
         register(r, TileEntityType.Builder.create(TileEntityOxygenCompressor::new, OXYGEN_COMPRESSOR).build(null), GCBlockNames.OXYGEN_COMPRESSOR);
         register(r, TileEntityType.Builder.create(TileEntityOxygenDecompressor::new, OXYGEN_DECOMPRESSOR).build(null), GCBlockNames.OXYGEN_DECOMPRESSOR);
         register(r, TileEntityType.Builder.create(TileEntityFuelLoader::new, FUEL_LOADER).build(null), GCBlockNames.FUEL_LOADER);
-        register(r, TileEntityType.Builder.create(TileEntityLandingPadSingle::new, LANDING_PAD).build(null), GCBlockNames.LANDING_PAD);
+        register(r, TileEntityType.Builder.create(TileEntityLandingPadSingle::new, ROCKET_LAUNCH_PAD).build(null), GCBlockNames.ROCKET_LAUNCH_PAD);
         register(r, TileEntityType.Builder.create(TileEntityLandingPad::new, FULL_LANDING_PAD).build(null), GCBlockNames.FULL_LANDING_PAD);
         register(r, TileEntityType.Builder.create(TileEntitySpaceStationBase::new, SPACE_STATION_BASE).build(null), GCBlockNames.SPACE_STATION_BASE);
         register(r, TileEntityType.Builder.create(TileEntityFake::new, MULTI_BLOCK).build(null), GCBlockNames.MULTI_BLOCK);
         register(r, TileEntityType.Builder.create(TileEntityOxygenSealer::new, OXYGEN_SEALER).build(null), GCBlockNames.OXYGEN_SEALER);
-        register(r, TileEntityType.Builder.create(TileEntityDungeonSpawner::new, BOSS_SPAWNER).build(null), GCBlockNames.BOSS_SPAWNER);
+        register(r, TileEntityType.Builder.create(TileEntityDungeonSpawner::new, MOON_BOSS_SPAWNER).build(null), GCBlockNames.MOON_BOSS_SPAWNER);
         register(r, TileEntityType.Builder.create(TileEntityOxygenDetector::new, OXYGEN_DETECTOR).build(null), GCBlockNames.OXYGEN_DETECTOR);
         register(r, TileEntityType.Builder.create(TileEntityBuggyFueler::new, FULL_BUGGY_PAD).build(null), GCBlockNames.FULL_BUGGY_PAD);
-        register(r, TileEntityType.Builder.create(TileEntityBuggyFuelerSingle::new, BUGGY_PAD).build(null), GCBlockNames.BUGGY_PAD);
+        register(r, TileEntityType.Builder.create(TileEntityBuggyFuelerSingle::new, BUGGY_FUELING_PAD).build(null), GCBlockNames.BUGGY_FUELING_PAD);
         register(r, TileEntityType.Builder.create(TileEntityCargoLoader::new, CARGO_LOADER).build(null), GCBlockNames.CARGO_LOADER);
         register(r, TileEntityType.Builder.create(TileEntityCargoUnloader::new, CARGO_UNLOADER).build(null), GCBlockNames.CARGO_UNLOADER);
         register(r, TileEntityType.Builder.create(TileEntityParaChest::new, PARACHEST).build(null), GCBlockNames.PARACHEST);

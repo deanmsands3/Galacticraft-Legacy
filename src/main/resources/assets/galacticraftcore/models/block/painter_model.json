@@ -1,12 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "particle": "galacticraftcore:blocks/machine",
-        "down": "galacticraftcore:blocks/machine_painter",
-        "up": "galacticraftcore:blocks/machine_painter",
-        "north": "galacticraftcore:blocks/machine_painter",
-        "east": "galacticraftcore:blocks/machine",
-        "south": "galacticraftcore:blocks/machine_painter",
-        "west": "galacticraftcore:blocks/machine"
+        "particle": "galacticraftcore:block/machine",
+        "down": "galacticraftcore:block/machine_painter",
+        "up": "galacticraftcore:block/machine_painter",
+        "north": "galacticraftcore:block/machine_painter",
+        "east": "galacticraftcore:block/machine",
+        "south": "galacticraftcore:block/machine_painter",
+        "west": "galacticraftcore:block/machine"
     }
 }

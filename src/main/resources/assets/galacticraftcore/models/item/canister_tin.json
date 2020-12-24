@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/canister_tin"
+        "layer0": "galacticraftcore:item/canister_tin"
     },
     "display": {
         "thirdperson": {

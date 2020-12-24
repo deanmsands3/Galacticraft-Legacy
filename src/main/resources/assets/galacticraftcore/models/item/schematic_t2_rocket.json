@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/schematic_rocket_t2"
+        "layer0": "galacticraftcore:item/schematic_rocket_t2"
     },
     "display": {
         "thirdperson": {

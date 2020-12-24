@@ -1,9 +1,9 @@
 {
     "parent": "block/block",
 	"textures": {
-		"particle": "galacticraftcore:blocks/pipe_oxygen_white",
-		"pipeTex": "galacticraftcore:blocks/pipe_oxygen_white",
-		"pull_texture": "galacticraftcore:blocks/pipe_pull"
+		"particle": "galacticraftcore:block/pipe_oxygen_white",
+		"pipeTex": "galacticraftcore:block/pipe_oxygen_white",
+		"pull_texture": "galacticraftcore:block/pipe_pull"
 	},
 	"elements": [ 
 	{

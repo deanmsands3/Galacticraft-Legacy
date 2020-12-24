@@ -205,8 +205,8 @@ public class TileEntityEmergencyBoxRenderer extends TileEntityRenderer<TileEntit
         }
     }
 
-    private static final ResourceLocation boxTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/blocks/emergency_box.png");
-    private static final ResourceLocation flapTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/blocks/emergency_box_flap.png");
+    private static final ResourceLocation boxTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/block/emergency_post.png");
+    private static final ResourceLocation flapTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/block/emergency_post_flap.png");
     private static final ResourceLocation packTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/parachute/red.png");
     private static final ResourceLocation oxygenMaskTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/oxygen.png");
     private static final ResourceLocation oxygenTankTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/player.png");

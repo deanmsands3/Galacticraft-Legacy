@@ -1,5 +1,5 @@
 {
-    "parent":"galacticraftcore:block/emergency_box_filled",
+    "parent":"galacticraftcore:block/emergency_post_kit",
     "display": {
         "gui": {
             "rotation": [ 30, 225, 0 ],

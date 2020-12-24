@@ -1,12 +1,12 @@
 {
   "parent": "galacticraftcore:block/machine_tiered_lr",
   "textures": {
-    "particle": "galacticraftcore:blocks/advanced/machine",
-    "front": "galacticraftcore:blocks/advanced/electric_compressor",
-    "rear": "galacticraftcore:blocks/advanced/machine_side",
-    "side": "galacticraftcore:blocks/advanced/machine_side",
-    "el_in": "galacticraftcore:blocks/advanced/machine_input",
-    "el_out": "galacticraftcore:blocks/advanced/machine_side",
-    "top": "galacticraftcore:blocks/advanced/machine",
-    "base": "galacticraftcore:blocks/advanced/machine" }
+    "particle": "galacticraftcore:block/advanced/machine",
+    "front": "galacticraftcore:block/advanced/electric_compressor",
+    "rear": "galacticraftcore:block/advanced/machine_side",
+    "side": "galacticraftcore:block/advanced/machine_side",
+    "el_in": "galacticraftcore:block/advanced/machine_input",
+    "el_out": "galacticraftcore:block/advanced/machine_side",
+    "top": "galacticraftcore:block/advanced/machine",
+    "base": "galacticraftcore:block/advanced/machine" }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "item/chest",
   "textures": {
-    "particle": "block/oak_planks"
+    "particle": "galacticraftcore:block/tier_1_treasure_chest"
   }
 }

@@ -1,10 +1,10 @@
 {
     "textures": {
-        "particle": "galacticraftcore:blocks/platform_base",
-        "0": "galacticraftcore:blocks/platform_side",
-        "1": "galacticraftcore:blocks/platform_light",
-        "2": "galacticraftcore:blocks/platform_haz",
-        "3": "galacticraftcore:blocks/platform_base"
+        "particle": "galacticraftcore:block/platform_base",
+        "0": "galacticraftcore:block/platform_side",
+        "1": "galacticraftcore:block/platform_light",
+        "2": "galacticraftcore:block/platform_haz",
+        "3": "galacticraftcore:block/platform_base"
     },
     "elements": [
         {

@@ -557,8 +557,8 @@ public class BaseDeck extends SizedPiece
             this.setBlockState(worldIn, lever, endX / 2 + 2, this.sizeY - 1, endZ - 1, this.boundingBox);
 
             //Create two redstone blocks
-            this.setBlockState(worldIn, GCBlocks.CONCEALED_REDSTONE.getDefaultState().with(StairsBlock.HALF, Half.TOP).with(StairsBlock.FACING, Direction.NORTH), endX / 2 - 2, this.sizeY, endZ, this.boundingBox);
-            this.setBlockState(worldIn, GCBlocks.CONCEALED_REDSTONE.getDefaultState().with(StairsBlock.HALF, Half.TOP).with(StairsBlock.FACING, Direction.NORTH), endX / 2 + 2, this.sizeY, endZ, this.boundingBox);
+            this.setBlockState(worldIn, GCBlocks.HIDDEN_REDSTONE_WIRE.getDefaultState().with(StairsBlock.HALF, Half.TOP).with(StairsBlock.FACING, Direction.NORTH), endX / 2 - 2, this.sizeY, endZ, this.boundingBox);
+            this.setBlockState(worldIn, GCBlocks.HIDDEN_REDSTONE_WIRE.getDefaultState().with(StairsBlock.HALF, Half.TOP).with(StairsBlock.FACING, Direction.NORTH), endX / 2 + 2, this.sizeY, endZ, this.boundingBox);
 
             //Create an access hole between the floors
             this.setBlockState(worldIn, blockAir, 2, 0, 1, this.boundingBox);

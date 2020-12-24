@@ -1,7 +1,7 @@
 {
     "textures": {
-        "particle": "galacticraftcore:blocks/screen_side",
-        "0": "galacticraftcore:blocks/screen_side"
+        "particle": "galacticraftcore:block/screen_side",
+        "0": "galacticraftcore:block/screen_side"
     },
     "elements": [
         {

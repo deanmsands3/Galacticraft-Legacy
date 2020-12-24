@@ -64,7 +64,7 @@ public class BaseHangar extends SizedPiece
 //        BlockState moonWall = GCBlocks.wallGC.getStateFromMeta(2); TODO Slabs and walls
         BlockState blockBars = Blocks.IRON_BARS.getDefaultState();
         BlockState blockDesh = MarsBlocks.deshBlock.getDefaultState();
-        BlockState blockRedstone = GCBlocks.CONCEALED_REDSTONE.getDefaultState();
+        BlockState blockRedstone = GCBlocks.HIDDEN_REDSTONE_WIRE.getDefaultState();
 //        Block blockStair = GCBlocks.tinStairs2;
         Block arcLamp = GCBlocks.ARC_LAMP;
         int stairmeta = 1;

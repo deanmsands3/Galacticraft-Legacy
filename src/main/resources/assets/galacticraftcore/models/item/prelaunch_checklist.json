@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/prelaunch_checklist"
+        "layer0": "galacticraftcore:item/prelaunch_checklist"
     },
     "display": {
         "thirdperson": {

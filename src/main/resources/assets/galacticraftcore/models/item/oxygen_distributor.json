@@ -1,5 +1,5 @@
 {
-    "parent":"galacticraftcore:block/distributor_model",
+    "parent":"galacticraftcore:block/oxygen_distributor",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

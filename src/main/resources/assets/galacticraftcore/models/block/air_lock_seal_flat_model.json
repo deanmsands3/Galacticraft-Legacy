@@ -13,13 +13,13 @@
         }
     ],
     "textures": {
-        "particle": "galacticraftcore:blocks/air_lock_seal",
-        "down": "galacticraftcore:blocks/air_lock_seal",
-        "up": "galacticraftcore:blocks/air_lock_seal",
-        "north": "galacticraftcore:blocks/air_lock_seal",
-        "east": "galacticraftcore:blocks/air_lock_seal",
-        "south": "galacticraftcore:blocks/air_lock_seal",
-        "west": "galacticraftcore:blocks/air_lock_seal"
+        "particle": "galacticraftcore:block/air_lock_seal",
+        "down": "galacticraftcore:block/air_lock_seal",
+        "up": "galacticraftcore:block/air_lock_seal",
+        "north": "galacticraftcore:block/air_lock_seal",
+        "east": "galacticraftcore:block/air_lock_seal",
+        "south": "galacticraftcore:block/air_lock_seal",
+        "west": "galacticraftcore:block/air_lock_seal"
     },
     "display": {
         "gui": {

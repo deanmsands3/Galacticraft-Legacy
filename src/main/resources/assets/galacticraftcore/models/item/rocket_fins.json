@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/rocket_fins"
+        "layer0": "galacticraftcore:item/rocket_fins"
     },
     "display": {
         "thirdperson": {

@@ -1,5 +1,5 @@
 {
-    "parent":"galacticraftcore:block/enclosed_pipe_items_stone_model",
+    "parent":"galacticraftcore:block/enclosed_pipe_item_stone_model",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

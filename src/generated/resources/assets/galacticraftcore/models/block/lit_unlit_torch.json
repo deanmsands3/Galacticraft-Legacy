@@ -1,0 +1,6 @@
+{
+  "parent": "block/torch_wall",
+  "textures": {
+    "torch": "galacticraftcore:block/lit_unlit_torch"
+  }
+}

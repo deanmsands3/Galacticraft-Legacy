@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/oil_canister_partial_2"
+        "layer0": "galacticraftcore:item/oil_canister_partial_2"
     },
     "display": {
         "thirdperson": {

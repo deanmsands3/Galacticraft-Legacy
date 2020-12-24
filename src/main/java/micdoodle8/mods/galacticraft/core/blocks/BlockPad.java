@@ -109,7 +109,7 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
-        return this == GCBlocks.LANDING_PAD ? new TileEntityLandingPadSingle() : new TileEntityBuggyFuelerSingle();
+        return this == GCBlocks.ROCKET_LAUNCH_PAD ? new TileEntityLandingPadSingle() : new TileEntityBuggyFuelerSingle();
     }
 
     @Override

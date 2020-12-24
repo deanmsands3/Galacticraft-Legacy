@@ -1,6 +1,6 @@
 {
     "textures": {
-        "0": "galacticraftcore:blocks/emergency_box",
+        "0": "galacticraftcore:block/emergency_post",
         "1": "galacticraftcore:items/emergency_kit"
     },
     "elements": [

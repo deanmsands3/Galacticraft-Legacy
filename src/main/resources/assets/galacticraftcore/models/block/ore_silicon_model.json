@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "galacticraftcore:blocks/ore_silicon"
+        "all": "galacticraftcore:block/ore_silicon"
     }
 }

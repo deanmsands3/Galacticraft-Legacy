@@ -15,15 +15,6 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 
-sourceSets.main {
-    java {
-        srcDirs = ['src/main/java', 'dependencies/main/java']
-    }
-    resources {
-        srcDirs = ['src/main/resources', 'dependencies/main/resources', 'src/generated/resources/']
-    }
-}
-
 def versionBuild = 0
 if (System.getenv("BUILD_NUMBER") != null)
     versionBuild = System.getenv("BUILD_NUMBER")
@@ -114,6 +105,14 @@ repositories {
 	maven {
 		url = "https://mod-buildcraft.com/maven/"
 	}
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src/main/resources/", "src/generated/resources/"]
+        }
+    }
 }
 
 dependencies {

@@ -1,12 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "particle": "galacticraftcore:blocks/machine",
-        "down": "galacticraftcore:blocks/machine",
-        "up": "galacticraftcore:blocks/machine",
-        "north": "galacticraftcore:blocks/machine_fuelloader",
-        "east": "galacticraftcore:blocks/machine_input",
-        "south": "galacticraftcore:blocks/machine_fuelloader",
-        "west": "galacticraftcore:blocks/machine_fuel_input"
+        "particle": "galacticraftcore:block/machine",
+        "down": "galacticraftcore:block/machine",
+        "up": "galacticraftcore:block/machine",
+        "north": "galacticraftcore:block/machine_fuelloader",
+        "east": "galacticraftcore:block/machine_input",
+        "south": "galacticraftcore:block/machine_fuelloader",
+        "west": "galacticraftcore:block/machine_fuel_input"
     }
 }

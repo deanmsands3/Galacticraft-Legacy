@@ -1,8 +1,8 @@
 {
     "variants": {
-        "facing=north": { "model": "galacticraftcore:block/collector_model" },
-        "facing=east":  { "model": "galacticraftcore:block/collector_model", "y": 90 },
-        "facing=west":  { "model": "galacticraftcore:block/collector_model", "y": 270 },
-        "facing=south": { "model": "galacticraftcore:block/collector_model", "y": 180 }
+        "facing=north": { "model": "galacticraftcore:block/oxygen_collector" },
+        "facing=east":  { "model": "galacticraftcore:block/oxygen_collector", "y": 90 },
+        "facing=west":  { "model": "galacticraftcore:block/oxygen_collector", "y": 270 },
+        "facing=south": { "model": "galacticraftcore:block/oxygen_collector", "y": 180 }
     }
 }

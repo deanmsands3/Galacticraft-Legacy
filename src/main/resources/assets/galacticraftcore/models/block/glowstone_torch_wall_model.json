@@ -1,8 +1,8 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "galacticraftcore:blocks/glowstone_torch",
-		"gstorch": "galacticraftcore:blocks/glowstone_torch"
+        "particle": "galacticraftcore:block/glowstone_torch",
+		"gstorch": "galacticraftcore:block/glowstone_torch"
     },
     "elements": [
         {   "from": [ -1, 3.5, 7 ],

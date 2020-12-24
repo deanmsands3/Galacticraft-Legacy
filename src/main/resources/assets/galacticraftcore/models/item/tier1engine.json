@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/engine.tier1engine"
+        "layer0": "galacticraftcore:item/engine.tier1engine"
     },
     "display": {
         "thirdperson": {

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "galacticraftcore:block/lit_unlit_torch"
+    },
+    "facing=south": {
+      "model": "galacticraftcore:block/lit_unlit_torch",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraftcore:block/lit_unlit_torch",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "galacticraftcore:block/lit_unlit_torch",
+      "y": 90
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/beef_patty_cooked"
+        "layer0": "galacticraftcore:item/beef_patty_cooked"
     }
 }

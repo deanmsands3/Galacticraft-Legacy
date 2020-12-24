@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/canned_beef"
+        "layer0": "galacticraftcore:item/canned_beef"
     }
 }

@@ -1,5 +1,5 @@
 {
-    "parent":"galacticraftcore:block/collector_model",
+    "parent":"galacticraftcore:block/oxygen_collector",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

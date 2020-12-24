@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/schematic_buggy"
+        "layer0": "galacticraftcore:item/schematic_buggy"
     },
     "display": {
         "thirdperson": {

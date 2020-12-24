@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class TileEntityLandingPadSingle extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.LANDING_PAD)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ROCKET_LAUNCH_PAD)
     public static TileEntityType<TileEntityLandingPadSingle> TYPE;
 
     private int corner = 0;
