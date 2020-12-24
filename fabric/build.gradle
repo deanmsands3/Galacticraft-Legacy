@@ -1,61 +1,85 @@
 plugins {
-    id "fabric-loom"
     id "com.github.johnrengelman.shadow" version "5.0.0"
 }
 
-configurations {
-    shadow
-}
 repositories {
     maven {
         name = "BuildCraft"
-        url = "https://mod-buildcraft.com/maven"
+        url = "https://alexiil.uk/maven/"
+        content {
+            includeGroup "alexiil.mc.lib"
+        }
     }
     maven {
         name = "Modmuss50"
         url = "https://maven.modmuss50.me/"
-    }
-    maven {
-        name = "Shedaniel"
-        url = "https://dl.bintray.com/shedaniel/cloth/"
+        content {
+            includeGroup "teamreborn"
+        }
     }
     maven {
         name = "Ladysnake Libs"
-        url = 'https://dl.bintray.com/ladysnake/libs'
+        url = 'https://dl.bintray.com/ladysnake/libs/'
+        content {
+            includeGroup "io.github.onyxstudios.Cardinal-Components-API"
+        }
     }
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:${rootProject.architect.minecraft}")
     mappings(minecraft.officialMojangMappings())
-    modCompile("net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}")
-    modCompile("me.shedaniel:architectury:${rootProject.architectury_version}:fabric")
+    modImplementation("net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}")
+    modImplementation("me.shedaniel:architectury:${rootProject.architectury_version}:fabric")
 
-    modCompile("net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}")
-    modCompile("alexiil.mc.lib:libblockattributes-core:${rootProject.lba_version}") { transitive = false }
-    modCompile("alexiil.mc.lib:libblockattributes-items:${rootProject.lba_version}") { transitive = false }
-    modCompile("alexiil.mc.lib:libblockattributes-fluids:${rootProject.lba_version}") { transitive = false }
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}")
+    modImplementation("alexiil.mc.lib:libblockattributes-core:${rootProject.lba_version}") { transitive = false }
+    modImplementation("alexiil.mc.lib:libblockattributes-items:${rootProject.lba_version}") { transitive = false }
+    modImplementation("alexiil.mc.lib:libblockattributes-fluids:${rootProject.lba_version}") { transitive = false }
     modApi("teamreborn:energy:${rootProject.tr_energy_version}") { transitive = false }
 
-    modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${rootProject.cardinal_components_version}"
-    include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${rootProject.cardinal_components_version}"
-    modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${rootProject.cardinal_components_version}"
-    include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${rootProject.cardinal_components_version}"
-    modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${rootProject.cardinal_components_version}"
-    include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${rootProject.cardinal_components_version}"
+    modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${rootProject.cardinal_components_version}") { transitive = false }
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${rootProject.cardinal_components_version}") { transitive = false }
+    modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${rootProject.cardinal_components_version}") { transitive = false }
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${rootProject.cardinal_components_version}") { transitive = false }
+    modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${rootProject.cardinal_components_version}") { transitive = false }
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${rootProject.cardinal_components_version}") { transitive = false }
 
-    compile(project(":common")) {
+    modImplementation("io.github.prospector:modmenu:${rootProject.modmenu_version}") { transitive = false }
+
+    compileOnly(project(path: ":common")) {
         transitive = false
     }
-    shadow(project(":common")) {
+
+    runtimeOnly(project(path: ":common", configuration: "transformed")) {
         transitive = false
     }
 
-    modCompile("com.google.code.findbugs:jsr305:3.0.1") //REQUIRED for LBA genSources to work. Use jetbrains annotations in code.
+    shadow(project(path: ":common", configuration: "transformed")) {
+        transitive = false
+    }
+
+    modImplementationMapped("com.google.code.findbugs:jsr305:3.0.1") { transitive = false }//REQUIRED for LBA genSources to work. Use jetbrains annotations in code.
 }
 
 loom {
     accessWidener file("src/main/resources/galacticraft-fabric.accesswidener")
+    silentMojangMappingsLicense()
+}
+
+architectury {
+    platformSetupLoomIde()
+}
+
+configurations {
+    shadow
+}
+
+processResources {
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+    inputs.property "version", project.version
 }
 
 shadowJar {
@@ -65,5 +89,6 @@ shadowJar {
 
 remapJar {
     dependsOn(shadowJar)
-    input.set(shadowJar.archivePath)
+    input.set(shadowJar.archiveFile)
+    archiveClassifier = "fabric"
 }

@@ -1,13 +1,28 @@
 pluginManagement {
     repositories {
-        jcenter()
-        maven { url "https://maven.fabricmc.net/" }
-        maven { url "https://dl.bintray.com/shedaniel/cloth" }
+        maven {
+            url "https://maven.fabricmc.net/"
+            content {
+                includeGroup "net.fabricmc"
+                includeGroup "fabric-loom"
+            }
+        }
+        maven {
+            url "https://dl.bintray.com/shedaniel/cloth/"
+            content {
+                includeGroup "forgified-fabric-loom"
+                includeGroup "architect-plugin"
+                includeGroup "me.shedaniel"
+            }
+        }
         gradlePluginPortal()
+        jcenter()
+        maven {
+            url "https://files.minecraftforge.net/maven/"
+        }
     }
 }
 
 include("common")
 include("fabric")
 include("forge")
-
