@@ -68,7 +68,7 @@ public class GuiFuelLoader extends GuiContainerGC<ContainerFuelLoader>
     protected void renderLabels(int par1, int par2)
     {
         this.font.draw(this.title.getColoredString(), 60, 10, 4210752);
-        this.buttonLoadFuel.active = this.fuelLoader.disableCooldown == 0 && this.fuelLoader.fuelTank.getFluid() != FluidStack.EMPTY && this.fuelLoader.fuelTank.getFluid().getAmount() > 0;
+        this.buttonLoadFuel.active = this.fuelLoader.disableCooldown == 0 && this.fuelLoader.fuelTank.getFluidStack() != FluidStack.empty() && this.fuelLoader.fuelTank.getFluidStack().getAmount() > 0;
         this.buttonLoadFuel.setMessage(!this.fuelLoader.getDisabled(0) ? I18n.get("gui.button.stoploading") : I18n.get("gui.button.loadfuel"));
         this.font.draw(I18n.get("gui.message.status") + ": " + this.getStatus(), 28, 45 + 23 - 46, 4210752);
         //this.font.drawString("" + this.fuelLoader.storage.getMaxExtract(), 28, 56 + 23 - 46, 4210752);
@@ -78,7 +78,7 @@ public class GuiFuelLoader extends GuiContainerGC<ContainerFuelLoader>
 
     private String getStatus()
     {
-        if (this.fuelLoader.fuelTank.getFluid() == FluidStack.EMPTY || this.fuelLoader.fuelTank.getFluid().getAmount() == 0)
+        if (this.fuelLoader.fuelTank.getFluidStack().isEmpty() || this.fuelLoader.fuelTank.getFluidStack().getAmount() == 0)
         {
             return EnumColor.DARK_RED + I18n.get("gui.status.nofuel");
         }

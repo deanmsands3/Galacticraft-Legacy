@@ -555,7 +555,7 @@ public class NetworkUtil
         else
         {
             buffer.writeInt(fluidTank.getCapacity());
-            writeUTF8String(buffer, fluidTank.getFluid().getFluid().getRegistryName().toString());
+            writeUTF8String(buffer, fluidTank.getFluidStack().getFluid().getRegistryName().toString());
             buffer.writeInt(fluidTank.getFluidAmount());
         }
     }
@@ -570,7 +570,7 @@ public class NetworkUtil
         int amount = buffer.readInt();
 
         Fluid fluid = Registry.FLUID.get(new ResourceLocation(fluidName)); // TODO Better way?
-        fluidTank.setFluid(new FluidStack(fluid, amount));
+        fluidTank.setFluid(FluidStack.create(fluid, amount));
 
         return fluidTank;
     }
@@ -589,7 +589,7 @@ public class NetworkUtil
         else
         {
             Fluid fluid = Registry.FLUID.get(new ResourceLocation(fluidName)); // TODO Better way?
-            fluidTank.setFluid(new FluidStack(fluid, amount));
+            fluidTank.setFluid(FluidStack.create(fluid, amount));
         }
 
         return fluidTank;
@@ -642,8 +642,8 @@ public class NetworkUtil
         {
             FluidTank a2 = (FluidTank) a;
             FluidTank b2 = (FluidTank) b;
-            FluidStack fluidA = a2.getFluid();
-            FluidStack fluidB = b2.getFluid();
+            FluidStack fluidA = a2.getFluidStack();
+            FluidStack fluidB = b2.getFluidStack();
             return fuzzyEquals(a2.getCapacity(), b2.getCapacity()) &&
                     fuzzyEquals(fluidA.getFluid().getRegistryName(), fluidB.getFluid().getRegistryName()) &&
                     fuzzyEquals(a2.getFluidAmount(), b2.getFluidAmount());
@@ -667,13 +667,13 @@ public class NetworkUtil
         else if (a instanceof FluidTankGC)
         {
             FluidTankGC prevTank = (FluidTankGC) a;
-            FluidTankGC tank = new FluidTankGC(prevTank.getFluid(), prevTank.getCapacity(), prevTank.getTile());
+            FluidTankGC tank = new FluidTankGC(prevTank.getFluidStack(), prevTank.getCapacity(), prevTank.getTile());
             return tank;
         }
         else if (a instanceof FluidTank)
         {
             FluidTank prevTank = (FluidTank) a;
-            FluidStack prevFluid = prevTank.getFluid();
+            FluidStack prevFluid = prevTank.getFluidStack();
             prevFluid = prevFluid.copy();
             FluidTank tank = new FluidTank(prevTank.getCapacity());
             tank.setFluid(prevFluid);

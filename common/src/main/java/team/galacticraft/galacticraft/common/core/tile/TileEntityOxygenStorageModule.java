@@ -1,5 +1,6 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
+import me.shedaniel.architectury.utils.Fraction;
 import team.galacticraft.galacticraft.common.api.item.IItemOxygenSupply;
 import team.galacticraft.galacticraft.common.core.GCBlockNames;
 import team.galacticraft.galacticraft.common.Constants;
@@ -38,7 +39,7 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
     private int lastScaledOxygenLevel;
 
     public static final int OUTPUT_PER_TICK = 500;
-    public static final int OXYGEN_CAPACITY = 60000;
+    public static final Fraction OXYGEN_CAPACITY = Fraction.ofWhole(60);
 
     public TileEntityOxygenStorageModule()
     {
@@ -277,7 +278,7 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
 ////
 ////        if (metaside == EnvType && GalacticraftCore.isPlanetsLoaded)
 ////        {
-////            tankInfo = new FluidTankInfo[] { new FluidTankInfo(new FluidStack(AsteroidsModule.fluidLiquidOxygen, (int) (this.getOxygenStored() * Constants.LOX_GAS_RATIO)), (int) (OXYGEN_CAPACITY * Constants.LOX_GAS_RATIO)) };
+////            tankInfo = new FluidTankInfo[] { new FluidTankInfo(FluidStack.create(AsteroidsModule.fluidLiquidOxygen, (int) (this.getOxygenStored() * Constants.LOX_GAS_RATIO)), (int) (OXYGEN_CAPACITY * Constants.LOX_GAS_RATIO)) };
 ////        }
 ////        return tankInfo;
 //        return super.getTankInfo(from);

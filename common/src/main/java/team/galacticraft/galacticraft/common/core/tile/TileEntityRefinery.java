@@ -1,8 +1,6 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
-import team.galacticraft.galacticraft.common.core.GCBlockNames;
-import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.core.blocks.BlockRefinery;
 import team.galacticraft.galacticraft.common.core.GCItems;
 import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
@@ -61,8 +59,8 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     {
         super(TYPE);
         this.storage.setMaxExtract(ConfigManagerCore.hardMode.get() ? 90 : 60);
-        this.oilTank.setFluid(new FluidStack(GCFluids.OIL.getFluid(), 0));
-        this.fuelTank.setFluid(new FluidStack(GCFluids.FUEL.getFluid(), 0));
+        this.oilTank.setFluid(FluidStack.create(GCFluids.OIL.getFluid(), 0));
+        this.fuelTank.setFluid(FluidStack.create(GCFluids.FUEL.getFluid(), 0));
         this.inventory = NonNullList.withSize(3, ItemStack.EMPTY);
     }
 
@@ -149,8 +147,8 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
 
             final int amountToDrain = Math.min(Math.min(oilAmount, fuelSpace), TileEntityRefinery.OUTPUT_PER_SECOND);
 
-            this.oilTank.drain(amountToDrain, ActionType.EXECUTE);
-            this.fuelTank.fill(new FluidStack(GCFluids.FUEL.getFluid(), amountToDrain)/*FluidRegistry.getFluidStack(ConfigManagerCore.useOldFuelFluidID.get() ? "fuelgc" : "fuel", amountToDrain)*/, ActionType.EXECUTE);
+            this.oilTank.drain(amountToDrain, ActionType.PERFORM);
+            this.fuelTank.fill(FluidStack.create(GCFluids.FUEL.getFluid(), amountToDrain)/*FluidRegistry.getFluidStack(ConfigManagerCore.useOldFuelFluidID.get() ? "fuelgc" : "fuel", amountToDrain)*/, ActionType.PERFORM);
         }
     }
 
@@ -164,9 +162,9 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
         {
             this.oilTank.readFromNBT(nbt.getCompound("oilTank"));
         }
-        if (this.oilTank.getFluid() != FluidStack.EMPTY && this.oilTank.getFluid().getFluid() != GCFluids.OIL.getFluid())
+        if (this.oilTank.getFluidStack() != FluidStack.empty() && this.oilTank.getFluidStack().getFluid() != GCFluids.OIL.getFluid())
         {
-            this.oilTank.setFluid(new FluidStack(GCFluids.OIL.getFluid(), this.oilTank.getFluidAmount()));
+            this.oilTank.setFluid(FluidStack.create(GCFluids.OIL.getFluid(), this.oilTank.getFluidAmount()));
         }
 
 
@@ -174,9 +172,9 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
         {
             this.fuelTank.readFromNBT(nbt.getCompound("fuelTank"));
         }
-        if (this.fuelTank.getFluid() != FluidStack.EMPTY && this.fuelTank.getFluid().getFluid() != GCFluids.FUEL.getFluid())
+        if (this.fuelTank.getFluidStack() != FluidStack.empty() && this.fuelTank.getFluidStack().getFluid() != GCFluids.FUEL.getFluid())
         {
-            this.fuelTank.setFluid(new FluidStack(GCFluids.FUEL.getFluid(), this.fuelTank.getFluidAmount()));
+            this.fuelTank.setFluid(FluidStack.create(GCFluids.FUEL.getFluid(), this.fuelTank.getFluidAmount()));
         }
     }
 
@@ -186,12 +184,12 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
         super.save(nbt);
         nbt.putInt("smeltingTicks", this.processTicks);
 
-        if (this.oilTank.getFluid() != FluidStack.EMPTY)
+        if (this.oilTank.getFluidStack() != FluidStack.empty())
         {
             nbt.put("oilTank", this.oilTank.writeToNBT(new CompoundTag()));
         }
 
-        if (this.fuelTank.getFluid() != FluidStack.EMPTY)
+        if (this.fuelTank.getFluidStack() != FluidStack.empty())
         {
             nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundTag()));
         }
@@ -305,7 +303,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     {
         if (from == getFuelPipe())
         {
-            return this.fuelTank.getFluid() != FluidStack.EMPTY && this.fuelTank.getFluidAmount() > 0;
+            return this.fuelTank.getFluidStack() != FluidStack.empty() && this.fuelTank.getFluidAmount() > 0;
         }
 
         return false;
@@ -327,7 +325,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     {
         if (from == getFuelPipe())
         {
-            return this.drain(from, new FluidStack(GCFluids.FUEL.getFluid(), maxDrain), action);
+            return this.drain(from, FluidStack.create(GCFluids.FUEL.getFluid(), maxDrain), action);
         }
 
         return null;
@@ -338,7 +336,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     {
         if (from == getOilPipe())
         {
-            return this.oilTank.getFluid() == FluidStack.EMPTY || this.oilTank.getFluidAmount() < this.oilTank.getCapacity();
+            return this.oilTank.getFluidStack().isEmpty() || this.oilTank.getFluidAmount() < this.oilTank.getCapacity();
         }
 
         return false;
@@ -361,7 +359,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
                 }
                 else
                 {
-                    used = this.oilTank.fill(new FluidStack(GCFluids.OIL.getFluid(), resource.getAmount()), action);
+                    used = this.oilTank.fill(FluidStack.create(GCFluids.OIL.getFluid(), resource.getAmount()), action);
                 }
             }
         }
@@ -382,11 +380,11 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
         switch (tank)
         {
         case 0:
-            return this.oilTank.getFluid();
+            return this.oilTank.getFluidStack();
         case 1:
-            return this.fuelTank.getFluid();
+            return this.fuelTank.getFluidStack();
         }
-        return FluidStack.EMPTY;
+        return FluidStack.empty();
     }
 
     @Override
@@ -448,7 +446,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
         {
             if (holder == null)
             {
-                holder = LazyOptional.of(new NonNullSupplier<IFluidHandler>()
+                holder = LazyOptional.create(new NonNullSupplier<IFluidHandler>()
                 {
                     @NotNull
                     @Override

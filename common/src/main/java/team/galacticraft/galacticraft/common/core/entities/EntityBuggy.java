@@ -45,7 +45,6 @@ import net.minecraft.sounds.SoundSource;
 import me.shedaniel.architectury.fluid.FluidStack;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
-import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.io.IOException;
@@ -201,7 +200,7 @@ public class EntityBuggy extends Entity implements Container, IPacketReceiver, I
 
     public int getScaledFuelLevel(int i)
     {
-        final double fuelLevel = this.buggyFuelTank.getFluid() == FluidStack.EMPTY ? 0 : this.buggyFuelTank.getFluid().getAmount();
+        final double fuelLevel = this.buggyFuelTank.getFluidStack().isEmpty() ? 0 : this.buggyFuelTank.getFluidStack().getAmount();
 
         return (int) (fuelLevel * i / EntityBuggy.tankCapacity);
     }
@@ -497,7 +496,7 @@ public class EntityBuggy extends Entity implements Container, IPacketReceiver, I
             this.timeClimbing = 0;
         }
 
-        if (this.level.isClientSide && this.buggyFuelTank.getFluid() != FluidStack.EMPTY && this.buggyFuelTank.getFluid().getAmount() > 0)
+        if (this.level.isClientSide && this.buggyFuelTank.getFluidStack() != FluidStack.empty() && this.buggyFuelTank.getFluidStack().getAmount() > 0)
         {
             this.setDeltaMovement(-(this.speed * Math.cos((this.yRot - 90F) / Constants.RADIANS_TO_DEGREES_D)), getDeltaMovement().y, -(this.speed * Math.sin((this.yRot - 90F) / Constants.RADIANS_TO_DEGREES_D)));
         }
@@ -580,7 +579,7 @@ public class EntityBuggy extends Entity implements Container, IPacketReceiver, I
         nbt.putInt("buggyType", this.buggyType.ordinal());
         final ListTag var2 = new ListTag();
 
-        if (this.buggyFuelTank.getFluid() != FluidStack.EMPTY)
+        if (this.buggyFuelTank.getFluidStack() != FluidStack.empty())
         {
             nbt.put("fuelTank", this.buggyFuelTank.writeToNBT(new CompoundTag()));
         }
@@ -750,7 +749,7 @@ public class EntityBuggy extends Entity implements Container, IPacketReceiver, I
     @Override
     public FluidStack removeFuel(int amount)
     {
-        return this.buggyFuelTank.drain(amount, ActionType.EXECUTE);
+        return this.buggyFuelTank.drain(amount, ActionType.PERFORM);
     }
 
     @Override

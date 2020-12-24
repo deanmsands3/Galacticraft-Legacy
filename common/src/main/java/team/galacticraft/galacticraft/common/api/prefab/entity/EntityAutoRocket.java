@@ -25,7 +25,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -254,7 +253,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
             return 0;
         }
 
-        return this.fuelTank.get(0).getAmount().multiply(Fraction.ofWhole(scale)).divide(Fraction.ofWhole(this.getFuelTankCapacity())).divide(Fraction.ofWhole(ConfigManagerCore.rocketFuelFactor.get())); //todo(marcus): api config
+        return this.fuelTank.getFluidStack(0).getAmount().multiply(Fraction.ofWhole(scale)).divide(Fraction.ofWhole(this.getFuelTankCapacity())).divide(Fraction.ofWhole(ConfigManagerCore.rocketFuelFactor.get())); //todo(marcus): api config
     }
 
     @Override
@@ -703,7 +702,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
         }
         int launchPhaseLast = this.launchPhase;
         super.decodePacketdata(buffer);
-        this.fuelTank.setFluid(new FluidStack(GCFluids.FUEL.getFluid(), buffer.readInt()));
+        this.fuelTank.setFluid(FluidStack.create(GCFluids.FUEL.getFluid(), buffer.readInt()));
         boolean landingNew = buffer.readBoolean();
         if (landingNew && launchPhaseLast != EnumLaunchPhase.LANDING.ordinal())
         {
@@ -1096,7 +1095,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
     @Override
     public FluidStack removeFuel(int amount)
     {
-        return this.fuelTank.drain(amount * ConfigManagerCore.rocketFuelFactor.get(), ActionType.EXECUTE);
+        return this.fuelTank.drain(amount * ConfigManagerCore.rocketFuelFactor.get(), ActionType.PERFORM);
     }
 
     @Override

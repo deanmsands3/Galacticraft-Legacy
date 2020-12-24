@@ -169,16 +169,16 @@ public class GCFluidRegistry
 //        //If any other mod has registered "fuel" or "oil" and GC has not, then allow GC's appropriate canisters to be fillable with that one as well
 ////        if (ConfigManagerCore.useOldFuelFluidID.get() && FluidRegistry.isFluidRegistered("fuel"))
 ////        {
-////            FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(new FluidStack(FluidRegistry.getFluid("fuel"), 1000), new ItemStack(GCItems.fuelCanister, 1, 1), ItemOilCanister.createEmptyCanister(1)));
+////            FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(FluidStack.create(FluidRegistry.getFluid("fuel"), 1000), new ItemStack(GCItems.fuelCanister, 1, 1), ItemOilCanister.createEmptyCanister(1)));
 ////        }
 ////        if (ConfigManagerCore.useOldOilFluidID.get() && FluidRegistry.isFluidRegistered("oil"))
 ////        {
-////            FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(new FluidStack(FluidRegistry.getFluid("oil"), 1000), new ItemStack(GCItems.oilCanister, 1, 1), ItemOilCanister.createEmptyCanister(1)));
+////            FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(FluidStack.create(FluidRegistry.getFluid("oil"), 1000), new ItemStack(GCItems.oilCanister, 1, 1), ItemOilCanister.createEmptyCanister(1)));
 //            //And allow Buildcraft oil buckets to be filled with oilgc
 ////            if (CompatibilityManager.isBCraftEnergyLoaded())
 ////            {
 //                // TODO Fix BC Oil compat
-////        		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(GalacticraftCore.fluidOil, 1000), GameRegistry.findItemStack("buildcraftcore", "bucketOil", 1), new ItemStack(Items.bucket)));
+////        		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(FluidStack.create(GalacticraftCore.fluidOil, 1000), GameRegistry.findItemStack("buildcraftcore", "bucketOil", 1), new ItemStack(Items.bucket)));
 ////            }
 ////        }
 //

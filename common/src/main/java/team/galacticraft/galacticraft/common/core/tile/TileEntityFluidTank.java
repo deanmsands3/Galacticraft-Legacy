@@ -3,7 +3,6 @@ package team.galacticraft.galacticraft.common.core.tile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.jetbrains.annotations.NotNull;
-import team.galacticraft.galacticraft.common.core.GCBlockNames;
 import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.common.core.network.NetworkUtil;
@@ -35,7 +34,6 @@ import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 import net.minecraftforge.fml.network.PacketDistributor;
 //import net.minecraftforge.registries.ObjectHolder;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
@@ -87,7 +85,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     {
         super.tick();
 
-        if (fluidTank.getFluid() != FluidStack.EMPTY)
+        if (fluidTank.getFluidStack() != FluidStack.empty())
         {
             moveFluidDown();
         }
@@ -112,7 +110,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
         int totalUsed = 0;
         TileEntityFluidTank toFill = getLastTank();
 
-        FluidStack fluid = toFill.fluidTank.getFluid();
+        FluidStack fluid = toFill.fluidTank.getFluidStack();
         if (!fluid.isEmpty() && fluid.getAmount() > 0 && !fluid.isFluidEqual(copy))
         {
             return 0;
@@ -141,7 +139,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
             return null;
         }
         TileEntityFluidTank last = getLastTank();
-        if (!resource.isFluidEqual(last.fluidTank.getFluid()))
+        if (!resource.isFluidEqual(last.fluidTank.getFluidStack()))
         {
             return null;
         }
@@ -163,13 +161,13 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     @Override
     public boolean canFill(Direction from, Fluid fluid)
     {
-        return fluidTank.getFluid() == FluidStack.EMPTY || fluidTank.getFluid() == FluidStack.EMPTY || fluid == null || fluidTank.getFluid().getFluid() == fluid;
+        return fluidTank.getFluidStack().isEmpty() || fluidTank.getFluidStack().isEmpty() || fluid == null || fluidTank.getFluidStack().getFluid() == fluid;
     }
 
     @Override
     public boolean canDrain(Direction from, Fluid fluid)
     {
-        return fluid == null || fluidTank.getFluid() != FluidStack.EMPTY && fluidTank.getFluid().getFluid() == fluid;
+        return fluid == null || fluidTank.getFluidStack() != FluidStack.empty() && fluidTank.getFluidStack().getFluid() == fluid;
     }
 
     @Override
@@ -186,11 +184,11 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 
         if (last != null)
         {
-            return last.fluidTank.getFluid();
+            return last.fluidTank.getFluidStack();
         }
         else
         {
-            return FluidStack.EMPTY;
+            return FluidStack.empty();
         }
     }
 
@@ -228,9 +226,9 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 
         if (last != null)
         {
-            if (last.fluidTank.getFluid() != FluidStack.EMPTY)
+            if (last.fluidTank.getFluidStack() != FluidStack.empty())
             {
-                return last.fluidTank.getFluid().getFluid() == stack.getFluid();
+                return last.fluidTank.getFluidStack().getFluid() == stack.getFluid();
             }
             else
             {
@@ -249,7 +247,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 //        FluidTank compositeTank = new FluidTank(fluidTank.getCapacity());
 //        TileEntityFluidTank last = getLastTank();
 //
-//        if (last != null && last.fluidTank.getFluid() != FluidStack.EMPTY)
+//        if (last != null && last.fluidTank.getFluid() != FluidStack.empty())
 //        {
 //            compositeTank.setFluid(last.fluidTank.getFluid().copy());
 //        }
@@ -290,13 +288,13 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
         TileEntityFluidTank next = getPreviousTank(this.getBlockPos());
         if (next != null)
         {
-            int used = next.fluidTank.fill(fluidTank.getFluid(), ActionType.EXECUTE);
+            int used = next.fluidTank.fill(fluidTank.getFluidStack(), ActionType.PERFORM);
 
             if (used > 0)
             {
                 this.updateClient = true;
                 next.updateClient = true;
-                fluidTank.drain(used, ActionType.EXECUTE);
+                fluidTank.drain(used, ActionType.PERFORM);
             }
         }
     }
@@ -359,7 +357,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     {
         super.save(nbt);
 
-        if (this.fluidTank.getFluid() != FluidStack.EMPTY)
+        if (this.fluidTank.getFluidStack() != FluidStack.empty())
         {
             nbt.put("fuelTank", this.fluidTank.writeToNBT(new CompoundTag()));
         }
@@ -432,7 +430,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
             else
             {
                 networkedList.add(fluidTank.getCapacity());
-                networkedList.add(fluidTank.getFluid() == FluidStack.EMPTY ? "" : fluidTank.getFluid().getFluid().getRegistryName().toString());
+                networkedList.add(fluidTank.getFluidStack().isEmpty() ? "" : fluidTank.getFluidStack().getFluid().getRegistryName().toString());
                 networkedList.add(fluidTank.getFluidAmount());
             }
         }
@@ -450,13 +448,13 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 
             if (fluidName.equals(""))
             {
-                fluidTank.setFluid(FluidStack.EMPTY);
+                fluidTank.setFluid(FluidStack.empty());
             }
             else
             {
                 Fluid fluid = Registry.FLUID.get(new ResourceLocation(fluidName));
 //                Fluid fluid = FluidRegistry.getFluid(fluidName);
-                fluidTank.setFluid(new FluidStack(fluid, amount));
+                fluidTank.setFluid(FluidStack.create(fluid, amount));
             }
 
             this.fluidTank = fluidTank;
@@ -491,7 +489,7 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
         {
             if (holder == null)
             {
-                holder = LazyOptional.of(new NonNullSupplier<IFluidHandler>()
+                holder = LazyOptional.create(new NonNullSupplier<IFluidHandler>()
                 {
                     @NotNull
                     @Override

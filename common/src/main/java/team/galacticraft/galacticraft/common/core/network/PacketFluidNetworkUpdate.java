@@ -157,7 +157,7 @@ public class PacketFluidNetworkUpdate extends PacketBase
                 this.fluidType = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(NetworkUtil.readUTF8String(buffer)));
                 if (this.fluidType != null)
                 {
-                    this.stack = new FluidStack(this.fluidType, buffer.readInt());
+                    this.stack = FluidStack.create(this.fluidType, buffer.readInt());
                 }
             }
             else

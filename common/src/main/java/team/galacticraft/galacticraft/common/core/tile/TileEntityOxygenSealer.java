@@ -1,5 +1,7 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
+import me.shedaniel.architectury.utils.Fraction;
+import net.fabricmc.api.EnvType;
 import team.galacticraft.galacticraft.common.api.item.IItemOxygenSupply;
 import team.galacticraft.galacticraft.common.api.tile.ITileClientUpdates;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
@@ -69,7 +71,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
 
     public TileEntityOxygenSealer()
     {
-        super(TYPE/*"container.oxygen_sealer"*/, 10000, UNSEALED_OXYGENPERTICK);
+        super(TYPE/*"container.oxygen_sealer"*/, Fraction.ofWhole(10), UNSEALED_OXYGENPERTICK);
         this.noRedstoneControl = true;
         this.storage.setMaxExtract(5.0F);  //Half of a standard machine's power draw
         this.storage.setMaxReceive(25.0F);

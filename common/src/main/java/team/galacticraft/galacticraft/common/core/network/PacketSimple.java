@@ -38,7 +38,6 @@ import team.galacticraft.galacticraft.common.core.entities.IControllableEntity;
 import team.galacticraft.galacticraft.common.core.entities.player.GCEntityPlayerMP;
 import team.galacticraft.galacticraft.common.core.entities.player.GCPlayerHandler;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
-import team.galacticraft.galacticraft.common.api.entity.GCPlayerStatsClient;
 import team.galacticraft.galacticraft.common.core.fluid.FluidNetwork;
 import team.galacticraft.galacticraft.common.core.inventory.ContainerBuggy;
 import team.galacticraft.galacticraft.common.core.inventory.ContainerExtendedInventory;
@@ -85,7 +84,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.LevelData;
-import net.minecraftforge.fml.network.NetworkEvent;
 import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 
 import java.io.IOException;

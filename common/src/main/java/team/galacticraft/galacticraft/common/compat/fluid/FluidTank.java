@@ -16,12 +16,18 @@ public interface FluidTank extends NbtSerializable {
      */
     int size();
 
+    default Fraction getCapacity() {
+        return getCapacity(0);
+    }
+
+    Fraction getCapacity(int tank);
+
     /**
      * Returns the fluid in the tank at index zero
      * @return The amount of fluid that is inside the tank at index zero
      */
-    default FluidStack get() {
-        return get(0);
+    default FluidStack getFluidStack() {
+        return getFluidStack(0);
     }
 
     /**
@@ -29,7 +35,7 @@ public interface FluidTank extends NbtSerializable {
      * @param tank The index of the tank to get the fluid from
      * @return The amount of fluid that is inside the tank
      */
-    FluidStack get(int tank);
+    FluidStack getFluidStack(int tank);
 
     /**
      * Extracts fluid from a tank
@@ -64,7 +70,7 @@ public interface FluidTank extends NbtSerializable {
      */
     default FluidStack insert(FluidStack stack, ActionType action) {
         for (int i = 0; i < size(); i++) {
-            if (stack.isEmpty()) return FluidStack.empty();
+            if (stack.isEmpty()) return FluidStack.empty()();
             stack = this.insert(i, stack, action);
         }
         return stack;
@@ -78,6 +84,8 @@ public interface FluidTank extends NbtSerializable {
      * @return The amount of fluid that was NOT inserted
      */
     FluidStack insert(int tank, FluidStack stack, ActionType action);
+
+    boolean setFluid(int tank, FluidStack stack, ActionType actionType);
 
     boolean isValid(int tank, FluidStack stack);
 

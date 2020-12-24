@@ -161,7 +161,7 @@ public abstract class TileEntityInventory extends BlockEntity implements Worldly
         {
             if (!this.itemHandlers.containsKey(side))
             {
-                this.itemHandlers.put(side, LazyOptional.of(new NonNullSupplier<IItemHandlerModifiable>()
+                this.itemHandlers.put(side, LazyOptional.create(new NonNullSupplier<IItemHandlerModifiable>()
                 {
                     @NotNull
                     @Override

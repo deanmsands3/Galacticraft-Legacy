@@ -40,6 +40,12 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank
         return this.getTankCount();
     }
 
+    @Override
+    public Fraction getCapacity(int tank)
+    {
+        return FabricFluidUtil.toFractionA(this.getMaxAmount_F(tank));
+    }
+
     /**
      * Returns the fluid in the tank
      *
@@ -47,9 +53,9 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank
      * @return The amount of fluid that is inside the tank
      */
     @Override
-    public @NotNull FluidStack get(int tank)
+    public @NotNull FluidStack getFluidStack(int tank)
     {
-        return FluidUtilFabric.toVolumeA(this.getTank(tank).get());
+        return FabricFluidUtil.toVolumeA(this.getTank(tank).get());
     }
 
     /**
@@ -62,7 +68,7 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank
     @Override
     public FluidStack extract(Fraction amount, ActionType action)
     {
-        return FluidUtilFabric.toVolumeA(this.attemptExtraction(ConstantFluidFilter.ANYTHING, FluidUtilFabric.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+        return FabricFluidUtil.toVolumeA(this.attemptExtraction(ConstantFluidFilter.ANYTHING, FabricFluidUtil.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     /**
@@ -76,7 +82,7 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank
     @Override
     public FluidStack extract(int tank, Fraction amount, ActionType action)
     {
-        return FluidUtilFabric.toVolumeA(this.getTank(tank).attemptExtraction(ConstantFluidFilter.ANYTHING, FluidUtilFabric.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+        return FabricFluidUtil.toVolumeA(this.getTank(tank).attemptExtraction(ConstantFluidFilter.ANYTHING, FabricFluidUtil.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     /**
@@ -89,7 +95,7 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank
     @Override
     public FluidStack extract(FluidStack stack, ActionType action)
     {
-        return FluidUtilFabric.toVolumeA(this.attemptExtraction(fluidKey -> stack.getFluid().equals(fluidKey.getRawFluid()), FluidUtilFabric.toAmountLBA(stack.getAmount()), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+        return FabricFluidUtil.toVolumeA(this.attemptExtraction(fluidKey -> stack.getFluid().equals(fluidKey.getRawFluid()), FabricFluidUtil.toAmountLBA(stack.getAmount()), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     /**
@@ -103,7 +109,13 @@ public class FluidTankImpl extends SimpleFixedFluidInv implements FluidTank
     @Override
     public FluidStack insert(int tank, FluidStack stack, ActionType action)
     {
-        return FluidUtilFabric.toVolumeA(this.getTank(tank).attemptInsertion(FluidUtilFabric.toVolumeLBA(stack), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+        return FabricFluidUtil.toVolumeA(this.getTank(tank).attemptInsertion(FabricFluidUtil.toVolumeLBA(stack), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+    }
+
+    @Override
+    public boolean setFluid(int tank, FluidStack stack, ActionType actionType)
+    {
+        return this.setInvFluid(tank, FabricFluidUtil.toVolumeLBA(stack), actionType == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION);
     }
 
     @Override

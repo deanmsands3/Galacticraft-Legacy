@@ -269,7 +269,7 @@ public abstract class TileBaseUniversalElectricalSource extends TileBaseUniversa
         {
             if (holder == null)
             {
-                holder = LazyOptional.of(new NonNullSupplier<IEnergyStorage>()
+                holder = LazyOptional.create(new NonNullSupplier<IEnergyStorage>()
                 {
                     @NotNull
                     @Override

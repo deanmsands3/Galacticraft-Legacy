@@ -1,5 +1,6 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
+import me.shedaniel.architectury.utils.Fraction;
 import team.galacticraft.galacticraft.common.api.world.EnumAtmosphericGas;
 import team.galacticraft.galacticraft.common.api.world.IGalacticraftDimension;
 import team.galacticraft.galacticraft.common.core.GCBlockNames;
@@ -47,7 +48,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements MenuP
 
     public TileEntityOxygenCollector()
     {
-        super(TYPE, 6000, 0);
+        super(TYPE, Fraction.ofWhole(6), 0);
         this.noRedstoneControl = true;
         inventory = NonNullList.withSize(1, ItemStack.EMPTY);
     }
@@ -193,7 +194,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements MenuP
 
                     this.lastOxygenCollected = nearbyLeaves / 10F;
 
-                    this.tank.setFluid(new FluidStack(GCFluids.OXYGEN.getFluid(), (int) Math.max(Math.min(this.getOxygenStored() + nearbyLeaves, this.getMaxOxygenStored()), 0)));
+                    this.tank.setFluid(FluidStack.create(GCFluids.OXYGEN.getFluid(), (int) Math.max(Math.min(this.getOxygenStored() + nearbyLeaves, this.getMaxOxygenStored()), 0)));
                 }
                 else
                 {

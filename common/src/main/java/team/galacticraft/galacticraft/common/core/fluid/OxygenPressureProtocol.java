@@ -7,7 +7,6 @@ import team.galacticraft.galacticraft.common.core.tile.TileEntityOxygenSealer;
 import team.galacticraft.galacticraft.common.core.util.ConfigManagerCore;
 import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import team.galacticraft.galacticraft.common.core.util.GCLog;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;

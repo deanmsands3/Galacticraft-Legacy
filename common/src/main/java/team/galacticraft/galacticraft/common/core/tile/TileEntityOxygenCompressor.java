@@ -1,5 +1,6 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
+import me.shedaniel.architectury.utils.Fraction;
 import team.galacticraft.galacticraft.common.api.item.IItemOxygenSupply;
 import team.galacticraft.galacticraft.common.core.GCBlockNames;
 import team.galacticraft.galacticraft.common.Constants;
@@ -33,7 +34,7 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen implements Menu
 
     public TileEntityOxygenCompressor()
     {
-        super(TYPE, 1200, 16);
+        super(TYPE, Fraction.of(6, 5), 16);
         this.storage.setMaxExtract(15);
         inventory = NonNullList.withSize(3, ItemStack.EMPTY);
     }

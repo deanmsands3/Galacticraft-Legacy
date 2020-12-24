@@ -1,6 +1,7 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
 import io.netty.buffer.ByteBuf;
+import me.shedaniel.architectury.utils.Fraction;
 import team.galacticraft.galacticraft.common.api.block.IOxygenReliantBlock;
 import team.galacticraft.galacticraft.common.api.item.IItemOxygenSupply;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
@@ -56,7 +57,7 @@ public class TileEntityOxygenDistributor extends TileEntityOxygen implements IBu
 
     public TileEntityOxygenDistributor()
     {
-        super(TYPE, 6000, 8);
+        super(TYPE, Fraction.ofWhole(6), 8);
 //        this.oxygenBubble = null;
         this.inventory = NonNullList.withSize(2, ItemStack.EMPTY);
     }

@@ -383,7 +383,7 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
             {
                 //Launch controlled launch but no valid target frequency = rocket loss [INVESTIGATE]
                 PlatformSpecific.getLogger().info("Error: the launch controlled rocket failed to find a valid landing spot when it reached space.");
-                this.fuelTank.drain(Integer.MAX_VALUE, ActionType.EXECUTE);
+                this.fuelTank.drain(Integer.MAX_VALUE, ActionType.PERFORM);
                 this.setPosRaw(this.getX(), Math.max(255, (this.level.getDimension() instanceof IExitHeight ? ((IExitHeight) this.level.getDimension()).getYCoordinateToTeleport() : 1200) - 200), this.getZ());
                 return;
             }

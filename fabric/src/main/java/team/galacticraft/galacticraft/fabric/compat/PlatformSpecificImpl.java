@@ -6,6 +6,7 @@ import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.utils.Fraction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -18,9 +19,12 @@ import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import team.galacticraft.galacticraft.common.compat.component.ComponentWrapper;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 import team.galacticraft.galacticraft.common.compat.item.ItemInventory;
+import team.galacticraft.galacticraft.common.core.wrappers.FluidHandlerWrapper;
+import team.galacticraft.galacticraft.common.core.wrappers.IFluidHandlerWrapper;
 import team.galacticraft.galacticraft.fabric.compat.component.FabricComponentWrapper;
+import team.galacticraft.galacticraft.fabric.compat.fluid.FluidHandlerWrapperFabric;
 import team.galacticraft.galacticraft.fabric.compat.fluid.FluidTankImpl;
-import team.galacticraft.galacticraft.fabric.compat.fluid.FluidUtilFabric;
+import team.galacticraft.galacticraft.fabric.compat.fluid.FabricFluidUtil;
 import team.galacticraft.galacticraft.fabric.compat.item.FabricItemInventory;
 import team.galacticraft.galacticraft.fabric.mixin.LevelChunkMixin;
 
@@ -48,12 +52,12 @@ public class PlatformSpecificImpl
 
     public static FluidTank createFluidInv(int tanks, Fraction fraction)
     {
-        return new FluidTankImpl(tanks, FluidUtilFabric.toAmountLBA(fraction));
+        return new FluidTankImpl(tanks, FabricFluidUtil.toAmountLBA(fraction));
     }
 
     public static FluidTank createFluidInv(int tanks, Fraction fraction, Int2ObjectMap<Object2BooleanFunction<FluidStack>> validFluids)
     {
-        return new FluidTankImpl(tanks, FluidUtilFabric.toAmountLBA(fraction), validFluids);
+        return new FluidTankImpl(tanks, FabricFluidUtil.toAmountLBA(fraction), validFluids);
     }
 
     public static <T> LazyOptional<T> getComponent(Entity entity, ComponentWrapper<T> wrapper)
@@ -71,5 +75,10 @@ public class PlatformSpecificImpl
         if (FabricLoader.getInstance().getEnvironmentType() == envType) {
             supplier.get().run();
         }
+    }
+
+    public static FluidHandlerWrapper createFluidHandlerWrapper(IFluidHandlerWrapper wrapper, Direction side)
+    {
+        return new FluidHandlerWrapperFabric(wrapper, side);
     }
 }

@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
 public class CapabilityProviderStats implements ICapabilitySerializable<CompoundTag>
 {
     private ServerPlayer owner;
-    private final LazyOptional<GCPlayerStats> holder = LazyOptional.of(() -> new StatsCapability(new WeakReference<>(this.owner)));
+    private final LazyOptional<GCPlayerStats> holder = LazyOptional.create(() -> new StatsCapability(new WeakReference<>(this.owner)));
 
     public CapabilityProviderStats(ServerPlayer owner)
     {

@@ -1,5 +1,7 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
+import me.shedaniel.architectury.utils.Fraction;
+import net.fabricmc.api.EnvType;
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IOxygenReceiver;
 import team.galacticraft.galacticraft.common.api.transmission.tile.IOxygenStorage;
@@ -31,9 +33,9 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
     public FluidTankGC tank;
     public float lastStoredOxygen;
     public static int timeSinceOxygenRequest;
-    private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
+    private final LazyOptional<FluidTankGC> holder = LazyOptional.create(() -> tank);
 
-    public TileEntityOxygen(BlockEntityType<?> type, int maxOxygen, int oxygenPerTick)
+    public TileEntityOxygen(BlockEntityType<?> type, Fraction maxOxygen, int oxygenPerTick)
     {
         super(type);
         this.tank = new FluidTankGC(maxOxygen, this);
@@ -94,9 +96,9 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
 
             if (this.shouldUseOxygen())
             {
-                if (this.tank.getFluid() != FluidStack.EMPTY)
+                if (this.tank.getFluidStack() != FluidStack.empty())
                 {
-                    FluidStack fluid = this.tank.getFluid().copy();
+                    FluidStack fluid = this.tank.getFluidStack().copy();
                     fluid.setAmount(Math.max(fluid.getAmount() - this.oxygenPerTick, 0));
                     this.tank.setFluid(fluid);
                 }
@@ -113,13 +115,13 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
 
         if (nbt.contains("storedOxygen"))
         {
-            this.tank.setFluid(new FluidStack(GCFluids.OXYGEN.getFluid(), nbt.getInt("storedOxygen")));
+            this.tank.setFluid(FluidStack.create(GCFluids.OXYGEN.getFluid(), nbt.getInt("storedOxygen")));
         }
         else if (nbt.contains("storedOxygenF"))
         {
             int oxygen = (int) nbt.getFloat("storedOxygenF");
             oxygen = Math.min(this.tank.getCapacity(), oxygen);
-            this.tank.setFluid(new FluidStack(GCFluids.OXYGEN.getFluid(), oxygen));
+            this.tank.setFluid(FluidStack.create(GCFluids.OXYGEN.getFluid(), oxygen));
         }
         else
         {
@@ -144,17 +146,17 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
     @Override
     public void setOxygenStored(int oxygen)
     {
-        this.tank.setFluid(new FluidStack(GCFluids.OXYGEN.getFluid(), Math.max(Math.min(oxygen, this.getMaxOxygenStored()), 0)));
+        this.tank.setFluid(FluidStack.create(GCFluids.OXYGEN.getFluid(), Math.max(Math.min(oxygen, this.getMaxOxygenStored()), 0)));
     }
 
     @Override
-    public int getOxygenStored()
+    public Fraction getOxygenStored()
     {
-        return this.tank.getFluidAmount();
+        return this.tank.getFluidStack().getAmount();
     }
 
     @Override
-    public int getMaxOxygenStored()
+    public Fraction getMaxOxygenStored()
     {
         return this.tank.getCapacity();
     }
@@ -236,11 +238,11 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
         return 0;
     }
 
-    public int drawOxygen(int request, ActionType action)
+    public int drawOxygen(FluidStack request, ActionType action)
     {
-        if (request > 0)
+        if (request.getAmount().isGreaterThan(Fraction.zero()))
         {
-            int requestedOxygen = Math.min(request, this.getOxygenStored());
+            int requestedOxygen = request.getAmount().isLessThan(this.getOxygenStored()) ? request.getAmount() : this.getOxygenStored();
 
             if (action.execute())
             {
@@ -282,9 +284,9 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
 
                 if (gasRequested > 0)
                 {
-                    int usedGas = outputNetwork.emitToBuffer(new FluidStack(GCFluids.OXYGEN.getFluid(), Math.min(gasRequested, provide)), ActionType.EXECUTE);
+                    int usedGas = outputNetwork.emitToBuffer(FluidStack.create(GCFluids.OXYGEN.getFluid(), Math.min(gasRequested, provide)), ActionType.PERFORM);
 
-                    this.drawOxygen(usedGas, ActionType.EXECUTE);
+                    this.drawOxygen(usedGas, ActionType.PERFORM);
                     return true;
                 }
             }
@@ -294,8 +296,8 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
 
                 if (requestedOxygen > 0)
                 {
-                    int acceptedOxygen = ((IOxygenReceiver) outputTile).receiveOxygen(outputDirection.getOpposite(), provide, ActionType.EXECUTE);
-                    this.drawOxygen(acceptedOxygen, ActionType.EXECUTE);
+                    int acceptedOxygen = ((IOxygenReceiver) outputTile).receiveOxygen(outputDirection.getOpposite(), provide, ActionType.PERFORM);
+                    this.drawOxygen(acceptedOxygen, ActionType.PERFORM);
                     return true;
                 }
             }
@@ -398,7 +400,7 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
 //    } TODO Mekanism Support
 
     @Override
-    public int fill(Direction from, FluidStack resource, ActionType action)
+    public FluidStack fill(Direction from, FluidStack resource, ActionType action)
     {
         if (this.getOxygenInputDirections().contains(from) && resource != null)
         {
@@ -420,11 +422,11 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
     }
 
     @Override
-    public FluidStack drain(Direction from, int maxDrain, ActionType action)
+    public FluidStack drain(Direction from, FluidStack maxDrain, ActionType action)
     {
         if (this.getOxygenOutputDirections().contains(from))
         {
-            return new FluidStack(GCFluids.OXYGEN.getFluid(), this.drawOxygen(maxDrain, action));
+            return FluidStack.create(GCFluids.OXYGEN.getFluid(), this.drawOxygen(maxDrain, action));
         }
 
         return null;
@@ -457,25 +459,25 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
     @Override
     public int getTanks()
     {
-        return this.tank.getTanks();
+        return this.tank.size();
     }
 
     @NotNull
     @Override
     public FluidStack getFluidInTank(int tank)
     {
-        return this.tank.getFluidInTank(tank);
+        return this.tank.getFluidStack(tank);
     }
 
     @Override
-    public int getTankCapacity(int tank)
+    public Fraction getTankCapacity(int tank)
     {
-        return this.tank.getTankCapacity(tank);
+        return this.tank.getCapacity(tank);
     }
 
     @Override
     public boolean isFluidValid(int tank, @NotNull FluidStack stack)
     {
-        return this.tank.isFluidValid(tank, stack);
+        return this.tank.isValid(tank, stack);
     }
 }

@@ -63,7 +63,7 @@ package team.galacticraft.galacticraft.common.core.items;
 //
 //    public ItemStack drainBucketTo(IFluidHandler fluidHandler)
 //    {
-//    	FluidStack fs = new FluidStack(this.accepts, 1000);
+//    	FluidStack fs = FluidStack.create(this.accepts, 1000);
 //        int transferred = fluidHandler.fill(fs, false);
 //        if (transferred == 1000)
 //        {
@@ -141,7 +141,7 @@ package team.galacticraft.galacticraft.common.core.items;
 //        @Nullable
 //        public FluidStack getFluid()
 //        {
-//            return new FluidStack(item.accepts, this.capacity);
+//            return FluidStack.create(item.accepts, this.capacity);
 //        }
 //
 //        protected void setFluid(FluidStack fluid)

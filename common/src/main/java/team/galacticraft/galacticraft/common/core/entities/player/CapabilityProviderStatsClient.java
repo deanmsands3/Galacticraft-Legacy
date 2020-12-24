@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public class CapabilityProviderStatsClient implements ICapabilityProvider
 {
     private final LocalPlayer owner;
-    private final LazyOptional<GCPlayerStatsClient> holder = LazyOptional.of(StatsClientCapability::new);
+    private final LazyOptional<GCPlayerStatsClient> holder = LazyOptional.create(StatsClientCapability::new);
 
     public CapabilityProviderStatsClient(LocalPlayer owner)
     {

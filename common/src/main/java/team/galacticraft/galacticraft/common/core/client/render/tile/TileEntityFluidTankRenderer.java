@@ -1,13 +1,10 @@
 package team.galacticraft.galacticraft.common.core.client.render.tile;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
-import team.galacticraft.galacticraft.common.Constants;
-import team.galacticraft.galacticraft.common.core.client.obj.GCModelCache;
 import team.galacticraft.galacticraft.common.core.tile.TileEntityFluidTank;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -36,8 +33,8 @@ public class TileEntityFluidTankRenderer extends BlockEntityRenderer<TileEntityF
 //            return;
 //        }
 //        FluidStack tankFluid = info[0].fluid;
-        FluidStack tankFluid = tileTank.fluidTank.getFluid();
-        if (tankFluid == FluidStack.EMPTY || (!tankFluid.getFluid().getAttributes().isGaseous() && tankFluid.getAmount() == 0))
+        FluidStack tankFluid = tileTank.fluidTank.getFluidStack();
+        if (tankFluid.isEmpty() || (!tankFluid.getFluid().getAttributes().isGaseous() && tankFluid.getAmount() == 0))
         {
             return;
         }

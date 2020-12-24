@@ -156,13 +156,13 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
     {
         FluidStack stack = transmitter.getBuffer();
 
-        if (stack == null || stack == FluidStack.EMPTY || stack.getAmount() == 0)
+        if (stack == null || stack.isEmpty() || stack.getAmount() == 0)
         {
             // Nothing to do
             return;
         }
 
-        if (buffer == null || buffer == FluidStack.EMPTY || buffer.getAmount() == 0)
+        if (buffer == null || buffer.isEmpty() || buffer.getAmount() == 0)
         {
             // Set transmitter buffer to network buffer
             buffer = stack.copy();
@@ -386,7 +386,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
 
             if (buffer != null)
             {
-                this.prevTransferAmount = this.emitToAcceptors(buffer, ActionType.EXECUTE);
+                this.prevTransferAmount = this.emitToAcceptors(buffer, ActionType.PERFORM);
                 if (buffer != null)
                 {
 //                    buffer.amount -= this.prevTransferAmount;
@@ -469,7 +469,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
             for (Direction side : sides)
             {
                 handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
-                if (handler.isPresent() && handler.orElse(null).fill(new FluidStack(fluidToSend, 1), ActionType.SIMULATE) > 0)
+                if (handler.isPresent() && handler.orElse(null).fill(FluidStack.create(fluidToSend, 1), ActionType.SIMULATE) > 0)
                 {
                     handlers.put(side, handler.orElse(null));
                 }

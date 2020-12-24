@@ -8,9 +8,9 @@ import me.shedaniel.architectury.fluid.FluidStack;
 import me.shedaniel.architectury.utils.Fraction;
 import org.jetbrains.annotations.NotNull;
 
-public class FluidUtilFabric
+public class FabricFluidUtil
 {
-    private FluidUtilFabric() {}
+    private FabricFluidUtil() {}
 
     public static @NotNull FluidAmount toAmountLBA(@NotNull Fraction stack)
     {

@@ -497,7 +497,7 @@ public class RecipeManagerGC
 //        boolean refineryDone = false;
 //        try
 //        {
-////            BuildcraftRecipeRegistry.refinery.addRecipe("buildcraft:fuel", new FluidStack(GCFluids.fluidOil, 1), new FluidStack(FluidRegistry.getFluid("fuel"), 1), 120, 1);
+////            BuildcraftRecipeRegistry.refinery.addRecipe("buildcraft:fuel", FluidStack.create(GCFluids.fluidOil, 1), FluidStack.create(FluidRegistry.getFluid("fuel"), 1), 120, 1);
 ////            refineryDone = true;
 //        }
 //        catch (Exception e)

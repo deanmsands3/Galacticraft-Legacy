@@ -8,12 +8,15 @@ import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
 import team.galacticraft.galacticraft.common.compat.component.ComponentWrapper;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
+import team.galacticraft.galacticraft.common.core.wrappers.FluidHandlerWrapper;
+import team.galacticraft.galacticraft.fabric.compat.fluid.FluidHandlerWrapperFabric;
 import team.galacticraft.galacticraft.fabric.compat.fluid.FluidTankWrapper;
 import team.galacticraft.galacticraft.fabric.compat.fluid.SerializableFixedFluidInv;
 
 public class GCApiComponentsImpl {
     private static final FabricComponentWrapper<GCPlayerStats> GC_PLAYER_STATS = new FabricComponentWrapper<>(ComponentRegistry.INSTANCE.registerIfAbsent(new ResourceLocation(Constants.MOD_ID_CORE, "player_stats"), (Class<FabricComponent<GCPlayerStats>>) (Object)FabricComponent.class));
     private static final FabricComponentWrapperLBA<FluidTankWrapper<? extends FixedFluidInv>, FixedFluidInv> FLUID_TANK = new FabricComponentWrapperLBA<>(FluidAttributes.FIXED_INV, SerializableFixedFluidInv::create);
+    private static final FabricComponentWrapperLBA<FluidHandlerWrapperFabric, FixedFluidInv> FLUID_HANDLER_WRAPPER = new FabricComponentWrapperLBA<>(FluidAttributes.FIXED_INV, fixedFluidInv -> (FluidHandlerWrapperFabric)fixedFluidInv);
 
     private GCApiComponentsImpl() {}
 
@@ -24,7 +27,9 @@ public class GCApiComponentsImpl {
     public static ComponentWrapper<? extends FluidTank> getTank() {
         return FLUID_TANK;
     }
-
-    public static void init() {
+    public static ComponentWrapper<? extends FluidHandlerWrapper> getFluidHandlerWrapper() {
+        return FLUID_HANDLER_WRAPPER;
     }
+
+    public static void init() {}
 }

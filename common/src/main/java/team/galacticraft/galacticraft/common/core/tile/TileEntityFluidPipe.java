@@ -1,11 +1,10 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
+import me.shedaniel.architectury.utils.Fraction;
 import team.galacticraft.galacticraft.common.api.tile.IColorable;
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.transmission.grid.IGridNetwork;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
-import team.galacticraft.galacticraft.common.core.GCBlockNames;
-import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.core.GCBlocks;
 import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.common.core.blocks.BlockFluidPipe;
@@ -171,7 +170,7 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     public CompoundTag save(CompoundTag tagCompound)
     {
         super.save(tagCompound);
-        if (this.buffer.getFluid() != FluidStack.EMPTY)
+        if (this.buffer.getFluidStack() != FluidStack.empty())
         {
             tagCompound.put("buff", this.buffer.writeToNBT(new CompoundTag()));
         }
@@ -204,7 +203,7 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     @Override
     public FluidStack getBuffer()
     {
-        return buffer.getFluid() == FluidStack.EMPTY ? null : buffer.getFluid();
+        return buffer.getFluidStack().isEmpty() ? null : buffer.getFluidStack();
     }
 
     @Override
@@ -214,7 +213,7 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     }
 
     @Override
-    public int fill(Direction from, FluidStack resource, ActionType action)
+    public FluidStack fill(Direction from, FluidStack resource, ActionType action)
     {
         IGridNetwork network = this.getNetwork();
         if (network instanceof FluidNetwork)
@@ -235,11 +234,10 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     }
 
     @Override
-    public FluidStack drain(Direction from, int maxDrain, ActionType action)
+    public FluidStack drain(Direction from, Fraction maxDrain, ActionType action)
     {
         return null;
     }
-
 
     @Override
     public boolean canFill(Direction from, Fluid fluid)
@@ -269,11 +267,11 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     @Override
     public FluidStack getFluidInTank(int tank)
     {
-        return FluidStack.EMPTY;
+        return FluidStack.empty();
     }
 
     @Override
-    public int getTankCapacity(int tank)
+    public Fraction getTankCapacity(int tank)
     {
         return 0;
     }
@@ -365,11 +363,11 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
 //        FluidStack mekEquivalent = null;
 //        if (mekGas.equals("oxygen"))
 //        {
-//            mekEquivalent = new FluidStack(GCFluidRegistry.fluidOxygenGas, stack.amount);
+//            mekEquivalent = FluidStack.create(GCFluidRegistry.fluidOxygenGas, stack.amount);
 //        }
 //        else if (mekGas.equals("hydrogen"))
 //        {
-//            mekEquivalent = new FluidStack(GCFluidRegistry.fluidHydrogenGas, stack.amount);
+//            mekEquivalent = FluidStack.create(GCFluidRegistry.fluidHydrogenGas, stack.amount);
 //        }
 //        else
 //        {

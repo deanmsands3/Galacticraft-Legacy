@@ -1,5 +1,6 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
+import me.shedaniel.architectury.utils.Fraction;
 import team.galacticraft.galacticraft.common.core.GCBlockNames;
 import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.core.blocks.BlockOxygenCompressor;
@@ -34,7 +35,7 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
 
     public TileEntityOxygenDecompressor()
     {
-        super(TYPE, 1200, 0);
+        super(TYPE, Fraction.of(6, 5), 0);
         inventory = NonNullList.withSize(2, ItemStack.EMPTY);
     }
 
@@ -48,17 +49,17 @@ public class TileEntityOxygenDecompressor extends TileEntityOxygen implements II
             this.usingEnergy = false;
             ItemStack tank1 = this.getInventory().get(0);
 
-            if (!tank1.isEmpty() && this.hasEnoughEnergyToRun && this.getOxygenStored() < this.getMaxOxygenStored())
+            if (!tank1.isEmpty() && this.hasEnoughEnergyToRun && this.getOxygenStored().isLessThan(this.getMaxOxygenStored()))
             {
                 if (tank1.getItem() instanceof ItemOxygenTank && tank1.getDamageValue() < tank1.getMaxDamage())
                 {
                     tank1.setDamageValue(tank1.getDamageValue() + 1); // TODO Test: Shouldn't damage only be done if receieve was successful?
-                    this.receiveOxygen(1, ActionType.EXECUTE);
+                    this.receiveOxygen(1, ActionType.PERFORM);
                     this.usingEnergy = true;
                 }
 //                else if (tank1.getItem() instanceof ItemCanisterOxygenInfinite)
 //                {
-//                    this.receiveOxygen(1, ActionType.EXECUTE);
+//                    this.receiveOxygen(1, ActionType.PERFORM);
 //                    this.usingEnergy = true;
 //                } TODO Oxygen canisters
             }

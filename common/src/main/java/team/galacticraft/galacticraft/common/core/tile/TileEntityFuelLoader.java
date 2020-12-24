@@ -1,13 +1,13 @@
 package team.galacticraft.galacticraft.common.core.tile;
 
+import me.shedaniel.architectury.utils.Fraction;
 import net.fabricmc.api.EnvType;
 import team.galacticraft.galacticraft.common.api.entity.IFuelable;
 import team.galacticraft.galacticraft.common.api.tile.ILandingPadAttachable;
 import team.galacticraft.galacticraft.common.api.transmission.NetworkType;
 import team.galacticraft.galacticraft.common.api.vector.BlockVec3;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
-import team.galacticraft.galacticraft.common.core.GCBlockNames;
-import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.core.blocks.BlockFuelLoader;
 import team.galacticraft.galacticraft.common.core.GCItems;
 import team.galacticraft.galacticraft.common.core.energy.item.ItemElectricBase;
@@ -41,7 +41,6 @@ import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
 //import net.minecraftforge.registries.ObjectHolder;
 import me.shedaniel.architectury.fluid.FluidStack;
 import org.jetbrains.annotations.NotNull;
@@ -52,9 +51,9 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
 //    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fuelLoader)
     public static BlockEntityType<TileEntityFuelLoader> TYPE;
 
-    private final int tankCapacity = 12000;
+    private final Fraction tankCapacity = Fraction.ofWhole(12);
     @NetworkedField(targetSide = EnvType.CLIENT)
-    public FluidTank fuelTank = new FluidTank(this.tankCapacity);
+    public FluidTank fuelTank = PlatformSpecific.createFluidInv(this.tankCapacity);
     public IFuelable attachedFuelable;
     private boolean loadedFuelLastTick = false;
 
@@ -67,9 +66,9 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
 
     public int getScaledFuelLevel(int i)
     {
-        final double fuelLevel = this.fuelTank.getFluid() == FluidStack.EMPTY ? 0 : this.fuelTank.getFluid().getAmount();
+        final Fraction fuelLevel = this.fuelTank.getFluidStack(0).isEmpty() ? Fraction.zero() : this.fuelTank.getFluidStack().getAmount();
 
-        return (int) (fuelLevel * i / this.tankCapacity);
+        return fuelLevel.divide(this.tankCapacity).intValue();
     }
 
     @Override
@@ -115,15 +114,15 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
 
             }
 
-            if (this.fuelTank != null && this.fuelTank.getFluid() != FluidStack.EMPTY && this.fuelTank.getFluid().getAmount() > 0)
+            if (this.fuelTank != null && this.fuelTank.getFluidStack() != FluidStack.empty() && this.fuelTank.getFluidStack().getAmount() > 0)
             {
-                final FluidStack liquid = new FluidStack(GCFluids.FUEL.getFluid(), 2);
+                final FluidStack liquid = FluidStack.create(GCFluids.FUEL.getFluid(), 2);
 
                 if (this.attachedFuelable != null && this.hasEnoughEnergyToRun && !this.disabled)
                 {
-                    int filled = this.attachedFuelable.addFuel(liquid, ActionType.EXECUTE);
+                    int filled = this.attachedFuelable.addFuel(liquid, ActionType.PERFORM);
                     this.loadedFuelLastTick = filled > 0;
-                    this.fuelTank.drain(filled, ActionType.EXECUTE);
+                    this.fuelTank.drain(filled, ActionType.PERFORM);
                 }
             }
         }
@@ -147,7 +146,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     {
         super.save(nbt);
 
-        if (this.fuelTank.getFluid() != FluidStack.EMPTY)
+        if (this.fuelTank.getFluidStack() != FluidStack.empty())
         {
             nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundTag()));
         }
@@ -222,7 +221,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     {
         if (this.getPipeInputDirection().equals(from))
         {
-            return this.fuelTank.getFluid() == FluidStack.EMPTY || this.fuelTank.getFluidAmount() < this.fuelTank.getCapacity();
+            return this.fuelTank.getFluidStack().isEmpty() || this.fuelTank.getFluidAmount() < this.fuelTank.getCapacity();
         }
         return false;
     }
@@ -282,7 +281,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     @Override
     public boolean shouldUseEnergy()
     {
-        return this.fuelTank.getFluid() != FluidStack.EMPTY && this.fuelTank.getFluid().getAmount() > 0 && !this.getDisabled(0) && loadedFuelLastTick;
+        return this.fuelTank.getFluidStack() != FluidStack.empty() && this.fuelTank.getFluidStack().getAmount() > 0 && !this.getDisabled(0) && loadedFuelLastTick;
     }
 
     @Override
@@ -318,7 +317,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
         {
             if (holder == null)
             {
-                holder = LazyOptional.of(new NonNullSupplier<IFluidHandler>()
+                holder = LazyOptional.create(new NonNullSupplier<IFluidHandler>()
                 {
                     @NotNull
                     @Override

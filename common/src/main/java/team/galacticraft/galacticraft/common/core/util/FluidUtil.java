@@ -1,5 +1,7 @@
 package team.galacticraft.galacticraft.common.core.util;
 
+import net.minecraft.core.Registry;
+import team.galacticraft.galacticraft.common.compat.PlatformSpecific;
 import team.galacticraft.galacticraft.common.core.GCItems;
 import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
 import team.galacticraft.galacticraft.common.core.items.ItemCanisterGeneric;
@@ -17,14 +19,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import team.galacticraft.galacticraft.common.api.util.LazyOptional;
-import net.minecraftforge.fluids.FluidActionResult;
 import me.shedaniel.architectury.fluid.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import team.galacticraft.galacticraft.common.compat.fluid.FluidTank;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
@@ -56,7 +53,7 @@ public class FluidUtil
 //        } TODO Buckets
 
         LazyOptional<FluidStack> liquid = net.minecraftforge.fluids.FluidUtil.getFluidContained(var4);
-        return liquid.isPresent() && FluidUtil.testFuel(liquid.orElse(FluidStack.EMPTY).getFluid().getRegistryName());
+        return liquid.isPresent() && FluidUtil.testFuel(liquid.orElse(FluidStack.empty()).getFluid().getRegistryName());
     }
 
     /**
@@ -135,12 +132,12 @@ public class FluidUtil
 
     public static boolean isFluidFuzzy(FluidStack fluid, String name)
     {
-        return fluid != null && fluid != FluidStack.EMPTY && fluid.getFluid().getRegistryName().getPath().startsWith(name);
+        return fluid != null && !fluid.isEmpty() && fluid.getFluid().getRegistryName().getPath().startsWith(name);
     }
 
     public static boolean isFluidStrict(FluidStack fluid, String name)
     {
-        return fluid != null && fluid != FluidStack.EMPTY && fluid.getFluid().getRegistryName().getPath().equals(name);
+        return fluid != null && !fluid.isEmpty() && fluid.getFluid().getRegistryName().getPath().equals(name);
     }
 
     /**
@@ -155,20 +152,20 @@ public class FluidUtil
      */
     public static int fillWithGCFuel(FluidTank tank, FluidStack liquid, ActionType action)
     {
-        if (liquid != FluidStack.EMPTY && testFuel(liquid.getFluid().getRegistryName()))
+        if (!liquid.isEmpty() && testFuel(liquid.getFluid().getRegistryName()))
         {
-            final FluidStack liquidInTank = tank.getFluid();
+            final FluidStack liquidInTank = tank.getFluidStack();
 
             //If the tank is empty, fill it with the current type of GC fuel
-            if (liquidInTank == FluidStack.EMPTY)
+            if (liquidInTank.isEmpty())
             {
-                return tank.fill(new FluidStack(GCFluids.FUEL.getFluid(), liquid.getAmount()), action);
+                return tank.fill(FluidStack.create(GCFluids.FUEL.getFluid(), liquid.getAmount()), action);
             }
 
             //If the tank already contains something, fill it with more of the same
             if (liquidInTank.getAmount() < tank.getCapacity())
             {
-                return tank.fill(new FluidStack(liquidInTank, liquid.getAmount()), action);
+                return tank.fill(FluidStack.create(liquidInTank, liquid.getAmount()), action);
             }
         }
 
@@ -215,7 +212,7 @@ public class FluidUtil
         if (holder.isPresent())
         {
             FluidStack stack = holder.orElse(null);
-            return stack != FluidStack.EMPTY && stack.getFluid().getRegistryName().getPath().toLowerCase().contains("methane");
+            return !stack.isEmpty() && stack.getFluid().getRegistryName().getPath().toLowerCase().contains("methane");
         }
         return false;
     }
@@ -275,7 +272,7 @@ public class FluidUtil
                 ItemStack stack = new ItemStack(canisterType, 1);
                 stack.setDamageValue(slotItem.getDamageValue() - used);
                 inventory.set(slot, stack);
-                tank.drain(used, ActionType.EXECUTE);
+                tank.drain(used, ActionType.PERFORM);
             }
             return;
         }
@@ -285,7 +282,7 @@ public class FluidUtil
 //        	if (slotItem.getItem() == Items.BUCKET && liquid.getAmount() >= 1000 && (bucketGC = ItemBucketGC.getBucketForFluid(liquid.getFluid())) != null)
 //        	{
 //        		inventory.set(slot, new ItemStack(bucketGC));
-//        		tank.drain(1000, ActionType.EXECUTE);
+//        		tank.drain(1000, ActionType.PERFORM);
 //        		return;
 //        	}
 //
@@ -293,11 +290,11 @@ public class FluidUtil
 //        	if (holder.isPresent())
 //        	{
 //                IFluidHandlerItem handler = holder.orElse(null);
-//        		final int used = handler.fill(liquid, ActionType.EXECUTE);
+//        		final int used = handler.fill(liquid, ActionType.PERFORM);
 //        		if (used > 0)
 //        		{
 //        			inventory.set(slot, handler.getContainer());
-//        			tank.drain(used, ActionType.EXECUTE);
+//        			tank.drain(used, ActionType.PERFORM);
 //        		}
 //        	}
 //        } TODO Bucket
@@ -312,7 +309,7 @@ public class FluidUtil
     {
         if (FluidUtil.isValidContainer(inventory.get(slot)))
         {
-            FluidStack liquid = tank.getFluid();
+            FluidStack liquid = tank.getFluidStack();
 
             if (!liquid.isEmpty() && liquid.getAmount() > 0)
             {
@@ -324,7 +321,7 @@ public class FluidUtil
                     //Make sure it is the current GC fuel
                     if (!liquidname.equals(GCFluids.FUEL.getFluid().getRegistryName().getPath()))
                     {
-                        liquid = new FluidStack(GCFluids.FUEL.getFluid(), liquid.getAmount());
+                        liquid = FluidStack.create(GCFluids.FUEL.getFluid(), liquid.getAmount());
                     }
 
                     //But match any existing fuel fluid in the container
@@ -336,10 +333,10 @@ public class FluidUtil
                         if (handler.isPresent())
                         {
                             LazyOptional<FluidStack> holder = net.minecraftforge.fluids.FluidUtil.getFluidContained(stack);
-                            FluidStack existingFluid = holder.orElse(FluidStack.EMPTY);
-                            if (existingFluid != FluidStack.EMPTY && !existingFluid.getFluid().getRegistryName().getPath().equals(GCFluids.FUEL.getFluid().getRegistryName().getPath()))
+                            FluidStack existingFluid = holder.orElse(FluidStack.empty());
+                            if (!existingFluid.isEmpty() && !existingFluid.getFluid().getRegistryName().getPath().equals(GCFluids.FUEL.getFluid().getRegistryName().getPath()))
                             {
-                                liquid = new FluidStack(existingFluid, liquid.getAmount());
+                                liquid = FluidStack.create(existingFluid, liquid.getAmount());
                             }
                         }
                     }
@@ -370,7 +367,7 @@ public class FluidUtil
         if (slotItem.getItem() instanceof ItemCanisterGeneric)
         {
             int originalDamage = slotItem.getDamageValue();
-            int used = tank.fill(new FluidStack(desiredLiquid, ItemCanisterGeneric.EMPTY_CAPACITY - originalDamage), ActionType.EXECUTE);
+            int used = tank.fill(FluidStack.create(desiredLiquid, ItemCanisterGeneric.EMPTY_CAPACITY - originalDamage), ActionType.PERFORM);
             if (originalDamage + used >= ItemCanisterGeneric.EMPTY_CAPACITY)
             {
                 ItemStack item = new ItemStack(GCItems.oilCanister, 1);
@@ -389,13 +386,13 @@ public class FluidUtil
 //        	ItemBucketGC bucket = (ItemBucketGC) slotItem.getItem();
 //        	if (fluidsSame(bucket.accepts, desiredLiquid, true))
 //        	{
-//                tank.fill(new FluidStack(desiredLiquid, amountOffered), ActionType.EXECUTE);
+//                tank.fill(FluidStack.create(desiredLiquid, amountOffered), ActionType.PERFORM);
 //                stacks.set(slot, new ItemStack(Items.BUCKET));
 //        	}
 //        } TODO Bucket
         else
         {
-            if (tank.getFluid() == FluidStack.EMPTY || amountOffered <= tank.getCapacity() - tank.getFluid().getAmount())
+            if (tank.getFluidStack().isEmpty() || amountOffered <= tank.getCapacity() - tank.getFluidStack().getAmount())
             {
                 //Now deal with the resulting container
                 if (FluidUtil.isFilledContainer(slotItem))
@@ -403,10 +400,10 @@ public class FluidUtil
                     final int itemCount = slotItem.getCount();
                     if (FluidUtil.isBucket(slotItem))
                     {
-                        int used = tank.fill(new FluidStack(desiredLiquid, amountOffered), ActionType.EXECUTE);
+                        int used = tank.fill(FluidStack.create(desiredLiquid, amountOffered), ActionType.PERFORM);
                         if (itemCount > 1)
                         {
-                            tank.fill(new FluidStack(desiredLiquid, (itemCount - 1) * 1000), ActionType.EXECUTE);
+                            tank.fill(FluidStack.create(desiredLiquid, (itemCount - 1) * 1000), ActionType.PERFORM);
                         }
                         stacks.set(slot, new ItemStack(Items.BUCKET, itemCount));
                     }
@@ -416,18 +413,18 @@ public class FluidUtil
                         if (holder.isPresent())
                         {
                             IFluidHandlerItem handlerItem = holder.orElse(null);
-                            int used = tank.fill(new FluidStack(desiredLiquid, amountOffered), ActionType.SIMULATE);
-                            FluidStack given = handlerItem.drain(used, ActionType.EXECUTE);
-                            if (given != FluidStack.EMPTY)
+                            int used = tank.fill(FluidStack.create(desiredLiquid, amountOffered), ActionType.SIMULATE);
+                            FluidStack given = handlerItem.drain(used, ActionType.PERFORM);
+                            if (!given.isEmpty())
                             {
-                                tank.fill(new FluidStack(desiredLiquid, given.getAmount()), ActionType.EXECUTE);
+                                tank.fill(FluidStack.create(desiredLiquid, given.getAmount()), ActionType.PERFORM);
                                 stacks.set(slot, handlerItem.getContainer());
                             }
                             return;
                         }
                         //Fallback basic treatment
                         ItemStack emptyStack = FluidUtil.getUsedContainer(slotItem);
-                        tank.fill(new FluidStack(desiredLiquid, FluidUtil.getContainerCapacity(slotItem)), ActionType.EXECUTE);
+                        tank.fill(FluidStack.create(desiredLiquid, FluidUtil.getContainerCapacity(slotItem)), ActionType.PERFORM);
                         stacks.set(slot, emptyStack);
                     }
                 }
@@ -466,7 +463,7 @@ public class FluidUtil
             FluidStack containedFluid = fluidHolder.orElse(null);
             containedFluid = containedFluid.copy();
             containedFluid.setAmount(1);
-            return handlerHolder.orElse(null).fill(containedFluid, ActionType.EXECUTE) > 0;
+            return handlerHolder.orElse(null).fill(containedFluid, ActionType.PERFORM) > 0;
         }
 
         return false;
@@ -566,20 +563,20 @@ public class FluidUtil
         }
         if (fuzzy)
         {
-            if (f1.getRegistryName().getPath().startsWith("fuel"))
+            if (PlatformSpecific.getResourceId(f1, Registry.FLUID).getPath().startsWith("fuel"))
             {
-                return testFuel(f2.getRegistryName());
+                return testFuel(PlatformSpecific.getResourceId(f2, Registry.FLUID));
             }
-            if (f1.getRegistryName().getPath().startsWith("oil"))
+            if (PlatformSpecific.getResourceId(f1, Registry.FLUID).getPath().startsWith("oil"))
             {
-                return f2.getRegistryName().getPath().startsWith("oil");
+                return PlatformSpecific.getResourceId(f2, Registry.FLUID).getPath().startsWith("oil");
             }
-            if (f1.getRegistryName().getPath().startsWith("water"))
+            if (PlatformSpecific.getResourceId(f1, Registry.FLUID).getPath().startsWith("water"))
             {
-                return f2.getRegistryName().getPath().startsWith("water");
+                return PlatformSpecific.getResourceId(f2, Registry.FLUID).getPath().startsWith("water");
             }
         }
-        return f1.getRegistryName().getPath().equals(f2.getRegistryName().getPath());
+        return PlatformSpecific.getResourceId(f1, Registry.FLUID).getPath().equals(PlatformSpecific.getResourceId(f2, Registry.FLUID).getPath());
     }
 
 //    public static boolean fluidsSame(Fluid f1, String name2, boolean fuzzy)
@@ -669,7 +666,7 @@ public class FluidUtil
         if (holder.isPresent())
         {
             FluidStack liquid = holder.orElse(null);
-            return liquid != FluidStack.EMPTY && liquid.getFluid().getRegistryName().getPath().equals("water");
+            return !liquid.isEmpty() && liquid.getFluid().getRegistryName().getPath().equals("water");
         }
         return false;
     }
@@ -690,10 +687,10 @@ public class FluidUtil
 
 //        if (container.getItem() instanceof ItemBucketGC)
 //        {
-//        	return new FluidStack(((ItemBucketGC)container.getItem()).accepts, 1000);
+//        	return FluidStack.create(((ItemBucketGC)container.getItem()).accepts, 1000);
 //        } TODO Bucket
 
-        return net.minecraftforge.fluids.FluidUtil.getFluidContained(container).orElse(FluidStack.EMPTY);
+        return net.minecraftforge.fluids.FluidUtil.getFluidContained(container).orElse(FluidStack.empty());
     }
 
     /**
@@ -725,7 +722,7 @@ public class FluidUtil
         }
         else if (handler != null)
         {
-            handler.drain(Integer.MAX_VALUE, ActionType.EXECUTE);
+            handler.drain(Integer.MAX_VALUE, ActionType.PERFORM);
             return handler.getContainer();
         }
         else
@@ -870,10 +867,10 @@ public class FluidUtil
             return ItemStack.EMPTY;
         }
         FluidStack liquid = tank.drain(currCapacity, ActionType.SIMULATE);
-        int transferred = ((ItemCanisterGeneric) canister.getItem()).fill(canister, liquid, isCreativeMode ? ActionType.SIMULATE : ActionType.EXECUTE);
+        int transferred = ((ItemCanisterGeneric) canister.getItem()).fill(canister, liquid, isCreativeMode ? ActionType.SIMULATE : ActionType.PERFORM);
         if (transferred > 0)
         {
-            liquid = tank.drain(transferred, ActionType.EXECUTE);
+            liquid = tank.drain(transferred, ActionType.PERFORM);
             return canister;
         }
         return ItemStack.EMPTY;
@@ -887,10 +884,10 @@ public class FluidUtil
             return ItemStack.EMPTY;
         }
         FluidStack liquid = ((ItemCanisterGeneric) canister.getItem()).drain(canister, currContents, ActionType.SIMULATE);
-        int transferred = tank.fill(liquid, ActionType.EXECUTE);
+        int transferred = tank.fill(liquid, ActionType.PERFORM);
         if (transferred > 0)
         {
-            ((ItemCanisterGeneric) canister.getItem()).drain(canister, transferred, isCreativeMode ? ActionType.SIMULATE : ActionType.EXECUTE);
+            ((ItemCanisterGeneric) canister.getItem()).drain(canister, transferred, isCreativeMode ? ActionType.SIMULATE : ActionType.PERFORM);
             return canister;
         }
         return ItemStack.EMPTY;

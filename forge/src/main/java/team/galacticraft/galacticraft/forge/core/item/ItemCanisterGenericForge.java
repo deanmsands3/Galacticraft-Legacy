@@ -131,7 +131,7 @@ public abstract class ItemCanisterGenericForge extends ItemFluidContainer
 
     public int fill(ItemStack container, FluidStack resource, ActionType action)
     {
-        if (resource == null || resource == FluidStack.EMPTY || resource.getAmount() <= 0 || container == null || container.getDamageValue() <= 1 || !(container.getItem() instanceof ItemCanisterGeneric))
+        if (resource == null || resource.isEmpty() || resource.getAmount() <= 0 || container == null || container.getDamageValue() <= 1 || !(container.getItem() instanceof ItemCanisterGeneric))
         {
             return 0;
         }
@@ -248,6 +248,6 @@ public abstract class ItemCanisterGenericForge extends ItemFluidContainer
             return null;
         }
 
-        return new FluidStack(fluid, ItemCanisterGeneric.EMPTY_CAPACITY - container.getDamageValue());
+        return FluidStack.create(fluid, ItemCanisterGeneric.EMPTY_CAPACITY - container.getDamageValue());
     }
 }

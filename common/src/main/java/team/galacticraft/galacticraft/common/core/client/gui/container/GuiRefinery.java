@@ -47,7 +47,7 @@ public class GuiRefinery extends GuiContainerGC<ContainerRefinery>
         List<String> oilTankDesc = new ArrayList<String>();
         oilTankDesc.add(I18n.get("gui.oil_tank.desc.0"));
         oilTankDesc.add(I18n.get("gui.oil_tank.desc.1"));
-        int oilLevel = this.refinery.oilTank != null && this.refinery.oilTank.getFluid() != FluidStack.EMPTY ? this.refinery.oilTank.getFluid().getAmount() : 0;
+        int oilLevel = this.refinery.oilTank != null && this.refinery.oilTank.getFluidStack() != FluidStack.empty() ? this.refinery.oilTank.getFluidStack().getAmount() : 0;
         int oilCapacity = this.refinery.oilTank != null ? this.refinery.oilTank.getCapacity() : 0;
         oilTankDesc.add(EnumColor.YELLOW + I18n.get("gui.message.oil") + ": " + oilLevel + " / " + oilCapacity);
         this.oilTankRegion.tooltipStrings = oilTankDesc;
@@ -62,7 +62,7 @@ public class GuiRefinery extends GuiContainerGC<ContainerRefinery>
         this.infoRegions.add(new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 37, (this.height - this.imageHeight) / 2 + 50, 18, 18, batterySlotDesc, this.width, this.height, this));
         List<String> fuelTankDesc = new ArrayList<String>();
         fuelTankDesc.add(I18n.get("gui.fuel_tank.desc.4"));
-        int fuelLevel = this.refinery.fuelTank != null && this.refinery.fuelTank.getFluid() != FluidStack.EMPTY ? this.refinery.fuelTank.getFluid().getAmount() : 0;
+        int fuelLevel = this.refinery.fuelTank != null && this.refinery.fuelTank.getFluidStack() != FluidStack.empty() ? this.refinery.fuelTank.getFluidStack().getAmount() : 0;
         int fuelCapacity = this.refinery.fuelTank != null ? this.refinery.fuelTank.getCapacity() : 0;
         fuelTankDesc.add(EnumColor.YELLOW + I18n.get("gui.message.fuel") + ": " + fuelLevel + " / " + fuelCapacity);
         this.fuelTankRegion.tooltipStrings = fuelTankDesc;
@@ -99,7 +99,7 @@ public class GuiRefinery extends GuiContainerGC<ContainerRefinery>
         int yOffset = -18;
 
         String missingInput = null;
-        if (this.refinery.oilTank.getFluid() == FluidStack.EMPTY || this.refinery.oilTank.getFluidAmount() == 0)
+        if (this.refinery.oilTank.getFluidStack().isEmpty() || this.refinery.oilTank.getFluidAmount() == 0)
         {
             missingInput = EnumColor.RED + I18n.get("gui.status.nooil");
         }
@@ -134,14 +134,14 @@ public class GuiRefinery extends GuiContainerGC<ContainerRefinery>
         List<String> oilTankDesc = new ArrayList<String>();
         oilTankDesc.add(I18n.get("gui.oil_tank.desc.0"));
         oilTankDesc.add(I18n.get("gui.oil_tank.desc.1"));
-        int oilLevel = this.refinery.oilTank != null && this.refinery.oilTank.getFluid() != FluidStack.EMPTY ? this.refinery.oilTank.getFluid().getAmount() : 0;
+        int oilLevel = this.refinery.oilTank != null && this.refinery.oilTank.getFluidStack() != FluidStack.empty() ? this.refinery.oilTank.getFluidStack().getAmount() : 0;
         int oilCapacity = this.refinery.oilTank != null ? this.refinery.oilTank.getCapacity() : 0;
         oilTankDesc.add(EnumColor.YELLOW + I18n.get("gui.message.oil") + ": " + oilLevel + " / " + oilCapacity);
         this.oilTankRegion.tooltipStrings = oilTankDesc;
 
         List<String> fuelTankDesc = new ArrayList<String>();
         fuelTankDesc.add(I18n.get("gui.fuel_tank.desc.4"));
-        int fuelLevel = this.refinery.fuelTank != null && this.refinery.fuelTank.getFluid() != FluidStack.EMPTY ? this.refinery.fuelTank.getFluid().getAmount() : 0;
+        int fuelLevel = this.refinery.fuelTank != null && this.refinery.fuelTank.getFluidStack() != FluidStack.empty() ? this.refinery.fuelTank.getFluidStack().getAmount() : 0;
         int fuelCapacity = this.refinery.fuelTank != null ? this.refinery.fuelTank.getCapacity() : 0;
         fuelTankDesc.add(EnumColor.YELLOW + I18n.get("gui.message.fuel") + ": " + fuelLevel + " / " + fuelCapacity);
         this.fuelTankRegion.tooltipStrings = fuelTankDesc;

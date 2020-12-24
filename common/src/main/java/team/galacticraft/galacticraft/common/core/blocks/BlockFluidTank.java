@@ -7,7 +7,6 @@ import team.galacticraft.galacticraft.common.core.items.ISortable;
 import team.galacticraft.galacticraft.common.core.tile.TileEntityFluidTank;
 import team.galacticraft.galacticraft.common.core.util.EnumSortCategory;
 import team.galacticraft.galacticraft.common.core.util.FluidUtil;
-import team.galacticraft.galacticraft.common.core.util.GCCoreUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +29,6 @@ import team.galacticraft.galacticraft.common.api.util.LazyOptional;
 import net.minecraftforge.fluids.FluidActionResult;
 import me.shedaniel.architectury.fluid.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
 public class BlockFluidTank extends Block implements IShiftDescription, ISortable, EntityBlock
 {
@@ -212,7 +210,7 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
         if (tile instanceof TileEntityFluidTank)
         {
             TileEntityFluidTank tank = (TileEntityFluidTank) tile;
-            return tank.fluidTank.getFluid() == FluidStack.EMPTY || tank.fluidTank.getFluid().getAmount() == 0 ? 0 : tank.fluidTank.getFluid().getFluid().getAttributes().getLuminosity(tank.fluidTank.getFluid());
+            return tank.fluidTank.getFluidStack().isEmpty() || tank.fluidTank.getFluidStack().getAmount() == 0 ? 0 : tank.fluidTank.getFluidStack().getFluid().getAttributes().getLuminosity(tank.fluidTank.getFluidStack());
         }
 
         return 0;

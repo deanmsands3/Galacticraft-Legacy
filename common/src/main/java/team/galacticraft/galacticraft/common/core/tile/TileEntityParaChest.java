@@ -2,8 +2,6 @@ package team.galacticraft.galacticraft.common.core.tile;
 
 import io.netty.buffer.ByteBuf;
 import team.galacticraft.galacticraft.common.core.Annotations.NetworkedField;
-import team.galacticraft.galacticraft.common.core.GCBlockNames;
-import team.galacticraft.galacticraft.common.Constants;
 import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.common.core.entities.IScaleableFuelLevel;
 import team.galacticraft.galacticraft.common.core.inventory.ContainerParaChest;
@@ -64,7 +62,7 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     @Override
     public int getScaledFuelLevel(int i)
     {
-        final double fuelLevel = this.fuelTank.getFluid() == FluidStack.EMPTY ? 0 : this.fuelTank.getFluid().getAmount();
+        final double fuelLevel = this.fuelTank.getFluidStack().isEmpty() ? 0 : this.fuelTank.getFluidStack().getAmount();
 
         return (int) (fuelLevel * i / this.tankCapacity);
     }
@@ -121,7 +119,7 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
         nbt.putInt("chestContentLength", this.getInventory().size());
         ContainerHelper.saveAllItems(nbt, this.getInventory());
 
-        if (this.fuelTank.getFluid() != FluidStack.EMPTY)
+        if (this.fuelTank.getFluidStack() != FluidStack.empty())
         {
             nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundTag()));
         }

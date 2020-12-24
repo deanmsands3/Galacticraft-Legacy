@@ -1,7 +1,6 @@
 package team.galacticraft.galacticraft.common.core.entities;
 
 import io.netty.buffer.ByteBuf;
-import team.galacticraft.galacticraft.common.core.fluid.GCFluidRegistry;
 import team.galacticraft.galacticraft.common.core.GalacticraftCore;
 import team.galacticraft.galacticraft.common.api.entity.GCPlayerStats;
 import team.galacticraft.galacticraft.common.core.fluid.GCFluids;
@@ -65,7 +64,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
 
         GCPlayerStats stats = GCPlayerStats.get(player);
         this.stacks = NonNullList.withSize(stats.getRocketStacks().size() + 1, ItemStack.EMPTY);
-        this.fuelTank.setFluid(new FluidStack(GCFluids.FUEL.getFluid(), stats.getFuelLevel()));
+        this.fuelTank.setFluid(FluidStack.create(GCFluids.FUEL.getFluid(), stats.getFuelLevel()));
 
         for (int i = 0; i < stats.getRocketStacks().size(); i++)
         {
@@ -153,7 +152,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     @Override
     public int getScaledFuelLevel(int i)
     {
-        final double fuelLevel = this.fuelTank.getFluid() == FluidStack.EMPTY ? 0 : this.fuelTank.getFluid().getAmount();
+        final double fuelLevel = this.fuelTank.getFluidStack().isEmpty() ? 0 : this.fuelTank.getFluidStack().getAmount();
 
         return (int) (fuelLevel * i / this.FUEL_TANK_CAPACITY);
     }
@@ -267,7 +266,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
 
         ContainerHelper.saveAllItems(nbt, this.stacks);
 
-        if (this.fuelTank.getFluid() != FluidStack.EMPTY)
+        if (this.fuelTank.getFluidStack() != FluidStack.empty())
         {
             nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundTag()));
         }
@@ -327,7 +326,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
         {
             Integer cargoLength = this.stacks != null ? this.stacks.size() : 0;
             objList.add(cargoLength);
-            objList.add(this.fuelTank.getFluid() == FluidStack.EMPTY ? 0 : this.fuelTank.getFluid().getAmount());
+            objList.add(this.fuelTank.getFluidStack().isEmpty() ? 0 : this.fuelTank.getFluidStack().getAmount());
         }
 
         if (this.level.isClientSide)
@@ -392,7 +391,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
                     GalacticraftCore.packetPipeline.sendToServer(new PacketDynamicInventory(this));
                 }
 
-                this.fuelTank.setFluid(new FluidStack(GCFluids.FUEL.getFluid(), buffer.readInt()));
+                this.fuelTank.setFluid(FluidStack.create(GCFluids.FUEL.getFluid(), buffer.readInt()));
 
                 this.shouldMoveServer = buffer.readBoolean();
 

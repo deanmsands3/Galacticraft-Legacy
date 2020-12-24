@@ -201,7 +201,7 @@ public class EntityParachest extends Entity implements IPacketReceiver
 
                     Collections.copy(chest.getInventory(), this.cargo);
 
-                    chest.fuelTank.fill(new FluidStack(GCFluids.FUEL.getFluid(), this.fuelLevel), ActionType.EXECUTE);
+                    chest.fuelTank.fill(FluidStack.create(GCFluids.FUEL.getFluid(), this.fuelLevel), ActionType.PERFORM);
                 }
                 else
                 {

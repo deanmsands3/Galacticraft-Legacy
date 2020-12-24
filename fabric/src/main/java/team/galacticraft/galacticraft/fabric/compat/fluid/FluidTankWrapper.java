@@ -29,39 +29,51 @@ public class FluidTankWrapper<T extends FixedFluidInv & Saveable> extends Delega
     }
 
     @Override
-    public FluidStack get(int tank)
+    public Fraction getCapacity(int tank)
     {
-        return FluidUtilFabric.toVolumeA(delegate.getInvFluid(tank));
+        return FabricFluidUtil.toFractionA(this.delegate.getMaxAmount_F(tank));
+    }
+
+    @Override
+    public FluidStack getFluidStack(int tank)
+    {
+        return FabricFluidUtil.toVolumeA(delegate.getInvFluid(tank));
     }
 
     @Override
     public FluidStack extract(int tank, Fraction amount, ActionType action)
     {
-        return FluidUtilFabric.toVolumeA(this.delegate.getTank(tank).attemptExtraction(ConstantFluidFilter.ANYTHING, FluidUtilFabric.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+        return FabricFluidUtil.toVolumeA(this.delegate.getTank(tank).attemptExtraction(ConstantFluidFilter.ANYTHING, FabricFluidUtil.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     @Override
     public FluidStack extract(Fraction amount, ActionType action)
     {
-        return FluidUtilFabric.toVolumeA(this.delegate.getExtractable().attemptExtraction(ConstantFluidFilter.ANYTHING, FluidUtilFabric.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+        return FabricFluidUtil.toVolumeA(this.delegate.getExtractable().attemptExtraction(ConstantFluidFilter.ANYTHING, FabricFluidUtil.toAmountLBA(amount), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     @Override
     public FluidStack extract(FluidStack stack, ActionType action)
     {
-        return FluidUtilFabric.toVolumeA(this.delegate.getExtractable().attemptExtraction(fluidKey -> stack.getFluid().equals(fluidKey.getRawFluid()), FluidUtilFabric.toAmountLBA(stack.getAmount()), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+        return FabricFluidUtil.toVolumeA(this.delegate.getExtractable().attemptExtraction(fluidKey -> stack.getFluid().equals(fluidKey.getRawFluid()), FabricFluidUtil.toAmountLBA(stack.getAmount()), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
     }
 
     @Override
     public FluidStack insert(int tank, FluidStack stack, ActionType action)
     {
-        return FluidUtilFabric.toVolumeA(this.delegate.getTank(tank).attemptInsertion(FluidUtilFabric.toVolumeLBA(stack), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+        return FabricFluidUtil.toVolumeA(this.delegate.getTank(tank).attemptInsertion(FabricFluidUtil.toVolumeLBA(stack), action == ActionType.SIMULATE ? Simulation.SIMULATE : Simulation.ACTION));
+    }
+
+    @Override
+    public boolean setFluid(int tank, FluidStack stack, ActionType actionType)
+    {
+        return this.delegate.setInvFluid(tank, FabricFluidUtil.toVolumeLBA(stack), actionType == ActionType.PERFORM ? Simulation.ACTION : Simulation.SIMULATE);
     }
 
     @Override
     public boolean isValid(int tank, FluidStack stack)
     {
-        return this.delegate.isFluidValidForTank(tank, FluidUtilFabric.toFluidKey(stack));
+        return this.delegate.isFluidValidForTank(tank, FabricFluidUtil.toFluidKey(stack));
     }
 
     @Override

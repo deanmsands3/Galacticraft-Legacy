@@ -145,7 +145,7 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortable
 
                     if (itemstack.hasTag() && itemstack.getTag().contains("BuggyFuel"))
                     {
-                        var35.buggyFuelTank.setFluid(new FluidStack(GCFluids.FUEL.getFluid(), itemstack.getTag().getInt("BuggyFuel")));
+                        var35.buggyFuelTank.setFluid(FluidStack.create(GCFluids.FUEL.getFluid(), itemstack.getTag().getInt("BuggyFuel")));
                     }
 
                     if (!worldIn.isClientSide)

@@ -128,9 +128,9 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
                         {
                             FluidStack received = handler.drain(this.pullAmount, ActionType.SIMULATE);
 
-                            if (received != FluidStack.EMPTY && received.getAmount() != 0)
+                            if (received != FluidStack.empty() && received.getAmount() != 0)
                             {
-                                handler.drain(this.fill(Direction.DOWN, received, ActionType.EXECUTE), ActionType.EXECUTE);
+                                handler.drain(this.fill(Direction.DOWN, received, ActionType.PERFORM), ActionType.PERFORM);
                             }
                         }
                     }
@@ -326,7 +326,7 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
         {
             if (holder == null)
             {
-                holder = LazyOptional.of(new NonNullSupplier<IFluidHandler>()
+                holder = LazyOptional.create(new NonNullSupplier<IFluidHandler>()
                 {
                     @NotNull
                     @Override

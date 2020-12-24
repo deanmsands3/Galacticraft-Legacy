@@ -1,13 +1,16 @@
 package team.galacticraft.galacticraft.common.core.wrappers;
 
+import me.shedaniel.architectury.utils.Fraction;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.material.Fluids;
 import me.shedaniel.architectury.fluid.FluidStack;
+import team.galacticraft.galacticraft.common.compat.component.ComponentWrapper;
 import team.galacticraft.galacticraft.common.compat.fluid.ActionType;
 
 import org.jetbrains.annotations.NotNull;
 
-public class FluidHandlerWrapper implements IFluidHandler
+public abstract class FluidHandlerWrapper
 {
     public IFluidHandlerWrapper wrapper;
 
@@ -19,46 +22,46 @@ public class FluidHandlerWrapper implements IFluidHandler
         side = s;
     }
 
-    @Override
+//    @Override
     public int getTanks()
     {
         return wrapper.getTanks();
     }
 
     @NotNull
-    @Override
+//    @Override
     public FluidStack getFluidInTank(int tank)
     {
         return wrapper.getFluidInTank(tank);
     }
 
-    @Override
-    public int getTankCapacity(int tank)
+//    @Override
+    public Fraction getTankCapacity(int tank)
     {
         return wrapper.getTankCapacity(tank);
     }
 
-    @Override
+//    @Override
     public boolean isFluidValid(int tank, @NotNull FluidStack stack)
     {
         return wrapper.isFluidValid(tank, stack);
     }
 
-    @Override
-    public int fill(FluidStack resource, ActionType action)
+//    @Override
+    public FluidStack fill(FluidStack resource, ActionType action)
     {
         if (wrapper.canFill(side, resource != null ? resource.getFluid() : null))
         {
             return wrapper.fill(side, resource, action);
         }
 
-        return 0;
+        return FluidStack.empty()();
     }
 
-    @Override
+//    @Override
     public FluidStack drain(FluidStack resource, ActionType action)
     {
-        if (wrapper.canDrain(side, resource != FluidStack.EMPTY ? resource.getFluid() : Fluids.EMPTY))
+        if (wrapper.canDrain(side, resource != FluidStack.empty()() ? resource.getFluid() : Fluids.EMPTY))
         {
             return wrapper.drain(side, resource, action);
         }
@@ -66,8 +69,8 @@ public class FluidHandlerWrapper implements IFluidHandler
         return null;
     }
 
-    @Override
-    public FluidStack drain(int maxDrain, ActionType action)
+//    @Override
+    public FluidStack drain(Fraction maxDrain, ActionType action)
     {
         if (wrapper.canDrain(side, Fluids.EMPTY))
         {
@@ -75,5 +78,18 @@ public class FluidHandlerWrapper implements IFluidHandler
         }
 
         return null;
+    }
+
+    public boolean setFluid(int tank, FluidStack stack, ActionType action)
+    {
+        return wrapper.setFluid(tank, stack, action);
+    }
+
+    public CompoundTag serialize(CompoundTag tag) {
+        return wrapper.serialize(tag);
+    }
+
+    public void deserialize(CompoundTag tag) {
+        wrapper.deserialize(tag);
     }
 }
