@@ -1,11 +1,20 @@
 {
+  "block.galacticraftplanets.asteroid_aluminum_ore": "Asteroid Aluminum Ore",
+  "block.galacticraftplanets.asteroid_iron_ore": "Asteroid Iron Ore",
+  "block.galacticraftplanets.astro_miner_base": "Astro Miner Base",
   "block.galacticraftplanets.blue_slimeling_egg": "Blue Slimeline Egg",
   "block.galacticraftplanets.cavernous_vines": "Cavernous Vines",
   "block.galacticraftplanets.creeper_egg": "Creeper Egg",
+  "block.galacticraftplanets.dark_asteroid_rock": "Dark Asteroid Rock",
+  "block.galacticraftplanets.dark_decoration_block": "Dark Decoration Block",
+  "block.galacticraftplanets.dense_ice": "Dense Ice",
   "block.galacticraftplanets.desh_block": "Block of Desh",
   "block.galacticraftplanets.desh_ore": "Desh Ore",
   "block.galacticraftplanets.gas_liquefier": "Gas Liquefier",
+  "block.galacticraftplanets.gray_asteroid_rock": "Gray Asteroid Rock",
+  "block.galacticraftplanets.ilmenite_ore": "Ilmenite Ore",
   "block.galacticraftplanets.launch_controller": "Launch Controller",
+  "block.galacticraftplanets.light_gray_asteroid_rock": "Light Gray Asteroid Rock",
   "block.galacticraftplanets.mars_cobblestone": "Mars Cobblestone",
   "block.galacticraftplanets.mars_copper_ore": "Mars Copper Ore",
   "block.galacticraftplanets.mars_dungeon_bricks": "Mars Dungeon Bricks",
@@ -17,6 +26,7 @@
   "block.galacticraftplanets.methane_synthesizer": "Methane Synthesizer",
   "block.galacticraftplanets.red_slimeling_egg": "Blue Slimeline Egg",
   "block.galacticraftplanets.terraformer": "Terraformer",
+  "block.galacticraftplanets.titanium_block": "Titanium Block",
   "block.galacticraftplanets.water_electrolyzer": "Water Electrolyzer",
   "block.galacticraftplanets.yellow_slimeling_egg": "Blue Slimeline Egg"
 }

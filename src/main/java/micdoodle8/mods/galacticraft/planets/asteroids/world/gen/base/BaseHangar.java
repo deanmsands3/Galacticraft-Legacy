@@ -56,7 +56,7 @@ public class BaseHangar extends SizedPiece
         BlockState blockAir = Blocks.AIR.getDefaultState();
         BlockState blockPlain = GCBlocks.TIN_DECORATION_BLOCK_2.getDefaultState();
         BlockState blockPattern = GCBlocks.TIN_DECORATION_BLOCK_1.getDefaultState();
-        BlockState blockGrid = AsteroidBlocks.blockWalkway.getDefaultState();
+        BlockState blockGrid = AsteroidBlocks.WALKWAY.getDefaultState();
 //        BlockState blockSlab = GCBlocks.slabGCHalf.getStateFromMeta(1);
 //        BlockState upsideSlab = GCBlocks.slabGCHalf.getStateFromMeta(9);
 //        BlockState blockWall = GCBlocks.wallGC.getStateFromMeta(1);

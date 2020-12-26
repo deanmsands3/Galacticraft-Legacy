@@ -3,7 +3,7 @@
 "textures": {
 	"particle": "galacticraftplanets:block/walkway", 
     "texture": "galacticraftplanets:block/walkway",
-    "aluminum_wire": "galacticraftcore:blocks/aluminum_wire"
+    "aluminum_wire": "galacticraftcore:block/aluminum_wire"
 },
 "elements": [ 
 {

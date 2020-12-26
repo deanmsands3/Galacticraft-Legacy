@@ -1,6 +1,7 @@
 package micdoodle8.mods.galacticraft.planets.data;
 
 import micdoodle8.mods.galacticraft.core.Constants;
+import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockSlimelingEgg;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import net.minecraft.block.Block;
@@ -77,9 +78,9 @@ public class DataGeneratorGCPlanets
             this.getVariantBuilder(MarsBlocks.RED_SLIMELING_EGG).forAllStates(state -> ConfiguredModel.builder().modelFile(this.getSlimelingEggModel(state, "red_slimeling_egg")).build());
             this.getVariantBuilder(MarsBlocks.YELLOW_SLIMELING_EGG).forAllStates(state -> ConfiguredModel.builder().modelFile(this.getSlimelingEggModel(state, "yellow_slimeling_egg")).build());
 
-            this.getVariantBuilder(MarsBlocks.CAVERNOUS_VINES).partialState().setModels(new ConfiguredModel(this.models().cross("cavernous_vines_1", this.getBlockTexture("cavernous_vines_1"))),
-                    new ConfiguredModel(this.models().cross("cavernous_vines_2", this.getBlockTexture("cavernous_vines_2"))),
-                    new ConfiguredModel(this.models().cross("cavernous_vines_3", this.getBlockTexture("cavernous_vines_3"))));
+            this.getVariantBuilder(MarsBlocks.CAVERNOUS_VINES).partialState().setModels(new ConfiguredModel(this.models().cross("cavernous_vines_1", this.modLoc("block/cavernous_vines_1"))),
+                    new ConfiguredModel(this.models().cross("cavernous_vines_2", this.modLoc("block/cavernous_vines_2"))),
+                    new ConfiguredModel(this.models().cross("cavernous_vines_3", this.modLoc("block/cavernous_vines_3"))));
 
             ModelFile model = this.models().cube("methane_synthesizer", machineAdvInput, machineAdvBase, this.modLoc("block/methane_synthesizer"), machineAdvSide, this.modLoc("block/machine_oxygen_input_warning"), this.modLoc("block/machine_oxygen_output_warning")).texture("particle", this.modLoc("block/methane_synthesizer"));
             this.horizontalBlock(MarsBlocks.METHANE_SYNTHESIZER, model);
@@ -95,6 +96,22 @@ public class DataGeneratorGCPlanets
 
             model = this.models().cube("water_electrolyzer", machineAdvInput, machineAdvBase, this.modLoc("block/water_electrolyzer"), this.modLoc("block/machine_oxygen_output_warning"), this.modLoc("block/machine_water_input_warning"), this.modLoc("block/machine_oxygen_output_warning")).texture("particle", this.modLoc("block/water_electrolyzer"));
             this.horizontalBlock(MarsBlocks.WATER_ELECTROLYZER, model);
+
+            this.simpleBlock(AsteroidBlocks.ASTEROID_IRON_ORE);
+            this.simpleBlock(AsteroidBlocks.ASTEROID_ALUMINUM_ORE);
+            this.simpleBlock(AsteroidBlocks.ILMENITE_ORE);
+            this.simpleBlock(AsteroidBlocks.TITANIUM_BLOCK);
+            this.simpleBlock(AsteroidBlocks.DARK_DECORATION_BLOCK);
+            this.simpleBlock(AsteroidBlocks.DARK_ASTEROID_ROCK);
+            this.simpleBlock(AsteroidBlocks.GRAY_ASTEROID_ROCK);
+            this.simpleBlock(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK);
+            this.simpleBlock(AsteroidBlocks.DENSE_ICE);
+            this.simpleBlock(AsteroidBlocks.ASTRO_MINER_BASE, this.models().cubeAll("astro_miner_base", this.modLoc("block/machine_frame")));
+            this.simpleBlock(AsteroidBlocks.FULL_ASTRO_MINER_BASE, this.models().cubeAll("full_astro_miner_base", this.modLoc("block/machine_frame")));
+            this.simpleBlock(AsteroidBlocks.SHORT_RANGE_TELEPAD, this.models().cubeAll("short_range_telepad", this.modLoc("block/short_range_telepad_base")));
+            this.simpleBlock(AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY, this.models().cubeAll("short_range_telepad_dummy", this.modLoc("block/short_range_telepad_base")));
+            this.simpleBlock(AsteroidBlocks.ENERGY_BEAM_RECEIVER, this.models().cubeAll("energy_beam_receiver", this.modLoc("block/energy_beam_receiver")));
+            this.simpleBlock(AsteroidBlocks.ENERGY_BEAM_REFLECTOR, this.models().cubeAll("energy_beam_reflector", this.modLoc("block/energy_beam_reflector")));
         }
 
         protected ModelFile getSlimelingEggModel(BlockState state, String name)
@@ -102,24 +119,9 @@ public class DataGeneratorGCPlanets
             return state.get(BlockSlimelingEgg.CRACKED) ? this.models().withExistingParent(name + "_cracked", this.modLoc("block/slimeling_egg")).texture("texture", this.modLoc("block/" + name + "_cracked")) : this.models().withExistingParent(name, this.modLoc("block/slimeling_egg")).texture("texture", this.modLoc("block/" + name));
         }
 
-        protected void simpleCross(Block block)
-        {
-            this.simpleCross(block, this.toString(block));
-        }
-
-        protected void simpleCross(Block block, String name)
-        {
-            this.getVariantBuilder(block).partialState().setModels(new ConfiguredModel(this.models().cross(name, this.getBlockTexture(name))));
-        }
-
         protected void simpleFluid(FlowingFluidBlock block)
         {
             this.getVariantBuilder(block).partialState().setModels(new ConfiguredModel(this.models().getBuilder(this.toString(block)).texture("particle", this.modLoc(block.getFluid().getAttributes().getStillTexture().getPath()))));
-        }
-
-        protected ResourceLocation getBlockTexture(String name)
-        {
-            return new ResourceLocation(Constants.MOD_ID_PLANETS, "block/" + name);
         }
 
         protected String toString(Block block)
@@ -158,6 +160,18 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(MarsBlocks.TERRAFORMER);
             this.parentedBlock(MarsBlocks.LAUNCH_CONTROLLER);
             this.parentedBlock(MarsBlocks.WATER_ELECTROLYZER);
+
+            this.parentedBlock(AsteroidBlocks.ASTEROID_IRON_ORE);
+            this.parentedBlock(AsteroidBlocks.ASTEROID_ALUMINUM_ORE);
+            this.parentedBlock(AsteroidBlocks.ILMENITE_ORE);
+            this.parentedBlock(AsteroidBlocks.TITANIUM_BLOCK);
+            this.parentedBlock(AsteroidBlocks.DARK_DECORATION_BLOCK);
+            this.parentedBlock(AsteroidBlocks.DARK_ASTEROID_ROCK);
+            this.parentedBlock(AsteroidBlocks.GRAY_ASTEROID_ROCK);
+            this.parentedBlock(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK);
+            this.parentedBlock(AsteroidBlocks.DENSE_ICE);
+            this.parentedBlock(AsteroidBlocks.ASTRO_MINER_BASE);
+
             this.itemGenerated(MarsBlocks.CAVERNOUS_VINES, "cavernous_vines_1");
         }
 
@@ -242,6 +256,17 @@ public class DataGeneratorGCPlanets
             this.add(MarsBlocks.TERRAFORMER, "Terraformer");
             this.add(MarsBlocks.LAUNCH_CONTROLLER, "Launch Controller");
             this.add(MarsBlocks.WATER_ELECTROLYZER, "Water Electrolyzer");
+
+            this.add(AsteroidBlocks.ASTEROID_IRON_ORE, "Asteroid Iron Ore");
+            this.add(AsteroidBlocks.ASTEROID_ALUMINUM_ORE, "Asteroid Aluminum Ore");
+            this.add(AsteroidBlocks.ILMENITE_ORE, "Ilmenite Ore");
+            this.add(AsteroidBlocks.TITANIUM_BLOCK, "Titanium Block");
+            this.add(AsteroidBlocks.DARK_DECORATION_BLOCK, "Dark Decoration Block");
+            this.add(AsteroidBlocks.DARK_ASTEROID_ROCK, "Dark Asteroid Rock");
+            this.add(AsteroidBlocks.GRAY_ASTEROID_ROCK, "Gray Asteroid Rock");
+            this.add(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK, "Light Gray Asteroid Rock");
+            this.add(AsteroidBlocks.DENSE_ICE, "Dense Ice");
+            this.add(AsteroidBlocks.ASTRO_MINER_BASE, "Astro Miner Base");
         }
     }
 }

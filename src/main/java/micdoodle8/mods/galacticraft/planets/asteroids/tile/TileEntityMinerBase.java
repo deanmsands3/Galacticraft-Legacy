@@ -47,7 +47,7 @@ import java.util.Map.Entry;
 
 public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory implements ISidedInventory, IMultiBlock, IMachineSides
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.minerBaseFull)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.FULL_ASTRO_MINER_BASE)
     public static TileEntityType<TileEntityMinerBase> TYPE;
 
     public static final int HOLDSIZE = 72;
@@ -135,7 +135,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
                         for (int z = 0; z < 2; z++)
                         {
                             BlockPos pos = posMain.add(x, y, z);
-                            w.setBlockState(pos, AsteroidBlocks.minerBaseFull.getDefaultState(), 2);
+                            w.setBlockState(pos, AsteroidBlocks.FULL_ASTRO_MINER_BASE.getDefaultState(), 2);
                             final TileEntity tile = w.getTileEntity(pos);
 
                             if (tile instanceof TileEntityMinerBase)
@@ -178,7 +178,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
             {
                 if (this.getMaster() == null)
                 {
-                    this.world.setBlockState(this.getPos(), AsteroidBlocks.blockMinerBase.getDefaultState(), 2);
+                    this.world.setBlockState(this.getPos(), AsteroidBlocks.ASTRO_MINER_BASE.getDefaultState(), 2);
                 }
             }
         }
@@ -650,7 +650,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
         {
             BlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == AsteroidBlocks.minerBaseFull) //GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.MINER_BASE)
+            if (stateAt.getBlock() == AsteroidBlocks.FULL_ASTRO_MINER_BASE) //GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.MINER_BASE)
             {
                 if (this.world.isRemote && this.world.rand.nextDouble() < 0.1D)
                 {

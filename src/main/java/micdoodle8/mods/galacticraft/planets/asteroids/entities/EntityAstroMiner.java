@@ -195,7 +195,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
         noMineList.add(Blocks.RAIL);
         noMineList.add(Blocks.LEVER);
         noMineList.add(Blocks.REDSTONE_WIRE);
-        noMineList.add(AsteroidBlocks.blockWalkway);
+        noMineList.add(AsteroidBlocks.WALKWAY);
         //TODO:
         //Add configurable blacklist
     }

@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "galacticraftplanets:block/dark_decoration_block"
+  }
+}

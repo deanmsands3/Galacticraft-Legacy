@@ -3,7 +3,7 @@
 "textures": {
 	"particle": "galacticraftplanets:block/walkway", 
     "texture": "galacticraftplanets:block/walkway",
-    "pipe_oxygen_white": "galacticraftcore:blocks/pipe_oxygen_white"
+    "pipe": "galacticraftcore:block/white_fluid_pipe"
 },
 "elements": [ 
 {

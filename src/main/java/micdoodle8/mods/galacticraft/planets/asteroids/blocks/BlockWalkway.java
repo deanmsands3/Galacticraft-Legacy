@@ -137,12 +137,12 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
-        if (this == AsteroidBlocks.blockWalkwayFluid)
+        if (this == AsteroidBlocks.FLUID_PIPE_WALKWAY)
         {
             return new TileEntityFluidPipe();
         }
 
-        if (this == AsteroidBlocks.blockWalkwayWire)
+        if (this == AsteroidBlocks.WIRE_WALKWAY)
         {
             return new TileEntityAluminumWire.TileEntityAluminumWireT2();
         }
@@ -159,12 +159,12 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
     @Override
     public NetworkType getNetworkType(BlockState state)
     {
-        if (this == AsteroidBlocks.blockWalkwayWire)
+        if (this == AsteroidBlocks.WIRE_WALKWAY)
         {
             return NetworkType.FLUID;
         }
 
-        if (this == AsteroidBlocks.blockWalkwayFluid)
+        if (this == AsteroidBlocks.FLUID_PIPE_WALKWAY)
         {
             return NetworkType.POWER;
         }
@@ -319,7 +319,7 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
 
         TileEntity tileEntity = null;
 
-        if (stateIn.getBlock() != AsteroidBlocks.blockWalkway) // pipe or wire
+        if (stateIn.getBlock() != AsteroidBlocks.WALKWAY) // pipe or wire
         {
             tileEntity = worldIn.getTileEntity(currentPos);
         }
@@ -331,7 +331,7 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
                 continue;
             }
 
-            if (stateIn.getBlock() == AsteroidBlocks.blockWalkway)
+            if (stateIn.getBlock() == AsteroidBlocks.WALKWAY)
             {
                 BlockPos neighbour = currentPos.offset(direction);
                 BlockState neighbourState = worldIn.getBlockState(neighbour);
@@ -342,11 +342,11 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
                     connectable[direction.ordinal()] = neighbourState.getBlock();
                 }
             }
-            else if (tileEntity != null && stateIn.getBlock() == AsteroidBlocks.blockWalkwayFluid)
+            else if (tileEntity != null && stateIn.getBlock() == AsteroidBlocks.FLUID_PIPE_WALKWAY)
             {
                 connectable = OxygenUtil.getAdjacentFluidConnections(tileEntity);
             }
-            else if (tileEntity != null && stateIn.getBlock() == AsteroidBlocks.blockWalkwayWire)
+            else if (tileEntity != null && stateIn.getBlock() == AsteroidBlocks.WIRE_WALKWAY)
             {
                 connectable = EnergyUtil.getAdjacentPowerConnections(tileEntity);
             }

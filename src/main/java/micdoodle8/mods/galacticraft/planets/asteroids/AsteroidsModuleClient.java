@@ -57,13 +57,13 @@ public class AsteroidsModuleClient implements IPlanetsModuleClient
 //        AsteroidsModuleClient.registerBlockRenderers();
 
         RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockMinerBase, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.minerBaseFull, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockWalkway, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockWalkwayWire, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockWalkwayFluid, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.ASTRO_MINER_BASE, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.FULL_ASTRO_MINER_BASE, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.WALKWAY, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.WIRE_WALKWAY, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.FLUID_PIPE_WALKWAY, cutout);
         RenderType transluscent = RenderType.getTranslucent();
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockDenseIce, transluscent);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.DENSE_ICE, transluscent);
 
 //          RenderingRegistry.registerEntityRenderingHandler(EntityAstroMiner.class, (RenderManager manager) -> new RenderAstroMiner());
         ClientRegistry.bindTileEntityRenderer(TileEntityBeamReflector.TYPE, TileEntityBeamReflectorRenderer::new);
@@ -82,9 +82,9 @@ public class AsteroidsModuleClient implements IPlanetsModuleClient
         ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThreeCreative.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
         ClientProxyCore.setCustomModel(AsteroidsItems.grapple.getRegistryName(), modelToWrap -> new ItemModelGrapple(modelToWrap));
         ClientProxyCore.setCustomModel(AsteroidsItems.astroMiner.getRegistryName(), modelToWrap -> new ItemModelAstroMiner(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidBlocks.shortRangeTelepad.getRegistryName(), modelToWrap -> new ItemModelTelepad(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidBlocks.beamReceiver.getRegistryName(), modelToWrap -> new ItemModelBeamReceiver(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidBlocks.beamReflector.getRegistryName(), modelToWrap -> new ItemModelBeamReflector(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidBlocks.SHORT_RANGE_TELEPAD.getRegistryName(), modelToWrap -> new ItemModelTelepad(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidBlocks.ENERGY_BEAM_RECEIVER.getRegistryName(), modelToWrap -> new ItemModelBeamReceiver(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidBlocks.ENERGY_BEAM_REFLECTOR.getRegistryName(), modelToWrap -> new ItemModelBeamReflector(modelToWrap));
     }
 
 //    @Override

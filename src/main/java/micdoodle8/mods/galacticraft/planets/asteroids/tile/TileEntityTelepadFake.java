@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class TileEntityTelepadFake extends TileBaseElectricBlock
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.fakeTelepad)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.SHORT_RANGE_TELEPAD_DUMMY)
     public static TileEntityType<TileEntityTelepadFake> TYPE;
 
     // The the position of the main block

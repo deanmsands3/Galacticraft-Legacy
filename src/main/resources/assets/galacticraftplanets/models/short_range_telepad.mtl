@@ -1,0 +1,5 @@
+newmtl Connector
+map_Kd galacticraftplanets:block/short_range_telepad_input
+
+newmtl Main
+map_Kd galacticraftplanets:block/short_range_telepad_base

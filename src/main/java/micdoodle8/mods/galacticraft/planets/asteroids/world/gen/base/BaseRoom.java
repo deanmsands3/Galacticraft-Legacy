@@ -630,14 +630,14 @@ public class BaseRoom extends SizedPiece
 
     public enum EnumRoomType
     {
-        ENGINEERING(AsteroidBlocks.asteroidDeco.getDefaultState(), AsteroidBlocks.asteroidDeco.getDefaultState(), false),
+        ENGINEERING(AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), false),
         POWER(null, null, false),
         STORE(null, null, false),
         EMPTY(null, null, false),
         MEDICAL(Blocks.IRON_TRAPDOOR.getDefaultState(), Blocks.IRON_TRAPDOOR.getDefaultState().with(TrapDoorBlock.HALF, Half.TOP), false),
         CREW(null, null, false),
-        CRYO(AsteroidBlocks.asteroidDeco.getDefaultState(), AsteroidBlocks.asteroidDeco.getDefaultState(), true),
-        CONTROL(AsteroidBlocks.asteroidDeco.getDefaultState()/* GCBlocks.slabGCHalf.getDefaultState() TODO Asteroids slab */, AsteroidBlocks.asteroidDeco.getDefaultState(), false);
+        CRYO(AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), true),
+        CONTROL(AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState()/* GCBlocks.slabGCHalf.getDefaultState() TODO Asteroids slab */, AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), false);
 
         public final BlockState blockFloor;
         public final BlockState blockEntrance;

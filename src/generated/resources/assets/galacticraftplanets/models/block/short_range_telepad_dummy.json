@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "galacticraftplanets:block/short_range_telepad_base"
+  }
+}

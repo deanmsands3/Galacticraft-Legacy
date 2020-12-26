@@ -3,7 +3,7 @@
 "textures": {
 	"particle": "galacticraftplanets:block/walkway", 
     "texture": "galacticraftplanets:block/walkway",
-    "pipe_oxygen_white": "galacticraftcore:blocks/pipe_oxygen_white"
+    "pipe": "galacticraftcore:block/white_fluid_pipe"
 },
 "elements": [ 
 {
@@ -154,12 +154,12 @@
     "from": [ 0.0625, 6.4375, 6.5 ],
     "to": [ 6.0625, 9.4375, 9.5 ],
     "faces": {
-        "down":  { "uv": [ 16, 10, 10, 6 ], "texture": "#pipe_oxygen_white" },
-        "up":    { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe_oxygen_white" },
-        "north": { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe_oxygen_white" },
-        "south": { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe_oxygen_white" },
-        "west":  { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe_oxygen_white" },
-        "east":  { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe_oxygen_white" }
+        "down":  { "uv": [ 16, 10, 10, 6 ], "texture": "#pipe" },
+        "up":    { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe" },
+        "north": { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe" },
+        "south": { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe" },
+        "west":  { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe" },
+        "east":  { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe" }
     }
 },
 {
@@ -167,12 +167,12 @@
     "from": [ 9.9375, 6.4375, 6.5 ],
     "to": [ 15.9375, 9.4375, 9.5 ],
     "faces": {
-        "down":  { "uv": [ 6, 10, 0, 6 ], "texture": "#pipe_oxygen_white" },
-        "up":    { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe_oxygen_white" },
-        "north": { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe_oxygen_white" },
-        "south": { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe_oxygen_white" },
-        "west":  { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe_oxygen_white" },
-        "east":  { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe_oxygen_white" }
+        "down":  { "uv": [ 6, 10, 0, 6 ], "texture": "#pipe" },
+        "up":    { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe" },
+        "north": { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe" },
+        "south": { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe" },
+        "west":  { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe" },
+        "east":  { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe" }
     }
 },
 {
@@ -180,12 +180,12 @@
     "from": [ 6.5, 6.4375, 0.0625 ],
     "to": [ 9.5, 9.4375, 6.0625 ],
     "faces": {
-        "down":  { "uv": [ 10, 6, 6, 0 ], "texture": "#pipe_oxygen_white" },
-        "up":    { "uv": [ 6, 0, 10, 6 ], "texture": "#pipe_oxygen_white" },
-        "north": { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe_oxygen_white" },
-        "south": { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe_oxygen_white" },
-        "west":  { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe_oxygen_white" },
-        "east":  { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe_oxygen_white" }
+        "down":  { "uv": [ 10, 6, 6, 0 ], "texture": "#pipe" },
+        "up":    { "uv": [ 6, 0, 10, 6 ], "texture": "#pipe" },
+        "north": { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe" },
+        "south": { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe" },
+        "west":  { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe" },
+        "east":  { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe" }
     }
 },
 {
@@ -193,12 +193,12 @@
     "from": [ 6.5, 6.4375, 9.9375 ],
     "to": [ 9.5, 9.4375, 15.9375 ],
     "faces": {
-        "down":  { "uv": [ 10, 16, 6, 10 ], "texture": "#pipe_oxygen_white" },
-        "up":    { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe_oxygen_white" },
-        "north": { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe_oxygen_white" },
-        "south": { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe_oxygen_white" },
-        "west":  { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe_oxygen_white" },
-        "east":  { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe_oxygen_white" }
+        "down":  { "uv": [ 10, 16, 6, 10 ], "texture": "#pipe" },
+        "up":    { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe" },
+        "north": { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe" },
+        "south": { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe" },
+        "west":  { "uv": [ 10, 6, 16, 10 ], "texture": "#pipe" },
+        "east":  { "uv": [ 0, 6, 6, 10 ], "texture": "#pipe" }
     }
 },
 {
@@ -206,12 +206,12 @@
     "from": [ 6.5, -0.0625, 6.5 ],
     "to": [ 9.5, 6.4375, 9.5 ],
     "faces": {
-        "down":  { "uv": [ 10, 10, 6, 6 ], "texture": "#pipe_oxygen_white" },
-        "up":    { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe_oxygen_white" },
-        "north": { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe_oxygen_white" },
-        "south": { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe_oxygen_white" },
-        "west":  { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe_oxygen_white" },
-        "east":  { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe_oxygen_white" }
+        "down":  { "uv": [ 10, 10, 6, 6 ], "texture": "#pipe" },
+        "up":    { "uv": [ 6, 6, 10, 10 ], "texture": "#pipe" },
+        "north": { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe" },
+        "south": { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe" },
+        "west":  { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe" },
+        "east":  { "uv": [ 6, 10, 10, 16 ], "texture": "#pipe" }
     }
 }
 ]

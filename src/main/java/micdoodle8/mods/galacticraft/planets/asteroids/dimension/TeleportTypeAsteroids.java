@@ -270,7 +270,7 @@ public class TeleportTypeAsteroids implements ITeleportType
     {
         if (world.isAirBlock(new BlockPos(x, y, z)))
         {
-            Block block = world.rand.nextInt(3) == 0 ? AsteroidBlocks.rock0 : AsteroidBlocks.rock1;
+            Block block = world.rand.nextInt(3) == 0 ? AsteroidBlocks.DARK_ASTEROID_ROCK : AsteroidBlocks.GRAY_ASTEROID_ROCK;
             world.setBlockState(new BlockPos(x, y, z), block.getDefaultState(), 2);
         }
     }

@@ -168,7 +168,7 @@ public class BlockMinerBaseFull extends BlockTileGC
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
     {
-        return new ItemStack(Item.getItemFromBlock(AsteroidBlocks.blockMinerBase), 1);
+        return new ItemStack(Item.getItemFromBlock(AsteroidBlocks.ASTRO_MINER_BASE), 1);
     }
 
     @Override

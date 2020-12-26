@@ -80,7 +80,7 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortable
                 }
             }
 
-            if (id == AsteroidBlocks.minerBaseFull)
+            if (id == AsteroidBlocks.FULL_ASTRO_MINER_BASE)
             {
                 tile = worldIn.getTileEntity(pos);
             }

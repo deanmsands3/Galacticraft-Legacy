@@ -15,7 +15,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityBeamReflector extends TileEntityBeamOutput implements ILaserNode
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.beamReflector)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.ENERGY_BEAM_REFLECTOR)
     public static TileEntityType<TileEntityBeamReflector> TYPE;
 
     public Vector3 color = new Vector3(0, 1, 0);

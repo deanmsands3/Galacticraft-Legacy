@@ -66,7 +66,7 @@ public class TileEntityShortRangeTelepad extends TileBaseElectricBlock implement
         TARGET_DISABLED
     }
 
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.shortRangeTelepad)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.SHORT_RANGE_TELEPAD)
     public static TileEntityType<TileEntityShortRangeTelepad> TYPE;
 
     public static final int MAX_TELEPORT_TIME = 150;
@@ -302,7 +302,7 @@ public class TileEntityShortRangeTelepad extends TileBaseElectricBlock implement
         this.getPositions(placedPosition, positions);
         for (BlockPos vecToAdd : positions)
         {
-            ((BlockTelepadFake) AsteroidBlocks.fakeTelepad).makeFakeBlock(world, vecToAdd, placedPosition, AsteroidBlocks.fakeTelepad.getDefaultState().with(BlockTelepadFake.TOP, vecToAdd.getY() == placedPosition.getY() + 2));
+            ((BlockTelepadFake) AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY).makeFakeBlock(world, vecToAdd, placedPosition, AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY.getDefaultState().with(BlockTelepadFake.TOP, vecToAdd.getY() == placedPosition.getY() + 2));
         }
     }
 
@@ -348,7 +348,7 @@ public class TileEntityShortRangeTelepad extends TileBaseElectricBlock implement
         {
             BlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == AsteroidBlocks.fakeTelepad)
+            if (stateAt.getBlock() == AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY)
             {
                 this.world.destroyBlock(pos, false);
             }

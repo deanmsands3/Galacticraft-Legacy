@@ -211,7 +211,7 @@ public class BaseDeck extends SizedPiece
     {
         BlockState block1;
         BlockState blockWall = this.configuration.getWallBlock();
-        BlockState blockGrid = AsteroidBlocks.blockWalkway.getDefaultState();
+        BlockState blockGrid = AsteroidBlocks.WALKWAY.getDefaultState();
 //        Block blockStair = GCBlocks.moonStoneStairs; TODO Stairs
         BlockState blockAir = Blocks.AIR.getDefaultState();
         boolean directionNS = this.getDirection().getAxis() == Direction.Axis.Z;

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class TileEntityMinerBaseSingle extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.blockMinerBase)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.ASTRO_MINER_BASE)
     public static TileEntityType<TileEntityMinerBaseSingle> TYPE;
 
     private int corner = 0;
