@@ -1,8 +1,0 @@
-{
-    "variants": {
-        "facing=north": { "model": "galacticraftcore:block/oxygen_sealer" },
-        "facing=east":  { "model": "galacticraftcore:block/oxygen_sealer", "y": 90 },
-        "facing=west":  { "model": "galacticraftcore:block/oxygen_sealer", "y": 270 },
-        "facing=south": { "model": "galacticraftcore:block/oxygen_sealer", "y": 180 }
-    }
-}

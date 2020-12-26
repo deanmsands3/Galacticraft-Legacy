@@ -1,7 +1,7 @@
 {
   "parent": "galacticraftcore:block/machine_tiered_lr",
   "textures": {
-    "particle": "galacticraftcore:block/advanced/machine",
+    "particle": "galacticraftcore:block/advanced/electric_furnace",
     "front": "galacticraftcore:block/advanced/electric_furnace",
     "rear": "galacticraftcore:block/advanced/machine_side",
     "side": "galacticraftcore:block/advanced/machine_side",

@@ -1,8 +1,0 @@
-{
-    "variants": {
-        "facing=north": { "model": "galacticraftcore:block/chromatic_applicator" },
-        "facing=east":  { "model": "galacticraftcore:block/chromatic_applicator", "y": 90 },
-        "facing=west":  { "model": "galacticraftcore:block/chromatic_applicator", "y": 270 },
-        "facing=south": { "model": "galacticraftcore:block/chromatic_applicator", "y": 180 }
-    }
-}

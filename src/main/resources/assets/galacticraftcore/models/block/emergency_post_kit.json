@@ -1,7 +1,8 @@
 {
     "textures": {
         "0": "galacticraftcore:block/emergency_post",
-        "1": "galacticraftcore:item/emergency_kit"
+        "1": "galacticraftcore:item/emergency_kit",
+        "particle": "galacticraftcore:block/emergency_post"
     },
     "elements": [
         {

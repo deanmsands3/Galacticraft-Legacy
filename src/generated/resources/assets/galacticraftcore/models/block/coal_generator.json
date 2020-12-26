@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/machine_base",
+    "up": "galacticraftcore:block/machine_base",
+    "north": "galacticraftcore:block/coal_generator",
+    "south": "galacticraftcore:block/machine_side",
+    "east": "galacticraftcore:block/machine_output",
+    "west": "galacticraftcore:block/machine_side",
+    "particle": "galacticraftcore:block/coal_generator"
+  }
+}

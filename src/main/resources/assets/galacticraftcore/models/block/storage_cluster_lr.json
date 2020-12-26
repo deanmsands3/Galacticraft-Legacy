@@ -1,7 +1,7 @@
 {
   "parent": "galacticraftcore:block/machine_tiered_lr",
   "textures": {
-    "particle": "galacticraftcore:block/advanced/machine",
+    "particle": "galacticraftcore:block/advanced/energy_storage_module_16",
     "front": "galacticraftcore:block/advanced/energy_storage_module_0",
     "rear": "galacticraftcore:block/advanced/energy_storage_module_0",
     "side": "galacticraftcore:block/advanced/machine",

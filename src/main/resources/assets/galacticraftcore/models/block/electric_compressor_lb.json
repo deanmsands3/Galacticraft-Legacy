@@ -1,12 +1,12 @@
 {
   "parent": "galacticraftcore:block/machine_tiered_lb",
   "textures": {
-    "particle": "galacticraftcore:block/machine",
+    "particle": "galacticraftcore:block/electric_compressor",
     "front": "galacticraftcore:block/electric_compressor",
     "rear": "galacticraftcore:block/machine_side",
     "side": "galacticraftcore:block/machine_side",
     "el_in": "galacticraftcore:block/machine_input",
     "el_out": "galacticraftcore:block/machine_side",
-    "top": "galacticraftcore:block/machine",
-    "base": "galacticraftcore:block/machine" }
+    "top": "galacticraftcore:block/machine_base",
+    "base": "galacticraftcore:block/machine_base" }
 }

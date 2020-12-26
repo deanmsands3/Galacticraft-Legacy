@@ -1,6 +1,5 @@
 {
   "variants": {
-    "": { "model": "galacticraftcore:block/rocket_workbench_model" },
-    "inventory": { "model": "galacticraftcore:block/rocket_workbench_model" }
+    "": { "model": "galacticraftcore:block/rocket_workbench_model" }
   }
 }

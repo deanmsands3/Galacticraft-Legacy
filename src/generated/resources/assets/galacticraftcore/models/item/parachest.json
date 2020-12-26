@@ -1,0 +1,6 @@
+{
+  "parent": "item/chest",
+  "textures": {
+    "particle": "galacticraftcore:block/parachest"
+  }
+}

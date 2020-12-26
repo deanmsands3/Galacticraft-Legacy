@@ -1,6 +1,5 @@
 {
   "variants": {
-    "inventory": [{ "model": "galacticraftcore:block/furnace_arc_model" }],
     "facing=north,msm=lr": { "model": "galacticraftcore:block/furnace_arc_lr" },
     "facing=east,msm=lr": { "model": "galacticraftcore:block/furnace_arc_lr", "y": 90 },
     "facing=south,msm=lr": { "model": "galacticraftcore:block/furnace_arc_lr", "y": 180 },

@@ -1,0 +1,9 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "side": "galacticraftcore:block/machine_side",
+    "front": "galacticraftcore:block/compressor",
+    "top": "galacticraftcore:block/machine_base",
+    "particle": "galacticraftcore:block/compressor"
+  }
+}

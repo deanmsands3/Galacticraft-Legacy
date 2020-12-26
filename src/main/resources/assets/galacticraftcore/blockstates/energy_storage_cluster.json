@@ -1,6 +1,5 @@
 {
   "variants": {
-    "inventory": [{ "model": "galacticraftcore:block/storage_cluster_model" }],
     "facing=north,msm=lr": { "model": "galacticraftcore:block/storage_cluster_lr" },
     "facing=east,msm=lr": { "model": "galacticraftcore:block/storage_cluster_lr", "y": 90 },
     "facing=south,msm=lr": { "model": "galacticraftcore:block/storage_cluster_lr", "y": 180 },

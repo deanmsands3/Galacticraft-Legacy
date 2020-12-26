@@ -197,27 +197,27 @@
 			}
 		},
 		
-        "color=silver,facing=north": { 
+        "color=light_gray,facing=north": { 
 			"model": "galacticraftcore:block/parachest",
 			"textures": {
 				"chute": "galacticraftcore:model/parachute/gray"
 			}
 		},
-        "color=silver,facing=east":  { 
+        "color=light_gray,facing=east":  { 
 			"model": "galacticraftcore:block/parachest",
 			"y": 90,
 			"textures": {
 				"chute": "galacticraftcore:model/parachute/gray"
 			}
 		},
-        "color=silver,facing=south": { 
+        "color=light_gray,facing=south": { 
 			"model": "galacticraftcore:block/parachest",
 			"y": 180,
 			"textures": {
 				"chute": "galacticraftcore:model/parachute/gray"
 			}
 		},
-        "color=silver,facing=west":  { 
+        "color=light_gray,facing=west":  { 
 			"model": "galacticraftcore:block/parachest",
 			"y": 270,
 			"textures": {

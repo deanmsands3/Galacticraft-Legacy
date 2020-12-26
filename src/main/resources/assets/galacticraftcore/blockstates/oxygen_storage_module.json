@@ -1,6 +1,5 @@
 {
     "variants": {
-      "inventory": [{ "model": "galacticraftcore:block/oxygen_storage_module_model" }],
       "facing=north,msm=lr": { "model": "galacticraftcore:block/oxygen_storage_module_lr" },
       "facing=east,msm=lr": { "model": "galacticraftcore:block/oxygen_storage_module_lr", "y": 90 },
       "facing=south,msm=lr": { "model": "galacticraftcore:block/oxygen_storage_module_lr", "y": 180 },
