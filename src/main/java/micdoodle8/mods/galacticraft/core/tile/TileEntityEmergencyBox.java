@@ -618,13 +618,13 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
         BlockPos blockpos = vec.toBlockPos();
         Block b = this.world.getBlockState(blockpos).getBlock();
         BlockState newState;
-        if (b == GCBlocks.brightAir)
+        if (b == GCBlocks.BRIGHT_AIR)
         {
             newState = Blocks.AIR.getDefaultState();
         }
-        else if (b == GCBlocks.brightBreatheableAir)
+        else if (b == GCBlocks.BRIGHT_BREATHEABLE_AIR)
         {
-            newState = GCBlocks.breatheableAir.getDefaultState();
+            newState = GCBlocks.BREATHEABLE_AIR.getDefaultState();
         }
         else
         {
@@ -680,12 +680,12 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
         BlockState bs = this.world.getBlockState(blockPos);
         if (bs.getBlock() == Blocks.AIR)
         {
-            this.brightenAir(blockPos, GCBlocks.brightAir.getDefaultState());
+            this.brightenAir(blockPos, GCBlocks.BRIGHT_AIR.getDefaultState());
             return true;
         }
-        else if (bs.getBlock() == GCBlocks.breatheableAir)
+        else if (bs.getBlock() == GCBlocks.BREATHEABLE_AIR)
         {
-            this.brightenAir(blockPos, GCBlocks.brightBreatheableAir.getDefaultState());
+            this.brightenAir(blockPos, GCBlocks.BRIGHT_BREATHEABLE_AIR.getDefaultState());
             return true;
         }
 
@@ -693,12 +693,12 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
         bs = this.world.getBlockState(blockPos);
         if (bs.getBlock() == Blocks.AIR)
         {
-            this.brightenAir(blockPos, GCBlocks.brightAir.getDefaultState());
+            this.brightenAir(blockPos, GCBlocks.BRIGHT_AIR.getDefaultState());
             return true;
         }
-        else if (bs.getBlock() == GCBlocks.breatheableAir)
+        else if (bs.getBlock() == GCBlocks.BREATHEABLE_AIR)
         {
-            this.brightenAir(blockPos, GCBlocks.brightBreatheableAir.getDefaultState());
+            this.brightenAir(blockPos, GCBlocks.BRIGHT_BREATHEABLE_AIR.getDefaultState());
             return true;
         }
 

@@ -54,7 +54,7 @@ public class BlockBreathableAir extends BlockThermalAir
                 }
                 if (OxygenPressureProtocol.canBlockPassAir(worldIn, state, fromPos, side))
                 {
-                    worldIn.setBlockState(fromPos, GCBlocks.breatheableAir.getDefaultState(), 6);
+                    worldIn.setBlockState(fromPos, GCBlocks.BREATHEABLE_AIR.getDefaultState(), 6);
                 }
             }
             // In all cases, trigger a leak check at this point

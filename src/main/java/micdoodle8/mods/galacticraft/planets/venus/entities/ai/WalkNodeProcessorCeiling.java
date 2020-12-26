@@ -28,8 +28,8 @@ public class WalkNodeProcessorCeiling extends NodeProcessor
     protected MobEntity currentEntity;
 
     @Override
-    public void func_225578_a_(Region region, MobEntity mob) {
-        super.func_225578_a_(region, mob);
+    public void setup(Region region, MobEntity mob) {
+        super.setup(region, mob);
         this.avoidsWater = mob.getPathPriority(PathNodeType.WATER);
     }
 
@@ -95,69 +95,69 @@ public class WalkNodeProcessorCeiling extends NodeProcessor
     }
 
     @Override
-    public FlaggedPathPoint func_224768_a(double p_224768_1_, double p_224768_3_, double p_224768_5_)
+    public FlaggedPathPoint openFlaggedPathPoint(double x, double y, double z)
     {
-        return new FlaggedPathPoint(this.openPoint(MathHelper.floor(p_224768_1_), MathHelper.floor(p_224768_3_), MathHelper.floor(p_224768_5_)));
+        return new FlaggedPathPoint(this.openPoint(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z)));
     }
 
     @Override
-    public int func_222859_a(PathPoint[] p_222859_1_, PathPoint p_222859_2_)
+    public int calculatePathOptions(PathPoint[] pathOptions, PathPoint fromPoint)
     {
         int i = 0;
         int j = 0;
-        PathNodeType pathnodetype = this.getPathNodeType(this.entity, p_222859_2_.x, p_222859_2_.y + 1, p_222859_2_.z);
+        PathNodeType pathnodetype = this.getPathNodeType(this.entity, fromPoint.x, fromPoint.y + 1, fromPoint.z);
         if (this.entity.getPathPriority(pathnodetype) >= 0.0F)
         {
             j = MathHelper.floor(Math.max(1.0F, this.entity.stepHeight));
         }
 
-        double d0 = getGroundY(this.blockaccess, new BlockPos(p_222859_2_.x, p_222859_2_.y, p_222859_2_.z));
-        PathPoint pathpoint = this.getSafePoint(p_222859_2_.x, p_222859_2_.y, p_222859_2_.z + 1, j, d0, Direction.SOUTH);
+        double d0 = getGroundY(this.blockaccess, new BlockPos(fromPoint.x, fromPoint.y, fromPoint.z));
+        PathPoint pathpoint = this.getSafePoint(fromPoint.x, fromPoint.y, fromPoint.z + 1, j, d0, Direction.SOUTH);
         if (pathpoint != null && !pathpoint.visited && pathpoint.costMalus >= 0.0F)
         {
-            p_222859_1_[i++] = pathpoint;
+            pathOptions[i++] = pathpoint;
         }
 
-        PathPoint pathpoint1 = this.getSafePoint(p_222859_2_.x - 1, p_222859_2_.y, p_222859_2_.z, j, d0, Direction.WEST);
+        PathPoint pathpoint1 = this.getSafePoint(fromPoint.x - 1, fromPoint.y, fromPoint.z, j, d0, Direction.WEST);
         if (pathpoint1 != null && !pathpoint1.visited && pathpoint1.costMalus >= 0.0F)
         {
-            p_222859_1_[i++] = pathpoint1;
+            pathOptions[i++] = pathpoint1;
         }
 
-        PathPoint pathpoint2 = this.getSafePoint(p_222859_2_.x + 1, p_222859_2_.y, p_222859_2_.z, j, d0, Direction.EAST);
+        PathPoint pathpoint2 = this.getSafePoint(fromPoint.x + 1, fromPoint.y, fromPoint.z, j, d0, Direction.EAST);
         if (pathpoint2 != null && !pathpoint2.visited && pathpoint2.costMalus >= 0.0F)
         {
-            p_222859_1_[i++] = pathpoint2;
+            pathOptions[i++] = pathpoint2;
         }
 
-        PathPoint pathpoint3 = this.getSafePoint(p_222859_2_.x, p_222859_2_.y, p_222859_2_.z - 1, j, d0, Direction.NORTH);
+        PathPoint pathpoint3 = this.getSafePoint(fromPoint.x, fromPoint.y, fromPoint.z - 1, j, d0, Direction.NORTH);
         if (pathpoint3 != null && !pathpoint3.visited && pathpoint3.costMalus >= 0.0F)
         {
-            p_222859_1_[i++] = pathpoint3;
+            pathOptions[i++] = pathpoint3;
         }
 
-        PathPoint pathpoint4 = this.getSafePoint(p_222859_2_.x - 1, p_222859_2_.y, p_222859_2_.z - 1, j, d0, Direction.NORTH);
-        if (this.func_222860_a(p_222859_2_, pathpoint1, pathpoint3, pathpoint4))
+        PathPoint pathpoint4 = this.getSafePoint(fromPoint.x - 1, fromPoint.y, fromPoint.z - 1, j, d0, Direction.NORTH);
+        if (this.func_222860_a(fromPoint, pathpoint1, pathpoint3, pathpoint4))
         {
-            p_222859_1_[i++] = pathpoint4;
+            pathOptions[i++] = pathpoint4;
         }
 
-        PathPoint pathpoint5 = this.getSafePoint(p_222859_2_.x + 1, p_222859_2_.y, p_222859_2_.z - 1, j, d0, Direction.NORTH);
-        if (this.func_222860_a(p_222859_2_, pathpoint2, pathpoint3, pathpoint5))
+        PathPoint pathpoint5 = this.getSafePoint(fromPoint.x + 1, fromPoint.y, fromPoint.z - 1, j, d0, Direction.NORTH);
+        if (this.func_222860_a(fromPoint, pathpoint2, pathpoint3, pathpoint5))
         {
-            p_222859_1_[i++] = pathpoint5;
+            pathOptions[i++] = pathpoint5;
         }
 
-        PathPoint pathpoint6 = this.getSafePoint(p_222859_2_.x - 1, p_222859_2_.y, p_222859_2_.z + 1, j, d0, Direction.SOUTH);
-        if (this.func_222860_a(p_222859_2_, pathpoint1, pathpoint, pathpoint6))
+        PathPoint pathpoint6 = this.getSafePoint(fromPoint.x - 1, fromPoint.y, fromPoint.z + 1, j, d0, Direction.SOUTH);
+        if (this.func_222860_a(fromPoint, pathpoint1, pathpoint, pathpoint6))
         {
-            p_222859_1_[i++] = pathpoint6;
+            pathOptions[i++] = pathpoint6;
         }
 
-        PathPoint pathpoint7 = this.getSafePoint(p_222859_2_.x + 1, p_222859_2_.y, p_222859_2_.z + 1, j, d0, Direction.SOUTH);
-        if (this.func_222860_a(p_222859_2_, pathpoint2, pathpoint, pathpoint7))
+        PathPoint pathpoint7 = this.getSafePoint(fromPoint.x + 1, fromPoint.y, fromPoint.z + 1, j, d0, Direction.SOUTH);
+        if (this.func_222860_a(fromPoint, pathpoint2, pathpoint, pathpoint7))
         {
-            p_222859_1_[i++] = pathpoint7;
+            pathOptions[i++] = pathpoint7;
         }
 
         return i;

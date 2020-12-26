@@ -23,13 +23,15 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.*;
 
+import com.google.common.collect.Lists;
+
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
 @ObjectHolder(Constants.MOD_ID_CORE)
 public class GCBlocks
 {
-    public static final Block breatheableAir = new BlockBreathableAir(Block.Properties.create(Material.AIR).doesNotBlockMovement().noDrops().hardnessAndResistance(0.0F, 10000.0F));
-    public static final Block brightAir = new BlockBrightAir(Block.Properties.from(breatheableAir).lightValue(15));
-    public static final Block brightBreatheableAir = new BlockBrightBreathableAir(Block.Properties.from(brightAir));
+    public static final Block BREATHEABLE_AIR = new BlockBreathableAir(Block.Properties.create(Material.AIR).doesNotBlockMovement().noDrops().hardnessAndResistance(0.0F, 10000.0F));
+    public static final Block BRIGHT_AIR = new BlockBrightAir(Block.Properties.from(BREATHEABLE_AIR).lightValue(15));
+    public static final Block BRIGHT_BREATHEABLE_AIR = new BlockBrightBreathableAir(Block.Properties.from(BRIGHT_AIR));
 
     public static final Block ARC_LAMP = new BlockArcLamp(Block.Properties.create(Material.GLASS).hardnessAndResistance(0.1F).sound(SoundType.METAL).lightValue(13));
 
@@ -37,8 +39,8 @@ public class GCBlocks
 
     public static final Block ROCKET_LAUNCH_PAD = new BlockPad(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
     public static final Block BUGGY_FUELING_PAD = new BlockPad(Block.Properties.from(ROCKET_LAUNCH_PAD));
-    public static final Block FULL_LANDING_PAD = new BlockPadFull(Block.Properties.from(ROCKET_LAUNCH_PAD));
-    public static final Block FULL_BUGGY_PAD = new BlockPadFull(Block.Properties.from(ROCKET_LAUNCH_PAD));
+    public static final Block FULL_ROCKET_LAUNCH_PAD = new BlockPadFull(Block.Properties.from(ROCKET_LAUNCH_PAD));
+    public static final Block FULL_BUGGY_FUELING_PAD = new BlockPadFull(Block.Properties.from(ROCKET_LAUNCH_PAD));
 
     public static final Block UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.0F).lightValue(3).sound(SoundType.WOOD));
     public static final Block WALL_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH));
@@ -47,43 +49,43 @@ public class GCBlocks
     public static final Block GLOWSTONE_TORCH = new BlockGlowstoneTorch(Block.Properties.from(UNLIT_TORCH).lightValue(12));
     public static final Block WALL_GLOWSTONE_TORCH = new BlockGlowstoneTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(12));
 
-    public static final Block OXYGEN_DISTRIBUTOR = new BlockOxygenDistributor(Block.Properties.create(Material.ROCK).hardnessAndResistance(1.0F).sound(SoundType.METAL));
-    public static final Block OXYGEN_COLLECTOR = new BlockOxygenCollector(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block ROCKET_WORKBENCH = new BlockNasaWorkbench(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block AIR_LOCK_FRAME = new BlockAirLockFrame(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block AIR_LOCK_CONTROLLER = new BlockAirLockController(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block INGOT_COMPRESSOR = new BlockIngotCompressor(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block ELECTRIC_INGOT_COMPRESSOR = new BlockIngotCompressorElectric(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block ADVANCED_ELECTRIC_INGOT_COMPRESSOR = new BlockIngotCompressorElectricAdvanced(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block COAL_GENERATOR = new BlockCoalGenerator(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block CIRCUIT_FABRICATOR = new BlockCircuitFabricator(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block OXYGEN_STORAGE_MODULE = new BlockOxygenStorageModule(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block DECONSTRUCTOR = new BlockDeconstructor(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block PAINTER = new BlockPainter(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block MAGNETIC_CRAFTING_TABLE = new BlockCrafting(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block REFINERY = new BlockRefinery(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block FUEL_LOADER = new BlockFuelLoader(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block OXYGEN_COMPRESSOR = new BlockOxygenCompressor(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block OXYGEN_DECOMPRESSOR = new BlockOxygenCompressor(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block OXYGEN_SEALER = new BlockOxygenSealer(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block OXYGEN_DETECTOR = new BlockOxygenDetector(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block CARGO_LOADER = new BlockCargoLoader(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block CARGO_UNLOADER = new BlockCargoUnloader(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block SOLAR_PANEL = new BlockSolar(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block ADVANCED_SOLAR_PANEL = new BlockSolarAdvanced(Block.Properties.from(OXYGEN_DISTRIBUTOR));
+    public static final Block OXYGEN_BUBBLE_DISTRIBUTOR = new BlockOxygenDistributor(Block.Properties.create(Material.ROCK).hardnessAndResistance(1.0F).sound(SoundType.METAL));
+    public static final Block OXYGEN_COLLECTOR = new BlockOxygenCollector(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ROCKET_WORKBENCH = new BlockNasaWorkbench(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block AIR_LOCK_FRAME = new BlockAirLockFrame(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block AIR_LOCK_CONTROLLER = new BlockAirLockController(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block COMPRESSOR = new BlockIngotCompressor(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ELECTRIC_COMPRESSOR = new BlockIngotCompressorElectric(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ADVANCED_COMPRESSOR = new BlockIngotCompressorElectricAdvanced(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block COAL_GENERATOR = new BlockCoalGenerator(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block CIRCUIT_FABRICATOR = new BlockCircuitFabricator(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_STORAGE_MODULE = new BlockOxygenStorageModule(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block DECONSTRUCTOR = new BlockDeconstructor(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block CHROMATIC_APPLICATOR = new BlockPainter(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block MAGNETIC_CRAFTING_TABLE = new BlockCrafting(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block REFINERY = new BlockRefinery(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block FUEL_LOADER = new BlockFuelLoader(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_COMPRESSOR = new BlockOxygenCompressor(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_DECOMPRESSOR = new BlockOxygenCompressor(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_SEALER = new BlockOxygenSealer(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_DETECTOR = new BlockOxygenDetector(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block CARGO_LOADER = new BlockCargoLoader(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block CARGO_UNLOADER = new BlockCargoUnloader(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block BASIC_SOLAR_PANEL = new BlockSolar(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ADVANCED_SOLAR_PANEL = new BlockSolarAdvanced(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
 //    public static final Block radioTelescope = new BlockDish(Block.Properties.from(oxygenDistributor));
-    public static final Block storageModule = new BlockEnergyStorageModule(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block storageCluster = new BlockEnergyStorageCluster(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block ELECTRIC_FURNACE = new BlockFurnaceElectric(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block ARC_FURNACE = new BlockFurnaceArc(Block.Properties.from(OXYGEN_DISTRIBUTOR));
+    public static final Block ENERGY_STORAGE = new BlockEnergyStorageModule(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ENERGY_STORAGE_CLUSTER = new BlockEnergyStorageCluster(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ELECTRIC_FURNACE = new BlockFurnaceElectric(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ELECTRIC_ARC_FURNACE = new BlockFurnaceArc(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
 //    public static final Block panelLighting = new BlockPanelLighting(Block.Properties.from(oxygenDistributor));
 //    public static final Block spinThruster = new BlockSpinThruster(Block.Properties.from(oxygenDistributor));
-    public static final Block TELEMETRY = new BlockTelemetry(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block HIDDEN_REDSTONE_WIRE = new BlockConcealedRedstone(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block HIDDEN_REDSTONE_REPEATER = new BlockConcealedRepeater(Block.Properties.from(OXYGEN_DISTRIBUTOR));
-    public static final Block PLAYER_DETECTOR = new BlockConcealedDetector(Block.Properties.from(OXYGEN_DISTRIBUTOR));
+    public static final Block TELEMETRY_UNIT = new BlockTelemetry(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block HIDDEN_REDSTONE_WIRE = new BlockConcealedRedstone(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block HIDDEN_REDSTONE_REPEATER = new BlockConcealedRepeater(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block PLAYER_DETECTOR = new BlockConcealedDetector(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
 
-    public static final Block AIR_LOCK_SEAL = new BlockAirLockWall(Block.Properties.from(OXYGEN_DISTRIBUTOR).hardnessAndResistance(1000.0F).tickRandomly());
+    public static final Block AIR_LOCK_SEAL = new BlockAirLockWall(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR).hardnessAndResistance(1000.0F).tickRandomly());
 
     public static final Block FLUID_PIPE = new BlockFluidPipe(Block.Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS), BlockFluidPipe.EnumPipeMode.NORMAL);
     public static final Block PULLED_FLUID_PIPE = new BlockFluidPipe(Block.Properties.from(FLUID_PIPE), BlockFluidPipe.EnumPipeMode.PULL);
@@ -108,7 +110,6 @@ public class GCBlocks
     public static final Block HEAVY_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.from(ALUMINUM_WIRE));
     public static final Block SWITCHABLE_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.from(ALUMINUM_WIRE));
     public static final Block SWITCHABLE_HEAVY_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.from(ALUMINUM_WIRE));
-//    public static final Block blockMoon = new BlockBasicMoon(builder);
 
     public static final Block CHEESE_BLOCK = new BlockCheese(Block.Properties.create(Material.CAKE).hardnessAndResistance(0.5F).sound(SoundType.CLOTH));
 
@@ -128,7 +129,7 @@ public class GCBlocks
 
 //    public static final Block wallGC = new BlockWallGC(builder);
 
-    public static final Block PLATFORM = new BlockPlatform(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
+    public static final Block HYDRAULIC_PLATFORM = new BlockPlatform(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
 
     public static final Block EMERGENCY_POST = new BlockEmergencyBox(Block.Properties.create(Material.IRON).hardnessAndResistance(4.0F, 70.0F).lightValue(15).sound(SoundType.METAL));
     public static final Block EMERGENCY_POST_KIT = new BlockEmergencyBoxKit(Block.Properties.from(EMERGENCY_POST));
@@ -141,100 +142,27 @@ public class GCBlocks
     public static final Block MOON_TIN_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
     public static final Block CHEESE_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
     public static final Block SAPPHIRE_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
-//    public static final Block oreMeteoricIron = new OreBlock(Block.Properties.from(oreCopper));
 
     public static final Block MOON_DIRT = new BlockSimple(Block.Properties.create(Material.ROCK).sound(SoundType.STONE));
     public static final Block MOON_ROCK = new BlockSimple(Block.Properties.from(MOON_DIRT));
     public static final Block MOON_TURF = new BlockSimple(Block.Properties.from(MOON_DIRT));
     public static final Block MOON_DUNGEON_BRICKS = new BlockDungeonBrick(Block.Properties.from(MOON_DIRT));
 
-    public static final Block decoBlock0 = new DecoBlock(Block.Properties.create(Material.ROCK).sound(SoundType.STONE));
-    public static final Block decoBlock1 = new DecoBlock(Block.Properties.from(decoBlock0));
-    public static final Block COPPER_BLOCK = new DecoBlock(Block.Properties.from(decoBlock0));
-    public static final Block TIN_BLOCK = new DecoBlock(Block.Properties.from(decoBlock0));
-    public static final Block ALUMINUM_BLOCK = new DecoBlock(Block.Properties.from(decoBlock0));
-    public static final Block METEORIC_IRON_BLOCK = new DecoBlock(Block.Properties.from(decoBlock0));
-    public static final Block SILICON_BLOCK = new DecoBlock(Block.Properties.from(decoBlock0));
+    public static final Block TIN_DECORATION_BLOCK_1 = new DecoBlock(Block.Properties.create(Material.ROCK).sound(SoundType.STONE));
+    public static final Block TIN_DECORATION_BLOCK_2 = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
+    public static final Block COPPER_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
+    public static final Block TIN_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
+    public static final Block ALUMINUM_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
+    public static final Block METEORIC_IRON_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
+    public static final Block SILICON_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
 //    public static final Block grating = new BlockGrating(builder);
 //    public static final Block gratingWater = new BlockGrating(builder);
 //    public static final Block gratingLava = new BlockGrating(builder);
-
-//    public static final Block breatheableAir = null;
-//    public static final Block brightAir = null;
-//    public static final Block brightBreatheableAir = null;
-//    public static final Block brightLamp = null;
-//    public static final Block treasureChestTier1 = null;
-//    public static final Block landingPad = null;
-//    public static final Block unlitTorch = null;
-//    public static final Block unlitTorchLit = null;
-//    public static final Block oxygenDistributor = null;
-//    public static final Block oxygenPipe = null;
-//    public static final Block oxygenPipePull = null;
-//    public static final Block oxygenCollector = null;
-//    public static final Block oxygenCompressor = null;
-//    public static final Block oxygenSealer = null;
-//    public static final Block oxygenDetector = null;
-//    public static final Block nasaWorkbench = null;
-//    public static final Block fallenMeteor = null;
-//    public static final Block basicBlock = null;
-//    public static final Block airLockFrame = null;
-//    public static final Block airLockSeal = null;
-//    public static BlockSpaceGlass spaceGlassClear;
-//    public static BlockSpaceGlass spaceGlassVanilla;
-//    public static BlockSpaceGlass spaceGlassStrong;
-//    public static BlockSpaceGlass spaceGlassTinClear;
-//    public static BlockSpaceGlass spaceGlassTinVanilla;
-//    public static BlockSpaceGlass spaceGlassTinStrong;
-//    public static final Block crafting = null;
-//    public static final Block crudeOil = null;
-//    public static final Block fuel = null;
-//    public static final Block refinery = null;
-//    public static final Block fuelLoader = null;
-//    public static final Block landingPadFull = null;
-//    public static final Block spaceStationBase = null;
-//    public static final Block fakeBlock = null;
-//    public static final Block sealableBlock = null;
-//    public static final Block cargoLoader = null;
-//    public static final Block parachest = null;
-//    public static final Block solarPanel = null;
-//    public static final Block radioTelescope = null;
-//    public static final Block machineBase = null;
-//    public static final Block machineBase2 = null;
-//    public static final Block machineBase3 = null;
-//    public static final Block machineBase4 = null;
-//    public static final Block machineTiered = null;
-//    public static final Block aluminumWire = null;
-//    public static final Block panelLighting = null;
-//    public static final Block glowstoneTorch = null;
-//    public static final Block blockMoon = null;
-//    public static final Block cheeseBlock = null;
-//    public static final Block spinThruster = null;
-//    public static final Block screen = null;
-//    public static final Block telemetry = null;
-//    public static final Block fluidTank = null;
-//    public static final Block bossSpawner = null;
-//    public static final Block slabGCHalf = null;
-//    public static final Block slabGCDouble = null;
-//    public static final Block tinStairs1 = null;
-//    public static final Block tinStairs2 = null;
-//    public static final Block moonStoneStairs = null;
-//    public static final Block moonBricksStairs = null;
-//    public static final Block wallGC = null;
-//    public static final Block concealedRedstone = null;
-//    public static final Block concealedRepeater_Powered = null;
-//    public static final Block concealedRepeater_Unpowered = null;
-//    public static final Block concealedDetector = null;
-//    public static final Block platform = null;
-//    public static final Block emergencyBox = null;
-//    public static final Block grating = null;
-//    public static final Block gratingWater = null;
-//    public static final Block gratingLava = null;
-
 //    public static final Material machine = new Material.Builder(MaterialColor.IRON).build();
 
-    public static ArrayList<Block> hiddenBlocks = new ArrayList<Block>();
-    public static ArrayList<Block> otherModTorchesLit = new ArrayList<Block>();
-    public static ArrayList<Block> otherModTorchesUnlit = new ArrayList<Block>();
+    public static ArrayList<Block> hiddenBlocks = Lists.newArrayList();
+    public static ArrayList<Block> otherModTorchesLit = Lists.newArrayList();
+    public static ArrayList<Block> otherModTorchesUnlit = Lists.newArrayList();
 
     public static HashMap<Block, Block> itemChanges = new HashMap<>(4, 1.0F);
 
@@ -270,34 +198,34 @@ public class GCBlocks
     public static void registerBlocks(RegistryEvent.Register<Block> evt)
     {
         IForgeRegistry<Block> r = evt.getRegistry();
-        register(r, GCBlockNames.breatheableAir, breatheableAir);
-        register(r, GCBlockNames.brightAir, brightAir);
-        register(r, GCBlockNames.brightBreatheableAir, brightBreatheableAir);
+        register(r, GCBlockNames.BREATHEABLE_AIR, BREATHEABLE_AIR);
+        register(r, GCBlockNames.BRIGHT_AIR, BRIGHT_AIR);
+        register(r, GCBlockNames.BRIGHT_BREATHEABLE_AIR, BRIGHT_BREATHEABLE_AIR);
         register(r, GCBlockNames.ARC_LAMP, ARC_LAMP);
         register(r, GCBlockNames.TIER_1_TREASURE_CHEST, TIER_1_TREASURE_CHEST);
         register(r, GCBlockNames.ROCKET_LAUNCH_PAD, ROCKET_LAUNCH_PAD);
         register(r, GCBlockNames.BUGGY_FUELING_PAD, BUGGY_FUELING_PAD);
-        register(r, GCBlockNames.FULL_LANDING_PAD, FULL_LANDING_PAD);
-        register(r, GCBlockNames.FULL_BUGGY_PAD, FULL_BUGGY_PAD);
+        register(r, GCBlockNames.FULL_ROCKET_LAUNCH_PAD, FULL_ROCKET_LAUNCH_PAD);
+        register(r, GCBlockNames.FULL_BUGGY_FUELING_PAD, FULL_BUGGY_FUELING_PAD);
         register(r, GCBlockNames.UNLIT_TORCH, UNLIT_TORCH);
         register(r, GCBlockNames.WALL_UNLIT_TORCH, WALL_UNLIT_TORCH);
         register(r, GCBlockNames.LIT_UNLIT_TORCH, LIT_UNLIT_TORCH);
         register(r, GCBlockNames.WALL_LIT_UNLIT_TORCH, WALL_LIT_UNLIT_TORCH);
         register(r, GCBlockNames.GLOWSTONE_TORCH, GLOWSTONE_TORCH);
         register(r, GCBlockNames.WALL_GLOWSTONE_TORCH, WALL_GLOWSTONE_TORCH);
-        register(r, GCBlockNames.OXYGEN_DISTRIBUTOR, OXYGEN_DISTRIBUTOR);
+        register(r, GCBlockNames.OXYGEN_BUBBLE_DISTRIBUTOR, OXYGEN_BUBBLE_DISTRIBUTOR);
         register(r, GCBlockNames.OXYGEN_COLLECTOR, OXYGEN_COLLECTOR);
         register(r, GCBlockNames.ROCKET_WORKBENCH, ROCKET_WORKBENCH);
         register(r, GCBlockNames.AIR_LOCK_FRAME, AIR_LOCK_FRAME);
         register(r, GCBlockNames.AIR_LOCK_CONTROLLER, AIR_LOCK_CONTROLLER);
-        register(r, GCBlockNames.INGOT_COMPRESSOR, INGOT_COMPRESSOR);
-        register(r, GCBlockNames.ELECTRIC_INGOT_COMPRESSOR, ELECTRIC_INGOT_COMPRESSOR);
-        register(r, GCBlockNames.ADVANCED_ELECTRIC_INGOT_COMPRESSOR, ADVANCED_ELECTRIC_INGOT_COMPRESSOR);
+        register(r, GCBlockNames.COMPRESSOR, COMPRESSOR);
+        register(r, GCBlockNames.ELECTRIC_COMPRESSOR, ELECTRIC_COMPRESSOR);
+        register(r, GCBlockNames.ADVANCED_COMPRESSOR, ADVANCED_COMPRESSOR);
         register(r, GCBlockNames.COAL_GENERATOR, COAL_GENERATOR);
         register(r, GCBlockNames.CIRCUIT_FABRICATOR, CIRCUIT_FABRICATOR);
         register(r, GCBlockNames.OXYGEN_STORAGE_MODULE, OXYGEN_STORAGE_MODULE);
         register(r, GCBlockNames.DECONSTRUCTOR, DECONSTRUCTOR);
-        register(r, GCBlockNames.PAINTER, PAINTER);
+        register(r, GCBlockNames.CHROMATIC_APPLICATOR, CHROMATIC_APPLICATOR);
         register(r, GCBlockNames.MAGNETIC_CRAFTING_TABLE, MAGNETIC_CRAFTING_TABLE);
         register(r, GCBlockNames.REFINERY, REFINERY);
         register(r, GCBlockNames.FUEL_LOADER, FUEL_LOADER);
@@ -307,16 +235,16 @@ public class GCBlocks
         register(r, GCBlockNames.OXYGEN_DETECTOR, OXYGEN_DETECTOR);
         register(r, GCBlockNames.CARGO_LOADER, CARGO_LOADER);
         register(r, GCBlockNames.CARGO_UNLOADER, CARGO_UNLOADER);
-        register(r, GCBlockNames.SOLAR_PANEL, SOLAR_PANEL);
+        register(r, GCBlockNames.BASIC_SOLAR_PANEL, BASIC_SOLAR_PANEL);
         register(r, GCBlockNames.ADVANCED_SOLAR_PANEL, ADVANCED_SOLAR_PANEL);
 //        register(r, BlockNames.radioTelescope, radioTelescope);
-        register(r, GCBlockNames.energyStorage, storageModule);
-        register(r, GCBlockNames.energyCluster, storageCluster);
+        register(r, GCBlockNames.ENERGY_STORAGE, ENERGY_STORAGE);
+        register(r, GCBlockNames.ENERGY_STORAGE_CLUSTER, ENERGY_STORAGE_CLUSTER);
         register(r, GCBlockNames.ELECTRIC_FURNACE, ELECTRIC_FURNACE);
-        register(r, GCBlockNames.ARC_FURNACE, ARC_FURNACE);
+        register(r, GCBlockNames.ELECTRIC_ARC_FURNACE, ELECTRIC_ARC_FURNACE);
 //        register(r, BlockNames.panelLighting, panelLighting);
 //        register(r, BlockNames.spinThruster, spinThruster);
-        register(r, GCBlockNames.TELEMETRY, TELEMETRY);
+        register(r, GCBlockNames.TELEMETRY_UNIT, TELEMETRY_UNIT);
         register(r, GCBlockNames.HIDDEN_REDSTONE_WIRE, HIDDEN_REDSTONE_WIRE);
         register(r, GCBlockNames.HIDDEN_REDSTONE_REPEATER, HIDDEN_REDSTONE_REPEATER);
         register(r, GCBlockNames.PLAYER_DETECTOR, PLAYER_DETECTOR);
@@ -349,7 +277,7 @@ public class GCBlocks
 //        register(r, BlockNames.moonStoneStairs, moonStoneStairs);
 //        register(r, BlockNames.moonBricksStairs, moonBricksStairs);
 //        register(r, BlockNames.wallGC, wallGC);
-        register(r, GCBlockNames.PLATFORM, PLATFORM);
+        register(r, GCBlockNames.HYDRAULIC_PLATFORM, HYDRAULIC_PLATFORM);
         register(r, GCBlockNames.EMERGENCY_POST, EMERGENCY_POST);
         register(r, GCBlockNames.EMERGENCY_POST_KIT, EMERGENCY_POST_KIT);
         register(r, GCBlockNames.COPPER_ORE, COPPER_ORE);
@@ -360,13 +288,12 @@ public class GCBlocks
         register(r, GCBlockNames.MOON_TIN_ORE, MOON_TIN_ORE);
         register(r, GCBlockNames.CHEESE_ORE, CHEESE_ORE);
         register(r, GCBlockNames.SAPPHIRE_ORE, SAPPHIRE_ORE);
-//        register(r, BlockNames.oreMeteoricIron, oreMeteoricIron);
         register(r, GCBlockNames.MOON_DIRT, MOON_DIRT);
         register(r, GCBlockNames.MOON_ROCK, MOON_ROCK);
         register(r, GCBlockNames.MOON_TURF, MOON_TURF);
         register(r, GCBlockNames.MOON_DUNGEON_BRICKS, MOON_DUNGEON_BRICKS);
-        register(r, GCBlockNames.decoBlock0, decoBlock0);
-        register(r, GCBlockNames.decoBlock1, decoBlock1);
+        register(r, GCBlockNames.TIN_DECORATION_BLOCK_1, TIN_DECORATION_BLOCK_1);
+        register(r, GCBlockNames.TIN_DECORATION_BLOCK_2, TIN_DECORATION_BLOCK_2);
         register(r, GCBlockNames.COPPER_BLOCK, COPPER_BLOCK);
         register(r, GCBlockNames.TIN_BLOCK, TIN_BLOCK);
         register(r, GCBlockNames.ALUMINUM_BLOCK, ALUMINUM_BLOCK);
@@ -455,7 +382,7 @@ public class GCBlocks
         GCBlocks.hiddenBlocks.add(GCBlocks.PULLED_FLUID_PIPE);
         GCBlocks.hiddenBlocks.add(GCBlocks.UNLIT_TORCH);
         GCBlocks.hiddenBlocks.add(GCBlocks.LIT_UNLIT_TORCH);
-        GCBlocks.hiddenBlocks.add(GCBlocks.FULL_LANDING_PAD);
+        GCBlocks.hiddenBlocks.add(GCBlocks.FULL_ROCKET_LAUNCH_PAD);
         GCBlocks.hiddenBlocks.add(GCBlocks.SPACE_STATION_BASE);
         GCBlocks.hiddenBlocks.add(GCBlocks.MOON_BOSS_SPAWNER);
 //        GCBlocks.hiddenBlocks.add(GCBlocks.slabGCDouble);
@@ -478,19 +405,19 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(ROCKET_LAUNCH_PAD), new BlockItem(ROCKET_LAUNCH_PAD, props));
         register(r, Registry.BLOCK.getKey(BUGGY_FUELING_PAD), new BlockItem(BUGGY_FUELING_PAD, props));
         register(r, Registry.BLOCK.getKey(GLOWSTONE_TORCH), new ItemBlockWallOrFloorDesc(GLOWSTONE_TORCH, WALL_GLOWSTONE_TORCH, props));
-        register(r, Registry.BLOCK.getKey(OXYGEN_DISTRIBUTOR), new ItemBlockDesc(OXYGEN_DISTRIBUTOR, props));
+        register(r, Registry.BLOCK.getKey(OXYGEN_BUBBLE_DISTRIBUTOR), new ItemBlockDesc(OXYGEN_BUBBLE_DISTRIBUTOR, props));
         register(r, Registry.BLOCK.getKey(OXYGEN_COLLECTOR), new ItemBlockDesc(OXYGEN_COLLECTOR, props));
         register(r, Registry.BLOCK.getKey(ROCKET_WORKBENCH), new BlockItem(ROCKET_WORKBENCH, props));
         register(r, Registry.BLOCK.getKey(AIR_LOCK_FRAME), new BlockItem(AIR_LOCK_FRAME, props));
         register(r, Registry.BLOCK.getKey(AIR_LOCK_CONTROLLER), new BlockItem(AIR_LOCK_CONTROLLER, props));
-        register(r, Registry.BLOCK.getKey(INGOT_COMPRESSOR), new BlockItem(INGOT_COMPRESSOR, props));
-        register(r, Registry.BLOCK.getKey(ELECTRIC_INGOT_COMPRESSOR), new BlockItem(ELECTRIC_INGOT_COMPRESSOR, props));
-        register(r, Registry.BLOCK.getKey(ADVANCED_ELECTRIC_INGOT_COMPRESSOR), new BlockItem(ADVANCED_ELECTRIC_INGOT_COMPRESSOR, props));
+        register(r, Registry.BLOCK.getKey(COMPRESSOR), new BlockItem(COMPRESSOR, props));
+        register(r, Registry.BLOCK.getKey(ELECTRIC_COMPRESSOR), new BlockItem(ELECTRIC_COMPRESSOR, props));
+        register(r, Registry.BLOCK.getKey(ADVANCED_COMPRESSOR), new BlockItem(ADVANCED_COMPRESSOR, props));
         register(r, Registry.BLOCK.getKey(COAL_GENERATOR), new BlockItem(COAL_GENERATOR, props));
         register(r, Registry.BLOCK.getKey(CIRCUIT_FABRICATOR), new BlockItem(CIRCUIT_FABRICATOR, props));
         register(r, Registry.BLOCK.getKey(OXYGEN_STORAGE_MODULE), new BlockItem(OXYGEN_STORAGE_MODULE, props));
         register(r, Registry.BLOCK.getKey(DECONSTRUCTOR), new BlockItem(DECONSTRUCTOR, props));
-        register(r, Registry.BLOCK.getKey(PAINTER), new BlockItem(PAINTER, props));
+        register(r, Registry.BLOCK.getKey(CHROMATIC_APPLICATOR), new BlockItem(CHROMATIC_APPLICATOR, props));
         register(r, Registry.BLOCK.getKey(MAGNETIC_CRAFTING_TABLE), new ItemBlockDesc(MAGNETIC_CRAFTING_TABLE, props));
         register(r, Registry.BLOCK.getKey(REFINERY), new ItemBlockDesc(REFINERY, props));
         register(r, Registry.BLOCK.getKey(FUEL_LOADER), new ItemBlockDesc(FUEL_LOADER, props));
@@ -500,13 +427,13 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(OXYGEN_DETECTOR), new ItemBlockDesc(OXYGEN_DETECTOR, props));
         register(r, Registry.BLOCK.getKey(CARGO_LOADER), new ItemBlockDesc(CARGO_LOADER, props));
         register(r, Registry.BLOCK.getKey(CARGO_UNLOADER), new ItemBlockDesc(CARGO_UNLOADER, props));
-        register(r, Registry.BLOCK.getKey(SOLAR_PANEL), new ItemBlockDesc(SOLAR_PANEL, props));
+        register(r, Registry.BLOCK.getKey(BASIC_SOLAR_PANEL), new ItemBlockDesc(BASIC_SOLAR_PANEL, props));
         register(r, Registry.BLOCK.getKey(ADVANCED_SOLAR_PANEL), new ItemBlockDesc(ADVANCED_SOLAR_PANEL, props));
-        register(r, Registry.BLOCK.getKey(storageModule), new ItemBlockDesc(storageModule, props));
-        register(r, Registry.BLOCK.getKey(storageCluster), new ItemBlockDesc(storageCluster, props));
+        register(r, Registry.BLOCK.getKey(ENERGY_STORAGE), new ItemBlockDesc(ENERGY_STORAGE, props));
+        register(r, Registry.BLOCK.getKey(ENERGY_STORAGE_CLUSTER), new ItemBlockDesc(ENERGY_STORAGE_CLUSTER, props));
         register(r, Registry.BLOCK.getKey(ELECTRIC_FURNACE), new ItemBlockDesc(ELECTRIC_FURNACE, props));
-        register(r, Registry.BLOCK.getKey(ARC_FURNACE), new ItemBlockDesc(ARC_FURNACE, props));
-        register(r, Registry.BLOCK.getKey(TELEMETRY), new ItemBlockDesc(TELEMETRY, props));
+        register(r, Registry.BLOCK.getKey(ELECTRIC_ARC_FURNACE), new ItemBlockDesc(ELECTRIC_ARC_FURNACE, props));
+        register(r, Registry.BLOCK.getKey(TELEMETRY_UNIT), new ItemBlockDesc(TELEMETRY_UNIT, props));
         register(r, Registry.BLOCK.getKey(HIDDEN_REDSTONE_WIRE), new BlockItem(HIDDEN_REDSTONE_WIRE, props));
         register(r, Registry.BLOCK.getKey(HIDDEN_REDSTONE_REPEATER), new BlockItem(HIDDEN_REDSTONE_REPEATER, props));
         register(r, Registry.BLOCK.getKey(PLAYER_DETECTOR), new BlockItem(PLAYER_DETECTOR, props));
@@ -535,14 +462,14 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(MOON_ROCK), new BlockItem(MOON_ROCK, props));
         register(r, Registry.BLOCK.getKey(MOON_TURF), new BlockItem(MOON_TURF, props));
         register(r, Registry.BLOCK.getKey(MOON_DUNGEON_BRICKS), new BlockItem(MOON_DUNGEON_BRICKS, props));
-        register(r, Registry.BLOCK.getKey(decoBlock0), new BlockItem(decoBlock0, props));
-        register(r, Registry.BLOCK.getKey(decoBlock1), new BlockItem(decoBlock1, props));
+        register(r, Registry.BLOCK.getKey(TIN_DECORATION_BLOCK_1), new BlockItem(TIN_DECORATION_BLOCK_1, props));
+        register(r, Registry.BLOCK.getKey(TIN_DECORATION_BLOCK_2), new BlockItem(TIN_DECORATION_BLOCK_2, props));
         register(r, Registry.BLOCK.getKey(COPPER_BLOCK), new BlockItem(COPPER_BLOCK, props));
         register(r, Registry.BLOCK.getKey(TIN_BLOCK), new BlockItem(TIN_BLOCK, props));
         register(r, Registry.BLOCK.getKey(ALUMINUM_BLOCK), new BlockItem(ALUMINUM_BLOCK, props));
         register(r, Registry.BLOCK.getKey(METEORIC_IRON_BLOCK), new BlockItem(METEORIC_IRON_BLOCK, props));
         register(r, Registry.BLOCK.getKey(SILICON_BLOCK), new BlockItem(SILICON_BLOCK, props));
-        register(r, Registry.BLOCK.getKey(PLATFORM), new ItemBlockDesc(PLATFORM, props));
+        register(r, Registry.BLOCK.getKey(HYDRAULIC_PLATFORM), new ItemBlockDesc(HYDRAULIC_PLATFORM, props));
         props = props.group(null);
         register(r, Registry.BLOCK.getKey(AIR_LOCK_SEAL), new BlockItem(AIR_LOCK_SEAL, props));
         register(r, Registry.BLOCK.getKey(UNLIT_TORCH), new ItemBlockWallOrFloorDesc(UNLIT_TORCH, WALL_UNLIT_TORCH, props));
@@ -808,7 +735,7 @@ public class GCBlocks
         IForgeRegistry<TileEntityType<?>> r = evt.getRegistry();
 
         register(r, TileEntityType.Builder.create(TileEntityTreasureChest::new, TIER_1_TREASURE_CHEST).build(null), GCBlockNames.TIER_1_TREASURE_CHEST);
-        register(r, TileEntityType.Builder.create(TileEntityOxygenDistributor::new, OXYGEN_DISTRIBUTOR).build(null), GCBlockNames.OXYGEN_DISTRIBUTOR);
+        register(r, TileEntityType.Builder.create(TileEntityOxygenDistributor::new, OXYGEN_BUBBLE_DISTRIBUTOR).build(null), GCBlockNames.OXYGEN_BUBBLE_DISTRIBUTOR);
         register(r, TileEntityType.Builder.create(TileEntityOxygenCollector::new, OXYGEN_COLLECTOR).build(null), GCBlockNames.OXYGEN_COLLECTOR);
         register(r, TileEntityType.Builder.create(TileEntityFluidPipe::new, FLUID_PIPE).build(null), GCBlockNames.FLUID_PIPE);
         register(r, TileEntityType.Builder.create(TileEntityAirLock::new, AIR_LOCK_FRAME).build(null), GCBlockNames.AIR_LOCK_FRAME);
@@ -819,35 +746,35 @@ public class GCBlocks
         register(r, TileEntityType.Builder.create(TileEntityOxygenDecompressor::new, OXYGEN_DECOMPRESSOR).build(null), GCBlockNames.OXYGEN_DECOMPRESSOR);
         register(r, TileEntityType.Builder.create(TileEntityFuelLoader::new, FUEL_LOADER).build(null), GCBlockNames.FUEL_LOADER);
         register(r, TileEntityType.Builder.create(TileEntityLandingPadSingle::new, ROCKET_LAUNCH_PAD).build(null), GCBlockNames.ROCKET_LAUNCH_PAD);
-        register(r, TileEntityType.Builder.create(TileEntityLandingPad::new, FULL_LANDING_PAD).build(null), GCBlockNames.FULL_LANDING_PAD);
+        register(r, TileEntityType.Builder.create(TileEntityLandingPad::new, FULL_ROCKET_LAUNCH_PAD).build(null), GCBlockNames.FULL_ROCKET_LAUNCH_PAD);
         register(r, TileEntityType.Builder.create(TileEntitySpaceStationBase::new, SPACE_STATION_BASE).build(null), GCBlockNames.SPACE_STATION_BASE);
         register(r, TileEntityType.Builder.create(TileEntityFake::new, MULTI_BLOCK).build(null), GCBlockNames.MULTI_BLOCK);
         register(r, TileEntityType.Builder.create(TileEntityOxygenSealer::new, OXYGEN_SEALER).build(null), GCBlockNames.OXYGEN_SEALER);
         register(r, TileEntityType.Builder.create(TileEntityDungeonSpawner::new, MOON_BOSS_SPAWNER).build(null), GCBlockNames.MOON_BOSS_SPAWNER);
         register(r, TileEntityType.Builder.create(TileEntityOxygenDetector::new, OXYGEN_DETECTOR).build(null), GCBlockNames.OXYGEN_DETECTOR);
-        register(r, TileEntityType.Builder.create(TileEntityBuggyFueler::new, FULL_BUGGY_PAD).build(null), GCBlockNames.FULL_BUGGY_PAD);
+        register(r, TileEntityType.Builder.create(TileEntityBuggyFueler::new, FULL_BUGGY_FUELING_PAD).build(null), GCBlockNames.FULL_BUGGY_FUELING_PAD);
         register(r, TileEntityType.Builder.create(TileEntityBuggyFuelerSingle::new, BUGGY_FUELING_PAD).build(null), GCBlockNames.BUGGY_FUELING_PAD);
         register(r, TileEntityType.Builder.create(TileEntityCargoLoader::new, CARGO_LOADER).build(null), GCBlockNames.CARGO_LOADER);
         register(r, TileEntityType.Builder.create(TileEntityCargoUnloader::new, CARGO_UNLOADER).build(null), GCBlockNames.CARGO_UNLOADER);
         register(r, TileEntityType.Builder.create(TileEntityParaChest::new, PARACHEST).build(null), GCBlockNames.PARACHEST);
-        register(r, TileEntityType.Builder.create(TileEntitySolar.TileEntitySolarT1::new, SOLAR_PANEL).build(null), GCBlockNames.SOLAR_PANEL);
+        register(r, TileEntityType.Builder.create(TileEntitySolar.TileEntitySolarT1::new, BASIC_SOLAR_PANEL).build(null), GCBlockNames.BASIC_SOLAR_PANEL);
         register(r, TileEntityType.Builder.create(TileEntitySolar.TileEntitySolarT2::new, ADVANCED_SOLAR_PANEL).build(null), GCBlockNames.ADVANCED_SOLAR_PANEL);
 //        register(r, TileEntityType.Builder.create(TileEntityDish::new, radioTelescope).build(null), BlockNames.radioTelescope);
         register(r, TileEntityType.Builder.create(TileEntityCrafting::new, MAGNETIC_CRAFTING_TABLE).build(null), GCBlockNames.MAGNETIC_CRAFTING_TABLE);
-        register(r, TileEntityType.Builder.create(TileEntityEnergyStorageModule.TileEntityEnergyStorageModuleT1::new, storageModule).build(null), GCBlockNames.energyStorage);
-        register(r, TileEntityType.Builder.create(TileEntityEnergyStorageModule.TileEntityEnergyStorageModuleT2::new, storageCluster).build(null), GCBlockNames.energyCluster);
+        register(r, TileEntityType.Builder.create(TileEntityEnergyStorageModule.TileEntityEnergyStorageModuleT1::new, ENERGY_STORAGE).build(null), GCBlockNames.ENERGY_STORAGE);
+        register(r, TileEntityType.Builder.create(TileEntityEnergyStorageModule.TileEntityEnergyStorageModuleT2::new, ENERGY_STORAGE_CLUSTER).build(null), GCBlockNames.ENERGY_STORAGE_CLUSTER);
         register(r, TileEntityType.Builder.create(TileEntityCoalGenerator::new, COAL_GENERATOR).build(null), GCBlockNames.COAL_GENERATOR);
         register(r, TileEntityType.Builder.create(TileEntityElectricFurnace.TileEntityElectricFurnaceT1::new, ELECTRIC_FURNACE).build(null), GCBlockNames.ELECTRIC_FURNACE);
-        register(r, TileEntityType.Builder.create(TileEntityElectricFurnace.TileEntityElectricFurnaceT2::new, ARC_FURNACE).build(null), GCBlockNames.ARC_FURNACE);
+        register(r, TileEntityType.Builder.create(TileEntityElectricFurnace.TileEntityElectricFurnaceT2::new, ELECTRIC_ARC_FURNACE).build(null), GCBlockNames.ELECTRIC_ARC_FURNACE);
         register(r, TileEntityType.Builder.create(TileEntityAluminumWire.TileEntityAluminumWireT1::new, ALUMINUM_WIRE).build(null), GCBlockNames.ALUMINUM_WIRE);
         register(r, TileEntityType.Builder.create(TileEntityAluminumWire.TileEntityAluminumWireT2::new, HEAVY_ALUMINUM_WIRE).build(null), GCBlockNames.HEAVY_ALUMINUM_WIRE);
         register(r, TileEntityType.Builder.create(TileEntityAluminumWireSwitch.TileEntityAluminumWireSwitchableT1::new, SWITCHABLE_ALUMINUM_WIRE).build(null), GCBlockNames.SWITCHABLE_ALUMINUM_WIRE);
         register(r, TileEntityType.Builder.create(TileEntityAluminumWireSwitch.TileEntityAluminumWireSwitchableT2::new, SWITCHABLE_HEAVY_ALUMINUM_WIRE).build(null), GCBlockNames.SWITCHABLE_HEAVY_ALUMINUM_WIRE);
 //        register(r, TileEntityType.Builder.create(TileEntityAluminumWireSwitch::new, "GC Switchable Aluminum Wire").build(null));
         register(r, TileEntityType.Builder.create(TileEntityFallenMeteor::new, FALLEN_METEOR).build(null), GCBlockNames.FALLEN_METEOR);
-        register(r, TileEntityType.Builder.create(TileEntityIngotCompressor::new, INGOT_COMPRESSOR).build(null), GCBlockNames.INGOT_COMPRESSOR);
-        register(r, TileEntityType.Builder.create(TileEntityElectricIngotCompressor.TileEntityElectricIngotCompressorT1::new, ELECTRIC_INGOT_COMPRESSOR).build(null), GCBlockNames.ELECTRIC_INGOT_COMPRESSOR);
-        register(r, TileEntityType.Builder.create(TileEntityElectricIngotCompressor.TileEntityElectricIngotCompressorT2::new, ADVANCED_ELECTRIC_INGOT_COMPRESSOR).build(null), GCBlockNames.ADVANCED_ELECTRIC_INGOT_COMPRESSOR);
+        register(r, TileEntityType.Builder.create(TileEntityIngotCompressor::new, COMPRESSOR).build(null), GCBlockNames.COMPRESSOR);
+        register(r, TileEntityType.Builder.create(TileEntityElectricIngotCompressor.TileEntityElectricIngotCompressorT1::new, ELECTRIC_COMPRESSOR).build(null), GCBlockNames.ELECTRIC_COMPRESSOR);
+        register(r, TileEntityType.Builder.create(TileEntityElectricIngotCompressor.TileEntityElectricIngotCompressorT2::new, ADVANCED_COMPRESSOR).build(null), GCBlockNames.ADVANCED_COMPRESSOR);
         register(r, TileEntityType.Builder.create(TileEntityCircuitFabricator::new, CIRCUIT_FABRICATOR).build(null), GCBlockNames.CIRCUIT_FABRICATOR);
         register(r, TileEntityType.Builder.create(TileEntityAirLockController::new, AIR_LOCK_CONTROLLER).build(null), GCBlockNames.AIR_LOCK_CONTROLLER);
         register(r, TileEntityType.Builder.create(TileEntityOxygenStorageModule::new, OXYGEN_STORAGE_MODULE).build(null), GCBlockNames.OXYGEN_STORAGE_MODULE);
@@ -855,11 +782,11 @@ public class GCBlocks
         register(r, TileEntityType.Builder.create(TileEntityArclamp::new, ARC_LAMP).build(null), GCBlockNames.ARC_LAMP);
         register(r, TileEntityType.Builder.create(TileEntityScreen::new, DISPLAY_SCREEN).build(null), GCBlockNames.DISPLAY_SCREEN);
 //        register(r, TileEntityType.Builder.create(TileEntityPanelLight::new, panelLighting).build(null), BlockNames.panelLighting);
-        register(r, TileEntityType.Builder.create(TileEntityTelemetry::new, TELEMETRY).build(null), GCBlockNames.TELEMETRY);
-        register(r, TileEntityType.Builder.create(TileEntityPainter::new, PAINTER).build(null), GCBlockNames.PAINTER);
+        register(r, TileEntityType.Builder.create(TileEntityTelemetry::new, TELEMETRY_UNIT).build(null), GCBlockNames.TELEMETRY_UNIT);
+        register(r, TileEntityType.Builder.create(TileEntityPainter::new, CHROMATIC_APPLICATOR).build(null), GCBlockNames.CHROMATIC_APPLICATOR);
         register(r, TileEntityType.Builder.create(TileEntityFluidTank::new, FLUID_TANK).build(null), GCBlockNames.FLUID_TANK);
         register(r, TileEntityType.Builder.create(TileEntityPlayerDetector::new, PLAYER_DETECTOR).build(null), GCBlockNames.PLAYER_DETECTOR);
-        register(r, TileEntityType.Builder.create(TileEntityPlatform::new, PLATFORM).build(null), GCBlockNames.PLATFORM);
+        register(r, TileEntityType.Builder.create(TileEntityPlatform::new, HYDRAULIC_PLATFORM).build(null), GCBlockNames.HYDRAULIC_PLATFORM);
         register(r, TileEntityType.Builder.create(TileEntityEmergencyBox::new, EMERGENCY_POST, EMERGENCY_POST_KIT).build(null), GCBlockNames.EMERGENCY_POST);
 //        register(r, TileEntityType.Builder.create(TileEntityNull::new, "GC Null Tile").build(null));
     }

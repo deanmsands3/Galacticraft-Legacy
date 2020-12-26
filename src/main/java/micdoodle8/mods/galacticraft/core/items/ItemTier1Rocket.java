@@ -77,7 +77,7 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
                     BlockPos pos1 = context.getPos().add(i, 0, j);
                     BlockState state = context.getWorld().getBlockState(pos1);
 
-                    if (state.getBlock() == GCBlocks.FULL_LANDING_PAD)
+                    if (state.getBlock() == GCBlocks.FULL_ROCKET_LAUNCH_PAD)
                     {
                         padFound = true;
                         tile = context.getWorld().getTileEntity(context.getPos().add(i, 0, j));

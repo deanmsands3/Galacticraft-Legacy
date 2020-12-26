@@ -131,7 +131,7 @@ public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLe
     public void onGroundHit()
     {
         BlockPos pos = new BlockPos(this).up(2);
-        this.world.setBlockState(pos, GCBlocks.brightAir.getDefaultState(), 2);
+        this.world.setBlockState(pos, GCBlocks.BRIGHT_AIR.getDefaultState(), 2);
     }
 
     @Override

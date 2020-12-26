@@ -54,8 +54,8 @@ public class BaseHangar extends SizedPiece
     public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
         BlockState blockAir = Blocks.AIR.getDefaultState();
-        BlockState blockPlain = GCBlocks.decoBlock1.getDefaultState();
-        BlockState blockPattern = GCBlocks.decoBlock0.getDefaultState();
+        BlockState blockPlain = GCBlocks.TIN_DECORATION_BLOCK_2.getDefaultState();
+        BlockState blockPattern = GCBlocks.TIN_DECORATION_BLOCK_1.getDefaultState();
         BlockState blockGrid = AsteroidBlocks.blockWalkway.getDefaultState();
 //        BlockState blockSlab = GCBlocks.slabGCHalf.getStateFromMeta(1);
 //        BlockState upsideSlab = GCBlocks.slabGCHalf.getStateFromMeta(9);

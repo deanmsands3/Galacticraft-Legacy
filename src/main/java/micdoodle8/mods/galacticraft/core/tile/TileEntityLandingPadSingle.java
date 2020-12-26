@@ -51,7 +51,7 @@ public class TileEntityLandingPadSingle extends TileEntity implements ITickableT
                     ((TileEntityLandingPadSingle) tile).corner = 1;
                 }
 
-                this.world.setBlockState(this.getPos(), GCBlocks.FULL_LANDING_PAD.getDefaultState(), 2);
+                this.world.setBlockState(this.getPos(), GCBlocks.FULL_ROCKET_LAUNCH_PAD.getDefaultState(), 2);
             }
         }
     }

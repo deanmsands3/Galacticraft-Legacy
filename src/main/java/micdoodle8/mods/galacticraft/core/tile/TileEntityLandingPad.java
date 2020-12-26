@@ -35,7 +35,7 @@ import java.util.List;
 
 public class TileEntityLandingPad extends TileEntityFake implements IMultiBlock, IFuelable, IFuelDock, ICargoEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.FULL_LANDING_PAD)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.FULL_ROCKET_LAUNCH_PAD)
     public static TileEntityType<TileEntityLandingPad> TYPE;
 
     public TileEntityLandingPad()

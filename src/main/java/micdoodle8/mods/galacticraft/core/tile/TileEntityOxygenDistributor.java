@@ -44,7 +44,7 @@ import java.util.List;
 
 public class TileEntityOxygenDistributor extends TileEntityOxygen implements IBubbleProviderColored, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_DISTRIBUTOR)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_BUBBLE_DISTRIBUTOR)
     public static TileEntityType<TileEntityOxygenDistributor> TYPE;
 
     public boolean active;

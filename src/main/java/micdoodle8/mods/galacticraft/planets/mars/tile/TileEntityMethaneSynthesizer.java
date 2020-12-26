@@ -161,7 +161,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
                     {
                         BlockState stateAbove = this.world.getBlockState(this.getPos().up());
                         Block blockAbove = stateAbove.getBlock();
-                        if (blockAbove.getMaterial(stateAbove) == Material.AIR && blockAbove != GCBlocks.breatheableAir && blockAbove != GCBlocks.brightBreatheableAir)
+                        if (blockAbove.getMaterial(stateAbove) == Material.AIR && blockAbove != GCBlocks.BREATHEABLE_AIR && blockAbove != GCBlocks.BRIGHT_BREATHEABLE_AIR)
                         {
                             if (!OxygenUtil.inOxygenBubble(this.world, this.getPos().getX() + 0.5D, this.getPos().getY() + 1D, this.getPos().getZ() + 0.5D))
                             {

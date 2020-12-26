@@ -92,7 +92,7 @@ public class BlockOxygenSealer extends BlockAdvancedTile implements IShiftDescri
     {
         BlockPos ventSide = pos.up(1);
         Block testBlock = worldIn.getBlockState(ventSide).getBlock();
-        if (testBlock == GCBlocks.breatheableAir || testBlock == GCBlocks.brightBreatheableAir)
+        if (testBlock == GCBlocks.BREATHEABLE_AIR || testBlock == GCBlocks.BRIGHT_BREATHEABLE_AIR)
         {
             TickHandlerServer.scheduleNewEdgeCheck(GCCoreUtil.getDimensionType(worldIn), pos);
         }

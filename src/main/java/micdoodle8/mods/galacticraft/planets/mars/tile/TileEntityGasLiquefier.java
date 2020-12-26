@@ -216,7 +216,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
                     if (this.gasTankType == -1 || (this.gasTankType == TankGases.AIR.index && this.gasTank.getFluid().getAmount() < this.gasTank.getCapacity()))
                     {
                         BlockState stateAbove = this.world.getBlockState(getPos().up());
-                        if (stateAbove.getMaterial() == Material.AIR && stateAbove.getBlock() != GCBlocks.breatheableAir && stateAbove.getBlock() != GCBlocks.brightBreatheableAir)
+                        if (stateAbove.getMaterial() == Material.AIR && stateAbove.getBlock() != GCBlocks.BREATHEABLE_AIR && stateAbove.getBlock() != GCBlocks.BRIGHT_BREATHEABLE_AIR)
                         {
                             FluidStack gcAtmosphere = new FluidStack(TankGases.AIR.gas, 4);
                             this.gasTank.fill(gcAtmosphere, IFluidHandler.FluidAction.EXECUTE);

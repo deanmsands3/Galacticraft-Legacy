@@ -265,7 +265,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     {
                         pos = new BlockPos(x, y, z);
                         b = this.world.getBlockState(pos.up()).getBlock();
-                        if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
+                        if (b == GCBlocks.BREATHEABLE_AIR || b == GCBlocks.BRIGHT_BREATHEABLE_AIR)
                         {
                             if (this.world.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL)
                             {
@@ -275,7 +275,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                             continue;
                         }
                         b = this.world.getBlockState(pos.down()).getBlock();
-                        if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
+                        if (b == GCBlocks.BREATHEABLE_AIR || b == GCBlocks.BRIGHT_BREATHEABLE_AIR)
                         {
                             if (this.world.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL)
                             {
@@ -299,7 +299,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                         {
                             if (sealedSide)
                             {
-                                this.world.setBlockState(pos, GCBlocks.breatheableAir.getDefaultState(), 3);
+                                this.world.setBlockState(pos, GCBlocks.BREATHEABLE_AIR.getDefaultState(), 3);
                             }
                             else
                             {
@@ -321,7 +321,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     {
                         pos = new BlockPos(x, y, z);
                         b = this.world.getBlockState(pos.north()).getBlock();
-                        if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
+                        if (b == GCBlocks.BREATHEABLE_AIR || b == GCBlocks.BRIGHT_BREATHEABLE_AIR)
                         {
                             if (this.world.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL)
                             {
@@ -331,7 +331,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                             continue;
                         }
                         b = this.world.getBlockState(pos.south()).getBlock();
-                        if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
+                        if (b == GCBlocks.BREATHEABLE_AIR || b == GCBlocks.BRIGHT_BREATHEABLE_AIR)
                         {
                             if (this.world.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL)
                             {
@@ -355,7 +355,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                         {
                             if (sealedSide)
                             {
-                                this.world.setBlockState(pos, GCBlocks.breatheableAir.getDefaultState(), 3);
+                                this.world.setBlockState(pos, GCBlocks.BREATHEABLE_AIR.getDefaultState(), 3);
                             }
                             else
                             {
@@ -374,7 +374,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                     {
                         pos = new BlockPos(x, y, z);
                         b = this.world.getBlockState(pos.west()).getBlock();
-                        if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
+                        if (b == GCBlocks.BREATHEABLE_AIR || b == GCBlocks.BRIGHT_BREATHEABLE_AIR)
                         {
                             if (this.world.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL)
                             {
@@ -384,7 +384,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                             continue;
                         }
                         b = this.world.getBlockState(pos.east()).getBlock();
-                        if (b == GCBlocks.breatheableAir || b == GCBlocks.brightBreatheableAir)
+                        if (b == GCBlocks.BREATHEABLE_AIR || b == GCBlocks.BRIGHT_BREATHEABLE_AIR)
                         {
                             if (this.world.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL)
                             {
@@ -408,7 +408,7 @@ public class TileEntityAirLockController extends TileEntityAdvanced
                         {
                             if (sealedSide)
                             {
-                                this.world.setBlockState(pos, GCBlocks.breatheableAir.getDefaultState(), 3);
+                                this.world.setBlockState(pos, GCBlocks.BREATHEABLE_AIR.getDefaultState(), 3);
                             }
                             else
                             {

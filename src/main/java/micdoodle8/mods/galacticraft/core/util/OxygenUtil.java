@@ -240,7 +240,7 @@ public class OxygenUtil
     private static synchronized BreathableAirResult testContactWithBreathableAir(World world, Block block, BlockPos pos, int limitCount)
     {
         checked.add(pos);
-        if (block == GCBlocks.breatheableAir || block == GCBlocks.brightBreatheableAir)
+        if (block == GCBlocks.BREATHEABLE_AIR || block == GCBlocks.BRIGHT_BREATHEABLE_AIR)
         {
             BlockState state = world.getBlockState(pos);
             return state.get(BlockThermalAir.THERMAL) ? BreathableAirResult.THERMAL_BREATHABLE : BreathableAirResult.BREATHABLE;

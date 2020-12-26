@@ -86,7 +86,7 @@ public class ItemTier3Rocket extends Item implements IHoldableItem, ISortable
                     BlockState state = context.getWorld().getBlockState(pos1);
                     final Block id = state.getBlock();
 
-                    if (id == GCBlocks.FULL_LANDING_PAD)
+                    if (id == GCBlocks.FULL_ROCKET_LAUNCH_PAD)
                     {
                         padFound = true;
                         tile = context.getWorld().getTileEntity(pos1);

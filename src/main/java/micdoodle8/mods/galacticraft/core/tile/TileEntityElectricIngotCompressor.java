@@ -41,7 +41,7 @@ public class TileEntityElectricIngotCompressor extends TileBaseElectricBlock imp
 {
     public static class TileEntityElectricIngotCompressorT1 extends TileEntityElectricIngotCompressor
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ELECTRIC_INGOT_COMPRESSOR)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ELECTRIC_COMPRESSOR)
         public static TileEntityType<TileEntityElectricIngotCompressorT1> TYPE;
 
         public TileEntityElectricIngotCompressorT1()
@@ -56,7 +56,7 @@ public class TileEntityElectricIngotCompressor extends TileBaseElectricBlock imp
 
     public static class TileEntityElectricIngotCompressorT2 extends TileEntityElectricIngotCompressor
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ADVANCED_ELECTRIC_INGOT_COMPRESSOR)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ADVANCED_COMPRESSOR)
         public static TileEntityType<TileEntityElectricIngotCompressorT2> TYPE;
 
         public TileEntityElectricIngotCompressorT2()

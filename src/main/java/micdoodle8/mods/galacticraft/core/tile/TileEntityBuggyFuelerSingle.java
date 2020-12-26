@@ -51,7 +51,7 @@ public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickable
                     ((TileEntityBuggyFuelerSingle) tile).corner = 1;
                 }
 
-                this.world.setBlockState(this.getPos(), GCBlocks.FULL_BUGGY_PAD.getDefaultState(), 2);
+                this.world.setBlockState(this.getPos(), GCBlocks.FULL_BUGGY_FUELING_PAD.getDefaultState(), 2);
             }
         }
     }

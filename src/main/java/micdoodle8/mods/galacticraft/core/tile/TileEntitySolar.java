@@ -52,7 +52,7 @@ public abstract class TileEntitySolar extends TileBaseUniversalElectricalSource 
 {
     public static class TileEntitySolarT1 extends TileEntitySolar
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.SOLAR_PANEL)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.BASIC_SOLAR_PANEL)
         public static TileEntityType<TileEntitySolarT1> TYPE;
 
         public TileEntitySolarT1()
@@ -415,7 +415,7 @@ public abstract class TileEntitySolar extends TileBaseUniversalElectricalSource 
                 {
                     if (this.world.isRemote && this.world.rand.nextDouble() < 0.1D)
                     {
-                        Minecraft.getInstance().particles.addBlockDestroyEffects(pos, GCBlocks.SOLAR_PANEL.getDefaultState());
+                        Minecraft.getInstance().particles.addBlockDestroyEffects(pos, GCBlocks.BASIC_SOLAR_PANEL.getDefaultState());
                     }
 
                     this.world.removeBlock(pos, false);

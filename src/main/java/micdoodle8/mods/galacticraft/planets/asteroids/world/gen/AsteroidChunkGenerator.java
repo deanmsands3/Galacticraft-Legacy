@@ -631,7 +631,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator<AsteroidGenSettings>
     }
 
     @Override
-    public int func_222529_a(int p_222529_1_, int p_222529_2_, Heightmap.Type p_222529_3_)
+    public int getHeight(int x, int z, Heightmap.Type heightmapType)
     {
         return 0;
     }
@@ -976,7 +976,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator<AsteroidGenSettings>
                                 count = 12;
                             }
 //                            chunk.setBlockState(new BlockPos(x - 1, y, z), GCBlocks.brightAir.getStateFromMeta(13 - count)); TODO ? Has bright air ever had metadata?
-                            chunk.setBlockState(new BlockPos(x - 1, y, z), GCBlocks.brightAir.getDefaultState(), false);
+                            chunk.setBlockState(new BlockPos(x - 1, y, z), GCBlocks.BRIGHT_AIR.getDefaultState(), false);
 //                            ExtendedBlockStorage extendedblockstorage = chunk.getLastExtendedBlockStorage()[y >> 4];
 //                            if (extendedblockstorage != null)
 //                            {
