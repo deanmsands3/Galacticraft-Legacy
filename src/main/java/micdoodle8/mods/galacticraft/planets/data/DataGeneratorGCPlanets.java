@@ -4,6 +4,8 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockSlimelingEgg;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
+import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockGeothermalGenerator;
+import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
@@ -56,6 +58,8 @@ public class DataGeneratorGCPlanets
         {
             ResourceLocation machineBase = new ResourceLocation(Constants.MOD_ID_CORE, "block/machine_base");
             ResourceLocation machineInput = new ResourceLocation(Constants.MOD_ID_CORE, "block/machine_input");
+            ResourceLocation machineOutput = new ResourceLocation(Constants.MOD_ID_CORE, "block/machine_output");
+            ResourceLocation machineSide = new ResourceLocation(Constants.MOD_ID_CORE, "block/machine_side");
             ResourceLocation machineAdvBase = new ResourceLocation(Constants.MOD_ID_CORE, "block/advanced_machine_base");
             ResourceLocation machineAdvSide = new ResourceLocation(Constants.MOD_ID_CORE, "block/advanced_machine_side");
             ResourceLocation machineAdvInput = new ResourceLocation(Constants.MOD_ID_CORE, "block/advanced_machine_input");
@@ -112,6 +116,41 @@ public class DataGeneratorGCPlanets
             this.simpleBlock(AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY, this.models().cubeAll("short_range_telepad_dummy", this.modLoc("block/short_range_telepad_base")));
             this.simpleBlock(AsteroidBlocks.ENERGY_BEAM_RECEIVER, this.models().cubeAll("energy_beam_receiver", this.modLoc("block/energy_beam_receiver")));
             this.simpleBlock(AsteroidBlocks.ENERGY_BEAM_REFLECTOR, this.models().cubeAll("energy_beam_reflector", this.modLoc("block/energy_beam_reflector")));
+
+            this.simpleBlock(VenusBlocks.VENUS_SOFT_ROCK);//TODO Random rotation
+            this.simpleBlock(VenusBlocks.VENUS_HARD_ROCK);//TODO Random rotation
+            this.simpleBlock(VenusBlocks.VENUS_VOLCANIC_ROCK);
+            this.simpleBlock(VenusBlocks.PUMICE);//TODO Random rotation
+            this.simpleBlock(VenusBlocks.SCORCHED_VENUS_ROCK);
+            this.simpleBlock(VenusBlocks.ORANGE_VENUS_DUNGEON_BRICKS);
+            this.simpleBlock(VenusBlocks.RED_VENUS_DUNGEON_BRICKS);
+            this.simpleBlock(VenusBlocks.GALENA_ORE);
+            this.simpleBlock(VenusBlocks.SOLAR_ORE);
+            this.simpleBlock(VenusBlocks.VENUS_ALUMINUM_ORE);
+            this.simpleBlock(VenusBlocks.VENUS_COPPER_ORE);
+            this.simpleBlock(VenusBlocks.VENUS_QUARTZ_ORE);
+            this.simpleBlock(VenusBlocks.VENUS_SILICON_ORE);
+            this.simpleBlock(VenusBlocks.VENUS_TIN_ORE);
+            this.simpleBlock(VenusBlocks.TIER_3_TREASURE_CHEST);
+            this.simpleBlock(VenusBlocks.LEAD_BLOCK);
+            this.simpleBlock(VenusBlocks.VENUS_BOSS_SPAWNER, this.models().getExistingFile(this.mcLoc("block/barrier")));
+            this.simpleCross(VenusBlocks.WEB_STRING);
+            this.simpleCross(VenusBlocks.WEB_TORCH);
+
+            model = this.models().cubeTop("vapor_spout", this.modLoc("block/venus_soft_rock"), this.modLoc("block/vapor_spout"));
+            this.simpleBlock(VenusBlocks.VAPOR_SPOUT, model);
+
+            model = this.models().cube("crashed_probe", this.modLoc("block/crashed_probe_top"), this.modLoc("block/crashed_probe_bottom"), this.modLoc("block/crashed_probe_side_2"), this.modLoc("block/crashed_probe_side_1"), this.modLoc("block/crashed_probe_side_1"), this.modLoc("block/crashed_probe_side_2")).texture("particle", this.modLoc("block/crashed_probe_side_1"));
+            this.simpleBlock(VenusBlocks.CRASHED_PROBE, model);
+
+            ModelFile geothermalOn = this.models().cube("geothermal_generator_on", machineBase, this.modLoc("block/geothermal_generator_top"), this.modLoc("block/geothermal_generator_on"), this.modLoc("block/geothermal_generator_on"), machineOutput, machineSide).texture("particle", this.modLoc("block/geothermal_generator_on")).texture("particle", this.modLoc("block/geothermal_generator_on"));
+            ModelFile geothermalOff = this.models().cube("geothermal_generator", machineBase, this.modLoc("block/geothermal_generator_top"), this.modLoc("block/geothermal_generator"), this.modLoc("block/geothermal_generator"), machineOutput, machineSide).texture("particle", this.modLoc("block/geothermal_generator")).texture("particle", this.modLoc("block/geothermal_generator"));
+
+            this.getVariantBuilder(VenusBlocks.GEOTHERMAL_GENERATOR)
+            .forAllStates(state -> ConfiguredModel.builder()
+                    .modelFile(state.get(BlockGeothermalGenerator.ACTIVE) ? geothermalOn : geothermalOff)
+                    .rotationY((int) state.get(BlockGeothermalGenerator.FACING).getOpposite().getHorizontalAngle())
+                    .build());
         }
 
         protected ModelFile getSlimelingEggModel(BlockState state, String name)
@@ -122,6 +161,11 @@ public class DataGeneratorGCPlanets
         protected void simpleFluid(FlowingFluidBlock block)
         {
             this.getVariantBuilder(block).partialState().setModels(new ConfiguredModel(this.models().getBuilder(this.toString(block)).texture("particle", this.modLoc(block.getFluid().getAttributes().getStillTexture().getPath()))));
+        }
+
+        protected void simpleCross(Block block)
+        {
+            this.getVariantBuilder(block).partialState().setModels(new ConfiguredModel(this.models().cross(this.toString(block), this.modLoc("block/" + this.toString(block)))));
         }
 
         protected String toString(Block block)
@@ -172,7 +216,30 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(AsteroidBlocks.DENSE_ICE);
             this.parentedBlock(AsteroidBlocks.ASTRO_MINER_BASE);
 
+            this.parentedBlock(VenusBlocks.VENUS_SOFT_ROCK);
+            this.parentedBlock(VenusBlocks.VENUS_HARD_ROCK);
+            this.parentedBlock(VenusBlocks.VENUS_VOLCANIC_ROCK);
+            this.parentedBlock(VenusBlocks.PUMICE);
+            this.parentedBlock(VenusBlocks.SCORCHED_VENUS_ROCK);
+            this.parentedBlock(VenusBlocks.ORANGE_VENUS_DUNGEON_BRICKS);
+            this.parentedBlock(VenusBlocks.RED_VENUS_DUNGEON_BRICKS);
+            this.parentedBlock(VenusBlocks.GALENA_ORE);
+            this.parentedBlock(VenusBlocks.SOLAR_ORE);
+            this.parentedBlock(VenusBlocks.VENUS_ALUMINUM_ORE);
+            this.parentedBlock(VenusBlocks.VENUS_COPPER_ORE);
+            this.parentedBlock(VenusBlocks.VENUS_QUARTZ_ORE);
+            this.parentedBlock(VenusBlocks.VENUS_SILICON_ORE);
+            this.parentedBlock(VenusBlocks.VENUS_TIN_ORE);
+            this.parentedBlock(VenusBlocks.TIER_3_TREASURE_CHEST);
+            this.parentedBlock(VenusBlocks.VAPOR_SPOUT);
+            this.parentedBlock(VenusBlocks.CRASHED_PROBE);
+            this.parentedBlock(VenusBlocks.LEAD_BLOCK);
+            this.parentedBlock(VenusBlocks.GEOTHERMAL_GENERATOR, this.modLoc("block/geothermal_generator_on"));
+            this.parentedBlock(VenusBlocks.TIER_3_TREASURE_CHEST, this.mcLoc("item/chest")).texture("particle", this.modLoc("block/tier_3_treasure_chest"));
+
             this.itemGenerated(MarsBlocks.CAVERNOUS_VINES, "cavernous_vines_1");
+            this.itemGenerated(VenusBlocks.WEB_STRING);
+            this.itemGenerated(VenusBlocks.WEB_TORCH);
         }
 
         protected ItemModelBuilder parentedBlock(Block block)
@@ -267,6 +334,28 @@ public class DataGeneratorGCPlanets
             this.add(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK, "Light Gray Asteroid Rock");
             this.add(AsteroidBlocks.DENSE_ICE, "Dense Ice");
             this.add(AsteroidBlocks.ASTRO_MINER_BASE, "Astro Miner Base");
+
+            this.add(VenusBlocks.VENUS_SOFT_ROCK, "Venus Soft Rock");
+            this.add(VenusBlocks.VENUS_HARD_ROCK, "Venus Hard Rock");
+            this.add(VenusBlocks.VENUS_VOLCANIC_ROCK, "Venus Volcanic Rock");
+            this.add(VenusBlocks.PUMICE, "Pumice");
+            this.add(VenusBlocks.SCORCHED_VENUS_ROCK, "Scorched Venus Rock");
+            this.add(VenusBlocks.ORANGE_VENUS_DUNGEON_BRICKS, "Orange Venus Dungeon Bricks");
+            this.add(VenusBlocks.RED_VENUS_DUNGEON_BRICKS, "Red Venus Dungeon Bricks");
+            this.add(VenusBlocks.GALENA_ORE, "Galena Ore");
+            this.add(VenusBlocks.SOLAR_ORE, "Solar Ore");
+            this.add(VenusBlocks.VENUS_ALUMINUM_ORE, "Venus Aluminum Ore");
+            this.add(VenusBlocks.VENUS_COPPER_ORE, "Venus Copper Ore");
+            this.add(VenusBlocks.VENUS_QUARTZ_ORE, "Venus Quartz Ore");
+            this.add(VenusBlocks.VENUS_SILICON_ORE, "Venus Silicon Ore");
+            this.add(VenusBlocks.VENUS_TIN_ORE, "Venus Tin Ore");
+            this.add(VenusBlocks.TIER_3_TREASURE_CHEST, "Tier 3 Treasure Chest");
+            this.add(VenusBlocks.VAPOR_SPOUT, "Vapor Spout");
+            this.add(VenusBlocks.CRASHED_PROBE, "Crashed Probe");
+            this.add(VenusBlocks.LEAD_BLOCK, "Block of Lead");
+            this.add(VenusBlocks.WEB_STRING, "Web String");
+            this.add(VenusBlocks.WEB_TORCH, "Web Torch");
+            this.add(VenusBlocks.GEOTHERMAL_GENERATOR, "Geothermal Generator");
         }
     }
 }

@@ -61,7 +61,7 @@ public class BlockOreVenus extends Block implements IDetectableResource, IPlanta
     @Override
     public int getExpDrop(BlockState state, IWorldReader world, BlockPos pos, int fortune, int silktouch)
     {
-        if (state.getBlock() == VenusBlocks.oreQuartz || state.getBlock() == VenusBlocks.oreSilicon)
+        if (state.getBlock() == VenusBlocks.VENUS_QUARTZ_ORE || state.getBlock() == VenusBlocks.VENUS_SILICON_ORE)
         {
             return MathHelper.nextInt(world instanceof World ? ((World) world).rand : new Random(), 2, 5);
         }

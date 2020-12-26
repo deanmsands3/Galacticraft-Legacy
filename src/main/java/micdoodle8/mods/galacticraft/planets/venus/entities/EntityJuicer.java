@@ -146,7 +146,7 @@ public class EntityJuicer extends MonsterEntity implements IEntityBreathable
                     BlockPos posAbove = new BlockPos(this.getPosX(), this.getPosY() + (this.isHanging() ? 1.0 : -0.5), this.getPosZ());
                     BlockState blockAbove = this.world.getBlockState(posAbove);
 
-                    if (blockAbove.getBlock() == VenusBlocks.dungeonBrick2 || blockAbove.getBlock() == VenusBlocks.dungeonBrick1)
+                    if (blockAbove.getBlock() == VenusBlocks.ORANGE_VENUS_DUNGEON_BRICKS || blockAbove.getBlock() == VenusBlocks.RED_VENUS_DUNGEON_BRICKS)
                     {
                         RayTraceResult hit = this.world.rayTraceBlocks(new RayTraceContext(new Vec3d(this.getPosX(), this.getPosY(), this.getPosZ()), new Vec3d(this.getPosX(), this.getPosY() + (this.isHanging() ? -10 : 10), this.getPosZ()), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
 
@@ -154,7 +154,7 @@ public class EntityJuicer extends MonsterEntity implements IEntityBreathable
                         {
                             BlockRayTraceResult blockResult = (BlockRayTraceResult) hit;
                             BlockState blockBelow = this.world.getBlockState(blockResult.getPos());
-                            if (blockBelow.getBlock() == VenusBlocks.dungeonBrick1 || blockBelow.getBlock() == VenusBlocks.dungeonBrick2)
+                            if (blockBelow.getBlock() == VenusBlocks.RED_VENUS_DUNGEON_BRICKS || blockBelow.getBlock() == VenusBlocks.ORANGE_VENUS_DUNGEON_BRICKS)
                             {
                                 if (this.isHanging())
                                 {

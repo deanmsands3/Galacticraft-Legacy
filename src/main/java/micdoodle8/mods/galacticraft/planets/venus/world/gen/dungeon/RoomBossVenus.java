@@ -121,11 +121,11 @@ public class RoomBossVenus extends SizedPieceVenus
                                 Block block;
                                 if (j0 == distFromFloor + 1)
                                 {
-                                    block = VenusBlocks.torchWebLight;
+                                    block = VenusBlocks.WEB_TORCH;
                                 }
                                 else
                                 {
-                                    block = VenusBlocks.torchWebSupport;
+                                    block = VenusBlocks.WEB_STRING;
                                 }
                                 this.setBlockState(worldIn, block.getDefaultState(), i, j0, k, mutableBoundingBoxIn);
                             }
@@ -208,7 +208,7 @@ public class RoomBossVenus extends SizedPieceVenus
         //Is this position inside the chunk currently being generated?
         if (mutableBoundingBoxIn.isVecInside(blockpos))
         {
-            worldIn.setBlockState(blockpos, VenusBlocks.bossSpawner.getDefaultState(), 2);
+            worldIn.setBlockState(blockpos, VenusBlocks.VENUS_BOSS_SPAWNER.getDefaultState(), 2);
             TileEntityDungeonSpawner spawner = (TileEntityDungeonSpawner) worldIn.getTileEntity(blockpos);
             if (spawner != null)
             {

@@ -14,12 +14,12 @@
         }
     ],
     "textures": {
-        "particle": "galacticraftplanets:block/solar_top",
-        "down": "galacticraftplanets:block/solar_top",
-        "up": "galacticraftplanets:block/solar_top",
-        "north": "galacticraftplanets:block/solar_side",
-        "east": "galacticraftplanets:block/solar_side",
-        "south": "galacticraftplanets:block/solar_side",
-        "west": "galacticraftplanets:block/solar_side"
+        "particle": "galacticraftplanets:block/solar_array_module_top",
+        "down": "galacticraftplanets:block/solar_array_module_top",
+        "up": "galacticraftplanets:block/solar_array_module_top",
+        "north": "galacticraftplanets:block/solar_array_module_side",
+        "east": "galacticraftplanets:block/solar_array_module_side",
+        "south": "galacticraftplanets:block/solar_array_module_side",
+        "west": "galacticraftplanets:block/solar_array_module_side"
     }
 }

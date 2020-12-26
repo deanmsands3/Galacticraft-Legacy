@@ -39,7 +39,7 @@ import java.util.EnumSet;
 
 public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSource implements IInventoryDefaults, ISidedInventory, IConnector, IDisableableMachine, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.geothermalGenerator)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.GEOTHERMAL_GENERATOR)
     public static TileEntityType<TileEntityGeothermalGenerator> TYPE;
 
     public static final int MAX_GENERATE_GJ_PER_TICK = 200;
@@ -80,7 +80,7 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
 
             boolean lastValidSpout = this.validSpout;
             this.validSpout = false;
-            if (stateBelow.getBlock() == VenusBlocks.spout)
+            if (stateBelow.getBlock() == VenusBlocks.VAPOR_SPOUT)
             {
                 BlockPos pos1 = below.down();
                 for (; this.getPos().getY() - pos1.getY() < 20; pos1 = pos1.down())

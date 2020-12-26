@@ -50,7 +50,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
-        if (state.getBlock() == VenusBlocks.torchWebLight)
+        if (state.getBlock() == VenusBlocks.WEB_TORCH)
         {
             return AABB_WEB_TORCH;
         }
@@ -61,7 +61,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos)
     {
-        if (state.getBlock() == VenusBlocks.torchWebLight)
+        if (state.getBlock() == VenusBlocks.WEB_TORCH)
         {
             return 15;
         }
@@ -115,7 +115,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
     private boolean canBlockStay(World world, BlockPos pos)
     {
         BlockState blockUp = world.getBlockState(pos.up());
-        return blockUp.getMaterial().isSolid() || blockUp.getBlock() == VenusBlocks.torchWebSupport;
+        return blockUp.getMaterial().isSolid() || blockUp.getBlock() == VenusBlocks.WEB_STRING;
     }
 
     @Override
@@ -174,7 +174,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
     @Override
     public boolean showDescription(ItemStack stack)
     {
-        return BlockItem.BLOCK_TO_ITEM.get(VenusBlocks.torchWebLight) == stack.getItem();
+        return BlockItem.BLOCK_TO_ITEM.get(VenusBlocks.WEB_TORCH) == stack.getItem();
     }
 
 //    @Override

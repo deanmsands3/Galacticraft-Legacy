@@ -63,7 +63,7 @@ import java.util.*;
 
 public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory implements IMultiBlock, ISidedInventory, IMachineSides, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.laserTurret)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.LASER_TURRET)
     public static TileEntityType<TileEntityLaserTurret> TYPE;
 
     private final float RANGE = 15.0F;
@@ -731,7 +731,7 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
                 {
                     if (this.world.isRemote)
                     {
-                        Minecraft.getInstance().particles.addBlockDestroyEffects(pos, VenusBlocks.laserTurret.getDefaultState());
+                        Minecraft.getInstance().particles.addBlockDestroyEffects(pos, VenusBlocks.LASER_TURRET.getDefaultState());
                     }
 
                     this.world.removeBlock(pos, false);

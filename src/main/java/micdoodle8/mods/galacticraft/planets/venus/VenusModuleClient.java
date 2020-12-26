@@ -50,8 +50,8 @@ public class VenusModuleClient implements IPlanetsModuleClient
 //        VenusModuleClient.registerBlockRenderers();
 
         RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(VenusBlocks.torchWebLight, cutout);
-        RenderTypeLookup.setRenderLayer(VenusBlocks.torchWebSupport, cutout);
+        RenderTypeLookup.setRenderLayer(VenusBlocks.WEB_TORCH, cutout);
+        RenderTypeLookup.setRenderLayer(VenusBlocks.WEB_STRING, cutout);
 
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTreasureChestVenus.class, new TileEntityTreasureChestRenderer());
         ClientRegistry.bindTileEntityRenderer(TileEntityLaserTurret.TYPE, TileEntityLaserTurretRenderer::new);

@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "galacticraftplanets:block/crashed_probe_top",
+    "up": "galacticraftplanets:block/crashed_probe_bottom",
+    "north": "galacticraftplanets:block/crashed_probe_side_2",
+    "south": "galacticraftplanets:block/crashed_probe_side_1",
+    "east": "galacticraftplanets:block/crashed_probe_side_1",
+    "west": "galacticraftplanets:block/crashed_probe_side_2",
+    "particle": "galacticraftplanets:block/crashed_probe_side_1"
+  }
+}

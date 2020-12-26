@@ -44,7 +44,7 @@ import java.util.Set;
 
 public class TileEntitySolarArrayController extends TileBaseUniversalElectricalSource implements IDisableableMachine, IInventoryDefaults, ISidedInventory, IConnector, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.solarArrayController)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.SOLAR_ARRAY_CONTROLLER)
     public static TileEntityType<TileEntitySolarArrayController> TYPE;
 
     private int solarStrength = 0;

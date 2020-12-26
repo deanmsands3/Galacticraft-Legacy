@@ -123,7 +123,7 @@ public class VenusModule implements IPlanetsModule
         VenusModule.planetVenus.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_CREEPER, 8, 2, 3), EntityClassification.MONSTER);
         VenusModule.planetVenus.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), EntityClassification.MONSTER);
         VenusModule.planetVenus.addChecklistKeys("equip_oxygen_suit", "equip_shield_controller", "thermal_padding_t2");
-        VenusModule.planetVenus.setSurfaceBlocks(Lists.newArrayList(VenusBlocks.rockHard));
+        VenusModule.planetVenus.setSurfaceBlocks(Lists.newArrayList(VenusBlocks.VENUS_HARD_ROCK));
 
         GalaxyRegistry.registerPlanet(VenusModule.planetVenus);
         GalacticraftRegistry.registerTeleportType(DimensionVenus.class, new TeleportTypeVenus());

@@ -10,7 +10,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntitySolarArrayModule extends TileEntitySolarTransmitter
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.solarArrayModule)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.SOLAR_ARRAY_MODULE)
     public static TileEntityType<TileEntitySolarArrayModule> TYPE;
 
     public TileEntitySolarArrayModule()

@@ -27,7 +27,7 @@ import java.util.Random;
 
 public class TileEntityCrashedProbe extends TileEntityInventory implements INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.crashedProbe)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.CRASHED_PROBE)
     public static TileEntityType<TileEntityCrashedProbe> TYPE;
 
     private boolean hasCoreToDrop;

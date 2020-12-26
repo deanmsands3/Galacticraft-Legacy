@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class TileEntitySpout extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.spout)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.VAPOR_SPOUT)
     public static TileEntityType<TileEntitySpout> TYPE;
 
     private final Random rand = new Random(System.currentTimeMillis());

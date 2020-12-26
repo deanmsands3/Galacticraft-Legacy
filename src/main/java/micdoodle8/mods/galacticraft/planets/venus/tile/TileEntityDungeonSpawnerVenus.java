@@ -19,7 +19,7 @@ import java.util.List;
 
 public class TileEntityDungeonSpawnerVenus extends TileEntityDungeonSpawner<EntitySpiderQueen>
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.bossSpawner)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.VENUS_BOSS_SPAWNER)
     public static TileEntityType<TileEntityDungeonSpawnerVenus> TYPE;
 
     public TileEntityDungeonSpawnerVenus()
