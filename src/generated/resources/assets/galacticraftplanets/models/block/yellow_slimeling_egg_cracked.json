@@ -1,0 +1,6 @@
+{
+  "parent": "galacticraftplanets:block/slimeling_egg",
+  "textures": {
+    "texture": "galacticraftplanets:block/yellow_slimeling_egg_cracked"
+  }
+}

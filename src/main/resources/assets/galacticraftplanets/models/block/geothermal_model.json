@@ -3,10 +3,10 @@
     "textures": {
         "particle": "galacticraftcore:blocks/machine",
         "down": "galacticraftcore:blocks/machine",
-        "up": "galacticraftplanets:blocks/geothermal_vent",
-        "north": "galacticraftplanets:blocks/geothermal",
+        "up": "galacticraftplanets:block/geothermal_vent",
+        "north": "galacticraftplanets:block/geothermal",
         "east": "galacticraftcore:blocks/machine_output",
-        "south": "galacticraftplanets:blocks/geothermal",
+        "south": "galacticraftplanets:block/geothermal",
         "west": "galacticraftcore:blocks/machine_side"
     }
 }

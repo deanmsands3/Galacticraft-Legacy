@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/titanium_helmet"
+        "layer0": "galacticraftplanets:item/titanium_helmet"
     },
     "display": {
         "thirdperson": {

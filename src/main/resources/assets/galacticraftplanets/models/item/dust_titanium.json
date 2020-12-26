@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/dust_titanium"
+        "layer0": "galacticraftplanets:item/dust_titanium"
     },
     "display": {}
 }

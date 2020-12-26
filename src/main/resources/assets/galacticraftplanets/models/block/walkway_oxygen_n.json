@@ -1,8 +1,8 @@
 {
 "__comment": "Designed by Micdoodle8 with BDcraft Cubik PRO 0.96 Beta - http://bdcraft.net",
 "textures": {
-	"particle": "galacticraftplanets:blocks/walkway", 
-    "texture": "galacticraftplanets:blocks/walkway",
+	"particle": "galacticraftplanets:block/walkway", 
+    "texture": "galacticraftplanets:block/walkway",
     "pipe_oxygen_white": "galacticraftcore:blocks/pipe_oxygen_white"
 },
 "elements": [ 

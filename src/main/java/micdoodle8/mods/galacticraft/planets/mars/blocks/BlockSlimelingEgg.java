@@ -36,13 +36,13 @@ import javax.annotation.Nullable;
 public class BlockSlimelingEgg extends Block implements IShiftDescription, ISortable
 {
     //    private IIcon[] icons;
-    public static final BooleanProperty BROKEN = BooleanProperty.create("broken");
+    public static final BooleanProperty CRACKED = BooleanProperty.create("cracked");
     protected static final VoxelShape AABB = VoxelShapes.create(0.25, 0.0, 0.25, 0.75, 0.625, 0.75);
 
     public BlockSlimelingEgg(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(BROKEN, false));
+        this.setDefaultState(stateContainer.getBaseState().with(CRACKED, false));
     }
 
     @Override
@@ -80,9 +80,9 @@ public class BlockSlimelingEgg extends Block implements IShiftDescription, ISort
     {
         BlockState state = world.getBlockState(pos);
 
-        if (!state.get(BROKEN))
+        if (!state.get(CRACKED))
         {
-            world.setBlockState(pos, state.with(BROKEN, true), 2);
+            world.setBlockState(pos, state.with(CRACKED, true), 2);
 
             TileEntity tile = world.getTileEntity(pos);
 
@@ -251,7 +251,7 @@ public class BlockSlimelingEgg extends Block implements IShiftDescription, ISort
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
     {
-        builder.add(BROKEN);
+        builder.add(CRACKED);
     }
 
     @Override

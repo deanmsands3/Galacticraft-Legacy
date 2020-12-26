@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class TileEntitySlimelingEgg extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.slimelingEgg)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.SLIMELING_EGG)
     public static TileEntityType<TileEntitySlimelingEgg> TYPE;
 
     public int timeToHatch = -1;
@@ -45,15 +45,15 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickableTileE
                 float colorGreen = 0.0F;
                 float colorBlue = 0.0F;
 
-                if (state.getBlock() == MarsBlocks.slimelingEggRed)
+                if (state.getBlock() == MarsBlocks.RED_SLIMELING_EGG)
                 {
                     colorRed = 1.0F;
                 }
-                else if (state.getBlock() == MarsBlocks.slimelingEggBlue)
+                else if (state.getBlock() == MarsBlocks.BLUE_SLIMELING_EGG)
                 {
                     colorBlue = 1.0F;
                 }
-                else if (state.getBlock() == MarsBlocks.slimelingEggYellow)
+                else if (state.getBlock() == MarsBlocks.YELLOW_SLIMELING_EGG)
                 {
                     colorRed = 1.0F;
                     colorGreen = 1.0F;

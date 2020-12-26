@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "galacticraftplanets:blocks/venus_rock_0"
+        "all": "galacticraftplanets:block/venus_rock_0"
     }
 }

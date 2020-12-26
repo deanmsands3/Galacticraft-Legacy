@@ -86,6 +86,9 @@ public class DataGeneratorGC
             this.simpleBlock(GCBlocks.BRIGHT_AIR, this.models().getExistingFile(this.mcLoc("block/barrier")));
             this.simpleBlock(GCBlocks.BRIGHT_BREATHEABLE_AIR, this.models().getExistingFile(this.mcLoc("block/barrier")));
             this.simpleBlock(GCBlocks.MOON_BOSS_SPAWNER, this.models().getExistingFile(this.mcLoc("block/barrier")));
+            this.simpleBlock(GCBlocks.BUGGY_FUELING_PAD, this.models().getExistingFile(this.modLoc("block/buggy_fueling_pad")));
+            this.simpleBlock(GCBlocks.ROCKET_LAUNCH_PAD, this.models().getExistingFile(this.modLoc("block/rocket_launch_pad")));
+            this.simpleBlock(GCBlocks.ROCKET_WORKBENCH, this.models().getExistingFile(this.modLoc("block/rocket_workbench")));
 
             ModelFile model = this.models().cubeBottomTop("air_lock_controller", this.modLoc("block/air_lock_controller"), this.modLoc("block/air_lock_frame"), this.modLoc("block/air_lock_frame"));
             this.simpleBlock(GCBlocks.AIR_LOCK_CONTROLLER, model);
@@ -98,6 +101,9 @@ public class DataGeneratorGC
 
             model = this.models().cubeBottomTop("tin_decoration_block_2", this.modLoc("block/tin_decoration_block_side"), tinDecor, this.modLoc("block/tin_decoration_block_top"));
             this.simpleBlock(GCBlocks.TIN_DECORATION_BLOCK_2, model);
+
+            model = this.models().cubeBottomTop("space_station_base", this.modLoc("block/space_station_base_side"), this.modLoc("block/space_station_base_side"), this.modLoc("block/space_station_base_top"));
+            this.simpleBlock(GCBlocks.SPACE_STATION_BASE, model);
 
             model = this.models().orientable("compressor", machineSide, this.modLoc("block/compressor"), machineBase).texture("particle", this.modLoc("block/compressor"));
             this.horizontalBlock(GCBlocks.COMPRESSOR, model);
@@ -124,7 +130,7 @@ public class DataGeneratorGC
             model = this.models().cube("oxygen_sealer", machineBase, this.modLoc("block/oxygen_sealer"), machineBase, machineBase, machineInput, this.modLoc("block/machine_oxygen_input")).texture("particle", this.modLoc("block/oxygen_sealer"));
             this.horizontalBlock(GCBlocks.OXYGEN_SEALER, model);
 
-            model = this.models().cube("refinery", machineBase, machineInput, this.modLoc("block/refinery_front"), this.modLoc("block/refinery_back"), this.modLoc("block/machine_oil_input"), this.modLoc("block/machine_fuel_input")).texture("particle", this.modLoc("block/refinery_front"));
+            model = this.models().cube("refinery", machineBase, this.modLoc("block/refinery_top"), this.modLoc("block/refinery_front"), this.modLoc("block/refinery_back"), this.modLoc("block/machine_oil_input"), this.modLoc("block/machine_fuel_input")).texture("particle", this.modLoc("block/refinery_front"));
             this.horizontalBlock(GCBlocks.REFINERY, model);
 
             model = this.models().cube("cargo_loader", machineBase, machineBase, this.modLoc("block/cargo_loader"), this.modLoc("block/cargo_loader"), machineInput, this.modLoc("block/machine_item_input")).texture("particle", this.modLoc("block/cargo_loader"));
@@ -231,8 +237,10 @@ public class DataGeneratorGC
             this.parentedBlock(GCBlocks.CARGO_UNLOADER);
             this.parentedBlock(GCBlocks.AIR_LOCK_CONTROLLER);
             this.parentedBlock(GCBlocks.MOON_BOSS_SPAWNER, this.mcLoc("item/air"));
+            this.parentedBlock(GCBlocks.ROCKET_WORKBENCH);
             this.itemGenerated(GCBlocks.GLOWSTONE_TORCH);
             this.itemGenerated(GCBlocks.UNLIT_TORCH);
+            this.itemGenerated(GCBlocks.CHEESE_BLOCK.asItem());
             this.itemGenerated(GCBlocks.LIT_UNLIT_TORCH);
             this.itemGenerated(GCBlocks.ALUMINUM_WIRE.asItem());
             this.itemGenerated(GCBlocks.HEAVY_ALUMINUM_WIRE.asItem());

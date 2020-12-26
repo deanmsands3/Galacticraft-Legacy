@@ -60,7 +60,7 @@ import java.util.ArrayList;
 
 public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInventory implements ISidedInventory, IDisableableMachine, IFluidHandlerWrapper, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.methaneSynthesizer)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.METHANE_SYNTHESIZER)
     public static TileEntityType<TileEntityMethaneSynthesizer> TYPE;
 
     private final int tankCapacity = 4000;

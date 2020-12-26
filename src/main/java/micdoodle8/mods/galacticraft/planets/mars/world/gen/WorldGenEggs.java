@@ -40,20 +40,20 @@ public class WorldGenEggs extends Feature<NoFeatureConfig>
         if (worldIn.isAirBlock(newPos) && (j1 < 127 || !worldIn.getDimension().isNether()))
         {
             BlockState below = worldIn.getBlockState(newPos.down());
-            if (below.getBlock() == MarsBlocks.rockSurface)
+            if (below.getBlock() == MarsBlocks.MARS_FINE_REGOLITH)
             {
                 Block block;
                 switch (rand.nextInt(3))
                 {
                 case 0:
-                    block = MarsBlocks.slimelingEggRed;
+                    block = MarsBlocks.RED_SLIMELING_EGG;
                     break;
                 case 1:
-                    block = MarsBlocks.slimelingEggBlue;
+                    block = MarsBlocks.BLUE_SLIMELING_EGG;
                     break;
                 default:
                 case 2:
-                    block = MarsBlocks.slimelingEggYellow;
+                    block = MarsBlocks.YELLOW_SLIMELING_EGG;
                     break;
                 }
                 worldIn.setBlockState(newPos, block.getDefaultState(), 2);

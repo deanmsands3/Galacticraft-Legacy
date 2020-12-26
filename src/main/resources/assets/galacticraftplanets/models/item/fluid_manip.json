@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/fluid_manip"
+        "layer0": "galacticraftplanets:item/fluid_manip"
     },
     "display": {
         "thirdperson": {

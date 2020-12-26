@@ -1,8 +1,8 @@
 {
 "__comment": "Designed by Micdoodle8 with BDcraft Cubik PRO 0.96 Beta - http://bdcraft.net",
 "textures": {
-    "texture": "galacticraftcore:block/screen_side",
-    "particle": "galacticraftcore:block/screen_side"
+    "texture": "galacticraftcore:block/display_screen_side",
+    "particle": "galacticraftcore:block/display_screen_side"
 },
 "elements": [ 
 {

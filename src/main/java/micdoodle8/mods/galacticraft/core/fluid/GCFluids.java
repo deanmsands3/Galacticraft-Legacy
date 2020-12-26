@@ -23,6 +23,6 @@ public class GCFluids
 
     private static FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> registerLiquid(String name, String stillTexture, String flowTexture, UnaryOperator<FluidAttributes.Builder> fluidAttributes)
     {
-        return FLUIDS.register(name, fluidAttributes.apply(FluidAttributes.builder(new ResourceLocation(Constants.MOD_ID_CORE, "block/fluid/" + stillTexture), new ResourceLocation(Constants.MOD_ID_CORE, "block/fluid/" + flowTexture))), Material.WATER);
+        return FLUIDS.register(name, fluidAttributes.apply(FluidAttributes.builder(new ResourceLocation(Constants.MOD_ID_CORE, "block/" + stillTexture), new ResourceLocation(Constants.MOD_ID_CORE, "block/" + flowTexture))), Material.WATER);
     }
 }

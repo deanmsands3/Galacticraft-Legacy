@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "galacticraftplanets:items/desh_pick"
+        "layer0": "galacticraftplanets:item/desh_pick"
     }
 }

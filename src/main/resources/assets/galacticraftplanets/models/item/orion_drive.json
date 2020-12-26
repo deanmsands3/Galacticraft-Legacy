@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/orion_drive"
+        "layer0": "galacticraftplanets:item/orion_drive"
     },
     "display": {
         "thirdperson": {

@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/bucket_sulphuric_acid"
+        "layer0": "galacticraftplanets:item/bucket_sulphuric_acid"
     },
     "display": {
         "thirdperson": {

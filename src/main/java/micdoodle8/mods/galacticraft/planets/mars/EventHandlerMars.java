@@ -84,7 +84,7 @@ public class EventHandlerMars
         BlockState state = player.getEntityWorld().getBlockState(c);
         Block blockID = state.getBlock();
 
-        if (blockID == MarsBlocks.cryoChamber)
+        if (blockID == MarsBlocks.CRYOGENIC_CHAMBER)
         {
             if (!event.immediately && event.updateWorld && event.setSpawn)
             {

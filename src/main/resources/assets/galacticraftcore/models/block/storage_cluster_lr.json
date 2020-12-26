@@ -1,12 +1,12 @@
 {
   "parent": "galacticraftcore:block/machine_tiered_lr",
   "textures": {
-    "particle": "galacticraftcore:block/advanced/energy_storage_module_16",
-    "front": "galacticraftcore:block/advanced/energy_storage_module_0",
-    "rear": "galacticraftcore:block/advanced/energy_storage_module_0",
-    "side": "galacticraftcore:block/advanced/machine",
-    "el_in": "galacticraftcore:block/advanced/machine_input",
-    "el_out": "galacticraftcore:block/advanced/machine_output",
-    "top": "galacticraftcore:block/advanced/machine",
-    "base": "galacticraftcore:block/advanced/machine" }
+    "particle": "galacticraftcore:block/energy_storage_cluster_16",
+    "front": "galacticraftcore:block/energy_storage_cluster_0",
+    "rear": "galacticraftcore:block/energy_storage_cluster_0",
+    "side": "galacticraftcore:block/advanced_machine_base",
+    "el_in": "galacticraftcore:block/advanced_machine_input",
+    "el_out": "galacticraftcore:block/advanced_machine_output",
+    "top": "galacticraftcore:block/advanced_machine_base",
+    "base": "galacticraftcore:block/advanced_machine_base" }
 }

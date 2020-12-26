@@ -56,7 +56,7 @@ import java.util.*;
 
 public class TileEntityLaunchController extends TileBaseElectricBlockWithInventory implements ISidedInventory, ILandingPadAttachable, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.launchController)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.LAUNCH_CONTROLLER)
     public static TileEntityType<TileEntityLaunchController> TYPE;
 
     public static final int WATTS_PER_TICK = 1;

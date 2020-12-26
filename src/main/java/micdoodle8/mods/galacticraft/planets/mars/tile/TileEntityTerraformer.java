@@ -60,7 +60,7 @@ import java.util.List;
 
 public class TileEntityTerraformer extends TileBaseElectricBlockWithInventory implements ISidedInventory, IDisableableMachine, IBubbleProviderColored, IFluidHandlerWrapper, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.terraformer)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.TERRAFORMER)
     public static TileEntityType<TileEntityTerraformer> TYPE;
 
     private final int tankCapacity = 2000;

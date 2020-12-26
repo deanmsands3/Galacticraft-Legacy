@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "galacticraftplanets:blocks/laser",
-		"particle": "galacticraftplanets:blocks/laser"
+		"0": "galacticraftplanets:block/laser",
+		"particle": "galacticraftplanets:block/laser"
 	},
 	"elements": [
 		{

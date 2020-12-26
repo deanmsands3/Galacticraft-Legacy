@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:blocks/web_torch_support"
+        "layer0": "galacticraftplanets:block/web_torch_support"
     },
     "display": {
         "thirdperson": {

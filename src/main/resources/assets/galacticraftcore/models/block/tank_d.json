@@ -1,8 +1,8 @@
 {
 "textures": {
-    "tank": "galacticraftcore:block/tank",
-    "tank_top": "galacticraftcore:block/tank_top",
-    "particle": "galacticraftcore:block/tank_top"
+    "tank": "galacticraftcore:block/fluid_tank",
+    "tank_top": "minecraft:block/glass",
+    "particle": "minecraft:block/glass"
 },
 "elements": [ 
 {

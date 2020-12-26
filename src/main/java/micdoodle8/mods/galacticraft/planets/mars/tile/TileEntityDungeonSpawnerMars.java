@@ -19,7 +19,7 @@ import java.util.List;
 
 public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<EntityCreeperBoss>
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.cryoChamber)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.CRYOGENIC_CHAMBER)
     public static TileEntityType<TileEntityDungeonSpawnerMars> TYPE;
 
     public TileEntityDungeonSpawnerMars()

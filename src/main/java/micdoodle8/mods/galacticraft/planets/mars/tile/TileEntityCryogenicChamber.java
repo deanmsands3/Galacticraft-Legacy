@@ -37,7 +37,7 @@ import java.util.List;
 
 public class TileEntityCryogenicChamber extends TileEntityFake implements IMultiBlock
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.cryoChamber)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.CRYOGENIC_CHAMBER)
     public static TileEntityType<TileEntityCryogenicChamber> TYPE;
 
     public boolean isOccupied;

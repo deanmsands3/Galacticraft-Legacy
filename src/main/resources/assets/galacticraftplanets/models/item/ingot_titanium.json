@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/ingot_titanium"
+        "layer0": "galacticraftplanets:item/ingot_titanium"
     },
     "display": {
         "thirdperson": {

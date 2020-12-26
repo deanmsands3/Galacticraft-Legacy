@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/schematic_astro_miner"
+        "layer0": "galacticraftplanets:item/schematic_astro_miner"
     },
     "display": {
         "thirdperson": {

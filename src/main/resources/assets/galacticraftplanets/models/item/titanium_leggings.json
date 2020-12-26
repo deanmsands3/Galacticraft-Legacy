@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/titanium_leggings"
+        "layer0": "galacticraftplanets:item/titanium_leggings"
     },
     "display": {
         "thirdperson": {

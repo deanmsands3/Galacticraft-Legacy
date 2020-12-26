@@ -443,7 +443,7 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
         BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
         BlockState cryoChamber = worldIn.getBlockState(mainBlockPosition);
         Direction enumfacing = Direction.NORTH;
-        if (GalacticraftCore.isPlanetsLoaded && cryoChamber.getBlock() == MarsBlocks.cryoChamber)
+        if (GalacticraftCore.isPlanetsLoaded && cryoChamber.getBlock() == MarsBlocks.CRYOGENIC_CHAMBER)
         {
             enumfacing = cryoChamber.get(BlockCryoChamber.FACING);
         }

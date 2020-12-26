@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/bucket_sludge"
+        "layer0": "galacticraftplanets:item/bucket_sludge"
     },
     "display": {
         "thirdperson": {

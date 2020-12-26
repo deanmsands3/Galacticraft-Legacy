@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/ingot_desh"
+        "layer0": "galacticraftplanets:item/ingot_desh"
     },
     "display": {
         "thirdperson": {

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/radioisotope_core"
+        "layer0": "galacticraftplanets:item/radioisotope_core"
     }
 }

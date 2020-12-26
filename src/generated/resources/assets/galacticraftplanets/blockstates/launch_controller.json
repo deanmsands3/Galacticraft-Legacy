@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "galacticraftplanets:block/launch_controller"
+    },
+    "facing=south": {
+      "model": "galacticraftplanets:block/launch_controller",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraftplanets:block/launch_controller",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "galacticraftplanets:block/launch_controller",
+      "y": 90
+    }
+  }
+}

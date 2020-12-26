@@ -57,7 +57,7 @@ import java.util.ArrayList;
 
 public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory implements ISidedInventory, IDisableableMachine, IFluidHandlerWrapper, IOxygenReceiver, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.gasLiquefier)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.GAS_LIQUEFIER)
     public static TileEntityType<TileEntityGasLiquefier> TYPE;
 
     private final int tankCapacity = 2000;

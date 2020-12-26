@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "galacticraftplanets:block/gas_liquefier"
+    },
+    "facing=south": {
+      "model": "galacticraftplanets:block/gas_liquefier",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraftplanets:block/gas_liquefier",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "galacticraftplanets:block/gas_liquefier",
+      "y": 90
+    }
+  }
+}

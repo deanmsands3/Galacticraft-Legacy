@@ -182,7 +182,7 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
         int vineCount = 0;
         int y2 = pos.getY();
 
-        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == MarsBlocks.vine)
+        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == MarsBlocks.CAVERNOUS_VINES)
         {
             vineCount++;
             y2++;
@@ -196,7 +196,7 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
         int vineCount = 0;
         int y2 = pos.getY();
 
-        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == MarsBlocks.vine)
+        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == MarsBlocks.CAVERNOUS_VINES)
         {
             vineCount += 4;
             y2--;

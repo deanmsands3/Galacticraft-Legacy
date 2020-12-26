@@ -122,7 +122,7 @@ public class MarsModuleClient implements IPlanetsModuleClient
         // ==============================
 
         RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(MarsBlocks.vine, cutout);
+        RenderTypeLookup.setRenderLayer(MarsBlocks.CAVERNOUS_VINES, cutout);
 
 //            IModelCustom chamberModel = AdvancedModelLoader.loadModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/chamber.obj"));
 //            IModelCustom cargoRocketModel = AdvancedModelLoader.loadModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/cargoRocket.obj"));

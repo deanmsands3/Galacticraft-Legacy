@@ -1,5 +1,5 @@
 {
-    "parent":"galacticraftcore:block/rocket_workbench_model",
+    "parent":"galacticraftcore:block/rocket_workbench",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

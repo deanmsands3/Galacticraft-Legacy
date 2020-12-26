@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "galacticraftplanets:items/titanium_pickaxe"
+        "layer0": "galacticraftplanets:item/titanium_pickaxe"
     }
 }

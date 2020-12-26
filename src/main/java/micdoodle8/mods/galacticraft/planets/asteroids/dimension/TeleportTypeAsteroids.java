@@ -370,7 +370,7 @@ public class TeleportTypeAsteroids implements ITeleportType
         ItemStack spawnEgg = new ItemStack(egg, 2);
         rocketStacks.add(spawnEgg);
         rocketStacks.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION, 4), Potions.LONG_NIGHT_VISION)); //Night Vision Potion
-        rocketStacks.add(new ItemStack(MarsBlocks.cryoChamber, 1)); //Cryogenic Chamber
+        rocketStacks.add(new ItemStack(MarsBlocks.CRYOGENIC_CHAMBER, 1)); //Cryogenic Chamber
         rocketStacks.add(new ItemStack(MarsItems.rocketTierTwoCargo2, 1));
         stats.setRocketStacks(rocketStacks);
     }

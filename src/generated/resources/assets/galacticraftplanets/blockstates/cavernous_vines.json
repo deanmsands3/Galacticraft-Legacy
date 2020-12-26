@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "galacticraftplanets:block/cavernous_vines_1"
+      },
+      {
+        "model": "galacticraftplanets:block/cavernous_vines_2"
+      },
+      {
+        "model": "galacticraftplanets:block/cavernous_vines_3"
+      }
+    ]
+  }
+}

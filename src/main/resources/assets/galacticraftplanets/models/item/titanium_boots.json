@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/titanium_boots"
+        "layer0": "galacticraftplanets:item/titanium_boots"
     },
     "display": {
         "thirdperson": {

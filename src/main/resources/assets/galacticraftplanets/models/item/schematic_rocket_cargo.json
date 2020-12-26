@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftplanets:items/schematic_rocket_cargo"
+        "layer0": "galacticraftplanets:item/schematic_rocket_cargo"
     },
     "display": {
         "thirdperson": {
