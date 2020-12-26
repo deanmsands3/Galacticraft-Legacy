@@ -45,15 +45,16 @@ public class RenderBuggy extends EntityRenderer<EntityBuggy>
 
     private void updateModels()
     {
-        mainModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/buggy.obj"), ImmutableList.of("MainBody"));
-        mainModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/buggy.obj"), ImmutableList.of("RadarDish_Dish"));
-        mainModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/buggy.obj"), ImmutableList.of("Wheel_Left_Cover"));
-        mainModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/buggy.obj"), ImmutableList.of("Wheel_Right"));
-        mainModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/buggy.obj"), ImmutableList.of("Wheel_Left"));
-        mainModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/buggy.obj"), ImmutableList.of("Wheel_Right_Cover"));
-        mainModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/buggy.obj"), ImmutableList.of("CargoLeft"));
-        mainModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/buggy.obj"), ImmutableList.of("CargoMid"));
-        mainModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/buggy.obj"), ImmutableList.of("CargoRight"));
+        ResourceLocation buggy = new ResourceLocation(Constants.MOD_ID_CORE, "models/obj/buggy.obj");
+        mainModel = GCModelCache.INSTANCE.getModel(buggy, ImmutableList.of("MainBody"));
+        mainModel = GCModelCache.INSTANCE.getModel(buggy, ImmutableList.of("RadarDish_Dish"));
+        mainModel = GCModelCache.INSTANCE.getModel(buggy, ImmutableList.of("Wheel_Left_Cover"));
+        mainModel = GCModelCache.INSTANCE.getModel(buggy, ImmutableList.of("Wheel_Right"));
+        mainModel = GCModelCache.INSTANCE.getModel(buggy, ImmutableList.of("Wheel_Left"));
+        mainModel = GCModelCache.INSTANCE.getModel(buggy, ImmutableList.of("Wheel_Right_Cover"));
+        mainModel = GCModelCache.INSTANCE.getModel(buggy, ImmutableList.of("CargoLeft"));
+        mainModel = GCModelCache.INSTANCE.getModel(buggy, ImmutableList.of("CargoMid"));
+        mainModel = GCModelCache.INSTANCE.getModel(buggy, ImmutableList.of("CargoRight"));
     }
 
     @Override

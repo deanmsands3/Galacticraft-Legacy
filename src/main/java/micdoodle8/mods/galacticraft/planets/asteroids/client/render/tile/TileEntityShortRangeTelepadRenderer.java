@@ -32,8 +32,8 @@ public class TileEntityShortRangeTelepadRenderer extends TileEntityRenderer<Tile
 
     private void updateModels()
     {
-        teleporterTop = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/short_range_telepad.obj"), ImmutableList.of("Top", "Connector"));
-        teleporterBottom = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/short_range_telepad.obj"), ImmutableList.of("Bottom"));
+        teleporterTop = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/short_range_telepad.obj"), ImmutableList.of("Top", "Connector"));
+        teleporterBottom = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/short_range_telepad.obj"), ImmutableList.of("Bottom"));
     }
 
     @Override

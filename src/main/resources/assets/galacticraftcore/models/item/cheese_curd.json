@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftcore:items/cheese_curd"
+        "layer0": "galacticraftcore:item/cheese_curd"
     },
     "display": {
         "thirdperson": {

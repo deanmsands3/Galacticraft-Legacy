@@ -13,12 +13,12 @@
         }
     ],
     "textures": {
-        "particle": "galacticraftcore:block/landing_pad",
-        "down": "galacticraftcore:block/landing_pad",
-        "up": "galacticraftcore:block/landing_pad",
-        "north": "galacticraftcore:block/landing_pad",
-        "east": "galacticraftcore:block/landing_pad",
-        "south": "galacticraftcore:block/landing_pad",
-        "west": "galacticraftcore:block/landing_pad"
+        "particle": "galacticraftcore:block/rocket_launch_pad",
+        "down": "galacticraftcore:block/rocket_launch_pad",
+        "up": "galacticraftcore:block/rocket_launch_pad",
+        "north": "galacticraftcore:block/rocket_launch_pad",
+        "east": "galacticraftcore:block/rocket_launch_pad",
+        "south": "galacticraftcore:block/rocket_launch_pad",
+        "west": "galacticraftcore:block/rocket_launch_pad"
     }
 }

@@ -39,10 +39,10 @@ public class TileEntityBeamReflectorRenderer extends TileEntityRenderer<TileEnti
 
     private void updateModels()
     {
-        reflectorModelBase = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/block/energy_beam_reflector.obj"), ImmutableList.of("Base"));
-        reflectorModelAxle = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/block/energy_beam_reflector.obj"), ImmutableList.of("Axle"));
-        reflectorModelEnergyBlaster = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/block/energy_beam_reflector.obj"), ImmutableList.of("EnergyBlaster"));
-        reflectorModelRing = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/block/energy_beam_reflector.obj"), ImmutableList.of("Ring"));
+        reflectorModelBase = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/energy_beam_reflector.obj"), ImmutableList.of("Base"));
+        reflectorModelAxle = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/energy_beam_reflector.obj"), ImmutableList.of("Axle"));
+        reflectorModelEnergyBlaster = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/energy_beam_reflector.obj"), ImmutableList.of("EnergyBlaster"));
+        reflectorModelRing = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/energy_beam_reflector.obj"), ImmutableList.of("Ring"));
     }
 
     @Override

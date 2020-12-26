@@ -31,7 +31,7 @@ public class TileEntityArclampRenderer extends TileEntityRenderer<TileEntityArcl
 
     private void updateModels()
     {
-        lampMetal = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/arclamp_metal.obj"), ImmutableList.of("main"));
+        lampMetal = GCModelCache.INSTANCE.getModel(new ResourceLocation(Constants.MOD_ID_CORE, "models/obj/arc_lamp.obj"), ImmutableList.of("main"));
     }
 
     @Override
