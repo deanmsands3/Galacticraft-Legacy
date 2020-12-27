@@ -7,6 +7,7 @@ import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.tags.GCTags;
+import micdoodle8.mods.galacticraft.planets.tags.GCPlanetsTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
@@ -621,12 +622,16 @@ public class DataGeneratorGC
             .add(GCTags.COPPER_ORES)
             .add(GCTags.SAPPHIRE_ORES)
             .add(GCTags.SILICON_ORES)
-            .add(GCTags.TIN_ORES);
+            .add(GCTags.TIN_ORES)
+            .add(GCPlanetsTags.DESH_ORES)
+            .add(GCPlanetsTags.ILMENITE_ORES);
 
             this.getBuilder(Tags.Blocks.STORAGE_BLOCKS).add(GCTags.ALUMINUM_STORAGE_BLOCKS)
             .add(GCTags.COPPER_STORAGE_BLOCKS)
             .add(GCTags.SILICON_STORAGE_BLOCKS)
-            .add(GCTags.TIN_STORAGE_BLOCKS);
+            .add(GCTags.TIN_STORAGE_BLOCKS)
+            .add(GCPlanetsTags.LEAD_STORAGE_BLOCKS)
+            .add(GCPlanetsTags.DESH_STORAGE_BLOCKS);
         }
     }
 
@@ -692,7 +697,8 @@ public class DataGeneratorGC
             .add(GCTags.ALUMINUM_INGOTS)
             .add(GCTags.COPPER_INGOTS)
             .add(GCTags.METEORIC_IRON_INGOTS)
-            .add(GCTags.TIN_INGOTS);
+            .add(GCTags.TIN_INGOTS)
+            .add(GCPlanetsTags.LEAD_INGOTS);
 
             this.getBuilder(GCTags.PLATES)
             .add(GCTags.ALUMINUM_PLATES)
@@ -709,7 +715,9 @@ public class DataGeneratorGC
             .add(GCTags.SOLAR_WAFERS);
 
             this.getBuilder(Tags.Items.ORES)
-            .add(GCTags.CHEESE_ORES_ITEM);
+            .add(GCTags.CHEESE_ORES_ITEM)
+            .add(GCPlanetsTags.DESH_ORES_ITEM)
+            .add(GCPlanetsTags.ILMENITE_ORES_ITEM);
 
             this.getBuilder(GCTags.CHEESE_ORES_ITEM).add(GCBlocks.CHEESE_ORE.asItem());
         }

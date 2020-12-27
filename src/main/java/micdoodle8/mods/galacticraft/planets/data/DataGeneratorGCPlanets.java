@@ -578,13 +578,6 @@ public class DataGeneratorGCPlanets
             this.getBuilder(GCPlanetsTags.ILMENITE_ORES).add(AsteroidBlocks.ILMENITE_ORE);
             this.getBuilder(GCPlanetsTags.LEAD_STORAGE_BLOCKS).add(VenusBlocks.LEAD_BLOCK);
             this.getBuilder(GCPlanetsTags.DESH_STORAGE_BLOCKS).add(MarsBlocks.DESH_BLOCK);
-
-            this.getBuilder(Tags.Blocks.ORES).add(GCPlanetsTags.DESH_ORES)
-            .add(GCPlanetsTags.ILMENITE_ORES);
-
-            this.getBuilder(Tags.Blocks.STORAGE_BLOCKS)
-            .add(GCPlanetsTags.LEAD_STORAGE_BLOCKS)
-            .add(GCPlanetsTags.DESH_STORAGE_BLOCKS);
         }
     }
 
@@ -600,13 +593,6 @@ public class DataGeneratorGCPlanets
         {
             this.getBuilder(GCPlanetsTags.LEAD_INGOTS)
             .add(VenusItems.LEAD_INGOT);
-
-            this.getBuilder(Tags.Items.INGOTS)
-            .add(GCPlanetsTags.LEAD_INGOTS);
-
-            this.getBuilder(Tags.Items.ORES)
-            .add(GCPlanetsTags.DESH_ORES_ITEM)
-            .add(GCPlanetsTags.ILMENITE_ORES_ITEM);
 
             this.getBuilder(GCPlanetsTags.DESH_ORES_ITEM)
             .add(MarsBlocks.DESH_ORE.asItem());
