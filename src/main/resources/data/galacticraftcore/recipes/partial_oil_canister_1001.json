@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "galacticraftcore:oil_canister_partial",
+    "item": "galacticraftcore:partial_oil_canister",
     "nbt": "{Damage:1001}"
   },
   "pattern": [

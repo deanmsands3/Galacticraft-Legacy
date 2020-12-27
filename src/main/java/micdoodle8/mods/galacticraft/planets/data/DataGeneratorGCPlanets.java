@@ -594,6 +594,9 @@ public class DataGeneratorGCPlanets
             this.getBuilder(GCPlanetsTags.LEAD_INGOTS)
             .add(VenusItems.LEAD_INGOT);
 
+            this.getBuilder(GCPlanetsTags.DESH_INGOTS)
+            .add(MarsItems.DESH_INGOT);
+
             this.getBuilder(GCPlanetsTags.DESH_ORES_ITEM)
             .add(MarsBlocks.DESH_ORE.asItem());
             this.getBuilder(GCPlanetsTags.ILMENITE_ORES_ITEM)

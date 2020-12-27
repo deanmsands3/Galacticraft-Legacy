@@ -698,7 +698,8 @@ public class DataGeneratorGC
             .add(GCTags.COPPER_INGOTS)
             .add(GCTags.METEORIC_IRON_INGOTS)
             .add(GCTags.TIN_INGOTS)
-            .add(GCPlanetsTags.LEAD_INGOTS);
+            .add(GCPlanetsTags.LEAD_INGOTS)
+            .add(GCPlanetsTags.DESH_INGOTS);
 
             this.getBuilder(GCTags.PLATES)
             .add(GCTags.ALUMINUM_PLATES)
@@ -813,6 +814,7 @@ public class DataGeneratorGC
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.TELEMETRY_UNIT).key('X', GCTags.TIN_PLATES).key('Y', GCTags.COPPER_PLATES).key('Z', GCTags.BASIC_WAFERS).key('W', GCItems.FREQUENCY_MODULE).patternLine("XWX").patternLine("XZX").patternLine("YYY").addCriterion(this.toCriterion(GCItems.FREQUENCY_MODULE), this.hasItem(GCItems.FREQUENCY_MODULE)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCItems.TIER_1_ROCKET_ENGINE).key('X', GCItems.TIER_1_HEAVY_DUTY_PLATE).key('Y', Items.FLINT_AND_STEEL).key('Z', GCItems.OXYGEN_VENT).key('W', GCItems.TIN_CANISTER).key('V', Items.STONE_BUTTON).patternLine(" YV").patternLine("XWX").patternLine("XZX").addCriterion(this.toCriterion(GCItems.TIER_1_HEAVY_DUTY_PLATE), this.hasItem(GCItems.TIER_1_HEAVY_DUTY_PLATE)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.DISPLAY_SCREEN).key('X', GCTags.STEEL_PLATES).key('Y', GCTags.BASIC_WAFERS).key('Z', Tags.Items.GLASS_COLORLESS).patternLine("XYX").patternLine("YZY").patternLine("XYX").addCriterion(this.toCriterion(GCTags.BASIC_WAFERS), this.hasItem(GCTags.BASIC_WAFERS)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCItems.BATTERY).key('T', GCTags.TIN_PLATES).key('C', Items.COAL).key('R', Tags.Items.DUSTS_REDSTONE).patternLine(" T ").patternLine("TRT").patternLine("TCT").addCriterion(this.toCriterion(GCTags.TIN_PLATES), this.hasItem(GCTags.TIN_PLATES)).build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.OXYGEN_VENT).addIngredient(GCTags.TIN_PLATES).addIngredient(GCTags.TIN_PLATES).addIngredient(GCTags.TIN_PLATES).addIngredient(GCTags.STEEL_PLATES).addCriterion(this.toCriterion(GCTags.STEEL_PLATES), this.hasItem(GCTags.STEEL_PLATES)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCBlocks.SWITCHABLE_ALUMINUM_WIRE).addIngredient(Items.REPEATER).addIngredient(GCBlocks.ALUMINUM_WIRE).addCriterion(this.toCriterion(GCBlocks.ALUMINUM_WIRE), this.hasItem(GCBlocks.ALUMINUM_WIRE)).build(consumer);

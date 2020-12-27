@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " T ",
+    "TRT",
+    "TCT"
+  ],
+  "key": {
+    "T": {
+      "tag": "forge:plates/tin"
+    },
+    "C": {
+      "item": "minecraft:coal"
+    },
+    "R": {
+      "tag": "forge:dusts/redstone"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:battery"
+  }
+}

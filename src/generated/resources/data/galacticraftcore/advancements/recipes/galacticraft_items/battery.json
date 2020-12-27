@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:battery"
+    ]
+  },
+  "criteria": {
+    "has_plates/tin_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:plates/tin"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:battery"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_plates/tin_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

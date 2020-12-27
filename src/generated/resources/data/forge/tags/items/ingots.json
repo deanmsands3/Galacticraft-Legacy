@@ -5,6 +5,7 @@
     "#forge:ingots/copper",
     "#forge:ingots/meteoric_iron",
     "#forge:ingots/tin",
-    "#forge:ingots/lead"
+    "#forge:ingots/lead",
+    "#forge:ingots/desh"
   ]
 }
