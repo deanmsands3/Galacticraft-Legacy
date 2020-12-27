@@ -171,7 +171,7 @@ public class DataGeneratorGCPlanets
 
         protected ModelFile getSlimelingEggModel(BlockState state, String name)
         {
-            return state.get(BlockSlimelingEgg.CRACKED) ? this.models().withExistingParent(name + "_cracked", this.modLoc("block/slimeling_egg")).texture("texture", this.modLoc("block/" + name + "_cracked")) : this.models().withExistingParent(name, this.modLoc("block/slimeling_egg")).texture("texture", this.modLoc("block/" + name));
+            return state.get(BlockSlimelingEgg.CRACKED) ? this.models().withExistingParent(name + "_cracked", this.modLoc("block/slimeling_egg")).texture("texture", this.modLoc("block/" + name + "_cracked")).texture("particle", this.modLoc("block/" + name + "_cracked")) : this.models().withExistingParent(name, this.modLoc("block/slimeling_egg")).texture("texture", this.modLoc("block/" + name)).texture("particle", this.modLoc("block/" + name));
         }
 
         protected void simpleFluid(FlowingFluidBlock block)

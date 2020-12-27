@@ -1,7 +1,7 @@
 {
 	"textures": {
-		"texture": "galacticraftcore:block/arc_lamp_off",
-		"particle": "galacticraftcore:block/arc_lamp_off"
+		"texture": "galacticraftcore:block/arc_lamp",
+		"particle": "galacticraftcore:block/arc_lamp"
 	},
     "elements": [ 
     {
