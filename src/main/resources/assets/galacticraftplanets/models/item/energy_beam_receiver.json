@@ -1,7 +1,7 @@
 {
     "parent": "forge:item/default",
     "loader": "forge:obj",
-    "model": "galacticraftplanets:models/block/energy_beam_receiver.obj",
+    "model": "galacticraftplanets:models/obj/energy_beam_receiver.obj",
     "flip-v": true,
     "display": {
         "thirdperson": {

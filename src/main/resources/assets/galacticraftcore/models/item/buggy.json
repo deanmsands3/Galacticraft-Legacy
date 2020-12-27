@@ -1,7 +1,7 @@
 {
     "parent": "forge:item/default",
     "loader": "forge:obj",
-    "model": "galacticraftcore:models/buggy_inv.obj",
+    "model": "galacticraftcore:models/obj/buggy_inventory.obj",
     "flip-v": true,
     "display": {
         "thirdperson": {

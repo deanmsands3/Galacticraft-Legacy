@@ -344,16 +344,16 @@ public class TeleportTypeAsteroids implements ITeleportType
     public void setupAdventureSpawn(ServerPlayerEntity player)
     {
         GCPlayerStats stats = GCPlayerStats.get(player);
-        SchematicRegistry.unlockNewPage(player, new ItemStack(GCItems.schematicRocketT2, 1)); //Knows how to build T2 rocket
+        SchematicRegistry.unlockNewPage(player, new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC, 1)); //Knows how to build T2 rocket
         SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.schematicRocketT3, 1)); //Knows how to build T3 rocket
         SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.schematicAstroMiner, 1)); //Knows how to build Astro Miner
         NonNullList<ItemStack> rocketStacks = NonNullList.create();
         stats.setFuelLevel(1000);
-        rocketStacks.add(new ItemStack(GCItems.oxMask));
-        rocketStacks.add(new ItemStack(GCItems.oxygenGear));
-        rocketStacks.add(new ItemStack(GCItems.oxTankMedium));
-        rocketStacks.add(new ItemStack(GCItems.oxTankHeavy));
-        rocketStacks.add(new ItemStack(GCItems.oxTankHeavy));
+        rocketStacks.add(new ItemStack(GCItems.OXYGEN_MASK));
+        rocketStacks.add(new ItemStack(GCItems.OXYGEN_GEAR));
+        rocketStacks.add(new ItemStack(GCItems.MEDIUM_OXYGEN_TANK));
+        rocketStacks.add(new ItemStack(GCItems.HEAVY_OXYGEN_TANK));
+        rocketStacks.add(new ItemStack(GCItems.HEAVY_OXYGEN_TANK));
         rocketStacks.add(new ItemStack(AsteroidsItems.canisterLOX));
         rocketStacks.add(new ItemStack(AsteroidsItems.canisterLOX));
         rocketStacks.add(new ItemStack(AsteroidsItems.canisterLOX));
@@ -361,9 +361,9 @@ public class TeleportTypeAsteroids implements ITeleportType
         rocketStacks.add(new ItemStack(Blocks.GLASS_PANE, 16));
         rocketStacks.add(new ItemStack(Blocks.OAK_PLANKS, 32));
         rocketStacks.add(new ItemStack(MarsItems.ingotDesh, 16)); //Desh ingot
-        rocketStacks.add(new ItemStack(GCItems.compressedWaferBasic, 8)); //Basic Wafer
-        rocketStacks.add(new ItemStack(GCItems.solarModule1, 2)); //Solar Panels
-        rocketStacks.add(new ItemStack(GCItems.dehydratedApple, 16));  //Canned food
+        rocketStacks.add(new ItemStack(GCItems.BASIC_WAFER, 8)); //Basic Wafer
+        rocketStacks.add(new ItemStack(GCItems.FULL_SOLAR_MODULE, 2)); //Solar Panels
+        rocketStacks.add(new ItemStack(GCItems.DEHYDRATED_APPLE_CAN, 16));  //Canned food
         rocketStacks.add(new ItemStack(Items.EGG, 12));
 
         SpawnEggItem egg = SpawnEggItem.getEgg(EntityType.COW);

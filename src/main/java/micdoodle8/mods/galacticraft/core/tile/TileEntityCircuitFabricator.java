@@ -127,11 +127,11 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
             ItemStack resultItemStack = this.producingStack.copy();
             if (this.world.getDimension() instanceof IZeroGDimension)
             {
-                if (resultItemStack.getItem() == GCItems.compressedWaferBasic)
+                if (resultItemStack.getItem() == GCItems.BASIC_WAFER)
                 {
                     resultItemStack.setCount(5);
                 }
-                else if (resultItemStack.getItem() == GCItems.compressedWaferSolar)
+                else if (resultItemStack.getItem() == GCItems.SOLAR_WAFER)
                 {
                     resultItemStack.setCount(15);
                 }

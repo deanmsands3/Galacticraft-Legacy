@@ -1,7 +1,7 @@
 {
     "parent": "forge:item/default",
     "loader": "forge:obj",
-    "model": "galacticraftcore:models/flag.obj",
+    "model": "galacticraftcore:models/obj/flag.obj",
     "flip-v": true,
     "display": {
         "thirdperson": {

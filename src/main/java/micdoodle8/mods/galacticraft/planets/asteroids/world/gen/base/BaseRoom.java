@@ -560,7 +560,7 @@ public class BaseRoom extends SizedPiece
                 loader.addCargo(new ItemStack(Items.POISONOUS_POTATO, 64), true);
                 loader.addCargo(new ItemStack(Items.POISONOUS_POTATO, 64), true);
                 loader.addCargo(new ItemStack(Items.ROTTEN_FLESH, 64), true);
-                loader.addCargo(new ItemStack(GCItems.flagPole, semirand % 31 + 2), true);
+                loader.addCargo(new ItemStack(GCItems.STEEL_POLE, semirand % 31 + 2), true);
                 loader.addCargo(new ItemStack(MarsItems.slimelingCargo, semirand % 2 + 1), true);  //Slimeling Inventory Bag
                 loader.addCargo(new ItemStack(AsteroidsItems.thermalCloth, semirand % 23 + 41), true); //Thermal cloth
                 loader.addCargo(ItemOilCanister.createEmptyCanister(1), true);
@@ -606,7 +606,7 @@ public class BaseRoom extends SizedPiece
                 TileEntityEnergyStorageModule store = (TileEntityEnergyStorageModule) tile;
                 if (semirand % 3 == 1)
                 {
-                    ItemStack stack = new ItemStack(GCItems.battery, 1);
+                    ItemStack stack = new ItemStack(GCItems.BATTERY, 1);
                     stack.setDamage(100);
                     store.setInventorySlotContents(1, stack);
                 }

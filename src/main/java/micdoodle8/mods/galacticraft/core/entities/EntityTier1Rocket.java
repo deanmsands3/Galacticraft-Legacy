@@ -65,37 +65,37 @@ public class EntityTier1Rocket extends EntityTieredRocket
         {
         default:
         case DEFAULT:
-            return GCItems.rocketTierOne;
+            return GCItems.TIER_1_ROCKET;
         case INVENTORY27:
-            return GCItems.rocketTierOneCargo1;
+            return GCItems.TIER_1_ROCKET_18_INVENTORY;
         case INVENTORY36:
-            return GCItems.rocketTierOneCargo2;
+            return GCItems.TIER_1_ROCKET_36_INVENTORY;
         case INVENTORY54:
-            return GCItems.rocketTierOneCargo3;
+            return GCItems.TIER_1_ROCKET_54_INVENTORY;
         case PREFUELED:
-            return GCItems.rocketTierOneCreative;
+            return GCItems.CREATIVE_TIER_1_ROCKET;
         }
     }
 
     public static EnumRocketType getTypeFromItem(Item item)
     {
-        if (item == GCItems.rocketTierOne)
+        if (item == GCItems.TIER_1_ROCKET)
         {
             return EnumRocketType.DEFAULT;
         }
-        if (item == GCItems.rocketTierOneCargo1)
+        if (item == GCItems.TIER_1_ROCKET_18_INVENTORY)
         {
             return EnumRocketType.INVENTORY27;
         }
-        if (item == GCItems.rocketTierOneCargo2)
+        if (item == GCItems.TIER_1_ROCKET_36_INVENTORY)
         {
             return EnumRocketType.INVENTORY36;
         }
-        if (item == GCItems.rocketTierOneCargo3)
+        if (item == GCItems.TIER_1_ROCKET_54_INVENTORY)
         {
             return EnumRocketType.INVENTORY54;
         }
-        if (item == GCItems.rocketTierOneCreative)
+        if (item == GCItems.CREATIVE_TIER_1_ROCKET)
         {
             return EnumRocketType.PREFUELED;
         }

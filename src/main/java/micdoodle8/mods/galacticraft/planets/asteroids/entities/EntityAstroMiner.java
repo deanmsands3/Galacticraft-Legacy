@@ -1649,7 +1649,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
     {
         if (b == GCBlocks.FALLEN_METEOR)
         {
-            return new ItemStack(GCItems.meteoricIronRaw);
+            return new ItemStack(GCItems.RAW_METEORIC_IRON);
         }
 //        if (b instanceof BlockSpaceGlass)
 //        {

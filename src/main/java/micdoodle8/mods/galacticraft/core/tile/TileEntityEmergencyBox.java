@@ -387,7 +387,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
             {
                 if (kitted)
                 {
-                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.emergencyKit), 0);
+                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.SPACE_EMERGENCY_KIT), 0);
                     this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST.getDefaultState(), 3);
                     break;
                 }
@@ -413,7 +413,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
             {
                 if (kitted)
                 {
-                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.emergencyKit), 0);
+                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.SPACE_EMERGENCY_KIT), 0);
                     this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST.getDefaultState(), 3);
                     break;
                 }
@@ -439,7 +439,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
             {
                 if (kitted)
                 {
-                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.emergencyKit), 0);
+                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.SPACE_EMERGENCY_KIT), 0);
                     this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST.getDefaultState(), 3);
                     break;
                 }
@@ -465,7 +465,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
             {
                 if (kitted)
                 {
-                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.emergencyKit), 0);
+                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.SPACE_EMERGENCY_KIT), 0);
                     this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST.getDefaultState(), 3);
                     break;
                 }

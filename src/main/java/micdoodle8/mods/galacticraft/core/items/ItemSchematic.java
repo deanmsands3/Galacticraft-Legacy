@@ -74,11 +74,11 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
-        if (stack.getItem() == GCItems.schematicBuggy)
+        if (stack.getItem() == GCItems.MOON_BUGGY_SCHEMATIC)
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.moonbuggy")));
         }
-        else if (stack.getItem() == GCItems.schematicRocketT2)
+        else if (stack.getItem() == GCItems.TIER_2_ROCKET_SCHEMATIC)
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.rocket_t2")));
 
@@ -144,8 +144,8 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
      */
     public static void registerSchematicItems()
     {
-        SchematicRegistry.registerSchematicItem(new ItemStack(GCItems.schematicBuggy, 1));
-        SchematicRegistry.registerSchematicItem(new ItemStack(GCItems.schematicRocketT2, 1));
+        SchematicRegistry.registerSchematicItem(new ItemStack(GCItems.MOON_BUGGY_SCHEMATIC, 1));
+        SchematicRegistry.registerSchematicItem(new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC, 1));
     }
 
     /**

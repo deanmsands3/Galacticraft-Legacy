@@ -71,20 +71,20 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
 //            addSalvage(new ItemStack(MarsItems.marsItemBasic, 1, 5));  //Compressed desh
 //            addSalvage(new ItemStack(MarsItems.marsItemBasic, 1, 2));  //Desh ingot
 //        } TODO planets
-        addSalvage(new ItemStack(GCItems.flagPole));
-        addSalvage(new ItemStack(GCItems.heavyPlatingTier1));
-        addSalvage(new ItemStack(GCItems.ingotMeteoricIron, 1));  //Meteoric iron ingot
-        addSalvage(new ItemStack(GCItems.compressedSteel, 1));  //Compressed steel
-        addSalvage(new ItemStack(GCItems.compressedAluminum, 1));  //Compressed meteoric iron
-        addSalvage(new ItemStack(GCItems.compressedBronze, 1));  //Compressed bronze
-        addSalvage(new ItemStack(GCItems.compressedCopper, 1));
-        addSalvage(new ItemStack(GCItems.compressedIron, 1));
-        addSalvage(new ItemStack(GCItems.compressedMeteoricIron, 1));
-        addSalvage(new ItemStack(GCItems.compressedSteel, 1));  //Compressed iron
-        addSalvage(new ItemStack(GCItems.compressedTin, 1));
-        addSalvage(new ItemStack(GCItems.compressedWaferAdvanced, 1));
-        addSalvage(new ItemStack(GCItems.compressedWaferBasic, 1));
-        addSalvage(new ItemStack(GCItems.compressedWaferSolar, 1));
+        addSalvage(new ItemStack(GCItems.STEEL_POLE));
+        addSalvage(new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        addSalvage(new ItemStack(GCItems.METEORIC_IRON_INGOT, 1));  //Meteoric iron ingot
+        addSalvage(new ItemStack(GCItems.COMPRESSED_STEEL, 1));  //Compressed steel
+        addSalvage(new ItemStack(GCItems.COMPRESSED_ALUMINUM, 1));  //Compressed meteoric iron
+        addSalvage(new ItemStack(GCItems.COMPRESSED_BRONZE, 1));  //Compressed bronze
+        addSalvage(new ItemStack(GCItems.COMPRESSED_COPPER, 1));
+        addSalvage(new ItemStack(GCItems.COMPRESSED_IRON, 1));
+        addSalvage(new ItemStack(GCItems.COMPRESSED_METEORIC_IRON, 1));
+        addSalvage(new ItemStack(GCItems.COMPRESSED_STEEL, 1));  //Compressed iron
+        addSalvage(new ItemStack(GCItems.COMPRESSED_TIN, 1));
+        addSalvage(new ItemStack(GCItems.ADVANCED_WAFER, 1));
+        addSalvage(new ItemStack(GCItems.BASIC_WAFER, 1));
+        addSalvage(new ItemStack(GCItems.SOLAR_WAFER, 1));
         addSalvage(new ItemStack(Items.IRON_INGOT));
         addSalvage(new ItemStack(Items.GOLD_INGOT));
         addSalvage(new ItemStack(Items.GOLD_NUGGET));

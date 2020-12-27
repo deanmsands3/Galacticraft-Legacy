@@ -225,7 +225,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
             case 1:
                 return FluidUtil.isOilContainerAny(itemstack);
             case 2:
-                return FluidUtil.isPartialContainer(itemstack, GCItems.fuelCanister);
+                return FluidUtil.isPartialContainer(itemstack, GCItems.PARTIAL_FUEL_CANISTER);
             default:
                 return false;
             }

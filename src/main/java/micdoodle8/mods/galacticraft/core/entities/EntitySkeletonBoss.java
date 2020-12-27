@@ -360,7 +360,7 @@ public class EntitySkeletonBoss extends EntityBossBase implements IEntityBreatha
     @Override
     public void dropKey()
     {
-        this.entityDropItem(new ItemStack(GCItems.key, 1), 0.5F);
+        this.entityDropItem(new ItemStack(GCItems.TIER_1_DUNGEON_KEY, 1), 0.5F);
     }
 
     @Override

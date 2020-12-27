@@ -195,7 +195,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     @Override
     public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
     {
-        return (slotID == 1 && itemstack != null && itemstack.getItem() == GCItems.fuelCanister) || (slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem()));
+        return (slotID == 1 && itemstack != null && itemstack.getItem() == GCItems.PARTIAL_FUEL_CANISTER) || (slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem()));
     }
 
     @Override

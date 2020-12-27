@@ -151,6 +151,19 @@ public class DataGeneratorGCPlanets
                     .modelFile(state.get(BlockGeothermalGenerator.ACTIVE) ? geothermalOn : geothermalOff)
                     .rotationY((int) state.get(BlockGeothermalGenerator.FACING).getOpposite().getHorizontalAngle())
                     .build());
+
+            /*this.simpleFluid(PlanetFluids.GAS_ARGON.getBlock());
+            this.simpleFluid(PlanetFluids.GAS_ATMOSPHERIC.getBlock());
+            this.simpleFluid(PlanetFluids.GAS_CARBON_DIOXIDE.getBlock());
+            this.simpleFluid(PlanetFluids.GAS_HELIUM.getBlock());
+            this.simpleFluid(PlanetFluids.GAS_METHANE.getBlock());
+            this.simpleFluid(PlanetFluids.GAS_NITROGEN.getBlock());
+            this.simpleFluid(PlanetFluids.LIQUID_ARGON.getBlock());
+            this.simpleFluid(PlanetFluids.LIQUID_BACTERIAL_SLUDGE.getBlock());
+            this.simpleFluid(PlanetFluids.LIQUID_METHANE.getBlock());
+            this.simpleFluid(PlanetFluids.LIQUID_NITROGEN.getBlock());
+            this.simpleFluid(PlanetFluids.LIQUID_OXYGEN.getBlock());
+            this.simpleFluid(PlanetFluids.LIQUID_SULPHURIC_ACID.getBlock());*/
         }
 
         protected ModelFile getSlimelingEggModel(BlockState state, String name)

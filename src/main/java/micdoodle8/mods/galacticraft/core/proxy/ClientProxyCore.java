@@ -231,16 +231,16 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
             e.printStackTrace();
         }
 
-        setCustomModel(GCItems.rocketTierOne.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCargo1.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCargo2.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCargo3.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCreative.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.buggy.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.buggyInventory1.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.buggyInventory2.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.buggyInventory3.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.flag.getRegistryName(), modelToWrap -> new ItemModelFlag(modelToWrap));
+        setCustomModel(GCItems.TIER_1_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.TIER_1_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.TIER_1_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.TIER_1_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.CREATIVE_TIER_1_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.BUGGY.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
+        setCustomModel(GCItems.BUGGY_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
+        setCustomModel(GCItems.BUGGY_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
+        setCustomModel(GCItems.BUGGY_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
+        setCustomModel(GCItems.FLAG.getRegistryName(), modelToWrap -> new ItemModelFlag(modelToWrap));
         setCustomModel(GCBlocks.ROCKET_WORKBENCH.getRegistryName(), modelToWrap -> new ItemModelWorkbench(modelToWrap));
 
         for (PartialCanister container : ClientProxyCore.canisters)

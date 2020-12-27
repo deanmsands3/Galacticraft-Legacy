@@ -46,11 +46,11 @@ public class ItemBase extends Item implements ISortable
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
-        if (stack != null && this == GCItems.heavyPlatingTier1)
+        if (stack != null && this == GCItems.TIER_1_HEAVY_DUTY_PLATE)
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("item.tier1.desc")));
         }
-        else if (stack != null && this == GCItems.dungeonFinder)
+        else if (stack != null && this == GCItems.DUNGEON_FINDER)
         {
             tooltip.add(new StringTextComponent(EnumColor.RED + GCCoreUtil.translate("gui.creative_only.desc")));
         }

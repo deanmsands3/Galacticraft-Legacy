@@ -255,13 +255,13 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
                             int used = this.gasTank.fill(canisterGas, IFluidHandler.FluidAction.EXECUTE) / factor;
                             if (used == amount)
                             {
-                                ItemStack stack = new ItemStack(GCItems.oilCanister, 1);
+                                ItemStack stack = new ItemStack(GCItems.PARTIAL_OIL_CANISTER, 1);
                                 stack.setDamage(ItemCanisterGeneric.EMPTY_CAPACITY);
                                 getInventory().set(1, stack);
                             }
                             else
                             {
-                                ItemStack stack = new ItemStack(GCItems.oilCanister, 1);
+                                ItemStack stack = new ItemStack(GCItems.PARTIAL_OIL_CANISTER, 1);
                                 stack.setDamage(ItemCanisterGeneric.EMPTY_CAPACITY - amount + used);
                                 getInventory().set(1, stack);
                             }

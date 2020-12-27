@@ -85,23 +85,23 @@ public class ItemEmergencyKit extends ItemDesc implements ISortable
         switch (slot)
         {
         case 0:
-            return new ItemStack(GCItems.oxMask);
+            return new ItemStack(GCItems.OXYGEN_MASK);
         case 1:
-            return new ItemStack(GCItems.oxygenGear);
+            return new ItemStack(GCItems.OXYGEN_GEAR);
         case 2:
-            return new ItemStack(GCItems.oxTankLight);
+            return new ItemStack(GCItems.LIGHT_OXYGEN_TANK);
         case 3:
-            return new ItemStack(GCItems.oxTankLight);
+            return new ItemStack(GCItems.LIGHT_OXYGEN_TANK);
         case 4:
-            return new ItemStack(GCItems.steelPickaxe);
+            return new ItemStack(GCItems.HEAVY_DUTY_PICKAXE);
         case 5:
-            return new ItemStack(GCItems.dehydratedPotato, 1);
+            return new ItemStack(GCItems.DEHYDRATED_POTATO_CAN, 1);
         case 6:
             return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.HEALING);
         case 7:
             return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.LONG_NIGHT_VISION);
         case 8:
-            return new ItemStack(GCItems.parachuteRed, 1);
+            return new ItemStack(GCItems.RED_PARACHUTE, 1);
         default:
             return null;
         }
