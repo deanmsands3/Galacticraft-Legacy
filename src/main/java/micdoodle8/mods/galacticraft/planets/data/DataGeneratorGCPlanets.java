@@ -1,22 +1,32 @@
 package micdoodle8.mods.galacticraft.planets.data;
 
+import java.util.function.Consumer;
+
 import micdoodle8.mods.galacticraft.core.Constants;
+import micdoodle8.mods.galacticraft.core.GCBlocks;
+import micdoodle8.mods.galacticraft.core.GCItems;
+import micdoodle8.mods.galacticraft.core.tags.GCTags;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockSlimelingEgg;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
+import micdoodle8.mods.galacticraft.planets.tags.GCPlanetsTags;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockGeothermalGenerator;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
 import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.*;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -37,16 +47,19 @@ public class DataGeneratorGCPlanets
             generator.addProvider(new ItemModels(generator, Constants.MOD_ID_PLANETS, helper));
             generator.addProvider(new Language(generator, Constants.MOD_ID_PLANETS));
         }
-        //        if (event.includeServer())
-        //        {
-        //            BlockTagsProvider blockTagProvider = new BlockTagsBuilder(generator, MineconLiveMod.MOD_ID, helper);
-        //            generator.addProvider(blockTagProvider);
-        //            generator.addProvider(new ItemTagsBuilder(generator, blockTagProvider, MineconLiveMod.MOD_ID, helper));
-        //            generator.addProvider(new FluidTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
-        //            generator.addProvider(new EntityTypeTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
-        //            generator.addProvider(new Recipe(generator, MineconLiveMod.MOD_ID));
-        //            generator.addProvider(new LootTables(generator));
-        //        }
+        if (event.includeServer())
+        {
+            /*BlockTagsProvider blockTagProvider = new BlockTagsBuilder(generator, MineconLiveMod.MOD_ID, helper);
+            generator.addProvider(blockTagProvider);
+            generator.addProvider(new ItemTagsBuilder(generator, blockTagProvider, MineconLiveMod.MOD_ID, helper));
+            generator.addProvider(new FluidTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
+            generator.addProvider(new EntityTypeTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
+            generator.addProvider(new LootTables(generator));*/
+            BlockTagsProvider blockTagProvider = new BlockTagsBuilder(generator, Constants.MOD_ID_PLANETS, helper);
+            generator.addProvider(blockTagProvider);
+            generator.addProvider(new ItemTagsBuilder(generator, blockTagProvider, Constants.MOD_ID_PLANETS, helper));
+            generator.addProvider(new Recipe(generator, Constants.MOD_ID_PLANETS));
+        }
     }
 
     public static class BlockStates extends BlockStateProvider
@@ -548,6 +561,118 @@ public class DataGeneratorGCPlanets
             this.add(VenusItems.TIER_2_THERMAL_BOOTS, "Tier 2 Thermal Boots");
             this.add(VenusItems.VOLCANIC_PICKAXE, "Volcanic Pickaxe");
             this.add(VenusItems.TIER_3_DUNGEON_KEY, "Tier 3 Dungeon Key");
+        }
+    }
+
+    public static class BlockTagsBuilder extends BlockTagsProvider
+    {
+        public BlockTagsBuilder(DataGenerator generator, String modid, ExistingFileHelper helper)
+        {
+            super(generator);
+        }
+
+        @Override
+        protected void registerTags()
+        {
+            this.getBuilder(GCPlanetsTags.DESH_ORES).add(MarsBlocks.DESH_ORE);
+            this.getBuilder(GCPlanetsTags.ILMENITE_ORES).add(AsteroidBlocks.ILMENITE_ORE);
+            this.getBuilder(GCPlanetsTags.LEAD_STORAGE_BLOCKS).add(VenusBlocks.LEAD_BLOCK);
+            this.getBuilder(GCPlanetsTags.DESH_STORAGE_BLOCKS).add(MarsBlocks.DESH_BLOCK);
+
+            this.getBuilder(Tags.Blocks.ORES).add(GCPlanetsTags.DESH_ORES)
+            .add(GCPlanetsTags.ILMENITE_ORES);
+
+            this.getBuilder(Tags.Blocks.STORAGE_BLOCKS)
+            .add(GCPlanetsTags.LEAD_STORAGE_BLOCKS)
+            .add(GCPlanetsTags.DESH_STORAGE_BLOCKS);
+        }
+    }
+
+    public static class ItemTagsBuilder extends ItemTagsProvider
+    {
+        public ItemTagsBuilder(DataGenerator generator, BlockTagsProvider blockTagProvider, String modid, ExistingFileHelper helper)
+        {
+            super(generator);
+        }
+
+        @Override
+        protected void registerTags()
+        {
+            this.getBuilder(GCPlanetsTags.LEAD_INGOTS)
+            .add(VenusItems.LEAD_INGOT);
+
+            this.getBuilder(Tags.Items.INGOTS)
+            .add(GCPlanetsTags.LEAD_INGOTS);
+
+            this.getBuilder(Tags.Items.ORES)
+            .add(GCPlanetsTags.DESH_ORES_ITEM)
+            .add(GCPlanetsTags.ILMENITE_ORES_ITEM);
+
+            this.getBuilder(GCPlanetsTags.DESH_ORES_ITEM)
+            .add(MarsBlocks.DESH_ORE.asItem());
+            this.getBuilder(GCPlanetsTags.ILMENITE_ORES_ITEM)
+            .add(AsteroidBlocks.ILMENITE_ORE.asItem());
+        }
+    }
+
+    public static class Recipe extends RecipeProvider
+    {
+        public Recipe(DataGenerator generator, String modid)
+        {
+            super(generator);
+        }
+
+        @Override
+        protected void registerRecipes(Consumer<IFinishedRecipe> consumer)
+        {
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.BEAM_CORE).key('X', Tags.Items.DUSTS_REDSTONE).key('Y', GCTags.IRON_PLATES).key('Z', Tags.Items.GLASS_PANES_COLORLESS).patternLine("XYX").patternLine("YZY").patternLine("XYX").addCriterion(this.toCriterion(GCTags.IRON_PLATES), this.hasItem(GCTags.IRON_PLATES)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(MarsBlocks.WATER_ELECTROLYZER).key('X', GCTags.BRONZE_PLATES).key('Y', MarsItems.FLUID_MANIPULATOR).key('Z', GCBlocks.FLUID_PIPE).key('W', GCItems.OXYGEN_VENT).key('V', GCItems.HEAVY_OXYGEN_TANK).key('U', GCTags.COPPER_PLATES).patternLine("VWV").patternLine("ZYZ").patternLine("UXU").addCriterion(this.toCriterion(MarsItems.FLUID_MANIPULATOR), this.hasItem(MarsItems.FLUID_MANIPULATOR)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.HEAVY_ROCKET_ENGINE).key('X', AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE).key('Y', Items.FLINT_AND_STEEL).key('Z', GCItems.OXYGEN_VENT).key('W', GCItems.TIN_CANISTER).key('V', Items.STONE_BUTTON).patternLine(" YV").patternLine("XWX").patternLine("XZX").addCriterion(this.toCriterion(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE), this.hasItem(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(MarsBlocks.GAS_LIQUEFIER).key('X', GCTags.BRONZE_PLATES).key('Y', GCBlocks.OXYGEN_COMPRESSOR).key('Z', MarsItems.FLUID_MANIPULATOR).key('W', GCBlocks.FLUID_PIPE).key('V', GCItems.OXYGEN_VENT).key('U', GCItems.HEAVY_OXYGEN_TANK).key('S', GCItems.MEDIUM_OXYGEN_TANK).key('P', GCBlocks.OXYGEN_DECOMPRESSOR).patternLine("UVS").patternLine("WZS").patternLine("PXY").addCriterion(this.toCriterion(MarsItems.FLUID_MANIPULATOR), this.hasItem(MarsItems.FLUID_MANIPULATOR)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(MarsBlocks.METHANE_SYNTHESIZER).key('X', GCTags.BRONZE_PLATES).key('Y', GCBlocks.OXYGEN_COMPRESSOR).key('Z', MarsItems.FLUID_MANIPULATOR).key('W', GCBlocks.FLUID_PIPE).key('V', GCItems.OXYGEN_VENT).key('T', GCItems.HEAVY_OXYGEN_TANK).key('C', GCBlocks.ELECTRIC_FURNACE).patternLine("TVT").patternLine("WZW").patternLine("CXY").addCriterion(this.toCriterion(MarsItems.FLUID_MANIPULATOR), this.hasItem(MarsItems.FLUID_MANIPULATOR)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(VenusBlocks.GEOTHERMAL_GENERATOR).key('X', GCTags.BRONZE_PLATES).key('Y', GCPlanetsTags.LEAD_INGOTS).key('Z', GCBlocks.ALUMINUM_WIRE).key('W', GCBlocks.COAL_GENERATOR).key('V', AsteroidsItems.ATMOSPHERIC_VALVE).patternLine("XVX").patternLine("ZWZ").patternLine("XYX").addCriterion(this.toCriterion(GCPlanetsTags.LEAD_INGOTS), this.hasItem(GCPlanetsTags.LEAD_INGOTS)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.GRAPPLE).key('X', Tags.Items.INGOTS_IRON).key('Y', Tags.Items.STRING).patternLine("  Y").patternLine("XY ").patternLine("XX ").addCriterion(this.toCriterion(Tags.Items.STRING), this.hasItem(Tags.Items.STRING)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.HEAVY_NOSE_CONE).key('X', AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE).key('Y', Items.REDSTONE_TORCH).patternLine(" Y ").patternLine(" X ").patternLine("X X").addCriterion(this.toCriterion(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE), this.hasItem(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(MarsBlocks.DESH_BLOCK).key('X', MarsItems.DESH_INGOT).patternLine("XXX").patternLine("XXX").patternLine("XXX").addCriterion(this.toCriterion(MarsItems.DESH_INGOT), this.hasItem(MarsItems.DESH_INGOT)).build(consumer);
+            //ShapedRecipeBuilder.shapedRecipe(AsteroidBlocks.TITANIUM_BLOCK).key('X', AsteroidsItems.TITANIUM_INGOT).patternLine("XXX").patternLine("XXX").patternLine("XXX").addCriterion(this.toCriterion(AsteroidsItems.TITANIUM_INGOT), this.hasItem(AsteroidsItems.TITANIUM_INGOT)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(VenusBlocks.LEAD_BLOCK).key('X', VenusItems.LEAD_INGOT).patternLine("XXX").patternLine("XXX").patternLine("XXX").addCriterion(this.toCriterion(VenusItems.LEAD_INGOT), this.hasItem(VenusItems.LEAD_INGOT)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.ORION_DRIVE).key('A', Tags.Items.ORES_DIAMOND).key('B', Tags.Items.ORES_LAPIS).key('C', Tags.Items.ORES_GOLD).key('D', Tags.Items.ORES_REDSTONE).key('E', Tags.Items.ORES_COAL).key('F', GCTags.CHEESE_ORES_ITEM).key('G', GCPlanetsTags.DESH_ORES_ITEM).key('H', GCPlanetsTags.ILMENITE_ORES_ITEM).key('O', AsteroidsItems.BEAM_CORE).patternLine("ABC").patternLine("DOE").patternLine("FGH").addCriterion(this.toCriterion(AsteroidsItems.BEAM_CORE), this.hasItem(AsteroidsItems.BEAM_CORE)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.HEAVY_ROCKET_FINS).key('X', AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE).key('Y', GCPlanetsTags.DESH_INGOTS).patternLine(" Y ").patternLine("XYX").patternLine("X X").addCriterion(this.toCriterion(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE), this.hasItem(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(MarsItems.SLIMELING_INVENTORY_BAG).key('X', Tags.Items.LEATHER).key('Y', Tags.Items.SLIMEBALLS).key('Z', Tags.Items.CHESTS_WOODEN).key('W', Tags.Items.GEMS_DIAMOND).patternLine("XWX").patternLine("XYX").patternLine(" Z ").addCriterion(this.toCriterion(Tags.Items.SLIMEBALLS), this.hasItem(Tags.Items.SLIMEBALLS)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(VenusBlocks.SOLAR_ARRAY_CONTROLLER).key('X', GCTags.STEEL_PLATES).key('Y', GCBlocks.HEAVY_ALUMINUM_WIRE).key('Z', GCTags.ADVANCED_WAFERS).patternLine("X X").patternLine("YZY").patternLine("XYX").addCriterion(this.toCriterion(GCTags.ADVANCED_WAFERS), this.hasItem(GCTags.ADVANCED_WAFERS)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(VenusBlocks.SOLAR_ARRAY_MODULE).key('X', VenusItems.SOLAR_ARRAY_PANEL).key('Y', GCBlocks.HEAVY_ALUMINUM_WIRE).key('Z', GCTags.ADVANCED_WAFERS).patternLine("XXX").patternLine("YZY").addCriterion(this.toCriterion(GCTags.ADVANCED_WAFERS), this.hasItem(GCTags.ADVANCED_WAFERS)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(VenusItems.SOLAR_ARRAY_PANEL).key('X', Tags.Items.GLASS_COLORLESS).key('Y', VenusItems.SOLAR_ARRAY_WAFER).key('Z', GCBlocks.HEAVY_ALUMINUM_WIRE).patternLine("XXX").patternLine("YYY").patternLine("ZZZ").addCriterion(this.toCriterion(VenusItems.SOLAR_ARRAY_WAFER), this.hasItem(VenusItems.SOLAR_ARRAY_WAFER)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.THERMAL_BOOTS).key('X', AsteroidsItems.THERMAL_CLOTH).patternLine("X X").patternLine("X X").addCriterion(this.toCriterion(AsteroidsItems.THERMAL_CLOTH), this.hasItem(AsteroidsItems.THERMAL_CLOTH)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.THERMAL_CHESTPLATE).key('X', AsteroidsItems.THERMAL_CLOTH).patternLine("X X").patternLine("XXX").patternLine("XXX").addCriterion(this.toCriterion(AsteroidsItems.THERMAL_CLOTH), this.hasItem(AsteroidsItems.THERMAL_CLOTH)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.THERMAL_HELMET).key('X', AsteroidsItems.THERMAL_CLOTH).patternLine("XXX").patternLine("X X").addCriterion(this.toCriterion(AsteroidsItems.THERMAL_CLOTH), this.hasItem(AsteroidsItems.THERMAL_CLOTH)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.THERMAL_LEGGINGS).key('X', AsteroidsItems.THERMAL_CLOTH).patternLine("XXX").patternLine("X X").patternLine("X X").addCriterion(this.toCriterion(AsteroidsItems.THERMAL_CLOTH), this.hasItem(AsteroidsItems.THERMAL_CLOTH)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(VenusItems.TIER_2_THERMAL_BOOTS).key('X', VenusItems.ISOTHERMAL_FABRIC).patternLine("X X").patternLine("X X").addCriterion(this.toCriterion(VenusItems.ISOTHERMAL_FABRIC), this.hasItem(VenusItems.ISOTHERMAL_FABRIC)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(VenusItems.TIER_2_THERMAL_CHESTPLATE).key('X', VenusItems.ISOTHERMAL_FABRIC).patternLine("X X").patternLine("XXX").patternLine("XXX").addCriterion(this.toCriterion(VenusItems.ISOTHERMAL_FABRIC), this.hasItem(VenusItems.ISOTHERMAL_FABRIC)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(VenusItems.TIER_2_THERMAL_HELMET).key('X', VenusItems.ISOTHERMAL_FABRIC).patternLine("XXX").patternLine("X X").addCriterion(this.toCriterion(VenusItems.ISOTHERMAL_FABRIC), this.hasItem(VenusItems.ISOTHERMAL_FABRIC)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(VenusItems.TIER_2_THERMAL_LEGGINGS).key('X', VenusItems.ISOTHERMAL_FABRIC).patternLine("XXX").patternLine("X X").patternLine("X X").addCriterion(this.toCriterion(VenusItems.ISOTHERMAL_FABRIC), this.hasItem(VenusItems.ISOTHERMAL_FABRIC)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.THERMAL_CLOTH).key('X', ItemTags.WOOL).key('Y', Tags.Items.DUSTS_REDSTONE).patternLine(" X ").patternLine("XYX").patternLine(" X ").addCriterion(this.toCriterion(ItemTags.WOOL), this.hasItem(ItemTags.WOOL)).build(consumer);
+
+            ShapelessRecipeBuilder.shapelessRecipe(MarsItems.FRAGMENTED_CARBON, 32).addIngredient(Items.COAL).addIngredient(Items.COAL).addIngredient(Items.COAL).addIngredient(Items.COAL).setGroup("fragmented_carbon").addCriterion(this.toCriterion(Items.COAL), this.hasItem(Items.COAL)).build(consumer, this.modLoc("fragmented_carbon_from_4_coals"));
+            ShapelessRecipeBuilder.shapelessRecipe(MarsItems.FRAGMENTED_CARBON, 16).addIngredient(Items.CHARCOAL).addIngredient(Items.CHARCOAL).addIngredient(Items.CHARCOAL).addIngredient(Items.CHARCOAL).setGroup("fragmented_carbon").addCriterion(this.toCriterion(Items.CHARCOAL), this.hasItem(Items.CHARCOAL)).build(consumer, this.modLoc("fragmented_carbon_from_4_charcoals"));
+            ShapelessRecipeBuilder.shapelessRecipe(MarsItems.FRAGMENTED_CARBON, 4).addIngredient(Items.CHARCOAL).setGroup("fragmented_carbon").addCriterion(this.toCriterion(Items.CHARCOAL), this.hasItem(Items.CHARCOAL)).build(consumer, this.modLoc("fragmented_carbon_from_charcoal"));
+            ShapelessRecipeBuilder.shapelessRecipe(MarsItems.DESH_INGOT, 9).addIngredient(MarsBlocks.DESH_BLOCK).addCriterion(this.toCriterion(MarsBlocks.DESH_BLOCK), this.hasItem(MarsBlocks.DESH_BLOCK)).build(consumer);
+            ShapelessRecipeBuilder.shapelessRecipe(AsteroidsItems.TITANIUM_INGOT, 9).addIngredient(AsteroidBlocks.TITANIUM_BLOCK).addCriterion(this.toCriterion(AsteroidBlocks.TITANIUM_BLOCK), this.hasItem(AsteroidBlocks.TITANIUM_BLOCK)).build(consumer);
+            ShapelessRecipeBuilder.shapelessRecipe(VenusItems.LEAD_INGOT, 9).addIngredient(VenusBlocks.LEAD_BLOCK).addCriterion(this.toCriterion(VenusBlocks.LEAD_BLOCK), this.hasItem(VenusBlocks.LEAD_BLOCK)).build(consumer);
+        }
+
+        protected String toCriterion(IItemProvider provider)
+        {
+            return "has_" + provider.asItem().getRegistryName().getPath();
+        }
+
+        protected String toCriterion(Tag<?> tag)
+        {
+            return "has_" + tag.getId().getPath() + "_tag";
+        }
+
+        protected ResourceLocation modLoc(String name)
+        {
+            return new ResourceLocation(Constants.MOD_ID_PLANETS, name);
         }
     }
 }

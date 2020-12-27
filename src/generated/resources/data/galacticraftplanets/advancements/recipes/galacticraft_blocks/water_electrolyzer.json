@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:water_electrolyzer"
+    ]
+  },
+  "criteria": {
+    "has_fluid_manipulator": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftplanets:fluid_manipulator"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:water_electrolyzer"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fluid_manipulator",
+      "has_the_recipe"
+    ]
+  ]
+}

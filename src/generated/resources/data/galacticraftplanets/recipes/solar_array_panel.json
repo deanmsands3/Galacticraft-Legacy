@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "YYY",
+    "ZZZ"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:glass/colorless"
+    },
+    "Y": {
+      "item": "galacticraftplanets:solar_array_wafer"
+    },
+    "Z": {
+      "item": "galacticraftcore:heavy_aluminum_wire"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:solar_array_panel"
+  }
+}

@@ -1,9 +1,6 @@
 {
   "replace": false,
   "values": [
-    "#forge:ingots/aluminum",
-    "#forge:ingots/copper",
-    "#forge:ingots/meteoric_iron",
-    "#forge:ingots/tin"
+    "#forge:ingots/lead"
   ]
 }

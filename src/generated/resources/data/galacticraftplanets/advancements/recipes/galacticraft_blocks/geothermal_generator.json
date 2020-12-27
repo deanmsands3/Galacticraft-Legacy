@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:geothermal_generator"
+    ]
+  },
+  "criteria": {
+    "has_ingots/lead_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ingots/lead"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:geothermal_generator"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ingots/lead_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

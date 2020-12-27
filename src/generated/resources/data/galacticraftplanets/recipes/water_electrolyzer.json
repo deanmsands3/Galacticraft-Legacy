@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "VWV",
+    "ZYZ",
+    "UXU"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/bronze"
+    },
+    "Y": {
+      "item": "galacticraftplanets:fluid_manipulator"
+    },
+    "Z": {
+      "item": "galacticraftcore:fluid_pipe"
+    },
+    "W": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "V": {
+      "item": "galacticraftcore:heavy_oxygen_tank"
+    },
+    "U": {
+      "tag": "forge:plates/copper"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:water_electrolyzer"
+  }
+}

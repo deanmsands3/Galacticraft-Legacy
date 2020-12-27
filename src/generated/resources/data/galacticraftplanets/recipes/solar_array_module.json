@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "YZY"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftplanets:solar_array_panel"
+    },
+    "Y": {
+      "item": "galacticraftcore:heavy_aluminum_wire"
+    },
+    "Z": {
+      "tag": "forge:wafers/advanced"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:solar_array_module"
+  }
+}

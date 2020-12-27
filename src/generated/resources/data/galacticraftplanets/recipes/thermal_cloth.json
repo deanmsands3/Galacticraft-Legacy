@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    "XYX",
+    " X "
+  ],
+  "key": {
+    "X": {
+      "tag": "minecraft:wool"
+    },
+    "Y": {
+      "tag": "forge:dusts/redstone"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:thermal_cloth"
+  }
+}

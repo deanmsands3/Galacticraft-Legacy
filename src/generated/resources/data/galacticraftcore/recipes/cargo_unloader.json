@@ -13,7 +13,7 @@
       "tag": "forge:plates/aluminum"
     },
     "Z": {
-      "tag": "forge:chests"
+      "tag": "forge:chests/wooden"
     },
     "W": {
       "item": "minecraft:hopper"

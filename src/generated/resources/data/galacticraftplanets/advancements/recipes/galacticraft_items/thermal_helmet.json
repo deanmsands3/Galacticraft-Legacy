@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:thermal_helmet"
+    ]
+  },
+  "criteria": {
+    "has_thermal_cloth": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftplanets:thermal_cloth"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:thermal_helmet"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_thermal_cloth",
+      "has_the_recipe"
+    ]
+  ]
+}

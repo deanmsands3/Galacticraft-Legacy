@@ -22,6 +22,8 @@ public class GCTags
     public static final Tag<Block> SILICON_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/silicon"));
     public static final Tag<Block> TIN_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/tin"));
 
+    public static final Tag<Item> CHEESE_ORES_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "ores/cheese"));
+
     public static final Tag<Item> ALUMINUM_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/aluminum"));
     public static final Tag<Item> COPPER_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/copper"));
     public static final Tag<Item> METEORIC_IRON_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/meteoric_iron"));

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  Y",
+    "XY ",
+    "XX "
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "Y": {
+      "tag": "forge:string"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:grapple"
+  }
+}

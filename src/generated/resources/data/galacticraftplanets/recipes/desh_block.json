@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftplanets:desh_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:desh_block"
+  }
+}

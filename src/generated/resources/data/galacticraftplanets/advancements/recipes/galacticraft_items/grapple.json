@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:grapple"
+    ]
+  },
+  "criteria": {
+    "has_string_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:string"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:grapple"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_string_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

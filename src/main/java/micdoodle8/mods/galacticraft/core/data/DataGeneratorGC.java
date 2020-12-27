@@ -707,6 +707,11 @@ public class DataGeneratorGC
             .add(GCTags.ADVANCED_WAFERS)
             .add(GCTags.BASIC_WAFERS)
             .add(GCTags.SOLAR_WAFERS);
+
+            this.getBuilder(Tags.Items.ORES)
+            .add(GCTags.CHEESE_ORES_ITEM);
+
+            this.getBuilder(GCTags.CHEESE_ORES_ITEM).add(GCBlocks.CHEESE_ORE.asItem());
         }
     }
 
@@ -732,13 +737,13 @@ public class DataGeneratorGC
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.SILICON_BLOCK).key('X', GCItems.RAW_SILICON).patternLine("XXX").patternLine("XXX").patternLine("XXX").addCriterion(this.toCriterion(GCItems.RAW_SILICON), this.hasItem(GCItems.RAW_SILICON)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.TIN_BLOCK).key('X', GCItems.TIN_INGOT).patternLine("XXX").patternLine("XXX").patternLine("XXX").addCriterion(this.toCriterion(GCItems.TIN_INGOT), this.hasItem(GCItems.TIN_INGOT)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCItems.BUGGY_SEAT).key('X', GCTags.STEEL_PLATES).key('Y', GCTags.IRON_PLATES).patternLine("  X").patternLine(" YX").patternLine("XXX").addCriterion(this.toCriterion(GCTags.STEEL_PLATES), this.hasItem(GCTags.STEEL_PLATES)).build(consumer);
-            ShapedRecipeBuilder.shapedRecipe(GCItems.BUGGY_STORAGE_BOX).key('X', GCTags.STEEL_PLATES).key('Y', GCTags.IRON_PLATES).key('Z', Tags.Items.CHESTS).patternLine("XXX").patternLine("YZY").patternLine("XXX").addCriterion(this.toCriterion(GCTags.IRON_PLATES), this.hasItem(GCTags.IRON_PLATES)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCItems.BUGGY_STORAGE_BOX).key('X', GCTags.STEEL_PLATES).key('Y', GCTags.IRON_PLATES).key('Z', Tags.Items.CHESTS_WOODEN).patternLine("XXX").patternLine("YZY").patternLine("XXX").addCriterion(this.toCriterion(GCTags.IRON_PLATES), this.hasItem(GCTags.IRON_PLATES)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCItems.BUGGY_WHEEL).key('X', Tags.Items.LEATHER).key('Y', GCTags.STEEL_PLATES).patternLine(" X ").patternLine("XYX").patternLine(" X ").addCriterion(this.toCriterion(Tags.Items.LEATHER), this.hasItem(Tags.Items.LEATHER)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.ROCKET_LAUNCH_PAD, 9).key('X', Tags.Items.STORAGE_BLOCKS_IRON).key('Y', GCTags.IRON_PLATES).patternLine("YYY").patternLine("XXX").addCriterion(this.toCriterion(Tags.Items.STORAGE_BLOCKS_IRON), this.hasItem(Tags.Items.STORAGE_BLOCKS_IRON)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.BUGGY_FUELING_PAD, 9).key('X', Tags.Items.STORAGE_BLOCKS_IRON).key('Y', GCTags.STEEL_PLATES).patternLine("YYY").patternLine("XXX").addCriterion(this.toCriterion(Tags.Items.STORAGE_BLOCKS_IRON), this.hasItem(Tags.Items.STORAGE_BLOCKS_IRON)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCItems.CANVAS).key('X', Tags.Items.STRING).key('Y', Tags.Items.RODS_WOODEN).patternLine(" XY").patternLine("XXX").patternLine("YX ").addCriterion(this.toCriterion(Tags.Items.STRING), this.hasItem(Tags.Items.STRING)).build(consumer);
-            ShapedRecipeBuilder.shapedRecipe(GCBlocks.CARGO_LOADER).key('X', GCTags.STEEL_PLATES).key('Y', GCTags.ALUMINUM_PLATES).key('Z', Tags.Items.CHESTS).key('W', Items.HOPPER).patternLine("XWX").patternLine("YZY").patternLine("XXX").addCriterion(this.toCriterion(Items.HOPPER), this.hasItem(Items.HOPPER)).build(consumer);
-            ShapedRecipeBuilder.shapedRecipe(GCBlocks.CARGO_UNLOADER).key('X', GCTags.STEEL_PLATES).key('Y', GCTags.ALUMINUM_PLATES).key('Z', Tags.Items.CHESTS).key('W', Items.HOPPER).patternLine("XXX").patternLine("YZY").patternLine("XWX").addCriterion(this.toCriterion(Items.HOPPER), this.hasItem(Items.HOPPER)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.CARGO_LOADER).key('X', GCTags.STEEL_PLATES).key('Y', GCTags.ALUMINUM_PLATES).key('Z', Tags.Items.CHESTS_WOODEN).key('W', Items.HOPPER).patternLine("XWX").patternLine("YZY").patternLine("XXX").addCriterion(this.toCriterion(Items.HOPPER), this.hasItem(Items.HOPPER)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.CARGO_UNLOADER).key('X', GCTags.STEEL_PLATES).key('Y', GCTags.ALUMINUM_PLATES).key('Z', Tags.Items.CHESTS_WOODEN).key('W', Items.HOPPER).patternLine("XXX").patternLine("YZY").patternLine("XWX").addCriterion(this.toCriterion(Items.HOPPER), this.hasItem(Items.HOPPER)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.CHEESE_BLOCK).key('X', Items.MILK_BUCKET).key('Y', GCItems.CHEESE_CURD).patternLine("YYY").patternLine("YXY").patternLine("YYY").addCriterion(this.toCriterion(GCItems.CHEESE_CURD), this.hasItem(GCItems.CHEESE_CURD)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.CIRCUIT_FABRICATOR).key('X', Items.LEVER).key('Y', Items.FURNACE).key('Z', Items.REDSTONE_TORCH).key('W', GCTags.ALUMINUM_INGOTS).key('V', GCBlocks.ALUMINUM_WIRE).key('U', Items.STONE_BUTTON).patternLine("WXW").patternLine("UYU").patternLine("VZV").addCriterion(this.toCriterion(GCTags.ALUMINUM_INGOTS), this.hasItem(GCTags.ALUMINUM_INGOTS)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.ENERGY_STORAGE_CLUSTER).key('X', GCBlocks.ENERGY_STORAGE).key('Y', GCTags.STEEL_PLATES).key('Z', GCTags.ADVANCED_WAFERS).patternLine("XYX").patternLine("YZY").patternLine("XYX").addCriterion(this.toCriterion(GCTags.ADVANCED_WAFERS), this.hasItem(GCTags.ADVANCED_WAFERS)).build(consumer);
