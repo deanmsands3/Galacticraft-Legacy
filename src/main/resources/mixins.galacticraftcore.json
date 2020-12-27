@@ -1,0 +1,16 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "compatibilityLevel": "JAVA_8",
+    "package": "micdoodle8.mods.galacticraft.core.mixin",
+    "refmap": "mixins.galacticraftcore.refmap.json",
+    "target": "@env(DEFAULT)",
+    "mixins": [
+    ],
+    "client": [
+    	"client.MixinMusicTicker",
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

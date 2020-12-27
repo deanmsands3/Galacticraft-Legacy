@@ -109,6 +109,8 @@ repositories {
 
 sourceSets {
     main {
+    	ext.refMap = "mixins.galacticraftcore.refmap.json"
+
         resources {
             srcDirs = ["src/main/resources/", "src/generated/resources/"]
         }
@@ -195,6 +197,10 @@ task packCoreJar(type: Jar, dependsOn: "rePackAllJarCore") {
 		excludes.addAll(project.ext.planetsFiles)
 		excludes.addAll(project.ext.micdoodleCoreFiles)
 	}
+	manifest {
+        attributes("MixinConnector": "micdoodle8.mods.galacticraft.core.GCMixinConnector"
+        )
+    }
 }
 
 task packPlanetsJar(type: Jar, dependsOn: "rePackAllJarPlanets") { 
@@ -258,6 +264,10 @@ task packCoreJarDev(type: Jar, dependsOn: "classes") {
 		excludes.addAll('assets')
 		into 'src'
 	}
+	manifest {
+        attributes("MixinConnector": "micdoodle8.mods.galacticraft.core.GCMixinConnector"
+        )
+    }
 	
 	// Jar will always be updated
 	outputs.upToDateWhen {false}

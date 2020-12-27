@@ -20,7 +20,6 @@ import micdoodle8.mods.galacticraft.core.client.obj.GCModelCache;
 import micdoodle8.mods.galacticraft.core.client.render.entities.*;
 import micdoodle8.mods.galacticraft.core.client.render.item.*;
 import micdoodle8.mods.galacticraft.core.client.render.tile.*;
-import micdoodle8.mods.galacticraft.core.client.sounds.MusicTickerGC;
 import micdoodle8.mods.galacticraft.core.entities.EntityTier1Rocket;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.entities.player.IPlayerClient;
@@ -79,7 +78,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -218,17 +216,6 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
             {
                 e.printStackTrace();
             }
-        }
-
-        try
-        {
-            Field ftc = Minecraft.getInstance().getClass().getDeclaredField(GCCoreUtil.isDeobfuscated() ? "mcMusicTicker" : "field_147126_aw");
-            ftc.setAccessible(true);
-            ftc.set(Minecraft.getInstance(), new MusicTickerGC(Minecraft.getInstance()));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
 
         setCustomModel(GCItems.TIER_1_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
