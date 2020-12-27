@@ -8,6 +8,7 @@ import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockGeothermalGenerator;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
+import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
@@ -319,6 +320,21 @@ public class DataGeneratorGCPlanets
             this.itemGenerated(AsteroidsItems.THERMAL_CLOTH);
             this.itemGenerated(AsteroidsItems.BEAM_CORE);
             this.itemGenerated(AsteroidsItems.TITANIUM_DUST);
+
+            this.itemGenerated(VenusItems.ATOMIC_BATTERY);
+            this.itemGenerated(VenusItems.SHIELD_CONTROLLER);
+            this.itemGenerated(VenusItems.LEAD_INGOT);
+            this.itemGenerated(VenusItems.RADIOISOTOPE_CORE);
+            this.itemGenerated(VenusItems.ISOTHERMAL_FABRIC);
+            this.itemGenerated(VenusItems.SOLAR_DUST);
+            this.itemGenerated(VenusItems.SOLAR_ARRAY_PANEL);
+            this.itemGenerated(VenusItems.SOLAR_ARRAY_WAFER);
+            this.itemGenerated(VenusItems.TIER_2_THERMAL_HELMET);
+            this.itemGenerated(VenusItems.TIER_2_THERMAL_CHESTPLATE);
+            this.itemGenerated(VenusItems.TIER_2_THERMAL_LEGGINGS);
+            this.itemGenerated(VenusItems.TIER_2_THERMAL_BOOTS);
+            this.itemGenerated(VenusItems.VOLCANIC_PICKAXE);
+            this.itemGenerated(VenusItems.TIER_3_DUNGEON_KEY, new ResourceLocation(Constants.MOD_ID_CORE, "item/dungeon_key")).texture("key", "item/tier_3_dungeon_key");
         }
 
         protected ItemModelBuilder parentedBlock(Block block)
@@ -517,6 +533,21 @@ public class DataGeneratorGCPlanets
             this.add(AsteroidsItems.THERMAL_CLOTH, "Thermal Cloth");
             this.add(AsteroidsItems.BEAM_CORE, "Beam Core");
             this.add(AsteroidsItems.TITANIUM_DUST, "Titanium Dust");
+
+            this.add(VenusItems.ATOMIC_BATTERY, "Atomic Battery");
+            this.add(VenusItems.SHIELD_CONTROLLER, "Shield Controller");
+            this.add(VenusItems.LEAD_INGOT, "Lead Ingot");
+            this.add(VenusItems.RADIOISOTOPE_CORE, "Radioisotope Core");
+            this.add(VenusItems.ISOTHERMAL_FABRIC, "Isothermal Fabric");
+            this.add(VenusItems.SOLAR_DUST, "Solar Dust");
+            this.add(VenusItems.SOLAR_ARRAY_PANEL, "Solar Array Panel");
+            this.add(VenusItems.SOLAR_ARRAY_WAFER, "Solar Array Wafer");
+            this.add(VenusItems.TIER_2_THERMAL_HELMET, "Tier 2 Thermal Helmet");
+            this.add(VenusItems.TIER_2_THERMAL_CHESTPLATE, "Tier 2 Thermal Chestplate");
+            this.add(VenusItems.TIER_2_THERMAL_LEGGINGS, "Tier 2 Thermal Leggings");
+            this.add(VenusItems.TIER_2_THERMAL_BOOTS, "Tier 2 Thermal Boots");
+            this.add(VenusItems.VOLCANIC_PICKAXE, "Volcanic Pickaxe");
+            this.add(VenusItems.TIER_3_DUNGEON_KEY, "Tier 3 Dungeon Key");
         }
     }
 }

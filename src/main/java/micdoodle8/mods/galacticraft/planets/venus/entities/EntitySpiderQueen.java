@@ -435,7 +435,7 @@ public class EntitySpiderQueen extends EntityBossBase implements IEntityBreathab
     @Override
     public void dropKey()
     {
-        this.entityDropItem(new ItemStack(VenusItems.keyT3, 1), 0.5F);
+        this.entityDropItem(new ItemStack(VenusItems.TIER_3_DUNGEON_KEY, 1), 0.5F);
     }
 
     @Override

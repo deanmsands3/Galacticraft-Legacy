@@ -52,7 +52,7 @@ public class IngredientAdvancedMetalSerializer implements IIngredientSerializer<
         }
         if (metal.equals("lead_ingot"))
         {
-            return Ingredient.fromStacks(new ItemStack(VenusItems.ingotLead, 1));// : new OreIngredient("ingotLead");
+            return Ingredient.fromStacks(new ItemStack(VenusItems.LEAD_INGOT, 1));// : new OreIngredient("ingotLead");
         }
         return Ingredient.fromItems(GCItems.INFINITE_BATTERY);
     }

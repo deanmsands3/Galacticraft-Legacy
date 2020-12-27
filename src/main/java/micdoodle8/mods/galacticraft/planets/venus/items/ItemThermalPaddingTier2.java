@@ -117,7 +117,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
             ItemStack gear2 = stats.getExtendedInventory().getStackInSlot(8);
             ItemStack gear3 = stats.getExtendedInventory().getStackInSlot(9);
 
-            if (itemStack.getItem() == VenusItems.thermal_helmet_t2)
+            if (itemStack.getItem() == VenusItems.TIER_2_THERMAL_HELMET)
             {
                 if (gear.isEmpty())
                 {
@@ -125,7 +125,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
                     itemStack.setCount(0);
                 }
             }
-            else if (itemStack.getItem() == VenusItems.thermal_chestplate_t2)
+            else if (itemStack.getItem() == VenusItems.TIER_2_THERMAL_CHESTPLATE)
             {
                 if (gear1.isEmpty())
                 {
@@ -133,7 +133,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
                     itemStack.setCount(0);
                 }
             }
-            else if (itemStack.getItem() == VenusItems.thermal_leggings_t2)
+            else if (itemStack.getItem() == VenusItems.TIER_2_THERMAL_LEGGINGS)
             {
                 if (gear2.isEmpty())
                 {
@@ -141,7 +141,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
                     itemStack.setCount(0);
                 }
             }
-            else if (itemStack.getItem() == VenusItems.thermal_boots_t2)
+            else if (itemStack.getItem() == VenusItems.TIER_2_THERMAL_BOOTS)
             {
                 if (gear3.isEmpty())
                 {

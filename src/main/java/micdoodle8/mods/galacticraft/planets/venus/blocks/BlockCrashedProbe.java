@@ -118,7 +118,7 @@ public class BlockCrashedProbe extends BlockTileGC implements ISortable
         final double d0 = syncRandom.nextFloat() * f + (1.0F - f) * 0.5D;
         final double d1 = syncRandom.nextFloat() * f + (1.0F - f) * 0.2D + 0.6D;
         final double d2 = syncRandom.nextFloat() * f + (1.0F - f) * 0.5D;
-        final ItemEntity entityitem = new ItemEntity(worldIn, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(VenusItems.radioisotopeCore, 1));
+        final ItemEntity entityitem = new ItemEntity(worldIn, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(VenusItems.RADIOISOTOPE_CORE, 1));
         entityitem.setDefaultPickupDelay();
         worldIn.addEntity(entityitem);
     }
