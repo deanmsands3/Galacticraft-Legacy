@@ -44,11 +44,11 @@ public class IngredientAdvancedMetalSerializer implements IIngredientSerializer<
         }
         if (metal.equals("titanium_ingot"))
         {
-            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.ingotTitanium, 1));// : new OreIngredient("ingotTitanium");
+            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.TITANIUM_INGOT, 1));// : new OreIngredient("ingotTitanium");
         }
         if (metal.equals("titanium_plate"))
         {
-            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.compressedTitanium, 1));// : new OreIngredient("compressedTitanium");
+            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.COMPRESSED_TITANIUM, 1));// : new OreIngredient("compressedTitanium");
         }
         if (metal.equals("lead_ingot"))
         {

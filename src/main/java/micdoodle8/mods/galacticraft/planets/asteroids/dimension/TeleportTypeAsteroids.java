@@ -354,10 +354,10 @@ public class TeleportTypeAsteroids implements ITeleportType
         rocketStacks.add(new ItemStack(GCItems.MEDIUM_OXYGEN_TANK));
         rocketStacks.add(new ItemStack(GCItems.HEAVY_OXYGEN_TANK));
         rocketStacks.add(new ItemStack(GCItems.HEAVY_OXYGEN_TANK));
-        rocketStacks.add(new ItemStack(AsteroidsItems.canisterLOX));
-        rocketStacks.add(new ItemStack(AsteroidsItems.canisterLOX));
-        rocketStacks.add(new ItemStack(AsteroidsItems.canisterLOX));
-        rocketStacks.add(new ItemStack(AsteroidsItems.thermalCloth, 32));
+        rocketStacks.add(new ItemStack(AsteroidsItems.PARTIAL_LOX_CANISTER));
+        rocketStacks.add(new ItemStack(AsteroidsItems.PARTIAL_LOX_CANISTER));
+        rocketStacks.add(new ItemStack(AsteroidsItems.PARTIAL_LOX_CANISTER));
+        rocketStacks.add(new ItemStack(AsteroidsItems.THERMAL_CLOTH, 32));
         rocketStacks.add(new ItemStack(Blocks.GLASS_PANE, 16));
         rocketStacks.add(new ItemStack(Blocks.OAK_PLANKS, 32));
         rocketStacks.add(new ItemStack(MarsItems.DESH_INGOT, 16)); //Desh ingot

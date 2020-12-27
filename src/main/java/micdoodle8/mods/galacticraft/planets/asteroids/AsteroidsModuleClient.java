@@ -75,13 +75,13 @@ public class AsteroidsModuleClient implements IPlanetsModuleClient
 //        {
 //            CraftGuideIntegration.register();
 //        }
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThree.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThreeCargo1.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThreeCargo2.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThreeCargo3.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThreeCreative.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.grapple.getRegistryName(), modelToWrap -> new ItemModelGrapple(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.astroMiner.getRegistryName(), modelToWrap -> new ItemModelAstroMiner(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.TIER_3_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.TIER_3_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.TIER_3_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.TIER_3_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.CREATIVE_TIER_3_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.GRAPPLE.getRegistryName(), modelToWrap -> new ItemModelGrapple(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.ASTRO_MINER.getRegistryName(), modelToWrap -> new ItemModelAstroMiner(modelToWrap));
         ClientProxyCore.setCustomModel(AsteroidBlocks.SHORT_RANGE_TELEPAD.getRegistryName(), modelToWrap -> new ItemModelTelepad(modelToWrap));
         ClientProxyCore.setCustomModel(AsteroidBlocks.ENERGY_BEAM_RECEIVER.getRegistryName(), modelToWrap -> new ItemModelBeamReceiver(modelToWrap));
         ClientProxyCore.setCustomModel(AsteroidBlocks.ENERGY_BEAM_REFLECTOR.getRegistryName(), modelToWrap -> new ItemModelBeamReflector(modelToWrap));

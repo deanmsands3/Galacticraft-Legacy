@@ -1,7 +1,7 @@
 {
     "parent": "forge:item/default",
     "loader": "forge:obj",
-    "model": "galacticraftplanets:models/astro_miner_inv.obj",
+    "model": "galacticraftplanets:models/obj/astro_miner_inventory.obj",
     "flip-v": true,
     "display": {
         "thirdperson": {

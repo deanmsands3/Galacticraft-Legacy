@@ -590,7 +590,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
         if (this.isMaster)
         {
             ItemStack holding = entityPlayer.getActiveItemStack();
-            return holding == ItemStack.EMPTY || holding.getItem() != AsteroidsItems.astroMiner ? ActionResultType.SUCCESS : ActionResultType.PASS;
+            return holding == ItemStack.EMPTY || holding.getItem() != AsteroidsItems.ASTRO_MINER ? ActionResultType.SUCCESS : ActionResultType.PASS;
 
 //            entityPlayer.openGui(GalacticraftPlanets.instance, GuiIdsPlanets.MACHINE_ASTEROIDS, this.world, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ()); TODO guis
         }

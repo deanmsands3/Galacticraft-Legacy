@@ -40,8 +40,8 @@ public class BaseDeck extends SizedPiece
     public enum EnumBaseType
     {
         HUMANOID(5, 3, GCBlocks.TIN_DECORATION_BLOCK_2.getDefaultState(), new ItemStack(Items.GHAST_TEAR, 3)),
-        AVIAN(4, 3, GCBlocks.TIN_DECORATION_BLOCK_2.getDefaultState(), new ItemStack(AsteroidsItems.strangeSeed1, 1)),
-        TUNNELER(4, 4, GCBlocks.TIN_DECORATION_BLOCK_2.getDefaultState(), new ItemStack(AsteroidsItems.strangeSeed0, 1));
+        AVIAN(4, 3, GCBlocks.TIN_DECORATION_BLOCK_2.getDefaultState(), new ItemStack(AsteroidsItems.LARGE_STRANGE_SEED, 1)),
+        TUNNELER(4, 4, GCBlocks.TIN_DECORATION_BLOCK_2.getDefaultState(), new ItemStack(AsteroidsItems.SMALL_STRANGE_SEED, 1));
 
         public final int height;
         public final int width;

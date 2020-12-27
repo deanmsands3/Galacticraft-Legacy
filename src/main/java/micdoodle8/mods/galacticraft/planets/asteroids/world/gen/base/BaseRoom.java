@@ -562,7 +562,7 @@ public class BaseRoom extends SizedPiece
                 loader.addCargo(new ItemStack(Items.ROTTEN_FLESH, 64), true);
                 loader.addCargo(new ItemStack(GCItems.STEEL_POLE, semirand % 31 + 2), true);
                 loader.addCargo(new ItemStack(MarsItems.SLIMELING_INVENTORY_BAG, semirand % 2 + 1), true);  //Slimeling Inventory Bag
-                loader.addCargo(new ItemStack(AsteroidsItems.thermalCloth, semirand % 23 + 41), true); //Thermal cloth
+                loader.addCargo(new ItemStack(AsteroidsItems.THERMAL_CLOTH, semirand % 23 + 41), true); //Thermal cloth
                 loader.addCargo(ItemOilCanister.createEmptyCanister(1), true);
                 loader.addCargo(ItemOilCanister.createEmptyCanister(1), true);
                 loader.addCargo(ItemOilCanister.createEmptyCanister(1), true);

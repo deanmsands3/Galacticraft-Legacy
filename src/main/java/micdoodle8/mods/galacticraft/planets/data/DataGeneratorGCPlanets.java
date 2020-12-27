@@ -2,6 +2,7 @@ package micdoodle8.mods.galacticraft.planets.data;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
+import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockSlimelingEgg;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
@@ -285,6 +286,39 @@ public class DataGeneratorGCPlanets
             this.itemGenerated(MarsItems.SLIMELING_INVENTORY_BAG);
             this.itemGenerated(MarsItems.COMPRESSED_DESH);
             this.itemGenerated(MarsItems.FLUID_MANIPULATOR);
+
+            this.itemGenerated(AsteroidsItems.TITANIUM_SHOVEL);
+            this.itemGenerated(AsteroidsItems.TITANIUM_PICKAXE);
+            this.itemGenerated(AsteroidsItems.TITANIUM_AXE);
+            this.itemGenerated(AsteroidsItems.ORION_DRIVE);
+            this.itemGenerated(AsteroidsItems.TITANIUM_BOOTS);
+            this.itemGenerated(AsteroidsItems.TITANIUM_HELMET);
+            this.itemGenerated(AsteroidsItems.THERMAL_HELMET);
+            this.itemGenerated(AsteroidsItems.THERMAL_CHESTPLATE);
+            this.itemGenerated(AsteroidsItems.THERMAL_LEGGINGS);
+            this.itemGenerated(AsteroidsItems.THERMAL_BOOTS);
+            this.itemGenerated(AsteroidsItems.TIER_3_ROCKET_18_INVENTORY, this.modLoc("item/tier_3_rocket"));
+            this.itemGenerated(AsteroidsItems.TIER_3_ROCKET_36_INVENTORY, this.modLoc("item/tier_3_rocket"));
+            this.itemGenerated(AsteroidsItems.TIER_3_ROCKET_54_INVENTORY, this.modLoc("item/tier_3_rocket"));
+            this.itemGenerated(AsteroidsItems.CREATIVE_TIER_3_ROCKET, this.modLoc("item/tier_3_rocket"));
+            this.itemGenerated(AsteroidsItems.HEAVY_NOSE_CONE);
+            this.itemGenerated(AsteroidsItems.TITANIUM_HOE);
+            this.itemGenerated(AsteroidsItems.SMALL_STRANGE_SEED);
+            this.itemGenerated(AsteroidsItems.LARGE_STRANGE_SEED);
+            this.itemGenerated(AsteroidsItems.ATMOSPHERIC_VALVE);
+            this.itemGenerated(AsteroidsItems.TITANIUM_SWORD);
+            this.itemGenerated(AsteroidsItems.TITANIUM_CHESTPLATE);
+            this.itemGenerated(AsteroidsItems.TITANIUM_LEGGINGS);
+            this.itemGenerated(AsteroidsItems.TITANIUM_INGOT);
+            this.itemGenerated(AsteroidsItems.HEAVY_ROCKET_ENGINE);
+            this.itemGenerated(AsteroidsItems.HEAVY_ROCKET_FINS);
+            this.itemGenerated(AsteroidsItems.IRON_SHARD);
+            this.itemGenerated(AsteroidsItems.TITANIUM_SHARD);
+            this.itemGenerated(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE);
+            this.itemGenerated(AsteroidsItems.COMPRESSED_TITANIUM);
+            this.itemGenerated(AsteroidsItems.THERMAL_CLOTH);
+            this.itemGenerated(AsteroidsItems.BEAM_CORE);
+            this.itemGenerated(AsteroidsItems.TITANIUM_DUST);
         }
 
         protected ItemModelBuilder parentedBlock(Block block)
@@ -449,6 +483,40 @@ public class DataGeneratorGCPlanets
             this.add(MarsItems.SLIMELING_INVENTORY_BAG, "Slimeling Inventory Bag");
             this.add(MarsItems.COMPRESSED_DESH, "Compressed Desh");
             this.add(MarsItems.FLUID_MANIPULATOR, "Fluid Manipulator");
+
+            this.add(AsteroidsItems.TITANIUM_SHOVEL, "Titanium Shovel");
+            this.add(AsteroidsItems.TITANIUM_PICKAXE, "Titanium Pickaxe");
+            this.add(AsteroidsItems.TITANIUM_AXE, "Titanium Axe");
+            this.add(AsteroidsItems.ORION_DRIVE, "Orion Drive");
+            this.add(AsteroidsItems.TITANIUM_BOOTS, "Titanium Boots");
+            this.add(AsteroidsItems.TITANIUM_HELMET, "Titanium Helmet");
+            this.add(AsteroidsItems.THERMAL_HELMET, "Thermal Helmet");
+            this.add(AsteroidsItems.THERMAL_CHESTPLATE, "Thermal Chestplate");
+            this.add(AsteroidsItems.THERMAL_LEGGINGS, "Thermal Leggings");
+            this.add(AsteroidsItems.THERMAL_BOOTS, "Thermal Boots");
+            this.add(AsteroidsItems.TIER_3_ROCKET, "Tier 3 Rocket");
+            this.add(AsteroidsItems.TIER_3_ROCKET_18_INVENTORY, "Tier 3 Rocket");
+            this.add(AsteroidsItems.TIER_3_ROCKET_36_INVENTORY, "Tier 3 Rocket");
+            this.add(AsteroidsItems.TIER_3_ROCKET_54_INVENTORY, "Tier 3 Rocket");
+            this.add(AsteroidsItems.CREATIVE_TIER_3_ROCKET, "Tier 3 Rocket");
+            this.add(AsteroidsItems.HEAVY_NOSE_CONE, "Heavy Nose Cone");
+            this.add(AsteroidsItems.TITANIUM_HOE, "Titanium Hoe");
+            this.add(AsteroidsItems.SMALL_STRANGE_SEED, "Small Strange Seed");
+            this.add(AsteroidsItems.LARGE_STRANGE_SEED, "Large Strange Seed");
+            this.add(AsteroidsItems.ATMOSPHERIC_VALVE, "Atmospheric Valve");
+            this.add(AsteroidsItems.TITANIUM_SWORD, "Titanium Sword");
+            this.add(AsteroidsItems.TITANIUM_CHESTPLATE, "Titanium Chestplate");
+            this.add(AsteroidsItems.TITANIUM_LEGGINGS, "Titanium Leggings");
+            this.add(AsteroidsItems.TITANIUM_INGOT, "Titanium Ingot");
+            this.add(AsteroidsItems.HEAVY_ROCKET_ENGINE, "Heavy Rocket Engine");
+            this.add(AsteroidsItems.HEAVY_ROCKET_FINS, "Heavy Rocket Fins");
+            this.add(AsteroidsItems.IRON_SHARD, "Iron Shard");
+            this.add(AsteroidsItems.TITANIUM_SHARD, "Titanium Shard");
+            this.add(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE, "Tier 3 Heavy Duty Plate");
+            this.add(AsteroidsItems.COMPRESSED_TITANIUM, "Compressed Titanium");
+            this.add(AsteroidsItems.THERMAL_CLOTH, "Thermal Cloth");
+            this.add(AsteroidsItems.BEAM_CORE, "Beam Core");
+            this.add(AsteroidsItems.TITANIUM_DUST, "Titanium Dust");
         }
     }
 }

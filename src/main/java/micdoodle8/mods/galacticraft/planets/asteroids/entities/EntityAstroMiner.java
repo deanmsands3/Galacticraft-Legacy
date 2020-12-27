@@ -2338,7 +2338,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
 
     public List<ItemStack> getItemsDropped(List<ItemStack> droppedItems)
     {
-        ItemStack rocket = new ItemStack(AsteroidsItems.astroMiner, 1);
+        ItemStack rocket = new ItemStack(AsteroidsItems.ASTRO_MINER, 1);
         droppedItems.add(rocket);
         for (int i = 0; i < this.stacks.size(); i++)
         {

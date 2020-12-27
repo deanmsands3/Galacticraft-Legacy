@@ -154,7 +154,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
             ItemStack inputCanister = this.getInventory().get(2);
             if (!inputCanister.isEmpty())
             {
-                if (inputCanister.getItem() == AsteroidsItems.atmosphericValve && this.hasCO2 > 0)
+                if (inputCanister.getItem() == AsteroidsItems.ATMOSPHERIC_VALVE && this.hasCO2 > 0)
                 {
                     //CO2 -> CO2 tank
                     if (this.gasTank2.getFluidAmount() < this.gasTank2.getCapacity())
@@ -228,10 +228,10 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
 
             if (liquid != null)
             {
-                FluidUtil.tryFillContainer(tank, liquid, this.getInventory(), slot, AsteroidsItems.methaneCanister);
+                FluidUtil.tryFillContainer(tank, liquid, this.getInventory(), slot, AsteroidsItems.PARTIAL_METHANE_CANISTER);
             }
         }
-        else if (!this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot).getItem() == AsteroidsItems.atmosphericValve)
+        else if (!this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot).getItem() == AsteroidsItems.ATMOSPHERIC_VALVE)
         {
             tank.drain(4, IFluidHandler.FluidAction.EXECUTE);
         }
@@ -419,7 +419,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
             case 3:
                 return itemstack.getItem() == MarsItems.FRAGMENTED_CARBON;
             case 4:
-                return FluidUtil.isPartialContainer(itemstack, AsteroidsItems.methaneCanister);
+                return FluidUtil.isPartialContainer(itemstack, AsteroidsItems.PARTIAL_METHANE_CANISTER);
             default:
                 return false;
             }
@@ -455,7 +455,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
         case 1:
             return false;
         case 2:
-            return itemstack.getItem() == AsteroidsItems.atmosphericValve;
+            return itemstack.getItem() == AsteroidsItems.ATMOSPHERIC_VALVE;
         case 3:
             return itemstack.getItem() == MarsItems.FRAGMENTED_CARBON;
         case 4:

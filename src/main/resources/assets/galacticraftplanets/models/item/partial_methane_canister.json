@@ -1,0 +1,56 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "galacticraftplanets:item/partial_methane_canister_0"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "galacticraftcore:fluid_level": 0.001
+            },
+            "model": "galacticraftplanets:item/partial_methane_canister_1"
+        },
+        {
+            "predicate": {
+                "galacticraftcore:fluid_level": 0.333333333334
+            },
+            "model": "galacticraftplanets:item/partial_methane_canister_2"
+        },
+        {
+            "predicate": {
+                "galacticraftcore:fluid_level": 0.5
+            },
+            "model": "galacticraftplanets:item/partial_methane_canister_3"
+        },
+        {
+            "predicate": {
+                "galacticraftcore:fluid_level": 0.66666666666
+            },
+            "model": "galacticraftplanets:item/partial_methane_canister_4"
+        },
+        {
+            "predicate": {
+                "galacticraftcore:fluid_level": 0.833333333333
+            },
+            "model": "galacticraftplanets:item/partial_methane_canister_5"
+        },
+        {
+            "predicate": {
+                "galacticraftcore:fluid_level": 1.0
+            },
+            "model": "galacticraftplanets:item/partial_methane_canister_6"
+        }
+    ],
+    "display": {
+        "thirdperson": {
+            "rotation": [ -90, 0, 0 ],
+            "translation": [ 0, 1, -3 ],
+            "scale": [ 0.55, 0.55, 0.55 ]
+        },
+        "firstperson": {
+            "rotation": [ 0, -135, 25 ],
+            "translation": [ 0, 4, 2 ],
+            "scale": [ 1.7, 1.7, 1.7 ]
+        }
+    }
+}

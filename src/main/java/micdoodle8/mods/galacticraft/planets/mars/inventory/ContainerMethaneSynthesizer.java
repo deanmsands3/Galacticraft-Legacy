@@ -116,7 +116,7 @@ public class ContainerMethaneSynthesizer extends Container
                 }
                 else
                 {
-                    if (var4.getItem() == AsteroidsItems.atmosphericValve)
+                    if (var4.getItem() == AsteroidsItems.ATMOSPHERIC_VALVE)
                     {
                         if (!this.mergeItemStack(var4, 2, 3, false))
                         {
@@ -130,7 +130,7 @@ public class ContainerMethaneSynthesizer extends Container
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (FluidUtil.isPartialContainer(var4, AsteroidsItems.methaneCanister))
+                    else if (FluidUtil.isPartialContainer(var4, AsteroidsItems.PARTIAL_METHANE_CANISTER))
                     {
                         if (!this.mergeItemStack(var4, 4, 5, false))
                         {

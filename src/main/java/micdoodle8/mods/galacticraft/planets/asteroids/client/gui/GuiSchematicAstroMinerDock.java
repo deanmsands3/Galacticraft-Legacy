@@ -45,7 +45,7 @@ public class GuiSchematicAstroMinerDock extends GuiContainerGC<ContainerSchemati
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        this.font.drawString(AsteroidsItems.astroMiner.getDisplayName(new ItemStack(AsteroidsItems.astroMiner, 1)).getFormattedText(), 7, -20 + 25, 4210752);
+        this.font.drawString(AsteroidsItems.ASTRO_MINER.getDisplayName(new ItemStack(AsteroidsItems.ASTRO_MINER, 1)).getFormattedText(), 7, -20 + 25, 4210752);
         this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, 220 - 104 + 2 - 16, 4210752);
     }
 

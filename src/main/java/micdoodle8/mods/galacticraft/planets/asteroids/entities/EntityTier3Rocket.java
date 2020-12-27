@@ -70,37 +70,37 @@ public class EntityTier3Rocket extends EntityTieredRocket
         {
         default:
         case DEFAULT:
-            return AsteroidsItems.rocketTierThree;
+            return AsteroidsItems.TIER_3_ROCKET;
         case INVENTORY27:
-            return AsteroidsItems.rocketTierThreeCargo1;
+            return AsteroidsItems.TIER_3_ROCKET_18_INVENTORY;
         case INVENTORY36:
-            return AsteroidsItems.rocketTierThreeCargo2;
+            return AsteroidsItems.TIER_3_ROCKET_36_INVENTORY;
         case INVENTORY54:
-            return AsteroidsItems.rocketTierThreeCargo3;
+            return AsteroidsItems.TIER_3_ROCKET_54_INVENTORY;
         case PREFUELED:
-            return AsteroidsItems.rocketTierThreeCreative;
+            return AsteroidsItems.CREATIVE_TIER_3_ROCKET;
         }
     }
 
     public static EnumRocketType getTypeFromItem(Item item)
     {
-        if (item == AsteroidsItems.rocketTierThree)
+        if (item == AsteroidsItems.TIER_3_ROCKET)
         {
             return EnumRocketType.DEFAULT;
         }
-        if (item == AsteroidsItems.rocketTierThreeCargo1)
+        if (item == AsteroidsItems.TIER_3_ROCKET_18_INVENTORY)
         {
             return EnumRocketType.INVENTORY27;
         }
-        if (item == AsteroidsItems.rocketTierThreeCargo2)
+        if (item == AsteroidsItems.TIER_3_ROCKET_36_INVENTORY)
         {
             return EnumRocketType.INVENTORY36;
         }
-        if (item == AsteroidsItems.rocketTierThreeCargo3)
+        if (item == AsteroidsItems.TIER_3_ROCKET_54_INVENTORY)
         {
             return EnumRocketType.INVENTORY54;
         }
-        if (item == AsteroidsItems.rocketTierThreeCreative)
+        if (item == AsteroidsItems.CREATIVE_TIER_3_ROCKET)
         {
             return EnumRocketType.PREFUELED;
         }

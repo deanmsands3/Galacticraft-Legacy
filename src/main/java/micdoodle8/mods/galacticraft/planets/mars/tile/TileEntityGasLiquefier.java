@@ -210,7 +210,7 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
             ItemStack inputCanister = getInventory().get(1);
             if (!inputCanister.isEmpty())
             {
-                if (inputCanister.getItem() == AsteroidsItems.atmosphericValve && this.airProducts > 0)
+                if (inputCanister.getItem() == AsteroidsItems.ATMOSPHERIC_VALVE && this.airProducts > 0)
                 {
                     //Air -> Air tank
                     if (this.gasTankType == -1 || (this.gasTankType == TankGases.AIR.index && this.gasTank.getFluid().getAmount() < this.gasTank.getCapacity()))
@@ -232,18 +232,18 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
                         Item canisterType = inputCanister.getItem();
                         FluidStack canisterGas = null;
                         int factor = 1;
-                        if (this.gasTankType <= 0 && canisterType == AsteroidsItems.methaneCanister)
+                        if (this.gasTankType <= 0 && canisterType == AsteroidsItems.PARTIAL_METHANE_CANISTER)
                         {
                             this.gasTankType = TankGases.METHANE.index;
                             canisterGas = new FluidStack(TankGases.METHANE.gas, amount);
                         }
-                        if ((this.gasTankType == TankGases.OXYGEN.index || this.gasTankType == -1) && canisterType == AsteroidsItems.canisterLOX)
+                        if ((this.gasTankType == TankGases.OXYGEN.index || this.gasTankType == -1) && canisterType == AsteroidsItems.PARTIAL_LOX_CANISTER)
                         {
                             this.gasTankType = TankGases.OXYGEN.index;
                             canisterGas = new FluidStack(TankGases.OXYGEN.gas, amount * 2);
                             factor = 2;
                         }
-                        if ((this.gasTankType == TankGases.NITROGEN.index || this.gasTankType == -1) && canisterType == AsteroidsItems.canisterLN2)
+                        if ((this.gasTankType == TankGases.NITROGEN.index || this.gasTankType == -1) && canisterType == AsteroidsItems.PARTIAL_LN2_CANISTER)
                         {
                             this.gasTankType = TankGases.NITROGEN.index;
                             canisterGas = new FluidStack(TankGases.NITROGEN.gas, amount * 2);
@@ -371,15 +371,15 @@ public class TileEntityGasLiquefier extends TileBaseElectricBlockWithInventory i
                 }
                 else if (liquidname.equals(TankGases.OXYGEN.liquid))
                 {
-                    FluidUtil.tryFillContainer(tank, liquid, this.getInventory(), slot, AsteroidsItems.canisterLOX);
+                    FluidUtil.tryFillContainer(tank, liquid, this.getInventory(), slot, AsteroidsItems.PARTIAL_LOX_CANISTER);
                 }
                 else if (liquidname.equals(TankGases.NITROGEN.liquid))
                 {
-                    FluidUtil.tryFillContainer(tank, liquid, this.getInventory(), slot, AsteroidsItems.canisterLN2);
+                    FluidUtil.tryFillContainer(tank, liquid, this.getInventory(), slot, AsteroidsItems.PARTIAL_LN2_CANISTER);
                 }
             }
         }
-        else if (!this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot).getItem() == AsteroidsItems.atmosphericValve)
+        else if (!this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot).getItem() == AsteroidsItems.ATMOSPHERIC_VALVE)
         {
             tank.drain(4, IFluidHandler.FluidAction.EXECUTE);
         }
