@@ -65,7 +65,7 @@ public class GCItemNames
     public static final String PARTIAL_FUEL_CANISTER = "partial_fuel_canister";
     public static final String PARTIAL_OIL_CANISTER = "partial_oil_canister";
     public static final String PRELAUNCH_CHECKLIST = "prelaunch_checklist";
-    public static final String RAW_GROUND_BEEF = "raw_ground_beef";
+    public static final String GROUND_BEEF = "ground_beef";
     public static final String RAW_METEORIC_IRON = "raw_meteoric_iron";
     public static final String RAW_SILICON = "raw_silicon";
     public static final String ROCKET_FINS = "rocket_fins";

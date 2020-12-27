@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:flag"
+    ]
+  },
+  "criteria": {
+    "has_canvas": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:canvas"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:flag"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_canvas",
+      "has_the_recipe"
+    ]
+  ]
+}

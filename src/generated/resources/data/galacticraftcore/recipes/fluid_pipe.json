@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "   ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:glass_panes/colorless"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:fluid_pipe",
+    "count": 6
+  }
+}

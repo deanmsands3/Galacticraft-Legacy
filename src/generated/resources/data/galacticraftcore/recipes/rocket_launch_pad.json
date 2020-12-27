@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "YYY",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:storage_blocks/iron"
+    },
+    "Y": {
+      "tag": "forge:plates/iron"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:rocket_launch_pad",
+    "count": 9
+  }
+}

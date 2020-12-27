@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    "XYX",
+    " X "
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:leather"
+    },
+    "Y": {
+      "tag": "forge:plates/steel"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:buggy_wheel"
+  }
+}

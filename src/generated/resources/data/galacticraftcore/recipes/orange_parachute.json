@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "parachute",
+  "ingredients": [
+    {
+      "tag": "galacticraftcore:parachutes"
+    },
+    {
+      "tag": "forge:dyes/orange"
+    }
+  ],
+  "result": {
+    "item": "galacticraftcore:orange_parachute"
+  }
+}

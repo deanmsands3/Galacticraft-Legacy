@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:plates/tin"
+    },
+    {
+      "tag": "forge:plates/tin"
+    },
+    {
+      "tag": "forge:plates/tin"
+    },
+    {
+      "tag": "forge:plates/steel"
+    }
+  ],
+  "result": {
+    "item": "galacticraftcore:oxygen_vent"
+  }
+}

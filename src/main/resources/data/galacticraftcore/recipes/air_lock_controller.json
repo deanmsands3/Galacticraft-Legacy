@@ -17,7 +17,7 @@
       "tag": "forge:plates/steel"
     },
     "Z": {
-      "item": "galacticraftcore:wafer_basic"
+      "item": "galacticraftcore:basic_wafer"
     }
   }
 }

@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABC",
+    "DEF",
+    "GHI"
+  ],
+  "key": {
+    "A": {
+      "tag": "forge:dyes/red"
+    },
+    "B": {
+      "tag": "forge:dyes/magenta"
+    },
+    "C": {
+      "tag": "forge:dyes/blue"
+    },
+    "D": {
+      "tag": "forge:dyes/orange"
+    },
+    "E": {
+      "tag": "forge:plates/steel"
+    },
+    "F": {
+      "tag": "forge:dyes/cyan"
+    },
+    "G": {
+      "tag": "forge:dyes/yellow"
+    },
+    "H": {
+      "tag": "forge:dyes/lime"
+    },
+    "I": {
+      "tag": "forge:dyes/green"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:chromatic_applicator"
+  }
+}

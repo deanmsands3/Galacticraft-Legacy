@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:crafting_table"
+    },
+    {
+      "tag": "forge:plates/iron"
+    }
+  ],
+  "result": {
+    "item": "galacticraftcore:magnetic_crafting_table"
+  }
+}

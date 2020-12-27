@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:meteor_chunk"
+    ]
+  },
+  "criteria": {
+    "has_raw_meteoric_iron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:raw_meteoric_iron"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:meteor_chunk"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_raw_meteoric_iron",
+      "has_the_recipe"
+    ]
+  ]
+}

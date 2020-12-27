@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:glowstone_torch"
+    ]
+  },
+  "criteria": {
+    "has_dusts/glowstone_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:dusts/glowstone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:glowstone_torch"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dusts/glowstone_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

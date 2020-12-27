@@ -175,8 +175,8 @@ public class GCItems
     public static Item CHEESE_SLICE;
     @ObjectHolder(GCItemNames.BURGER_BUN)
     public static Item BURGER_BUN;
-    @ObjectHolder(GCItemNames.RAW_GROUND_BEEF)
-    public static Item RAW_GROUND_BEEF;
+    @ObjectHolder(GCItemNames.GROUND_BEEF)
+    public static Item GROUND_BEEF;
     @ObjectHolder(GCItemNames.COOKED_BEEF_PATTY)
     public static Item COOKED_BEEF_PATTY;
     @ObjectHolder(GCItemNames.CHEESEBURGER)
@@ -328,7 +328,7 @@ public class GCItems
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.3F).build())), GCItemNames.DEHYDRATED_POTATO_CAN);
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.1F).build())), GCItemNames.CHEESE_SLICE);
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(4).saturation(0.8F).build())), GCItemNames.BURGER_BUN);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.3F).build())), GCItemNames.RAW_GROUND_BEEF);
+        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.3F).build())), GCItemNames.GROUND_BEEF);
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(4).saturation(0.6F).build())), GCItemNames.COOKED_BEEF_PATTY);
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(14).saturation(1.0F).build())), GCItemNames.CHEESEBURGER);
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(8).saturation(0.6F).build())), GCItemNames.CANNED_BEEF);

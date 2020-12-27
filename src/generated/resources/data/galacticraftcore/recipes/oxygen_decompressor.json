@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XVX",
+    "WZW",
+    "XYX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/steel"
+    },
+    "Y": {
+      "item": "minecraft:redstone_torch"
+    },
+    "Z": {
+      "item": "galacticraftcore:oxygen_concentrator"
+    },
+    "W": {
+      "tag": "forge:plates/aluminum"
+    },
+    "V": {
+      "item": "galacticraftcore:oxygen_fan"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:oxygen_decompressor"
+  }
+}

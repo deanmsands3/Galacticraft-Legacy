@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYY",
+    "XYY",
+    "X  "
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:steel_pole"
+    },
+    "Y": {
+      "item": "galacticraftcore:canvas"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:flag"
+  }
+}

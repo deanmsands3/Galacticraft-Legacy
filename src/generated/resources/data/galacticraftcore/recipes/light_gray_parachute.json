@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "parachute",
+  "ingredients": [
+    {
+      "tag": "galacticraftcore:parachutes"
+    },
+    {
+      "tag": "forge:dyes/light_gray"
+    }
+  ],
+  "result": {
+    "item": "galacticraftcore:light_gray_parachute"
+  }
+}

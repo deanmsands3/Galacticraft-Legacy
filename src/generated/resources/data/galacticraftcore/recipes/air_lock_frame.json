@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "YZY",
+    "XXX"
+  ],
+  "key": {
+    "Z": {
+      "item": "galacticraftcore:oxygen_concentrator"
+    },
+    "Y": {
+      "tag": "forge:plates/steel"
+    },
+    "X": {
+      "tag": "forge:plates/aluminum"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:air_lock_frame",
+    "count": 4
+  }
+}

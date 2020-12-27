@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WXW",
+    "WYW",
+    "VZV"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/tin"
+    },
+    "Y": {
+      "item": "galacticraftcore:compressor"
+    },
+    "Z": {
+      "tag": "forge:wafers/advanced"
+    },
+    "W": {
+      "tag": "forge:plates/steel"
+    },
+    "V": {
+      "item": "galacticraftcore:aluminum_wire"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:electric_compressor"
+  }
+}

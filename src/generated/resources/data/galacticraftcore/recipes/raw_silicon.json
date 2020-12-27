@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraftcore:silicon_block"
+    }
+  ],
+  "result": {
+    "item": "galacticraftcore:raw_silicon",
+    "count": 9
+  }
+}

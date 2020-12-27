@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XWX",
+    "WZW",
+    "XYX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/steel"
+    },
+    "Y": {
+      "tag": "forge:plates/bronze"
+    },
+    "Z": {
+      "item": "galacticraftcore:oxygen_concentrator"
+    },
+    "W": {
+      "tag": "forge:plates/aluminum"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:oxygen_compressor"
+  }
+}

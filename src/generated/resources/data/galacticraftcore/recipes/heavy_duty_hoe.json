@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XX",
+    " #",
+    " #"
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:rods/wooden"
+    },
+    "X": {
+      "tag": "forge:plates/steel"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:heavy_duty_hoe"
+  }
+}

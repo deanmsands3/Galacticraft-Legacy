@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:buggy_wheel"
+    ]
+  },
+  "criteria": {
+    "has_leather_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:leather"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:buggy_wheel"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_leather_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

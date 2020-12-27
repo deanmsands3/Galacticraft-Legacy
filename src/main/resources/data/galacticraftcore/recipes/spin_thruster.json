@@ -20,11 +20,11 @@
       "metal": "meteoric_iron_ingot"
     },
     "Y": {
-      "item": "galacticraftcore:fuel_canister_partial",
+      "item": "galacticraftcore:partial_fuel_canister",
       "data": 1
     },
     "Z": {
-      "item": "galacticraftcore:engine"
+      "item": "galacticraftcore:tier_1_rocket_engine"
     }
   }
 }

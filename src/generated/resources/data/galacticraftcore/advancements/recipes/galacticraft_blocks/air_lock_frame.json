@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:air_lock_frame"
+    ]
+  },
+  "criteria": {
+    "has_oxygen_concentrator": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:oxygen_concentrator"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:air_lock_frame"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_oxygen_concentrator",
+      "has_the_recipe"
+    ]
+  ]
+}
