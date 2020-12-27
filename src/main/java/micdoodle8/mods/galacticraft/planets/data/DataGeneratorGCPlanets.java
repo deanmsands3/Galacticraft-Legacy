@@ -4,6 +4,7 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockSlimelingEgg;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
+import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockGeothermalGenerator;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
 import net.minecraft.block.Block;
@@ -253,6 +254,37 @@ public class DataGeneratorGCPlanets
             this.itemGenerated(MarsBlocks.CAVERNOUS_VINES, "cavernous_vines_1");
             this.itemGenerated(VenusBlocks.WEB_STRING);
             this.itemGenerated(VenusBlocks.WEB_TORCH);
+
+            this.itemGenerated(MarsItems.FRAGMENTED_CARBON);
+            this.itemGenerated(MarsItems.DESH_AXE);
+            this.itemGenerated(MarsItems.DESH_BOOTS);
+            this.itemGenerated(MarsItems.DESH_CHESTPLATE);
+            this.itemGenerated(MarsItems.DESH_HELMET);
+            this.itemGenerated(MarsItems.DESH_HOE);
+            this.itemGenerated(MarsItems.DESH_LEGGINGS);
+            this.itemGenerated(MarsItems.STICKY_DESH_PICKAXE);
+            this.itemGenerated(MarsItems.DESH_PICKAXE);
+            this.itemGenerated(MarsItems.DESH_SHOVEL);
+            this.itemGenerated(MarsItems.DESH_SWORD);
+            this.itemGenerated(MarsItems.TIER_2_DUNGEON_KEY, new ResourceLocation(Constants.MOD_ID_CORE, "item/dungeon_key")).texture("key", "item/tier_2_dungeon_key");
+            this.itemGenerated(MarsItems.TIER_2_ROCKET_18_INVENTORY, this.modLoc("item/tier_2_rocket"));
+            this.itemGenerated(MarsItems.TIER_2_ROCKET_36_INVENTORY, this.modLoc("item/tier_2_rocket"));
+            this.itemGenerated(MarsItems.TIER_2_ROCKET_54_INVENTORY, this.modLoc("item/tier_2_rocket"));
+            this.itemGenerated(MarsItems.CREATIVE_TIER_2_ROCKET, this.modLoc("item/tier_2_rocket"));
+            this.itemGenerated(MarsItems.CARGO_ROCKET_18_INVENTORY, this.modLoc("item/cargo_rocket"));
+            this.itemGenerated(MarsItems.CARGO_ROCKET_36_INVENTORY, this.modLoc("item/cargo_rocket"));
+            this.itemGenerated(MarsItems.CARGO_ROCKET_54_INVENTORY, this.modLoc("item/cargo_rocket"));
+            this.itemGenerated(MarsItems.CREATIVE_CARGO_ROCKET, this.modLoc("item/cargo_rocket"));
+            this.itemGenerated(MarsItems.CARGO_ROCKET_SCHEMATIC);
+            this.itemGenerated(MarsItems.ASTRO_MINER_SCHEMATIC);
+            this.itemGenerated(MarsItems.TIER_3_ROCKET_SCHEMATIC);
+            this.itemGenerated(MarsItems.UNREFINED_DESH);
+            this.itemGenerated(MarsItems.DESH_STICK);
+            this.itemGenerated(MarsItems.DESH_INGOT);
+            this.itemGenerated(MarsItems.TIER_2_HEAVY_DUTY_PLATE);
+            this.itemGenerated(MarsItems.SLIMELING_INVENTORY_BAG);
+            this.itemGenerated(MarsItems.COMPRESSED_DESH);
+            this.itemGenerated(MarsItems.FLUID_MANIPULATOR);
         }
 
         protected ItemModelBuilder parentedBlock(Block block)
@@ -293,6 +325,11 @@ public class DataGeneratorGCPlanets
         protected void itemGenerated(Item item, String texture)
         {
             this.getBuilder(item.getRegistryName().getPath()).parent(this.getExistingFile(this.mcLoc("item/generated"))).texture("layer0", this.modLoc("item/" + texture));
+        }
+
+        protected ItemModelBuilder itemGenerated(Item item, ResourceLocation model)
+        {
+            return this.getBuilder(item.getRegistryName().getPath()).parent(this.getExistingFile(model));
         }
 
         protected void spawnEgg(Item item)
@@ -336,6 +373,8 @@ public class DataGeneratorGCPlanets
             this.add(MarsBlocks.TERRAFORMER, "Terraformer");
             this.add(MarsBlocks.LAUNCH_CONTROLLER, "Launch Controller");
             this.add(MarsBlocks.WATER_ELECTROLYZER, "Water Electrolyzer");
+            this.add(MarsBlocks.TIER_2_TREASURE_CHEST, "Tier 2 Treasure Chest");
+            this.add(MarsBlocks.CRYOGENIC_CHAMBER, "Cryogenic Chamber");
 
             this.add(AsteroidBlocks.ASTEROID_IRON_ORE, "Asteroid Iron Ore");
             this.add(AsteroidBlocks.ASTEROID_ALUMINUM_ORE, "Asteroid Aluminum Ore");
@@ -347,6 +386,12 @@ public class DataGeneratorGCPlanets
             this.add(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK, "Light Gray Asteroid Rock");
             this.add(AsteroidBlocks.DENSE_ICE, "Dense Ice");
             this.add(AsteroidBlocks.ASTRO_MINER_BASE, "Astro Miner Base");
+            this.add(AsteroidBlocks.WALKWAY, "Walkway");
+            this.add(AsteroidBlocks.FLUID_PIPE_WALKWAY, "Fluid Pipe Walkway");
+            this.add(AsteroidBlocks.WIRE_WALKWAY, "Wire Walkway");
+            this.add(AsteroidBlocks.ENERGY_BEAM_RECEIVER, "Energy Beam Receiver");
+            this.add(AsteroidBlocks.ENERGY_BEAM_REFLECTOR, "Energy Beam Reflector");
+            this.add(AsteroidBlocks.SHORT_RANGE_TELEPAD, "Short Range Telepad");
 
             this.add(VenusBlocks.VENUS_SOFT_ROCK, "Venus Soft Rock");
             this.add(VenusBlocks.VENUS_HARD_ROCK, "Venus Hard Rock");
@@ -369,6 +414,41 @@ public class DataGeneratorGCPlanets
             this.add(VenusBlocks.WEB_STRING, "Web String");
             this.add(VenusBlocks.WEB_TORCH, "Web Torch");
             this.add(VenusBlocks.GEOTHERMAL_GENERATOR, "Geothermal Generator");
+            this.add(VenusBlocks.SOLAR_ARRAY_CONTROLLER, "Solar Array Controller");
+            this.add(VenusBlocks.SOLAR_ARRAY_MODULE, "Solar Array Module");
+            this.add(VenusBlocks.LASER_TURRET, "Laser Turret");
+
+            this.add(MarsItems.FRAGMENTED_CARBON, "Fragmented Carbon");
+            this.add(MarsItems.DESH_AXE, "Desh Axe");
+            this.add(MarsItems.DESH_BOOTS, "Desh Boots");
+            this.add(MarsItems.DESH_CHESTPLATE, "Desh Chestplate");
+            this.add(MarsItems.DESH_HELMET, "Desh Helmet");
+            this.add(MarsItems.DESH_HOE, "Desh Hoe");
+            this.add(MarsItems.DESH_LEGGINGS, "Desh Leggings");
+            this.add(MarsItems.STICKY_DESH_PICKAXE, "Sticky Desh Pickaxe");
+            this.add(MarsItems.DESH_PICKAXE, "Desh Pickaxe");
+            this.add(MarsItems.DESH_SHOVEL, "Desh Shovel");
+            this.add(MarsItems.DESH_SWORD, "Desh Sword");
+            this.add(MarsItems.TIER_2_DUNGEON_KEY, "Tier 2 Dungeon Key");
+            this.add(MarsItems.TIER_2_ROCKET, "Tier 2 Rocket");
+            this.add(MarsItems.TIER_2_ROCKET_18_INVENTORY, "Tier 2 Rocket");
+            this.add(MarsItems.TIER_2_ROCKET_36_INVENTORY, "Tier 2 Rocket");
+            this.add(MarsItems.TIER_2_ROCKET_54_INVENTORY, "Tier 2 Rocket");
+            this.add(MarsItems.CREATIVE_TIER_2_ROCKET, "Tier 2 Rocket");
+            this.add(MarsItems.CARGO_ROCKET_18_INVENTORY, "Cargo Rocket");
+            this.add(MarsItems.CARGO_ROCKET_36_INVENTORY, "Cargo Rocket");
+            this.add(MarsItems.CARGO_ROCKET_54_INVENTORY, "Cargo Rocket");
+            this.add(MarsItems.CREATIVE_CARGO_ROCKET, "Cargo Rocket");
+            this.add(MarsItems.CARGO_ROCKET_SCHEMATIC, "Cargo Rocket Schematic");
+            this.add(MarsItems.ASTRO_MINER_SCHEMATIC, "Astro Miner Schematic");
+            this.add(MarsItems.TIER_3_ROCKET_SCHEMATIC, "Tier 3 Rocket Schematic");
+            this.add(MarsItems.UNREFINED_DESH, "Unrefined Desh");
+            this.add(MarsItems.DESH_STICK, "Desh Stick");
+            this.add(MarsItems.DESH_INGOT, "Desh Ingot");
+            this.add(MarsItems.TIER_2_HEAVY_DUTY_PLATE, "Tier 2 Heavy Duty Plate");
+            this.add(MarsItems.SLIMELING_INVENTORY_BAG, "Slimeling Inventory Bag");
+            this.add(MarsItems.COMPRESSED_DESH, "Compressed Desh");
+            this.add(MarsItems.FLUID_MANIPULATOR, "Fluid Manipulator");
         }
     }
 }

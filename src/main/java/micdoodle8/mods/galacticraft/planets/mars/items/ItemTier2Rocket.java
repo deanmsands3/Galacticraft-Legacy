@@ -141,7 +141,7 @@ public class ItemTier2Rocket extends Item implements IHoldableItem, ISortable
 
         EntityAutoRocket rocket;
 
-        if (this == MarsItems.rocketTierTwo || this == MarsItems.rocketTierTwoCargo1 || this == MarsItems.rocketTierTwoCargo2 || this == MarsItems.rocketTierTwoCargo3 || this == MarsItems.rocketTierTwoCreative)
+        if (this == MarsItems.TIER_2_ROCKET || this == MarsItems.TIER_2_ROCKET_18_INVENTORY || this == MarsItems.TIER_2_ROCKET_36_INVENTORY || this == MarsItems.TIER_2_ROCKET_54_INVENTORY || this == MarsItems.CREATIVE_TIER_2_ROCKET)
         {
             rocket = EntityTier2Rocket.createEntityTier2Rocket(world, centerX, centerY, centerZ, EntityTier2Rocket.getTypeFromItem(this));
         }

@@ -698,7 +698,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         if (!this.world.isRemote)
         {
             ItemStack bag = this.slimelingInventory.getStackInSlot(1);
-            if (bag != null && bag.getItem() == MarsItems.slimelingCargo)
+            if (bag != null && bag.getItem() == MarsItems.SLIMELING_INVENTORY_BAG)
             {
                 this.slimelingInventory.decrStackSize(1, 64);
                 this.entityDropItem(bag, 0.5F);

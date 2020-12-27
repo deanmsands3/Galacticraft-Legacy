@@ -113,9 +113,9 @@ public class MarsModule implements IPlanetsModule
         GalaxyRegistry.registerPlanet(MarsModule.planetMars);
         GalacticraftRegistry.registerTeleportType(DimensionMars.class, new TeleportTypeMars());
         GalacticraftRegistry.registerRocketGui(DimensionMars.class, new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/mars_rocket_gui.png"));
-        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.schematicRocketT3, 1));
-        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.schematicAstroMiner, 1));
-        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.schematicCargoRocket, 1));
+        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.TIER_3_ROCKET_SCHEMATIC, 1));
+        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.ASTRO_MINER_SCHEMATIC, 1));
+        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.CARGO_ROCKET_SCHEMATIC, 1));
 
 //        GalacticraftCore.proxy.registerFluidTexture(PlanetFluids.LIQUID_BACTERIAL_SLUDGE.getFluid(), new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/misc/underbecterial.png"));
         // TODO Fluid textures

@@ -259,7 +259,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
             return false;
         }
 
-        this.noCoal = this.getInventory().get(3).isEmpty() || this.getInventory().get(3).getItem() != MarsItems.carbonFragments;
+        this.noCoal = this.getInventory().get(3).isEmpty() || this.getInventory().get(3).getItem() != MarsItems.FRAGMENTED_CARBON;
 
         if (this.noCoal && this.coalPartial == 0 && (this.gasTank2.getFluid() == FluidStack.EMPTY || this.gasTank2.getFluidAmount() <= 0))
         {
@@ -417,7 +417,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
             case 0:
                 return ItemElectricBase.isElectricItemCharged(itemstack);
             case 3:
-                return itemstack.getItem() == MarsItems.carbonFragments;
+                return itemstack.getItem() == MarsItems.FRAGMENTED_CARBON;
             case 4:
                 return FluidUtil.isPartialContainer(itemstack, AsteroidsItems.methaneCanister);
             default:
@@ -457,7 +457,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
         case 2:
             return itemstack.getItem() == AsteroidsItems.atmosphericValve;
         case 3:
-            return itemstack.getItem() == MarsItems.carbonFragments;
+            return itemstack.getItem() == MarsItems.FRAGMENTED_CARBON;
         case 4:
             return FluidUtil.isValidContainer(itemstack);
         }

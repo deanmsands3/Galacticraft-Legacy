@@ -67,31 +67,31 @@ public class EntityCargoRocket extends EntityAutoRocket implements IRocketType, 
         default:
         case DEFAULT:
         case INVENTORY27:
-            return MarsItems.rocketCargo1;
+            return MarsItems.CARGO_ROCKET_18_INVENTORY;
         case INVENTORY36:
-            return MarsItems.rocketCargo2;
+            return MarsItems.CARGO_ROCKET_36_INVENTORY;
         case INVENTORY54:
-            return MarsItems.rocketCargo3;
+            return MarsItems.CARGO_ROCKET_54_INVENTORY;
         case PREFUELED:
-            return MarsItems.rocketCargoCreative;
+            return MarsItems.CREATIVE_CARGO_ROCKET;
         }
     }
 
     public static EnumRocketType getTypeFromItem(Item item)
     {
-        if (item == MarsItems.rocketCargo1)
+        if (item == MarsItems.CARGO_ROCKET_18_INVENTORY)
         {
             return EnumRocketType.INVENTORY27;
         }
-        if (item == MarsItems.rocketCargo2)
+        if (item == MarsItems.CARGO_ROCKET_36_INVENTORY)
         {
             return EnumRocketType.INVENTORY36;
         }
-        if (item == MarsItems.rocketCargo3)
+        if (item == MarsItems.CARGO_ROCKET_54_INVENTORY)
         {
             return EnumRocketType.INVENTORY54;
         }
-        if (item == MarsItems.rocketCargoCreative)
+        if (item == MarsItems.CREATIVE_CARGO_ROCKET)
         {
             return EnumRocketType.PREFUELED;
         }

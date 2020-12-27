@@ -140,29 +140,29 @@ public class MarsModuleClient implements IPlanetsModuleClient
 
         ItemSchematicTier2.registerTextures();
 
-        ClientProxyCore.setCustomModel(MarsItems.rocketTierTwo.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.rocketTierTwoCargo1.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.rocketTierTwoCargo2.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.rocketTierTwoCargo3.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.rocketTierTwoCreative.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.rocketCargo1.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.rocketCargo2.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.rocketCargo3.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.rocketCargoCreative.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CREATIVE_TIER_2_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CREATIVE_CARGO_ROCKET.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
     }
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void loadTextures(TextureStitchEvent.Pre event)
     {
-        registerTexture(event, "rocket_t2");
+        registerTexture(event, "tier_2_rocket");
         registerTexture(event, "cargo_rocket");
         registerTexture(event, "landing_balloon");
     }
 
     private static void registerTexture(TextureStitchEvent.Pre event, String texture)
     {
-        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "blocks/" + texture));
+        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "block/" + texture));
     }
 
     @SubscribeEvent

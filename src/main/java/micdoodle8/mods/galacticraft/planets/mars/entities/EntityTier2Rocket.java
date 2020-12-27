@@ -69,37 +69,37 @@ public class EntityTier2Rocket extends EntityTieredRocket
         {
         default:
         case DEFAULT:
-            return MarsItems.rocketTierTwo;
+            return MarsItems.TIER_2_ROCKET;
         case INVENTORY27:
-            return MarsItems.rocketTierTwoCargo1;
+            return MarsItems.TIER_2_ROCKET_18_INVENTORY;
         case INVENTORY36:
-            return MarsItems.rocketTierTwoCargo2;
+            return MarsItems.TIER_2_ROCKET_36_INVENTORY;
         case INVENTORY54:
-            return MarsItems.rocketTierTwoCargo3;
+            return MarsItems.TIER_2_ROCKET_54_INVENTORY;
         case PREFUELED:
-            return MarsItems.rocketTierTwoCreative;
+            return MarsItems.CREATIVE_TIER_2_ROCKET;
         }
     }
 
     public static EnumRocketType getTypeFromItem(Item item)
     {
-        if (item == MarsItems.rocketTierTwo)
+        if (item == MarsItems.TIER_2_ROCKET)
         {
             return EnumRocketType.DEFAULT;
         }
-        if (item == MarsItems.rocketTierTwoCargo1)
+        if (item == MarsItems.TIER_2_ROCKET_18_INVENTORY)
         {
             return EnumRocketType.INVENTORY27;
         }
-        if (item == MarsItems.rocketTierTwoCargo2)
+        if (item == MarsItems.TIER_2_ROCKET_36_INVENTORY)
         {
             return EnumRocketType.INVENTORY36;
         }
-        if (item == MarsItems.rocketTierTwoCargo3)
+        if (item == MarsItems.TIER_2_ROCKET_54_INVENTORY)
         {
             return EnumRocketType.INVENTORY54;
         }
-        if (item == MarsItems.rocketTierTwoCreative)
+        if (item == MarsItems.CREATIVE_TIER_2_ROCKET)
         {
             return EnumRocketType.PREFUELED;
         }

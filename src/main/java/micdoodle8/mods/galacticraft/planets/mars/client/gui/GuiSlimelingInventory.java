@@ -107,7 +107,7 @@ public class GuiSlimelingInventory extends GuiContainerGC<ContainerSlimeling>
 
         ItemStack stack = this.slimeling.slimelingInventory.getStackInSlot(1);
 
-        if (stack != null && stack.getItem() == MarsItems.slimelingCargo)
+        if (stack != null && stack.getItem() == MarsItems.SLIMELING_INVENTORY_BAG)
         {
             int offsetX = 7;
             int offsetY = 53;

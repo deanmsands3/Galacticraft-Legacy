@@ -330,7 +330,7 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     @Override
     public void dropKey()
     {
-        this.entityDropItem(new ItemStack(MarsItems.key, 1), 0.5F);
+        this.entityDropItem(new ItemStack(MarsItems.TIER_2_DUNGEON_KEY, 1), 0.5F);
     }
 
     @Override

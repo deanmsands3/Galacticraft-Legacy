@@ -41,7 +41,7 @@ public class ContainerSlimeling extends Container
 
     public static void addSlots(ContainerSlimeling container, PlayerInventory playerInventory, EntitySlimeling slimeling)
     {
-        Slot slot = new SlotSpecific(slimeling.slimelingInventory, 1, 9, 30, new ItemStack(MarsItems.slimelingCargo, 1));
+        Slot slot = new SlotSpecific(slimeling.slimelingInventory, 1, 9, 30, new ItemStack(MarsItems.SLIMELING_INVENTORY_BAG, 1));
         container.addSlot(slot);
 
         int var3;
@@ -71,7 +71,7 @@ public class ContainerSlimeling extends Container
 
     public static void addAdditionalSlots(ContainerSlimeling container, EntitySlimeling slimeling, ItemStack stack)
     {
-        if (!stack.isEmpty() && stack.getItem() == MarsItems.slimelingCargo)
+        if (!stack.isEmpty() && stack.getItem() == MarsItems.SLIMELING_INVENTORY_BAG)
         {
             //Note that if NEI is installed, this can be called by InventorySlimeling.setInventorySlotContents even if the container already has the slots
             if (container.inventorySlots.size() < 63)
@@ -125,7 +125,7 @@ public class ContainerSlimeling extends Container
                 }
                 else
                 {
-                    if (var4.getItem() == MarsItems.slimelingCargo)
+                    if (var4.getItem() == MarsItems.SLIMELING_INVENTORY_BAG)
                     {
                         if (!this.mergeItemStack(var4, 0, 1, false))
                         {

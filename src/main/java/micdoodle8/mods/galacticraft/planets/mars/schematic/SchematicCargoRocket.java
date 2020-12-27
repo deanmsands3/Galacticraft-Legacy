@@ -35,7 +35,7 @@ public class SchematicCargoRocket implements ISchematicPage
     @Override
     public ItemStack getRequiredItem()
     {
-        return new ItemStack(MarsItems.schematicCargoRocket, 1);
+        return new ItemStack(MarsItems.CARGO_ROCKET_SCHEMATIC, 1);
     }
 
     @OnlyIn(Dist.CLIENT)

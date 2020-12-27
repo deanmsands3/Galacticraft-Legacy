@@ -36,11 +36,11 @@ public class IngredientAdvancedMetalSerializer implements IIngredientSerializer<
         }
         if (metal.equals("desh_ingot"))
         {
-            return GalacticraftCore.isPlanetsLoaded ? Ingredient.fromStacks(new ItemStack(MarsItems.ingotDesh, 1)) : Ingredient.fromItems(GCItems.TIER_1_HEAVY_DUTY_PLATE);
+            return GalacticraftCore.isPlanetsLoaded ? Ingredient.fromStacks(new ItemStack(MarsItems.DESH_INGOT, 1)) : Ingredient.fromItems(GCItems.TIER_1_HEAVY_DUTY_PLATE);
         }
         if (metal.equals("desh_plate"))
         {
-            return Ingredient.fromStacks(new ItemStack(MarsItems.compressedDesh, 1));// : new OreIngredient("compressedDesh");
+            return Ingredient.fromStacks(new ItemStack(MarsItems.COMPRESSED_DESH, 1));// : new OreIngredient("compressedDesh");
         }
         if (metal.equals("titanium_ingot"))
         {

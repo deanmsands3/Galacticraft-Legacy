@@ -345,8 +345,8 @@ public class TeleportTypeAsteroids implements ITeleportType
     {
         GCPlayerStats stats = GCPlayerStats.get(player);
         SchematicRegistry.unlockNewPage(player, new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC, 1)); //Knows how to build T2 rocket
-        SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.schematicRocketT3, 1)); //Knows how to build T3 rocket
-        SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.schematicAstroMiner, 1)); //Knows how to build Astro Miner
+        SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.TIER_3_ROCKET_SCHEMATIC, 1)); //Knows how to build T3 rocket
+        SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.ASTRO_MINER_SCHEMATIC, 1)); //Knows how to build Astro Miner
         NonNullList<ItemStack> rocketStacks = NonNullList.create();
         stats.setFuelLevel(1000);
         rocketStacks.add(new ItemStack(GCItems.OXYGEN_MASK));
@@ -360,7 +360,7 @@ public class TeleportTypeAsteroids implements ITeleportType
         rocketStacks.add(new ItemStack(AsteroidsItems.thermalCloth, 32));
         rocketStacks.add(new ItemStack(Blocks.GLASS_PANE, 16));
         rocketStacks.add(new ItemStack(Blocks.OAK_PLANKS, 32));
-        rocketStacks.add(new ItemStack(MarsItems.ingotDesh, 16)); //Desh ingot
+        rocketStacks.add(new ItemStack(MarsItems.DESH_INGOT, 16)); //Desh ingot
         rocketStacks.add(new ItemStack(GCItems.BASIC_WAFER, 8)); //Basic Wafer
         rocketStacks.add(new ItemStack(GCItems.FULL_SOLAR_MODULE, 2)); //Solar Panels
         rocketStacks.add(new ItemStack(GCItems.DEHYDRATED_APPLE_CAN, 16));  //Canned food
@@ -371,7 +371,7 @@ public class TeleportTypeAsteroids implements ITeleportType
         rocketStacks.add(spawnEgg);
         rocketStacks.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION, 4), Potions.LONG_NIGHT_VISION)); //Night Vision Potion
         rocketStacks.add(new ItemStack(MarsBlocks.CRYOGENIC_CHAMBER, 1)); //Cryogenic Chamber
-        rocketStacks.add(new ItemStack(MarsItems.rocketTierTwoCargo2, 1));
+        rocketStacks.add(new ItemStack(MarsItems.TIER_2_ROCKET_36_INVENTORY, 1));
         stats.setRocketStacks(rocketStacks);
     }
 }

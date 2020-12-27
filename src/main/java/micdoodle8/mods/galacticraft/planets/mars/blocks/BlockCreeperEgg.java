@@ -113,14 +113,14 @@ public class BlockCreeperEgg extends DragonEggBlock implements IShiftDescription
         {
             return player.canHarvestBlock(world.getBlockState(pos));
         }
-        return stack.getItem() == MarsItems.deshPickSlime;
+        return stack.getItem() == MarsItems.STICKY_DESH_PICKAXE;
     }
 
     @Override
     public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos)
     {
         ItemStack stack = player.inventory.getCurrentItem();
-        if (stack != ItemStack.EMPTY && stack.getItem() == MarsItems.deshPickSlime)
+        if (stack != ItemStack.EMPTY && stack.getItem() == MarsItems.STICKY_DESH_PICKAXE)
         {
             return 0.2F;
         }

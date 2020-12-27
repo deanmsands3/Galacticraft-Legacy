@@ -38,7 +38,7 @@ public class ContainerMethaneSynthesizer extends Container
         this.addSlot(new Slot(this.synthesizer, 2, 28, 7));
 
         // Carbon slot
-        this.addSlot(new SlotSpecific(this.synthesizer, 3, 28, 53, new ItemStack(MarsItems.carbonFragments, 1)));
+        this.addSlot(new SlotSpecific(this.synthesizer, 3, 28, 53, new ItemStack(MarsItems.FRAGMENTED_CARBON, 1)));
 
         // Output slot
         this.addSlot(new Slot(this.synthesizer, 4, 153, 7));
@@ -123,7 +123,7 @@ public class ContainerMethaneSynthesizer extends Container
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (var4.getItem() == MarsItems.carbonFragments)
+                    else if (var4.getItem() == MarsItems.FRAGMENTED_CARBON)
                     {
                         if (!this.mergeItemStack(var4, 3, 4, false))
                         {

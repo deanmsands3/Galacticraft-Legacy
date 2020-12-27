@@ -103,7 +103,7 @@ public class VenusModuleClient implements IPlanetsModuleClient
 
     private static void registerTexture(TextureStitchEvent.Pre event, String texture)
     {
-        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "blocks/" + texture));
+        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "block/" + texture));
     }
 
     @SubscribeEvent

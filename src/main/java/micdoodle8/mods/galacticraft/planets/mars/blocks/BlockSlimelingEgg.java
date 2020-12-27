@@ -137,9 +137,9 @@ public class BlockSlimelingEgg extends Block implements IShiftDescription, ISort
             player.addExhaustion(0.025F);
             spawnAsEntity(worldIn, pos, getItem(worldIn, pos, state));
 //            this.dropBlockAsItem(worldIn, pos, state.getBlock().getStateFromMeta(state.getBlock().getMetaFromState(state) % 3), 0);
-            if (currentStack.getItem() == MarsItems.deshPickaxe && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, currentStack) > 0)
+            if (currentStack.getItem() == MarsItems.DESH_PICKAXE && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, currentStack) > 0)
             {
-                ItemStack itemstack = new ItemStack(MarsItems.deshPickSlime, 1/*, currentStack.getDamage()*/);
+                ItemStack itemstack = new ItemStack(MarsItems.STICKY_DESH_PICKAXE, 1/*, currentStack.getDamage()*/);
                 itemstack.setDamage(currentStack.getDamage());
                 if (currentStack.getTag() != null)
                 {
