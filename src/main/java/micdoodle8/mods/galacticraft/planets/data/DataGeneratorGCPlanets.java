@@ -233,6 +233,7 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(MarsBlocks.TERRAFORMER);
             this.parentedBlock(MarsBlocks.LAUNCH_CONTROLLER);
             this.parentedBlock(MarsBlocks.WATER_ELECTROLYZER);
+            this.parentedBlock(MarsBlocks.MARS_BOSS_SPAWNER, this.mcLoc("item/air"));
 
             this.parentedBlock(AsteroidBlocks.ASTEROID_IRON_ORE);
             this.parentedBlock(AsteroidBlocks.ASTEROID_ALUMINUM_ORE);
@@ -244,6 +245,8 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK);
             this.parentedBlock(AsteroidBlocks.DENSE_ICE);
             this.parentedBlock(AsteroidBlocks.ASTRO_MINER_BASE);
+            this.parentedBlock(AsteroidBlocks.FULL_ASTRO_MINER_BASE, this.mcLoc("item/air"));
+            this.parentedBlock(AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY, this.mcLoc("item/air"));
 
             this.parentedBlock(VenusBlocks.VENUS_SOFT_ROCK);
             this.parentedBlock(VenusBlocks.VENUS_HARD_ROCK);
