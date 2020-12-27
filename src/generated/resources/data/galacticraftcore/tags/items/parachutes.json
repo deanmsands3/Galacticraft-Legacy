@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraftcore:white_parachute",
+    "galacticraftcore:orange_parachute",
+    "galacticraftcore:magenta_parachute",
+    "galacticraftcore:light_blue_parachute",
+    "galacticraftcore:yellow_parachute",
+    "galacticraftcore:lime_parachute",
+    "galacticraftcore:pink_parachute",
+    "galacticraftcore:gray_parachute",
+    "galacticraftcore:light_gray_parachute",
+    "galacticraftcore:cyan_parachute",
+    "galacticraftcore:purple_parachute",
+    "galacticraftcore:blue_parachute",
+    "galacticraftcore:brown_parachute",
+    "galacticraftcore:green_parachute",
+    "galacticraftcore:red_parachute",
+    "galacticraftcore:black_parachute"
+  ]
+}

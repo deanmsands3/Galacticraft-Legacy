@@ -6,11 +6,17 @@ import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.ItemTagsProvider;
 import net.minecraft.item.Item;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.*;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -31,16 +37,16 @@ public class DataGeneratorGC
             generator.addProvider(new ItemModels(generator, Constants.MOD_ID_CORE, helper));
             generator.addProvider(new Language(generator, Constants.MOD_ID_CORE));
         }
-        //        if (event.includeServer())
-        //        {
-        //            BlockTagsProvider blockTagProvider = new BlockTagsBuilder(generator, MineconLiveMod.MOD_ID, helper);
-        //            generator.addProvider(blockTagProvider);
-        //            generator.addProvider(new ItemTagsBuilder(generator, blockTagProvider, MineconLiveMod.MOD_ID, helper));
-        //            generator.addProvider(new FluidTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
-        //            generator.addProvider(new EntityTypeTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
-        //            generator.addProvider(new Recipe(generator, MineconLiveMod.MOD_ID));
-        //            generator.addProvider(new LootTables(generator));
-        //        }
+        if (event.includeServer())
+        {
+            BlockTagsProvider blockTagProvider = new BlockTagsBuilder(generator, Constants.MOD_ID_CORE, helper);
+            generator.addProvider(blockTagProvider);
+            generator.addProvider(new ItemTagsBuilder(generator, blockTagProvider, Constants.MOD_ID_CORE, helper));
+            /*generator.addProvider(new FluidTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
+            generator.addProvider(new EntityTypeTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
+            generator.addProvider(new Recipe(generator, MineconLiveMod.MOD_ID));
+            generator.addProvider(new LootTables(generator));*/
+        }
     }
 
     public static class BlockStates extends BlockStateProvider
@@ -583,6 +589,155 @@ public class DataGeneratorGC
             this.add(GCItems.METEOR_CHUNK, "Meteor Chunk");
             this.add(GCItems.HOT_METEOR_CHUNK, "Hot Meteor Chunk");
             this.add(GCItems.DUNGEON_FINDER, "Dungeon Finder");
+        }
+    }
+
+    public static class BlockTagsBuilder extends BlockTagsProvider
+    {
+        public static final Tag<Block> ALUMINUM_ORES = new BlockTags.Wrapper(new ResourceLocation("forge", "ores/aluminum"));
+        public static final Tag<Block> CHEESE_ORES = new BlockTags.Wrapper(new ResourceLocation("forge", "ores/cheese"));
+        public static final Tag<Block> COPPER_ORES = new BlockTags.Wrapper(new ResourceLocation("forge", "ores/copper"));
+        public static final Tag<Block> SAPPHIRE_ORES = new BlockTags.Wrapper(new ResourceLocation("forge", "ores/sapphire"));
+        public static final Tag<Block> SILICON_ORES = new BlockTags.Wrapper(new ResourceLocation("forge", "ores/silicon"));
+        public static final Tag<Block> TIN_ORES = new BlockTags.Wrapper(new ResourceLocation("forge", "ores/tin"));
+
+        public static final Tag<Block> ALUMINUM_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/aluminum"));
+        public static final Tag<Block> COPPER_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/copper"));
+        public static final Tag<Block> SILICON_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/silicon"));
+        public static final Tag<Block> TIN_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/tin"));
+
+        public BlockTagsBuilder(DataGenerator generator, String modid, ExistingFileHelper helper)
+        {
+            super(generator);
+        }
+
+        @Override
+        protected void registerTags()
+        {
+            this.getBuilder(ALUMINUM_ORES).add(GCBlocks.ALUMINUM_ORE);
+            this.getBuilder(CHEESE_ORES).add(GCBlocks.CHEESE_ORE);
+            this.getBuilder(COPPER_ORES).add(GCBlocks.COPPER_ORE).add(GCBlocks.MOON_COPPER_ORE);
+            this.getBuilder(SAPPHIRE_ORES).add(GCBlocks.SAPPHIRE_ORE);
+            this.getBuilder(SILICON_ORES).add(GCBlocks.SILICON_ORE);
+            this.getBuilder(TIN_ORES).add(GCBlocks.TIN_ORE).add(GCBlocks.MOON_TIN_ORE);
+
+            this.getBuilder(ALUMINUM_STORAGE_BLOCKS).add(GCBlocks.ALUMINUM_BLOCK);
+            this.getBuilder(COPPER_STORAGE_BLOCKS).add(GCBlocks.COPPER_BLOCK);
+            this.getBuilder(SILICON_STORAGE_BLOCKS).add(GCBlocks.SILICON_BLOCK);
+            this.getBuilder(TIN_STORAGE_BLOCKS).add(GCBlocks.TIN_BLOCK);
+
+            this.getBuilder(Tags.Blocks.ORES).add(ALUMINUM_ORES)
+            .add(CHEESE_ORES)
+            .add(COPPER_ORES)
+            .add(SAPPHIRE_ORES)
+            .add(SILICON_ORES)
+            .add(TIN_ORES);
+
+            this.getBuilder(Tags.Blocks.STORAGE_BLOCKS).add(ALUMINUM_STORAGE_BLOCKS)
+            .add(COPPER_STORAGE_BLOCKS)
+            .add(SILICON_STORAGE_BLOCKS)
+            .add(TIN_STORAGE_BLOCKS);
+        }
+    }
+
+    public static class ItemTagsBuilder extends ItemTagsProvider
+    {
+        public static final Tag<Item> ALUMINUM_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/aluminum"));
+        public static final Tag<Item> COPPER_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/copper"));
+        public static final Tag<Item> METEORIC_IRON_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/meteoric_iron"));
+        public static final Tag<Item> TIN_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/tin"));
+
+        public static final Tag<Item> PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates"));
+        public static final Tag<Item> ALUMINUM_PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates/aluminum"));
+        public static final Tag<Item> BRONZE_PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates/bronze"));
+        public static final Tag<Item> COPPER_PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates/copper"));
+        public static final Tag<Item> IRON_PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates/iron"));
+        public static final Tag<Item> METEORIC_IRON_PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates/meteoric_iron"));
+        public static final Tag<Item> STEEL_PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates/steel"));
+        public static final Tag<Item> TIN_PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates/tin"));
+
+        public static final Tag<Item> WAFERS = new ItemTags.Wrapper(new ResourceLocation("forge", "wafers"));
+        public static final Tag<Item> ADVANCED_WAFERS = new ItemTags.Wrapper(new ResourceLocation("forge", "wafers/advanced"));
+        public static final Tag<Item> BASIC_WAFERS = new ItemTags.Wrapper(new ResourceLocation("forge", "wafers/basic"));
+        public static final Tag<Item> SOLAR_WAFERS = new ItemTags.Wrapper(new ResourceLocation("forge", "wafers/solar"));
+
+        public static final Tag<Item> PARACHUTES = new ItemTags.Wrapper(new ResourceLocation(Constants.MOD_ID_CORE, "parachutes"));
+
+        public ItemTagsBuilder(DataGenerator generator, BlockTagsProvider blockTagProvider, String modid, ExistingFileHelper helper)
+        {
+            super(generator);
+        }
+
+        @Override
+        protected void registerTags()
+        {
+            this.getBuilder(PARACHUTES).add(GCItems.WHITE_PARACHUTE)
+            .add(GCItems.ORANGE_PARACHUTE)
+            .add(GCItems.MAGENTA_PARACHUTE)
+            .add(GCItems.LIGHT_BLUE_PARACHUTE)
+            .add(GCItems.YELLOW_PARACHUTE)
+            .add(GCItems.LIME_PARACHUTE)
+            .add(GCItems.PINK_PARACHUTE)
+            .add(GCItems.GRAY_PARACHUTE)
+            .add(GCItems.LIGHT_GRAY_PARACHUTE)
+            .add(GCItems.CYAN_PARACHUTE)
+            .add(GCItems.PURPLE_PARACHUTE)
+            .add(GCItems.BLUE_PARACHUTE)
+            .add(GCItems.BROWN_PARACHUTE)
+            .add(GCItems.GREEN_PARACHUTE)
+            .add(GCItems.RED_PARACHUTE)
+            .add(GCItems.BLACK_PARACHUTE);
+
+            this.getBuilder(ALUMINUM_INGOTS)
+            .add(GCItems.ALUMINUM_INGOT);
+            this.getBuilder(COPPER_INGOTS)
+            .add(GCItems.COPPER_INGOT);
+            this.getBuilder(METEORIC_IRON_INGOTS)
+            .add(GCItems.METEORIC_IRON_INGOT);
+            this.getBuilder(TIN_INGOTS)
+            .add(GCItems.TIN_INGOT);
+
+            this.getBuilder(ALUMINUM_PLATES)
+            .add(GCItems.COMPRESSED_ALUMINUM);
+            this.getBuilder(BRONZE_PLATES)
+            .add(GCItems.COMPRESSED_BRONZE);
+            this.getBuilder(COPPER_PLATES)
+            .add(GCItems.COMPRESSED_COPPER);
+            this.getBuilder(IRON_PLATES)
+            .add(GCItems.COMPRESSED_IRON);
+            this.getBuilder(METEORIC_IRON_PLATES)
+            .add(GCItems.COMPRESSED_METEORIC_IRON);
+            this.getBuilder(STEEL_PLATES)
+            .add(GCItems.COMPRESSED_STEEL);
+            this.getBuilder(TIN_PLATES)
+            .add(GCItems.COMPRESSED_TIN);
+
+            this.getBuilder(ADVANCED_WAFERS)
+            .add(GCItems.ADVANCED_WAFER);
+            this.getBuilder(BASIC_WAFERS)
+            .add(GCItems.BASIC_WAFER);
+            this.getBuilder(SOLAR_WAFERS)
+            .add(GCItems.SOLAR_WAFER);
+
+            this.getBuilder(Tags.Items.INGOTS)
+            .add(ALUMINUM_INGOTS)
+            .add(COPPER_INGOTS)
+            .add(METEORIC_IRON_INGOTS)
+            .add(TIN_INGOTS);
+
+            this.getBuilder(PLATES)
+            .add(ALUMINUM_PLATES)
+            .add(BRONZE_PLATES)
+            .add(COPPER_PLATES)
+            .add(IRON_PLATES)
+            .add(METEORIC_IRON_PLATES)
+            .add(STEEL_PLATES)
+            .add(TIN_PLATES);
+
+            this.getBuilder(WAFERS)
+            .add(ADVANCED_WAFERS)
+            .add(BASIC_WAFERS)
+            .add(SOLAR_WAFERS);
         }
     }
 }

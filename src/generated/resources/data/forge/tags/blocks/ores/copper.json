@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraftcore:copper_ore",
+    "galacticraftcore:moon_copper_ore"
+  ]
+}
