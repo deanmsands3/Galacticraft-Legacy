@@ -49,7 +49,7 @@ public class VenusBlocks
 
     public static final Block VENUS_BOSS_SPAWNER = new BlockBossSpawnerVenus(Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops());
 
-    public static final Block TIER_3_TREASURE_CHEST = new BlockTier3TreasureChest(Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13));
+    public static final Block TIER_3_TREASURE_CHEST = new BlockTier3TreasureChest(Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13).noDrops());
 
     public static final Block WEB_STRING = new BlockTorchWeb(Block.Properties.create(Material.WEB).doesNotBlockMovement());
     public static final Block WEB_TORCH = new BlockTorchWeb(Block.Properties.from(WEB_STRING).lightValue(15));

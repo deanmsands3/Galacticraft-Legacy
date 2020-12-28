@@ -95,7 +95,7 @@ public class MarsBlocks
         builder = builder.hardnessAndResistance(5.0F, 60.0F).tickRandomly();
         register(r, new BlockBasicMars(builder), MarsBlockNames.MARS_DUNGEON_BRICKS);
 
-        builder = Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().lightValue(15).tickRandomly().hardnessAndResistance(0.2F).sound(SoundType.PLANT).noDrops();
+        builder = Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().lightValue(15).tickRandomly().hardnessAndResistance(0.2F).sound(SoundType.PLANT);
         register(r, new BlockCavernousVine(builder), MarsBlockNames.CAVERNOUS_VINES);
 
         builder = Block.Properties.create(Material.ROCK);
@@ -103,7 +103,7 @@ public class MarsBlocks
         register(r, new BlockSlimelingEgg(builder), MarsBlockNames.BLUE_SLIMELING_EGG);
         register(r, new BlockSlimelingEgg(builder), MarsBlockNames.YELLOW_SLIMELING_EGG);
 
-        builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13);
+        builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13).noDrops();
         register(r, new BlockTier2TreasureChest(builder), MarsBlockNames.TIER_2_TREASURE_CHEST);
 
         builder = Block.Properties.create(Material.IRON).sound(SoundType.METAL);
@@ -114,7 +114,7 @@ public class MarsBlocks
         register(r, new BlockGasLiquefier(builder), MarsBlockNames.GAS_LIQUEFIER);
         register(r, new BlockElectrolyzer(builder.tickRandomly()), MarsBlockNames.WATER_ELECTROLYZER);
 
-        builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 9.0F);
+        builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 9.0F).noDrops();
         register(r, new BlockCreeperEgg(builder), MarsBlockNames.CREEPER_EGG);
 
         builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops();

@@ -92,7 +92,7 @@ public class AsteroidBlocks
         builder = Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(3.0F);
         register(r, new BlockShortRangeTelepad(builder), AsteroidBlockNames.SHORT_RANGE_TELEPAD);
 
-        builder = Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(100000.0F);
+        builder = Block.Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(100000.0F).noDrops();
         register(r, new BlockTelepadFake(builder), AsteroidBlockNames.SHORT_RANGE_TELEPAD_DUMMY);
 
         builder = Block.Properties.create(Material.ICE).sound(SoundType.GLASS).hardnessAndResistance(0.5F).slipperiness(0.98F);
