@@ -1,6 +1,17 @@
 package micdoodle8.mods.galacticraft.core.data;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.mojang.datafixers.util.Pair;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
@@ -12,18 +23,24 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.data.*;
+import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.data.loot.EntityLootTables;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.storage.loot.*;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID_CORE, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGeneratorGC
@@ -46,9 +63,7 @@ public class DataGeneratorGC
             generator.addProvider(blockTagProvider);
             generator.addProvider(new ItemTagsBuilder(generator, blockTagProvider, Constants.MOD_ID_CORE, helper));
             generator.addProvider(new Recipe(generator, Constants.MOD_ID_CORE));
-            /*generator.addProvider(new FluidTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
-            generator.addProvider(new EntityTypeTagsBuilder(generator, MineconLiveMod.MOD_ID, helper));
-            generator.addProvider(new LootTables(generator));*/
+            generator.addProvider(new LootTables(generator));
         }
     }
 
@@ -869,6 +884,171 @@ public class DataGeneratorGC
         protected ResourceLocation modLoc(String name)
         {
             return new ResourceLocation(Constants.MOD_ID_CORE, name);
+        }
+    }
+
+    public static class LootTables extends LootTableProvider
+    {
+        private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> tables = Lists.newArrayList();
+
+        public LootTables(DataGenerator generator)
+        {
+            super(generator);
+            this.addTable(Pair.of(BlockLootTable::new, LootParameterSets.BLOCK));/*.addTable(Pair.of(EntityLootTable::new, LootParameterSets.ENTITY));*/
+        }
+
+        @Override
+        protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> getTables()
+        {
+            return Collections.unmodifiableList(this.tables);
+        }
+
+        @Override
+        protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker tracker)
+        {
+            map.forEach((resource, loot) -> LootTableManager.func_227508_a_(tracker, resource, loot));//validateLootTable
+        }
+
+        public LootTables addTable(Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet> table)
+        {
+            this.tables.add(table);
+            return this;
+        }
+
+        class BlockLootTable extends BlockLootTables
+        {
+            @Override
+            protected void addTables()
+            {
+                this.registerDropSelfLootTable(GCBlocks.COPPER_ORE);
+                this.registerDropSelfLootTable(GCBlocks.TIN_ORE);
+                this.registerDropSelfLootTable(GCBlocks.ALUMINUM_ORE);
+                this.registerDropSelfLootTable(GCBlocks.MOON_COPPER_ORE);
+                this.registerDropSelfLootTable(GCBlocks.MOON_TIN_ORE);
+                this.registerDropSelfLootTable(GCBlocks.SAPPHIRE_ORE);
+                this.registerDropSelfLootTable(GCBlocks.COPPER_BLOCK);
+                this.registerDropSelfLootTable(GCBlocks.TIN_BLOCK);
+                this.registerDropSelfLootTable(GCBlocks.ALUMINUM_BLOCK);
+                this.registerDropSelfLootTable(GCBlocks.SILICON_BLOCK);
+                this.registerDropSelfLootTable(GCBlocks.METEORIC_IRON_BLOCK);
+                this.registerDropSelfLootTable(GCBlocks.MAGNETIC_CRAFTING_TABLE);
+                this.registerDropSelfLootTable(GCBlocks.PARACHEST);
+                this.registerDropping(GCBlocks.PLAYER_DETECTOR, GCBlocks.TIN_DECORATION_BLOCK_1);
+                this.registerDropSelfLootTable(GCBlocks.HIDDEN_REDSTONE_WIRE);
+                this.registerDropSelfLootTable(GCBlocks.HIDDEN_REDSTONE_REPEATER);
+                this.registerDropSelfLootTable(GCBlocks.EMERGENCY_POST);
+                this.registerDropSelfLootTable(GCBlocks.EMERGENCY_POST_KIT);
+                this.registerDropSelfLootTable(GCBlocks.MOON_ROCK);
+                this.registerDropSelfLootTable(GCBlocks.MOON_DIRT);
+                this.registerDropSelfLootTable(GCBlocks.MOON_DUNGEON_BRICKS);
+                this.registerDropSelfLootTable(GCBlocks.AIR_LOCK_FRAME);
+                this.registerDropSelfLootTable(GCBlocks.TIN_DECORATION_BLOCK_1);
+                this.registerDropSelfLootTable(GCBlocks.TIN_DECORATION_BLOCK_2);
+                this.registerDropSelfLootTable(GCBlocks.OXYGEN_DETECTOR);
+                this.registerDropSelfLootTable(GCBlocks.TELEMETRY_UNIT);
+                this.registerDropSelfLootTable(GCBlocks.ROCKET_LAUNCH_PAD);
+                this.registerDropSelfLootTable(GCBlocks.BUGGY_FUELING_PAD);
+                this.registerDropSelfLootTable(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR);
+                this.registerDropSelfLootTable(GCBlocks.OXYGEN_COLLECTOR);
+                this.registerDropSelfLootTable(GCBlocks.COMPRESSOR);
+                this.registerDropSelfLootTable(GCBlocks.COAL_GENERATOR);
+                this.registerDropSelfLootTable(GCBlocks.CHROMATIC_APPLICATOR);
+                this.registerDropSelfLootTable(GCBlocks.BASIC_SOLAR_PANEL);
+                this.registerDropSelfLootTable(GCBlocks.ADVANCED_SOLAR_PANEL);
+                this.registerDropSelfLootTable(GCBlocks.OXYGEN_COMPRESSOR);
+                this.registerDropSelfLootTable(GCBlocks.OXYGEN_DECOMPRESSOR);
+                this.registerDropSelfLootTable(GCBlocks.OXYGEN_SEALER);
+                this.registerDropSelfLootTable(GCBlocks.ELECTRIC_COMPRESSOR);
+                this.registerDropSelfLootTable(GCBlocks.ELECTRIC_FURNACE);
+                this.registerDropSelfLootTable(GCBlocks.REFINERY);
+                this.registerDropSelfLootTable(GCBlocks.CARGO_LOADER);
+                this.registerDropSelfLootTable(GCBlocks.CARGO_UNLOADER);
+                this.registerDropSelfLootTable(GCBlocks.AIR_LOCK_CONTROLLER);
+                this.registerDropSelfLootTable(GCBlocks.ROCKET_WORKBENCH);
+                this.registerDropSelfLootTable(GCBlocks.ARC_LAMP);
+                this.registerDropSelfLootTable(GCBlocks.GLOWSTONE_TORCH);
+                this.registerDropSelfLootTable(GCBlocks.UNLIT_TORCH);
+                this.registerDropSelfLootTable(GCBlocks.ADVANCED_COMPRESSOR);
+                this.registerDropSelfLootTable(GCBlocks.CIRCUIT_FABRICATOR);
+                this.registerDropSelfLootTable(GCBlocks.OXYGEN_STORAGE_MODULE);
+                this.registerDropSelfLootTable(GCBlocks.DECONSTRUCTOR);
+                this.registerDropSelfLootTable(GCBlocks.FUEL_LOADER);
+                this.registerDropSelfLootTable(GCBlocks.ENERGY_STORAGE);
+                this.registerDropSelfLootTable(GCBlocks.ENERGY_STORAGE_CLUSTER);
+                this.registerDropSelfLootTable(GCBlocks.ELECTRIC_ARC_FURNACE);
+                this.registerDropSelfLootTable(GCBlocks.FLUID_PIPE);
+                this.registerDropping(GCBlocks.PULLED_FLUID_PIPE, GCBlocks.FLUID_PIPE);
+                this.registerDropSelfLootTable(GCBlocks.ALUMINUM_WIRE);
+                this.registerDropSelfLootTable(GCBlocks.HEAVY_ALUMINUM_WIRE);
+                this.registerDropSelfLootTable(GCBlocks.SWITCHABLE_ALUMINUM_WIRE);
+                this.registerDropSelfLootTable(GCBlocks.SWITCHABLE_HEAVY_ALUMINUM_WIRE);
+                this.registerDropSelfLootTable(GCBlocks.DISPLAY_SCREEN);
+                this.registerDropSelfLootTable(GCBlocks.FLUID_TANK);
+                this.registerDropSelfLootTable(GCBlocks.HYDRAULIC_PLATFORM);
+                this.registerDropSelfLootTable(GCBlocks.MOON_TURF);
+                this.registerLootTable(GCBlocks.CHEESE_BLOCK, func_218482_a());
+                this.registerLootTable(GCBlocks.SILICON_ORE, block -> droppingItemWithFortune(block, GCItems.RAW_SILICON));
+                this.registerLootTable(GCBlocks.CHEESE_ORE, block -> droppingItemWithFortune(block, GCItems.CHEESE_CURD));
+                this.registerLootTable(GCBlocks.SAPPHIRE_ORE, block -> droppingItemWithFortune(block, GCItems.LUNAR_SAPPHIRE));
+                this.registerLootTable(GCBlocks.FALLEN_METEOR, droppingRandomly(GCItems.RAW_METEORIC_IRON, RandomValueRange.of(1.0F, 2.0F)));
+                this.registerLootTable(GCBlocks.FULL_ROCKET_LAUNCH_PAD, block -> droppingWithSilkTouchOrRandomly(block, GCBlocks.ROCKET_LAUNCH_PAD, ConstantRange.of(9)));
+                this.registerLootTable(GCBlocks.FULL_BUGGY_FUELING_PAD, block -> droppingWithSilkTouchOrRandomly(block, GCBlocks.BUGGY_FUELING_PAD, ConstantRange.of(9)));
+            }
+
+            @Override
+            @Deprecated //TODO Remove after debugging
+            public void accept(BiConsumer<ResourceLocation, LootTable.Builder> p_accept_1_)
+            {
+                this.addTables();
+                Set<ResourceLocation> set = Sets.newHashSet();
+
+                for (Block block : this.getKnownBlocks())
+                {
+                    ResourceLocation resourcelocation = block.getLootTable();
+
+                    if (resourcelocation != net.minecraft.world.storage.loot.LootTables.EMPTY && set.add(resourcelocation))
+                    {
+                        LootTable.Builder loottable$builder = this.lootTables.remove(resourcelocation);
+
+                        if (loottable$builder == null)
+                        {
+                            System.out.println(String.format("Missing loottable '%s' for '%s'", resourcelocation, Registry.BLOCK.getKey(block)));
+                            continue;
+                        }
+
+                        p_accept_1_.accept(resourcelocation, loottable$builder);
+                    }
+                }
+
+                if (!this.lootTables.isEmpty())
+                {
+                    throw new IllegalStateException("Created block loot tables for non-blocks: " + this.lootTables.keySet());
+                }
+            }
+
+            @Override
+            protected Iterable<Block> getKnownBlocks()
+            {
+                return ForgeRegistries.BLOCKS.getValues().stream().filter(type -> type.getRegistryName().getNamespace().equals(Constants.MOD_ID_CORE)).collect(Collectors.toList());
+            }
+        }
+
+        class EntityLootTable extends EntityLootTables
+        {
+            @Override
+            protected void addTables()
+            {
+                //                this.registerLootTable(MCEntities.MOOBLOOM, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.LEATHER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))).addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BEEF).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 3.0F))).acceptFunction(Smelt.func_215953_b().acceptCondition(EntityHasProperty.builder(LootContext.EntityTarget.THIS, ON_FIRE))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))).addEntry(ItemLootEntry.builder(Blocks.SUNFLOWER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
+                //                this.registerLootTable(MCEntities.WITHERBLOOM, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.LEATHER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))).addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BEEF).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 3.0F))).acceptFunction(Smelt.func_215953_b().acceptCondition(EntityHasProperty.builder(LootContext.EntityTarget.THIS, ON_FIRE))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))).addEntry(ItemLootEntry.builder(Blocks.WITHER_ROSE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
+                //                this.registerLootTable(MCEntities.ICEOLOGER, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Blocks.PACKED_ICE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
+                //                this.registerLootTable(MCEntities.GLOW_SQUID, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(MCItems.GLOW_INK_SAC).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 3.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
+            }
+
+            @Override
+            protected Iterable<EntityType<?>> getKnownEntities()
+            {
+                return ForgeRegistries.ENTITIES.getValues().stream().filter(type -> type.getRegistryName().getNamespace().equals(Constants.MOD_ID_CORE)).collect(Collectors.toList());
+            }
         }
     }
 }

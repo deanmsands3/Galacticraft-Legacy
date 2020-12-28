@@ -29,13 +29,13 @@ import com.google.common.collect.Lists;
 @ObjectHolder(Constants.MOD_ID_CORE)
 public class GCBlocks
 {
-    public static final Block BREATHEABLE_AIR = new BlockBreathableAir(Block.Properties.create(Material.AIR).doesNotBlockMovement().noDrops().hardnessAndResistance(0.0F, 10000.0F));
-    public static final Block BRIGHT_AIR = new BlockBrightAir(Block.Properties.from(BREATHEABLE_AIR).lightValue(15));
-    public static final Block BRIGHT_BREATHEABLE_AIR = new BlockBrightBreathableAir(Block.Properties.from(BRIGHT_AIR));
+    public static final Block BREATHEABLE_AIR = new BlockBreathableAir(Block.Properties.create(Material.AIR).doesNotBlockMovement().noDrops().hardnessAndResistance(0.0F, 10000.0F).noDrops());
+    public static final Block BRIGHT_AIR = new BlockBrightAir(Block.Properties.from(BREATHEABLE_AIR).lightValue(15).noDrops());
+    public static final Block BRIGHT_BREATHEABLE_AIR = new BlockBrightBreathableAir(Block.Properties.from(BRIGHT_AIR).noDrops());
 
     public static final Block ARC_LAMP = new BlockArcLamp(Block.Properties.create(Material.GLASS).hardnessAndResistance(0.1F).sound(SoundType.METAL).lightValue(13));
 
-    public static final Block TIER_1_TREASURE_CHEST = new BlockTier1TreasureChest(Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13));
+    public static final Block TIER_1_TREASURE_CHEST = new BlockTier1TreasureChest(Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13).noDrops());
 
     public static final Block ROCKET_LAUNCH_PAD = new BlockPad(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
     public static final Block BUGGY_FUELING_PAD = new BlockPad(Block.Properties.from(ROCKET_LAUNCH_PAD));
@@ -43,11 +43,11 @@ public class GCBlocks
     public static final Block FULL_BUGGY_FUELING_PAD = new BlockPadFull(Block.Properties.from(ROCKET_LAUNCH_PAD));
 
     public static final Block UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.0F).lightValue(3).sound(SoundType.WOOD));
-    public static final Block WALL_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH));
-    public static final Block LIT_UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.from(UNLIT_TORCH).lightValue(14));
-    public static final Block WALL_LIT_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(14));
+    public static final Block WALL_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH).lootFrom(UNLIT_TORCH));
+    public static final Block LIT_UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.from(UNLIT_TORCH).lightValue(14).lootFrom(UNLIT_TORCH));
+    public static final Block WALL_LIT_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(14).lootFrom(UNLIT_TORCH));
     public static final Block GLOWSTONE_TORCH = new BlockGlowstoneTorch(Block.Properties.from(UNLIT_TORCH).lightValue(12));
-    public static final Block WALL_GLOWSTONE_TORCH = new BlockGlowstoneTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(12));
+    public static final Block WALL_GLOWSTONE_TORCH = new BlockGlowstoneTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(12).lootFrom(GLOWSTONE_TORCH));
 
     public static final Block OXYGEN_BUBBLE_DISTRIBUTOR = new BlockOxygenDistributor(Block.Properties.create(Material.ROCK).hardnessAndResistance(1.0F).sound(SoundType.METAL));
     public static final Block OXYGEN_COLLECTOR = new BlockOxygenCollector(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
@@ -85,7 +85,7 @@ public class GCBlocks
     public static final Block HIDDEN_REDSTONE_REPEATER = new BlockConcealedRepeater(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
     public static final Block PLAYER_DETECTOR = new BlockConcealedDetector(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
 
-    public static final Block AIR_LOCK_SEAL = new BlockAirLockWall(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR).hardnessAndResistance(1000.0F).tickRandomly());
+    public static final Block AIR_LOCK_SEAL = new BlockAirLockWall(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR).hardnessAndResistance(1000.0F).tickRandomly().noDrops());
 
     public static final Block FLUID_PIPE = new BlockFluidPipe(Block.Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS), BlockFluidPipe.EnumPipeMode.NORMAL);
     public static final Block PULLED_FLUID_PIPE = new BlockFluidPipe(Block.Properties.from(FLUID_PIPE), BlockFluidPipe.EnumPipeMode.PULL);
@@ -100,7 +100,7 @@ public class GCBlocks
 
     public static final Block SPACE_STATION_BASE = new BlockSpaceStationBase(Block.Properties.create(Material.ROCK).hardnessAndResistance(-1.0F, 3600000.0F).noDrops());
 
-    public static final Block MULTI_BLOCK = new BlockMulti(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 3600000.0F).sound(SoundType.METAL).notSolid());
+    public static final Block MULTI_BLOCK = new BlockMulti(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 3600000.0F).sound(SoundType.METAL).notSolid().noDrops());
 
 //    public static final Block sealableBlock = new BlockEnclosed(builder);
 
