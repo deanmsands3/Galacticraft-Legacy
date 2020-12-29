@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import micdoodle8.mods.galacticraft.core.GCBlocks;
+import micdoodle8.mods.galacticraft.planets.asteroids.dimension.DimensionAsteroids;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BushBlock;
@@ -22,7 +23,7 @@ public abstract class MixinBushBlock
         BlockPos blockpos = pos.down();
 
         // hopefully it is a good condition for nether wart in asteroids dimension
-        if (state.getBlock() == Blocks.NETHER_WART/* && world.getDimension() instanceof DimensionAsteroids*/)
+        if (state.getBlock() == Blocks.NETHER_WART && world.getDimension() instanceof DimensionAsteroids)
         {
             info.setReturnValue(world.getBlockState(blockpos).getBlock() == GCBlocks.MOON_ROCK || world.getBlockState(blockpos).canSustainPlant(world, blockpos, Direction.UP, (BushBlock)(Object)this));
         }

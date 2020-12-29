@@ -3,14 +3,12 @@ package micdoodle8.mods.galacticraft.planets.data;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 
 import micdoodle8.mods.galacticraft.core.Constants;
@@ -43,7 +41,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.ILootCondition;
 import net.minecraft.world.storage.loot.conditions.MatchTool;
@@ -790,37 +787,6 @@ public class DataGeneratorGCPlanets
                 this.registerLootTable(VenusBlocks.WEB_STRING, BlockLootTables::onlyWithShears);
                 this.registerSilkTouch(VenusBlocks.VENUS_VOLCANIC_ROCK);
                 this.registerLootTable(VenusBlocks.VAPOR_SPOUT, block -> droppingWithSilkTouch(block, VenusBlocks.VENUS_SOFT_ROCK));
-            }
-
-            @Override
-            @Deprecated //TODO Remove after debugging
-            public void accept(BiConsumer<ResourceLocation, LootTable.Builder> p_accept_1_)
-            {
-                this.addTables();
-                Set<ResourceLocation> set = Sets.newHashSet();
-
-                for (Block block : this.getKnownBlocks())
-                {
-                    ResourceLocation resourcelocation = block.getLootTable();
-
-                    if (resourcelocation != net.minecraft.world.storage.loot.LootTables.EMPTY && set.add(resourcelocation))
-                    {
-                        LootTable.Builder loottable$builder = this.lootTables.remove(resourcelocation);
-
-                        if (loottable$builder == null)
-                        {
-                            System.out.println(String.format("Missing loottable '%s' for '%s'", resourcelocation, Registry.BLOCK.getKey(block)));
-                            continue;
-                        }
-
-                        p_accept_1_.accept(resourcelocation, loottable$builder);
-                    }
-                }
-
-                if (!this.lootTables.isEmpty())
-                {
-                    throw new IllegalStateException("Created block loot tables for non-blocks: " + this.lootTables.keySet());
-                }
             }
 
             @Override

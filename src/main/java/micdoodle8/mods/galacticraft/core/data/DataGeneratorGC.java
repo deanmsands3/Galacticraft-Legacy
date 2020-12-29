@@ -3,22 +3,22 @@ package micdoodle8.mods.galacticraft.core.data;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
+import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.tags.GCTags;
 import micdoodle8.mods.galacticraft.planets.tags.GCPlanetsTags;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
@@ -28,12 +28,18 @@ import net.minecraft.data.loot.EntityLootTables;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.storage.loot.*;
+import net.minecraft.world.storage.loot.conditions.EntityHasProperty;
+import net.minecraft.world.storage.loot.conditions.KilledByPlayer;
+import net.minecraft.world.storage.loot.conditions.RandomChanceWithLooting;
+import net.minecraft.world.storage.loot.functions.LootingEnchantBonus;
+import net.minecraft.world.storage.loot.functions.SetCount;
+import net.minecraft.world.storage.loot.functions.SetDamage;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -894,7 +900,7 @@ public class DataGeneratorGC
         public LootTables(DataGenerator generator)
         {
             super(generator);
-            this.addTable(Pair.of(BlockLootTable::new, LootParameterSets.BLOCK));/*.addTable(Pair.of(EntityLootTable::new, LootParameterSets.ENTITY));*/
+            this.addTable(Pair.of(BlockLootTable::new, LootParameterSets.BLOCK)).addTable(Pair.of(EntityLootTable::new, LootParameterSets.ENTITY));
         }
 
         @Override
@@ -909,7 +915,7 @@ public class DataGeneratorGC
             map.forEach((resource, loot) -> LootTableManager.func_227508_a_(tracker, resource, loot));//validateLootTable
         }
 
-        public LootTables addTable(Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet> table)
+        protected LootTables addTable(Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet> table)
         {
             this.tables.add(table);
             return this;
@@ -996,37 +1002,6 @@ public class DataGeneratorGC
             }
 
             @Override
-            @Deprecated //TODO Remove after debugging
-            public void accept(BiConsumer<ResourceLocation, LootTable.Builder> p_accept_1_)
-            {
-                this.addTables();
-                Set<ResourceLocation> set = Sets.newHashSet();
-
-                for (Block block : this.getKnownBlocks())
-                {
-                    ResourceLocation resourcelocation = block.getLootTable();
-
-                    if (resourcelocation != net.minecraft.world.storage.loot.LootTables.EMPTY && set.add(resourcelocation))
-                    {
-                        LootTable.Builder loottable$builder = this.lootTables.remove(resourcelocation);
-
-                        if (loottable$builder == null)
-                        {
-                            System.out.println(String.format("Missing loottable '%s' for '%s'", resourcelocation, Registry.BLOCK.getKey(block)));
-                            continue;
-                        }
-
-                        p_accept_1_.accept(resourcelocation, loottable$builder);
-                    }
-                }
-
-                if (!this.lootTables.isEmpty())
-                {
-                    throw new IllegalStateException("Created block loot tables for non-blocks: " + this.lootTables.keySet());
-                }
-            }
-
-            @Override
             protected Iterable<Block> getKnownBlocks()
             {
                 return ForgeRegistries.BLOCKS.getValues().stream().filter(type -> type.getRegistryName().getNamespace().equals(Constants.MOD_ID_CORE)).collect(Collectors.toList());
@@ -1038,10 +1013,93 @@ public class DataGeneratorGC
             @Override
             protected void addTables()
             {
-                //                this.registerLootTable(MCEntities.MOOBLOOM, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.LEATHER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))).addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BEEF).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 3.0F))).acceptFunction(Smelt.func_215953_b().acceptCondition(EntityHasProperty.builder(LootContext.EntityTarget.THIS, ON_FIRE))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))).addEntry(ItemLootEntry.builder(Blocks.SUNFLOWER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
-                //                this.registerLootTable(MCEntities.WITHERBLOOM, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.LEATHER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))).addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BEEF).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 3.0F))).acceptFunction(Smelt.func_215953_b().acceptCondition(EntityHasProperty.builder(LootContext.EntityTarget.THIS, ON_FIRE))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))).addEntry(ItemLootEntry.builder(Blocks.WITHER_ROSE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
-                //                this.registerLootTable(MCEntities.ICEOLOGER, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Blocks.PACKED_ICE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
-                //                this.registerLootTable(MCEntities.GLOW_SQUID, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(MCItems.GLOW_INK_SAC).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 3.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
+                this.registerLootTable(GCEntities.EVOLVED_SPIDER, LootTable.builder()
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(Items.STRING).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(Items.SPIDER_EYE).acceptFunction(SetCount.builder(RandomValueRange.of(-1.0F, 1.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))).acceptCondition(KilledByPlayer.builder()))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(GCItems.CHEESE_CURD))
+                                .addEntry(ItemLootEntry.builder(Items.FERMENTED_SPIDER_EYE))
+                                .addEntry(ItemLootEntry.builder(GCItems.MEDIUM_OXYGEN_TANK).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.1F, 0.8F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_GEAR))
+                                .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_CONCENTRATOR))
+                                .addEntry(ItemLootEntry.builder(Items.NETHER_WART))//TODO ConfigManagerCore.challengeMobDropsAndSpawning condition
+                                .acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.025F, 0.02F))));
+
+                this.registerLootTable(GCEntities.EVOLVED_ZOMBIE, LootTable.builder()
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(Items.ROTTEN_FLESH).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.IRON_INGOT))
+                                .addEntry(ItemLootEntry.builder(Items.CARROT))
+                                .addEntry(ItemLootEntry.builder(Items.POTATO)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.025F, 0.01F)))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_CARROT_CAN))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_POTATO_CAN))
+                                .addEntry(ItemLootEntry.builder(GCItems.RAW_METEORIC_IRON))
+                                .addEntry(ItemLootEntry.builder(GCItems.MEDIUM_OXYGEN_TANK).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.1F, 0.8F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_MASK))
+                                .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_VENT))
+                                .addEntry(ItemLootEntry.builder(Items.MELON_SEEDS))//TODO ConfigManagerCore.challengeMobDropsAndSpawning condition
+                                .acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.025F, 0.02F)))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(GCItems.COPPER_INGOT))//TODO ConfigManagerCore.challengeMobDropsAndSpawning condition
+                                .acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.5F, 0.0F))));
+
+                this.registerLootTable(GCEntities.EVOLVED_CREEPER, LootTable.builder()
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(Items.GUNPOWDER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+                        .addLootPool(LootPool.builder()
+                                .addEntry(TagLootEntry.func_216176_b(ItemTags.MUSIC_DISCS)).acceptCondition(EntityHasProperty.builder(LootContext.EntityTarget.KILLER, EntityPredicate.Builder.create().type(EntityTypeTags.SKELETONS))))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(Blocks.SAND))
+                                .addEntry(ItemLootEntry.builder(GCItems.MEDIUM_OXYGEN_TANK).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.1F, 0.8F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_GEAR))
+                                .addEntry(ItemLootEntry.builder(Blocks.ICE))
+                                .addEntry(ItemLootEntry.builder(Items.SUGAR_CANE))//TODO ConfigManagerCore.challengeMobDropsAndSpawning condition
+                                .acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.025F, 0.02F))));
+
+                this.registerLootTable(GCEntities.EVOLVED_SKELETON, LootTable.builder()
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(Items.ARROW).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(Items.BONE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(GCBlocks.FLUID_PIPE))
+                                .addEntry(ItemLootEntry.builder(GCItems.MEDIUM_OXYGEN_TANK).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.1F, 0.8F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.TIN_CANISTER))
+                                .addEntry(ItemLootEntry.builder(Items.PUMPKIN_SEEDS))//TODO ConfigManagerCore.challengeMobDropsAndSpawning condition
+                                .acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.025F, 0.02F))));
+
+                this.registerLootTable(GCEntities.EVOLVED_ENDERMAN, LootTable.builder()
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(Items.ENDER_PEARL).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(GCItems.MEDIUM_OXYGEN_TANK).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.1F, 0.8F))))
+                                .addEntry(ItemLootEntry.builder(Items.ENDER_EYE))
+                                .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_CONCENTRATOR))
+                                .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_MASK))
+                                .acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.025F, 0.02F))));
+
+                this.registerLootTable(GCEntities.EVOLVED_WITCH, LootTable.builder()
+                        .addLootPool(LootPool.builder().rolls(RandomValueRange.of(1.0F, 3.0F))
+                                .addEntry(ItemLootEntry.builder(Items.GLOWSTONE_DUST).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))
+                                .addEntry(ItemLootEntry.builder(Items.SUGAR).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))
+                                .addEntry(ItemLootEntry.builder(Items.REDSTONE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))
+                                .addEntry(ItemLootEntry.builder(Items.SPIDER_EYE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))
+                                .addEntry(ItemLootEntry.builder(Items.GLASS_BOTTLE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))
+                                .addEntry(ItemLootEntry.builder(Items.GUNPOWDER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))
+                                .addEntry(ItemLootEntry.builder(Items.STICK).weight(2).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(GCItems.MEDIUM_OXYGEN_TANK).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.1F, 0.8F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_CARROT_CAN))
+                                .addEntry(ItemLootEntry.builder(Blocks.GLOWSTONE))
+                                .addEntry(ItemLootEntry.builder(GCItems.AMBIENT_THERMAL_CONTROLLER))
+                                .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_MASK))
+                                .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_VENT))
+                                .acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.025F, 0.02F))));
+
+                this.registerLootTable(GCEntities.EVOLVED_SKELETON_BOSS, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.ARROW).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))).addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BONE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
             }
 
             @Override
