@@ -19,10 +19,12 @@ import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockSlimelingEgg;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
+import micdoodle8.mods.galacticraft.planets.mars.entities.MarsEntities;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.tags.GCPlanetsTags;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockGeothermalGenerator;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
+import micdoodle8.mods.galacticraft.planets.venus.entities.VenusEntities;
 import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
 import net.minecraft.advancements.criterion.EnchantmentPredicate;
 import net.minecraft.advancements.criterion.ItemPredicate;
@@ -43,8 +45,11 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.ILootCondition;
+import net.minecraft.world.storage.loot.conditions.KilledByPlayer;
 import net.minecraft.world.storage.loot.conditions.MatchTool;
 import net.minecraft.world.storage.loot.functions.ApplyBonus;
+import net.minecraft.world.storage.loot.functions.LootingEnchantBonus;
+import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -695,7 +700,7 @@ public class DataGeneratorGCPlanets
         public LootTables(DataGenerator generator)
         {
             super(generator);
-            this.addTable(Pair.of(BlockLootTable::new, LootParameterSets.BLOCK));/*.addTable(Pair.of(EntityLootTable::new, LootParameterSets.ENTITY));*/
+            this.addTable(Pair.of(BlockLootTable::new, LootParameterSets.BLOCK)).addTable(Pair.of(EntityLootTable::new, LootParameterSets.ENTITY));
         }
 
         @Override
@@ -799,16 +804,19 @@ public class DataGeneratorGCPlanets
             @Override
             protected void addTables()
             {
-                //                this.registerLootTable(MCEntities.MOOBLOOM, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.LEATHER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))).addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BEEF).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 3.0F))).acceptFunction(Smelt.func_215953_b().acceptCondition(EntityHasProperty.builder(LootContext.EntityTarget.THIS, ON_FIRE))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))).addEntry(ItemLootEntry.builder(Blocks.SUNFLOWER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
-                //                this.registerLootTable(MCEntities.WITHERBLOOM, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.LEATHER).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))).addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BEEF).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 3.0F))).acceptFunction(Smelt.func_215953_b().acceptCondition(EntityHasProperty.builder(LootContext.EntityTarget.THIS, ON_FIRE))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))).addEntry(ItemLootEntry.builder(Blocks.WITHER_ROSE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
-                //                this.registerLootTable(MCEntities.ICEOLOGER, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Blocks.PACKED_ICE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
-                //                this.registerLootTable(MCEntities.GLOW_SQUID, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(MCItems.GLOW_INK_SAC).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 3.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
+                this.registerLootTable(MarsEntities.SLIMELING, LootTable.builder()
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                                .addEntry(ItemLootEntry.builder(Items.SLIME_BALL).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))));
+                this.registerLootTable(MarsEntities.SLUDGELING, LootTable.builder());
+                this.registerLootTable(MarsEntities.CREEPER_BOSS, LootTable.builder());
+                this.registerLootTable(VenusEntities.JUICER, LootTable.builder());
+                this.registerLootTable(VenusEntities.SPIDER_QUEEN, LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.STRING).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F))))).addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.SPIDER_EYE).acceptFunction(SetCount.builder(RandomValueRange.of(-1.0F, 1.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))).acceptCondition(KilledByPlayer.builder())));
             }
 
             @Override
             protected Iterable<EntityType<?>> getKnownEntities()
             {
-                return ForgeRegistries.ENTITIES.getValues().stream().filter(type -> type.getRegistryName().getNamespace().equals(Constants.MOD_ID_CORE)).collect(Collectors.toList());
+                return ForgeRegistries.ENTITIES.getValues().stream().filter(type -> type.getRegistryName().getNamespace().equals(Constants.MOD_ID_PLANETS)).collect(Collectors.toList());
             }
         }
     }

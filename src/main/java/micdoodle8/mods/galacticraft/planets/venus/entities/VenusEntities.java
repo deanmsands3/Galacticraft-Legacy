@@ -30,13 +30,13 @@ public class VenusEntities
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntityJuicer> JUICER = EntityType.Builder.create(EntityJuicer::new, EntityClassification.MISC)
+    public static final EntityType<EntityJuicer> JUICER = EntityType.Builder.create(EntityJuicer::new, EntityClassification.MONSTER)
             .size(0.95F, 0.6F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EntitySpiderQueen> SPIDER_QUEEN = EntityType.Builder.create(EntitySpiderQueen::new, EntityClassification.MISC)
+    public static final EntityType<EntitySpiderQueen> SPIDER_QUEEN = EntityType.Builder.create(EntitySpiderQueen::new, EntityClassification.MONSTER)
             .size(1.4F, 0.9F)
             .immuneToFire()
             .setUpdateInterval(10)
