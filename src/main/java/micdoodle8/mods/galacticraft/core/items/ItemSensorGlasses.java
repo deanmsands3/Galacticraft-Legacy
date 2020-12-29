@@ -38,7 +38,7 @@ public class ItemSensorGlasses extends ArmorItem implements ISortable, ISensorGl
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type)
     {
-        return Constants.TEXTURE_PREFIX + "textures/model/armor/sensor_1.png";
+        return Constants.TEXTURE_PREFIX + "textures/models/armor/sensor_glasses.png";
     }
 
     @Override

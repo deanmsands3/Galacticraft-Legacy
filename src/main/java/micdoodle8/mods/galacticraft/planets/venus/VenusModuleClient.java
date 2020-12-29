@@ -94,16 +94,16 @@ public class VenusModuleClient implements IPlanetsModuleClient
     @OnlyIn(Dist.CLIENT)
     public static void loadTextures(TextureStitchEvent.Pre event)
     {
-        registerTexture(event, "pod_flame");
-        registerTexture(event, "web");
-        registerTexture(event, "laser");
-        registerTexture(event, "laser_off");
-        registerTexture(event, "orb");
+        registerTexture(event, "entry_pod/flame");
+        registerTexture(event, "queen_web");
+        registerTexture(event, "laser_turret/laser");
+        registerTexture(event, "laser_turret/laser_off");
+        registerTexture(event, "laser_turret/orb");
     }
 
     private static void registerTexture(TextureStitchEvent.Pre event, String texture)
     {
-        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "block/" + texture));
+        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "entity/" + texture));
     }
 
     @SubscribeEvent

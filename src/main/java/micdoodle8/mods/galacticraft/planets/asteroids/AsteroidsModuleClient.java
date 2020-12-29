@@ -151,32 +151,32 @@ public class AsteroidsModuleClient implements IPlanetsModuleClient
     @OnlyIn(Dist.CLIENT)
     public static void loadTextures(TextureStitchEvent.Pre event)
     {
-        registerTexture(event, "astro_miner_base");
-        registerTexture(event, "energy_beam_reflector");
-        registerTexture(event, "energy_beam_receiver");
-        registerTexture(event, "short_range_telepad_base");
-        registerTexture(event, "short_range_telepad_input");
-        registerTexture(event, "grapple");
-        registerTexture(event, "tier3rocket");
-        registerTexture(event, "astro_miner");
-        registerTexture(event, "astro_miner_off");
-        registerTexture(event, "astro_miner_fx");
-        registerTexture(event, "space_pod");
-        registerTexture(event, "argon");
-        registerTexture(event, "atmospheric_gases");
-        registerTexture(event, "carbondioxide");
-        registerTexture(event, "helium");
-        registerTexture(event, "liquid_argon");
-        registerTexture(event, "liquid_methane");
-        registerTexture(event, "liquid_nitrogen");
-        registerTexture(event, "liquid_oxygen");
-        registerTexture(event, "methane");
-        registerTexture(event, "nitrogen");
+        registerTexture(event, "entity/astro_miner_base");
+        registerTexture(event, "entity/energy_beam_reflector");
+        registerTexture(event, "entity/energy_beam_receiver");
+        registerTexture(event, "entity/short_range_telepad/base");
+        registerTexture(event, "entity/short_range_telepad/input");
+        registerTexture(event, "entity/grapple");
+        registerTexture(event, "entity/tier_3_rocket");
+        registerTexture(event, "entity/astro_miner/main");
+        registerTexture(event, "entity/astro_miner/off");
+        registerTexture(event, "entity/astro_miner/fx");
+        registerTexture(event, "entity/entry_pod/pod");
+        registerTexture(event, "block/argon");
+        registerTexture(event, "block/atmospheric_gases");
+        registerTexture(event, "block/carbondioxide");
+        registerTexture(event, "block/helium");
+        registerTexture(event, "block/liquid_argon");
+        registerTexture(event, "block/liquid_methane");
+        registerTexture(event, "block/liquid_nitrogen");
+        registerTexture(event, "block/liquid_oxygen");
+        registerTexture(event, "block/methane");
+        registerTexture(event, "block/nitrogen");
     }
 
     private static void registerTexture(TextureStitchEvent.Pre event, String texture)
     {
-        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "block/" + texture));
+        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + texture));
     }
 
 //    public static void registerBlockRenderers()

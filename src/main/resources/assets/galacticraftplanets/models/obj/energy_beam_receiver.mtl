@@ -3,4 +3,4 @@ Ks 0.8 0.8 0.8
 d 1
 
 newmtl Receiver
-map_Kd galacticraftplanets:block/energy_beam_receiver
+map_Kd galacticraftplanets:entity/energy_beam_receiver

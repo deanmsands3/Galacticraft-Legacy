@@ -2,4 +2,4 @@
 # Material Count: 1
 
 newmtl None
-map_Kd galacticraftplanets:block/orb
+map_Kd galacticraftplanets:entity/laser_turret/orb

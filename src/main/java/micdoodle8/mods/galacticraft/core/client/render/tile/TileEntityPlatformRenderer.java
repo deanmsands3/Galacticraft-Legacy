@@ -62,7 +62,7 @@ public class TileEntityPlatformRenderer extends TileEntityRenderer<TileEntityPla
         }
     }
 
-    public static final ResourceLocation platformTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/platform_moving.png");
+    public static final ResourceLocation platformTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/hydraulic_platform.png");
     public static final ResourceLocation lightTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/misc/light.png");
     private final ModelPlatform platform = new ModelPlatform();
     private static final Map<Integer, Float> lastYMap = new HashMap<>();

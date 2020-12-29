@@ -160,12 +160,12 @@ public class MarsModuleClient implements IPlanetsModuleClient
     {
         registerTexture(event, "tier_2_rocket");
         registerTexture(event, "cargo_rocket");
-        registerTexture(event, "landing_balloon");
+        registerTexture(event, "landing_balloons");
     }
 
     private static void registerTexture(TextureStitchEvent.Pre event, String texture)
     {
-        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "block/" + texture));
+        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "entity/" + texture));
     }
 
     @SubscribeEvent

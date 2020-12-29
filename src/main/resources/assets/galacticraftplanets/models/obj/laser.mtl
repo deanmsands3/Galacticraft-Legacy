@@ -1,6 +1,6 @@
 # Made in Blockbench 3.0.6
 newmtl 0
-map_Kd galacticraftplanets:block/laser
+map_Kd galacticraftplanets:entity/laser_turret/laser
 newmtl 1
-map_Kd galacticraftplanets:block/laser_off
+map_Kd galacticraftplanets:entity/laser_turret/laser_off
 newmtl none

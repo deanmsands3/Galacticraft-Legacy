@@ -7,4 +7,4 @@ newmtl None_bubble.png
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
 d 1
-map_Kd galacticraftcore:blocks/bubble
+map_Kd galacticraftcore:block/bubble

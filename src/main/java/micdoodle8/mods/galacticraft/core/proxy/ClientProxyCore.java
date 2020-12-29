@@ -428,7 +428,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 //        event.getMap().loadTexture(new ResourceLocation("galacticraftcore:blocks/fluids/hydrogen_gas"));
 //        event.getMap().loadTexture(new ResourceLocation("galacticraftcore:blocks/bubble")); TODO Item/Block models
 //        new TextureDungeonFinder("galacticraftcore:items/dungeonfinder").registedistanceSmoker(event);
-        registerTexture(event, "model/arc_lamp");
+        registerTexture(event, "entity/arc_lamp");
     }
 
     private static void registerTexture(TextureStitchEvent.Pre event, String texture)
@@ -594,7 +594,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 
     private static void registerTileEntityRenderers()
     {
-        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChest.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/treasure.png")));
+        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChest.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/tier_1_treasure_chest.png")));
         ClientRegistry.bindTileEntityRenderer(TileEntitySolar.TileEntitySolarT1.TYPE, TileEntitySolarPanelRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntitySolar.TileEntitySolarT2.TYPE, TileEntitySolarPanelRenderer::new);
 ////        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOxygenDistributor.class, new TileEntityBubbleProviderRenderer<>(0.25F, 0.25F, 1.0F));
