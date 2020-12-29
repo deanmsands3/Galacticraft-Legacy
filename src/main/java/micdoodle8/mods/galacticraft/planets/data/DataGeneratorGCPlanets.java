@@ -26,13 +26,16 @@ import micdoodle8.mods.galacticraft.planets.tags.GCPlanetsTags;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockGeothermalGenerator;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
 import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.data.*;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.data.loot.EntityLootTables;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -42,6 +45,9 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.storage.loot.*;
+import net.minecraft.world.storage.loot.conditions.ILootCondition;
+import net.minecraft.world.storage.loot.conditions.MatchTool;
+import net.minecraft.world.storage.loot.functions.ApplyBonus;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -689,6 +695,7 @@ public class DataGeneratorGCPlanets
     public static class LootTables extends LootTableProvider
     {
         private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> tables = Lists.newArrayList();
+        private static final ILootCondition.IBuilder SILK_TOUCH = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1))));
 
         public LootTables(DataGenerator generator)
         {
@@ -742,7 +749,6 @@ public class DataGeneratorGCPlanets
 
                 this.registerDropSelfLootTable(AsteroidBlocks.ASTEROID_IRON_ORE);
                 this.registerDropSelfLootTable(AsteroidBlocks.ASTEROID_ALUMINUM_ORE);
-                this.registerDropSelfLootTable(AsteroidBlocks.ILMENITE_ORE);
                 this.registerDropSelfLootTable(AsteroidBlocks.TITANIUM_BLOCK);
                 this.registerDropSelfLootTable(AsteroidBlocks.DARK_DECORATION_BLOCK);
                 this.registerDropSelfLootTable(AsteroidBlocks.DARK_ASTEROID_ROCK);
@@ -757,6 +763,8 @@ public class DataGeneratorGCPlanets
                 this.registerDropSelfLootTable(AsteroidBlocks.ENERGY_BEAM_RECEIVER);
                 this.registerDropSelfLootTable(AsteroidBlocks.SHORT_RANGE_TELEPAD);
                 this.registerLootTable(AsteroidBlocks.FULL_ASTRO_MINER_BASE, block -> droppingWithSilkTouchOrRandomly(block, AsteroidBlocks.ASTRO_MINER_BASE, ConstantRange.of(8)));
+                this.registerLootTable(AsteroidBlocks.ILMENITE_ORE, block -> droppingItemWithFortune(block, AsteroidsItems.TITANIUM_SHARD)
+                        .addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(AsteroidsItems.IRON_SHARD).acceptFunction(ApplyBonus.oreDrops(Enchantments.FORTUNE)).acceptCondition(SILK_TOUCH.inverted()))));
 
                 this.registerDropSelfLootTable(VenusBlocks.VENUS_SOFT_ROCK);
                 this.registerDropSelfLootTable(VenusBlocks.VENUS_HARD_ROCK);
