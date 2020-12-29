@@ -454,9 +454,9 @@ public class DataGeneratorGCPlanets
             this.add(MarsBlocks.MARS_TIN_ORE, "Mars Tin Ore");
             this.add(MarsBlocks.MARS_COPPER_ORE, "Mars Copper Ore");
             this.add(MarsBlocks.CREEPER_EGG, "Creeper Egg");
-            this.add(MarsBlocks.BLUE_SLIMELING_EGG, "Blue Slimeline Egg");
-            this.add(MarsBlocks.RED_SLIMELING_EGG, "Blue Slimeline Egg");
-            this.add(MarsBlocks.YELLOW_SLIMELING_EGG, "Blue Slimeline Egg");
+            this.add(MarsBlocks.BLUE_SLIMELING_EGG, "Blue Slimeling Egg");
+            this.add(MarsBlocks.RED_SLIMELING_EGG, "Blue Slimeling Egg");
+            this.add(MarsBlocks.YELLOW_SLIMELING_EGG, "Blue Slimeling Egg");
             this.add(MarsBlocks.CAVERNOUS_VINES, "Cavernous Vines");
             this.add(MarsBlocks.METHANE_SYNTHESIZER, "Methane Synthesizer");
             this.add(MarsBlocks.GAS_LIQUEFIER, "Gas Liquefier");

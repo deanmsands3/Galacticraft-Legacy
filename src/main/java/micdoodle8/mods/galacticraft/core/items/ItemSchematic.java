@@ -5,7 +5,7 @@ import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
-import micdoodle8.mods.galacticraft.core.entities.EntityHangingSchematic;
+import micdoodle8.mods.galacticraft.core.entities.HangingSchematicEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
@@ -104,7 +104,7 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
 
         if (facing != Direction.DOWN && facing != Direction.UP && context.getPlayer().canPlayerEdit(blockpos, facing, stack))
         {
-            EntityHangingSchematic entityhanging = this.createEntity(context.getWorld(), blockpos, facing, this.getIndex(stack.getDamage()));
+            HangingSchematicEntity entityhanging = this.createEntity(context.getWorld(), blockpos, facing, this.getIndex(stack.getDamage()));
 
             if (entityhanging != null && entityhanging.onValidSurface())
             {
@@ -126,9 +126,9 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
         }
     }
 
-    private EntityHangingSchematic createEntity(World worldIn, BlockPos pos, Direction clickedSide, int index)
+    private HangingSchematicEntity createEntity(World worldIn, BlockPos pos, Direction clickedSide, int index)
     {
-        return new EntityHangingSchematic(GCEntities.HANGING_SCHEMATIC, worldIn, pos, clickedSide, index);
+        return new HangingSchematicEntity(GCEntities.HANGING_SCHEMATIC, worldIn, pos, clickedSide, index);
     }
 
     /**

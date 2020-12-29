@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.planets.mars.blocks;
 
 import micdoodle8.mods.galacticraft.core.items.ISortable;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedCreeper;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedCreeperEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
@@ -89,7 +89,7 @@ public class BlockCreeperEgg extends DragonEggBlock implements IShiftDescription
     {
         if (!world.isRemote)
         {
-            EntityEvolvedCreeper creeper = new EntityEvolvedCreeper(GCEntities.EVOLVED_CREEPER, world);
+            EvolvedCreeperEntity creeper = new EvolvedCreeperEntity(GCEntities.EVOLVED_CREEPER, world);
             creeper.setPosition(pos.getX() + 0.5, pos.getY() + 3, pos.getZ() + 0.5);
             creeper.setChild(true);
             world.addEntity(creeper);

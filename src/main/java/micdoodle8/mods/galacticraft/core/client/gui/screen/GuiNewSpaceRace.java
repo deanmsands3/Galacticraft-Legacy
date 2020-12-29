@@ -11,7 +11,7 @@ import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementGradientLi
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementTextBox.ITextBoxCallback;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRace;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRaceManager;
-import micdoodle8.mods.galacticraft.core.entities.EntityFlag;
+import micdoodle8.mods.galacticraft.core.entities.FlagEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
@@ -91,7 +91,7 @@ public class GuiNewSpaceRace extends Screen implements ICheckBoxCallback, ITextB
     private int selectionMinY;
     private int selectionMaxY;
 
-    private final EntityFlag dummyFlag = new EntityFlag(GCEntities.FLAG, Minecraft.getInstance().world);
+    private final FlagEntity dummyFlag = new FlagEntity(GCEntities.FLAG, Minecraft.getInstance().world);
 //    private final ModelFlag dummyModel = new ModelFlag();
 
     private SpaceRace spaceRaceData;

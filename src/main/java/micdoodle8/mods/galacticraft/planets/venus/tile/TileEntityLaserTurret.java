@@ -14,7 +14,7 @@ import micdoodle8.mods.galacticraft.core.dimension.SpaceRace;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRaceManager;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
-import micdoodle8.mods.galacticraft.core.entities.EntityMeteor;
+import micdoodle8.mods.galacticraft.core.entities.MeteorEntity;
 import micdoodle8.mods.galacticraft.core.network.NetworkUtil;
 import micdoodle8.mods.galacticraft.core.tile.IMachineSides;
 import micdoodle8.mods.galacticraft.core.tile.IMachineSidesProperties;
@@ -290,13 +290,13 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
                         Vector3 vecNoHeight = vec.clone();
                         vecNoHeight.y = 0;
                         // Make sure target is within range and not directly below turret:
-                        if ((vec.getMagnitudeSquared() < RANGE * RANGE || (targetMeteors && e instanceof EntityMeteor && vecNoHeight.getMagnitudeSquared() < METEOR_RANGE * METEOR_RANGE)) && Math.asin(vec.clone().normalize().y) > -Math.PI / 3.0)
+                        if ((vec.getMagnitudeSquared() < RANGE * RANGE || (targetMeteors && e instanceof MeteorEntity && vecNoHeight.getMagnitudeSquared() < METEOR_RANGE * METEOR_RANGE)) && Math.asin(vec.clone().normalize().y) > -Math.PI / 3.0)
                         {
                             if (e instanceof LivingEntity)
                             {
                                 list.add(new EntityEntrySortable((LivingEntity) e, vec.getMagnitude()));
                             }
-                            else if (targetMeteors && e instanceof EntityMeteor)
+                            else if (targetMeteors && e instanceof MeteorEntity)
                             {
                                 return e;
                             }
@@ -407,7 +407,7 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
                         LivingEntity entityLiving = (LivingEntity) toTarget;
                         entityLiving.attackEntityFrom(DamageSourceGC.laserTurret, 1.5F);
                     }
-                    else if (toTarget instanceof EntityMeteor)
+                    else if (toTarget instanceof MeteorEntity)
                     {
                         toTarget.remove();
                     }

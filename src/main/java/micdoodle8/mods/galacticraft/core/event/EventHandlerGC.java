@@ -17,9 +17,9 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.TransformerHooks;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedZombie;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedZombieEntity;
 import micdoodle8.mods.galacticraft.core.entities.EntityLanderBase;
-import micdoodle8.mods.galacticraft.core.entities.EntityMeteor;
+import micdoodle8.mods.galacticraft.core.entities.MeteorEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStatsClient;
@@ -364,7 +364,7 @@ public class EventHandlerGC
     @SubscribeEvent
     public static void entityUpdateCancelInFreefall(EntityEvent.CanUpdate event)
     {
-        if (event.getEntity() instanceof EntityMeteor)
+        if (event.getEntity() instanceof MeteorEntity)
         {
             event.setCanUpdate(true);
             return;
@@ -880,11 +880,11 @@ public class EventHandlerGC
     @SubscribeEvent
     public static void onZombieSummonAid(ZombieEvent.SummonAidEvent event)
     {
-        if (event.getEntity() instanceof EntityEvolvedZombie)
+        if (event.getEntity() instanceof EvolvedZombieEntity)
         {
-            event.setCustomSummonedAid(new EntityEvolvedZombie(GCEntities.EVOLVED_ZOMBIE, event.getWorld()));
+            event.setCustomSummonedAid(new EvolvedZombieEntity(GCEntities.EVOLVED_ZOMBIE, event.getWorld()));
 
-            if (((LivingEntity) event.getEntity()).getRNG().nextFloat() < ((EntityEvolvedZombie) event.getEntity()).getAttribute(((EntityEvolvedZombie) event.getEntity()).getReinforcementsAttribute()).getValue())
+            if (((LivingEntity) event.getEntity()).getRNG().nextFloat() < ((EvolvedZombieEntity) event.getEntity()).getAttribute(((EvolvedZombieEntity) event.getEntity()).getReinforcementsAttribute()).getValue())
             {
                 event.setResult(Event.Result.ALLOW);
             }

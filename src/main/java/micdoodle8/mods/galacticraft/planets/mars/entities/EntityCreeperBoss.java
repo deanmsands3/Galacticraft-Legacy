@@ -7,7 +7,7 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.client.sounds.GCSounds;
 import micdoodle8.mods.galacticraft.core.entities.EntityAIArrowAttack;
 import micdoodle8.mods.galacticraft.core.entities.EntityBossBase;
-import micdoodle8.mods.galacticraft.core.entities.EntitySkeletonBoss;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedSkeletonBossEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;

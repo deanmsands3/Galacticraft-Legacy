@@ -735,7 +735,7 @@ public class GCPlayerHandler
 
     protected void checkOxygen(ServerPlayerEntity player, GCPlayerStats stats)
     {
-        if ((player.dimension == DimensionType.OVERWORLD || player.world.getDimension() instanceof IGalacticraftDimension) && (!(player.dimension == DimensionType.OVERWORLD || ((IGalacticraftDimension) player.world.getDimension()).hasBreathableAtmosphere()) || player.getPosY() > GCPlayerHandler.OXYGENHEIGHTLIMIT) && !player.abilities.isCreativeMode && !(player.getRidingEntity() instanceof EntityLanderBase) && !(player.getRidingEntity() instanceof EntityAutoRocket) && !(player.getRidingEntity() instanceof EntityCelestialFake) && !CompatibilityManager.isAndroid(player))
+        if ((player.dimension == DimensionType.OVERWORLD || player.world.getDimension() instanceof IGalacticraftDimension) && (!(player.dimension == DimensionType.OVERWORLD || ((IGalacticraftDimension) player.world.getDimension()).hasBreathableAtmosphere()) || player.getPosY() > GCPlayerHandler.OXYGENHEIGHTLIMIT) && !player.abilities.isCreativeMode && !(player.getRidingEntity() instanceof EntityLanderBase) && !(player.getRidingEntity() instanceof EntityAutoRocket) && !(player.getRidingEntity() instanceof CelestialScreenEntity) && !CompatibilityManager.isAndroid(player))
         {
             final ItemStack tankInSlot = stats.getExtendedInventory().getStackInSlot(2);
             final ItemStack tankInSlot2 = stats.getExtendedInventory().getStackInSlot(3);
@@ -906,7 +906,7 @@ public class GCPlayerHandler
                             x = ((px >> 4) + r << 4) - 1 - px;
                         }
 
-                        EntityMeteor meteor = GCEntities.METEOR.create(world);
+                        MeteorEntity meteor = GCEntities.METEOR.create(world);
                         meteor.setPositionAndRotation(player.getPosX() + x, 355D, player.getPosZ() + z, meteor.rotationYaw, meteor.rotationPitch);
                         meteor.setMotion(motX, 0, motZ);
 
@@ -933,7 +933,7 @@ public class GCPlayerHandler
                             x = ((px >> 4) + r << 4) - 1 - px;
                         }
 
-                        EntityMeteor meteor = GCEntities.METEOR_HUGE.create(world);
+                        MeteorEntity meteor = GCEntities.LARGE_METEOR.create(world);
                         meteor.setPositionAndRotation(player.getPosX() + x, 355D, player.getPosZ() + z, meteor.rotationYaw, meteor.rotationPitch);
                         meteor.setMotion(motX, 0, motZ);
 
@@ -1489,7 +1489,7 @@ public class GCPlayerHandler
             {
                 if (stats.getChestSpawnVector() != null)
                 {
-                    EntityParachest chest = new EntityParachest(player.world, stats.getRocketStacks(), stats.getFuelLevel());
+                    ParachestEntity chest = new ParachestEntity(player.world, stats.getRocketStacks(), stats.getFuelLevel());
 
                     chest.setPosition(stats.getChestSpawnVector().x, stats.getChestSpawnVector().y, stats.getChestSpawnVector().z);
                     chest.color = stats.getParachuteInSlot().isEmpty() ? DyeColor.WHITE : ((ItemParaChute) stats.getParachuteInSlot().getItem()).getColor();

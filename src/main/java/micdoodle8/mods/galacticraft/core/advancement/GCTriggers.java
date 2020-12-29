@@ -6,7 +6,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase;
 import micdoodle8.mods.galacticraft.core.advancement.criterion.GenericTrigger;
-import micdoodle8.mods.galacticraft.core.entities.EntitySkeletonBoss;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedSkeletonBossEntity;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.ICriterionInstance;
@@ -49,7 +49,7 @@ public class GCTriggers
                 @Override
                 public boolean test(ServerPlayerEntity player)
                 {
-                    return ((ServerWorld) player.world).getEntities().filter((entity -> entity instanceof EntitySkeletonBoss && entity.getDistanceSq(player) < 400)).count() >= 1;
+                    return ((ServerWorld) player.world).getEntities().filter((entity -> entity instanceof EvolvedSkeletonBossEntity && entity.getDistanceSq(player) < 400)).count() >= 1;
                 }
             };
         }

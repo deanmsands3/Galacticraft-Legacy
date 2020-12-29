@@ -2,23 +2,23 @@ package micdoodle8.mods.galacticraft.core.entities;
 
 public class GCEntityNames
 {
-    public static final String evolvedSpider = "evolved_spider";
-    public static final String evolvedZombie = "evolved_zombie";
-    public static final String evolvedCreeper = "evolved_creeper";
-    public static final String evolvedSkeleton = "evolved_skeleton";
-    public static final String skeletonBoss = "evolved_skeleton_boss";
-    public static final String alienVillager = "alien_villager";
-    public static final String evolvedEnderman = "evolved_enderman";
-    public static final String evolvedWitch = "evolved_witch";
+    public static final String EVOLVED_SPIDER = "evolved_spider";
+    public static final String EVOLVED_ZOMBIE = "evolved_zombie";
+    public static final String EVOLVED_CREEPER = "evolved_creeper";
+    public static final String EVOLVED_SKELETON = "evolved_skeleton";
+    public static final String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
+    public static final String ALIEN_VILLAGER = "alien_villager";
+    public static final String EVOLVED_ENDERMAN = "evolved_enderman";
+    public static final String EVOLVED_WITCH = "evolved_witch";
 
-    public static final String rocketTier1 = "rocket_t1";
-    public static final String meteor = "meteor";
-    public static final String meteorHuge = "meteor_huge";
-    public static final String buggy = "buggy";
-    public static final String flag = "gcflag";
-    public static final String parachest = "para_chest";
-    public static final String lander = "lander";
-    public static final String meteorChunk = "meteor_chunk";
-    public static final String celestialFake = "celestial_screen";
-    public static final String hangingSchematic = "hanging_schematic";
+    public static final String TIER_1_ROCKET = "tier_1_rocket";
+    public static final String METEOR = "meteor";
+    public static final String LARGE_METEOR = "large_meteor";
+    public static final String BUGGY = "buggy";
+    public static final String FLAG = "flag";
+    public static final String PARACHEST = "parachest";
+    public static final String LANDER = "lander";
+    public static final String METEOR_CHUNK = "meteor_chunk";
+    public static final String CELESTIAL_SCREEN = "celestial_screen";
+    public static final String HANGING_SCHEMATIC = "hanging_schematic";
 }

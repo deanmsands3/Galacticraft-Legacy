@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.core.inventory;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import micdoodle8.mods.galacticraft.core.entities.EntityBuggy;
+import micdoodle8.mods.galacticraft.core.entities.BuggyEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -20,14 +20,14 @@ public class ContainerBuggy extends Container
     private final IInventory playerInv;
     private final IInventory buggyInv;
 
-    public EntityBuggy.BuggyType buggyType;
+    public BuggyEntity.BuggyType buggyType;
 
-    public ContainerBuggy(int containerId, PlayerInventory playerInv, EntityBuggy.BuggyType type)
+    public ContainerBuggy(int containerId, PlayerInventory playerInv, BuggyEntity.BuggyType type)
     {
         this(containerId, playerInv, new Inventory(type.getInvSize()), type);
     }
 
-    public ContainerBuggy(int containerId, PlayerInventory playerInv, IInventory buggyInv, EntityBuggy.BuggyType type)
+    public ContainerBuggy(int containerId, PlayerInventory playerInv, IInventory buggyInv, BuggyEntity.BuggyType type)
     {
         super(TYPE, containerId);
         this.playerInv = playerInv;
@@ -38,7 +38,7 @@ public class ContainerBuggy extends Container
         int var4;
         int var5;
 
-        if (type != EntityBuggy.BuggyType.NO_INVENTORY)
+        if (type != BuggyEntity.BuggyType.NO_INVENTORY)
         {
             for (int i = 0; i < type.getInvSize(); ++i)
             {

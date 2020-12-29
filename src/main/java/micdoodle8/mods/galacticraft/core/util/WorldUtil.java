@@ -21,7 +21,7 @@ import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.dimension.GCDimensions;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceStationWorldData;
-import micdoodle8.mods.galacticraft.core.entities.EntityCelestialFake;
+import micdoodle8.mods.galacticraft.core.entities.CelestialScreenEntity;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerHandler;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.items.ItemParaChute;
@@ -803,7 +803,7 @@ public class WorldUtil
             {
                 entity.startRiding(entity.getRidingEntity());
             }
-            else if (entity.getRidingEntity() instanceof EntityCelestialFake)
+            else if (entity.getRidingEntity() instanceof CelestialScreenEntity)
             {
                 Entity e = entity.getRidingEntity();
                 e.removePassengers();
@@ -1600,7 +1600,7 @@ public class WorldUtil
         GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_DIMENSION_LIST, GCCoreUtil.getDimensionType(player.world), new Object[]{PlayerUtil.getName(player), dimensionList, canCreateStations}), player);
         stats.setUsingPlanetSelectionGui(true);
         stats.setSavedPlanetList(dimensionList);
-        Entity fakeEntity = new EntityCelestialFake(player.world, player.getPosX(), player.getPosY(), player.getPosZ());
+        Entity fakeEntity = new CelestialScreenEntity(player.world, player.getPosX(), player.getPosY(), player.getPosZ());
         player.world.addEntity(fakeEntity);
         player.startRiding(fakeEntity);
     }

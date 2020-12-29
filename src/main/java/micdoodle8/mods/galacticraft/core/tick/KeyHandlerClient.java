@@ -6,7 +6,7 @@ import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase.EnumLa
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.client.KeyHandler;
-import micdoodle8.mods.galacticraft.core.entities.EntityBuggy;
+import micdoodle8.mods.galacticraft.core.entities.BuggyEntity;
 import micdoodle8.mods.galacticraft.core.entities.IControllableEntity;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStatsClient;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
@@ -88,7 +88,7 @@ public class KeyHandlerClient extends KeyHandler
             }
             else if (kb == KeyHandlerClient.openFuelGui)
             {
-                if (playerBase.getRidingEntity() instanceof EntitySpaceshipBase || playerBase.getRidingEntity() instanceof EntityBuggy)
+                if (playerBase.getRidingEntity() instanceof EntitySpaceshipBase || playerBase.getRidingEntity() instanceof BuggyEntity)
                 {
                     GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_OPEN_FUEL_GUI, GCCoreUtil.getDimensionType(mc.world), new Object[]{PlayerUtil.getName(playerBase)}));
                 }

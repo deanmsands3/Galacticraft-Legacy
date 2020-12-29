@@ -9,6 +9,7 @@ import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MusicTicker;
 
+//TODO Removed if MinecraftForge#7356 got merged
 @Mixin(MusicTicker.class)
 public class MixinMusicTicker
 {

@@ -2,7 +2,7 @@ package micdoodle8.mods.galacticraft.core.items;
 
 import micdoodle8.mods.galacticraft.api.item.IHoldableItem;
 import micdoodle8.mods.galacticraft.core.Constants;
-import micdoodle8.mods.galacticraft.core.entities.EntityBuggy;
+import micdoodle8.mods.galacticraft.core.entities.BuggyEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
@@ -127,8 +127,8 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortable
                         --y;
                     }
 
-                    final EntityBuggy var35 = GCEntities.BUGGY.create(worldIn);
-                    var35.setBuggyType(EntityBuggy.getTypeFromItem(itemstack.getItem()));
+                    final BuggyEntity var35 = GCEntities.BUGGY.create(worldIn);
+                    var35.setBuggyType(BuggyEntity.getTypeFromItem(itemstack.getItem()));
                     var35.setPosition(x + 0.5F, y + 1.0F, z + 0.5F);
 
 //                    if (!worldIn.getCollisionBoxes(var35, var35.getBoundingBox().expand(-0.1D, -0.1D, -0.1D)).isEmpty())
@@ -160,7 +160,7 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortable
     @Override
     public void addInformation(ItemStack item, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
-        EntityBuggy.BuggyType type = EntityBuggy.getTypeFromItem(item.getItem());
+        BuggyEntity.BuggyType type = BuggyEntity.getTypeFromItem(item.getItem());
         if (type.getInvSize() != 0)
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.buggy.storage_space") + ": " + type.getInvSize()));
@@ -168,7 +168,7 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortable
 
         if (item.hasTag() && item.getTag().contains("BuggyFuel"))
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + item.getTag().getInt("BuggyFuel") + " / " + EntityBuggy.tankCapacity));
+            tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + item.getTag().getInt("BuggyFuel") + " / " + BuggyEntity.tankCapacity));
         }
     }
 

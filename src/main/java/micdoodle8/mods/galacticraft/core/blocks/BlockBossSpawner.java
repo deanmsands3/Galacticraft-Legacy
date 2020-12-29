@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.core.blocks;
 
-import micdoodle8.mods.galacticraft.core.entities.EntitySkeletonBoss;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedSkeletonBossEntity;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -46,7 +46,7 @@ public class BlockBossSpawner extends Block
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
-        return new TileEntityDungeonSpawner<>(EntitySkeletonBoss.class);
+        return new TileEntityDungeonSpawner<>(EvolvedSkeletonBossEntity.class);
     }
 
     @Override

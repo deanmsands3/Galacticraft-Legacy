@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.core.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import micdoodle8.mods.galacticraft.core.entities.EntityLander;
+import micdoodle8.mods.galacticraft.core.entities.LanderEntity;
 import micdoodle8.mods.galacticraft.core.tick.KeyHandlerClient;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
@@ -18,7 +18,7 @@ public class OverlayLander extends Overlay
     public static void renderLanderOverlay(long ticks)
     {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player.getRidingEntity() instanceof EntityLander)
+        if (mc.player.getRidingEntity() instanceof LanderEntity)
         {
             int width = (int) (mc.mouseHelper.getMouseX() * (double) mc.getMainWindow().getScaledWidth() / (double) mc.getMainWindow().getWidth());
             int height = (int) (mc.mouseHelper.getMouseY() * (double) mc.getMainWindow().getScaledHeight() / (double) mc.getMainWindow().getHeight());

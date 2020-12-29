@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.planets.asteroids.world.gen.base;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti;
-import micdoodle8.mods.galacticraft.core.entities.EntityHangingSchematic;
+import micdoodle8.mods.galacticraft.core.entities.HangingSchematicEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.items.ItemCanisterGeneric;
 import micdoodle8.mods.galacticraft.core.items.ItemOilCanister;
@@ -621,7 +621,7 @@ public class BaseRoom extends SizedPiece
                 //Apparently we have our North and our South reversed ?  So we don't want the opposite for North and South!
                 hangingDirection = hangingDirection.getOpposite();
             }
-            EntityHangingSchematic entityhanging = new EntityHangingSchematic(GCEntities.HANGING_SCHEMATIC, (World) worldIn, blockpos, hangingDirection, x / 3 - 1);
+            HangingSchematicEntity entityhanging = new HangingSchematicEntity(GCEntities.HANGING_SCHEMATIC, (World) worldIn, blockpos, hangingDirection, x / 3 - 1);
             worldIn.addEntity(entityhanging);
             entityhanging.setSendToClient();
         }

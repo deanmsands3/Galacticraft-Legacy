@@ -1,10 +1,10 @@
 package micdoodle8.mods.galacticraft.planets.mars.entities;
 
 import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedCreeper;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSkeleton;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSpider;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedZombie;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedCreeperEntity;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedSkeletonEntity;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedSpiderEntity;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedZombieEntity;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -33,10 +33,10 @@ public class EntitySludgeling extends MonsterEntity implements IEntityBreathable
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.25F, true));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 0, false, true, null));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EntityEvolvedZombie.class, 0, false, true, null));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EntityEvolvedSkeleton.class, 0, false, true, null));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EntityEvolvedSpider.class, 0, false, true, null));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EntityEvolvedCreeper.class, 0, false, true, null));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EvolvedZombieEntity.class, 0, false, true, null));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EvolvedSkeletonEntity.class, 0, false, true, null));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EvolvedSpiderEntity.class, 0, false, true, null));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EvolvedCreeperEntity.class, 0, false, true, null));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, EntitySlimeling.class, 200, false, true, null));
     }
 

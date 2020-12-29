@@ -2,8 +2,8 @@
 "parent": "block/block",
 "textures": {
     "particle": "galacticraftcore:block/parachest",
-    "texture": "galacticraftcore:model/parachest",
-    "chute": "galacticraftcore:model/parachute/red"
+    "texture": "galacticraftcore:entity/parachest",
+    "chute": "galacticraftcore:entity/parachute/red"
 },
 "display": {
 	"gui": {

@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.core.entities.player;
 import micdoodle8.mods.galacticraft.api.entity.IIgnoreShift;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.dimension.DimensionMoon;
-import micdoodle8.mods.galacticraft.core.entities.EntityCelestialFake;
+import micdoodle8.mods.galacticraft.core.entities.CelestialScreenEntity;
 import micdoodle8.mods.galacticraft.core.util.DamageSourceGC;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -74,7 +74,7 @@ public class PlayerServer implements IPlayerServer
     public float attackEntityFrom(ServerPlayerEntity player, DamageSource par1DamageSource, float par2)
     {
         //No damage while in Celestial Selection screen
-        if (player.getRidingEntity() instanceof EntityCelestialFake)
+        if (player.getRidingEntity() instanceof CelestialScreenEntity)
         {
             return -1F;
         }

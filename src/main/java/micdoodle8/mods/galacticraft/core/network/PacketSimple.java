@@ -32,7 +32,7 @@ import micdoodle8.mods.galacticraft.core.dimension.SpaceRace;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRaceManager;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceStationWorldData;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseConductor;
-import micdoodle8.mods.galacticraft.core.entities.EntityBuggy;
+import micdoodle8.mods.galacticraft.core.entities.BuggyEntity;
 import micdoodle8.mods.galacticraft.core.entities.IBubbleProvider;
 import micdoodle8.mods.galacticraft.core.entities.IControllableEntity;
 import micdoodle8.mods.galacticraft.core.entities.player.GCEntityPlayerMP;
@@ -841,9 +841,9 @@ public class PacketSimple extends PacketBase implements IPacket<INetHandler>, IG
             }
             break;
         case S_OPEN_FUEL_GUI:
-            if (player.getRidingEntity() instanceof EntityBuggy)
+            if (player.getRidingEntity() instanceof BuggyEntity)
             {
-                INamedContainerProvider container = new SimpleNamedContainerProvider((w, p, pl) -> new ContainerBuggy(w, p, ((EntityBuggy) player.getRidingEntity()).getBuggyType()), new TranslationTextComponent("container.buggy"));
+                INamedContainerProvider container = new SimpleNamedContainerProvider((w, p, pl) -> new ContainerBuggy(w, p, ((BuggyEntity) player.getRidingEntity()).getBuggyType()), new TranslationTextComponent("container.buggy"));
                 NetworkHooks.openGui((ServerPlayerEntity) player, container);
             }
             else if (player.getRidingEntity() instanceof EntitySpaceshipBase)

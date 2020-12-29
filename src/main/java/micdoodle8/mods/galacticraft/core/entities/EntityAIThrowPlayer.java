@@ -8,11 +8,11 @@ import java.util.EnumSet;
 
 public class EntityAIThrowPlayer extends Goal
 {
-    EntitySkeletonBoss skeletonBoss;
+    EvolvedSkeletonBossEntity skeletonBoss;
 
     PlayerEntity targetPlayer;
 
-    public EntityAIThrowPlayer(EntitySkeletonBoss boss)
+    public EntityAIThrowPlayer(EvolvedSkeletonBossEntity boss)
     {
         this.skeletonBoss = boss;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));

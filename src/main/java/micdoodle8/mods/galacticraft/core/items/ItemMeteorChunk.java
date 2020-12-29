@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.core.items;
 
 import micdoodle8.mods.galacticraft.core.GCItems;
-import micdoodle8.mods.galacticraft.core.entities.EntityMeteorChunk;
+import micdoodle8.mods.galacticraft.core.entities.MeteorChunkEntity;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
@@ -139,7 +139,7 @@ public class ItemMeteorChunk extends Item implements ISortable
 
         if (!world.isRemote)
         {
-            EntityMeteorChunk meteor = new EntityMeteorChunk(world, player, 1.0F);
+            MeteorChunkEntity meteor = new MeteorChunkEntity(world, player, 1.0F);
 
             if (itemStack.getItem() == GCItems.HOT_METEOR_CHUNK)
             {

@@ -15,12 +15,12 @@ import micdoodle8.mods.galacticraft.core.client.DynamicTextureProper;
 import micdoodle8.mods.galacticraft.core.client.EventHandlerClient;
 import micdoodle8.mods.galacticraft.core.client.fx.*;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.InventoryTabGalacticraft;
-import micdoodle8.mods.galacticraft.core.client.model.ModelRocketTier1;
+import micdoodle8.mods.galacticraft.core.client.model.Tier1RocketModel;
 import micdoodle8.mods.galacticraft.core.client.obj.GCModelCache;
 import micdoodle8.mods.galacticraft.core.client.render.entities.*;
 import micdoodle8.mods.galacticraft.core.client.render.item.*;
 import micdoodle8.mods.galacticraft.core.client.render.tile.*;
-import micdoodle8.mods.galacticraft.core.entities.EntityTier1Rocket;
+import micdoodle8.mods.galacticraft.core.entities.Tier1RocketEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.entities.player.IPlayerClient;
 import micdoodle8.mods.galacticraft.core.entities.player.PlayerClient;
@@ -561,23 +561,24 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 
     public static void registerEntityRenderers()
     {
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.ROCKET_T1, RenderTier1Rocket::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SPIDER, RenderEvolvedSpider::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_ZOMBIE, RenderEvolvedZombie::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_CREEPER, RenderEvolvedCreeper::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SKELETON, RenderEvolvedSkeleton::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.SKELETON_BOSS, RenderEvolvedSkeletonBoss::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR, RenderMeteor::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.FLAG, RenderFlag::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.PARA_CHEST, RenderParaChest::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.TIER_1_ROCKET, Tier1RocketRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SPIDER, EvolvedSpiderRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_CREEPER, EvolvedCreeperRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SKELETON, EvolvedSkeletonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SKELETON_BOSS, EvolvedSkeletonBossRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR, MeteorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.LARGE_METEOR, MeteorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.FLAG, FlagRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.PARACHEST, ParachestRenderer::new);
 ////        RenderingRegistry.registerEntityRenderingHandler(EntityAlienVillager.class, (EntityRendererManager manager) -> new RenderAlienVillager(manager)); TODO Villagers
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.LANDER, RenderLander::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.CELESTIAL_FAKE, RenderEntityFake::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.BUGGY, RenderBuggy::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR_CHUNK, RenderMeteorChunk::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.HANGING_SCHEMATIC, RenderSchematic::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_ENDERMAN, RenderEvolvedEnderman::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_WITCH, RenderEvolvedWitch::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.LANDER, LanderRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.CELESTIAL_SCREEN, CelestialScreenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.BUGGY, BuggyRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR_CHUNK, MeteorChunkRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.HANGING_SCHEMATIC, HangingSchematicRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_ENDERMAN, EvolvedEndermanRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_WITCH, EvolvedWitchRenderer::new);
     }
 
     private static void registerHandlers()

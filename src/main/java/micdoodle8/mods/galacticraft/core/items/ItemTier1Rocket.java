@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.core.items;
 import micdoodle8.mods.galacticraft.api.entity.IRocketType.EnumRocketType;
 import micdoodle8.mods.galacticraft.api.item.IHoldableItem;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
-import micdoodle8.mods.galacticraft.core.entities.EntityTier1Rocket;
+import micdoodle8.mods.galacticraft.core.entities.Tier1RocketEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
@@ -131,9 +131,9 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
             return false;
         }
 
-        final EntityTier1Rocket spaceship = GCEntities.ROCKET_T1.create(worldIn);
+        final Tier1RocketEntity spaceship = GCEntities.TIER_1_ROCKET.create(worldIn);
         spaceship.setPosition(centerX, centerY, centerZ);
-        spaceship.rocketType = EntityTier1Rocket.getTypeFromItem(stack.getItem());
+        spaceship.rocketType = Tier1RocketEntity.getTypeFromItem(stack.getItem());
 
         spaceship.setPosition(spaceship.getPosX(), spaceship.getPosY() + spaceship.getOnPadYOffset(), spaceship.getPosZ());
         worldIn.addEntity(spaceship);
@@ -186,7 +186,7 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortable
 
         if (stack.hasTag() && stack.getTag().contains("RocketFuel"))
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + stack.getTag().getInt("RocketFuel") + " / " + EntityTier1Rocket.FUEL_CAPACITY));
+            tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + stack.getTag().getInt("RocketFuel") + " / " + Tier1RocketEntity.FUEL_CAPACITY));
         }
     }
 
