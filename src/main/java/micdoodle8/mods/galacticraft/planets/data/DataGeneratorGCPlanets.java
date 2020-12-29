@@ -173,12 +173,10 @@ public class DataGeneratorGCPlanets
             this.simpleBlock(VenusBlocks.VENUS_BOSS_SPAWNER, this.models().getExistingFile(this.mcLoc("block/barrier")));
             this.simpleCross(VenusBlocks.WEB_STRING);
             this.simpleCross(VenusBlocks.WEB_TORCH);
+            this.horizontalBlock(VenusBlocks.CRASHED_PROBE, this.models().getExistingFile(this.modLoc("block/crashed_probe")), 90);
 
             model = this.models().cubeTop("vapor_spout", this.modLoc("block/venus_soft_rock"), this.modLoc("block/vapor_spout"));
             this.simpleBlock(VenusBlocks.VAPOR_SPOUT, model);
-
-            model = this.models().cube("crashed_probe", this.modLoc("block/crashed_probe_top"), this.modLoc("block/crashed_probe_bottom"), this.modLoc("block/crashed_probe_side_2"), this.modLoc("block/crashed_probe_side_1"), this.modLoc("block/crashed_probe_side_1"), this.modLoc("block/crashed_probe_side_2")).texture("particle", this.modLoc("block/crashed_probe_side_1"));
-            this.simpleBlock(VenusBlocks.CRASHED_PROBE, model);
 
             ModelFile geothermalOn = this.models().cube("geothermal_generator_on", machineBase, this.modLoc("block/geothermal_generator_top"), this.modLoc("block/geothermal_generator_on"), this.modLoc("block/geothermal_generator_on"), machineOutput, machineSide).texture("particle", this.modLoc("block/geothermal_generator_on")).texture("particle", this.modLoc("block/geothermal_generator_on"));
             ModelFile geothermalOff = this.models().cube("geothermal_generator", machineBase, this.modLoc("block/geothermal_generator_top"), this.modLoc("block/geothermal_generator"), this.modLoc("block/geothermal_generator"), machineOutput, machineSide).texture("particle", this.modLoc("block/geothermal_generator")).texture("particle", this.modLoc("block/geothermal_generator"));

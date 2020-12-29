@@ -1,6 +1,18 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
+      "model": "galacticraftplanets:block/crashed_probe",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "galacticraftplanets:block/crashed_probe",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "galacticraftplanets:block/crashed_probe",
+      "y": 180
+    },
+    "facing=east": {
       "model": "galacticraftplanets:block/crashed_probe"
     }
   }
