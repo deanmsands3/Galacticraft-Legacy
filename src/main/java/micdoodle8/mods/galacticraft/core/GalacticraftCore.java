@@ -581,6 +581,7 @@ public class GalacticraftCore
         if (config.getSpec() == ConfigManagerCore.COMMON_SPEC)
         {
             ConfigManagerCore.onConfigEvent();
+            ConfigManagerCore.challengeModeUpdate();
         }
     }
 
