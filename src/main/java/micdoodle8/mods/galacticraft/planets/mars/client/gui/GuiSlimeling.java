@@ -8,7 +8,7 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars.EnumSimplePacketMars;
 import net.minecraft.client.Minecraft;
@@ -32,7 +32,7 @@ public class GuiSlimeling extends Screen
     private final int xSize;
     private final int ySize;
     private static final ResourceLocation slimelingPanelGui = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/slimeling_panel0.png");
-    private final EntitySlimeling slimeling;
+    private final SlimelingEntity slimeling;
 
     public TextFieldWidget nameField;
     public Button stayButton;
@@ -44,7 +44,7 @@ public class GuiSlimeling extends Screen
     private final int invWidth = 18;
     private final int invHeight = 18;
 
-    public GuiSlimeling(EntitySlimeling slimeling)
+    public GuiSlimeling(SlimelingEntity slimeling)
     {
         super(new StringTextComponent("gui.slimeling.main"));
         this.slimeling = slimeling;
@@ -204,7 +204,7 @@ public class GuiSlimeling extends Screen
         }
     }
 
-    public static void drawSlimelingOnGui(EntitySlimeling slimeling, int x, int y, int scale, float mouseX, float mouseY)
+    public static void drawSlimelingOnGui(SlimelingEntity slimeling, int x, int y, int scale, float mouseX, float mouseY)
     {
         GuiSlimeling.renderingOnGui = true;
         float f = (float)Math.atan((double)(mouseX / 40.0F));

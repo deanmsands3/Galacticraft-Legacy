@@ -22,9 +22,9 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntitySludgeling extends MonsterEntity implements IEntityBreathable
+public class SludgelingEntity extends MonsterEntity implements IEntityBreathable
 {
-    public EntitySludgeling(EntityType<? extends EntitySludgeling> type, World worldIn)
+    public SludgelingEntity(EntityType<? extends SludgelingEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(0.3F, 0.2F);
@@ -37,7 +37,7 @@ public class EntitySludgeling extends MonsterEntity implements IEntityBreathable
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EvolvedSkeletonEntity.class, 0, false, true, null));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EvolvedSpiderEntity.class, 0, false, true, null));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, EvolvedCreeperEntity.class, 0, false, true, null));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, EntitySlimeling.class, 200, false, true, null));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SlimelingEntity.class, 200, false, true, null));
     }
 
     @Override

@@ -17,17 +17,17 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntityProjectileTNT extends DamagingProjectileEntity
+public class TNTProjectileEntity extends DamagingProjectileEntity
 {
-    public EntityProjectileTNT(EntityType<? extends EntityProjectileTNT> type, World worldIn)
+    public TNTProjectileEntity(EntityType<? extends TNTProjectileEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.0F, 1.0F);
     }
 
-    public static EntityProjectileTNT createEntityProjectileTNT(World world, LivingEntity entityShooting, double motX, double motY, double motZ)
+    public static TNTProjectileEntity createEntityProjectileTNT(World world, LivingEntity entityShooting, double motX, double motY, double motZ)
     {
-        EntityProjectileTNT projectileTNT = new EntityProjectileTNT(MarsEntities.PROJECTILE_TNT, world);
+        TNTProjectileEntity projectileTNT = new TNTProjectileEntity(MarsEntities.TNT_PROJECTILE, world);
 //        this.setSize(1.0F, 1.0F);
         projectileTNT.shootingEntity = entityShooting;
         projectileTNT.setLocationAndAngles(entityShooting.getPosX(), entityShooting.getPosY(), entityShooting.getPosZ(), entityShooting.rotationYaw, entityShooting.rotationPitch);

@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.planets.mars.inventory;
 import micdoodle8.mods.galacticraft.core.entities.BuggyEntity;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerRocketInventory;
 import micdoodle8.mods.galacticraft.planets.mars.client.gui.*;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import micdoodle8.mods.galacticraft.planets.mars.tile.*;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
@@ -31,7 +31,7 @@ public class MarsContainers
         ContainerType<ContainerMethaneSynthesizer> methaneSynthesizer = IForgeContainerType.create((windowId, inv, data) -> new ContainerMethaneSynthesizer(windowId, inv, (TileEntityMethaneSynthesizer) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
         ContainerType<ContainerSchematicTier2Rocket> schematicT2Rocket = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicTier2Rocket(windowId, inv));
         ContainerType<ContainerSchematicCargoRocket> schematicCargoRocket = IForgeContainerType.create((windowId, inv, data) -> new ContainerSchematicCargoRocket(windowId, inv));
-        ContainerType<ContainerSlimeling> slimeling = IForgeContainerType.create((windowId, inv, data) -> new ContainerSlimeling(windowId, inv, (EntitySlimeling) inv.player.world.getEntityByID(data.readInt())));
+        ContainerType<ContainerSlimeling> slimeling = IForgeContainerType.create((windowId, inv, data) -> new ContainerSlimeling(windowId, inv, (SlimelingEntity) inv.player.world.getEntityByID(data.readInt())));
         ContainerType<ContainerTerraformer> terraformer = IForgeContainerType.create((windowId, inv, data) -> new ContainerTerraformer(windowId, inv, (TileEntityTerraformer) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
 
         register(r, electrolyzer, MarsContainerNames.ELECTROLYZER);

@@ -27,13 +27,13 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.ArrayList;
 
-public class EntityLandingBalloons extends EntityLanderBase implements IIgnoreShift, ICameraZoomEntity
+public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreShift, ICameraZoomEntity
 {
     private int groundHitCount;
     private float rotationPitchSpeed;
     private float rotationYawSpeed;
 
-    public EntityLandingBalloons(EntityType<? extends EntityLandingBalloons> type, World worldIn)
+    public LandingBalloonsEntity(EntityType<? extends LandingBalloonsEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(2.0F, 2.0F);
@@ -41,9 +41,9 @@ public class EntityLandingBalloons extends EntityLanderBase implements IIgnoreSh
         this.rotationYawSpeed = this.rand.nextFloat();
     }
 
-    public static EntityLandingBalloons createEntityLandingBalloons(ServerPlayerEntity player)
+    public static LandingBalloonsEntity createEntityLandingBalloons(ServerPlayerEntity player)
     {
-        EntityLandingBalloons balloons = new EntityLandingBalloons(MarsEntities.LANDING_BALLOONS, player.world);
+        LandingBalloonsEntity balloons = new LandingBalloonsEntity(MarsEntities.LANDING_BALLOONS, player.world);
 
         GCPlayerStats stats = GCPlayerStats.get(player);
         balloons.stacks = NonNullList.withSize(stats.getRocketStacks().size() + 1, ItemStack.EMPTY);

@@ -36,20 +36,20 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityCargoRocket extends EntityAutoRocket implements IRocketType, IInventory, IWorldTransferCallback
+public class CargoRocketEntity extends EntityAutoRocket implements IRocketType, IInventory, IWorldTransferCallback
 {
     public EnumRocketType rocketType;
     public float rumble;
 
-    public EntityCargoRocket(EntityType<? extends EntityCargoRocket> type, World worldIn)
+    public CargoRocketEntity(EntityType<? extends CargoRocketEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(0.98F, 2F);
     }
 
-    public static EntityCargoRocket createEntityCargoRocket(World world, double x, double y, double z, EnumRocketType rocketType)
+    public static CargoRocketEntity createEntityCargoRocket(World world, double x, double y, double z, EnumRocketType rocketType)
     {
-        EntityCargoRocket rocket = new EntityCargoRocket(MarsEntities.CARGO_ROCKET, world);
+        CargoRocketEntity rocket = new CargoRocketEntity(MarsEntities.CARGO_ROCKET, world);
         rocket.setPosition(x, y, z);
         rocket.prevPosX = x;
         rocket.prevPosY = y;
@@ -315,11 +315,11 @@ public class EntityCargoRocket extends EntityAutoRocket implements IRocketType, 
                     this.setPosition(this.targetVec.getX() + 0.5F, this.targetVec.getY() + 800, this.targetVec.getZ() + 0.5F);
                     Entity e = WorldUtil.transferEntityToDimension(this, this.targetDimension, (ServerWorld) targetDim.getWorld(), false, null);
 
-                    if (e instanceof EntityCargoRocket)
+                    if (e instanceof CargoRocketEntity)
                     {
                         GCLog.debug("Cargo rocket arrived at destination dimension, going into landing mode.");
                         e.setPosition(this.targetVec.getX() + 0.5F, this.targetVec.getY() + 800, this.targetVec.getZ() + 0.5F);
-                        ((EntityCargoRocket) e).setLaunchPhase(EnumLaunchPhase.LANDING);
+                        ((CargoRocketEntity) e).setLaunchPhase(EnumLaunchPhase.LANDING);
                         //No setDead() following successful transferEntityToDimension() - see javadoc on that
                     }
                     else

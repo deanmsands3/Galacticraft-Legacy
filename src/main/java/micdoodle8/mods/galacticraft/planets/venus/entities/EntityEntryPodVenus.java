@@ -7,7 +7,7 @@ import micdoodle8.mods.galacticraft.core.entities.EntityLanderBase;
 import micdoodle8.mods.galacticraft.core.entities.IScaleableFuelLevel;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityProjectileTNT;
+import micdoodle8.mods.galacticraft.planets.mars.entities.TNTProjectileEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;

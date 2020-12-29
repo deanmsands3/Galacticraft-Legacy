@@ -7,7 +7,7 @@ import micdoodle8.mods.galacticraft.core.entities.EvolvedSpiderEntity;
 import micdoodle8.mods.galacticraft.core.entities.EvolvedZombieEntity;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlockNames;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCreeperBoss;
+import micdoodle8.mods.galacticraft.planets.mars.entities.CreeperBossEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -17,14 +17,14 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<EntityCreeperBoss>
+public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<CreeperBossEntity>
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.CRYOGENIC_CHAMBER)
     public static TileEntityType<TileEntityDungeonSpawnerMars> TYPE;
 
     public TileEntityDungeonSpawnerMars()
     {
-        super(TYPE, EntityCreeperBoss.class);
+        super(TYPE, CreeperBossEntity.class);
     }
 
     @Override

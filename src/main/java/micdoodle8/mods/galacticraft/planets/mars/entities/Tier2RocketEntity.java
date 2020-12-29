@@ -29,17 +29,17 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import java.util.List;
 import java.util.Random;
 
-public class EntityTier2Rocket extends EntityTieredRocket
+public class Tier2RocketEntity extends EntityTieredRocket
 {
-    public EntityTier2Rocket(EntityType<? extends EntityTier2Rocket> type, World worldIn)
+    public Tier2RocketEntity(EntityType<? extends Tier2RocketEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.2F, 4.5F);
     }
 
-    public static EntityTier2Rocket createEntityTier2Rocket(World world, double x, double y, double z, EnumRocketType rocketType)
+    public static Tier2RocketEntity createEntityTier2Rocket(World world, double x, double y, double z, EnumRocketType rocketType)
     {
-        EntityTier2Rocket rocket = new EntityTier2Rocket(MarsEntities.ROCKET_T2, world);
+        Tier2RocketEntity rocket = new Tier2RocketEntity(MarsEntities.TIER_2_ROCKET, world);
         rocket.setPosition(x, y, z);
         rocket.prevPosX = x;
         rocket.prevPosY = y;
@@ -50,9 +50,9 @@ public class EntityTier2Rocket extends EntityTieredRocket
         return rocket;
     }
 
-    public EntityTier2Rocket createEntityTier2Rocket(World par1World, double par2, double par4, double par6, boolean reversed, EnumRocketType rocketType, NonNullList<ItemStack> inv)
+    public Tier2RocketEntity createEntityTier2Rocket(World par1World, double par2, double par4, double par6, boolean reversed, EnumRocketType rocketType, NonNullList<ItemStack> inv)
     {
-        EntityTier2Rocket rocket = createEntityTier2Rocket(par1World, par2, par4, par6, rocketType);
+        Tier2RocketEntity rocket = createEntityTier2Rocket(par1World, par2, par4, par6, rocketType);
         this.stacks = inv;
         return rocket;
     }

@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.planets.mars.client.gui;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars.EnumSimplePacketMars;
 import net.minecraft.client.Minecraft;
@@ -17,7 +17,7 @@ public class GuiSlimelingFeed extends Screen
     private final int xSize;
     private final int ySize;
     private static final ResourceLocation slimelingPanelGui = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/slimeling_panel1.png");
-    private final EntitySlimeling slimeling;
+    private final SlimelingEntity slimeling;
 
 //    public static RenderItem drawItems = new RenderItem();
 
@@ -31,7 +31,7 @@ public class GuiSlimelingFeed extends Screen
     public Button buttonStrengthenSlimeling;
     public Button buttonHealSlimeling;
 
-    public GuiSlimelingFeed(EntitySlimeling slimeling)
+    public GuiSlimelingFeed(SlimelingEntity slimeling)
     {
         super(new StringTextComponent("gui.slimeling.feed"));
         this.slimeling = slimeling;

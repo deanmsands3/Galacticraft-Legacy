@@ -31,22 +31,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathable, IRangedAttackMob
+public class CreeperBossEntity extends EntityBossBase implements IEntityBreathable, IRangedAttackMob
 {
     protected long ticks = 0;
     public int headsRemaining = 3;
     private Entity targetEntity;
 
-    public EntityCreeperBoss(EntityType<? extends EntityCreeperBoss> type, World worldIn)
+    public CreeperBossEntity(EntityType<? extends CreeperBossEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(2.0F, 7.0F);
 //        this.isImmuneToFire = true;
     }
 
-    public static EntityCreeperBoss create(World world)
+    public static CreeperBossEntity create(World world)
     {
-        return new EntityCreeperBoss(MarsEntities.CREEPER_BOSS, world);
+        return new CreeperBossEntity(MarsEntities.CREEPER_BOSS, world);
     }
 
     @Override
@@ -316,7 +316,7 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
         double d6 = entitylivingbase.getPosX() - d3;
         double d7 = entitylivingbase.getPosY() + entitylivingbase.getEyeHeight() * 0.5D - d4;
         double d8 = entitylivingbase.getPosZ() - d5;
-        EntityProjectileTNT projectileTNT = EntityProjectileTNT.createEntityProjectileTNT(this.world, this, d6 * 0.5D, d7 * 0.5D, d8 * 0.5D);
+        TNTProjectileEntity projectileTNT = TNTProjectileEntity.createEntityProjectileTNT(this.world, this, d6 * 0.5D, d7 * 0.5D, d8 * 0.5D);
         projectileTNT.setRawPosition(d3, d4, d5);
         this.world.addEntity(projectileTNT);
     }

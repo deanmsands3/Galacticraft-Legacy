@@ -5,7 +5,7 @@ import micdoodle8.mods.galacticraft.api.world.ITeleportType;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityLandingBalloons;
+import micdoodle8.mods.galacticraft.planets.mars.entities.LandingBalloonsEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.World;
@@ -85,7 +85,7 @@ public class TeleportTypeMars implements ITeleportType
                     player.abilities.isFlying = false;
                 }
 
-                EntityLandingBalloons lander = EntityLandingBalloons.createEntityLandingBalloons(player);
+                LandingBalloonsEntity lander = LandingBalloonsEntity.createEntityLandingBalloons(player);
 
                 if (!newWorld.isRemote)
                 {

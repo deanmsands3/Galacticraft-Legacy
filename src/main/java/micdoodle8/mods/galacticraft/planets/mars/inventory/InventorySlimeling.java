@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.planets.mars.inventory;
 
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.IInventory;
@@ -16,10 +16,10 @@ import net.minecraft.util.text.TranslationTextComponent;
 public class InventorySlimeling implements IInventory
 {
     private NonNullList<ItemStack> stacks = NonNullList.withSize(30, ItemStack.EMPTY);
-    private final EntitySlimeling slimeling;
+    private final SlimelingEntity slimeling;
     public Container currentContainer;
 
-    public InventorySlimeling(EntitySlimeling slimeling)
+    public InventorySlimeling(SlimelingEntity slimeling)
     {
         this.slimeling = slimeling;
     }

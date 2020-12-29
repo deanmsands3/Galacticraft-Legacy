@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 
-public class ItemModelRocketT2 extends ModelTransformWrapper
+public class Tier2RocketItemModel extends ModelTransformWrapper
 {
-    public ItemModelRocketT2(IBakedModel modelToWrap)
+    public Tier2RocketItemModel(IBakedModel modelToWrap)
     {
         super(modelToWrap);
     }

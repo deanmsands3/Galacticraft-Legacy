@@ -154,8 +154,8 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
     @OnlyIn(Dist.CLIENT)
     public static void registerTextures()
     {
-        SchematicRegistry.registerTexture(new ResourceLocation(Constants.MOD_ID_CORE, "textures/items/schematic_buggy.png"));
-        SchematicRegistry.registerTexture(new ResourceLocation(Constants.MOD_ID_CORE, "textures/items/schematic_rocket_t2.png"));
+        SchematicRegistry.registerTexture(new ResourceLocation(Constants.MOD_ID_CORE, "textures/item/moon_buggy_schematic.png"));
+        SchematicRegistry.registerTexture(new ResourceLocation(Constants.MOD_ID_CORE, "textures/item/tier_2_rocket_schematic.png"));
     }
 
     @Override

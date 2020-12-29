@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.entities;
 
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityProjectileTNT;
+import micdoodle8.mods.galacticraft.planets.mars.entities.TNTProjectileEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;

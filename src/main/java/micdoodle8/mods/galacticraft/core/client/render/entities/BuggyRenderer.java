@@ -64,14 +64,14 @@ public class BuggyRenderer extends EntityRenderer<BuggyEntity>
     }
 
     @Override
-    public void render(BuggyEntity entity, float entityYaw, float partialTicks, MatrixStack matStack, IRenderTypeBuffer bufferIn, int packedLightIn)
+    public void render(BuggyEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
     {
         float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
         RenderSystem.disableRescaleNormal();
-        matStack.push();
-        matStack.rotate(new Quaternion(Vector3f.YP, entityYaw, true));
-        matStack.rotate(new Quaternion(Vector3f.ZN, pitch, true));
-        matStack.scale(0.41F, 0.41F, 0.41F);
+        matrixStack.push();
+        matrixStack.rotate(new Quaternion(Vector3f.YP, entityYaw, true));
+        matrixStack.rotate(new Quaternion(Vector3f.ZN, pitch, true));
+        matrixStack.scale(0.41F, 0.41F, 0.41F);
 
         if (Minecraft.isAmbientOcclusionEnabled())
         {
@@ -83,67 +83,67 @@ public class BuggyRenderer extends EntityRenderer<BuggyEntity>
         }
 
         // Front wheels
-        matStack.push();
+        matrixStack.push();
         float dZ = -2.727F;
         float dY = 0.976F;
         float dX = 1.25F;
         float rotation = entity.wheelRotationX;
-        matStack.translate(dX, dY, dZ);
-        matStack.rotate(new Quaternion(Vector3f.YP, entity.wheelRotationZ, true));
-        ClientUtil.drawBakedModel(this.wheelRightCover, bufferIn, matStack, packedLightIn);
-        matStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
-        ClientUtil.drawBakedModel(this.wheelRight, bufferIn, matStack, packedLightIn);
-        matStack.pop();
+        matrixStack.translate(dX, dY, dZ);
+        matrixStack.rotate(new Quaternion(Vector3f.YP, entity.wheelRotationZ, true));
+        ClientUtil.drawBakedModel(this.wheelRightCover, buffer, matrixStack, packedLight);
+        matrixStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
+        ClientUtil.drawBakedModel(this.wheelRight, buffer, matrixStack, packedLight);
+        matrixStack.pop();
 
-        matStack.push();
-        matStack.translate(-dX, dY, dZ);
-        matStack.rotate(new Quaternion(Vector3f.YP, entity.wheelRotationZ, true));
-        ClientUtil.drawBakedModel(this.wheelLeftCover, bufferIn, matStack, packedLightIn);
-        matStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
-        ClientUtil.drawBakedModel(this.wheelLeft, bufferIn, matStack, packedLightIn);
-        matStack.pop();
+        matrixStack.push();
+        matrixStack.translate(-dX, dY, dZ);
+        matrixStack.rotate(new Quaternion(Vector3f.YP, entity.wheelRotationZ, true));
+        ClientUtil.drawBakedModel(this.wheelLeftCover, buffer, matrixStack, packedLight);
+        matrixStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
+        ClientUtil.drawBakedModel(this.wheelLeft, buffer, matrixStack, packedLight);
+        matrixStack.pop();
 
         // Back wheels
-        matStack.push();
+        matrixStack.push();
         dX = 1.9F;
         dZ = -dZ;
-        matStack.translate(dX, dY, dZ);
-        matStack.rotate(new Quaternion(Vector3f.YP, -entity.wheelRotationZ, true));
-        matStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
-        ClientUtil.drawBakedModel(this.wheelRight, bufferIn, matStack, packedLightIn);
-        matStack.pop();
+        matrixStack.translate(dX, dY, dZ);
+        matrixStack.rotate(new Quaternion(Vector3f.YP, -entity.wheelRotationZ, true));
+        matrixStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
+        ClientUtil.drawBakedModel(this.wheelRight, buffer, matrixStack, packedLight);
+        matrixStack.pop();
 
-        matStack.push();
-        matStack.translate(-dX, dY, dZ);
-        matStack.rotate(new Quaternion(Vector3f.YP, -entity.wheelRotationZ, true));
-        matStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
-        ClientUtil.drawBakedModel(this.wheelLeft, bufferIn, matStack, packedLightIn);
-        matStack.pop();
+        matrixStack.push();
+        matrixStack.translate(-dX, dY, dZ);
+        matrixStack.rotate(new Quaternion(Vector3f.YP, -entity.wheelRotationZ, true));
+        matrixStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
+        ClientUtil.drawBakedModel(this.wheelLeft, buffer, matrixStack, packedLight);
+        matrixStack.pop();
 
-        ClientUtil.drawBakedModel(this.mainModel, bufferIn, matStack, packedLightIn);
+        ClientUtil.drawBakedModel(this.mainModel, buffer, matrixStack, packedLight);
 
         // Radar Dish
-        matStack.push();
-        matStack.translate(-1.178F, 4.1F, -2.397F);
+        matrixStack.push();
+        matrixStack.translate(-1.178F, 4.1F, -2.397F);
         int ticks = entity.ticksExisted + entity.getEntityId() * 10000;
-        matStack.rotate(new Quaternion(Vector3f.XP, (float)Math.sin(ticks * 0.05) * 50.0F, true));
-        matStack.rotate(new Quaternion(Vector3f.ZP, (float)Math.cos(ticks * 0.1) * 50.0F, true));
-        ClientUtil.drawBakedModel(this.radarDish, bufferIn, matStack, packedLightIn);
-        matStack.pop();
+        matrixStack.rotate(new Quaternion(Vector3f.XP, (float)Math.sin(ticks * 0.05) * 50.0F, true));
+        matrixStack.rotate(new Quaternion(Vector3f.ZP, (float)Math.cos(ticks * 0.1) * 50.0F, true));
+        ClientUtil.drawBakedModel(this.radarDish, buffer, matrixStack, packedLight);
+        matrixStack.pop();
 
         switch (entity.buggyType)
         {
         case INVENTORY_3:
-            ClientUtil.drawBakedModel(this.cargoRight, bufferIn, matStack, packedLightIn);
+            ClientUtil.drawBakedModel(this.cargoRight, buffer, matrixStack, packedLight);
         case INVENTORY_2:
-            ClientUtil.drawBakedModel(this.cargoMid, bufferIn, matStack, packedLightIn);
+            ClientUtil.drawBakedModel(this.cargoMid, buffer, matrixStack, packedLight);
         case INVENTORY_1:
-            ClientUtil.drawBakedModel(this.cargoLeft, bufferIn, matStack, packedLightIn);
+            ClientUtil.drawBakedModel(this.cargoLeft, buffer, matrixStack, packedLight);
         default:
             break;
         }
 
-        matStack.pop();
+        matrixStack.pop();
         RenderHelper.enableStandardItemLighting();
     }
 

@@ -8,7 +8,7 @@ import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementInfoRegion
 import micdoodle8.mods.galacticraft.core.inventory.ContainerRocketInventory;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCargoRocket;
+import micdoodle8.mods.galacticraft.planets.mars.entities.CargoRocketEntity;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars.EnumSimplePacketMars;
 import net.minecraft.client.gui.widget.button.Button;
@@ -35,7 +35,7 @@ public class GuiCargoRocket extends GuiContainerGC<ContainerRocketInventory>
         }
     }
 
-    private final EntityCargoRocket rocket;
+    private final CargoRocketEntity rocket;
     private Button launchButton;
 
 //    public GuiCargoRocket(IInventory par1IInventory, EntityCargoRocket rocket)
@@ -46,7 +46,7 @@ public class GuiCargoRocket extends GuiContainerGC<ContainerRocketInventory>
     public GuiCargoRocket(ContainerRocketInventory container, PlayerInventory playerInv, ITextComponent title)
     {
         super(container, playerInv, title);
-        this.rocket = (EntityCargoRocket) container.getRocket();
+        this.rocket = (CargoRocketEntity) container.getRocket();
 //        this.allowUserInput = false;
         this.ySize = rocket.getSizeInventory() <= 3 ? 132 : 145 + rocket.getSizeInventory() * 2;
     }

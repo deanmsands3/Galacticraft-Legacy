@@ -10,15 +10,17 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityTreasureChest;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.IPlanetsModuleClient;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
-import micdoodle8.mods.galacticraft.planets.asteroids.client.render.item.ItemModelCargoRocket;
+import micdoodle8.mods.galacticraft.planets.asteroids.client.render.item.CargoRocketItemModel;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.client.fx.EntityCryoFX;
 import micdoodle8.mods.galacticraft.planets.mars.client.fx.ParticleDrip;
 import micdoodle8.mods.galacticraft.planets.mars.client.gui.GuiSlimeling;
 import micdoodle8.mods.galacticraft.planets.mars.client.gui.GuiSlimelingFeed;
-import micdoodle8.mods.galacticraft.planets.mars.client.render.item.ItemModelRocketT2;
+import micdoodle8.mods.galacticraft.planets.mars.client.render.entity.*;
+import micdoodle8.mods.galacticraft.planets.mars.client.render.item.Tier2RocketItemModel;
 import micdoodle8.mods.galacticraft.planets.mars.dimension.DimensionMars;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
+import micdoodle8.mods.galacticraft.planets.mars.entities.MarsEntities;
 import micdoodle8.mods.galacticraft.planets.mars.items.ItemSchematicTier2;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityTreasureChestMars;
@@ -37,6 +39,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -106,13 +109,13 @@ public class MarsModuleClient implements IPlanetsModuleClient
     {
         MinecraftForge.EVENT_BUS.register(this);
 
-//        RenderingRegistry.registerEntityRenderingHandler(EntitySludgeling.class, (EntityRendererManager manager) -> new RenderSludgeling(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntitySlimeling.class, (EntityRendererManager manager) -> new RenderSlimeling(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntityCreeperBoss.class, (EntityRendererManager manager) -> new RenderCreeperBoss(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntityProjectileTNT.class, (EntityRendererManager manager) -> new RenderProjectileTNT(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntityCargoRocket.class, (EntityRendererManager manager) -> new RenderCargoRocket(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntityLandingBalloons.class, (EntityRendererManager manager) -> new RenderLandingBalloons(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTier2Rocket.class, (EntityRendererManager manager) -> new RenderTier2Rocket(manager));
+        RenderingRegistry.registerEntityRenderingHandler(MarsEntities.SLUDGELING, SludgelingRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MarsEntities.SLIMELING, SlimelingRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MarsEntities.CREEPER_BOSS, CreeperBossRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MarsEntities.TNT_PROJECTILE, TNTProjectileRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MarsEntities.CARGO_ROCKET, CargoRocketRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MarsEntities.LANDING_BALLOONS, LandingBalloonsRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MarsEntities.TIER_2_ROCKET, Tier2RocketRenderer::new);
 
         // ==============================
 
@@ -140,15 +143,15 @@ public class MarsModuleClient implements IPlanetsModuleClient
 
         ItemSchematicTier2.registerTextures();
 
-        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.CREATIVE_TIER_2_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocketT2(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
-        ClientProxyCore.setCustomModel(MarsItems.CREATIVE_CARGO_ROCKET.getRegistryName(), modelToWrap -> new ItemModelCargoRocket(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET.getRegistryName(), modelToWrap -> new Tier2RocketItemModel(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new Tier2RocketItemModel(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new Tier2RocketItemModel(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.TIER_2_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new Tier2RocketItemModel(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CREATIVE_TIER_2_ROCKET.getRegistryName(), modelToWrap -> new Tier2RocketItemModel(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new CargoRocketItemModel(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new CargoRocketItemModel(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new CargoRocketItemModel(modelToWrap));
+        ClientProxyCore.setCustomModel(MarsItems.CREATIVE_CARGO_ROCKET.getRegistryName(), modelToWrap -> new CargoRocketItemModel(modelToWrap));
     }
 
     @SubscribeEvent
@@ -298,7 +301,7 @@ public class MarsModuleClient implements IPlanetsModuleClient
 //        idList.add(GuiIdsPlanets.MACHINE_MARS);
 //    }
 
-    public static void openSlimelingGui(EntitySlimeling slimeling, int gui)
+    public static void openSlimelingGui(SlimelingEntity slimeling, int gui)
     {
         switch (gui)
         {

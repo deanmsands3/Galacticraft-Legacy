@@ -42,19 +42,19 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public class EntitySlimeling extends TameableEntity implements IEntityBreathable
+public class SlimelingEntity extends TameableEntity implements IEntityBreathable
 {
     public InventorySlimeling slimelingInventory = new InventorySlimeling(this);
 
-    private static final DataParameter<Float> HEALTH = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> COLOR_RED = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> COLOR_GREEN = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> COLOR_BLUE = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.VARINT);
-    private static final DataParameter<String> NAME = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.STRING);
-    private static final DataParameter<Integer> FAV_FOOD_ID = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.VARINT);
-    private static final DataParameter<Float> ATTACK_DAMAGE = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> KILLS = EntityDataManager.createKey(EntitySlimeling.class, DataSerializers.VARINT);
+    private static final DataParameter<Float> HEALTH = EntityDataManager.createKey(SlimelingEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> COLOR_RED = EntityDataManager.createKey(SlimelingEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> COLOR_GREEN = EntityDataManager.createKey(SlimelingEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> COLOR_BLUE = EntityDataManager.createKey(SlimelingEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(SlimelingEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<String> NAME = EntityDataManager.createKey(SlimelingEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Integer> FAV_FOOD_ID = EntityDataManager.createKey(SlimelingEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Float> ATTACK_DAMAGE = EntityDataManager.createKey(SlimelingEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Integer> KILLS = EntityDataManager.createKey(SlimelingEntity.class, DataSerializers.VARINT);
 
     public float colorRed;
     public float colorGreen;
@@ -67,7 +67,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
     public float attackDamage = 0.05F;
     public int kills;
 
-    public EntitySlimeling(EntityType<? extends EntitySlimeling> type, World worldIn)
+    public SlimelingEntity(EntityType<? extends SlimelingEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(0.45F, 0.7F);
@@ -84,7 +84,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(4, new NonTamedTargetGoal(this, EntitySludgeling.class, false, p_apply_1_ -> p_apply_1_ instanceof EntitySludgeling));
+        this.targetSelector.addGoal(4, new NonTamedTargetGoal(this, SludgelingEntity.class, false, p_apply_1_ -> p_apply_1_ instanceof SludgelingEntity));
         this.setTamed(false);
 
         switch (this.rand.nextInt(3))
@@ -104,9 +104,9 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         this.setRandomFavFood();
     }
 
-    public static EntitySlimeling createEntitySlimeling(World worldIn, float r, float g, float b)
+    public static SlimelingEntity createEntitySlimeling(World worldIn, float r, float g, float b)
     {
-        EntitySlimeling slimeling = new EntitySlimeling(MarsEntities.SLIMELING, worldIn);
+        SlimelingEntity slimeling = new SlimelingEntity(MarsEntities.SLIMELING, worldIn);
         slimeling.colorRed = r;
         slimeling.colorGreen = g;
         slimeling.colorBlue = b;
@@ -509,11 +509,11 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         return false;
     }
 
-    public EntitySlimeling spawnBabyAnimal(AgeableEntity par1EntityAgeable)
+    public SlimelingEntity spawnBabyAnimal(AgeableEntity par1EntityAgeable)
     {
-        if (par1EntityAgeable instanceof EntitySlimeling)
+        if (par1EntityAgeable instanceof SlimelingEntity)
         {
-            EntitySlimeling otherSlimeling = (EntitySlimeling) par1EntityAgeable;
+            SlimelingEntity otherSlimeling = (SlimelingEntity) par1EntityAgeable;
 
             Vector3 colorParentA = new Vector3(this.getColorRed(), this.getColorGreen(), this.getColorBlue());
             Vector3 colorParentB = new Vector3(otherSlimeling.getColorRed(), otherSlimeling.getColorGreen(), otherSlimeling.getColorBlue());
@@ -521,7 +521,7 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
             newColor.x = Math.max(Math.min(newColor.x, 1.0F), 0);
             newColor.y = Math.max(Math.min(newColor.y, 1.0F), 0);
             newColor.z = Math.max(Math.min(newColor.z, 1.0F), 0);
-            EntitySlimeling newSlimeling = EntitySlimeling.createEntitySlimeling(this.world, newColor.x, newColor.y, newColor.z);
+            SlimelingEntity newSlimeling = SlimelingEntity.createEntitySlimeling(this.world, newColor.x, newColor.y, newColor.z);
 
             UUID id = this.getOwnerId();
 
@@ -548,13 +548,13 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
         {
             return false;
         }
-        else if (!(par1EntityAnimal instanceof EntitySlimeling))
+        else if (!(par1EntityAnimal instanceof SlimelingEntity))
         {
             return false;
         }
         else
         {
-            EntitySlimeling slimeling = (EntitySlimeling) par1EntityAnimal;
+            SlimelingEntity slimeling = (SlimelingEntity) par1EntityAnimal;
             return slimeling.isTamed() && !slimeling.isSitting() && this.isInLove() && slimeling.isInLove();
         }
     }
@@ -564,9 +564,9 @@ public class EntitySlimeling extends TameableEntity implements IEntityBreathable
     {
         if (!(toAttack instanceof CreeperEntity) && !(toAttack instanceof GhastEntity))
         {
-            if (toAttack instanceof EntitySlimeling)
+            if (toAttack instanceof SlimelingEntity)
             {
-                EntitySlimeling slimeling = (EntitySlimeling) toAttack;
+                SlimelingEntity slimeling = (SlimelingEntity) toAttack;
 
                 if (slimeling.isTamed() && slimeling.getOwner() == owner)
                 {

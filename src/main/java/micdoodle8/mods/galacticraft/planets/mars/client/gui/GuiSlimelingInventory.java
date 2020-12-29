@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import micdoodle8.mods.galacticraft.core.client.gui.container.GuiContainerGC;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerSlimeling;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import net.minecraft.client.Minecraft;
@@ -19,7 +19,7 @@ import net.minecraft.util.text.ITextComponent;
 public class GuiSlimelingInventory extends GuiContainerGC<ContainerSlimeling>
 {
     private static final ResourceLocation slimelingPanelGui = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/slimeling_panel2.png");
-    private final EntitySlimeling slimeling;
+    private final SlimelingEntity slimeling;
 
     private int invX;
     private int invY;
