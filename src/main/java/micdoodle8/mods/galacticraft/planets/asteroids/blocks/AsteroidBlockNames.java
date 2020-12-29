@@ -4,7 +4,6 @@ public class AsteroidBlockNames
 {
     public static final String SHORT_RANGE_TELEPAD = "short_range_telepad";
     public static final String ENERGY_BEAM_REFLECTOR = "energy_beam_reflector";
-    public static final String spaceWart = "spacewart";
     public static final String ASTRO_MINER_BASE = "astro_miner_base";
     public static final String ENERGY_BEAM_RECEIVER = "energy_beam_receiver";
     public static final String FULL_ASTRO_MINER_BASE = "full_astro_miner_base";

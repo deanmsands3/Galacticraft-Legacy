@@ -6,6 +6,7 @@
     "refmap": "mixins.galacticraftcore.refmap.json",
     "target": "@env(DEFAULT)",
     "mixins": [
+    	"MixinBushBlock"
     ],
     "client": [
     	"client.MixinMusicTicker",

@@ -16,10 +16,10 @@ public class MixinMusicTicker
     @Redirect(method = "tick()V", at = @At(value = "INVOKE", target = "net/minecraft/client/Minecraft.getAmbientMusicType()Lnet/minecraft/client/audio/MusicTicker$MusicType;"))
     private MusicTicker.MusicType getAmbientMusicType(Minecraft mc)
     {
-        if (mc.world != null && mc.world.dimension instanceof IGalacticraftDimension)
+        /*if (mc.world != null && mc.world.dimension instanceof IGalacticraftDimension)TODO Disable this until forge add support for MusicTicker.MusicType
         {
             return ClientProxyCore.MUSIC_TYPE_MARS;
-        }
+        }*/
         return mc.getAmbientMusicType();
     }
 }

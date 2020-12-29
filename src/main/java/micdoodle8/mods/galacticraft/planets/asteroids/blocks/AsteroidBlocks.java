@@ -47,8 +47,6 @@ public class AsteroidBlocks
     public static Block ASTRO_MINER_BASE;
     @ObjectHolder(AsteroidBlockNames.FULL_ASTRO_MINER_BASE)
     public static Block FULL_ASTRO_MINER_BASE;
-    @ObjectHolder(AsteroidBlockNames.spaceWart)
-    public static Block spaceWart;
     @ObjectHolder(AsteroidBlockNames.DARK_ASTEROID_ROCK)
     public static Block DARK_ASTEROID_ROCK;
     @ObjectHolder(AsteroidBlockNames.GRAY_ASTEROID_ROCK)
@@ -102,9 +100,6 @@ public class AsteroidBlocks
         register(r, new BlockMinerBase(builder), AsteroidBlockNames.ASTRO_MINER_BASE);
         builder = builder.hardnessAndResistance(3.0F, 35.0F);
         register(r, new BlockMinerBaseFull(builder), AsteroidBlockNames.FULL_ASTRO_MINER_BASE);
-
-        builder = Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().sound(SoundType.NETHER_WART);
-        register(r, new BlockSpaceWart(builder), AsteroidBlockNames.spaceWart);
     }
 
     public static <V extends IForgeRegistryEntry<V>> void register(IForgeRegistry<V> reg, IForgeRegistryEntry<V> thing, String name)
@@ -126,7 +121,6 @@ public class AsteroidBlocks
         Item.Properties props = GCItems.defaultBuilder().group(null);
         register(r, Registry.BLOCK.getKey(SHORT_RANGE_TELEPAD_DUMMY), new BlockItem(SHORT_RANGE_TELEPAD_DUMMY, props));
         register(r, Registry.BLOCK.getKey(FULL_ASTRO_MINER_BASE), new BlockItem(FULL_ASTRO_MINER_BASE, props));
-        register(r, Registry.BLOCK.getKey(spaceWart), new BlockItem(spaceWart, props));
         props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(WALKWAY), new ItemBlockDesc(WALKWAY, props));
         register(r, Registry.BLOCK.getKey(FLUID_PIPE_WALKWAY), new ItemBlockDesc(FLUID_PIPE_WALKWAY, props));

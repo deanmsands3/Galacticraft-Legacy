@@ -278,7 +278,7 @@ public class BaseRoom extends SizedPiece
 //                //Some random Netherwart
 //                if (semirand < 2)
 //                {
-//                    state = AsteroidBlocks.spaceWart.getStateFromMeta(semirand);
+//                    state = Blocks.NETHER_WART.getStateFromMeta(semirand);
 //                }
 //            }
 //            break;
