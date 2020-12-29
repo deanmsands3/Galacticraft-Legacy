@@ -143,9 +143,9 @@ public class DataGeneratorGCPlanets
             this.simpleBlock(AsteroidBlocks.ILMENITE_ORE);
             this.simpleBlock(AsteroidBlocks.TITANIUM_BLOCK);
             this.simpleBlock(AsteroidBlocks.DARK_DECORATION_BLOCK);
-            this.simpleBlock(AsteroidBlocks.DARK_ASTEROID_ROCK);
-            this.simpleBlock(AsteroidBlocks.GRAY_ASTEROID_ROCK);
-            this.simpleBlock(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK);
+            this.simpleBlock(AsteroidBlocks.DARK_ASTEROID_ROCK, model1 -> ConfiguredModel.allYRotations(model1, 0, false));
+            this.simpleBlock(AsteroidBlocks.GRAY_ASTEROID_ROCK, model1 -> ConfiguredModel.allYRotations(model1, 0, false));
+            this.simpleBlock(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK, model1 -> ConfiguredModel.allYRotations(model1, 0, false));
             this.simpleBlock(AsteroidBlocks.DENSE_ICE);
             this.simpleBlock(AsteroidBlocks.ASTRO_MINER_BASE, this.models().cubeAll("astro_miner_base", this.modLoc("block/machine_frame")));
             this.simpleBlock(AsteroidBlocks.FULL_ASTRO_MINER_BASE, this.models().cubeAll("full_astro_miner_base", this.modLoc("block/machine_frame")));
@@ -154,10 +154,10 @@ public class DataGeneratorGCPlanets
             this.simpleBlock(AsteroidBlocks.ENERGY_BEAM_RECEIVER, this.models().cubeAll("energy_beam_receiver", this.modLoc("block/energy_beam_receiver")));
             this.simpleBlock(AsteroidBlocks.ENERGY_BEAM_REFLECTOR, this.models().cubeAll("energy_beam_reflector", this.modLoc("block/energy_beam_reflector")));
 
-            this.simpleBlock(VenusBlocks.VENUS_SOFT_ROCK);//TODO Random rotation
-            this.simpleBlock(VenusBlocks.VENUS_HARD_ROCK);//TODO Random rotation
+            this.simpleBlock(VenusBlocks.VENUS_SOFT_ROCK, model1 -> ConfiguredModel.allYRotations(model1, 0, false));
+            this.simpleBlock(VenusBlocks.VENUS_HARD_ROCK, model1 -> ConfiguredModel.allYRotations(model1, 0, false));
+            this.simpleBlock(VenusBlocks.PUMICE, model1 -> ConfiguredModel.allYRotations(model1, 0, false));
             this.simpleBlock(VenusBlocks.VENUS_VOLCANIC_ROCK);
-            this.simpleBlock(VenusBlocks.PUMICE);//TODO Random rotation
             this.simpleBlock(VenusBlocks.SCORCHED_VENUS_ROCK);
             this.simpleBlock(VenusBlocks.ORANGE_VENUS_DUNGEON_BRICKS);
             this.simpleBlock(VenusBlocks.RED_VENUS_DUNGEON_BRICKS);

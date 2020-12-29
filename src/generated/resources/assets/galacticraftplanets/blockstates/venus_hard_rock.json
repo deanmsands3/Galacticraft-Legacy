@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "galacticraftplanets:block/venus_hard_rock"
-    }
+    "": [
+      {
+        "model": "galacticraftplanets:block/venus_hard_rock"
+      },
+      {
+        "model": "galacticraftplanets:block/venus_hard_rock",
+        "y": 90
+      },
+      {
+        "model": "galacticraftplanets:block/venus_hard_rock",
+        "y": 180
+      },
+      {
+        "model": "galacticraftplanets:block/venus_hard_rock",
+        "y": 270
+      }
+    ]
   }
 }
