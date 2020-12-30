@@ -37,7 +37,7 @@ public class SpiderQueenRenderer extends MobRenderer<SpiderQueenEntity, SpiderQu
 
     private void updateModel()
     {
-        this.webModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/web.obj"), ImmutableList.of("Sphere"));
+        this.webModel = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/queen_web.obj"), ImmutableList.of("Sphere"));
     }
 
     @Override

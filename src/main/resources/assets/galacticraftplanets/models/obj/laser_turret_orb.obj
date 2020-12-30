@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib orb.mtl
+mtllib laser_turret_orb.mtl
 o inner_Icosphere
 v 0.000000 -1.000000 0.000000
 v 0.723600 -0.447215 0.525720

@@ -45,8 +45,8 @@ public class TileEntityLaserTurretRenderer extends TileEntityRenderer<TileEntity
 
     private void updateModels()
     {
-        ResourceLocation laser = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/laser.obj");
-        ResourceLocation orb = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/orb.obj");
+        ResourceLocation laser = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/laser_turret.obj");
+        ResourceLocation orb = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/laser_turret_orb.obj");
         laserBase = GCModelCache.INSTANCE.getModel(laser, ImmutableList.of("baseConnector0", "baseConnector1"));
         laserPhalange = GCModelCache.INSTANCE.getModel(laser, ImmutableList.of("phalange"));
         laserPhalangeAxle = GCModelCache.INSTANCE.getModel(laser, ImmutableList.of("phalangeAxle"));

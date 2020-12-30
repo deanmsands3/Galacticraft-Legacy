@@ -41,7 +41,7 @@ public class EntryPodVenusRenderer extends EntityRenderer<EntityEntryPodVenus>
 
     private void updateModels()
     {
-        ResourceLocation model = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/pod_flame.obj");
+        ResourceLocation model = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/entry_pod_flame.obj");
         this.modelEntryPod = GCModelCache.INSTANCE.getModel(model, ImmutableList.of("PodBody"));
         this.modelFlame = GCModelCache.INSTANCE.getModel(model, ImmutableList.of("Flame_Sphere"));
     }
