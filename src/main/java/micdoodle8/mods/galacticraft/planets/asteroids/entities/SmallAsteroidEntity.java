@@ -13,17 +13,17 @@ import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntitySmallAsteroid extends Entity
+public class SmallAsteroidEntity extends Entity
 {
-    private static final DataParameter<Float> SPIN_PITCH = EntityDataManager.createKey(EntitySmallAsteroid.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> SPIN_YAW = EntityDataManager.createKey(EntitySmallAsteroid.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> ASTEROID_TYPE = EntityDataManager.createKey(EntitySmallAsteroid.class, DataSerializers.VARINT);
+    private static final DataParameter<Float> SPIN_PITCH = EntityDataManager.createKey(SmallAsteroidEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> SPIN_YAW = EntityDataManager.createKey(SmallAsteroidEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Integer> ASTEROID_TYPE = EntityDataManager.createKey(SmallAsteroidEntity.class, DataSerializers.VARINT);
     public float spinPitch;
     public float spinYaw;
     public int type;
     private boolean firstUpdate = true;
 
-    public EntitySmallAsteroid(EntityType<? extends EntitySmallAsteroid> type, World worldIn)
+    public SmallAsteroidEntity(EntityType<? extends SmallAsteroidEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.0F, 1.0F);

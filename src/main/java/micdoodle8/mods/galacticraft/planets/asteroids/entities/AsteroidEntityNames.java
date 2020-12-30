@@ -6,5 +6,5 @@ public class AsteroidEntityNames
     public static final String ENTRY_POD = "entry_pod";
     public static final String GRAPPLE = "grapple";
     public static final String SMALL_ASTEROID = "small_asteroid";
-    public static final String ROCKET_T3 = "rocket_t3";
+    public static final String TIER_3_ROCKET = "tier_3_rocket";
 }

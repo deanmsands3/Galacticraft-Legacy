@@ -27,17 +27,17 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.List;
 
-public class EntityTier3Rocket extends EntityTieredRocket
+public class Tier3RocketEntity extends EntityTieredRocket
 {
-    public EntityTier3Rocket(EntityType<? extends EntityTier3Rocket> type, World worldIn)
+    public Tier3RocketEntity(EntityType<? extends Tier3RocketEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.8F, 6.0F);
     }
 
-    public static EntityTier3Rocket createEntityTier3Rocket(World world, double x, double y, double z, EnumRocketType rocketType)
+    public static Tier3RocketEntity createEntityTier3Rocket(World world, double x, double y, double z, EnumRocketType rocketType)
     {
-        EntityTier3Rocket rocket = new EntityTier3Rocket(AsteroidEntities.ROCKET_T3.get(), world);
+        Tier3RocketEntity rocket = new Tier3RocketEntity(AsteroidEntities.TIER_3_ROCKET, world);
         rocket.setPosition(x, y, z);
         rocket.prevPosX = x;
         rocket.prevPosY = y;

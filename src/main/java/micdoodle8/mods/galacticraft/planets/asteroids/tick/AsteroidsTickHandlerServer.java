@@ -7,7 +7,7 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.dimension.ShortRangeTelepadHandler;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityAstroMiner;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityMinerBase;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.ChunkPos;
@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AsteroidsTickHandlerServer
 {
     public static ShortRangeTelepadHandler spaceRaceData = null;
-    public static List<EntityAstroMiner> activeMiners = new ArrayList<>();
+    public static List<AstroMinerEntity> activeMiners = new ArrayList<>();
     public static AtomicBoolean loadingSavedChunks = new AtomicBoolean();
     private static Field droppedChunks = null;
 
@@ -62,7 +62,7 @@ public class AsteroidsTickHandlerServer
             }
 
             int index = -1;
-            for (EntityAstroMiner miner : activeMiners)
+            for (AstroMinerEntity miner : activeMiners)
             {
                 index++;
                 if (!miner.isAlive())
@@ -115,7 +115,7 @@ public class AsteroidsTickHandlerServer
     {
         if (event.phase == TickEvent.Phase.START)
         {
-            for (EntityAstroMiner miner : activeMiners)
+            for (AstroMinerEntity miner : activeMiners)
             {
                 if (miner.playerMP != null && miner.world == event.world && miner.isAlive())
                 {
@@ -126,7 +126,7 @@ public class AsteroidsTickHandlerServer
         }
         else if (event.phase == TickEvent.Phase.END)
         {
-            for (EntityAstroMiner miner : activeMiners)
+            for (AstroMinerEntity miner : activeMiners)
             {
                 if (!miner.isAlive())
                 {
@@ -161,10 +161,10 @@ public class AsteroidsTickHandlerServer
         }
     }
 
-    public static void removeChunkData(GCPlayerStats stats, EntityAstroMiner entityToRemove)
+    public static void removeChunkData(GCPlayerStats stats, AstroMinerEntity entityToRemove)
     {
         int index = 0;
-        for (EntityAstroMiner miner : activeMiners)
+        for (AstroMinerEntity miner : activeMiners)
         {
             if (miner == entityToRemove)  //Found it in the list here
             {
@@ -215,7 +215,7 @@ public class AsteroidsTickHandlerServer
         }
     }
 
-    public static int monitorMiner(EntityAstroMiner entityAstroMiner)
+    public static int monitorMiner(AstroMinerEntity entityAstroMiner)
     {
         int result = activeMiners.size();
         activeMiners.add(entityAstroMiner);

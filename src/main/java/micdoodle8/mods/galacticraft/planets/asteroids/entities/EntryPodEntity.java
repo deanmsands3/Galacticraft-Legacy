@@ -24,17 +24,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLevel, ICameraZoomEntity, IIgnoreShift
+public class EntryPodEntity extends EntityLanderBase implements IScaleableFuelLevel, ICameraZoomEntity, IIgnoreShift
 {
-    public EntityEntryPod(EntityType<? extends EntityEntryPod> type, World worldIn)
+    public EntryPodEntity(EntityType<? extends EntryPodEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.5F, 3.0F);
     }
 
-    public static EntityEntryPod createEntityEntryPod(ServerPlayerEntity player)
+    public static EntryPodEntity createEntityEntryPod(ServerPlayerEntity player)
     {
-        EntityEntryPod pod = new EntityEntryPod(AsteroidEntities.ENTRY_POD.get(), player.world);
+        EntryPodEntity pod = new EntryPodEntity(AsteroidEntities.ENTRY_POD, player.world);
         GCPlayerStats stats = GCPlayerStats.get(player);
         pod.stacks = NonNullList.withSize(stats.getRocketStacks().size() + 1, ItemStack.EMPTY);
         pod.fuelTank.setFluid(new FluidStack(GCFluids.FUEL.getFluid(), stats.getFuelLevel()));

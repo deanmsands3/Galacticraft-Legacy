@@ -42,11 +42,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class EntityGrapple extends Entity implements IProjectile
+public class GrappleEntity extends Entity implements IProjectile
 {
-    private static final DataParameter<Integer> PULLING_ENTITY_ID = EntityDataManager.createKey(EntityGrapple.class, DataSerializers.VARINT);
-    private static final DataParameter<Boolean> IS_PULLING = EntityDataManager.createKey(EntityGrapple.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<ItemStack> STRING_ITEM_STACK = EntityDataManager.createKey(EntityGrapple.class, DataSerializers.ITEMSTACK);
+    private static final DataParameter<Integer> PULLING_ENTITY_ID = EntityDataManager.createKey(GrappleEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Boolean> IS_PULLING = EntityDataManager.createKey(GrappleEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<ItemStack> STRING_ITEM_STACK = EntityDataManager.createKey(GrappleEntity.class, DataSerializers.ITEMSTACK);
     private BlockPos hitVec;
     @Nullable
     private BlockState inBlockState;
@@ -60,7 +60,7 @@ public class EntityGrapple extends Entity implements IProjectile
     public float prevRotationRoll;
     public boolean pullingPlayer;
 
-    public EntityGrapple(EntityType<? extends EntityGrapple> type, World worldIn)
+    public GrappleEntity(EntityType<? extends GrappleEntity> type, World worldIn)
     {
         super(type, worldIn);
         this.ignoreFrustumCheck = false;
@@ -68,9 +68,9 @@ public class EntityGrapple extends Entity implements IProjectile
 //        this.setSize(0.75F, 0.75F);
     }
 
-    public static EntityGrapple createEntityGrapple(World world, PlayerEntity shootingEntity, float par3, ItemStack stringStack)
+    public static GrappleEntity createEntityGrapple(World world, PlayerEntity shootingEntity, float par3, ItemStack stringStack)
     {
-        EntityGrapple grapple = new EntityGrapple(AsteroidEntities.GRAPPLE.get(), world);
+        GrappleEntity grapple = new GrappleEntity(AsteroidEntities.GRAPPLE, world);
         grapple.shootingEntity = shootingEntity;
 //        grapple.setSize(0.75F, 0.75F);
 

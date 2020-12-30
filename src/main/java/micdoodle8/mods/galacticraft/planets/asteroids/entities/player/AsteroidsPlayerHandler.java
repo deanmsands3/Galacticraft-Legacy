@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.planets.asteroids.entities.player;
 import micdoodle8.mods.galacticraft.planets.ConfigManagerPlanets;
 import micdoodle8.mods.galacticraft.planets.asteroids.dimension.DimensionAsteroids;
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.AsteroidEntities;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntitySmallAsteroid;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.SmallAsteroidEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
@@ -70,7 +70,7 @@ public class AsteroidsPlayerHandler
                         motY = (player.world.rand.nextDouble() - 0.5) * 0.4;
                         motZ = (player.getPosZ() - z + (player.world.rand.nextDouble() - 0.5) * 40) / 400.0F;
 
-                        final EntitySmallAsteroid smallAsteroid = new EntitySmallAsteroid(AsteroidEntities.SMALL_ASTEROID.get(), player.world);
+                        final SmallAsteroidEntity smallAsteroid = new SmallAsteroidEntity(AsteroidEntities.SMALL_ASTEROID, player.world);
                         smallAsteroid.setPosition(x, y, z);
 //                        smallAsteroid.motionX = motX;
 //                        smallAsteroid.motionY = motY;

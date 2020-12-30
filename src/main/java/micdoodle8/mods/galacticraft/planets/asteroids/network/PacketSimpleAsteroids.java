@@ -8,7 +8,7 @@ import micdoodle8.mods.galacticraft.core.network.PacketBase;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityGrapple;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.GrappleEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityShortRangeTelepad;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars;
 import net.minecraft.client.Minecraft;
@@ -199,7 +199,7 @@ public class PacketSimpleAsteroids extends PacketBase
             break;
         case C_UPDATE_GRAPPLE_POS:
             entity = playerBaseClient.world.getEntityByID((Integer) this.data.get(0));
-            if (entity != null && entity instanceof EntityGrapple)
+            if (entity != null && entity instanceof GrappleEntity)
             {
                 Vector3 vec = (Vector3) this.data.get(1);
                 entity.setPosition(vec.x, vec.y, vec.z);

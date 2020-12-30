@@ -61,9 +61,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class EntityAstroMiner extends Entity implements IInventory, IPacketReceiver, IEntityNoisy, IAntiGrav, ITelemetry
+public class AstroMinerEntity extends Entity implements IInventory, IPacketReceiver, IEntityNoisy, IAntiGrav, ITelemetry
 {
-    private static final DataParameter<Float> DAMAGE = EntityDataManager.createKey(EntityAstroMiner.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> DAMAGE = EntityDataManager.createKey(AstroMinerEntity.class, DataSerializers.FLOAT);
 
     public static final int MINE_LENGTH = 24;
     public static final int MINE_LENGTH_AST = 12;
@@ -208,7 +208,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
 //        this.energyLevel = energy;
 //    }
 
-    public EntityAstroMiner(EntityType<? extends EntityAstroMiner> type, World worldIn)
+    public AstroMinerEntity(EntityType<? extends AstroMinerEntity> type, World worldIn)
     {
         super(type, worldIn);
         this.facing = Direction.NORTH;
@@ -1237,7 +1237,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
                 }
                 else
                 {
-                    this.playerMP.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.message.astro_miner1_a.fail") + " " + GCCoreUtil.translate(EntityAstroMiner.blockingBlock.toString())));
+                    this.playerMP.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.message.astro_miner1_a.fail") + " " + GCCoreUtil.translate(AstroMinerEntity.blockingBlock.toString())));
                 }
             }
             this.setMotion(0.0, 0.0, 0.0);
@@ -2039,8 +2039,8 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
             return true;
         }
 //        final EntityAstroMiner miner = new EntityAstroMiner(world, NonNullList.withSize(EntityAstroMiner.INV_SIZE, ItemStack.EMPTY), 0);
-        EntityAstroMiner miner = new EntityAstroMiner(AsteroidEntities.ASTRO_MINER.get(), world);
-        miner.stacks = NonNullList.withSize(EntityAstroMiner.INV_SIZE, ItemStack.EMPTY);
+        AstroMinerEntity miner = new AstroMinerEntity(AsteroidEntities.ASTRO_MINER, world);
+        miner.stacks = NonNullList.withSize(AstroMinerEntity.INV_SIZE, ItemStack.EMPTY);
         miner.energyLevel = 0;
         miner.setPlayer(player);
         if (player.abilities.isCreativeMode)
@@ -2414,25 +2414,25 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
         str[4] = GCCoreUtil.translate("gui.energy_storage.desc.1") + ": " + energyPerCent + "%";
         switch (data[4])
         {
-        case EntityAstroMiner.AISTATE_STUCK:
+        case AstroMinerEntity.AISTATE_STUCK:
             str[0] = GCCoreUtil.translate("gui.message.no_energy");
             break;
-        case EntityAstroMiner.AISTATE_ATBASE:
+        case AstroMinerEntity.AISTATE_ATBASE:
             str[0] = GCCoreUtil.translate("gui.miner.docked");
             break;
-        case EntityAstroMiner.AISTATE_TRAVELLING:
+        case AstroMinerEntity.AISTATE_TRAVELLING:
             str[0] = GCCoreUtil.translate("gui.miner.travelling");
             break;
-        case EntityAstroMiner.AISTATE_MINING:
+        case AstroMinerEntity.AISTATE_MINING:
             str[0] = GCCoreUtil.translate("gui.miner.mining");
             break;
-        case EntityAstroMiner.AISTATE_RETURNING:
+        case AstroMinerEntity.AISTATE_RETURNING:
             str[0] = GCCoreUtil.translate("gui.miner.returning");
             break;
-        case EntityAstroMiner.AISTATE_DOCKING:
+        case AstroMinerEntity.AISTATE_DOCKING:
             str[0] = GCCoreUtil.translate("gui.miner.docking");
             break;
-        case EntityAstroMiner.AISTATE_OFFLINE:
+        case AstroMinerEntity.AISTATE_OFFLINE:
             str[0] = GCCoreUtil.translate("gui.miner.offline");
             break;
         }

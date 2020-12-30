@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.planets.venus.entities;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityEntryPod;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntryPodEntity;
 import micdoodle8.mods.galacticraft.planets.mars.entities.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;

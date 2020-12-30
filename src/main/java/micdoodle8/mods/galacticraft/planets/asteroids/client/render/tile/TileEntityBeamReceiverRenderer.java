@@ -36,9 +36,10 @@ public class TileEntityBeamReceiverRenderer extends TileEntityRenderer<TileEntit
 
     private void updateModels()
     {
-        reflectorModelMain = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/energy_beam_receiver.obj"), ImmutableList.of("Main"));
-        reflectorModelReceiver = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/energy_beam_receiver.obj"), ImmutableList.of("Receiver"));
-        reflectorModelRing = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/energy_beam_receiver.obj"), ImmutableList.of("Ring"));
+        ResourceLocation model = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/energy_beam_receiver.obj");
+        reflectorModelMain = GCModelCache.INSTANCE.getModel(model, ImmutableList.of("Main"));
+        reflectorModelReceiver = GCModelCache.INSTANCE.getModel(model, ImmutableList.of("Receiver"));
+        reflectorModelRing = GCModelCache.INSTANCE.getModel(model, ImmutableList.of("Ring"));
     }
 
     @Override

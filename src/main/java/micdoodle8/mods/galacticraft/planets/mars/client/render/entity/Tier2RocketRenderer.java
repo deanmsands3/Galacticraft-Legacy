@@ -35,14 +35,12 @@ public class Tier2RocketRenderer extends EntityRenderer<Tier2RocketEntity>
     {
         super(manager);
         this.shadowSize = 2F;
+        GCModelCache.INSTANCE.reloadCallback(this::updateModel);
     }
 
     private void updateModel()
     {
-        if (this.model == null)
-        {
-            this.model = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/tier_2_rocket.obj"), ImmutableList.of("Rocket"));
-        }
+        this.model = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/tier_2_rocket.obj"), ImmutableList.of("Rocket"));
     }
 
     @Override
@@ -68,8 +66,6 @@ public class Tier2RocketRenderer extends EntityRenderer<Tier2RocketEntity>
             matrixStack.rotate(Vector3f.XP.rotation(MathHelper.sin(rollAmplitude) * rollAmplitude * i * partialTicks));
             matrixStack.rotate(Vector3f.ZP.rotation(MathHelper.sin(rollAmplitude) * rollAmplitude * i * partialTicks));
         }
-
-        this.updateModel();
 
         if (Minecraft.isAmbientOcclusionEnabled())
         {

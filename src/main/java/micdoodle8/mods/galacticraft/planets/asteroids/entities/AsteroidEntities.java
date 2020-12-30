@@ -1,80 +1,86 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.entities;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import micdoodle8.mods.galacticraft.planets.mars.entities.CargoRocketEntity;
-import net.minecraft.entity.Entity;
+import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.function.Supplier;
+import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID_PLANETS, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AsteroidEntities
 {
-    public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Constants.MOD_ID_PLANETS);
+    public static final EntityType<AstroMinerEntity> ASTRO_MINER = AsteroidEntities.astroMiner();
+    public static final EntityType<EntryPodEntity> ENTRY_POD = AsteroidEntities.entryPod();
+    public static final EntityType<GrappleEntity> GRAPPLE = AsteroidEntities.grapple();
+    public static final EntityType<SmallAsteroidEntity> SMALL_ASTEROID = AsteroidEntities.smallAsteroid();
+    public static final EntityType<Tier3RocketEntity> TIER_3_ROCKET = AsteroidEntities.rocketT3();
 
-    public static final RegistryObject<EntityType<EntityAstroMiner>> ASTRO_MINER = register(AsteroidEntityNames.ASTRO_MINER, AsteroidEntities::astroMiner);
-    public static final RegistryObject<EntityType<EntityEntryPod>> ENTRY_POD = register(AsteroidEntityNames.ENTRY_POD, AsteroidEntities::entryPod);
-    public static final RegistryObject<EntityType<EntityGrapple>> GRAPPLE = register(AsteroidEntityNames.GRAPPLE, AsteroidEntities::grapple);
-    public static final RegistryObject<EntityType<EntitySmallAsteroid>> SMALL_ASTEROID = register(AsteroidEntityNames.SMALL_ASTEROID, AsteroidEntities::smallAsteroid);
-    public static final RegistryObject<EntityType<EntityTier3Rocket>> ROCKET_T3 = register(AsteroidEntityNames.ROCKET_T3, AsteroidEntities::rocketT3);
-
-    private static <E extends Entity, T extends EntityType<E>> RegistryObject<EntityType<E>> register(final String name, final Supplier<EntityType.Builder<E>> sup)
+    @SubscribeEvent
+    public static void registerEntities(RegistryEvent.Register<EntityType<?>> event)
     {
-        return ENTITIES.register(name, () -> sup.get().build(name));
+        IForgeRegistry<EntityType<?>> r = event.getRegistry();
+        AsteroidBlocks.register(r, ASTRO_MINER, AsteroidEntityNames.ASTRO_MINER);
+        AsteroidBlocks.register(r, ENTRY_POD, AsteroidEntityNames.ENTRY_POD);
+        AsteroidBlocks.register(r, GRAPPLE, AsteroidEntityNames.GRAPPLE);
+        AsteroidBlocks.register(r, SMALL_ASTEROID, AsteroidEntityNames.SMALL_ASTEROID);
+        AsteroidBlocks.register(r, TIER_3_ROCKET, AsteroidEntityNames.TIER_3_ROCKET);
     }
 
-    private static EntityType.Builder<EntityAstroMiner> astroMiner()
+    private static EntityType<AstroMinerEntity> astroMiner()
     {
-        return EntityType.Builder.create(EntityAstroMiner::new, EntityClassification.MISC)
+        return EntityType.Builder.create(AstroMinerEntity::new, EntityClassification.MISC)
                 .size(2.6F, 1.8F)
                 .immuneToFire()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
-                .setShouldReceiveVelocityUpdates(true);
+                .setShouldReceiveVelocityUpdates(true)
+                .build("");
     }
 
-    private static EntityType.Builder<EntityEntryPod> entryPod()
+    private static EntityType<EntryPodEntity> entryPod()
     {
-        return EntityType.Builder.create(EntityEntryPod::new, EntityClassification.MISC)
+        return EntityType.Builder.create(EntryPodEntity::new, EntityClassification.MISC)
                 .size(2.6F, 1.8F)
                 .immuneToFire()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
-                .setShouldReceiveVelocityUpdates(true);
+                .setShouldReceiveVelocityUpdates(true)
+                .build("");
     }
 
-    private static EntityType.Builder<EntityGrapple> grapple()
+    private static EntityType<GrappleEntity> grapple()
     {
-        return EntityType.Builder.create(EntityGrapple::new, EntityClassification.MISC)
+        return EntityType.Builder.create(GrappleEntity::new, EntityClassification.MISC)
                 .size(0.75F, 0.75F)
                 .immuneToFire()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
-                .setShouldReceiveVelocityUpdates(true);
+                .setShouldReceiveVelocityUpdates(true)
+                .build("");
     }
 
-    private static EntityType.Builder<EntitySmallAsteroid> smallAsteroid()
+    private static EntityType<SmallAsteroidEntity> smallAsteroid()
     {
-        return EntityType.Builder.create(EntitySmallAsteroid::new, EntityClassification.MISC)
+        return EntityType.Builder.create(SmallAsteroidEntity::new, EntityClassification.MISC)
                 .size(1.0F, 1.0F)
                 .immuneToFire()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
-                .setShouldReceiveVelocityUpdates(true);
+                .setShouldReceiveVelocityUpdates(true)
+                .build("");
     }
 
-    private static EntityType.Builder<EntityTier3Rocket> rocketT3()
+    private static EntityType<Tier3RocketEntity> rocketT3()
     {
-        return EntityType.Builder.create(EntityTier3Rocket::new, EntityClassification.MISC)
+        return EntityType.Builder.create(Tier3RocketEntity::new, EntityClassification.MISC)
                 .size(1.8F, 6.0F)
                 .immuneToFire()
                 .setUpdateInterval(10)
                 .setTrackingRange(64)
-                .setShouldReceiveVelocityUpdates(true);
+                .setShouldReceiveVelocityUpdates(true)
+                .build("");
     }
 }

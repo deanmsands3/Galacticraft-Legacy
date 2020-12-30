@@ -11,7 +11,7 @@ import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.BlockAsteroidRock;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityEntryPod;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntryPodEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
@@ -327,7 +327,7 @@ public class TeleportTypeAsteroids implements ITeleportType
 
                 if (!newWorld.isRemote)
                 {
-                    EntityEntryPod entryPod = EntityEntryPod.createEntityEntryPod(player);
+                    EntryPodEntity entryPod = EntryPodEntity.createEntityEntryPod(player);
 
                     boolean previous = CompatibilityManager.forceLoadChunks((ServerWorld) newWorld);
                     entryPod.forceSpawn = true;

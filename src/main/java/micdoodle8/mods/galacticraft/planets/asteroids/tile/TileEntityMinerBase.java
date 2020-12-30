@@ -15,7 +15,7 @@ import micdoodle8.mods.galacticraft.core.util.*;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlockNames;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.dimension.DimensionAsteroids;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityAstroMiner;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -90,7 +90,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
 
     private final boolean spawnedMiner = false;
 
-    public EntityAstroMiner linkedMiner = null;
+    public AstroMinerEntity linkedMiner = null;
     public UUID linkedMinerID = null;
     private boolean initialised;
 
@@ -243,7 +243,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
             this.linkedMinerDataAIState = -3;
             return;
         }
-        EntityAstroMiner miner = this.linkedMiner;
+        AstroMinerEntity miner = this.linkedMiner;
         if (miner == null || !miner.isAlive())
         {
             this.linkedMinerDataAIState = -3;
@@ -291,7 +291,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
             if (this.linkedMinerID == null)
             {
 //                System.err.println("" + this.facing);
-                if (EntityAstroMiner.spawnMinerAtBase(this.world, this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1, this.facing, new BlockVec3(this), player))
+                if (AstroMinerEntity.spawnMinerAtBase(this.world, this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1, this.facing, new BlockVec3(this), player))
                 {
                     this.findTargetPoints();
                     return true;
@@ -775,7 +775,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
         return null;
     }
 
-    public void linkMiner(EntityAstroMiner entityAstroMiner)
+    public void linkMiner(AstroMinerEntity entityAstroMiner)
     {
         this.linkedMiner = entityAstroMiner;
         this.linkedMinerID = this.linkedMiner.getUniqueID();
@@ -1024,7 +1024,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
         int s = this.targetPoints.size();
         for (int i = 0; i < s; i++)
         {
-            this.targetPoints.add(this.targetPoints.get(i).clone().modifyPositionFromSide(inLine, EntityAstroMiner.MINE_LENGTH + 6));
+            this.targetPoints.add(this.targetPoints.get(i).clone().modifyPositionFromSide(inLine, AstroMinerEntity.MINE_LENGTH + 6));
         }
 
         this.markDirty();

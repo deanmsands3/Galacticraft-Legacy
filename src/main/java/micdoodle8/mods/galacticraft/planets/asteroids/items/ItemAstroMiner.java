@@ -11,7 +11,7 @@ import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.ConfigManagerPlanets;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityAstroMiner;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityMinerBase;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
@@ -123,7 +123,7 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortable
 
                 if (!((TileEntityMinerBase) tile).spawnMiner(playerMP))
                 {
-                    playerIn.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.message.astro_miner1.fail") + " " + GCCoreUtil.translate(EntityAstroMiner.blockingBlock.toString())));
+                    playerIn.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.message.astro_miner1.fail") + " " + GCCoreUtil.translate(AstroMinerEntity.blockingBlock.toString())));
                     return ActionResultType.FAIL;
                 }
 

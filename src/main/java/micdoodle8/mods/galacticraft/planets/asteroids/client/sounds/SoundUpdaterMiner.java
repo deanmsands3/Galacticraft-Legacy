@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.client.sounds;
 
 import micdoodle8.mods.galacticraft.core.client.sounds.GCSounds;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityAstroMiner;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
 import net.minecraft.client.audio.TickableSound;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -15,12 +15,12 @@ import net.minecraft.util.SoundCategory;
 public class SoundUpdaterMiner extends TickableSound
 {
     private final ClientPlayerEntity thePlayer;
-    private final EntityAstroMiner theRocket;
+    private final AstroMinerEntity theRocket;
     private boolean soundStopped;
     private float targetVolume;
     private float targetPitch;
 
-    public SoundUpdaterMiner(ClientPlayerEntity par1EntityPlayerSP, EntityAstroMiner par2Entity)
+    public SoundUpdaterMiner(ClientPlayerEntity par1EntityPlayerSP, AstroMinerEntity par2Entity)
     {
         super(GCSounds.astroMiner, SoundCategory.AMBIENT);
         this.theRocket = par2Entity;
@@ -42,7 +42,7 @@ public class SoundUpdaterMiner extends TickableSound
     {
         if (this.theRocket.isAlive())
         {
-            if (this.theRocket.AIstate == EntityAstroMiner.AISTATE_ATBASE || this.theRocket.AIstate == EntityAstroMiner.AISTATE_DOCKING)
+            if (this.theRocket.AIstate == AstroMinerEntity.AISTATE_ATBASE || this.theRocket.AIstate == AstroMinerEntity.AISTATE_DOCKING)
             {
                 this.targetVolume = 0.6F;
                 this.targetPitch = 0.1F;
