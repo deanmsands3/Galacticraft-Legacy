@@ -7,7 +7,7 @@ import micdoodle8.mods.galacticraft.core.entities.EvolvedSpiderEntity;
 import micdoodle8.mods.galacticraft.core.entities.EvolvedZombieEntity;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlockNames;
-import micdoodle8.mods.galacticraft.planets.venus.entities.EntitySpiderQueen;
+import micdoodle8.mods.galacticraft.planets.venus.entities.SpiderQueenEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -17,14 +17,14 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityDungeonSpawnerVenus extends TileEntityDungeonSpawner<EntitySpiderQueen>
+public class TileEntityDungeonSpawnerVenus extends TileEntityDungeonSpawner<SpiderQueenEntity>
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.VENUS_BOSS_SPAWNER)
     public static TileEntityType<TileEntityDungeonSpawnerVenus> TYPE;
 
     public TileEntityDungeonSpawnerVenus()
     {
-        super(TYPE, EntitySpiderQueen.class);
+        super(TYPE, SpiderQueenEntity.class);
     }
 
     @Override

@@ -23,14 +23,14 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
-public class EntityJuicer extends MonsterEntity implements IEntityBreathable
+public class JuicerEntity extends MonsterEntity implements IEntityBreathable
 {
-    private static final DataParameter<Boolean> IS_FALLING = EntityDataManager.createKey(EntityJuicer.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> IS_HANGING = EntityDataManager.createKey(EntityJuicer.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_FALLING = EntityDataManager.createKey(JuicerEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_HANGING = EntityDataManager.createKey(JuicerEntity.class, DataSerializers.BOOLEAN);
     private BlockPos jumpTarget;
     private int timeSinceLastJump = 0;
 
-    public EntityJuicer(EntityType<? extends EntityJuicer> type, World worldIn)
+    public JuicerEntity(EntityType<? extends JuicerEntity> type, World worldIn)
     {
         super(type, worldIn);
         this.moveController = new EntityMoveHelperCeiling(this);

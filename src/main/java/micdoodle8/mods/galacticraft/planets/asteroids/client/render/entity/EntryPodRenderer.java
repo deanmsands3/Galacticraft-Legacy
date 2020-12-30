@@ -33,7 +33,7 @@ public class EntryPodRenderer extends EntityRenderer<EntryPodEntity>
         GCModelCache.INSTANCE.reloadCallback(this::updateModel);
     }
 
-    public void updateModel()
+    private void updateModel()
     {
         this.modelEntryPod = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/entry_pod.obj"), ImmutableList.of("PodBody"));
     }

@@ -40,18 +40,18 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
-public class EntitySpiderQueen extends EntityBossBase implements IEntityBreathable, IBoss, IRangedAttackMob
+public class SpiderQueenEntity extends EntityBossBase implements IEntityBreathable, IBoss, IRangedAttackMob
 {
-    private static final DataParameter<Byte> BURROWED_COUNT = EntityDataManager.createKey(EntitySpiderQueen.class, DataSerializers.BYTE);
+    private static final DataParameter<Byte> BURROWED_COUNT = EntityDataManager.createKey(SpiderQueenEntity.class, DataSerializers.BYTE);
     public boolean shouldEvade;
-    private final List<EntityJuicer> juicersSpawned = Lists.newArrayList();
+    private final List<JuicerEntity> juicersSpawned = Lists.newArrayList();
     private List<UUID> spawnedPreload;
 
     private int rangedAttackTime;
     private final int minRangedAttackTime;
     private final int maxRangedAttackTime;
 
-    public EntitySpiderQueen(EntityType<? extends EntitySpiderQueen> type, World worldIn)
+    public SpiderQueenEntity(EntityType<? extends SpiderQueenEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.4F, 0.9F);
@@ -66,9 +66,9 @@ public class EntitySpiderQueen extends EntityBossBase implements IEntityBreathab
         this.ignoreFrustumCheck = true;
     }
 
-    public static EntitySpiderQueen create(World world)
+    public static SpiderQueenEntity create(World world)
     {
-        return new EntitySpiderQueen(VenusEntities.SPIDER_QUEEN, world);
+        return new SpiderQueenEntity(VenusEntities.SPIDER_QUEEN, world);
     }
 
     @Override
@@ -156,9 +156,9 @@ public class EntitySpiderQueen extends EntityBossBase implements IEntityBreathab
                 {
                     entity = first.get();
                 }
-                if (entity instanceof EntityJuicer)
+                if (entity instanceof JuicerEntity)
                 {
-                    this.juicersSpawned.add((EntityJuicer) entity);
+                    this.juicersSpawned.add((JuicerEntity) entity);
                 }
             }
             if (this.juicersSpawned.size() == this.spawnedPreload.size())
@@ -195,7 +195,7 @@ public class EntitySpiderQueen extends EntityBossBase implements IEntityBreathab
                             {
                                 if (this.juicersSpawned.size() < 6)
                                 {
-                                    EntityJuicer juicer = new EntityJuicer(VenusEntities.JUICER, this.world);
+                                    JuicerEntity juicer = new JuicerEntity(VenusEntities.JUICER, this.world);
                                     double angle = Math.random() * 2 * Math.PI;
                                     double dist = 3.0F;
                                     juicer.setPosition(this.getPosX() + dist * Math.sin(angle), this.getPosY() + 0.2F, this.getPosZ() + dist * Math.cos(angle));
@@ -221,7 +221,7 @@ public class EntitySpiderQueen extends EntityBossBase implements IEntityBreathab
             if (!this.juicersSpawned.isEmpty())
             {
                 boolean allDead = true;
-                for (EntityJuicer juicer : this.juicersSpawned)
+                for (JuicerEntity juicer : this.juicersSpawned)
                 {
                     if (juicer.isAlive())
                     {
@@ -368,7 +368,7 @@ public class EntitySpiderQueen extends EntityBossBase implements IEntityBreathab
     @Override
     public void attackEntityWithRangedAttack(LivingEntity target, float damage)
     {
-        EntityWebShot entityarrow = EntityWebShot.createEntityWebShot(this.world, this, target, 0.8F, (float) (14 - this.world.getDifficulty().getId() * 4));
+        SpiderQueenWebEntity entityarrow = SpiderQueenWebEntity.createEntityWebShot(this.world, this, target, 0.8F, (float) (14 - this.world.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_ARROW_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.world.addEntity(entityarrow);
     }
@@ -381,7 +381,7 @@ public class EntitySpiderQueen extends EntityBossBase implements IEntityBreathab
         nbt.putBoolean("should_evade", this.shouldEvade);
 
         ListNBT list = new ListNBT();
-        for (EntityJuicer juicer : this.juicersSpawned)
+        for (JuicerEntity juicer : this.juicersSpawned)
         {
             list.add(LongNBT.valueOf(juicer.getUniqueID().getMostSignificantBits()));
             list.add(LongNBT.valueOf(juicer.getUniqueID().getLeastSignificantBits()));

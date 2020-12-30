@@ -7,6 +7,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
+import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.obj.GCModelCache;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
@@ -33,6 +34,7 @@ public class LandingBalloonsRenderer extends EntityRenderer<LandingBalloonsEntit
 {
     private IBakedModel balloonModel;
     private final ParachuteBalloonModel parachute = new ParachuteBalloonModel();
+    private static final ResourceLocation PARACHUTE = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/parachute/white.png");
 
     public LandingBalloonsRenderer(EntityRendererManager manager)
     {
@@ -81,7 +83,7 @@ public class LandingBalloonsRenderer extends EntityRenderer<LandingBalloonsEntit
             matrixStack.push();
             matrixStack.translate(-1.25F, -0.93F, -0.3F);
             matrixStack.scale(2.5F, 3.0F, 2.5F);
-            IVertexBuilder ivertexbuilder = buffer.getBuffer(this.parachute.getRenderType(this.getEntityTexture(entity)));
+            IVertexBuilder ivertexbuilder = buffer.getBuffer(this.parachute.getRenderType(PARACHUTE));
             this.parachute.render(matrixStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
             matrixStack.pop();
         }

@@ -18,30 +18,30 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import java.util.List;
 import java.util.Optional;
 
-public class EntityWebShot extends Entity implements IProjectile
+public class SpiderQueenWebEntity extends Entity implements IProjectile
 {
     public int canBePickedUp;
     public int arrowShake;
     public Entity shootingEntity;
     private int ticksInAir;
 
-    public EntityWebShot(EntityType<? extends EntityWebShot> type, World worldIn)
+    public SpiderQueenWebEntity(EntityType<? extends SpiderQueenWebEntity> type, World worldIn)
     {
         super(type, worldIn);
 //        this.setSize(0.5F, 0.5F);
     }
 
-    public static EntityWebShot createEntityWebShot(World worldIn, double x, double y, double z)
+    public static SpiderQueenWebEntity createEntityWebShot(World worldIn, double x, double y, double z)
     {
-        EntityWebShot webShot = new EntityWebShot(VenusEntities.WEB_SHOT, worldIn);
+        SpiderQueenWebEntity webShot = new SpiderQueenWebEntity(VenusEntities.SPIDER_QUEEN_WEB, worldIn);
 //        this.setSize(0.5F, 0.5F);
         webShot.setPosition(x, y, z);
         return webShot;
     }
 
-    public static EntityWebShot createEntityWebShot(World worldIn, LivingEntity shooter, LivingEntity target, float p_i1755_4_, float p_i1755_5_)
+    public static SpiderQueenWebEntity createEntityWebShot(World worldIn, LivingEntity shooter, LivingEntity target, float p_i1755_4_, float p_i1755_5_)
     {
-        EntityWebShot webShot = new EntityWebShot(VenusEntities.WEB_SHOT, worldIn);
+        SpiderQueenWebEntity webShot = new SpiderQueenWebEntity(VenusEntities.SPIDER_QUEEN_WEB, worldIn);
         webShot.shootingEntity = shooter;
 
         if (shooter instanceof PlayerEntity)
@@ -69,9 +69,9 @@ public class EntityWebShot extends Entity implements IProjectile
         return webShot;
     }
 
-    public static EntityWebShot createEntityWebShot(World worldIn, LivingEntity shooter, float velocity)
+    public static SpiderQueenWebEntity createEntityWebShot(World worldIn, LivingEntity shooter, float velocity)
     {
-        EntityWebShot webShot = new EntityWebShot(VenusEntities.WEB_SHOT, worldIn);
+        SpiderQueenWebEntity webShot = new SpiderQueenWebEntity(VenusEntities.SPIDER_QUEEN_WEB, worldIn);
         webShot.shootingEntity = shooter;
 
         if (shooter instanceof PlayerEntity)
