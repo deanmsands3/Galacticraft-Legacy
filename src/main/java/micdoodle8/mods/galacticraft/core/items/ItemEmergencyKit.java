@@ -95,7 +95,7 @@ public class ItemEmergencyKit extends ItemDesc implements ISortable
         case 4:
             return new ItemStack(GCItems.HEAVY_DUTY_PICKAXE);
         case 5:
-            return new ItemStack(GCItems.DEHYDRATED_POTATO_CAN, 1);
+            return new ItemStack(GCItems.DEHYDRATED_POTATOES, 1);
         case 6:
             return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.HEALING);
         case 7:

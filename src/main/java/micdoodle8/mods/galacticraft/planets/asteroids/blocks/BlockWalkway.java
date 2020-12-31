@@ -10,6 +10,7 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityFluidPipe;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
+import micdoodle8.mods.galacticraft.planets.asteroids.tile.WalkwayFluidPipeTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.IFluidState;
@@ -139,7 +140,7 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
     {
         if (this == AsteroidBlocks.FLUID_PIPE_WALKWAY)
         {
-            return new TileEntityFluidPipe();
+            return new WalkwayFluidPipeTileEntity();
         }
 
         if (this == AsteroidBlocks.WIRE_WALKWAY)
@@ -153,7 +154,7 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
     @Override
     public boolean hasTileEntity(BlockState state)
     {
-        return true;
+        return this != AsteroidBlocks.WALKWAY;
     }
 
     @Override

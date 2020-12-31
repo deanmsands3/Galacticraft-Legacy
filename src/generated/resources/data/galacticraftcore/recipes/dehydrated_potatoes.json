@@ -6,13 +6,13 @@
       "item": "galacticraftcore:tin_canister"
     },
     {
-      "item": "minecraft:melon_slice"
+      "item": "minecraft:potato"
     },
     {
-      "item": "minecraft:melon_slice"
+      "item": "minecraft:potato"
     }
   ],
   "result": {
-    "item": "galacticraftcore:dehydrated_melon_can"
+    "item": "galacticraftcore:dehydrated_potatoes"
   }
 }

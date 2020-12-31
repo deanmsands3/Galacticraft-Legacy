@@ -31,11 +31,11 @@ public class GCItemNames
     public static final String COPPER_CANISTER = "copper_canister";
     public static final String COPPER_INGOT = "copper_ingot";
     public static final String CREATIVE_TIER_1_ROCKET = "creative_tier_1_rocket";
-    public static final String DEHYDRATED_APPLE_CAN = "dehydrated_apple_can";
-    public static final String DEHYDRATED_CARROT_CAN = "dehydrated_carrot_can";
-    public static final String DEHYDRATED_MELON_CAN = "dehydrated_melon_can";
-    public static final String DEHYDRATED_POTATO_CAN = "dehydrated_potato_can";
-    public static final String DUNGEON_FINDER = "dungeon_finder";
+    public static final String DEHYDRATED_APPLES = "dehydrated_apples";
+    public static final String DEHYDRATED_CARROTS = "dehydrated_carrots";
+    public static final String DEHYDRATED_MELONS = "dehydrated_melons";
+    public static final String DEHYDRATED_POTATOES = "dehydrated_potatoes";
+    public static final String DUNGEON_LOCATOR = "dungeon_locator";
     public static final String FLAG = "flag";
     public static final String FREQUENCY_MODULE = "frequency_module";
     public static final String FULL_SOLAR_MODULE = "full_solar_module";

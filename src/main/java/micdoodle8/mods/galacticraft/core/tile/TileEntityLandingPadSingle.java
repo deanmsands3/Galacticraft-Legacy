@@ -9,7 +9,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.registries.ObjectHolder;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 public class TileEntityLandingPadSingle extends TileEntity implements ITickableTileEntity
 {
@@ -28,13 +30,13 @@ public class TileEntityLandingPadSingle extends TileEntity implements ITickableT
     {
         if (!this.world.isRemote && this.corner == 0)
         {
-            final ArrayList<TileEntity> attachedLaunchPads = new ArrayList<>();
+            List<TileEntity> attachedLaunchPads = Lists.newArrayList();
 
             for (int x = this.getPos().getX() - 1; x < this.getPos().getX() + 2; x++)
             {
                 for (int z = this.getPos().getZ() - 1; z < this.getPos().getZ() + 2; z++)
                 {
-                    final TileEntity tile = this.world.getTileEntity(new BlockPos(x, this.getPos().getY(), z));
+                    TileEntity tile = this.world.getTileEntity(new BlockPos(x, this.getPos().getY(), z));
 
                     if (tile instanceof TileEntityLandingPadSingle && !tile.isRemoved() && ((TileEntityLandingPadSingle) tile).corner == 0)
                     {
@@ -45,7 +47,7 @@ public class TileEntityLandingPadSingle extends TileEntity implements ITickableT
 
             if (attachedLaunchPads.size() == 9)
             {
-                for (final TileEntity tile : attachedLaunchPads)
+                for (TileEntity tile : attachedLaunchPads)
                 {
                     this.world.removeTileEntity(tile.getPos());
                     ((TileEntityLandingPadSingle) tile).corner = 1;
@@ -55,12 +57,4 @@ public class TileEntityLandingPadSingle extends TileEntity implements ITickableT
             }
         }
     }
-
-//    @Override
-//    public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate)
-//    {
-//        return oldState.getBlock() != newSate.getBlock();
-//    }
-
-
 }

@@ -17,6 +17,7 @@ import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.tags.GCTags;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
+import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockCavernousVine;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockSlimelingEgg;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.entities.MarsEntities;
@@ -123,10 +124,7 @@ public class DataGeneratorGCPlanets
             this.getVariantBuilder(MarsBlocks.BLUE_SLIMELING_EGG).forAllStates(state -> ConfiguredModel.builder().modelFile(this.getSlimelingEggModel(state, "blue_slimeling_egg")).build());
             this.getVariantBuilder(MarsBlocks.RED_SLIMELING_EGG).forAllStates(state -> ConfiguredModel.builder().modelFile(this.getSlimelingEggModel(state, "red_slimeling_egg")).build());
             this.getVariantBuilder(MarsBlocks.YELLOW_SLIMELING_EGG).forAllStates(state -> ConfiguredModel.builder().modelFile(this.getSlimelingEggModel(state, "yellow_slimeling_egg")).build());
-
-            this.getVariantBuilder(MarsBlocks.CAVERNOUS_VINES).partialState().setModels(new ConfiguredModel(this.models().cross("cavernous_vines_1", this.modLoc("block/cavernous_vines_1"))),
-                    new ConfiguredModel(this.models().cross("cavernous_vines_2", this.modLoc("block/cavernous_vines_2"))),
-                    new ConfiguredModel(this.models().cross("cavernous_vines_3", this.modLoc("block/cavernous_vines_3"))));
+            this.getVariantBuilder(MarsBlocks.CAVERNOUS_VINES).forAllStates(state -> ConfiguredModel.builder().modelFile(this.getCavernousVinesModel(state.get(BlockCavernousVine.VINE_TYPE).getTextureName())).build());
 
             ModelFile model = this.models().cube("methane_synthesizer", machineAdvInput, machineAdvBase, this.modLoc("block/methane_synthesizer"), machineAdvSide, this.modLoc("block/machine_oxygen_input_warning"), this.modLoc("block/machine_oxygen_output_warning")).texture("particle", this.modLoc("block/methane_synthesizer"));
             this.horizontalBlock(MarsBlocks.METHANE_SYNTHESIZER, model);
@@ -209,6 +207,11 @@ public class DataGeneratorGCPlanets
         protected ModelFile getSlimelingEggModel(BlockState state, String name)
         {
             return state.get(BlockSlimelingEgg.CRACKED) ? this.models().withExistingParent(name + "_cracked", this.modLoc("block/slimeling_egg")).texture("texture", this.modLoc("block/" + name + "_cracked")).texture("particle", this.modLoc("block/" + name + "_cracked")) : this.models().withExistingParent(name, this.modLoc("block/slimeling_egg")).texture("texture", this.modLoc("block/" + name)).texture("particle", this.modLoc("block/" + name));
+        }
+
+        protected ModelFile getCavernousVinesModel(String name)
+        {
+            return this.models().cross(name, this.modLoc("block/" + name));
         }
 
         protected void simpleFluid(FlowingFluidBlock block)
@@ -535,7 +538,7 @@ public class DataGeneratorGCPlanets
             this.add(MarsItems.UNREFINED_DESH, "Unrefined Desh");
             this.add(MarsItems.DESH_STICK, "Desh Stick");
             this.add(MarsItems.DESH_INGOT, "Desh Ingot");
-            this.add(MarsItems.TIER_2_HEAVY_DUTY_PLATE, "Tier 2 Heavy Duty Plate");
+            this.add(MarsItems.TIER_2_HEAVY_DUTY_PLATE, "Tier 2 Heavy-Duty Plate");
             this.add(MarsItems.SLIMELING_INVENTORY_BAG, "Slimeling Inventory Bag");
             this.add(MarsItems.COMPRESSED_DESH, "Compressed Desh");
             this.add(MarsItems.FLUID_MANIPULATOR, "Fluid Manipulator");
@@ -568,7 +571,7 @@ public class DataGeneratorGCPlanets
             this.add(AsteroidsItems.HEAVY_ROCKET_FINS, "Heavy Rocket Fins");
             this.add(AsteroidsItems.IRON_SHARD, "Iron Shard");
             this.add(AsteroidsItems.TITANIUM_SHARD, "Titanium Shard");
-            this.add(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE, "Tier 3 Heavy Duty Plate");
+            this.add(AsteroidsItems.TIER_3_HEAVY_DUTY_PLATE, "Tier 3 Heavy-Duty Plate");
             this.add(AsteroidsItems.COMPRESSED_TITANIUM, "Compressed Titanium");
             this.add(AsteroidsItems.THERMAL_CLOTH, "Thermal Cloth");
             this.add(AsteroidsItems.BEAM_CORE, "Beam Core");
@@ -743,6 +746,7 @@ public class DataGeneratorGCPlanets
                 this.registerDropSelfLootTable(MarsBlocks.LAUNCH_CONTROLLER);
                 this.registerDropSelfLootTable(MarsBlocks.WATER_ELECTROLYZER);
                 this.registerDropSelfLootTable(MarsBlocks.CRYOGENIC_CHAMBER);
+                this.registerDropSelfLootTable(MarsBlocks.CREEPER_EGG);
                 this.registerLootTable(MarsBlocks.CAVERNOUS_VINES, BlockLootTables::onlyWithShears);
                 this.registerLootTable(MarsBlocks.DESH_ORE, block -> droppingItemWithFortune(block, MarsItems.UNREFINED_DESH));
                 this.registerLootTable(MarsBlocks.MARS_STONE, block -> droppingWithSilkTouch(block, MarsBlocks.MARS_COBBLESTONE));

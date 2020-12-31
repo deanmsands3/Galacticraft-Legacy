@@ -1,12 +1,10 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.blocks;
 
-import micdoodle8.mods.galacticraft.core.Constants;
-import micdoodle8.mods.galacticraft.core.GCBlocks;
-import micdoodle8.mods.galacticraft.core.GCItems;
-import micdoodle8.mods.galacticraft.core.GalacticraftCore;
+import micdoodle8.mods.galacticraft.core.*;
 import micdoodle8.mods.galacticraft.core.blocks.DecoBlock;
 import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
+import micdoodle8.mods.galacticraft.core.tile.TileEntityFluidPipe;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -186,5 +184,6 @@ public class AsteroidBlocks
         register(r, TileEntityType.Builder.create(TileEntityMinerBase::new, FULL_ASTRO_MINER_BASE).build(null), AsteroidBlockNames.FULL_ASTRO_MINER_BASE);
         register(r, TileEntityType.Builder.create(TileEntityShortRangeTelepad::new, SHORT_RANGE_TELEPAD).build(null), AsteroidBlockNames.SHORT_RANGE_TELEPAD);
         register(r, TileEntityType.Builder.create(TileEntityTelepadFake::new, SHORT_RANGE_TELEPAD_DUMMY).build(null), AsteroidBlockNames.SHORT_RANGE_TELEPAD_DUMMY);
+        register(r, TileEntityType.Builder.create(WalkwayFluidPipeTileEntity::new, FLUID_PIPE_WALKWAY).build(null), GCBlockNames.FLUID_PIPE);
     }
 }

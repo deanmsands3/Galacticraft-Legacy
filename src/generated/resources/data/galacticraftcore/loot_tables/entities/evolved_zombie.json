@@ -59,11 +59,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraftcore:dehydrated_carrot_can"
+          "name": "galacticraftcore:dehydrated_carrots"
         },
         {
           "type": "minecraft:item",
-          "name": "galacticraftcore:dehydrated_potato_can"
+          "name": "galacticraftcore:dehydrated_potatoes"
         },
         {
           "type": "minecraft:item",

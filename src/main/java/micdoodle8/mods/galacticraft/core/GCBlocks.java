@@ -88,7 +88,7 @@ public class GCBlocks
     public static final Block AIR_LOCK_SEAL = new BlockAirLockWall(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR).hardnessAndResistance(1000.0F).tickRandomly().noDrops());
 
     public static final Block FLUID_PIPE = new BlockFluidPipe(Block.Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS), BlockFluidPipe.EnumPipeMode.NORMAL);
-    public static final Block PULLED_FLUID_PIPE = new BlockFluidPipe(Block.Properties.from(FLUID_PIPE), BlockFluidPipe.EnumPipeMode.PULL);
+    public static final Block PULLED_FLUID_PIPE = new BlockFluidPipe(Block.Properties.from(FLUID_PIPE).lootFrom(FLUID_PIPE), BlockFluidPipe.EnumPipeMode.PULL);
 
     public static final Block FALLEN_METEOR = new BlockFallenMeteor(Block.Properties.create(Material.ROCK).hardnessAndResistance(40.0F).sound(SoundType.STONE));
 //    public static final Block spaceGlassVanilla = new BlockSpaceGlass(builder, GlassType.VANILLA, GlassFrame.PLAIN, null);
@@ -438,7 +438,7 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(HIDDEN_REDSTONE_REPEATER), new BlockItem(HIDDEN_REDSTONE_REPEATER, props));
         register(r, Registry.BLOCK.getKey(PLAYER_DETECTOR), new BlockItem(PLAYER_DETECTOR, props));
         register(r, Registry.BLOCK.getKey(FLUID_PIPE), new ItemBlockDesc(FLUID_PIPE, props));
-        register(r, Registry.BLOCK.getKey(PULLED_FLUID_PIPE), new ItemBlockDesc(PULLED_FLUID_PIPE, props));
+        register(r, Registry.BLOCK.getKey(PULLED_FLUID_PIPE), new ItemBlockDesc(PULLED_FLUID_PIPE, new Item.Properties()));
         register(r, Registry.BLOCK.getKey(FALLEN_METEOR), new ItemBlockDesc(FALLEN_METEOR, props));
         register(r, Registry.BLOCK.getKey(PARACHEST), new ItemBlockDesc(PARACHEST, props));
         register(r, Registry.BLOCK.getKey(ALUMINUM_WIRE), new BlockItem(ALUMINUM_WIRE, props));
@@ -737,7 +737,7 @@ public class GCBlocks
         register(r, TileEntityType.Builder.create(TileEntityTreasureChest::new, TIER_1_TREASURE_CHEST).build(null), GCBlockNames.TIER_1_TREASURE_CHEST);
         register(r, TileEntityType.Builder.create(TileEntityOxygenDistributor::new, OXYGEN_BUBBLE_DISTRIBUTOR).build(null), GCBlockNames.OXYGEN_BUBBLE_DISTRIBUTOR);
         register(r, TileEntityType.Builder.create(TileEntityOxygenCollector::new, OXYGEN_COLLECTOR).build(null), GCBlockNames.OXYGEN_COLLECTOR);
-        register(r, TileEntityType.Builder.create(TileEntityFluidPipe::new, FLUID_PIPE).build(null), GCBlockNames.FLUID_PIPE);
+        register(r, TileEntityType.Builder.create(TileEntityFluidPipe::new, FLUID_PIPE, PULLED_FLUID_PIPE).build(null), GCBlockNames.FLUID_PIPE);
         register(r, TileEntityType.Builder.create(TileEntityAirLock::new, AIR_LOCK_FRAME).build(null), GCBlockNames.AIR_LOCK_FRAME);
         register(r, TileEntityType.Builder.create(TileEntityRefinery::new, REFINERY).build(null), GCBlockNames.REFINERY);
         register(r, TileEntityType.Builder.create(TileEntityNasaWorkbench::new, ROCKET_WORKBENCH).build(null), GCBlockNames.ROCKET_WORKBENCH);

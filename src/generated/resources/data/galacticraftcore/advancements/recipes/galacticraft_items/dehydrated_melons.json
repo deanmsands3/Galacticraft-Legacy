@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "galacticraftcore:dehydrated_apple_can"
+      "galacticraftcore:dehydrated_melons"
     ]
   },
   "criteria": {
-    "has_apple": {
+    "has_melon_slice": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:apple"
+            "item": "minecraft:melon_slice"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "galacticraftcore:dehydrated_apple_can"
+        "recipe": "galacticraftcore:dehydrated_melons"
       }
     }
   },
   "requirements": [
     [
-      "has_apple",
+      "has_melon_slice",
       "has_the_recipe"
     ]
   ]

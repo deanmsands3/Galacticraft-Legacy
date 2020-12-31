@@ -1402,7 +1402,7 @@ public class GCPlayerHandler
             {
                 boolean doneDungeon = false;
                 ItemStack current = player.inventory.getCurrentItem();
-                if (current != ItemStack.EMPTY && current.getItem() == GCItems.DUNGEON_FINDER)
+                if (current != ItemStack.EMPTY && current.getItem() == GCItems.DUNGEON_LOCATOR)
                 {
                     this.sendDungeonDirectionPacket(player, stats);
                     doneDungeon = true;
@@ -1416,7 +1416,7 @@ public class GCPlayerHandler
                     {
                         for (ItemStack stack : player.inventory.mainInventory)
                         {
-                            if (stack != null && stack.getItem() == GCItems.DUNGEON_FINDER)
+                            if (stack != null && stack.getItem() == GCItems.DUNGEON_LOCATOR)
                             {
                                 this.sendDungeonDirectionPacket(player, stats);
                                 break;

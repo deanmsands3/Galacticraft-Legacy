@@ -45,6 +45,11 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
         super(TYPE, 100);
     }
 
+    public TileEntityFluidPipe(TileEntityType<TileEntityFluidPipe> type)
+    {
+        super(type, 100);
+    }
+
     @Override
     public int[] getSlotsForFace(Direction side)
     {

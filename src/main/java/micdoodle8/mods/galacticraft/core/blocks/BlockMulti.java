@@ -167,7 +167,7 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn)
     {
-        return null;
+        return new TileEntityFake();
     }
 
     //    @Override

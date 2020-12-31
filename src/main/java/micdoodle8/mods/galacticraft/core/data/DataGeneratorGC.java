@@ -304,10 +304,10 @@ public class DataGeneratorGC
             this.itemGenerated(GCItems.COOKED_BEEF_PATTY);
             this.itemGenerated(GCItems.COPPER_CANISTER);
             this.itemGenerated(GCItems.COPPER_INGOT);
-            this.itemGenerated(GCItems.DEHYDRATED_APPLE_CAN);
-            this.itemGenerated(GCItems.DEHYDRATED_CARROT_CAN);
-            this.itemGenerated(GCItems.DEHYDRATED_MELON_CAN);
-            this.itemGenerated(GCItems.DEHYDRATED_POTATO_CAN);
+            this.itemGenerated(GCItems.DEHYDRATED_APPLES);
+            this.itemGenerated(GCItems.DEHYDRATED_CARROTS);
+            this.itemGenerated(GCItems.DEHYDRATED_MELONS);
+            this.itemGenerated(GCItems.DEHYDRATED_POTATOES);
             this.itemGenerated(GCItems.FREQUENCY_MODULE);
             this.itemGenerated(GCItems.FULL_SOLAR_MODULE);
             this.itemGenerated(GCItems.HEAVY_DUTY_AXE);
@@ -474,7 +474,6 @@ public class DataGeneratorGC
             this.add(GCBlocks.ROCKET_LAUNCH_PAD, "Rocket Launch Pad");
             this.add(GCBlocks.BUGGY_FUELING_PAD, "Buggy Fueling Pad");
             this.add(GCBlocks.FLUID_PIPE, "Fluid Pipe");
-            this.add(GCBlocks.PULLED_FLUID_PIPE, "Pulled Fluid Pipe");
             this.add(GCBlocks.ALUMINUM_WIRE, "Aluminum Wire");
             this.add(GCBlocks.HEAVY_ALUMINUM_WIRE, "Heavy Aluminum Wire");
             this.add(GCBlocks.SWITCHABLE_ALUMINUM_WIRE, "Switchable Aluminum Wire");
@@ -536,21 +535,21 @@ public class DataGeneratorGC
             this.add(GCItems.COOKED_BEEF_PATTY, "Cooked Beef Patty");
             this.add(GCItems.COPPER_CANISTER, "Copper Canister");
             this.add(GCItems.COPPER_INGOT, "Copper Ingot");
-            this.add(GCItems.DEHYDRATED_APPLE_CAN, "Dehydrated Apple Can");
-            this.add(GCItems.DEHYDRATED_CARROT_CAN, "Dehydrated Carrot Can");
-            this.add(GCItems.DEHYDRATED_MELON_CAN, "Dehydrated Melon Can");
-            this.add(GCItems.DEHYDRATED_POTATO_CAN, "Dehydrated Potato Can");
+            this.add(GCItems.DEHYDRATED_APPLES, "Dehydrated Apples");
+            this.add(GCItems.DEHYDRATED_CARROTS, "Dehydrated Carrots");
+            this.add(GCItems.DEHYDRATED_MELONS, "Dehydrated Melons");
+            this.add(GCItems.DEHYDRATED_POTATOES, "Dehydrated Potatoes");
             this.add(GCItems.FREQUENCY_MODULE, "Frequency Module");
             this.add(GCItems.FULL_SOLAR_MODULE, "Full Solar Module");
-            this.add(GCItems.HEAVY_DUTY_AXE, "Heavy Duty Axe");
-            this.add(GCItems.HEAVY_DUTY_BOOTS, "Heavy Duty Boots");
-            this.add(GCItems.HEAVY_DUTY_CHESTPLATE, "Heavy Duty Chestplate");
-            this.add(GCItems.HEAVY_DUTY_HELMET, "Heavy Duty Helmet");
-            this.add(GCItems.HEAVY_DUTY_HOE, "Heavy Duty Hoe");
-            this.add(GCItems.HEAVY_DUTY_LEGGINGS, "Heavy Duty Leggings");
-            this.add(GCItems.HEAVY_DUTY_PICKAXE, "Heavy Duty Pickaxe");
-            this.add(GCItems.HEAVY_DUTY_SHOVEL, "Heavy Duty Shovel");
-            this.add(GCItems.HEAVY_DUTY_SWORD, "Heavy Duty Sword");
+            this.add(GCItems.HEAVY_DUTY_AXE, "Heavy-Duty Axe");
+            this.add(GCItems.HEAVY_DUTY_BOOTS, "Heavy-Duty Boots");
+            this.add(GCItems.HEAVY_DUTY_CHESTPLATE, "Heavy-Duty Chestplate");
+            this.add(GCItems.HEAVY_DUTY_HELMET, "Heavy-Duty Helmet");
+            this.add(GCItems.HEAVY_DUTY_HOE, "Heavy-Duty Hoe");
+            this.add(GCItems.HEAVY_DUTY_LEGGINGS, "Heavy-Duty Leggings");
+            this.add(GCItems.HEAVY_DUTY_PICKAXE, "Heavy-Duty Pickaxe");
+            this.add(GCItems.HEAVY_DUTY_SHOVEL, "Heavy-Duty Shovel");
+            this.add(GCItems.HEAVY_DUTY_SWORD, "Heavy-Duty Sword");
             this.add(GCItems.HEAVY_OXYGEN_TANK, "Heavy Oxygen Tank");
             this.add(GCItems.INFINITE_BATTERY, "Infinite Battery");
             this.add(GCItems.INFINITE_OXYGEN_TANK, "Infinite Oxygen Tank");
@@ -578,7 +577,7 @@ public class DataGeneratorGC
             this.add(GCItems.STANDARD_WRENCH, "Standard Wrench");
             this.add(GCItems.STEEL_POLE, "Steel Pole");
             this.add(GCItems.TIER_1_BOOSTER, "Tier 1 Booster");
-            this.add(GCItems.TIER_1_HEAVY_DUTY_PLATE, "Tier 1 Heavy Duty Plate");
+            this.add(GCItems.TIER_1_HEAVY_DUTY_PLATE, "Tier 1 Heavy-Duty Plate");
             this.add(GCItems.TIER_1_ROCKET_ENGINE, "Tier 1 Rocket Engine");
             this.add(GCItems.TIER_1_DUNGEON_KEY, "Tier 1 Dungeon Key");
             this.add(GCItems.TIER_2_ROCKET_SCHEMATIC, "Tier 2 Rocket Schematic");
@@ -612,7 +611,7 @@ public class DataGeneratorGC
             this.add(GCItems.FLAG, "Flag");
             this.add(GCItems.METEOR_CHUNK, "Meteor Chunk");
             this.add(GCItems.HOT_METEOR_CHUNK, "Hot Meteor Chunk");
-            this.add(GCItems.DUNGEON_FINDER, "Dungeon Finder");
+            this.add(GCItems.DUNGEON_LOCATOR, "Dungeon Locator");
         }
     }
 
@@ -845,10 +844,10 @@ public class DataGeneratorGC
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.CANNED_BEEF).addIngredient(GCItems.TIN_CANISTER).addIngredient(GCItems.GROUND_BEEF).addIngredient(GCItems.GROUND_BEEF).addCriterion(this.toCriterion(GCItems.GROUND_BEEF), this.hasItem(GCItems.GROUND_BEEF)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.CHEESE_SLICE, 6).addIngredient(GCBlocks.CHEESE_BLOCK).addCriterion(this.toCriterion(GCBlocks.CHEESE_BLOCK), this.hasItem(GCBlocks.CHEESE_BLOCK)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.CHEESEBURGER).addIngredient(GCItems.CHEESE_SLICE).addIngredient(GCItems.BURGER_BUN).addIngredient(GCItems.COOKED_BEEF_PATTY).addCriterion(this.toCriterion(GCItems.CHEESE_SLICE), this.hasItem(GCItems.CHEESE_SLICE)).build(consumer);
-            ShapelessRecipeBuilder.shapelessRecipe(GCItems.DEHYDRATED_APPLE_CAN).addIngredient(GCItems.TIN_CANISTER).addIngredient(Items.APPLE).addIngredient(Items.APPLE).setGroup("dehydrated_food").addCriterion(this.toCriterion(Items.APPLE), this.hasItem(Items.APPLE)).build(consumer);
-            ShapelessRecipeBuilder.shapelessRecipe(GCItems.DEHYDRATED_CARROT_CAN).addIngredient(GCItems.TIN_CANISTER).addIngredient(Items.CARROT).addIngredient(Items.CARROT).setGroup("dehydrated_food").addCriterion(this.toCriterion(Items.CARROT), this.hasItem(Items.CARROT)).build(consumer);
-            ShapelessRecipeBuilder.shapelessRecipe(GCItems.DEHYDRATED_MELON_CAN).addIngredient(GCItems.TIN_CANISTER).addIngredient(Items.MELON_SLICE).addIngredient(Items.MELON_SLICE).setGroup("dehydrated_food").addCriterion(this.toCriterion(Items.MELON_SLICE), this.hasItem(Items.MELON_SLICE)).build(consumer);
-            ShapelessRecipeBuilder.shapelessRecipe(GCItems.DEHYDRATED_POTATO_CAN).addIngredient(GCItems.TIN_CANISTER).addIngredient(Items.POTATO).addIngredient(Items.POTATO).setGroup("dehydrated_food").addCriterion(this.toCriterion(Items.POTATO), this.hasItem(Items.POTATO)).build(consumer);
+            ShapelessRecipeBuilder.shapelessRecipe(GCItems.DEHYDRATED_APPLES).addIngredient(GCItems.TIN_CANISTER).addIngredient(Items.APPLE).addIngredient(Items.APPLE).setGroup("dehydrated_food").addCriterion(this.toCriterion(Items.APPLE), this.hasItem(Items.APPLE)).build(consumer);
+            ShapelessRecipeBuilder.shapelessRecipe(GCItems.DEHYDRATED_CARROTS).addIngredient(GCItems.TIN_CANISTER).addIngredient(Items.CARROT).addIngredient(Items.CARROT).setGroup("dehydrated_food").addCriterion(this.toCriterion(Items.CARROT), this.hasItem(Items.CARROT)).build(consumer);
+            ShapelessRecipeBuilder.shapelessRecipe(GCItems.DEHYDRATED_MELONS).addIngredient(GCItems.TIN_CANISTER).addIngredient(Items.MELON_SLICE).addIngredient(Items.MELON_SLICE).setGroup("dehydrated_food").addCriterion(this.toCriterion(Items.MELON_SLICE), this.hasItem(Items.MELON_SLICE)).build(consumer);
+            ShapelessRecipeBuilder.shapelessRecipe(GCItems.DEHYDRATED_POTATOES).addIngredient(GCItems.TIN_CANISTER).addIngredient(Items.POTATO).addIngredient(Items.POTATO).setGroup("dehydrated_food").addCriterion(this.toCriterion(Items.POTATO), this.hasItem(Items.POTATO)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCBlocks.EMERGENCY_POST_KIT).addIngredient(GCItems.SPACE_EMERGENCY_KIT).addIngredient(GCBlocks.EMERGENCY_POST).addCriterion(this.toCriterion(GCItems.SPACE_EMERGENCY_KIT), this.hasItem(GCItems.SPACE_EMERGENCY_KIT)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.ALUMINUM_INGOT, 9).addIngredient(GCBlocks.ALUMINUM_BLOCK).addCriterion(this.toCriterion(GCBlocks.ALUMINUM_BLOCK), this.hasItem(GCBlocks.ALUMINUM_BLOCK)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.TIN_INGOT, 9).addIngredient(GCBlocks.TIN_BLOCK).addCriterion(this.toCriterion(GCBlocks.TIN_BLOCK), this.hasItem(GCBlocks.TIN_BLOCK)).build(consumer);
@@ -983,7 +982,6 @@ public class DataGeneratorGC
                 this.registerDropSelfLootTable(GCBlocks.ENERGY_STORAGE_CLUSTER);
                 this.registerDropSelfLootTable(GCBlocks.ELECTRIC_ARC_FURNACE);
                 this.registerDropSelfLootTable(GCBlocks.FLUID_PIPE);
-                this.registerDropping(GCBlocks.PULLED_FLUID_PIPE, GCBlocks.FLUID_PIPE);
                 this.registerDropSelfLootTable(GCBlocks.ALUMINUM_WIRE);
                 this.registerDropSelfLootTable(GCBlocks.HEAVY_ALUMINUM_WIRE);
                 this.registerDropSelfLootTable(GCBlocks.SWITCHABLE_ALUMINUM_WIRE);
@@ -1034,8 +1032,8 @@ public class DataGeneratorGC
                                 .addEntry(ItemLootEntry.builder(Items.CARROT))
                                 .addEntry(ItemLootEntry.builder(Items.POTATO)).acceptCondition(KilledByPlayer.builder()).acceptCondition(RandomChanceWithLooting.builder(0.025F, 0.01F)))
                         .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
-                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_CARROT_CAN))
-                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_POTATO_CAN))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_CARROTS))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_POTATOES))
                                 .addEntry(ItemLootEntry.builder(GCItems.RAW_METEORIC_IRON))
                                 .addEntry(ItemLootEntry.builder(GCItems.MEDIUM_OXYGEN_TANK).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.1F, 0.8F))))
                                 .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_MASK))
@@ -1092,7 +1090,7 @@ public class DataGeneratorGC
                                 .addEntry(ItemLootEntry.builder(Items.STICK).weight(2).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
                         .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
                                 .addEntry(ItemLootEntry.builder(GCItems.MEDIUM_OXYGEN_TANK).acceptFunction(SetDamage.func_215931_a(RandomValueRange.of(0.1F, 0.8F))))
-                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_CARROT_CAN))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_CARROTS))
                                 .addEntry(ItemLootEntry.builder(Blocks.GLOWSTONE))
                                 .addEntry(ItemLootEntry.builder(GCItems.AMBIENT_THERMAL_CONTROLLER))
                                 .addEntry(ItemLootEntry.builder(GCItems.OXYGEN_MASK))

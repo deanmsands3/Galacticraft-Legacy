@@ -51,15 +51,15 @@ public class VenusBlocks
 
     public static final Block TIER_3_TREASURE_CHEST = new BlockTier3TreasureChest(Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13).noDrops());
 
-    public static final Block WEB_STRING = new BlockTorchWeb(Block.Properties.create(Material.WEB).doesNotBlockMovement());
-    public static final Block WEB_TORCH = new BlockTorchWeb(Block.Properties.from(WEB_STRING).lightValue(15));
+    public static final Block WEB_STRING = new BlockTorchWeb(Block.Properties.create(Material.WEB).doesNotBlockMovement().notSolid());
+    public static final Block WEB_TORCH = new BlockTorchWeb(Block.Properties.from(WEB_STRING).lightValue(15).notSolid());
 
     public static final Block GEOTHERMAL_GENERATOR = new BlockGeothermalGenerator(Block.Properties.create(Material.ROCK).hardnessAndResistance(1.0F).sound(SoundType.METAL));
     public static final Block SOLAR_ARRAY_MODULE = new BlockSolarArrayModule(Block.Properties.from(GEOTHERMAL_GENERATOR));
     public static final Block SOLAR_ARRAY_CONTROLLER = new BlockSolarArrayController(Block.Properties.from(GEOTHERMAL_GENERATOR));
     public static final Block LASER_TURRET = new BlockLaserTurret(Block.Properties.from(GEOTHERMAL_GENERATOR));
 
-    public static final Block CRASHED_PROBE = new BlockCrashedProbe(Block.Properties.create(Material.IRON).tickRandomly().hardnessAndResistance(4.5F).sound(SoundType.METAL));
+    public static final Block CRASHED_PROBE = new BlockCrashedProbe(Block.Properties.create(Material.IRON).tickRandomly().hardnessAndResistance(4.5F).sound(SoundType.METAL).notSolid());
 
     public static final Block SCORCHED_VENUS_ROCK = new BlockScorchedRock(Block.Properties.create(Material.ROCK).tickRandomly().hardnessAndResistance(0.9F, 2.5F));
 

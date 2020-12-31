@@ -6,13 +6,13 @@
       "item": "galacticraftcore:tin_canister"
     },
     {
-      "item": "minecraft:apple"
+      "item": "minecraft:carrot"
     },
     {
-      "item": "minecraft:apple"
+      "item": "minecraft:carrot"
     }
   ],
   "result": {
-    "item": "galacticraftcore:dehydrated_apple_can"
+    "item": "galacticraftcore:dehydrated_carrots"
   }
 }

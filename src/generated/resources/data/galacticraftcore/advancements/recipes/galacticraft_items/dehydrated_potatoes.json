@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "galacticraftcore:dehydrated_melon_can"
+      "galacticraftcore:dehydrated_potatoes"
     ]
   },
   "criteria": {
-    "has_melon_slice": {
+    "has_potato": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:melon_slice"
+            "item": "minecraft:potato"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "galacticraftcore:dehydrated_melon_can"
+        "recipe": "galacticraftcore:dehydrated_potatoes"
       }
     }
   },
   "requirements": [
     [
-      "has_melon_slice",
+      "has_potato",
       "has_the_recipe"
     ]
   ]

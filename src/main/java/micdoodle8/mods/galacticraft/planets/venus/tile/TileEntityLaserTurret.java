@@ -584,7 +584,10 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
         {
             nbt.putString("ownerName", this.ownerName);
         }
-        nbt.putUniqueId("ownerUUID", this.ownerUUID);
+        if (this.ownerUUID != null)
+        {
+            nbt.putUniqueId("ownerUUID", this.ownerUUID);
+        }
 
         return nbt;
     }

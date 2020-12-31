@@ -9,7 +9,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.registries.ObjectHolder;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickableTileEntity
 {
@@ -28,13 +30,13 @@ public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickable
     {
         if (!this.world.isRemote && this.corner == 0)
         {
-            final ArrayList<TileEntity> attachedLaunchPads = new ArrayList<TileEntity>();
+            List<TileEntity> attachedLaunchPads = Lists.newArrayList();
 
             for (int x = this.getPos().getX() - 1; x < this.getPos().getX() + 2; x++)
             {
                 for (int z = this.getPos().getZ() - 1; z < this.getPos().getZ() + 2; z++)
                 {
-                    final TileEntity tile = this.world.getTileEntity(new BlockPos(x, this.getPos().getY(), z));
+                    TileEntity tile = this.world.getTileEntity(new BlockPos(x, this.getPos().getY(), z));
 
                     if (tile instanceof TileEntityBuggyFuelerSingle && !tile.isRemoved() && ((TileEntityBuggyFuelerSingle) tile).corner == 0)
                     {
@@ -45,7 +47,7 @@ public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickable
 
             if (attachedLaunchPads.size() == 9)
             {
-                for (final TileEntity tile : attachedLaunchPads)
+                for (TileEntity tile : attachedLaunchPads)
                 {
                     this.world.removeTileEntity(tile.getPos());
                     ((TileEntityBuggyFuelerSingle) tile).corner = 1;
@@ -55,10 +57,4 @@ public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickable
             }
         }
     }
-
-//    @Override
-//    public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate)
-//    {
-//        return oldState.getBlock() != newSate.getBlock();
-//    }
 }

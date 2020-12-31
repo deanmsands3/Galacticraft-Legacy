@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "galacticraftcore:dehydrated_carrot_can"
+      "galacticraftcore:dehydrated_carrots"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "galacticraftcore:dehydrated_carrot_can"
+        "recipe": "galacticraftcore:dehydrated_carrots"
       }
     }
   },

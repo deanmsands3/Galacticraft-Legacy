@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraftcore:fluid_pipe"
+          "name": "galacticraftplanets:creeper_egg"
         }
       ],
       "conditions": [

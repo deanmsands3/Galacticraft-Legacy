@@ -8,7 +8,6 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityBuggyFuelerSingle;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPadSingle;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -18,11 +17,12 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock, IShiftDescription, ISortable
 {
-    protected static final VoxelShape AABB = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 0.1875, 1.0);
+    private static final VoxelShape SHAPE = VoxelShapes.create(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
 
     public BlockPad(Properties builder)
     {
@@ -30,33 +30,18 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context)
     {
-        return AABB;
+        return SHAPE;
     }
 
-//    @Override
-//    public ItemGroup getCreativeTabToDisplayOn()
-//    {
-//        return GalacticraftCore.galacticraftBlocksTab;
-//    }
-
-//    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public void getSubBlocks(ItemGroup tab, NonNullList<ItemStack> list)
-//    {
-//        for (int i = 0; i < 2; i++)
-//        {
-//            list.add(new ItemStack(this, 1, i));
-//        }
-//    }
-
-    private boolean checkAxis(World worldIn, BlockPos pos, Block block, Direction facing)
+    private boolean checkAxis(IWorldReader world, BlockPos pos, Direction facing)
     {
         int sameCount = 0;
+
         for (int i = 1; i <= 3; i++)
         {
-            if (worldIn.getBlockState(pos.offset(facing, i)).getBlock() == block)
+            if (world.getBlockState(pos.offset(facing, i)).getBlock() == this)
             {
                 sameCount++;
             }
@@ -65,46 +50,23 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
         return sameCount < 3;
     }
 
-//    @Override
-//    public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, Direction side)
-//    {
-//        final Block id = GCBlocks.landingPad;
-//
-//        if (!checkAxis(worldIn, pos, id, Direction.EAST) ||
-//                !checkAxis(worldIn, pos, id, Direction.WEST) ||
-//                !checkAxis(worldIn, pos, id, Direction.NORTH) ||
-//                !checkAxis(worldIn, pos, id, Direction.SOUTH))
-//        {
-//            return false;
-//        }
-//
-//        if (worldIn.getBlockState(pos.offset(Direction.DOWN)).getBlock() == GCBlocks.landingPad && LogicalSide == Direction.UP)
-//        {
-//            return false;
-//        }
-//        else
-//        {
-//            return this.canPlaceBlockAt(worldIn, pos);
-//        }
-//    }
+    @Override
+    public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos)
+    {
+        for (Direction direction : Direction.Plane.HORIZONTAL)
+        {
+            if (!this.checkAxis(world, pos, Direction.EAST) || !this.checkAxis(world, pos, Direction.WEST) || !this.checkAxis(world, pos, Direction.NORTH) || !this.checkAxis(world, pos, Direction.SOUTH))
+            {
+                return false;
+            }
 
-//    @Override
-//    public boolean isOpaqueCube(BlockState state)
-//    {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isFullCube(BlockState state)
-//    {
-//        return false;
-//    }
-
-//    @Override
-//    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, BlockState state, BlockPos pos, Direction face)
-//    {
-//        return BlockFaceShape.UNDEFINED;
-//    }
+            if (world.getBlockState(pos.offset(Direction.DOWN)).getBlock() == this && direction == Direction.UP)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world)
@@ -119,26 +81,19 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
     }
 
     @Override
-    public boolean isSealed(World worldIn, BlockPos pos, Direction direction)
+    public boolean isSealed(World world, BlockPos pos, Direction direction)
     {
         return direction == Direction.UP;
     }
 
-//    @Override
-//    public int damageDropped(BlockState state)
-//    {
-//        return getMetaFromState(state);
-//    }
-
     @Override
-    public String getShiftDescription(ItemStack stack)
+    public String getShiftDescription(ItemStack itemStack)
     {
         return GCCoreUtil.translate(this.getTranslationKey() + ".description");
-//        return GCCoreUtil.translate("tile.buggy_pad.description");
     }
 
     @Override
-    public boolean showDescription(ItemStack stack)
+    public boolean showDescription(ItemStack itemStack)
     {
         return true;
     }

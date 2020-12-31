@@ -114,8 +114,8 @@ public class GCItems
     public static Item RAW_METEORIC_IRON;
     @ObjectHolder(GCItemNames.PRELAUNCH_CHECKLIST)
     public static Item PRELAUNCH_CHECKLIST;
-    @ObjectHolder(GCItemNames.DUNGEON_FINDER)
-    public static Item DUNGEON_FINDER;
+    @ObjectHolder(GCItemNames.DUNGEON_LOCATOR)
+    public static Item DUNGEON_LOCATOR;
     //    @ObjectHolder(ItemNames.ic2compat) public static Item ic2compat;
     @ObjectHolder(GCItemNames.SPACE_EMERGENCY_KIT)
     public static Item SPACE_EMERGENCY_KIT;
@@ -163,14 +163,14 @@ public class GCItems
     public static Item TIN_CANISTER;
     @ObjectHolder(GCItemNames.COPPER_CANISTER)
     public static Item COPPER_CANISTER;
-    @ObjectHolder(GCItemNames.DEHYDRATED_APPLE_CAN)
-    public static Item DEHYDRATED_APPLE_CAN;
-    @ObjectHolder(GCItemNames.DEHYDRATED_CARROT_CAN)
-    public static Item DEHYDRATED_CARROT_CAN;
-    @ObjectHolder(GCItemNames.DEHYDRATED_MELON_CAN)
-    public static Item DEHYDRATED_MELON_CAN;
-    @ObjectHolder(GCItemNames.DEHYDRATED_POTATO_CAN)
-    public static Item DEHYDRATED_POTATO_CAN;
+    @ObjectHolder(GCItemNames.DEHYDRATED_APPLES)
+    public static Item DEHYDRATED_APPLES;
+    @ObjectHolder(GCItemNames.DEHYDRATED_CARROTS)
+    public static Item DEHYDRATED_CARROTS;
+    @ObjectHolder(GCItemNames.DEHYDRATED_MELONS)
+    public static Item DEHYDRATED_MELONS;
+    @ObjectHolder(GCItemNames.DEHYDRATED_POTATOES)
+    public static Item DEHYDRATED_POTATOES;
     @ObjectHolder(GCItemNames.CHEESE_SLICE)
     public static Item CHEESE_SLICE;
     @ObjectHolder(GCItemNames.BURGER_BUN)
@@ -297,7 +297,7 @@ public class GCItems
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(1).saturation(0.1F).fastToEat().build())), GCItemNames.CHEESE_CURD);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.RAW_METEORIC_IRON);
         register(r, new ItemPreLaunchChecklist(defaultBuilder()), GCItemNames.PRELAUNCH_CHECKLIST);
-        register(r, new ItemDungeonFinder(defaultBuilder()), GCItemNames.DUNGEON_FINDER);
+        register(r, new ItemDungeonFinder(defaultBuilder()), GCItemNames.DUNGEON_LOCATOR);
 //        register(r, new ItemIC2Compat(defaultBuilder()), ItemNames.ic2compat); TODO
         register(r, new ItemEmergencyKit(defaultBuilder().maxDamage(0)), GCItemNames.SPACE_EMERGENCY_KIT);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.SINGLE_SOLAR_MODULE);
@@ -322,10 +322,10 @@ public class GCItems
         register(r, new ItemBase(defaultBuilder()), GCItemNames.BUGGY_STORAGE_BOX);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.TIN_CANISTER);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.COPPER_CANISTER);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(8).saturation(0.3F).build())), GCItemNames.DEHYDRATED_APPLE_CAN);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(8).saturation(0.6F).build())), GCItemNames.DEHYDRATED_CARROT_CAN);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(4).saturation(0.3F).build())), GCItemNames.DEHYDRATED_MELON_CAN);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.3F).build())), GCItemNames.DEHYDRATED_POTATO_CAN);
+        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(8).saturation(0.3F).build())), GCItemNames.DEHYDRATED_APPLES);
+        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(8).saturation(0.6F).build())), GCItemNames.DEHYDRATED_CARROTS);
+        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(4).saturation(0.3F).build())), GCItemNames.DEHYDRATED_MELONS);
+        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.3F).build())), GCItemNames.DEHYDRATED_POTATOES);
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.1F).build())), GCItemNames.CHEESE_SLICE);
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(4).saturation(0.8F).build())), GCItemNames.BURGER_BUN);
         register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.3F).build())), GCItemNames.GROUND_BEEF);

@@ -50,7 +50,7 @@ public class ItemBase extends Item implements ISortable
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("item.tier1.desc")));
         }
-        else if (stack != null && this == GCItems.DUNGEON_FINDER)
+        else if (stack != null && this == GCItems.DUNGEON_LOCATOR)
         {
             tooltip.add(new StringTextComponent(EnumColor.RED + GCCoreUtil.translate("gui.creative_only.desc")));
         }

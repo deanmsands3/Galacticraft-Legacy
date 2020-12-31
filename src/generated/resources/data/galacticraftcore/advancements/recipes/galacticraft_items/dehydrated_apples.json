@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "galacticraftcore:dehydrated_potato_can"
+      "galacticraftcore:dehydrated_apples"
     ]
   },
   "criteria": {
-    "has_potato": {
+    "has_apple": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:potato"
+            "item": "minecraft:apple"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "galacticraftcore:dehydrated_potato_can"
+        "recipe": "galacticraftcore:dehydrated_apples"
       }
     }
   },
   "requirements": [
     [
-      "has_potato",
+      "has_apple",
       "has_the_recipe"
     ]
   ]

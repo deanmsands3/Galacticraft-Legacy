@@ -45,7 +45,7 @@ public abstract class TileEntityEnergyStorageModule extends TileBaseUniversalEle
 
     public static class TileEntityEnergyStorageModuleT2 extends TileEntityEnergyStorageModule
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ENERGY_STORAGE)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ENERGY_STORAGE_CLUSTER)
         public static TileEntityType<TileEntityEnergyStorageModuleT2> TYPE;
 
         public TileEntityEnergyStorageModuleT2()

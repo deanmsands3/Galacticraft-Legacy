@@ -1,15 +1,13 @@
 {
   "variants": {
-    "": [
-      {
-        "model": "galacticraftplanets:block/cavernous_vines_1"
-      },
-      {
-        "model": "galacticraftplanets:block/cavernous_vines_2"
-      },
-      {
-        "model": "galacticraftplanets:block/cavernous_vines_3"
-      }
-    ]
+    "vine_type=vine_0": {
+      "model": "galacticraftplanets:block/cavernous_vines_1"
+    },
+    "vine_type=vine_1": {
+      "model": "galacticraftplanets:block/cavernous_vines_2"
+    },
+    "vine_type=vine_2": {
+      "model": "galacticraftplanets:block/cavernous_vines_3"
+    }
   }
 }

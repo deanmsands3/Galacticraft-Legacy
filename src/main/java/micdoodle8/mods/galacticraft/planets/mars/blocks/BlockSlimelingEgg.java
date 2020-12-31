@@ -11,17 +11,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -100,25 +97,6 @@ public class BlockSlimelingEgg extends Block implements IShiftDescription, ISort
         {
             world.markBlockRangeForRenderUpdate(pos, this.getDefaultState(), state); // Forces block render update. Better way to do this?
             return ActionResultType.PASS;
-        }
-    }
-
-    @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid)
-    {
-        ItemStack currentStack = player.getHeldItemMainhand();
-        if (currentStack != ItemStack.EMPTY && currentStack.getItem() instanceof PickaxeItem)
-        {
-            return world.removeBlock(pos, false);
-        }
-        else if (player.abilities.isCreativeMode)
-        {
-            return world.removeBlock(pos, false);
-        }
-        else
-        {
-            beginHatch(world, pos, player, 0);
-            return false;
         }
     }
 
