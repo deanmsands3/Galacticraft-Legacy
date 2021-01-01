@@ -548,7 +548,7 @@ public class BaseRoom extends SizedPiece
 
             if (tile instanceof TileEntityFluidTank)
             {
-                ((TileEntityFluidTank) tile).fill(null, new FluidStack(PlanetFluids.LIQUID_BACTERIAL_SLUDGE.getFluid(), 16000), IFluidHandler.FluidAction.EXECUTE);
+                ((TileEntityFluidTank) tile).fill(null, new FluidStack(PlanetFluids.BACTERIAL_SLUDGE.getFluid(), 16000), IFluidHandler.FluidAction.EXECUTE);
             }
             else if (tile instanceof TileEntityCargoLoader)
             {

@@ -4,7 +4,7 @@ import java.util.function.UnaryOperator;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.fluid.FluidRegistrationEntry;
-import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
+import micdoodle8.mods.galacticraft.core.fluid.GCFluidRegistry;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.ForgeFlowingFluid.Source;
 
 public class PlanetFluids
 {
+    public static final GCFluidRegistry FLUIDS = new GCFluidRegistry(GalacticraftPlanets.ASSET_PREFIX);
     public static final Material ACID_MATERIAL = new Material(MaterialColor.EMERALD, true, false, false, false, true, false, true, PushReaction.DESTROY);
 
     public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> GAS_METHANE = registerLiquid("methane", fluidAttributes -> fluidAttributes.color(0xFF111111).density(1).viscosity(11).temperature(295).gaseous());
@@ -30,8 +31,8 @@ public class PlanetFluids
     public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> LIQUID_OXYGEN = registerLiquid("liquid_oxygen", fluidAttributes -> fluidAttributes.color(0xFF111111).density(1141).viscosity(140).temperature(90));
     public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> LIQUID_NITROGEN = registerLiquid("liquid_nitrogen", fluidAttributes -> fluidAttributes.color(0xFF111111).density(808).viscosity(130).temperature(90));
     public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> LIQUID_ARGON = registerLiquid("liquid_argon", fluidAttributes -> fluidAttributes.color(0xFF111111).density(900).viscosity(100).temperature(87));
-    public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> LIQUID_SULPHURIC_ACID = registerLiquid("sulphuric_acid", "sulphuric_acid_still", "sulphuric_acid_flow", fluidAttributes -> fluidAttributes.color(0xFF111111).density(6229).viscosity(1400));
-    public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> LIQUID_BACTERIAL_SLUDGE = registerLiquid("bacterial_sludge", "bacterial_sludge_still", "bacterial_sludge_flow", fluidAttributes -> fluidAttributes.color(0xFF111111).density(800).viscosity(1500), ACID_MATERIAL);
+    public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> SULPHURIC_ACID = registerLiquid("sulphuric_acid", "sulphuric_acid_still", "sulphuric_acid_flow", fluidAttributes -> fluidAttributes.color(0xFF111111).density(6229).viscosity(1400));
+    public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> BACTERIAL_SLUDGE = registerLiquid("bacterial_sludge", "bacterial_sludge_still", "bacterial_sludge_flow", fluidAttributes -> fluidAttributes.color(0xFF111111).density(800).viscosity(1500), ACID_MATERIAL);
 
     private static FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> registerLiquid(String name, UnaryOperator<FluidAttributes.Builder> fluidAttributes)
     {
@@ -40,11 +41,11 @@ public class PlanetFluids
 
     private static FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> registerLiquid(String name, String stillTexture, String flowTexture, UnaryOperator<FluidAttributes.Builder> fluidAttributes)
     {
-        return GCFluids.FLUIDS.register(name, fluidAttributes.apply(FluidAttributes.builder(new ResourceLocation(Constants.MOD_ID_PLANETS, "block/" + stillTexture), new ResourceLocation(Constants.MOD_ID_PLANETS, "block/" + flowTexture))), Material.WATER);
+        return FLUIDS.register(name, fluidAttributes.apply(FluidAttributes.builder(new ResourceLocation(Constants.MOD_ID_PLANETS, "block/" + stillTexture), new ResourceLocation(Constants.MOD_ID_PLANETS, "block/" + flowTexture))), Material.WATER);
     }
 
     private static FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> registerLiquid(String name, String stillTexture, String flowTexture, UnaryOperator<FluidAttributes.Builder> fluidAttributes, Material blockMaterial)
     {
-        return GCFluids.FLUIDS.register(name, fluidAttributes.apply(FluidAttributes.builder(new ResourceLocation(Constants.MOD_ID_PLANETS, "block/" + stillTexture), new ResourceLocation(Constants.MOD_ID_PLANETS, "block/" + flowTexture))), blockMaterial);
+        return FLUIDS.register(name, fluidAttributes.apply(FluidAttributes.builder(new ResourceLocation(Constants.MOD_ID_PLANETS, "block/" + stillTexture), new ResourceLocation(Constants.MOD_ID_PLANETS, "block/" + flowTexture))), blockMaterial);
     }
 }

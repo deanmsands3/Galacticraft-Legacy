@@ -63,6 +63,7 @@ public class GalacticraftPlanets
         GalacticraftCore.isPlanetsLoaded = true;
         GalacticraftChannelHandler.registerPlanetsPackets();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigManagerPlanets.COMMON_SPEC);
+        PlanetFluids.FLUIDS.register(modBus);
 
         MinecraftForge.EVENT_BUS.addListener(PlanetDimensions::onModDimensionRegister);
 

@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.ForgeFlowingFluid.Source;
 
 public class GCFluids
 {
-    public static final GCFluidRegistry FLUIDS = new GCFluidRegistry();
+    public static final GCFluidRegistry FLUIDS = new GCFluidRegistry(Constants.MOD_ID_CORE);
 
     public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> OIL = registerLiquid("oil", "oil_still", "oil_flow", fluidAttributes -> fluidAttributes.color(0xFF111111).density(800).viscosity(1500));
     public static final FluidRegistrationEntry<Source, Flowing, FlowingFluidBlock, BucketItem> FUEL = registerLiquid("fuel", "fuel_still", "fuel_flow", fluidAttributes -> fluidAttributes.color(0xFFDBDF16).density(400).viscosity(900));

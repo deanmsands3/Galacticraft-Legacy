@@ -86,7 +86,7 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
                 for (; this.getPos().getY() - pos1.getY() < 20; pos1 = pos1.down())
                 {
                     BlockState state = this.world.getBlockState(pos1);
-                    if (state.getBlock() == PlanetFluids.LIQUID_SULPHURIC_ACID.getBlock())
+                    if (state.getBlock() == PlanetFluids.SULPHURIC_ACID.getBlock())
                     {
                         this.validSpout = true;
                         break;

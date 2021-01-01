@@ -15,6 +15,7 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.tags.GCTags;
+import micdoodle8.mods.galacticraft.planets.PlanetFluids;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockCavernousVine;
@@ -191,18 +192,18 @@ public class DataGeneratorGCPlanets
                     .rotationY((int) state.get(BlockGeothermalGenerator.FACING).getOpposite().getHorizontalAngle())
                     .build());
 
-            /*this.simpleFluid(PlanetFluids.GAS_ARGON.getBlock());
+            this.simpleFluid(PlanetFluids.GAS_ARGON.getBlock());
             this.simpleFluid(PlanetFluids.GAS_ATMOSPHERIC.getBlock());
             this.simpleFluid(PlanetFluids.GAS_CARBON_DIOXIDE.getBlock());
             this.simpleFluid(PlanetFluids.GAS_HELIUM.getBlock());
             this.simpleFluid(PlanetFluids.GAS_METHANE.getBlock());
             this.simpleFluid(PlanetFluids.GAS_NITROGEN.getBlock());
             this.simpleFluid(PlanetFluids.LIQUID_ARGON.getBlock());
-            this.simpleFluid(PlanetFluids.LIQUID_BACTERIAL_SLUDGE.getBlock());
+            this.simpleFluid(PlanetFluids.BACTERIAL_SLUDGE.getBlock());
             this.simpleFluid(PlanetFluids.LIQUID_METHANE.getBlock());
             this.simpleFluid(PlanetFluids.LIQUID_NITROGEN.getBlock());
             this.simpleFluid(PlanetFluids.LIQUID_OXYGEN.getBlock());
-            this.simpleFluid(PlanetFluids.LIQUID_SULPHURIC_ACID.getBlock());*/
+            this.simpleFluid(PlanetFluids.SULPHURIC_ACID.getBlock());
         }
 
         protected ModelFile getSlimelingEggModel(BlockState state, String name)
@@ -385,6 +386,19 @@ public class DataGeneratorGCPlanets
             this.itemGenerated(VenusItems.TIER_2_THERMAL_BOOTS);
             this.itemGenerated(VenusItems.VOLCANIC_PICKAXE);
             this.itemGenerated(VenusItems.TIER_3_DUNGEON_KEY, new ResourceLocation(Constants.MOD_ID_CORE, "item/dungeon_key")).texture("key", "item/tier_3_dungeon_key");
+
+            this.itemGenerated(PlanetFluids.GAS_ARGON.getBucket());
+            this.itemGenerated(PlanetFluids.GAS_ATMOSPHERIC.getBucket());
+            this.itemGenerated(PlanetFluids.GAS_CARBON_DIOXIDE.getBucket());
+            this.itemGenerated(PlanetFluids.GAS_HELIUM.getBucket());
+            this.itemGenerated(PlanetFluids.GAS_METHANE.getBucket());
+            this.itemGenerated(PlanetFluids.GAS_NITROGEN.getBucket());
+            this.itemGenerated(PlanetFluids.LIQUID_ARGON.getBucket());
+            this.itemGenerated(PlanetFluids.BACTERIAL_SLUDGE.getBucket());
+            this.itemGenerated(PlanetFluids.LIQUID_METHANE.getBucket());
+            this.itemGenerated(PlanetFluids.LIQUID_NITROGEN.getBucket());
+            this.itemGenerated(PlanetFluids.LIQUID_OXYGEN.getBucket());
+            this.itemGenerated(PlanetFluids.SULPHURIC_ACID.getBucket());
         }
 
         protected ItemModelBuilder parentedBlock(Block block)
