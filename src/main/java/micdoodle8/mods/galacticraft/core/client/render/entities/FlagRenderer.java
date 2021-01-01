@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class FlagRenderer extends EntityRenderer<FlagEntity>
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/flag.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/flag.png");
     private final FlagModel model = new FlagModel();
 
     public FlagRenderer(EntityRendererManager manager)
