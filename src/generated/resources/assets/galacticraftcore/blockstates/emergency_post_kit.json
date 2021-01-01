@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraftcore:block/emergency_post_kit"
+      "model": "galacticraftcore:block/emergency_post"
     }
   }
 }

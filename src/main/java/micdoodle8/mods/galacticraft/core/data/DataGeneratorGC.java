@@ -109,7 +109,7 @@ public class DataGeneratorGC
             this.simpleBlock(GCBlocks.MOON_DIRT);
             this.simpleBlock(GCBlocks.MOON_DUNGEON_BRICKS);
             this.simpleBlock(GCBlocks.EMERGENCY_POST, this.models().getExistingFile(this.modLoc("block/emergency_post")));
-            this.simpleBlock(GCBlocks.EMERGENCY_POST_KIT, this.models().getExistingFile(this.modLoc("block/emergency_post_kit")));
+            this.simpleBlock(GCBlocks.EMERGENCY_POST_KIT, this.models().getExistingFile(this.modLoc("block/emergency_post")));
             this.simpleBlock(GCBlocks.FALLEN_METEOR, this.models().getExistingFile(this.modLoc("block/fallen_meteor")));
             this.simpleBlock(GCBlocks.AIR_LOCK_FRAME);
             this.simpleBlock(GCBlocks.TIER_1_TREASURE_CHEST);
@@ -256,7 +256,7 @@ public class DataGeneratorGC
             this.parentedBlock(GCBlocks.HIDDEN_REDSTONE_WIRE);
             this.parentedBlock(GCBlocks.HIDDEN_REDSTONE_REPEATER);
             this.parentedBlock(GCBlocks.EMERGENCY_POST);
-            this.parentedBlock(GCBlocks.EMERGENCY_POST_KIT);
+            this.parentedBlock(GCBlocks.EMERGENCY_POST_KIT, this.modLoc("block/emergency_post_kit"));
             this.parentedBlock(GCBlocks.MOON_TURF);
             this.parentedBlock(GCBlocks.MOON_ROCK);
             this.parentedBlock(GCBlocks.MOON_DIRT);
