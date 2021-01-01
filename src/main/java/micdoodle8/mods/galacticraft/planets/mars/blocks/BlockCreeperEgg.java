@@ -7,7 +7,6 @@ import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DragonEggBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,15 +15,12 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BlockCreeperEgg extends DragonEggBlock implements IShiftDescription, ISortable
 {
@@ -41,31 +37,6 @@ public class BlockCreeperEgg extends DragonEggBlock implements IShiftDescription
         return DRAGON_EGG_AABB;
     }
 
-//    @Override
-//    public boolean isOpaqueCube(BlockState state)
-//    {
-//        return false;
-//    }
-
-//    @OnlyIn(Dist.CLIENT)
-//    @Override
-//    public ItemGroup getCreativeTabToDisplayOn()
-//    {
-//        return GalacticraftCore.galacticraftBlocksTab;
-//    }
-
-//    @Override
-//    public boolean isFullCube(BlockState state)
-//    {
-//        return false;
-//    }
-
-//    @Override
-//    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face)
-//    {
-//        return BlockFaceShape.UNDEFINED;
-//    }
-
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
     {
@@ -75,13 +46,6 @@ public class BlockCreeperEgg extends DragonEggBlock implements IShiftDescription
     @Override
     public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player)
     {
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
-    {
-        return ItemStack.EMPTY;
     }
 
     @Override

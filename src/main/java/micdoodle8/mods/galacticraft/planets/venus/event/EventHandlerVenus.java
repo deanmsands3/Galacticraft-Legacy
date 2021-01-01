@@ -24,12 +24,12 @@ public class EventHandlerVenus
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event)
     {
-        /*if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START)TODO Fix crash when join the world
+        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START)
         {
             ((ServerWorld) event.world).getEntities()
                     .filter((e) -> e.ticksExisted % 20 == 1 && e instanceof LivingEntity && event.world.isMaterialInBB(e.getBoundingBox().grow(-0.1D, -0.4D, -0.1D), PlanetFluids.ACID_MATERIAL))
                     .forEach((e) -> e.attackEntityFrom(DamageSourceGC.acid, 3.0F));
-        }*/
+        }
     }
 
     @SubscribeEvent
