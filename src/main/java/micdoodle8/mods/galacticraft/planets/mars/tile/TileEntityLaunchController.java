@@ -305,7 +305,12 @@ public class TileEntityLaunchController extends TileBaseElectricBlockWithInvento
     public CompoundNBT write(CompoundNBT nbt)
     {
         super.write(nbt);
-        nbt.putString("OwnerName", this.ownerUUID.toString());
+
+        if (this.ownerUUID != null)
+        {
+            nbt.putString("OwnerName", this.ownerUUID.toString());
+        }
+
         nbt.putInt("LaunchSelection", this.launchDropdownSelection);
         nbt.putInt("ControllerFrequency", this.frequency);
         nbt.putInt("TargetFrequency", this.destFrequency);
