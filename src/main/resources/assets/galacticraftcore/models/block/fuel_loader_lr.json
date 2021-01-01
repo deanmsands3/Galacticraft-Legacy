@@ -1,5 +1,5 @@
 {
-  "parent": "galacticraftcore:block/machine_tiered_lr",
+  "parent": "galacticraftcore:block/machine_base_lr",
   "textures": {
     "particle": "galacticraftcore:block/fuel_loader",
     "front": "galacticraftcore:block/fuel_loader",

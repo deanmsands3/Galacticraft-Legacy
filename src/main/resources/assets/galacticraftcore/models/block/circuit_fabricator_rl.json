@@ -1,5 +1,5 @@
 {
-  "parent": "galacticraftcore:block/machine_tiered_rl",
+  "parent": "galacticraftcore:block/machine_base_rl",
   "textures": {
     "particle": "galacticraftcore:block/circuit_fabricator",
     "front": "galacticraftcore:block/circuit_fabricator",

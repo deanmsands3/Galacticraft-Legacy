@@ -14,6 +14,9 @@ import com.mojang.datafixers.util.Pair;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
+import micdoodle8.mods.galacticraft.core.blocks.BlockAirLockWall;
+import micdoodle8.mods.galacticraft.core.blocks.BlockCheese;
+import micdoodle8.mods.galacticraft.core.blocks.BlockParaChest;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.tags.GCTags;
@@ -122,6 +125,19 @@ public class DataGeneratorGC
             this.simpleBlock(GCBlocks.ROCKET_WORKBENCH, this.models().getExistingFile(this.modLoc("block/rocket_workbench")));
             this.simpleBlock(GCBlocks.FULL_BUGGY_FUELING_PAD, this.models().getExistingFile(this.modLoc("block/full_buggy_fueling_pad")));
             this.simpleBlock(GCBlocks.FULL_ROCKET_LAUNCH_PAD, this.models().getExistingFile(this.modLoc("block/full_rocket_launch_pad")));
+
+            this.getVariantBuilder(GCBlocks.AIR_LOCK_SEAL).partialState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.EnumAirLockSealConnection.X).modelForState().modelFile(this.models().getExistingFile(this.modLoc("block/air_lock_seal"))).addModel()
+            .partialState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.EnumAirLockSealConnection.Z).modelForState().rotationY(90).modelFile(this.models().getExistingFile(this.modLoc("block/air_lock_seal"))).addModel()
+            .partialState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.EnumAirLockSealConnection.FLAT).modelForState().modelFile(this.models().getExistingFile(this.modLoc("block/flat_air_lock_seal"))).addModel();
+
+            this.getVariantBuilder(GCBlocks.CHEESE_BLOCK).forAllStates(state ->
+            {
+                int slice = state.get(BlockCheese.BITES);
+                String model = slice > 0 ? "cheese_block_slice" + slice : "cheese_block";
+                return ConfiguredModel.builder().modelFile(this.models().getExistingFile(this.modLoc("block/" + model))).build();
+            });
+
+            this.getVariantBuilder(GCBlocks.PARACHEST).forAllStates(state -> ConfiguredModel.builder().modelFile(this.models().getExistingFile(this.modLoc("block/parachest"))).rotationY((int) state.get(BlockParaChest.FACING).getOpposite().getHorizontalAngle()).build());
 
             ModelFile model = this.models().cubeBottomTop("air_lock_controller", this.modLoc("block/air_lock_controller"), this.modLoc("block/air_lock_frame"), this.modLoc("block/air_lock_frame"));
             this.simpleBlock(GCBlocks.AIR_LOCK_CONTROLLER, model);
@@ -269,8 +285,19 @@ public class DataGeneratorGC
             this.parentedBlock(GCBlocks.CARGO_LOADER);
             this.parentedBlock(GCBlocks.CARGO_UNLOADER);
             this.parentedBlock(GCBlocks.AIR_LOCK_CONTROLLER);
-            this.parentedBlock(GCBlocks.MOON_BOSS_SPAWNER, this.mcLoc("item/air"));
             this.parentedBlock(GCBlocks.ROCKET_WORKBENCH);
+            this.parentedBlock(GCBlocks.DISPLAY_SCREEN);
+            this.parentedBlock(GCBlocks.ELECTRIC_ARC_FURNACE);
+            this.parentedBlock(GCBlocks.FLUID_TANK, this.modLoc("block/fluid_tank_ud"));
+            this.parentedInventoryBlock(GCBlocks.ARC_LAMP);
+            this.parentedInventoryBlock(GCBlocks.FLUID_PIPE);
+            this.parentedInventoryBlock(GCBlocks.FUEL_LOADER);
+            this.parentedInventoryBlock(GCBlocks.ENERGY_STORAGE);
+            this.parentedInventoryBlock(GCBlocks.ENERGY_STORAGE_CLUSTER);
+            this.parentedInventoryBlock(GCBlocks.CIRCUIT_FABRICATOR);
+            this.parentedInventoryBlock(GCBlocks.OXYGEN_STORAGE_MODULE);
+            this.parentedInventoryBlock(GCBlocks.ADVANCED_COMPRESSOR);
+            this.parentedInventoryBlock(GCBlocks.DECONSTRUCTOR);
             this.itemGenerated(GCBlocks.GLOWSTONE_TORCH);
             this.itemGenerated(GCBlocks.UNLIT_TORCH);
             this.itemGenerated(GCBlocks.LIT_UNLIT_TORCH);
@@ -375,6 +402,10 @@ public class DataGeneratorGC
             this.itemGenerated(GCItems.TIER_1_ROCKET_36_INVENTORY, this.modLoc("item/tier_1_rocket"));
             this.itemGenerated(GCItems.TIER_1_ROCKET_54_INVENTORY, this.modLoc("item/tier_1_rocket"));
             this.itemGenerated(GCItems.CREATIVE_TIER_1_ROCKET, this.modLoc("item/tier_1_rocket"));
+            this.itemGenerated(GCFluids.FUEL.getBucket());
+            this.itemGenerated(GCFluids.HYDROGEN.getBucket());
+            this.itemGenerated(GCFluids.OIL.getBucket());
+            this.itemGenerated(GCFluids.OXYGEN.getBucket());
         }
 
         protected ItemModelBuilder parentedBlock(Block block)
@@ -390,6 +421,11 @@ public class DataGeneratorGC
         protected ItemModelBuilder parentedBlock(Block block, ResourceLocation resource)
         {
             return this.getBuilder(block.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile(resource));
+        }
+
+        protected ItemModelBuilder parentedInventoryBlock(Block block)
+        {
+            return this.getBuilder(block.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile(this.modLoc("block/" + block.getRegistryName().getPath() + "_inventory")));
         }
 
         protected ItemModelBuilder parentedItem(Item item, String model)

@@ -33,7 +33,7 @@ public class GCFluidRegistry
     public FluidRegistrationEntry<ForgeFlowingFluid.Source, ForgeFlowingFluid.Flowing, FlowingFluidBlock, BucketItem> register(String name, FluidAttributes.Builder builder, Material blockMaterial)
     {
         String flowingName = "flowing_" + name;
-        String bucketName = "bucket_" + name;
+        String bucketName = name + "_bucket";
         //Create the registry object with dummy entries that we can use as part of the supplier but that works as use in suppliers
         FluidRegistrationEntry<ForgeFlowingFluid.Source, ForgeFlowingFluid.Flowing, FlowingFluidBlock, BucketItem> fluidRegistryObject = new FluidRegistrationEntry<>(name);
         //Pass in suppliers that are wrapped instead of direct references to the registry objects, so that when we update the registry object to

@@ -1,25 +1,25 @@
 {
     "multipart": [
         {	"when": { "middle":  "true" },
-            "apply": { "model": "galacticraftcore:block/hvy_alu_wire" }
+            "apply": { "model": "galacticraftcore:block/heavy_aluminum_wire" }
         },
         {   "when": { "up": "true" },
-            "apply": { "model": "galacticraftcore:block/hvy_alu_wire_u" }
+            "apply": { "model": "galacticraftcore:block/heavy_aluminum_wire_u" }
         },
         {   "when": { "down": "true" },
-            "apply": { "model": "galacticraftcore:block/hvy_alu_wire_u", "x": 180 }
+            "apply": { "model": "galacticraftcore:block/heavy_aluminum_wire_u", "x": 180 }
         },
         {   "when": { "north": "true" },
-            "apply": { "model": "galacticraftcore:block/hvy_alu_wire_n" }
+            "apply": { "model": "galacticraftcore:block/heavy_aluminum_wire_n" }
         },
         {   "when": { "east": "true" },
-            "apply": { "model": "galacticraftcore:block/hvy_alu_wire_n", "y": 90 }
+            "apply": { "model": "galacticraftcore:block/heavy_aluminum_wire_n", "y": 90 }
         },
         {   "when": { "south": "true" },
-            "apply": { "model": "galacticraftcore:block/hvy_alu_wire_n", "y": 180 }
+            "apply": { "model": "galacticraftcore:block/heavy_aluminum_wire_n", "y": 180 }
         },
         {   "when": { "west": "true" },
-            "apply": { "model": "galacticraftcore:block/hvy_alu_wire_n", "y": 270 }
+            "apply": { "model": "galacticraftcore:block/heavy_aluminum_wire_n", "y": 270 }
         }
     ]
 }

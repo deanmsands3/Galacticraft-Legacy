@@ -1,5 +1,5 @@
 {
-  "parent": "galacticraftcore:block/machine_tiered_lr",
+  "parent": "galacticraftcore:block/machine_base_lr",
   "textures": {
     "particle": "galacticraftcore:block/advanced_compressor",
     "front": "galacticraftcore:block/advanced_compressor",

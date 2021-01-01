@@ -1,5 +1,5 @@
 {
-    "parent": "forge:item/default",
+    "parent": "block/block",
     "loader": "forge:obj",
     "model": "galacticraftcore:models/obj/rocket_workbench.obj",
     "flip-v": true,

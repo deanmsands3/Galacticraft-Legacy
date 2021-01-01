@@ -1,8 +1,0 @@
-{
-    "parent": "block/inner_stairs",
-    "textures": {
-        "bottom": "galacticraftcore:block/deco_block_up",
-        "top": "galacticraftcore:block/deco_block",
-        "side": "galacticraftcore:block/deco_block_side"
-    }
-}

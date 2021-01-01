@@ -1,8 +1,0 @@
-{
-    "parent": "block/upper_slab",
-    "textures": {
-        "bottom": "galacticraftplanets:block/brick",
-        "top": "galacticraftplanets:block/brick",
-        "side": "galacticraftplanets:block/brick"
-    }
-}

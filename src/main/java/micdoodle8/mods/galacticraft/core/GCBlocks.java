@@ -438,7 +438,6 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(HIDDEN_REDSTONE_REPEATER), new BlockItem(HIDDEN_REDSTONE_REPEATER, props));
         register(r, Registry.BLOCK.getKey(PLAYER_DETECTOR), new BlockItem(PLAYER_DETECTOR, props));
         register(r, Registry.BLOCK.getKey(FLUID_PIPE), new ItemBlockDesc(FLUID_PIPE, props));
-        register(r, Registry.BLOCK.getKey(PULLED_FLUID_PIPE), new ItemBlockDesc(PULLED_FLUID_PIPE, new Item.Properties()));
         register(r, Registry.BLOCK.getKey(FALLEN_METEOR), new ItemBlockDesc(FALLEN_METEOR, props));
         register(r, Registry.BLOCK.getKey(PARACHEST), new ItemBlockDesc(PARACHEST, props));
         register(r, Registry.BLOCK.getKey(ALUMINUM_WIRE), new BlockItem(ALUMINUM_WIRE, props));
@@ -471,7 +470,6 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(SILICON_BLOCK), new BlockItem(SILICON_BLOCK, props));
         register(r, Registry.BLOCK.getKey(HYDRAULIC_PLATFORM), new ItemBlockDesc(HYDRAULIC_PLATFORM, props));
         props = props.group(null);
-        register(r, Registry.BLOCK.getKey(AIR_LOCK_SEAL), new BlockItem(AIR_LOCK_SEAL, props));
         register(r, Registry.BLOCK.getKey(UNLIT_TORCH), new ItemBlockWallOrFloorDesc(UNLIT_TORCH, WALL_UNLIT_TORCH, props));
         register(r, Registry.BLOCK.getKey(LIT_UNLIT_TORCH), new ItemBlockWallOrFloorDesc(LIT_UNLIT_TORCH, WALL_LIT_UNLIT_TORCH, props));
     }

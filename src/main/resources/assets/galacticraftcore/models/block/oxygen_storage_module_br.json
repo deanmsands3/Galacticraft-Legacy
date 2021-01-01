@@ -1,5 +1,5 @@
 {
-  "parent": "galacticraftcore:block/machine_tiered_br",
+  "parent": "galacticraftcore:block/machine_base_br",
   "textures": {
     "particle": "galacticraftcore:block/oxygen_storage_module_full",
     "front": "galacticraftcore:block/oxygen_storage_module_full",

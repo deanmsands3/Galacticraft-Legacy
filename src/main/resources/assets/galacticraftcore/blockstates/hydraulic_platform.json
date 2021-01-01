@@ -1,5 +1,4 @@
 {
-    "forge_marker": 1,
     "variants": {
         "type=none": { "model": "galacticraftcore:block/hydraulic_platform_unset" },
         "type=nw": { "model": "galacticraftcore:block/hydraulic_platform", "y": 270 },
