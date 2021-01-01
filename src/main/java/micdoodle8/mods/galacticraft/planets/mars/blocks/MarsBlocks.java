@@ -2,7 +2,7 @@ package micdoodle8.mods.galacticraft.planets.mars.blocks;
 
 import micdoodle8.mods.galacticraft.core.*;
 import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
-import micdoodle8.mods.galacticraft.planets.client.renderer.ItemStackTileEntityRendererGCMars;
+import micdoodle8.mods.galacticraft.planets.client.renderer.ItemStackTileEntityRendererPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.tile.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -168,7 +168,7 @@ public class MarsBlocks
         register(r, Registry.BLOCK.getKey(RED_SLIMELING_EGG), new ItemBlockDesc(RED_SLIMELING_EGG, props));
         register(r, Registry.BLOCK.getKey(BLUE_SLIMELING_EGG), new ItemBlockDesc(BLUE_SLIMELING_EGG, props));
         register(r, Registry.BLOCK.getKey(YELLOW_SLIMELING_EGG), new ItemBlockDesc(YELLOW_SLIMELING_EGG, props));
-        register(r, Registry.BLOCK.getKey(TIER_2_TREASURE_CHEST), new ItemBlockDesc(TIER_2_TREASURE_CHEST, props.setISTER(() -> ItemStackTileEntityRendererGCMars::new)));
+        register(r, Registry.BLOCK.getKey(TIER_2_TREASURE_CHEST), new ItemBlockDesc(TIER_2_TREASURE_CHEST, props.setISTER(() -> ItemStackTileEntityRendererPlanets::new)));
         register(r, Registry.BLOCK.getKey(CRYOGENIC_CHAMBER), new ItemBlockDesc(CRYOGENIC_CHAMBER, props));
         register(r, Registry.BLOCK.getKey(LAUNCH_CONTROLLER), new ItemBlockDesc(LAUNCH_CONTROLLER, props));
         register(r, Registry.BLOCK.getKey(TERRAFORMER), new ItemBlockDesc(TERRAFORMER, props));

@@ -15,8 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 
 public class ItemStackTileEntityRendererGC extends ItemStackTileEntityRenderer
 {
-    private final TileEntityTreasureChest tier1TreasureChest = new TileEntityTreasureChest();
-
     @Override
     public void render(ItemStack itemStack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay)
     {
@@ -29,7 +27,7 @@ public class ItemStackTileEntityRendererGC extends ItemStackTileEntityRenderer
 
             if (block == GCBlocks.TIER_1_TREASURE_CHEST)
             {
-                tileentity = this.tier1TreasureChest;
+                tileentity = new TileEntityTreasureChest();
             }
 
             if (tileentity != null)

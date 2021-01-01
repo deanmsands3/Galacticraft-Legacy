@@ -251,7 +251,7 @@ public class DataGeneratorGC
             this.parentedBlock(GCBlocks.METEORIC_IRON_BLOCK);
             this.parentedBlock(GCBlocks.MAGNETIC_CRAFTING_TABLE);
             this.parentedBlock(GCBlocks.TIER_1_TREASURE_CHEST, this.mcLoc("item/chest")).texture("particle", this.modLoc("block/tier_1_treasure_chest"));
-            this.parentedBlock(GCBlocks.PARACHEST, this.mcLoc("item/chest")).texture("particle", this.modLoc("block/parachest"));
+            this.parentedBlock(GCBlocks.PARACHEST);
             this.parentedBlock(GCBlocks.PLAYER_DETECTOR);
             this.parentedBlock(GCBlocks.HIDDEN_REDSTONE_WIRE);
             this.parentedBlock(GCBlocks.HIDDEN_REDSTONE_REPEATER);

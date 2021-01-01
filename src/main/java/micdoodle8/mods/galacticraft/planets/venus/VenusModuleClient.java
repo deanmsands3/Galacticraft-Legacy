@@ -59,7 +59,7 @@ public class VenusModuleClient implements IPlanetsModuleClient
         RenderTypeLookup.setRenderLayer(VenusBlocks.WEB_STRING, cutout);
 
         ClientRegistry.bindTileEntityRenderer(TileEntityLaserTurret.TYPE, TileEntityLaserTurretRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChestVenus.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/entity/tier_3_treasure_chest.png")));
+        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChestVenus.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/entity/tier_3_treasure_chest.png"), VenusBlocks.TIER_3_TREASURE_CHEST));
     }
 
 //    private void addPlanetVariants(String name, String... variants)

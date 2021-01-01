@@ -594,7 +594,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 
     private static void registerTileEntityRenderers()
     {
-        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChest.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/tier_1_treasure_chest.png")));
+        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChest.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/tier_1_treasure_chest.png"), GCBlocks.TIER_1_TREASURE_CHEST));
         ClientRegistry.bindTileEntityRenderer(TileEntitySolar.TileEntitySolarT1.TYPE, TileEntitySolarPanelRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntitySolar.TileEntitySolarT2.TYPE, TileEntitySolarPanelRenderer::new);
 ////        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOxygenDistributor.class, new TileEntityBubbleProviderRenderer<>(0.25F, 0.25F, 1.0F));
