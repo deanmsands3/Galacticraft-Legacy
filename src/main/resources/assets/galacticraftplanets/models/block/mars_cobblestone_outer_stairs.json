@@ -1,8 +1,0 @@
-{
-    "parent": "block/outer_stairs",
-    "textures": {
-        "bottom": "galacticraftplanets:block/cobblestone",
-        "top": "galacticraftplanets:block/cobblestone",
-        "side": "galacticraftplanets:block/cobblestone"
-    }
-}

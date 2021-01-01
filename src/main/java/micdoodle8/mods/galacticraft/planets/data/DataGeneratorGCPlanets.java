@@ -174,6 +174,7 @@ public class DataGeneratorGCPlanets
             this.simpleBlock(VenusBlocks.TIER_3_TREASURE_CHEST);
             this.simpleBlock(VenusBlocks.LEAD_BLOCK);
             this.simpleBlock(VenusBlocks.VENUS_BOSS_SPAWNER, this.models().getExistingFile(this.mcLoc("block/barrier")));
+            this.simpleBlock(VenusBlocks.SOLAR_ARRAY_MODULE, this.models().getExistingFile(this.modLoc("block/solar_array_module")));
             this.simpleCross(VenusBlocks.WEB_STRING);
             this.simpleCross(VenusBlocks.WEB_TORCH);
             this.horizontalBlock(VenusBlocks.CRASHED_PROBE, this.models().getExistingFile(this.modLoc("block/crashed_probe")), 90);
@@ -260,6 +261,7 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(MarsBlocks.TERRAFORMER);
             this.parentedBlock(MarsBlocks.LAUNCH_CONTROLLER);
             this.parentedBlock(MarsBlocks.WATER_ELECTROLYZER);
+            this.parentedBlock(MarsBlocks.CRYOGENIC_CHAMBER);
             this.parentedBlock(MarsBlocks.MARS_BOSS_SPAWNER, this.mcLoc("item/air"));
 
             this.parentedBlock(AsteroidBlocks.ASTEROID_IRON_ORE);
@@ -274,6 +276,9 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(AsteroidBlocks.ASTRO_MINER_BASE);
             this.parentedBlock(AsteroidBlocks.FULL_ASTRO_MINER_BASE, this.mcLoc("item/air"));
             this.parentedBlock(AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY, this.mcLoc("item/air"));
+            this.parentedInventoryBlock(AsteroidBlocks.WALKWAY);
+            this.parentedInventoryBlock(AsteroidBlocks.FLUID_PIPE_WALKWAY);
+            this.parentedInventoryBlock(AsteroidBlocks.WIRE_WALKWAY);
 
             this.parentedBlock(VenusBlocks.VENUS_SOFT_ROCK);
             this.parentedBlock(VenusBlocks.VENUS_HARD_ROCK);
@@ -293,6 +298,8 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(VenusBlocks.VAPOR_SPOUT);
             this.parentedBlock(VenusBlocks.CRASHED_PROBE);
             this.parentedBlock(VenusBlocks.LEAD_BLOCK);
+            this.parentedBlock(VenusBlocks.SOLAR_ARRAY_CONTROLLER);
+            this.parentedBlock(VenusBlocks.SOLAR_ARRAY_MODULE);
             this.parentedBlock(VenusBlocks.GEOTHERMAL_GENERATOR, this.modLoc("block/geothermal_generator_on"));
             this.parentedBlock(VenusBlocks.TIER_3_TREASURE_CHEST, this.mcLoc("item/chest")).texture("particle", this.modLoc("block/tier_3_treasure_chest"));
 
@@ -393,6 +400,11 @@ public class DataGeneratorGCPlanets
         protected ItemModelBuilder parentedBlock(Block block, ResourceLocation resource)
         {
             return this.getBuilder(block.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile(resource));
+        }
+
+        protected ItemModelBuilder parentedInventoryBlock(Block block)
+        {
+            return this.getBuilder(block.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile(this.modLoc("block/" + block.getRegistryName().getPath() + "_inventory")));
         }
 
         protected ItemModelBuilder parentedItem(Item item, String model)
