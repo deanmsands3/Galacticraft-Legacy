@@ -827,7 +827,7 @@ public class DataGeneratorGCPlanets
                 this.registerDropSelfLootTable(AsteroidBlocks.ENERGY_BEAM_RECEIVER);
                 this.registerDropSelfLootTable(AsteroidBlocks.SHORT_RANGE_TELEPAD);
                 this.registerLootTable(AsteroidBlocks.DARK_DECORATION_SLAB, BlockLootTables::droppingSlab);
-                this.registerLootTable(AsteroidBlocks.FULL_ASTRO_MINER_BASE, LootTable.builder().addLootPool(withSurvivesExplosion(AsteroidBlocks.ASTRO_MINER_BASE, LootPool.builder().rolls(ConstantRange.of(8)).addEntry(ItemLootEntry.builder(AsteroidBlocks.ASTRO_MINER_BASE)))));
+                this.registerLootTable(AsteroidBlocks.FULL_ASTRO_MINER_BASE, LootTable.builder().addLootPool(withSurvivesExplosion(AsteroidBlocks.ASTRO_MINER_BASE, LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(AsteroidBlocks.ASTRO_MINER_BASE).acceptFunction(SetCount.builder(ConstantRange.of(8)))))));
                 this.registerLootTable(AsteroidBlocks.ILMENITE_ORE, block -> droppingItemWithFortune(block, AsteroidsItems.TITANIUM_SHARD)
                         .addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(AsteroidsItems.IRON_SHARD).acceptFunction(ApplyBonus.oreDrops(Enchantments.FORTUNE)).acceptCondition(SILK_TOUCH.inverted()))));
 

@@ -2,10 +2,16 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 8,
+      "rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 8
+            }
+          ],
           "name": "galacticraftplanets:astro_miner_base"
         }
       ],
