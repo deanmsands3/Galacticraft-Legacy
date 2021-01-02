@@ -9,9 +9,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorldReader;
 
-public class OreBlock extends Block implements ISortable
+public class OreBlockGC extends Block implements ISortable
 {
-    public OreBlock(Properties properties)
+    public OreBlockGC(Properties properties)
     {
         super(properties);
     }

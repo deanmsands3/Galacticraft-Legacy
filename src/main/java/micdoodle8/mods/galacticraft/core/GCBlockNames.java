@@ -102,4 +102,8 @@ public class GCBlockNames
     public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
     public static final String TIN_DECORATION_STAIRS_1 = "tin_decoration_stairs_1";
     public static final String TIN_DECORATION_STAIRS_2 = "tin_decoration_stairs_2";
+    public static final String MOON_ROCK_SLAB = "moon_rock_slab";
+    public static final String MOON_DUNGEON_BRICK_SLAB = "moon_dungeon_brick_slab";
+    public static final String TIN_DECORATION_SLAB_1 = "tin_decoration_slab_1";
+    public static final String TIN_DECORATION_SLAB_2 = "tin_decoration_slab_2";
 }

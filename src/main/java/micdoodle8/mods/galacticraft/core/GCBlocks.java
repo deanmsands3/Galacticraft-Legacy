@@ -6,10 +6,7 @@ import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
 import micdoodle8.mods.galacticraft.core.items.ItemBlockWallOrFloorDesc;
 import micdoodle8.mods.galacticraft.core.tile.*;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockDungeonBrick;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.StairsBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntityType;
@@ -120,9 +117,6 @@ public class GCBlocks
 
     public static final Block MOON_BOSS_SPAWNER = new BlockBossSpawner(Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops());
 
-//    public static final Block slabGCHalf = new BlockSlabGC(builder);
-//    public static final Block slabGCDouble = new BlockDoubleSlabGC(builder);
-
 //    public static final Block wallGC = new BlockWallGC(builder);
 
     public static final Block HYDRAULIC_PLATFORM = new BlockPlatform(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
@@ -130,14 +124,14 @@ public class GCBlocks
     public static final Block EMERGENCY_POST = new BlockEmergencyBox(Block.Properties.create(Material.IRON).hardnessAndResistance(4.0F, 70.0F).lightValue(15).sound(SoundType.METAL));
     public static final Block EMERGENCY_POST_KIT = new BlockEmergencyBoxKit(Block.Properties.from(EMERGENCY_POST));
 
-    public static final Block COPPER_ORE = new OreBlock(Block.Properties.create(Material.ROCK).sound(SoundType.STONE));
-    public static final Block TIN_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
-    public static final Block ALUMINUM_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
-    public static final Block SILICON_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
-    public static final Block MOON_COPPER_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
-    public static final Block MOON_TIN_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
-    public static final Block CHEESE_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
-    public static final Block SAPPHIRE_ORE = new OreBlock(Block.Properties.from(COPPER_ORE));
+    public static final Block COPPER_ORE = new OreBlockGC(Block.Properties.create(Material.ROCK).sound(SoundType.STONE));
+    public static final Block TIN_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
+    public static final Block ALUMINUM_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
+    public static final Block SILICON_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
+    public static final Block MOON_COPPER_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
+    public static final Block MOON_TIN_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
+    public static final Block CHEESE_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
+    public static final Block SAPPHIRE_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
 
     public static final Block MOON_DIRT = new BlockSimple(Block.Properties.create(Material.ROCK).sound(SoundType.STONE));
     public static final Block MOON_ROCK = new BlockSimple(Block.Properties.from(MOON_DIRT));
@@ -156,6 +150,11 @@ public class GCBlocks
     public static final StairsBlock TIN_DECORATION_STAIRS_2 = new StairsBlockGC(() -> TIN_DECORATION_BLOCK_2.getDefaultState(), Block.Properties.from(TIN_DECORATION_BLOCK_2));
     public static final StairsBlock MOON_ROCK_STAIRS = new StairsBlockGC(() -> MOON_ROCK.getDefaultState(), Block.Properties.from(MOON_ROCK));
     public static final StairsBlock MOON_DUNGEON_BRICK_STAIRS = new StairsBlockGC(() -> MOON_DUNGEON_BRICKS.getDefaultState(), Block.Properties.from(MOON_DUNGEON_BRICKS));
+
+    public static final SlabBlock TIN_DECORATION_SLAB_1 = new SlabBlockGC(Block.Properties.from(TIN_DECORATION_BLOCK_1));
+    public static final SlabBlock TIN_DECORATION_SLAB_2 = new SlabBlockGC(Block.Properties.from(TIN_DECORATION_BLOCK_2));
+    public static final SlabBlock MOON_ROCK_SLAB = new SlabBlockGC(Block.Properties.from(MOON_ROCK));
+    public static final SlabBlock MOON_DUNGEON_BRICK_SLAB = new SlabBlockGC(Block.Properties.from(MOON_DUNGEON_BRICKS));
 //    public static final Block grating = new BlockGrating(builder);
 //    public static final Block gratingWater = new BlockGrating(builder);
 //    public static final Block gratingLava = new BlockGrating(builder);
@@ -271,13 +270,6 @@ public class GCBlocks
         register(r, GCBlockNames.DISPLAY_SCREEN, DISPLAY_SCREEN);
         register(r, GCBlockNames.FLUID_TANK, FLUID_TANK);
         register(r, GCBlockNames.MOON_BOSS_SPAWNER, MOON_BOSS_SPAWNER);
-//        register(r, BlockNames.slabGCHalf, slabGCHalf);
-//        register(r, BlockNames.slabGCDouble, slabGCDouble);
-//        register(r, BlockNames.tinStairs1, tinStairs1);
-//        register(r, BlockNames.tinStairs2, tinStairs2);
-//        register(r, BlockNames.moonStoneStairs, moonStoneStairs);
-//        register(r, BlockNames.moonBricksStairs, moonBricksStairs);
-//        register(r, BlockNames.wallGC, wallGC);
         register(r, GCBlockNames.HYDRAULIC_PLATFORM, HYDRAULIC_PLATFORM);
         register(r, GCBlockNames.EMERGENCY_POST, EMERGENCY_POST);
         register(r, GCBlockNames.EMERGENCY_POST_KIT, EMERGENCY_POST_KIT);
@@ -299,6 +291,10 @@ public class GCBlocks
         register(r, GCBlockNames.TIN_DECORATION_STAIRS_2, TIN_DECORATION_STAIRS_2);
         register(r, GCBlockNames.MOON_ROCK_STAIRS, MOON_ROCK_STAIRS);
         register(r, GCBlockNames.MOON_DUNGEON_BRICK_STAIRS, MOON_DUNGEON_BRICK_STAIRS);
+        register(r, GCBlockNames.TIN_DECORATION_SLAB_1, TIN_DECORATION_SLAB_1);
+        register(r, GCBlockNames.TIN_DECORATION_SLAB_2, TIN_DECORATION_SLAB_2);
+        register(r, GCBlockNames.MOON_ROCK_SLAB, MOON_ROCK_SLAB);
+        register(r, GCBlockNames.MOON_DUNGEON_BRICK_SLAB, MOON_DUNGEON_BRICK_SLAB);
         register(r, GCBlockNames.COPPER_BLOCK, COPPER_BLOCK);
         register(r, GCBlockNames.TIN_BLOCK, TIN_BLOCK);
         register(r, GCBlockNames.ALUMINUM_BLOCK, ALUMINUM_BLOCK);
@@ -472,6 +468,10 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(TIN_DECORATION_STAIRS_2), new BlockItem(TIN_DECORATION_STAIRS_2, props));
         register(r, Registry.BLOCK.getKey(MOON_ROCK_STAIRS), new BlockItem(MOON_ROCK_STAIRS, props));
         register(r, Registry.BLOCK.getKey(MOON_DUNGEON_BRICK_STAIRS), new BlockItem(MOON_DUNGEON_BRICK_STAIRS, props));
+        register(r, Registry.BLOCK.getKey(TIN_DECORATION_SLAB_1), new BlockItem(TIN_DECORATION_SLAB_1, props));
+        register(r, Registry.BLOCK.getKey(TIN_DECORATION_SLAB_2), new BlockItem(TIN_DECORATION_SLAB_2, props));
+        register(r, Registry.BLOCK.getKey(MOON_ROCK_SLAB), new BlockItem(MOON_ROCK_SLAB, props));
+        register(r, Registry.BLOCK.getKey(MOON_DUNGEON_BRICK_SLAB), new BlockItem(MOON_DUNGEON_BRICK_SLAB, props));
         register(r, Registry.BLOCK.getKey(COPPER_BLOCK), new BlockItem(COPPER_BLOCK, props));
         register(r, Registry.BLOCK.getKey(TIN_BLOCK), new BlockItem(TIN_BLOCK, props));
         register(r, Registry.BLOCK.getKey(ALUMINUM_BLOCK), new BlockItem(ALUMINUM_BLOCK, props));

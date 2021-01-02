@@ -8,6 +8,8 @@ public class MarsBlockNames
     public static final String YELLOW_SLIMELING_EGG = "yellow_slimeling_egg";
     public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
     public static final String MARS_DUNGEON_BRICK_STAIRS = "mars_dungeon_brick_stairs";
+    public static final String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
+    public static final String MARS_DUNGEON_BRICK_SLAB = "mars_dungeon_brick_slab";
     public static final String CRYOGENIC_CHAMBER = "cryogenic_chamber";
     public static final String METHANE_SYNTHESIZER = "methane_synthesizer";
     public static final String GAS_LIQUEFIER = "gas_liquefier";

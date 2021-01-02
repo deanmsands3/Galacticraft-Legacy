@@ -31,10 +31,7 @@ import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
 import net.minecraft.advancements.criterion.EnchantmentPredicate;
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.block.StairsBlock;
+import net.minecraft.block.*;
 import net.minecraft.data.*;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.data.loot.EntityLootTables;
@@ -124,6 +121,8 @@ public class DataGeneratorGCPlanets
             this.simpleBlock(MarsBlocks.CREEPER_EGG, this.models().withExistingParent("creeper_egg", this.mcLoc("block/dragon_egg")).texture("particle", this.modLoc("block/creeper_egg")).texture("all", this.modLoc("block/creeper_egg")));
             this.stairsBlock((StairsBlock)MarsBlocks.MARS_COBBLESTONE_STAIRS, this.modLoc("block/mars_cobblestone"));
             this.stairsBlock((StairsBlock)MarsBlocks.MARS_DUNGEON_BRICK_STAIRS, this.modLoc("block/mars_dungeon_bricks"));
+            this.slabBlock((SlabBlock)MarsBlocks.MARS_COBBLESTONE_SLAB, this.getGeneratedModel(MarsBlocks.MARS_COBBLESTONE), this.modLoc("block/mars_cobblestone"));
+            this.slabBlock((SlabBlock)MarsBlocks.MARS_DUNGEON_BRICK_SLAB, this.getGeneratedModel(MarsBlocks.MARS_DUNGEON_BRICKS), this.modLoc("block/mars_dungeon_bricks"));
 
             this.getVariantBuilder(MarsBlocks.BLUE_SLIMELING_EGG).forAllStates(state -> ConfiguredModel.builder().modelFile(this.getSlimelingEggModel(state, "blue_slimeling_egg")).build());
             this.getVariantBuilder(MarsBlocks.RED_SLIMELING_EGG).forAllStates(state -> ConfiguredModel.builder().modelFile(this.getSlimelingEggModel(state, "red_slimeling_egg")).build());
@@ -160,6 +159,7 @@ public class DataGeneratorGCPlanets
             this.simpleBlock(AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY, this.models().cubeAll("short_range_telepad_dummy", this.modLoc("block/short_range_telepad")));
             this.simpleBlock(AsteroidBlocks.ENERGY_BEAM_RECEIVER, this.models().cubeAll("energy_beam_receiver", this.modLoc("block/energy_beam_receiver")));
             this.simpleBlock(AsteroidBlocks.ENERGY_BEAM_REFLECTOR, this.models().cubeAll("energy_beam_reflector", this.modLoc("block/energy_beam_reflector")));
+            this.slabBlock((SlabBlock)AsteroidBlocks.DARK_DECORATION_SLAB, this.getGeneratedModel(AsteroidBlocks.DARK_DECORATION_BLOCK), this.modLoc("block/dark_decoration_block"));
 
             this.simpleBlock(VenusBlocks.VENUS_SOFT_ROCK, model1 -> ConfiguredModel.allYRotations(model1, 0, false));
             this.simpleBlock(VenusBlocks.VENUS_HARD_ROCK, model1 -> ConfiguredModel.allYRotations(model1, 0, false));
@@ -229,6 +229,11 @@ public class DataGeneratorGCPlanets
             this.getVariantBuilder(block).partialState().setModels(new ConfiguredModel(this.models().cross(this.toString(block), this.modLoc("block/" + this.toString(block)))));
         }
 
+        protected ResourceLocation getGeneratedModel(Block block)
+        {
+            return this.models().generatedModels.get(this.modLoc("block/" + this.toString(block))).getLocation();
+        }
+
         protected String toString(Block block)
         {
             return block.getRegistryName().getPath();
@@ -268,6 +273,8 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(MarsBlocks.CRYOGENIC_CHAMBER);
             this.parentedBlock(MarsBlocks.MARS_COBBLESTONE_STAIRS);
             this.parentedBlock(MarsBlocks.MARS_DUNGEON_BRICK_STAIRS);
+            this.parentedBlock(MarsBlocks.MARS_COBBLESTONE_SLAB);
+            this.parentedBlock(MarsBlocks.MARS_DUNGEON_BRICK_SLAB);
 
             this.parentedBlock(AsteroidBlocks.ASTEROID_IRON_ORE);
             this.parentedBlock(AsteroidBlocks.ASTEROID_ALUMINUM_ORE);
@@ -279,6 +286,7 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK);
             this.parentedBlock(AsteroidBlocks.DENSE_ICE);
             this.parentedBlock(AsteroidBlocks.ASTRO_MINER_BASE);
+            this.parentedBlock(AsteroidBlocks.DARK_DECORATION_SLAB);
             this.parentedInventoryBlock(AsteroidBlocks.WALKWAY);
             this.parentedInventoryBlock(AsteroidBlocks.FLUID_PIPE_WALKWAY);
             this.parentedInventoryBlock(AsteroidBlocks.WIRE_WALKWAY);
@@ -498,6 +506,8 @@ public class DataGeneratorGCPlanets
             this.add(MarsBlocks.CRYOGENIC_CHAMBER, "Cryogenic Chamber");
             this.add(MarsBlocks.MARS_COBBLESTONE_STAIRS, "Mars Cobblestone Stairs");
             this.add(MarsBlocks.MARS_DUNGEON_BRICK_STAIRS, "Mars Dungeon Brick Stairs");
+            this.add(MarsBlocks.MARS_COBBLESTONE_SLAB, "Mars Cobblestone Slab");
+            this.add(MarsBlocks.MARS_DUNGEON_BRICK_SLAB, "Mars Dungeon Brick Slab");
 
             this.add(AsteroidBlocks.ASTEROID_IRON_ORE, "Asteroid Iron Ore");
             this.add(AsteroidBlocks.ASTEROID_ALUMINUM_ORE, "Asteroid Aluminum Ore");
@@ -515,6 +525,7 @@ public class DataGeneratorGCPlanets
             this.add(AsteroidBlocks.ENERGY_BEAM_RECEIVER, "Energy Beam Receiver");
             this.add(AsteroidBlocks.ENERGY_BEAM_REFLECTOR, "Energy Beam Reflector");
             this.add(AsteroidBlocks.SHORT_RANGE_TELEPAD, "Short Range Telepad");
+            this.add(AsteroidBlocks.DARK_DECORATION_SLAB, "Dark Decoration Slab");
 
             this.add(VenusBlocks.VENUS_SOFT_ROCK, "Venus Soft Rock");
             this.add(VenusBlocks.VENUS_HARD_ROCK, "Venus Hard Rock");
@@ -702,6 +713,9 @@ public class DataGeneratorGCPlanets
             ShapedRecipeBuilder.shapedRecipe(AsteroidsItems.THERMAL_CLOTH).key('X', ItemTags.WOOL).key('Y', Tags.Items.DUSTS_REDSTONE).patternLine(" X ").patternLine("XYX").patternLine(" X ").addCriterion(this.toCriterion(ItemTags.WOOL), this.hasItem(ItemTags.WOOL)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(MarsBlocks.MARS_COBBLESTONE_STAIRS, 4).key('#', MarsBlocks.MARS_COBBLESTONE).patternLine("#  ").patternLine("## ").patternLine("###").addCriterion(this.toCriterion(MarsBlocks.MARS_COBBLESTONE), this.hasItem(MarsBlocks.MARS_COBBLESTONE)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(MarsBlocks.MARS_DUNGEON_BRICK_STAIRS, 4).key('#', MarsBlocks.MARS_DUNGEON_BRICKS).patternLine("#  ").patternLine("## ").patternLine("###").addCriterion(this.toCriterion(MarsBlocks.MARS_DUNGEON_BRICKS), this.hasItem(MarsBlocks.MARS_DUNGEON_BRICKS)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(MarsBlocks.MARS_COBBLESTONE_SLAB, 6).key('#', MarsBlocks.MARS_COBBLESTONE).patternLine("###").addCriterion(this.toCriterion(MarsBlocks.MARS_COBBLESTONE), this.hasItem(MarsBlocks.MARS_COBBLESTONE)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(MarsBlocks.MARS_DUNGEON_BRICK_SLAB, 6).key('#', MarsBlocks.MARS_DUNGEON_BRICKS).patternLine("###").addCriterion(this.toCriterion(MarsBlocks.MARS_DUNGEON_BRICKS), this.hasItem(MarsBlocks.MARS_DUNGEON_BRICKS)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(AsteroidBlocks.DARK_DECORATION_SLAB, 6).key('#', AsteroidBlocks.DARK_DECORATION_BLOCK).patternLine("###").addCriterion(this.toCriterion(AsteroidBlocks.DARK_DECORATION_BLOCK), this.hasItem(AsteroidBlocks.DARK_DECORATION_BLOCK)).build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(MarsItems.FRAGMENTED_CARBON, 32).addIngredient(Items.COAL).addIngredient(Items.COAL).addIngredient(Items.COAL).addIngredient(Items.COAL).setGroup("fragmented_carbon").addCriterion(this.toCriterion(Items.COAL), this.hasItem(Items.COAL)).build(consumer, this.modLoc("fragmented_carbon_from_4_coals"));
             ShapelessRecipeBuilder.shapelessRecipe(MarsItems.FRAGMENTED_CARBON, 16).addIngredient(Items.CHARCOAL).addIngredient(Items.CHARCOAL).addIngredient(Items.CHARCOAL).addIngredient(Items.CHARCOAL).setGroup("fragmented_carbon").addCriterion(this.toCriterion(Items.CHARCOAL), this.hasItem(Items.CHARCOAL)).build(consumer, this.modLoc("fragmented_carbon_from_4_charcoals"));
@@ -781,6 +795,8 @@ public class DataGeneratorGCPlanets
                 this.registerDropSelfLootTable(MarsBlocks.CREEPER_EGG);
                 this.registerDropSelfLootTable(MarsBlocks.MARS_COBBLESTONE_STAIRS);
                 this.registerDropSelfLootTable(MarsBlocks.MARS_DUNGEON_BRICK_STAIRS);
+                this.registerLootTable(MarsBlocks.MARS_COBBLESTONE_SLAB, BlockLootTables::droppingSlab);
+                this.registerLootTable(MarsBlocks.MARS_DUNGEON_BRICK_SLAB, BlockLootTables::droppingSlab);
                 this.registerLootTable(MarsBlocks.CAVERNOUS_VINES, BlockLootTables::onlyWithShears);
                 this.registerLootTable(MarsBlocks.DESH_ORE, block -> droppingItemWithFortune(block, MarsItems.UNREFINED_DESH));
                 this.registerLootTable(MarsBlocks.MARS_STONE, block -> droppingWithSilkTouch(block, MarsBlocks.MARS_COBBLESTONE));
@@ -800,6 +816,7 @@ public class DataGeneratorGCPlanets
                 this.registerDropSelfLootTable(AsteroidBlocks.ENERGY_BEAM_REFLECTOR);
                 this.registerDropSelfLootTable(AsteroidBlocks.ENERGY_BEAM_RECEIVER);
                 this.registerDropSelfLootTable(AsteroidBlocks.SHORT_RANGE_TELEPAD);
+                this.registerLootTable(AsteroidBlocks.DARK_DECORATION_SLAB, BlockLootTables::droppingSlab);
                 this.registerLootTable(AsteroidBlocks.FULL_ASTRO_MINER_BASE, LootTable.builder().addLootPool(withSurvivesExplosion(AsteroidBlocks.ASTRO_MINER_BASE, LootPool.builder().rolls(ConstantRange.of(8)).addEntry(ItemLootEntry.builder(AsteroidBlocks.ASTRO_MINER_BASE)))));
                 this.registerLootTable(AsteroidBlocks.ILMENITE_ORE, block -> droppingItemWithFortune(block, AsteroidsItems.TITANIUM_SHARD)
                         .addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(AsteroidsItems.IRON_SHARD).acceptFunction(ApplyBonus.oreDrops(Enchantments.FORTUNE)).acceptCondition(SILK_TOUCH.inverted()))));

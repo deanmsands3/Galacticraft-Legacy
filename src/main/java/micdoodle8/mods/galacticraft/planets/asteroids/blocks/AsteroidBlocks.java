@@ -2,6 +2,7 @@ package micdoodle8.mods.galacticraft.planets.asteroids.blocks;
 
 import micdoodle8.mods.galacticraft.core.*;
 import micdoodle8.mods.galacticraft.core.blocks.DecoBlock;
+import micdoodle8.mods.galacticraft.core.blocks.SlabBlockGC;
 import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.*;
@@ -60,6 +61,8 @@ public class AsteroidBlocks
     public static Block DARK_DECORATION_BLOCK;
     @ObjectHolder(AsteroidBlockNames.TITANIUM_BLOCK)
     public static Block TITANIUM_BLOCK;
+    @ObjectHolder(AsteroidBlockNames.DARK_DECORATION_SLAB)
+    public static Block DARK_DECORATION_SLAB;
 
     public static void registerBlocks(RegistryEvent.Register<Block> evt)
     {
@@ -79,6 +82,7 @@ public class AsteroidBlocks
         register(r, new OreBlockAsteroids(builder), AsteroidBlockNames.ASTEROID_IRON_ORE);
         register(r, new DecoBlock(builder), AsteroidBlockNames.DARK_DECORATION_BLOCK);
         register(r, new DecoBlock(builder), AsteroidBlockNames.TITANIUM_BLOCK);
+        register(r, new SlabBlockGC(builder), AsteroidBlockNames.DARK_DECORATION_SLAB);
 
         builder = Block.Properties.create(Material.IRON).sound(SoundType.METAL);
         register(r, new BlockBeamReflector(builder), AsteroidBlockNames.ENERGY_BEAM_REFLECTOR);
@@ -132,6 +136,7 @@ public class AsteroidBlocks
         register(r, Registry.BLOCK.getKey(SHORT_RANGE_TELEPAD), new ItemBlockDesc(SHORT_RANGE_TELEPAD, props));
         register(r, Registry.BLOCK.getKey(DENSE_ICE), new BlockItem(DENSE_ICE, props));
         register(r, Registry.BLOCK.getKey(ASTRO_MINER_BASE), new ItemBlockDesc(ASTRO_MINER_BASE, props));
+        register(r, Registry.BLOCK.getKey(DARK_DECORATION_SLAB), new ItemBlockDesc(DARK_DECORATION_SLAB, props));
     }
 
 //    public static void registerBlocks()

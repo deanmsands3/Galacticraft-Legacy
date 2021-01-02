@@ -20,4 +20,5 @@ public class AsteroidBlockNames
     public static final String ASTEROID_IRON_ORE = "asteroid_iron_ore";
     public static final String DARK_DECORATION_BLOCK = "dark_decoration_block";
     public static final String TITANIUM_BLOCK = "titanium_block";
+    public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
 }

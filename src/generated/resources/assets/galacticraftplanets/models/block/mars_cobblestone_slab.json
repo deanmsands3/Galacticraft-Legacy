@@ -1,0 +1,8 @@
+{
+  "parent": "block/slab",
+  "textures": {
+    "side": "galacticraftplanets:block/mars_cobblestone",
+    "bottom": "galacticraftplanets:block/mars_cobblestone",
+    "top": "galacticraftplanets:block/mars_cobblestone"
+  }
+}
