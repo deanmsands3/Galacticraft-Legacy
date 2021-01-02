@@ -4,7 +4,6 @@ import micdoodle8.mods.galacticraft.core.*;
 import micdoodle8.mods.galacticraft.core.blocks.DecoBlock;
 import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
-import micdoodle8.mods.galacticraft.core.tile.TileEntityFluidPipe;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -116,10 +115,7 @@ public class AsteroidBlocks
     public static void registerItemBlocks(RegistryEvent.Register<Item> evt)
     {
         IForgeRegistry<Item> r = evt.getRegistry();
-        Item.Properties props = GCItems.defaultBuilder().group(null);
-        register(r, Registry.BLOCK.getKey(SHORT_RANGE_TELEPAD_DUMMY), new BlockItem(SHORT_RANGE_TELEPAD_DUMMY, props));
-        register(r, Registry.BLOCK.getKey(FULL_ASTRO_MINER_BASE), new BlockItem(FULL_ASTRO_MINER_BASE, props));
-        props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
+        Item.Properties props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(WALKWAY), new ItemBlockDesc(WALKWAY, props));
         register(r, Registry.BLOCK.getKey(FLUID_PIPE_WALKWAY), new ItemBlockDesc(FLUID_PIPE_WALKWAY, props));
         register(r, Registry.BLOCK.getKey(WIRE_WALKWAY), new ItemBlockDesc(WIRE_WALKWAY, props));

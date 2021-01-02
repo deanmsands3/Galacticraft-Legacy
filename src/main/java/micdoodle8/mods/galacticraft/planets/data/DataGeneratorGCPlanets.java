@@ -266,7 +266,6 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(MarsBlocks.LAUNCH_CONTROLLER);
             this.parentedBlock(MarsBlocks.WATER_ELECTROLYZER);
             this.parentedBlock(MarsBlocks.CRYOGENIC_CHAMBER);
-            this.parentedBlock(MarsBlocks.MARS_BOSS_SPAWNER, this.mcLoc("item/air"));
             this.parentedBlock(MarsBlocks.MARS_COBBLESTONE_STAIRS);
             this.parentedBlock(MarsBlocks.MARS_DUNGEON_BRICK_STAIRS);
 
@@ -280,8 +279,6 @@ public class DataGeneratorGCPlanets
             this.parentedBlock(AsteroidBlocks.LIGHT_GRAY_ASTEROID_ROCK);
             this.parentedBlock(AsteroidBlocks.DENSE_ICE);
             this.parentedBlock(AsteroidBlocks.ASTRO_MINER_BASE);
-            this.parentedBlock(AsteroidBlocks.FULL_ASTRO_MINER_BASE, this.mcLoc("item/air"));
-            this.parentedBlock(AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY, this.mcLoc("item/air"));
             this.parentedInventoryBlock(AsteroidBlocks.WALKWAY);
             this.parentedInventoryBlock(AsteroidBlocks.FLUID_PIPE_WALKWAY);
             this.parentedInventoryBlock(AsteroidBlocks.WIRE_WALKWAY);

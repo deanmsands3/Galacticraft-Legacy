@@ -182,7 +182,6 @@ public class MarsBlocks
         register(r, Registry.BLOCK.getKey(CREEPER_EGG), new ItemBlockDesc(CREEPER_EGG, props));
         register(r, Registry.BLOCK.getKey(MARS_COBBLESTONE_STAIRS), new BlockItem(MARS_COBBLESTONE_STAIRS, props));
         register(r, Registry.BLOCK.getKey(MARS_DUNGEON_BRICK_STAIRS), new BlockItem(MARS_DUNGEON_BRICK_STAIRS, props));
-        register(r, Registry.BLOCK.getKey(MARS_BOSS_SPAWNER), new BlockItem(MARS_BOSS_SPAWNER, props.group(null)));
     }
 
 //    public static void setHarvestLevels()
