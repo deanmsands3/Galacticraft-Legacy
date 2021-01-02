@@ -9,6 +9,7 @@ import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockDungeonBrick;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntityType;
@@ -122,11 +123,6 @@ public class GCBlocks
 //    public static final Block slabGCHalf = new BlockSlabGC(builder);
 //    public static final Block slabGCDouble = new BlockDoubleSlabGC(builder);
 
-//    public static final Block tinStairs1 = new BlockStairsGC(builder);
-//    public static final Block tinStairs2 = new BlockStairsGC(builder);
-//    public static final Block moonStoneStairs = new BlockStairsGC(builder);
-//    public static final Block moonBricksStairs = new BlockStairsGC(builder);
-
 //    public static final Block wallGC = new BlockWallGC(builder);
 
     public static final Block HYDRAULIC_PLATFORM = new BlockPlatform(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
@@ -155,6 +151,11 @@ public class GCBlocks
     public static final Block ALUMINUM_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
     public static final Block METEORIC_IRON_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
     public static final Block SILICON_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
+
+    public static final StairsBlock TIN_DECORATION_STAIRS_1 = new StairsBlockGC(() -> TIN_DECORATION_BLOCK_1.getDefaultState(), Block.Properties.from(TIN_DECORATION_BLOCK_1));
+    public static final StairsBlock TIN_DECORATION_STAIRS_2 = new StairsBlockGC(() -> TIN_DECORATION_BLOCK_2.getDefaultState(), Block.Properties.from(TIN_DECORATION_BLOCK_2));
+    public static final StairsBlock MOON_ROCK_STAIRS = new StairsBlockGC(() -> MOON_ROCK.getDefaultState(), Block.Properties.from(MOON_ROCK));
+    public static final StairsBlock MOON_DUNGEON_BRICK_STAIRS = new StairsBlockGC(() -> MOON_DUNGEON_BRICKS.getDefaultState(), Block.Properties.from(MOON_DUNGEON_BRICKS));
 //    public static final Block grating = new BlockGrating(builder);
 //    public static final Block gratingWater = new BlockGrating(builder);
 //    public static final Block gratingLava = new BlockGrating(builder);
@@ -294,6 +295,10 @@ public class GCBlocks
         register(r, GCBlockNames.MOON_DUNGEON_BRICKS, MOON_DUNGEON_BRICKS);
         register(r, GCBlockNames.TIN_DECORATION_BLOCK_1, TIN_DECORATION_BLOCK_1);
         register(r, GCBlockNames.TIN_DECORATION_BLOCK_2, TIN_DECORATION_BLOCK_2);
+        register(r, GCBlockNames.TIN_DECORATION_STAIRS_1, TIN_DECORATION_STAIRS_1);
+        register(r, GCBlockNames.TIN_DECORATION_STAIRS_2, TIN_DECORATION_STAIRS_2);
+        register(r, GCBlockNames.MOON_ROCK_STAIRS, MOON_ROCK_STAIRS);
+        register(r, GCBlockNames.MOON_DUNGEON_BRICK_STAIRS, MOON_DUNGEON_BRICK_STAIRS);
         register(r, GCBlockNames.COPPER_BLOCK, COPPER_BLOCK);
         register(r, GCBlockNames.TIN_BLOCK, TIN_BLOCK);
         register(r, GCBlockNames.ALUMINUM_BLOCK, ALUMINUM_BLOCK);
@@ -463,6 +468,10 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(MOON_DUNGEON_BRICKS), new BlockItem(MOON_DUNGEON_BRICKS, props));
         register(r, Registry.BLOCK.getKey(TIN_DECORATION_BLOCK_1), new BlockItem(TIN_DECORATION_BLOCK_1, props));
         register(r, Registry.BLOCK.getKey(TIN_DECORATION_BLOCK_2), new BlockItem(TIN_DECORATION_BLOCK_2, props));
+        register(r, Registry.BLOCK.getKey(TIN_DECORATION_STAIRS_1), new BlockItem(TIN_DECORATION_STAIRS_1, props));
+        register(r, Registry.BLOCK.getKey(TIN_DECORATION_STAIRS_2), new BlockItem(TIN_DECORATION_STAIRS_2, props));
+        register(r, Registry.BLOCK.getKey(MOON_ROCK_STAIRS), new BlockItem(MOON_ROCK_STAIRS, props));
+        register(r, Registry.BLOCK.getKey(MOON_DUNGEON_BRICK_STAIRS), new BlockItem(MOON_DUNGEON_BRICK_STAIRS, props));
         register(r, Registry.BLOCK.getKey(COPPER_BLOCK), new BlockItem(COPPER_BLOCK, props));
         register(r, Registry.BLOCK.getKey(TIN_BLOCK), new BlockItem(TIN_BLOCK, props));
         register(r, Registry.BLOCK.getKey(ALUMINUM_BLOCK), new BlockItem(ALUMINUM_BLOCK, props));

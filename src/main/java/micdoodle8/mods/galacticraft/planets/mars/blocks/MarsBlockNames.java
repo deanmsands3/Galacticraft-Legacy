@@ -6,7 +6,8 @@ public class MarsBlockNames
     public static final String RED_SLIMELING_EGG = "red_slimeling_egg";
     public static final String BLUE_SLIMELING_EGG = "blue_slimeling_egg";
     public static final String YELLOW_SLIMELING_EGG = "yellow_slimeling_egg";
-    public static final String MARS_DUNGEON_BRICKS_STAIRS = "mars_dungeon_bricks_stairs";
+    public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
+    public static final String MARS_DUNGEON_BRICK_STAIRS = "mars_dungeon_brick_stairs";
     public static final String CRYOGENIC_CHAMBER = "cryogenic_chamber";
     public static final String METHANE_SYNTHESIZER = "methane_synthesizer";
     public static final String GAS_LIQUEFIER = "gas_liquefier";
@@ -17,7 +18,6 @@ public class MarsBlockNames
     public static final String CREEPER_EGG = "creeper_egg";
     public static final String TIER_2_TREASURE_CHEST = "tier_2_treasure_chest";
     public static final String CAVERNOUS_VINES = "cavernous_vines";
-    public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
     public static final String MARS_COPPER_ORE = "mars_copper_ore";
     public static final String MARS_TIN_ORE = "mars_tin_ore";
     public static final String DESH_ORE = "desh_ore";

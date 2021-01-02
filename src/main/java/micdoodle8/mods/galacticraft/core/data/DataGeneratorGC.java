@@ -20,6 +20,7 @@ import micdoodle8.mods.galacticraft.core.blocks.BlockParaChest;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.tags.GCTags;
+import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.tags.GCPlanetsTags;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.block.Block;
@@ -31,6 +32,7 @@ import net.minecraft.data.loot.EntityLootTables;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -125,6 +127,10 @@ public class DataGeneratorGC
             this.simpleBlock(GCBlocks.ROCKET_WORKBENCH, this.models().getExistingFile(this.modLoc("block/rocket_workbench")));
             this.simpleBlock(GCBlocks.FULL_BUGGY_FUELING_PAD, this.models().getExistingFile(this.modLoc("block/full_buggy_fueling_pad")));
             this.simpleBlock(GCBlocks.FULL_ROCKET_LAUNCH_PAD, this.models().getExistingFile(this.modLoc("block/full_rocket_launch_pad")));
+            this.stairsBlock(GCBlocks.TIN_DECORATION_STAIRS_1, tinDecor);
+            this.stairsBlock(GCBlocks.TIN_DECORATION_STAIRS_2, this.modLoc("block/tin_decoration_block_side"), tinDecor, this.modLoc("block/tin_decoration_block_top"));
+            this.stairsBlock(GCBlocks.MOON_ROCK_STAIRS, this.modLoc("block/moon_rock"));
+            this.stairsBlock(GCBlocks.MOON_DUNGEON_BRICK_STAIRS, this.modLoc("block/moon_dungeon_bricks"));
 
             this.getVariantBuilder(GCBlocks.AIR_LOCK_SEAL).partialState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.EnumAirLockSealConnection.X).modelForState().modelFile(this.models().getExistingFile(this.modLoc("block/air_lock_seal"))).addModel()
             .partialState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.EnumAirLockSealConnection.Z).modelForState().rotationY(90).modelFile(this.models().getExistingFile(this.modLoc("block/air_lock_seal"))).addModel()
@@ -289,6 +295,10 @@ public class DataGeneratorGC
             this.parentedBlock(GCBlocks.DISPLAY_SCREEN);
             this.parentedBlock(GCBlocks.ELECTRIC_ARC_FURNACE);
             this.parentedBlock(GCBlocks.FLUID_TANK, this.modLoc("block/fluid_tank_ud"));
+            this.parentedBlock(GCBlocks.TIN_DECORATION_STAIRS_1);
+            this.parentedBlock(GCBlocks.TIN_DECORATION_STAIRS_2);
+            this.parentedBlock(GCBlocks.MOON_ROCK_STAIRS);
+            this.parentedBlock(GCBlocks.MOON_DUNGEON_BRICK_STAIRS);
             this.parentedInventoryBlock(GCBlocks.ARC_LAMP);
             this.parentedInventoryBlock(GCBlocks.FLUID_PIPE);
             this.parentedInventoryBlock(GCBlocks.FUEL_LOADER);
@@ -546,6 +556,8 @@ public class DataGeneratorGC
             this.add(GCBlocks.DISPLAY_SCREEN, "Display Screen");
             this.add(GCBlocks.HYDRAULIC_PLATFORM, "Hydraulic Platform");
             this.add(GCBlocks.TIER_1_TREASURE_CHEST, "Tier 1 Treasure Chest");
+            this.add(GCBlocks.MOON_ROCK_STAIRS, "Moon Rock Stairs");
+            this.add(GCBlocks.MOON_DUNGEON_BRICK_STAIRS, "Moon Dungeon Brick Stairs");
 
             this.add(GCItems.ADVANCED_WAFER, "Advanced Wafer");
             this.add(GCItems.ALUMINUM_INGOT, "Aluminum Ingot");
@@ -688,6 +700,14 @@ public class DataGeneratorGC
             .add(GCTags.TIN_STORAGE_BLOCKS)
             .add(GCPlanetsTags.LEAD_STORAGE_BLOCKS)
             .add(GCPlanetsTags.DESH_STORAGE_BLOCKS);
+
+            this.getBuilder(BlockTags.STAIRS)
+            .add(GCBlocks.TIN_DECORATION_STAIRS_1)
+            .add(GCBlocks.TIN_DECORATION_STAIRS_2)
+            .add(GCBlocks.MOON_ROCK_STAIRS)
+            .add(GCBlocks.MOON_DUNGEON_BRICK_STAIRS)
+            .add(MarsBlocks.MARS_COBBLESTONE_STAIRS)
+            .add(MarsBlocks.MARS_DUNGEON_BRICK_STAIRS);
         }
     }
 
@@ -777,6 +797,14 @@ public class DataGeneratorGC
             .add(GCPlanetsTags.ILMENITE_ORES_ITEM);
 
             this.getBuilder(GCTags.CHEESE_ORES_ITEM).add(GCBlocks.CHEESE_ORE.asItem());
+
+            this.getBuilder(ItemTags.STAIRS)
+            .add(GCBlocks.TIN_DECORATION_STAIRS_1.asItem())
+            .add(GCBlocks.TIN_DECORATION_STAIRS_2.asItem())
+            .add(GCBlocks.MOON_ROCK_STAIRS.asItem())
+            .add(GCBlocks.MOON_DUNGEON_BRICK_STAIRS.asItem())
+            .add(MarsBlocks.MARS_COBBLESTONE_STAIRS.asItem())
+            .add(MarsBlocks.MARS_DUNGEON_BRICK_STAIRS.asItem());
         }
     }
 
@@ -871,6 +899,10 @@ public class DataGeneratorGC
             ShapedRecipeBuilder.shapedRecipe(GCItems.TIER_1_ROCKET_ENGINE).key('X', GCItems.TIER_1_HEAVY_DUTY_PLATE).key('Y', Items.FLINT_AND_STEEL).key('Z', GCItems.OXYGEN_VENT).key('W', GCItems.TIN_CANISTER).key('V', Items.STONE_BUTTON).patternLine(" YV").patternLine("XWX").patternLine("XZX").addCriterion(this.toCriterion(GCItems.TIER_1_HEAVY_DUTY_PLATE), this.hasItem(GCItems.TIER_1_HEAVY_DUTY_PLATE)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.DISPLAY_SCREEN).key('X', GCTags.STEEL_PLATES).key('Y', GCTags.BASIC_WAFERS).key('Z', Tags.Items.GLASS_COLORLESS).patternLine("XYX").patternLine("YZY").patternLine("XYX").addCriterion(this.toCriterion(GCTags.BASIC_WAFERS), this.hasItem(GCTags.BASIC_WAFERS)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCItems.BATTERY).key('T', GCTags.TIN_PLATES).key('C', Items.COAL).key('R', Tags.Items.DUSTS_REDSTONE).patternLine(" T ").patternLine("TRT").patternLine("TCT").addCriterion(this.toCriterion(GCTags.TIN_PLATES), this.hasItem(GCTags.TIN_PLATES)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.TIN_DECORATION_STAIRS_1, 4).key('#', GCBlocks.TIN_DECORATION_BLOCK_1).patternLine("#  ").patternLine("## ").patternLine("###").setGroup("tin_stairs").addCriterion(this.toCriterion(GCBlocks.TIN_DECORATION_BLOCK_1), this.hasItem(GCBlocks.TIN_DECORATION_BLOCK_1)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.TIN_DECORATION_STAIRS_2, 4).key('#', GCBlocks.TIN_DECORATION_BLOCK_2).patternLine("#  ").patternLine("## ").patternLine("###").setGroup("tin_stairs").addCriterion(this.toCriterion(GCBlocks.TIN_DECORATION_BLOCK_2), this.hasItem(GCBlocks.TIN_DECORATION_BLOCK_2)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.MOON_ROCK_STAIRS, 4).key('#', GCBlocks.MOON_ROCK).patternLine("#  ").patternLine("## ").patternLine("###").addCriterion(this.toCriterion(GCBlocks.MOON_ROCK), this.hasItem(GCBlocks.MOON_ROCK)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.MOON_DUNGEON_BRICK_STAIRS, 4).key('#', GCBlocks.MOON_DUNGEON_BRICKS).patternLine("#  ").patternLine("## ").patternLine("###").addCriterion(this.toCriterion(GCBlocks.MOON_DUNGEON_BRICKS), this.hasItem(GCBlocks.MOON_DUNGEON_BRICKS)).build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.OXYGEN_VENT).addIngredient(GCTags.TIN_PLATES).addIngredient(GCTags.TIN_PLATES).addIngredient(GCTags.TIN_PLATES).addIngredient(GCTags.STEEL_PLATES).addCriterion(this.toCriterion(GCTags.STEEL_PLATES), this.hasItem(GCTags.STEEL_PLATES)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCBlocks.SWITCHABLE_ALUMINUM_WIRE).addIngredient(Items.REPEATER).addIngredient(GCBlocks.ALUMINUM_WIRE).addCriterion(this.toCriterion(GCBlocks.ALUMINUM_WIRE), this.hasItem(GCBlocks.ALUMINUM_WIRE)).build(consumer);
@@ -1026,6 +1058,10 @@ public class DataGeneratorGC
                 this.registerDropSelfLootTable(GCBlocks.FLUID_TANK);
                 this.registerDropSelfLootTable(GCBlocks.HYDRAULIC_PLATFORM);
                 this.registerDropSelfLootTable(GCBlocks.MOON_TURF);
+                this.registerDropSelfLootTable(GCBlocks.TIN_DECORATION_STAIRS_1);
+                this.registerDropSelfLootTable(GCBlocks.TIN_DECORATION_STAIRS_2);
+                this.registerDropSelfLootTable(GCBlocks.MOON_ROCK_STAIRS);
+                this.registerDropSelfLootTable(GCBlocks.MOON_DUNGEON_BRICK_STAIRS);
                 this.registerLootTable(GCBlocks.CHEESE_BLOCK, func_218482_a());
                 this.registerLootTable(GCBlocks.SILICON_ORE, block -> droppingItemWithFortune(block, GCItems.RAW_SILICON));
                 this.registerLootTable(GCBlocks.CHEESE_ORE, block -> droppingItemWithFortune(block, GCItems.CHEESE_CURD));

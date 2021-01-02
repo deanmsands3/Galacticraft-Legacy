@@ -54,7 +54,6 @@ public class GCBlockNames
     public static final String ELECTRIC_COMPRESSOR = "electric_compressor";
     public static final String ADVANCED_COMPRESSOR = "advanced_compressor";
     public static final String REFINERY = "refinery";
-    public static final String MOON_STONE_STAIRS = "moon_stone_stairs";
     public static final String HIDDEN_REDSTONE_WIRE = "hidden_redstone_wire";
     public static final String PARACHEST = "parachest";
     public static final String OXYGEN_BUBBLE_DISTRIBUTOR = "oxygen_bubble_distributor";
@@ -64,12 +63,9 @@ public class GCBlockNames
     public static final String FLUID_PIPE = "fluid_pipe";
     public static final String BRIGHT_AIR = "bright_air";
     public static final String BREATHEABLE_AIR = "breatheable_air";
-    public static final String MOON_BRICKS_STAIRS = "moon_bricks_stairs";
     public static final String GLOWSTONE_TORCH = "glowstone_torch";
     public static final String WALL_GLOWSTONE_TORCH = "wall_glowstone_torch";
     public static final String GRATING = "grating";
-    public static final String TIN_STAIRS_1 = "tin_stairs_1";
-    public static final String TIN_STAIRS_2 = "tin_stairs_2";
     public static final String ROCKET_LAUNCH_PAD = "rocket_launch_pad";
     public static final String BUGGY_FUELING_PAD = "buggy_fueling_pad";
     public static final String BRIGHT_BREATHEABLE_AIR = "bright_breatheable_air";
@@ -102,4 +98,8 @@ public class GCBlockNames
     public static final String TIN_VACUUM_GLASS = "tin_vacuum_glass";
     public static final String STRONG_VACUUM_GLASS = "strong_vacuum_glass";
     public static final String STRONG_TIN_VACUUM_GLASS = "strong_tin_vacuum_glass";
+    public static final String MOON_ROCK_STAIRS = "moon_rock_stairs";
+    public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
+    public static final String TIN_DECORATION_STAIRS_1 = "tin_decoration_stairs_1";
+    public static final String TIN_DECORATION_STAIRS_2 = "tin_decoration_stairs_2";
 }
