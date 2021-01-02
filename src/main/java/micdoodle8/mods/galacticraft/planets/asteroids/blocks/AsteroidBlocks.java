@@ -68,7 +68,7 @@ public class AsteroidBlocks
     {
         IForgeRegistry<Block> r = evt.getRegistry();
 
-        Block.Properties builder = Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F).sound(SoundType.METAL);
+        Block.Properties builder = Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F).sound(SoundType.METAL).notSolid();
         register(r, new BlockWalkway(builder), AsteroidBlockNames.WALKWAY);
         register(r, new BlockWalkway(builder), AsteroidBlockNames.FLUID_PIPE_WALKWAY);
         register(r, new BlockWalkway(builder), AsteroidBlockNames.WIRE_WALKWAY);
