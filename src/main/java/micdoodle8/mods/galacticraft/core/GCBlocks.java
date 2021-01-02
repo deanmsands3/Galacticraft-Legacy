@@ -117,8 +117,6 @@ public class GCBlocks
 
     public static final Block MOON_BOSS_SPAWNER = new BlockBossSpawner(Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops());
 
-//    public static final Block wallGC = new BlockWallGC(builder);
-
     public static final Block HYDRAULIC_PLATFORM = new BlockPlatform(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
 
     public static final Block EMERGENCY_POST = new BlockEmergencyBox(Block.Properties.create(Material.IRON).hardnessAndResistance(4.0F, 70.0F).lightValue(15).sound(SoundType.METAL));
@@ -155,6 +153,11 @@ public class GCBlocks
     public static final SlabBlock TIN_DECORATION_SLAB_2 = new SlabBlockGC(Block.Properties.from(TIN_DECORATION_BLOCK_2));
     public static final SlabBlock MOON_ROCK_SLAB = new SlabBlockGC(Block.Properties.from(MOON_ROCK));
     public static final SlabBlock MOON_DUNGEON_BRICK_SLAB = new SlabBlockGC(Block.Properties.from(MOON_DUNGEON_BRICKS));
+
+    public static final WallBlock TIN_DECORATION_WALL_1 = new WallBlockGC(Block.Properties.from(TIN_DECORATION_BLOCK_1));
+    public static final WallBlock TIN_DECORATION_WALL_2 = new WallBlockGC(Block.Properties.from(TIN_DECORATION_BLOCK_2));
+    public static final WallBlock MOON_ROCK_WALL = new WallBlockGC(Block.Properties.from(MOON_ROCK));
+    public static final WallBlock MOON_DUNGEON_BRICK_WALL = new WallBlockGC(Block.Properties.from(MOON_DUNGEON_BRICKS));
 //    public static final Block grating = new BlockGrating(builder);
 //    public static final Block gratingWater = new BlockGrating(builder);
 //    public static final Block gratingLava = new BlockGrating(builder);
@@ -295,6 +298,10 @@ public class GCBlocks
         register(r, GCBlockNames.TIN_DECORATION_SLAB_2, TIN_DECORATION_SLAB_2);
         register(r, GCBlockNames.MOON_ROCK_SLAB, MOON_ROCK_SLAB);
         register(r, GCBlockNames.MOON_DUNGEON_BRICK_SLAB, MOON_DUNGEON_BRICK_SLAB);
+        register(r, GCBlockNames.TIN_DECORATION_WALL_1, TIN_DECORATION_WALL_1);
+        register(r, GCBlockNames.TIN_DECORATION_WALL_2, TIN_DECORATION_WALL_2);
+        register(r, GCBlockNames.MOON_ROCK_WALL, MOON_ROCK_WALL);
+        register(r, GCBlockNames.MOON_DUNGEON_BRICK_WALL, MOON_DUNGEON_BRICK_WALL);
         register(r, GCBlockNames.COPPER_BLOCK, COPPER_BLOCK);
         register(r, GCBlockNames.TIN_BLOCK, TIN_BLOCK);
         register(r, GCBlockNames.ALUMINUM_BLOCK, ALUMINUM_BLOCK);
@@ -472,6 +479,10 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(TIN_DECORATION_SLAB_2), new BlockItem(TIN_DECORATION_SLAB_2, props));
         register(r, Registry.BLOCK.getKey(MOON_ROCK_SLAB), new BlockItem(MOON_ROCK_SLAB, props));
         register(r, Registry.BLOCK.getKey(MOON_DUNGEON_BRICK_SLAB), new BlockItem(MOON_DUNGEON_BRICK_SLAB, props));
+        register(r, Registry.BLOCK.getKey(TIN_DECORATION_WALL_1), new BlockItem(TIN_DECORATION_WALL_1, props));
+        register(r, Registry.BLOCK.getKey(TIN_DECORATION_WALL_2), new BlockItem(TIN_DECORATION_WALL_2, props));
+        register(r, Registry.BLOCK.getKey(MOON_ROCK_WALL), new BlockItem(MOON_ROCK_WALL, props));
+        register(r, Registry.BLOCK.getKey(MOON_DUNGEON_BRICK_WALL), new BlockItem(MOON_DUNGEON_BRICK_WALL, props));
         register(r, Registry.BLOCK.getKey(COPPER_BLOCK), new BlockItem(COPPER_BLOCK, props));
         register(r, Registry.BLOCK.getKey(TIN_BLOCK), new BlockItem(TIN_BLOCK, props));
         register(r, Registry.BLOCK.getKey(ALUMINUM_BLOCK), new BlockItem(ALUMINUM_BLOCK, props));

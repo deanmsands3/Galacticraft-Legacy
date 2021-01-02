@@ -135,6 +135,13 @@ public class DataGeneratorGC
             this.slabBlock(GCBlocks.TIN_DECORATION_SLAB_1, this.getGeneratedModel(GCBlocks.TIN_DECORATION_BLOCK_1), tinDecor);
             this.slabBlock(GCBlocks.MOON_ROCK_SLAB, this.getGeneratedModel(GCBlocks.MOON_ROCK), this.modLoc("block/moon_rock"));
             this.slabBlock(GCBlocks.MOON_DUNGEON_BRICK_SLAB, this.getGeneratedModel(GCBlocks.MOON_DUNGEON_BRICKS), this.modLoc("block/moon_dungeon_bricks"));
+            this.wallBlock(GCBlocks.TIN_DECORATION_WALL_1, this.modLoc("block/tin_decoration_block"));
+            this.wallBlock(GCBlocks.TIN_DECORATION_WALL_2, this.models().getExistingFile(this.modLoc("block/tin_decoration_wall_2_post")), this.models().getExistingFile(this.modLoc("block/tin_decoration_wall_2_side")));
+            this.wallBlock(GCBlocks.MOON_ROCK_WALL, this.modLoc("block/moon_rock"));
+            this.wallBlock(GCBlocks.MOON_DUNGEON_BRICK_WALL, this.modLoc("block/moon_dungeon_bricks"));
+            this.itemModels().wallInventory(this.toString(GCBlocks.TIN_DECORATION_WALL_1), this.modLoc("block/tin_decoration_block"));
+            this.itemModels().wallInventory(this.toString(GCBlocks.MOON_ROCK_WALL), this.modLoc("block/moon_rock"));
+            this.itemModels().wallInventory(this.toString(GCBlocks.MOON_DUNGEON_BRICK_WALL), this.modLoc("block/moon_dungeon_bricks"));
 
             this.getVariantBuilder(GCBlocks.AIR_LOCK_SEAL).partialState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.EnumAirLockSealConnection.X).modelForState().modelFile(this.models().getExistingFile(this.modLoc("block/air_lock_seal"))).addModel()
             .partialState().with(BlockAirLockWall.CONNECTION_TYPE, BlockAirLockWall.EnumAirLockSealConnection.Z).modelForState().rotationY(90).modelFile(this.models().getExistingFile(this.modLoc("block/air_lock_seal"))).addModel()
@@ -575,6 +582,8 @@ public class DataGeneratorGC
             this.add(GCBlocks.MOON_DUNGEON_BRICK_STAIRS, "Moon Dungeon Brick Stairs");
             this.add(GCBlocks.MOON_ROCK_SLAB, "Moon Rock Slab");
             this.add(GCBlocks.MOON_DUNGEON_BRICK_SLAB, "Moon Dungeon Brick Slab");
+            this.add(GCBlocks.MOON_ROCK_WALL, "Moon Rock Wall");
+            this.add(GCBlocks.MOON_DUNGEON_BRICK_WALL, "Moon Dungeon Brick Wall");
 
             this.add(GCItems.ADVANCED_WAFER, "Advanced Wafer");
             this.add(GCItems.ALUMINUM_INGOT, "Aluminum Ingot");
@@ -734,6 +743,14 @@ public class DataGeneratorGC
             .add(MarsBlocks.MARS_COBBLESTONE_SLAB)
             .add(MarsBlocks.MARS_DUNGEON_BRICK_SLAB)
             .add(AsteroidBlocks.DARK_DECORATION_SLAB);
+
+            this.getBuilder(BlockTags.WALLS)
+            .add(GCBlocks.TIN_DECORATION_WALL_1)
+            .add(GCBlocks.TIN_DECORATION_WALL_2)
+            .add(GCBlocks.MOON_ROCK_WALL)
+            .add(GCBlocks.MOON_DUNGEON_BRICK_WALL)
+            .add(MarsBlocks.MARS_COBBLESTONE_WALL)
+            .add(MarsBlocks.MARS_DUNGEON_BRICK_WALL);
         }
     }
 
@@ -840,6 +857,14 @@ public class DataGeneratorGC
             .add(MarsBlocks.MARS_COBBLESTONE_SLAB.asItem())
             .add(MarsBlocks.MARS_DUNGEON_BRICK_SLAB.asItem())
             .add(AsteroidBlocks.DARK_DECORATION_SLAB.asItem());
+
+            this.getBuilder(ItemTags.WALLS)
+            .add(GCBlocks.TIN_DECORATION_WALL_1.asItem())
+            .add(GCBlocks.TIN_DECORATION_WALL_2.asItem())
+            .add(GCBlocks.MOON_ROCK_WALL.asItem())
+            .add(GCBlocks.MOON_DUNGEON_BRICK_WALL.asItem())
+            .add(MarsBlocks.MARS_COBBLESTONE_WALL.asItem())
+            .add(MarsBlocks.MARS_DUNGEON_BRICK_WALL.asItem());
         }
     }
 
@@ -942,6 +967,10 @@ public class DataGeneratorGC
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.TIN_DECORATION_SLAB_2, 6).key('#', GCBlocks.TIN_DECORATION_BLOCK_2).patternLine("###").setGroup("tin_slab").addCriterion(this.toCriterion(GCBlocks.TIN_DECORATION_BLOCK_2), this.hasItem(GCBlocks.TIN_DECORATION_BLOCK_2)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.MOON_ROCK_SLAB, 6).key('#', GCBlocks.MOON_ROCK).patternLine("###").addCriterion(this.toCriterion(GCBlocks.MOON_ROCK), this.hasItem(GCBlocks.MOON_ROCK)).build(consumer);
             ShapedRecipeBuilder.shapedRecipe(GCBlocks.MOON_DUNGEON_BRICK_SLAB, 6).key('#', GCBlocks.MOON_DUNGEON_BRICKS).patternLine("###").addCriterion(this.toCriterion(GCBlocks.MOON_DUNGEON_BRICKS), this.hasItem(GCBlocks.MOON_DUNGEON_BRICKS)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.TIN_DECORATION_WALL_1, 6).key('#', GCBlocks.TIN_DECORATION_BLOCK_1).patternLine("###").patternLine("###").setGroup("tin_wall").addCriterion(this.toCriterion(GCBlocks.TIN_DECORATION_BLOCK_1), this.hasItem(GCBlocks.TIN_DECORATION_BLOCK_1)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.TIN_DECORATION_WALL_2, 6).key('#', GCBlocks.TIN_DECORATION_BLOCK_2).patternLine("###").patternLine("###").setGroup("tin_wall").addCriterion(this.toCriterion(GCBlocks.TIN_DECORATION_BLOCK_2), this.hasItem(GCBlocks.TIN_DECORATION_BLOCK_2)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.MOON_ROCK_WALL, 6).key('#', GCBlocks.MOON_ROCK).patternLine("###").patternLine("###").addCriterion(this.toCriterion(GCBlocks.MOON_ROCK), this.hasItem(GCBlocks.MOON_ROCK)).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(GCBlocks.MOON_DUNGEON_BRICK_WALL, 6).key('#', GCBlocks.MOON_DUNGEON_BRICKS).patternLine("###").patternLine("###").addCriterion(this.toCriterion(GCBlocks.MOON_DUNGEON_BRICKS), this.hasItem(GCBlocks.MOON_DUNGEON_BRICKS)).build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.OXYGEN_VENT).addIngredient(GCTags.TIN_PLATES).addIngredient(GCTags.TIN_PLATES).addIngredient(GCTags.TIN_PLATES).addIngredient(GCTags.STEEL_PLATES).addCriterion(this.toCriterion(GCTags.STEEL_PLATES), this.hasItem(GCTags.STEEL_PLATES)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCBlocks.SWITCHABLE_ALUMINUM_WIRE).addIngredient(Items.REPEATER).addIngredient(GCBlocks.ALUMINUM_WIRE).addCriterion(this.toCriterion(GCBlocks.ALUMINUM_WIRE), this.hasItem(GCBlocks.ALUMINUM_WIRE)).build(consumer);
@@ -1101,6 +1130,10 @@ public class DataGeneratorGC
                 this.registerDropSelfLootTable(GCBlocks.TIN_DECORATION_STAIRS_2);
                 this.registerDropSelfLootTable(GCBlocks.MOON_ROCK_STAIRS);
                 this.registerDropSelfLootTable(GCBlocks.MOON_DUNGEON_BRICK_STAIRS);
+                this.registerDropSelfLootTable(GCBlocks.TIN_DECORATION_WALL_1);
+                this.registerDropSelfLootTable(GCBlocks.TIN_DECORATION_WALL_2);
+                this.registerDropSelfLootTable(GCBlocks.MOON_ROCK_WALL);
+                this.registerDropSelfLootTable(GCBlocks.MOON_DUNGEON_BRICK_WALL);
                 this.registerLootTable(GCBlocks.TIN_DECORATION_SLAB_1, BlockLootTables::droppingSlab);
                 this.registerLootTable(GCBlocks.TIN_DECORATION_SLAB_2, BlockLootTables::droppingSlab);
                 this.registerLootTable(GCBlocks.MOON_ROCK_SLAB, BlockLootTables::droppingSlab);

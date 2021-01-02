@@ -3,12 +3,12 @@ package micdoodle8.mods.galacticraft.planets.mars.blocks;
 import micdoodle8.mods.galacticraft.core.*;
 import micdoodle8.mods.galacticraft.core.blocks.SlabBlockGC;
 import micdoodle8.mods.galacticraft.core.blocks.StairsBlockGC;
+import micdoodle8.mods.galacticraft.core.blocks.WallBlockGC;
 import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
 import micdoodle8.mods.galacticraft.planets.client.renderer.ItemStackTileEntityRendererPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.tile.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.StairsBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -59,6 +59,10 @@ public class MarsBlocks
     public static Block MARS_COBBLESTONE_SLAB;
     @ObjectHolder(MarsBlockNames.MARS_DUNGEON_BRICK_SLAB)
     public static Block MARS_DUNGEON_BRICK_SLAB;
+    @ObjectHolder(MarsBlockNames.MARS_COBBLESTONE_WALL)
+    public static Block MARS_COBBLESTONE_WALL;
+    @ObjectHolder(MarsBlockNames.MARS_DUNGEON_BRICK_WALL)
+    public static Block MARS_DUNGEON_BRICK_WALL;
     @ObjectHolder(MarsBlockNames.MARS_BOSS_SPAWNER)
     public static Block MARS_BOSS_SPAWNER;
     @ObjectHolder(MarsBlockNames.MARS_COPPER_ORE)
@@ -97,6 +101,7 @@ public class MarsBlocks
         register(r, new BlockBasicMars(builder), MarsBlockNames.MARS_STONE);
         register(r, new StairsBlockGC(() -> MARS_COBBLESTONE.getDefaultState(), builder), MarsBlockNames.MARS_COBBLESTONE_STAIRS);
         register(r, new SlabBlockGC(builder), MarsBlockNames.MARS_COBBLESTONE_SLAB);
+        register(r, new WallBlockGC(builder), MarsBlockNames.MARS_COBBLESTONE_WALL);
 
         builder = builder.hardnessAndResistance(5.0F, 20.0F);
         register(r, new BlockBasicMars(builder), MarsBlockNames.DESH_BLOCK);
@@ -105,6 +110,7 @@ public class MarsBlocks
         register(r, new BlockBasicMars(builder), MarsBlockNames.MARS_DUNGEON_BRICKS);
         register(r, new StairsBlockGC(() -> MARS_DUNGEON_BRICKS.getDefaultState(), builder), MarsBlockNames.MARS_DUNGEON_BRICK_STAIRS);
         register(r, new SlabBlockGC(builder), MarsBlockNames.MARS_DUNGEON_BRICK_SLAB);
+        register(r, new WallBlockGC(builder), MarsBlockNames.MARS_DUNGEON_BRICK_WALL);
 
         builder = Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().lightValue(15).tickRandomly().hardnessAndResistance(0.2F).sound(SoundType.PLANT);
         register(r, new BlockCavernousVine(builder), MarsBlockNames.CAVERNOUS_VINES);
@@ -191,6 +197,8 @@ public class MarsBlocks
         register(r, Registry.BLOCK.getKey(MARS_DUNGEON_BRICK_STAIRS), new BlockItem(MARS_DUNGEON_BRICK_STAIRS, props));
         register(r, Registry.BLOCK.getKey(MARS_COBBLESTONE_SLAB), new BlockItem(MARS_COBBLESTONE_SLAB, props));
         register(r, Registry.BLOCK.getKey(MARS_DUNGEON_BRICK_SLAB), new BlockItem(MARS_DUNGEON_BRICK_SLAB, props));
+        register(r, Registry.BLOCK.getKey(MARS_COBBLESTONE_WALL), new BlockItem(MARS_COBBLESTONE_WALL, props));
+        register(r, Registry.BLOCK.getKey(MARS_DUNGEON_BRICK_WALL), new BlockItem(MARS_DUNGEON_BRICK_WALL, props));
     }
 
 //    public static void setHarvestLevels()

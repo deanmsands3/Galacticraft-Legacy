@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "galacticraftcore:moon_rock"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:moon_rock_wall",
+    "count": 6
+  }
+}
