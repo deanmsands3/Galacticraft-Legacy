@@ -33,19 +33,19 @@ import net.minecraft.data.loot.EntityLootTables;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.EntityHasProperty;
 import net.minecraft.world.storage.loot.conditions.KilledByPlayer;
 import net.minecraft.world.storage.loot.conditions.RandomChanceWithLooting;
-import net.minecraft.world.storage.loot.functions.LootingEnchantBonus;
-import net.minecraft.world.storage.loot.functions.SetCount;
-import net.minecraft.world.storage.loot.functions.SetDamage;
+import net.minecraft.world.storage.loot.functions.*;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -1035,7 +1035,7 @@ public class DataGeneratorGC
         public LootTables(DataGenerator generator)
         {
             super(generator);
-            this.addTable(Pair.of(BlockLootTable::new, LootParameterSets.BLOCK)).addTable(Pair.of(EntityLootTable::new, LootParameterSets.ENTITY));
+            this.addTable(Pair.of(BlockLootTable::new, LootParameterSets.BLOCK)).addTable(Pair.of(EntityLootTable::new, LootParameterSets.ENTITY)).addTable(Pair.of(ChestLootTables::new, LootParameterSets.CHEST));
         }
 
         @Override
@@ -1253,6 +1253,36 @@ public class DataGeneratorGC
             protected Iterable<EntityType<?>> getKnownEntities()
             {
                 return ForgeRegistries.ENTITIES.getValues().stream().filter(type -> type.getRegistryName().getNamespace().equals(Constants.MOD_ID_CORE)).collect(Collectors.toList());
+            }
+        }
+
+        class ChestLootTables implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>
+        {
+            @Override
+            public void accept(BiConsumer<ResourceLocation, LootTable.Builder> consumer)
+            {
+                ResourceLocation moonDungeon = new ResourceLocation(Constants.MOD_ID_CORE, "chests/moon_dungeon");
+
+                consumer.accept(moonDungeon, LootTable.builder()
+                        .addLootPool(LootPool.builder().rolls(RandomValueRange.of(5.0F, 8.0F))
+                                .addEntry(ItemLootEntry.builder(GCItems.CHEESE_CURD).weight(10).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 4.0F))))
+                                .addEntry(ItemLootEntry.builder(Items.IRON_INGOT).weight(10).acceptFunction(SetCount.builder(RandomValueRange.of(2.0F, 7.0F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_APPLES).weight(6).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 2.0F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_CARROTS).weight(6).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 2.0F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_MELONS).weight(6).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 2.0F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.DEHYDRATED_POTATOES).weight(6).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 2.0F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.PARTIAL_OIL_CANISTER).weight(5).acceptFunction(SetNBT.builder(Util.make(new CompoundNBT(), compound -> compound.putInt("Damage", 1001)))))
+                                .addEntry(ItemLootEntry.builder(Items.GOLDEN_APPLE).weight(15))
+                                .addEntry(ItemLootEntry.builder(Items.ENCHANTED_GOLDEN_APPLE).weight(2))
+                                .addEntry(ItemLootEntry.builder(Items.REDSTONE).weight(10).acceptFunction(SetCount.builder(RandomValueRange.of(2.0F, 7.0F))))
+                                .addEntry(ItemLootEntry.builder(Items.MUSIC_DISC_BLOCKS).weight(4))
+                                .addEntry(ItemLootEntry.builder(Items.MUSIC_DISC_FAR).weight(4))
+                                .addEntry(ItemLootEntry.builder(GCItems.HEAVY_DUTY_SHOVEL).weight(10))
+                                .addEntry(ItemLootEntry.builder(GCItems.LUNAR_SAPPHIRE).weight(2).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 2.0F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.RAW_METEORIC_IRON).weight(5).acceptFunction(SetCount.builder(RandomValueRange.of(1.0F, 5.0F))))
+                                .addEntry(ItemLootEntry.builder(GCItems.FREQUENCY_MODULE).weight(1))
+                                .addEntry(ItemLootEntry.builder(Items.BOOK).weight(8).acceptFunction(EnchantRandomly.func_215900_c()))
+                                .addEntry(ItemLootEntry.builder(Items.BOOK).weight(8).acceptFunction(EnchantRandomly.func_215900_c()))));
             }
         }
     }
