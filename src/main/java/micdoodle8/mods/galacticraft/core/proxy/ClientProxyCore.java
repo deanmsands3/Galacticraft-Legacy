@@ -69,6 +69,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -238,6 +239,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
                 setCustomModel(modelResourceLocation, i_modelToWrap -> new ItemLiquidCanisterModel(i_modelToWrap));
             }
         }
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ItemStackTileEntityRendererGC.INSTANCE.init());
     }
 
     @Override

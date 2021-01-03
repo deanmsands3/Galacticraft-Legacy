@@ -17,6 +17,10 @@ import net.minecraft.tileentity.TileEntity;
 
 public class ItemStackTileEntityRendererPlanets extends ItemStackTileEntityRenderer
 {
+    public static final ItemStackTileEntityRendererPlanets INSTANCE = new ItemStackTileEntityRendererPlanets();
+    private TileEntityTreasureChestMars tier2TreasureChest;
+    private TileEntityTreasureChestVenus tier3TreasureChest;
+
     @Override
     public void render(ItemStack itemStack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay)
     {
@@ -29,11 +33,11 @@ public class ItemStackTileEntityRendererPlanets extends ItemStackTileEntityRende
 
             if (block == MarsBlocks.TIER_2_TREASURE_CHEST)
             {
-                tileentity = new TileEntityTreasureChestMars();
+                tileentity = this.tier2TreasureChest;
             }
             else if (block == VenusBlocks.TIER_3_TREASURE_CHEST)
             {
-                tileentity = new TileEntityTreasureChestVenus();
+                tileentity = this.tier3TreasureChest;
             }
 
             if (tileentity != null)
@@ -41,5 +45,11 @@ public class ItemStackTileEntityRendererPlanets extends ItemStackTileEntityRende
                 TileEntityRendererDispatcher.instance.renderItem(tileentity, matrixStack, buffer, combinedLight, combinedOverlay);
             }
         }
+    }
+
+    public void init()
+    {
+        this.tier2TreasureChest = new TileEntityTreasureChestMars();
+        this.tier3TreasureChest = new TileEntityTreasureChestVenus();
     }
 }

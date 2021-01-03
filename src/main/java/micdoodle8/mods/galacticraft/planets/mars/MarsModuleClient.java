@@ -11,6 +11,7 @@ import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.IPlanetsModuleClient;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.render.item.CargoRocketItemModel;
+import micdoodle8.mods.galacticraft.planets.client.renderer.ItemStackTileEntityRendererPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.client.fx.EntityCryoFX;
 import micdoodle8.mods.galacticraft.planets.mars.client.fx.ParticleDrip;
@@ -38,6 +39,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -152,6 +154,8 @@ public class MarsModuleClient implements IPlanetsModuleClient
         ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new CargoRocketItemModel(modelToWrap));
         ClientProxyCore.setCustomModel(MarsItems.CARGO_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new CargoRocketItemModel(modelToWrap));
         ClientProxyCore.setCustomModel(MarsItems.CREATIVE_CARGO_ROCKET.getRegistryName(), modelToWrap -> new CargoRocketItemModel(modelToWrap));
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ItemStackTileEntityRendererPlanets.INSTANCE.init());
     }
 
     @SubscribeEvent

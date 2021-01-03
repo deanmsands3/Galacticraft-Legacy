@@ -409,7 +409,7 @@ public class GCBlocks
         IForgeRegistry<Item> r = evt.getRegistry();
         Item.Properties props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(ARC_LAMP), new BlockItem(ARC_LAMP, props));
-        register(r, Registry.BLOCK.getKey(TIER_1_TREASURE_CHEST), new ItemBlockDesc(TIER_1_TREASURE_CHEST, props.setISTER(() -> ItemStackTileEntityRendererGC::new)));
+        register(r, Registry.BLOCK.getKey(TIER_1_TREASURE_CHEST), new ItemBlockDesc(TIER_1_TREASURE_CHEST, props.setISTER(() -> () -> ItemStackTileEntityRendererGC.INSTANCE)));
         register(r, Registry.BLOCK.getKey(ROCKET_LAUNCH_PAD), new BlockItem(ROCKET_LAUNCH_PAD, props));
         register(r, Registry.BLOCK.getKey(BUGGY_FUELING_PAD), new BlockItem(BUGGY_FUELING_PAD, props));
         register(r, Registry.BLOCK.getKey(GLOWSTONE_TORCH), new ItemBlockWallOrFloorDesc(GLOWSTONE_TORCH, WALL_GLOWSTONE_TORCH, props));

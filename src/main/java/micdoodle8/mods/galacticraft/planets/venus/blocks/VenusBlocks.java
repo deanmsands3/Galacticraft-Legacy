@@ -196,7 +196,7 @@ public class VenusBlocks
         register(r, Registry.BLOCK.getKey(RED_VENUS_DUNGEON_BRICKS), new BlockItem(RED_VENUS_DUNGEON_BRICKS, props));
         register(r, Registry.BLOCK.getKey(ORANGE_VENUS_DUNGEON_BRICKS), new BlockItem(ORANGE_VENUS_DUNGEON_BRICKS, props));
         register(r, Registry.BLOCK.getKey(VAPOR_SPOUT), new BlockItem(VAPOR_SPOUT, props));
-        register(r, Registry.BLOCK.getKey(TIER_3_TREASURE_CHEST), new ItemBlockDesc(TIER_3_TREASURE_CHEST, props.setISTER(() -> ItemStackTileEntityRendererPlanets::new)));
+        register(r, Registry.BLOCK.getKey(TIER_3_TREASURE_CHEST), new ItemBlockDesc(TIER_3_TREASURE_CHEST, props.setISTER(() -> () -> ItemStackTileEntityRendererPlanets.INSTANCE)));
         register(r, Registry.BLOCK.getKey(WEB_STRING), new ItemBlockDesc(WEB_STRING, props));
         register(r, Registry.BLOCK.getKey(WEB_TORCH), new ItemBlockDesc(WEB_TORCH, props));
         register(r, Registry.BLOCK.getKey(GEOTHERMAL_GENERATOR), new ItemBlockDesc(GEOTHERMAL_GENERATOR, props));
