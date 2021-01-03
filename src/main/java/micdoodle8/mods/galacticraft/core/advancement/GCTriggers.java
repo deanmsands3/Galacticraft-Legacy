@@ -117,7 +117,7 @@ public class GCTriggers
     {
         public FindMoonBossInstance()
         {
-            super(GCTriggers.CREATE_SPACE_STATION.getId());
+            super(GCTriggers.FIND_MOON_BOSS.getId());
         }
 
         @Override

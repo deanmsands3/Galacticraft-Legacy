@@ -17,7 +17,7 @@
   },
   "criteria": {
     "moon_dungeon": {
-      "trigger": "galacticraftcore:create_space_station"
+      "trigger": "galacticraftcore:boss_moon"
     }
   },
   "requirements": [
