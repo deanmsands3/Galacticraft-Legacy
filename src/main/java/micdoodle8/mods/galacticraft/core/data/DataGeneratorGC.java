@@ -22,7 +22,7 @@ import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.tags.GCTags;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
-import micdoodle8.mods.galacticraft.planets.tags.GCPlanetsTags;
+import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -33,6 +33,8 @@ import net.minecraft.data.loot.EntityLootTables;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
@@ -699,17 +701,33 @@ public class DataGeneratorGC
         @Override
         protected void registerTags()
         {
-            this.getBuilder(GCTags.ALUMINUM_ORES).add(GCBlocks.ALUMINUM_ORE);
+            this.getBuilder(GCTags.ALUMINUM_ORES).add(GCBlocks.ALUMINUM_ORE)
+            .add(AsteroidBlocks.ASTEROID_ALUMINUM_ORE)
+            .add(VenusBlocks.VENUS_ALUMINUM_ORE);
+
             this.getBuilder(GCTags.CHEESE_ORES).add(GCBlocks.CHEESE_ORE);
-            this.getBuilder(GCTags.COPPER_ORES).add(GCBlocks.COPPER_ORE).add(GCBlocks.MOON_COPPER_ORE);
+            this.getBuilder(GCTags.COPPER_ORES).add(GCBlocks.COPPER_ORE)
+            .add(GCBlocks.MOON_COPPER_ORE)
+            .add(MarsBlocks.MARS_COPPER_ORE)
+            .add(VenusBlocks.VENUS_COPPER_ORE);
+
             this.getBuilder(GCTags.SAPPHIRE_ORES).add(GCBlocks.SAPPHIRE_ORE);
-            this.getBuilder(GCTags.SILICON_ORES).add(GCBlocks.SILICON_ORE);
-            this.getBuilder(GCTags.TIN_ORES).add(GCBlocks.TIN_ORE).add(GCBlocks.MOON_TIN_ORE);
+            this.getBuilder(GCTags.SILICON_ORES).add(GCBlocks.SILICON_ORE).add(VenusBlocks.VENUS_SILICON_ORE);
+
+            this.getBuilder(GCTags.TIN_ORES).add(GCBlocks.TIN_ORE)
+            .add(GCBlocks.MOON_TIN_ORE)
+            .add(MarsBlocks.MARS_TIN_ORE)
+            .add(VenusBlocks.VENUS_TIN_ORE);
 
             this.getBuilder(GCTags.ALUMINUM_STORAGE_BLOCKS).add(GCBlocks.ALUMINUM_BLOCK);
             this.getBuilder(GCTags.COPPER_STORAGE_BLOCKS).add(GCBlocks.COPPER_BLOCK);
             this.getBuilder(GCTags.SILICON_STORAGE_BLOCKS).add(GCBlocks.SILICON_BLOCK);
             this.getBuilder(GCTags.TIN_STORAGE_BLOCKS).add(GCBlocks.TIN_BLOCK);
+
+            this.getBuilder(Tags.Blocks.ORES_IRON).add(MarsBlocks.MARS_IRON_ORE)
+            .add(AsteroidBlocks.ASTEROID_IRON_ORE);
+
+            this.getBuilder(Tags.Blocks.ORES_QUARTZ).add(VenusBlocks.VENUS_QUARTZ_ORE);
 
             this.getBuilder(Tags.Blocks.ORES).add(GCTags.ALUMINUM_ORES)
             .add(GCTags.CHEESE_ORES)
@@ -717,15 +735,16 @@ public class DataGeneratorGC
             .add(GCTags.SAPPHIRE_ORES)
             .add(GCTags.SILICON_ORES)
             .add(GCTags.TIN_ORES)
-            .add(GCPlanetsTags.DESH_ORES)
-            .add(GCPlanetsTags.ILMENITE_ORES);
+            .add(GCTags.DESH_ORES)
+            .add(GCTags.ILMENITE_ORES)
+            .add(VenusBlocks.GALENA_ORE);
 
             this.getBuilder(Tags.Blocks.STORAGE_BLOCKS).add(GCTags.ALUMINUM_STORAGE_BLOCKS)
             .add(GCTags.COPPER_STORAGE_BLOCKS)
             .add(GCTags.SILICON_STORAGE_BLOCKS)
             .add(GCTags.TIN_STORAGE_BLOCKS)
-            .add(GCPlanetsTags.LEAD_STORAGE_BLOCKS)
-            .add(GCPlanetsTags.DESH_STORAGE_BLOCKS);
+            .add(GCTags.LEAD_STORAGE_BLOCKS)
+            .add(GCTags.DESH_STORAGE_BLOCKS);
 
             this.getBuilder(BlockTags.STAIRS)
             .add(GCBlocks.TIN_DECORATION_STAIRS_1)
@@ -781,6 +800,35 @@ public class DataGeneratorGC
             .add(GCItems.RED_PARACHUTE)
             .add(GCItems.BLACK_PARACHUTE);
 
+            this.getBuilder(GCTags.CHEESE_ORES_ITEM).add(GCBlocks.CHEESE_ORE.asItem());
+
+            this.getBuilder(GCTags.ALUMINUM_ORES_ITEM).add(GCBlocks.ALUMINUM_ORE.asItem())
+            .add(AsteroidBlocks.ASTEROID_ALUMINUM_ORE.asItem())
+            .add(VenusBlocks.VENUS_ALUMINUM_ORE.asItem());
+
+            this.getBuilder(GCTags.CHEESE_ORES_ITEM).add(GCBlocks.CHEESE_ORE.asItem());
+            this.getBuilder(GCTags.COPPER_ORES_ITEM)
+            .add(GCBlocks.COPPER_ORE.asItem())
+            .add(GCBlocks.MOON_COPPER_ORE.asItem())
+            .add(MarsBlocks.MARS_COPPER_ORE.asItem())
+            .add(VenusBlocks.VENUS_COPPER_ORE.asItem());
+
+            this.getBuilder(GCTags.SAPPHIRE_ORES_ITEM).add(GCBlocks.SAPPHIRE_ORE.asItem());
+            this.getBuilder(GCTags.SILICON_ORES_ITEM).add(GCBlocks.SILICON_ORE.asItem()).add(VenusBlocks.VENUS_SILICON_ORE.asItem());
+            this.getBuilder(GCTags.TIN_ORES_ITEM).add(GCBlocks.TIN_ORE.asItem())
+            .add(GCBlocks.MOON_TIN_ORE.asItem())
+            .add(MarsBlocks.MARS_TIN_ORE.asItem())
+            .add(VenusBlocks.VENUS_TIN_ORE.asItem());
+
+            this.getBuilder(GCTags.ALUMINUM_STORAGE_BLOCKS_ITEM).add(GCBlocks.ALUMINUM_BLOCK.asItem());
+            this.getBuilder(GCTags.COPPER_STORAGE_BLOCKS_ITEM).add(GCBlocks.COPPER_BLOCK.asItem());
+            this.getBuilder(GCTags.SILICON_STORAGE_BLOCKS_ITEM).add(GCBlocks.SILICON_BLOCK.asItem());
+            this.getBuilder(GCTags.TIN_STORAGE_BLOCKS_ITEM).add(GCBlocks.TIN_BLOCK.asItem());
+
+            this.getBuilder(Tags.Items.ORES_IRON).add(MarsBlocks.MARS_IRON_ORE.asItem()).add(AsteroidBlocks.ASTEROID_IRON_ORE.asItem());
+
+            this.getBuilder(Tags.Items.ORES_QUARTZ).add(VenusBlocks.VENUS_QUARTZ_ORE.asItem());
+
             this.getBuilder(GCTags.ALUMINUM_INGOTS)
             .add(GCItems.ALUMINUM_INGOT);
             this.getBuilder(GCTags.COPPER_INGOTS)
@@ -817,8 +865,8 @@ public class DataGeneratorGC
             .add(GCTags.COPPER_INGOTS)
             .add(GCTags.METEORIC_IRON_INGOTS)
             .add(GCTags.TIN_INGOTS)
-            .add(GCPlanetsTags.LEAD_INGOTS)
-            .add(GCPlanetsTags.DESH_INGOTS);
+            .add(GCTags.LEAD_INGOTS)
+            .add(GCTags.DESH_INGOTS);
 
             this.getBuilder(GCTags.PLATES)
             .add(GCTags.ALUMINUM_PLATES)
@@ -835,11 +883,22 @@ public class DataGeneratorGC
             .add(GCTags.SOLAR_WAFERS);
 
             this.getBuilder(Tags.Items.ORES)
+            .add(GCTags.ALUMINUM_ORES_ITEM)
             .add(GCTags.CHEESE_ORES_ITEM)
-            .add(GCPlanetsTags.DESH_ORES_ITEM)
-            .add(GCPlanetsTags.ILMENITE_ORES_ITEM);
+            .add(GCTags.COPPER_ORES_ITEM)
+            .add(GCTags.SAPPHIRE_ORES_ITEM)
+            .add(GCTags.SILICON_ORES_ITEM)
+            .add(GCTags.TIN_ORES_ITEM)
+            .add(GCTags.DESH_ORES_ITEM)
+            .add(GCTags.ILMENITE_ORES_ITEM)
+            .add(VenusBlocks.GALENA_ORE.asItem());
 
-            this.getBuilder(GCTags.CHEESE_ORES_ITEM).add(GCBlocks.CHEESE_ORE.asItem());
+            this.getBuilder(Tags.Items.STORAGE_BLOCKS).add(GCTags.ALUMINUM_STORAGE_BLOCKS_ITEM)
+            .add(GCTags.COPPER_STORAGE_BLOCKS_ITEM)
+            .add(GCTags.SILICON_STORAGE_BLOCKS_ITEM)
+            .add(GCTags.TIN_STORAGE_BLOCKS_ITEM)
+            .add(GCTags.LEAD_STORAGE_BLOCKS_ITEM)
+            .add(GCTags.DESH_STORAGE_BLOCKS_ITEM);
 
             this.getBuilder(ItemTags.STAIRS)
             .add(GCBlocks.TIN_DECORATION_STAIRS_1.asItem())
@@ -1010,16 +1069,66 @@ public class DataGeneratorGC
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.RED_PARACHUTE).addIngredient(GCTags.PARACHUTES).addIngredient(Tags.Items.DYES_RED).setGroup("parachute").addCriterion(this.toCriterion(GCTags.PARACHUTES), this.hasItem(GCTags.PARACHUTES)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.BLACK_PARACHUTE).addIngredient(GCTags.PARACHUTES).addIngredient(Tags.Items.DYES_BLACK).setGroup("parachute").addCriterion(this.toCriterion(GCTags.PARACHUTES), this.hasItem(GCTags.PARACHUTES)).build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(GCItems.PRELAUNCH_CHECKLIST).addIngredient(GCItems.CANVAS).addIngredient(Tags.Items.DYES_RED).addCriterion(this.toCriterion(GCItems.CANVAS), this.hasItem(GCItems.CANVAS)).build(consumer);
+
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromTag(GCTags.COPPER_ORES_ITEM), GCItems.COPPER_INGOT, 0.5F, 200).addCriterion(this.toCriterion(GCTags.COPPER_ORES_ITEM), this.hasItem(GCTags.COPPER_ORES_ITEM)).build(consumer, this.toSmelting(GCItems.COPPER_INGOT));
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromTag(GCTags.TIN_ORES_ITEM), GCItems.TIN_INGOT, 0.5F, 200).addCriterion(this.toCriterion(GCTags.TIN_ORES_ITEM), this.hasItem(GCTags.TIN_ORES_ITEM)).build(consumer, this.toSmelting(GCItems.TIN_INGOT));
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromTag(GCTags.SILICON_ORES_ITEM), GCItems.RAW_SILICON, 0.5F, 200).addCriterion(this.toCriterion(GCTags.SILICON_ORES_ITEM), this.hasItem(GCTags.SILICON_ORES_ITEM)).build(consumer, this.toSmelting(GCItems.RAW_SILICON));
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromTag(GCTags.ALUMINUM_ORES_ITEM), GCItems.ALUMINUM_INGOT, 0.5F, 200).addCriterion(this.toCriterion(GCTags.ALUMINUM_ORES_ITEM), this.hasItem(GCTags.ALUMINUM_ORES_ITEM)).build(consumer, this.toSmelting(GCItems.ALUMINUM_INGOT));
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(GCItems.METEOR_CHUNK), GCItems.HOT_METEOR_CHUNK, 0.1F, 200).addCriterion(this.toCriterion(GCItems.METEOR_CHUNK), this.hasItem(GCItems.METEOR_CHUNK)).build(consumer, this.toSmelting(GCItems.HOT_METEOR_CHUNK));
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(GCItems.RAW_METEORIC_IRON), GCItems.METEORIC_IRON_INGOT, 1.0F, 200).addCriterion(this.toCriterion(GCItems.RAW_METEORIC_IRON), this.hasItem(GCItems.RAW_METEORIC_IRON)).build(consumer, this.toSmelting(GCItems.METEORIC_IRON_INGOT));
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromTag(GCTags.SAPPHIRE_ORES_ITEM), GCItems.LUNAR_SAPPHIRE, 1.0F, 200).addCriterion(this.toCriterion(GCTags.SAPPHIRE_ORES_ITEM), this.hasItem(GCTags.SAPPHIRE_ORES_ITEM)).build(consumer, this.toSmelting(GCItems.LUNAR_SAPPHIRE));
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromTag(GCTags.CHEESE_ORES_ITEM), GCItems.CHEESE_CURD, 1.0F, 200).addCriterion(this.toCriterion(GCTags.CHEESE_ORES_ITEM), this.hasItem(GCTags.CHEESE_ORES_ITEM)).build(consumer, this.toSmelting(GCItems.CHEESE_CURD));
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(GCItems.GROUND_BEEF), GCItems.COOKED_BEEF_PATTY, 1.0F, 200).addCriterion(this.toCriterion(GCItems.GROUND_BEEF), this.hasItem(GCItems.GROUND_BEEF)).build(consumer, this.toSmelting(GCItems.COOKED_BEEF_PATTY));
+
+            // Recycling: smelt tin/copper canisters back into ingots
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(GCItems.TIN_CANISTER), GCItems.TIN_INGOT, 1.0F, 200).addCriterion(this.toCriterion(GCItems.TIN_CANISTER), this.hasItem(GCItems.TIN_CANISTER)).build(consumer, this.from(GCItems.TIN_INGOT, GCItems.TIN_CANISTER));
+            CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(GCItems.COPPER_CANISTER), GCItems.COPPER_INGOT, 1.0F, 200).addCriterion(this.toCriterion(GCItems.COPPER_CANISTER), this.hasItem(GCItems.COPPER_CANISTER)).build(consumer, this.from(GCItems.COPPER_INGOT, GCItems.COPPER_CANISTER));
+
+            /*if (CompatibilityManager.useAluDust())
+            {
+                CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(GCItems.ic2compat, 1, 0), Ingredient.fromItems(GCItems.basicItem, 1, 5), 1.0F);
+            }*/
+
+            CookingRecipeBuilder.blastingRecipe(Ingredient.fromTag(GCTags.COPPER_ORES_ITEM), GCItems.COPPER_INGOT, 0.5F, 100).addCriterion(this.toCriterion(GCTags.COPPER_ORES_ITEM), this.hasItem(GCTags.COPPER_ORES_ITEM)).build(consumer, this.toBlasting(GCItems.COPPER_INGOT));
+            CookingRecipeBuilder.blastingRecipe(Ingredient.fromTag(GCTags.TIN_ORES_ITEM), GCItems.TIN_INGOT, 0.5F, 100).addCriterion(this.toCriterion(GCTags.TIN_ORES_ITEM), this.hasItem(GCTags.TIN_ORES_ITEM)).build(consumer, this.toBlasting(GCItems.TIN_INGOT));
+            CookingRecipeBuilder.blastingRecipe(Ingredient.fromTag(GCTags.SILICON_ORES_ITEM), GCItems.RAW_SILICON, 0.5F, 100).addCriterion(this.toCriterion(GCTags.SILICON_ORES_ITEM), this.hasItem(GCTags.SILICON_ORES_ITEM)).build(consumer, this.toBlasting(GCItems.RAW_SILICON));
+            CookingRecipeBuilder.blastingRecipe(Ingredient.fromTag(GCTags.ALUMINUM_ORES_ITEM), GCItems.ALUMINUM_INGOT, 0.5F, 100).addCriterion(this.toCriterion(GCTags.ALUMINUM_ORES_ITEM), this.hasItem(GCTags.ALUMINUM_ORES_ITEM)).build(consumer, this.toBlasting(GCItems.ALUMINUM_INGOT));
+            CookingRecipeBuilder.blastingRecipe(Ingredient.fromItems(GCItems.RAW_METEORIC_IRON), GCItems.METEORIC_IRON_INGOT, 1.0F, 100).addCriterion(this.toCriterion(GCItems.RAW_METEORIC_IRON), this.hasItem(GCItems.RAW_METEORIC_IRON)).build(consumer, this.toBlasting(GCItems.METEORIC_IRON_INGOT));
+            CookingRecipeBuilder.blastingRecipe(Ingredient.fromTag(GCTags.SAPPHIRE_ORES_ITEM), GCItems.LUNAR_SAPPHIRE, 1.0F, 100).addCriterion(this.toCriterion(GCTags.SAPPHIRE_ORES_ITEM), this.hasItem(GCTags.SAPPHIRE_ORES_ITEM)).build(consumer, this.toBlasting(GCItems.LUNAR_SAPPHIRE));
+            CookingRecipeBuilder.blastingRecipe(Ingredient.fromTag(GCTags.CHEESE_ORES_ITEM), GCItems.CHEESE_CURD, 1.0F, 100).addCriterion(this.toCriterion(GCTags.CHEESE_ORES_ITEM), this.hasItem(GCTags.CHEESE_ORES_ITEM)).build(consumer, this.toBlasting(GCItems.CHEESE_CURD));
+
+            CookingRecipeBuilder.cookingRecipe(Ingredient.fromItems(GCItems.GROUND_BEEF), GCItems.COOKED_BEEF_PATTY, 1.0F, 100, IRecipeSerializer.SMOKING).addCriterion(this.toCriterion(GCItems.GROUND_BEEF), this.hasItem(GCItems.GROUND_BEEF)).build(consumer, this.modLoc(this.toString(GCItems.COOKED_BEEF_PATTY) + "_from_smoking"));
+            CookingRecipeBuilder.cookingRecipe(Ingredient.fromItems(GCItems.GROUND_BEEF), GCItems.COOKED_BEEF_PATTY, 1.0F, 600, IRecipeSerializer.CAMPFIRE_COOKING).addCriterion(this.toCriterion(GCItems.GROUND_BEEF), this.hasItem(GCItems.GROUND_BEEF)).build(consumer, this.modLoc(this.toString(GCItems.COOKED_BEEF_PATTY) + "_from_campfire_cooking"));
         }
 
         protected String toCriterion(IItemProvider provider)
         {
-            return "has_" + provider.asItem().getRegistryName().getPath();
+            return "has_" + this.toString(provider);
         }
 
         protected String toCriterion(Tag<?> tag)
         {
             return "has_" + tag.getId().getPath() + "_tag";
+        }
+
+        protected ResourceLocation toSmelting(IItemProvider provider)
+        {
+            return this.modLoc(this.toString(provider) + "_from_smelting");
+        }
+
+        protected ResourceLocation toBlasting(IItemProvider provider)
+        {
+            return this.modLoc(this.toString(provider) + "_from_blasting");
+        }
+
+        protected ResourceLocation from(IItemProvider provider1, IItemProvider provider2)
+        {
+            return this.modLoc(this.toString(provider1) + "_from_" + this.toString(provider2));
+        }
+
+        protected String toString(IItemProvider provider)
+        {
+            return provider.asItem().getRegistryName().getPath();
         }
 
         protected ResourceLocation modLoc(String name)

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "forge:ores/cheese"
+  },
+  "result": "galacticraftcore:cheese_curd",
+  "experience": 1.0,
+  "cookingtime": 200
+}

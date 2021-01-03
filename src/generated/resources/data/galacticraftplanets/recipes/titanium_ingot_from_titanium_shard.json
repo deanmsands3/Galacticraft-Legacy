@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": [
+    {
+      "item": "galacticraftplanets:titanium_shard"
+    },
+    {
+      "item": "galacticraftplanets:titanium_dust"
+    }
+  ],
+  "result": "galacticraftplanets:titanium_ingot",
+  "experience": 0.8,
+  "cookingtime": 200
+}

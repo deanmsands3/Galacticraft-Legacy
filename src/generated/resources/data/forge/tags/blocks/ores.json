@@ -8,6 +8,7 @@
     "#forge:ores/silicon",
     "#forge:ores/tin",
     "#forge:ores/desh",
-    "#forge:ores/ilmenite"
+    "#forge:ores/ilmenite",
+    "galacticraftplanets:galena_ore"
   ]
 }

@@ -21,13 +21,38 @@ public class GCTags
     public static final Tag<Block> COPPER_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/copper"));
     public static final Tag<Block> SILICON_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/silicon"));
     public static final Tag<Block> TIN_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/tin"));
+    
+    public static final Tag<Block> DESH_ORES = new BlockTags.Wrapper(new ResourceLocation("forge", "ores/desh"));
+    public static final Tag<Block> ILMENITE_ORES = new BlockTags.Wrapper(new ResourceLocation("forge", "ores/ilmenite"));
+    
+    public static final Tag<Block> LEAD_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/lead"));
+    public static final Tag<Block> DESH_STORAGE_BLOCKS = new BlockTags.Wrapper(new ResourceLocation("forge", "storage_blocks/desh"));
 
+    public static final Tag<Item> ALUMINUM_ORES_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "ores/aluminum"));
     public static final Tag<Item> CHEESE_ORES_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "ores/cheese"));
+    public static final Tag<Item> COPPER_ORES_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "ores/copper"));
+    public static final Tag<Item> SAPPHIRE_ORES_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "ores/sapphire"));
+    public static final Tag<Item> SILICON_ORES_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "ores/silicon"));
+    public static final Tag<Item> TIN_ORES_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "ores/tin"));
+    
+    public static final Tag<Item> ALUMINUM_STORAGE_BLOCKS_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "storage_blocks/aluminum"));
+    public static final Tag<Item> COPPER_STORAGE_BLOCKS_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "storage_blocks/copper"));
+    public static final Tag<Item> SILICON_STORAGE_BLOCKS_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "storage_blocks/silicon"));
+    public static final Tag<Item> TIN_STORAGE_BLOCKS_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "storage_blocks/tin"));
 
     public static final Tag<Item> ALUMINUM_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/aluminum"));
     public static final Tag<Item> COPPER_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/copper"));
     public static final Tag<Item> METEORIC_IRON_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/meteoric_iron"));
     public static final Tag<Item> TIN_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/tin"));
+    
+    public static final Tag<Item> DESH_ORES_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "ores/desh"));
+    public static final Tag<Item> ILMENITE_ORES_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "ores/ilmenite"));
+    
+    public static final Tag<Item> LEAD_STORAGE_BLOCKS_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "storage_blocks/lead"));
+    public static final Tag<Item> DESH_STORAGE_BLOCKS_ITEM = new ItemTags.Wrapper(new ResourceLocation("forge", "storage_blocks/desh"));
+    
+    public static final Tag<Item> LEAD_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/lead"));
+    public static final Tag<Item> DESH_INGOTS = new ItemTags.Wrapper(new ResourceLocation("forge", "ingots/desh"));
 
     public static final Tag<Item> PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates"));
     public static final Tag<Item> ALUMINUM_PLATES = new ItemTags.Wrapper(new ResourceLocation("forge", "plates/aluminum"));

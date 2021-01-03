@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "galacticraftplanets:ilmenite_ore"
+  },
+  "result": "galacticraftplanets:titanium_ingot",
+  "experience": 0.8,
+  "cookingtime": 200
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:fragmented_carbon_from_smelting"
+    ]
+  },
+  "criteria": {
+    "has_planks_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:planks"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:fragmented_carbon_from_smelting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_planks_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:titanium_ingot_from_titanium_shard"
+    ]
+  },
+  "criteria": {
+    "has_titanium_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftplanets:titanium_shard"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:titanium_ingot_from_titanium_shard"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_titanium_shard",
+      "has_the_recipe"
+    ]
+  ]
+}
