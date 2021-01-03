@@ -78,6 +78,7 @@ public class DataGeneratorGC
             generator.addProvider(new ItemTagsBuilder(generator, blockTagProvider, Constants.MOD_ID_CORE, helper));
             generator.addProvider(new Recipe(generator, Constants.MOD_ID_CORE));
             generator.addProvider(new LootTables(generator));
+            generator.addProvider(new AdvancementProviderGC(generator));
         }
     }
 

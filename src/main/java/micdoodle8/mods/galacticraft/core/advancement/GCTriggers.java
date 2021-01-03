@@ -6,12 +6,12 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import micdoodle8.mods.galacticraft.api.prefab.entity.EntitySpaceshipBase;
 import micdoodle8.mods.galacticraft.core.advancement.criterion.GenericTrigger;
+import micdoodle8.mods.galacticraft.core.advancement.criterion.GenericTrigger.Instance;
 import micdoodle8.mods.galacticraft.core.entities.EvolvedSkeletonBossEntity;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.advancements.ICriterionTrigger;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.server.ServerWorld;
 
@@ -22,21 +22,7 @@ public class GCTriggers
         @Override
         public ICriterionInstance deserializeInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext)
         {
-            return new Instance(getId())
-            {
-                @Override
-                public boolean test(ServerPlayerEntity player)
-                {
-                    if (player.getRidingEntity() instanceof EntitySpaceshipBase)
-                    {
-                        if (((EntitySpaceshipBase) player.getRidingEntity()).launchPhase >= EntitySpaceshipBase.EnumLaunchPhase.LAUNCHED.ordinal())
-                        {
-                            return player.getRidingEntity().getPassengers().size() >= 1 && player.getRidingEntity().getPassengers().get(0) instanceof ServerPlayerEntity;
-                        }
-                    }
-                    return false;
-                }
-            };
+            return new LaunchRocketInstance();
         }
     };
     public static final GenericTrigger FIND_MOON_BOSS = new GenericTrigger("boss_moon")
@@ -44,14 +30,7 @@ public class GCTriggers
         @Override
         public ICriterionInstance deserializeInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext)
         {
-            return new Instance(getId())
-            {
-                @Override
-                public boolean test(ServerPlayerEntity player)
-                {
-                    return ((ServerWorld) player.world).getEntities().filter((entity -> entity instanceof EvolvedSkeletonBossEntity && entity.getDistanceSq(player) < 400)).count() >= 1;
-                }
-            };
+            return new FindMoonBossInstance();
         }
     };
     public static final GenericTrigger CREATE_SPACE_STATION = new GenericTrigger("create_space_station")
@@ -59,14 +38,7 @@ public class GCTriggers
         @Override
         public ICriterionInstance deserializeInstance(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext)
         {
-            return new Instance(getId())
-            {
-                @Override
-                public boolean test(ServerPlayerEntity player)
-                {
-                    return !GCPlayerStats.get(player).getSpaceStationDimensionData().isEmpty();
-                }
-            };
+            return new CreateSpaceStationInstance();
         }
     };
 
@@ -103,6 +75,55 @@ public class GCTriggers
             catch (Exception ignore)
             {
             }
+        }
+    }
+
+    public static class LaunchRocketInstance extends Instance
+    {
+        public LaunchRocketInstance()
+        {
+            super(GCTriggers.LAUNCH_ROCKET.getId());
+        }
+
+        @Override
+        public boolean test(ServerPlayerEntity player)
+        {
+            if (player.getRidingEntity() instanceof EntitySpaceshipBase)
+            {
+                if (((EntitySpaceshipBase) player.getRidingEntity()).launchPhase >= EntitySpaceshipBase.EnumLaunchPhase.LAUNCHED.ordinal())
+                {
+                    return player.getRidingEntity().getPassengers().size() >= 1 && player.getRidingEntity().getPassengers().get(0) instanceof ServerPlayerEntity;
+                }
+            }
+            return false;
+        }
+    }
+
+    public static class CreateSpaceStationInstance extends Instance
+    {
+        public CreateSpaceStationInstance()
+        {
+            super(GCTriggers.CREATE_SPACE_STATION.getId());
+        }
+
+        @Override
+        public boolean test(ServerPlayerEntity player)
+        {
+            return !GCPlayerStats.get(player).getSpaceStationDimensionData().isEmpty();
+        }
+    }
+
+    public static class FindMoonBossInstance extends Instance
+    {
+        public FindMoonBossInstance()
+        {
+            super(GCTriggers.CREATE_SPACE_STATION.getId());
+        }
+
+        @Override
+        public boolean test(ServerPlayerEntity player)
+        {
+            return ((ServerWorld) player.world).getEntities().filter((entity -> entity instanceof EvolvedSkeletonBossEntity && entity.getDistanceSq(player) < 400)).count() >= 1;
         }
     }
 }
