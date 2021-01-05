@@ -1,0 +1,35 @@
+{
+  "parent": "galacticraftcore:galacticraft/oxygen_collector",
+  "display": {
+    "icon": {
+      "item": "galacticraftcore:oxygen_compressor"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.oxygen_compressor.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.oxygen_compressor.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "oxygen_compressor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:oxygen_compressor"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "oxygen_compressor"
+    ]
+  ]
+}

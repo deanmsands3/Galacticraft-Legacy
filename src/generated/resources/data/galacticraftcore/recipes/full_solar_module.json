@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "YYY",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:single_solar_module"
+    },
+    "Y": {
+      "item": "galacticraftcore:aluminum_wire"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:full_solar_module"
+  }
+}

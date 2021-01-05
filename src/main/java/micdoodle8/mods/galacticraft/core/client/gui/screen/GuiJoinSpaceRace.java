@@ -10,7 +10,7 @@ import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementTextBox;
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementTextBox.ITextBoxCallback;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRace;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRaceManager;
-import micdoodle8.mods.galacticraft.core.entities.EntityFlag;
+import micdoodle8.mods.galacticraft.core.entities.FlagEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStatsClient;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
@@ -42,7 +42,7 @@ public class GuiJoinSpaceRace extends Screen implements ICheckBoxCallback, IText
     private int buttonFlag_xPosition;
     private int buttonFlag_yPosition;
 
-    private final EntityFlag dummyFlag = new EntityFlag(GCEntities.FLAG, Minecraft.getInstance().world);
+    private final FlagEntity dummyFlag = new FlagEntity(GCEntities.FLAG, Minecraft.getInstance().world);
 //    private final ModelFlag dummyModel = new ModelFlag();
 
     private final SpaceRace spaceRaceData;

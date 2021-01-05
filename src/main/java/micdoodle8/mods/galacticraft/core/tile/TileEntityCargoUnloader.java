@@ -31,7 +31,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityCargoUnloader extends TileEntityCargoBase implements ILandingPadAttachable, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.cargoUnloader)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.CARGO_UNLOADER)
     public static TileEntityType<TileEntityCargoUnloader> TYPE;
 
     @NetworkedField(targetSide = LogicalSide.CLIENT)

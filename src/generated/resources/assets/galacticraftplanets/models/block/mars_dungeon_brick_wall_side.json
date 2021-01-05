@@ -1,0 +1,6 @@
+{
+  "parent": "block/template_wall_side",
+  "textures": {
+    "wall": "galacticraftplanets:block/mars_dungeon_bricks"
+  }
+}

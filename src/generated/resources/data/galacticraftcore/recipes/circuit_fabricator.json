@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WXW",
+    "UYU",
+    "VZV"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:lever"
+    },
+    "Y": {
+      "item": "minecraft:furnace"
+    },
+    "Z": {
+      "item": "minecraft:redstone_torch"
+    },
+    "W": {
+      "tag": "forge:ingots/aluminum"
+    },
+    "V": {
+      "item": "galacticraftcore:aluminum_wire"
+    },
+    "U": {
+      "item": "minecraft:stone_button"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:circuit_fabricator"
+  }
+}

@@ -8,8 +8,8 @@ import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCargoRocket;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.CargoRocketEntity;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityCryogenicChamber;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityLaunchController;
 import micdoodle8.mods.galacticraft.planets.mars.util.MarsUtil;
@@ -269,9 +269,9 @@ public class PacketSimpleMars extends PacketBase
         case S_UPDATE_SLIMELING_DATA:
             Entity entity = player.world.getEntityByID((Integer) this.data.get(0));
 
-            if (entity instanceof EntitySlimeling)
+            if (entity instanceof SlimelingEntity)
             {
-                EntitySlimeling slimeling = (EntitySlimeling) entity;
+                SlimelingEntity slimeling = (SlimelingEntity) entity;
 
                 int subType = (Integer) this.data.get(1);
 
@@ -391,9 +391,9 @@ public class PacketSimpleMars extends PacketBase
         case S_UPDATE_CARGO_ROCKET_STATUS:
             Entity entity2 = player.world.getEntityByID((Integer) this.data.get(0));
 
-            if (entity2 instanceof EntityCargoRocket)
+            if (entity2 instanceof CargoRocketEntity)
             {
-                EntityCargoRocket rocket = (EntityCargoRocket) entity2;
+                CargoRocketEntity rocket = (CargoRocketEntity) entity2;
 
                 int subType = (Integer) this.data.get(1);
 

@@ -166,7 +166,7 @@ public class ThreadFindSeal
                 {
                     this.airToReplace.add(this.head.clone());
                 }
-                else if (state.getBlock() == GCBlocks.brightAir)
+                else if (state.getBlock() == GCBlocks.BRIGHT_AIR)
                 {
                     this.airToReplaceBright.add(this.head.clone());
                 }
@@ -179,7 +179,7 @@ public class ThreadFindSeal
                 {
                     this.airToReplace.add(this.head.clone());
                 }
-                else if (headState.getBlock() == GCBlocks.brightAir)
+                else if (headState.getBlock() == GCBlocks.BRIGHT_AIR)
                 {
                     this.airToReplaceBright.add(this.head.clone());
                 }
@@ -319,11 +319,11 @@ public class ThreadFindSeal
             if (!this.sealed)
             {
                 Block block = this.head.getBlockState(this.world).getBlock();
-                if (block == GCBlocks.breatheableAir)
+                if (block == GCBlocks.BREATHEABLE_AIR)
                 {
                     this.breatheableToReplace.add(this.head);
                 }
-                if (block == GCBlocks.brightBreatheableAir)
+                if (block == GCBlocks.BRIGHT_BREATHEABLE_AIR)
                 {
                     this.breatheableToReplaceBright.add(this.head);
                 }
@@ -383,8 +383,8 @@ public class ThreadFindSeal
         if (!this.airToReplace.isEmpty() || !this.airToReplaceBright.isEmpty() || !ambientThermalTracked.isEmpty() || !ambientThermalTracked.isEmpty())
         {
             List<ScheduledBlockChange> changeList = new LinkedList<ScheduledBlockChange>();
-            BlockThermalAir breatheableAirID = (BlockThermalAir) GCBlocks.breatheableAir;
-            BlockThermalAir breatheableAirIDBright = (BlockThermalAir) GCBlocks.brightBreatheableAir;
+            BlockThermalAir breatheableAirID = (BlockThermalAir) GCBlocks.BREATHEABLE_AIR;
+            BlockThermalAir breatheableAirIDBright = (BlockThermalAir) GCBlocks.BRIGHT_BREATHEABLE_AIR;
             //TODO: Can we somehow detect only changes in state of ambientThermal since last check?  tricky...
             for (BlockVec3 checkedVec : this.airToReplace)
             {
@@ -433,7 +433,7 @@ public class ThreadFindSeal
             }
             for (BlockVec3 checkedVec : this.breatheableToReplaceBright)
             {
-                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), GCBlocks.brightAir.getDefaultState(), 0));
+                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), GCBlocks.BRIGHT_AIR.getDefaultState(), 0));
             }
             TickHandlerServer.scheduleNewBlockChange(GCCoreUtil.getDimensionType(this.world), changeList);
         }
@@ -446,12 +446,12 @@ public class ThreadFindSeal
     private void unseal()
     {
         //Local variables are fractionally faster than statics
-        Block breatheableAirID = GCBlocks.breatheableAir;
-        Block breatheableAirIDBright = GCBlocks.brightBreatheableAir;
-        Block oxygenSealerID = GCBlocks.oxygenSealer;
+        Block breatheableAirID = GCBlocks.BREATHEABLE_AIR;
+        Block breatheableAirIDBright = GCBlocks.BRIGHT_BREATHEABLE_AIR;
+        Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         Block fireBlock = Blocks.FIRE;
         Block airBlock = Blocks.AIR;
-        Block airBlockBright = GCBlocks.brightAir;
+        Block airBlockBright = GCBlocks.BRIGHT_AIR;
         List<BlockVec3> toReplaceLocal = this.breatheableToReplace;
         List<BlockVec3> toReplaceLocalBright = this.breatheableToReplaceBright;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
@@ -554,12 +554,12 @@ public class ThreadFindSeal
     private void unsealNearMapEdge()
     {
         //Local variables are fractionally faster than statics
-        Block breatheableAirID = GCBlocks.breatheableAir;
-        Block breatheableAirIDBright = GCBlocks.brightBreatheableAir;
-        Block oxygenSealerID = GCBlocks.oxygenSealer;
+        Block breatheableAirID = GCBlocks.BREATHEABLE_AIR;
+        Block breatheableAirIDBright = GCBlocks.BRIGHT_BREATHEABLE_AIR;
+        Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         Block fireBlock = Blocks.FIRE;
         Block airBlock = Blocks.AIR;
-        Block airBlockBright = GCBlocks.brightAir;
+        Block airBlockBright = GCBlocks.BRIGHT_AIR;
         List<BlockVec3> toReplaceLocal = this.breatheableToReplace;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
         World world = this.world;
@@ -653,11 +653,11 @@ public class ThreadFindSeal
     private void doLayer()
     {
         //Local variables are fractionally faster than statics
-        Block breatheableAirID = GCBlocks.breatheableAir;
+        Block breatheableAirID = GCBlocks.BREATHEABLE_AIR;
         Block airID = Blocks.AIR;
-        Block breatheableAirIDBright = GCBlocks.brightBreatheableAir;
-        Block airIDBright = GCBlocks.brightAir;
-        Block oxygenSealerID = GCBlocks.oxygenSealer;
+        Block breatheableAirIDBright = GCBlocks.BRIGHT_BREATHEABLE_AIR;
+        Block airIDBright = GCBlocks.BRIGHT_AIR;
+        Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
         World world = this.world;
         int LogicalSide, bits;
@@ -790,11 +790,11 @@ public class ThreadFindSeal
     private void doLayerNearMapEdge()
     {
         //Local variables are fractionally faster than statics
-        Block breatheableAirID = GCBlocks.breatheableAir;
+        Block breatheableAirID = GCBlocks.BREATHEABLE_AIR;
         Block airID = Blocks.AIR;
-        Block breatheableAirIDBright = GCBlocks.brightBreatheableAir;
-        Block airIDBright = GCBlocks.brightAir;
-        Block oxygenSealerID = GCBlocks.oxygenSealer;
+        Block breatheableAirIDBright = GCBlocks.BRIGHT_BREATHEABLE_AIR;
+        Block airIDBright = GCBlocks.BRIGHT_AIR;
+        Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
         World world = this.world;
         int LogicalSide, bits;

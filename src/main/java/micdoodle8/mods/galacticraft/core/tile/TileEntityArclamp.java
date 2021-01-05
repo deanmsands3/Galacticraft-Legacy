@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 //ITileClientUpdates for changing in facing;  IPacketReceiver for initial transfer of NBT Data (airToRestore)
 public class TileEntityArclamp extends TileEntity implements ITickableTileEntity, ITileClientUpdates, IPacketReceiver
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.arcLamp)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ARC_LAMP)
     public static TileEntityType<TileEntityArclamp> TYPE;
 
     private static final int LIGHTRANGE = 14;
@@ -303,9 +303,9 @@ public class TileEntityArclamp extends TileEntity implements ITickableTileEntity
         }
         int index = 0;
 //        Block air = Blocks.AIR;
-        Block breatheableAirID = GCBlocks.breatheableAir;
-        BlockState brightAir = GCBlocks.brightAir.getDefaultState();
-        BlockState brightBreatheableAir = GCBlocks.brightBreatheableAir.getDefaultState();
+        Block breatheableAirID = GCBlocks.BREATHEABLE_AIR;
+        BlockState brightAir = GCBlocks.BRIGHT_AIR.getDefaultState();
+        BlockState brightBreatheableAir = GCBlocks.BRIGHT_BREATHEABLE_AIR.getDefaultState();
         boolean dirty = false;
         checkedClear();
         HashSet<BlockVec3> airToRevert = new HashSet<>();
@@ -605,13 +605,13 @@ public class TileEntityArclamp extends TileEntity implements ITickableTileEntity
         BlockPos blockpos = vec.toBlockPos();
         Block b = this.world.getBlockState(blockpos).getBlock();
         BlockState newState;
-        if (b == GCBlocks.brightAir)
+        if (b == GCBlocks.BRIGHT_AIR)
         {
             newState = Blocks.AIR.getDefaultState();
         }
-        else if (b == GCBlocks.brightBreatheableAir)
+        else if (b == GCBlocks.BRIGHT_BREATHEABLE_AIR)
         {
-            newState = GCBlocks.breatheableAir.getDefaultState();
+            newState = GCBlocks.BREATHEABLE_AIR.getDefaultState();
         }
         else
         {

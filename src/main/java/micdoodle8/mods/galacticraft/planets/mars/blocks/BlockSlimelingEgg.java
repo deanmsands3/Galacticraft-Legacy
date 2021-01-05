@@ -11,17 +11,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -36,13 +33,13 @@ import javax.annotation.Nullable;
 public class BlockSlimelingEgg extends Block implements IShiftDescription, ISortable
 {
     //    private IIcon[] icons;
-    public static final BooleanProperty BROKEN = BooleanProperty.create("broken");
+    public static final BooleanProperty CRACKED = BooleanProperty.create("cracked");
     protected static final VoxelShape AABB = VoxelShapes.create(0.25, 0.0, 0.25, 0.75, 0.625, 0.75);
 
     public BlockSlimelingEgg(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(BROKEN, false));
+        this.setDefaultState(stateContainer.getBaseState().with(CRACKED, false));
     }
 
     @Override
@@ -80,9 +77,9 @@ public class BlockSlimelingEgg extends Block implements IShiftDescription, ISort
     {
         BlockState state = world.getBlockState(pos);
 
-        if (!state.get(BROKEN))
+        if (!state.get(CRACKED))
         {
-            world.setBlockState(pos, state.with(BROKEN, true), 2);
+            world.setBlockState(pos, state.with(CRACKED, true), 2);
 
             TileEntity tile = world.getTileEntity(pos);
 
@@ -104,25 +101,6 @@ public class BlockSlimelingEgg extends Block implements IShiftDescription, ISort
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid)
-    {
-        ItemStack currentStack = player.getHeldItemMainhand();
-        if (currentStack != ItemStack.EMPTY && currentStack.getItem() instanceof PickaxeItem)
-        {
-            return world.removeBlock(pos, false);
-        }
-        else if (player.abilities.isCreativeMode)
-        {
-            return world.removeBlock(pos, false);
-        }
-        else
-        {
-            beginHatch(world, pos, player, 0);
-            return false;
-        }
-    }
-
-    @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
     {
         return beginHatch(worldIn, pos, playerIn, 20);
@@ -137,9 +115,9 @@ public class BlockSlimelingEgg extends Block implements IShiftDescription, ISort
             player.addExhaustion(0.025F);
             spawnAsEntity(worldIn, pos, getItem(worldIn, pos, state));
 //            this.dropBlockAsItem(worldIn, pos, state.getBlock().getStateFromMeta(state.getBlock().getMetaFromState(state) % 3), 0);
-            if (currentStack.getItem() == MarsItems.deshPickaxe && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, currentStack) > 0)
+            if (currentStack.getItem() == MarsItems.DESH_PICKAXE && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, currentStack) > 0)
             {
-                ItemStack itemstack = new ItemStack(MarsItems.deshPickSlime, 1/*, currentStack.getDamage()*/);
+                ItemStack itemstack = new ItemStack(MarsItems.STICKY_DESH_PICKAXE, 1/*, currentStack.getDamage()*/);
                 itemstack.setDamage(currentStack.getDamage());
                 if (currentStack.getTag() != null)
                 {
@@ -251,7 +229,7 @@ public class BlockSlimelingEgg extends Block implements IShiftDescription, ISort
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
     {
-        builder.add(BROKEN);
+        builder.add(CRACKED);
     }
 
     @Override

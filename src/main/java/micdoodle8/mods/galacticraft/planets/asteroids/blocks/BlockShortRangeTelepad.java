@@ -178,7 +178,7 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
                 {
                     if (!(x == 0 && y == 0 && z == 0))
                     {
-                        if (worldIn.getBlockState(pos.add(x, y, z)).getBlock() == AsteroidBlocks.fakeTelepad)
+                        if (worldIn.getBlockState(pos.add(x, y, z)).getBlock() == AsteroidBlocks.SHORT_RANGE_TELEPAD_DUMMY)
                         {
                             fakeBlockCount++;
                         }
@@ -203,7 +203,7 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
     @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand)
     {
-        final TileEntity tileAt = worldIn.getTileEntity(pos);
+        /*final TileEntity tileAt = worldIn.getTileEntity(pos);TODO Fix crash
 
         if (tileAt instanceof TileEntityShortRangeTelepad)
         {
@@ -224,7 +224,7 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
                 worldIn.addParticle(data, pos.getX() + rand.nextDouble(), pos.getY() + 2.9, pos.getZ() + 0.2 + rand.nextDouble() * 0.2, 0.0, -2.95, 0.0);
                 worldIn.addParticle(data, pos.getX() + rand.nextDouble(), pos.getY() + 2.9, pos.getZ() + 0.8 + rand.nextDouble() * 0.2, 0.0, -2.95, 0.0);
             }
-        }
+        }*/
     }
 
     @Override

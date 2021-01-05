@@ -102,7 +102,7 @@ public class BlockOxygenCompressor extends BlockAdvancedTile implements IShiftDe
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
-        return this == GCBlocks.oxygenCompressor ? new TileEntityOxygenCompressor() : new TileEntityOxygenDecompressor();
+        return this == GCBlocks.OXYGEN_COMPRESSOR ? new TileEntityOxygenCompressor() : new TileEntityOxygenDecompressor();
 //        int metadata = getMetaFromState(state);
 //        if (metadata >= BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA)
 //        {

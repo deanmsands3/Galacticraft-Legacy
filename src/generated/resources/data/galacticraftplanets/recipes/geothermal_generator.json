@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XVX",
+    "ZWZ",
+    "XYX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/bronze"
+    },
+    "Y": {
+      "tag": "forge:ingots/lead"
+    },
+    "Z": {
+      "item": "galacticraftcore:aluminum_wire"
+    },
+    "W": {
+      "item": "galacticraftcore:coal_generator"
+    },
+    "V": {
+      "item": "galacticraftplanets:atmospheric_valve"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:geothermal_generator"
+  }
+}

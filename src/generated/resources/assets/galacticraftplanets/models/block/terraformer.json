@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/machine_base",
+    "up": "galacticraftcore:block/machine_base",
+    "north": "galacticraftplanets:block/terraformer",
+    "south": "galacticraftplanets:block/terraformer",
+    "east": "galacticraftcore:block/machine_input",
+    "west": "galacticraftcore:block/machine_base",
+    "particle": "galacticraftplanets:block/terraformer"
+  }
+}

@@ -123,19 +123,19 @@ public class VenusModule implements IPlanetsModule
         VenusModule.planetVenus.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_CREEPER, 8, 2, 3), EntityClassification.MONSTER);
         VenusModule.planetVenus.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), EntityClassification.MONSTER);
         VenusModule.planetVenus.addChecklistKeys("equip_oxygen_suit", "equip_shield_controller", "thermal_padding_t2");
-        VenusModule.planetVenus.setSurfaceBlocks(Lists.newArrayList(VenusBlocks.rockHard));
+        VenusModule.planetVenus.setSurfaceBlocks(Lists.newArrayList(VenusBlocks.VENUS_HARD_ROCK));
 
         GalaxyRegistry.registerPlanet(VenusModule.planetVenus);
         GalacticraftRegistry.registerTeleportType(DimensionVenus.class, new TeleportTypeVenus());
         GalacticraftRegistry.registerRocketGui(DimensionVenus.class, new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/venus_rocket_gui.png"));
-        GalacticraftRegistry.addDungeonLoot(3, new ItemStack(VenusItems.volcanicPickaxe, 1));
-        GalacticraftRegistry.addDungeonLoot(3, new ItemStack(VenusItems.shieldController, 1));
+        GalacticraftRegistry.addDungeonLoot(3, new ItemStack(VenusItems.VOLCANIC_PICKAXE, 1));
+        GalacticraftRegistry.addDungeonLoot(3, new ItemStack(VenusItems.SHIELD_CONTROLLER, 1));
 
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_SHIELD_CONTROLLER, EnumExtendedInventorySlot.SHIELD_CONTROLLER, new ItemStack(VenusItems.shieldController));
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_THERMAL_PADDING_T2_HELMET, EnumExtendedInventorySlot.THERMAL_HELMET, new ItemStack(VenusItems.thermal_helmet_t2));
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_THERMAL_PADDING_T2_CHESTPLATE, EnumExtendedInventorySlot.THERMAL_CHESTPLATE, new ItemStack(VenusItems.thermal_chestplate_t2));
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_THERMAL_PADDING_T2_LEGGINGS, EnumExtendedInventorySlot.THERMAL_LEGGINGS, new ItemStack(VenusItems.thermal_leggings_t2));
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_THERMAL_PADDING_T2_BOOTS, EnumExtendedInventorySlot.THERMAL_BOOTS, new ItemStack(VenusItems.thermal_boots_t2));
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_SHIELD_CONTROLLER, EnumExtendedInventorySlot.SHIELD_CONTROLLER, new ItemStack(VenusItems.SHIELD_CONTROLLER));
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_THERMAL_PADDING_T2_HELMET, EnumExtendedInventorySlot.THERMAL_HELMET, new ItemStack(VenusItems.TIER_2_THERMAL_HELMET));
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_THERMAL_PADDING_T2_CHESTPLATE, EnumExtendedInventorySlot.THERMAL_CHESTPLATE, new ItemStack(VenusItems.TIER_2_THERMAL_CHESTPLATE));
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_THERMAL_PADDING_T2_LEGGINGS, EnumExtendedInventorySlot.THERMAL_LEGGINGS, new ItemStack(VenusItems.TIER_2_THERMAL_LEGGINGS));
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_THERMAL_PADDING_T2_BOOTS, EnumExtendedInventorySlot.THERMAL_BOOTS, new ItemStack(VenusItems.TIER_2_THERMAL_BOOTS));
 
 //        GalacticraftCore.proxy.registerFluidTexture(PlanetFluids.LIQUID_SULPHURIC_ACID.getFluid(), new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/misc/underacid.png"));
         // TODO Fluid textures

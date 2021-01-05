@@ -7,7 +7,7 @@ import micdoodle8.mods.galacticraft.core.entities.EntityLanderBase;
 import micdoodle8.mods.galacticraft.core.entities.IScaleableFuelLevel;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityProjectileTNT;
+import micdoodle8.mods.galacticraft.planets.mars.entities.TNTProjectileEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +36,7 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
 
     public static EntityEntryPodVenus createEntityEntryPodVenus(ServerPlayerEntity player)
     {
-        EntityEntryPodVenus pod = new EntityEntryPodVenus(VenusEntities.ENTRY_POD, player.world);
+        EntityEntryPodVenus pod = new EntityEntryPodVenus(VenusEntities.VENUS_ENTRY_POD, player.world);
 
         GCPlayerStats stats = GCPlayerStats.get(player);
         pod.stacks = NonNullList.withSize(stats.getRocketStacks().size() + 1, ItemStack.EMPTY);
@@ -169,7 +169,7 @@ public class EntityEntryPodVenus extends EntityLanderBase implements IScaleableF
 
         if (this.ticks >= 40 && this.ticks < 45)
         {
-            this.setMotion(this.getMotion().x, this.getInitialMotionY(), this.getMotionVec().z);
+            this.setMotion(this.getMotion().x, this.getInitialMotionY(), this.getMotion().z);
         }
 
         if (!this.shouldMove())

@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "galacticraftplanets:block/pumice"
+      },
+      {
+        "model": "galacticraftplanets:block/pumice",
+        "y": 90
+      },
+      {
+        "model": "galacticraftplanets:block/pumice",
+        "y": 180
+      },
+      {
+        "model": "galacticraftplanets:block/pumice",
+        "y": 270
+      }
+    ]
+  }
+}

@@ -42,7 +42,7 @@ import java.util.List;
 
 public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileClientUpdates, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenSealer)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_SEALER)
     public static TileEntityType<TileEntityOxygenSealer> TYPE;
 
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -144,7 +144,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
     public boolean thermalControlEnabled()
     {
         ItemStack oxygenItemStack = this.getStackInSlot(2);
-        return oxygenItemStack != null && oxygenItemStack.getItem() == GCItems.ambientThermalController && this.hasEnoughEnergyToRun && !this.disabled;
+        return oxygenItemStack != null && oxygenItemStack.getItem() == GCItems.AMBIENT_THERMAL_CONTROLLER && this.hasEnoughEnergyToRun && !this.disabled;
     }
 
     @Override
@@ -262,7 +262,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
             case 1:
                 return itemstack.getDamage() < itemstack.getItem().getMaxDamage();
             case 2:
-                return itemstack.getItem() == GCItems.ambientThermalController;
+                return itemstack.getItem() == GCItems.AMBIENT_THERMAL_CONTROLLER;
             default:
                 return false;
             }
@@ -307,7 +307,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
         }
         if (slotID == 2)
         {
-            return itemstack.getItem() == GCItems.ambientThermalController;
+            return itemstack.getItem() == GCItems.AMBIENT_THERMAL_CONTROLLER;
         }
         return false;
     }

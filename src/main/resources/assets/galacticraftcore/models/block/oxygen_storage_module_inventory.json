@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "galacticraftcore:block/oxygen_storage_module_full",
+        "down": "galacticraftcore:block/machine_base",
+        "up": "galacticraftcore:block/machine_base",
+        "north": "galacticraftcore:block/oxygen_storage_module_full",
+        "east": "galacticraftcore:block/machine_oxygen_input",
+        "south": "galacticraftcore:block/oxygen_storage_module_full",
+        "west": "galacticraftcore:block/machine_oxygen_output"
+    }
+}

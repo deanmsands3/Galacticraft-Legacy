@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.planets.asteroids.world.gen.base;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti;
-import micdoodle8.mods.galacticraft.core.entities.EntityHangingSchematic;
+import micdoodle8.mods.galacticraft.core.entities.HangingSchematicEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.items.ItemCanisterGeneric;
 import micdoodle8.mods.galacticraft.core.items.ItemOilCanister;
@@ -278,7 +278,7 @@ public class BaseRoom extends SizedPiece
 //                //Some random Netherwart
 //                if (semirand < 2)
 //                {
-//                    state = AsteroidBlocks.spaceWart.getStateFromMeta(semirand);
+//                    state = Blocks.NETHER_WART.getStateFromMeta(semirand);
 //                }
 //            }
 //            break;
@@ -542,13 +542,13 @@ public class BaseRoom extends SizedPiece
                 ((IMultiBlock) tile).getPositions(blockpos, positions);
                 for (BlockPos pos : positions)
                 {
-                    worldIn.setBlockState(pos, GCBlocks.fakeBlock.getDefaultState().with(BlockMulti.MULTI_TYPE, ((IMultiBlock) tile).getMultiType()), 2);
+                    worldIn.setBlockState(pos, GCBlocks.MULTI_BLOCK.getDefaultState().with(BlockMulti.MULTI_TYPE, ((IMultiBlock) tile).getMultiType()), 2);
                 }
             }
 
             if (tile instanceof TileEntityFluidTank)
             {
-                ((TileEntityFluidTank) tile).fill(null, new FluidStack(PlanetFluids.LIQUID_BACTERIAL_SLUDGE.getFluid(), 16000), IFluidHandler.FluidAction.EXECUTE);
+                ((TileEntityFluidTank) tile).fill(null, new FluidStack(PlanetFluids.BACTERIAL_SLUDGE.getFluid(), 16000), IFluidHandler.FluidAction.EXECUTE);
             }
             else if (tile instanceof TileEntityCargoLoader)
             {
@@ -560,9 +560,9 @@ public class BaseRoom extends SizedPiece
                 loader.addCargo(new ItemStack(Items.POISONOUS_POTATO, 64), true);
                 loader.addCargo(new ItemStack(Items.POISONOUS_POTATO, 64), true);
                 loader.addCargo(new ItemStack(Items.ROTTEN_FLESH, 64), true);
-                loader.addCargo(new ItemStack(GCItems.flagPole, semirand % 31 + 2), true);
-                loader.addCargo(new ItemStack(MarsItems.slimelingCargo, semirand % 2 + 1), true);  //Slimeling Inventory Bag
-                loader.addCargo(new ItemStack(AsteroidsItems.thermalCloth, semirand % 23 + 41), true); //Thermal cloth
+                loader.addCargo(new ItemStack(GCItems.STEEL_POLE, semirand % 31 + 2), true);
+                loader.addCargo(new ItemStack(MarsItems.SLIMELING_INVENTORY_BAG, semirand % 2 + 1), true);  //Slimeling Inventory Bag
+                loader.addCargo(new ItemStack(AsteroidsItems.THERMAL_CLOTH, semirand % 23 + 41), true); //Thermal cloth
                 loader.addCargo(ItemOilCanister.createEmptyCanister(1), true);
                 loader.addCargo(ItemOilCanister.createEmptyCanister(1), true);
                 loader.addCargo(ItemOilCanister.createEmptyCanister(1), true);
@@ -606,7 +606,7 @@ public class BaseRoom extends SizedPiece
                 TileEntityEnergyStorageModule store = (TileEntityEnergyStorageModule) tile;
                 if (semirand % 3 == 1)
                 {
-                    ItemStack stack = new ItemStack(GCItems.battery, 1);
+                    ItemStack stack = new ItemStack(GCItems.BATTERY, 1);
                     stack.setDamage(100);
                     store.setInventorySlotContents(1, stack);
                 }
@@ -621,7 +621,7 @@ public class BaseRoom extends SizedPiece
                 //Apparently we have our North and our South reversed ?  So we don't want the opposite for North and South!
                 hangingDirection = hangingDirection.getOpposite();
             }
-            EntityHangingSchematic entityhanging = new EntityHangingSchematic(GCEntities.HANGING_SCHEMATIC, (World) worldIn, blockpos, hangingDirection, x / 3 - 1);
+            HangingSchematicEntity entityhanging = new HangingSchematicEntity(GCEntities.HANGING_SCHEMATIC, (World) worldIn, blockpos, hangingDirection, x / 3 - 1);
             worldIn.addEntity(entityhanging);
             entityhanging.setSendToClient();
         }
@@ -630,14 +630,14 @@ public class BaseRoom extends SizedPiece
 
     public enum EnumRoomType
     {
-        ENGINEERING(AsteroidBlocks.asteroidDeco.getDefaultState(), AsteroidBlocks.asteroidDeco.getDefaultState(), false),
+        ENGINEERING(AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), false),
         POWER(null, null, false),
         STORE(null, null, false),
         EMPTY(null, null, false),
         MEDICAL(Blocks.IRON_TRAPDOOR.getDefaultState(), Blocks.IRON_TRAPDOOR.getDefaultState().with(TrapDoorBlock.HALF, Half.TOP), false),
         CREW(null, null, false),
-        CRYO(AsteroidBlocks.asteroidDeco.getDefaultState(), AsteroidBlocks.asteroidDeco.getDefaultState(), true),
-        CONTROL(AsteroidBlocks.asteroidDeco.getDefaultState()/* GCBlocks.slabGCHalf.getDefaultState() TODO Asteroids slab */, AsteroidBlocks.asteroidDeco.getDefaultState(), false);
+        CRYO(AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), true),
+        CONTROL(AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState()/* GCBlocks.slabGCHalf.getDefaultState() TODO Asteroids slab */, AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), false);
 
         public final BlockState blockFloor;
         public final BlockState blockEntrance;

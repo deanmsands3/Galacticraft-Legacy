@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:slimeling_inventory_bag"
+    ]
+  },
+  "criteria": {
+    "has_slimeballs_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:slimeballs"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:slimeling_inventory_bag"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_slimeballs_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

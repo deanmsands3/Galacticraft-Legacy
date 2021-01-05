@@ -27,7 +27,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEnergyHandlerGC, ILaserNode
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.beamReceiver)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.ENERGY_BEAM_RECEIVER)
     public static TileEntityType<TileEntityBeamReceiver> TYPE;
 
     @NetworkedField(targetSide = LogicalSide.CLIENT)

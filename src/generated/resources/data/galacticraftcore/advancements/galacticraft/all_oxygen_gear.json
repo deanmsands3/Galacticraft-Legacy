@@ -1,0 +1,67 @@
+{
+  "parent": "galacticraftcore:galacticraft/fill_tank",
+  "display": {
+    "icon": {
+      "item": "galacticraftcore:oxygen_mask"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.all_oxygen_gear.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.all_oxygen_gear.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "light_oxygen_tank": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:light_oxygen_tank"
+          },
+          {
+            "item": "galacticraftcore:medium_oxygen_tank"
+          },
+          {
+            "item": "galacticraftcore:heavy_oxygen_tank"
+          }
+        ]
+      }
+    },
+    "oxygen_mask": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:oxygen_mask"
+          }
+        ]
+      }
+    },
+    "oxygen_gear": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:oxygen_gear"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "light_oxygen_tank"
+    ],
+    [
+      "oxygen_mask"
+    ],
+    [
+      "oxygen_gear"
+    ]
+  ]
+}

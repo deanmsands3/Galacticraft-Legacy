@@ -76,7 +76,7 @@ public class RecipeManagerGC
     {
 //        RecipeSorter.register("galacticraftcore:shapedore", OreRecipeUpdatable.class, Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
 
-        Object meteoricIronIngot = new ItemStack(GCItems.ingotMeteoricIron, 1);
+        Object meteoricIronIngot = new ItemStack(GCItems.METEORIC_IRON_INGOT, 1);
 //        Object meteoricIronPlate = new ItemStack(GCItems.itemBasicMoon, 1, 1);
 //    	Object deshIngot = GalacticraftCore.isPlanetsLoaded ? new ItemStack(MarsItems.marsItemBasic, 1, 2) : GCItems.heavyPlatingTier1;
 //
@@ -99,24 +99,24 @@ public class RecipeManagerGC
 //        FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(GCBlocks.blockMoon, 1, 6), new ItemStack(GCItems.itemBasicMoon, 1, 2), 1.0F);
 
         HashMap<Integer, ItemStack> input = new HashMap<>();
-        input.put(1, new ItemStack(GCItems.partNoseCone));
-        input.put(2, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(3, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(4, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(5, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(6, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(7, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(8, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(9, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(10, new ItemStack(GCItems.partFins));
-        input.put(11, new ItemStack(GCItems.partFins));
-        input.put(12, new ItemStack(GCItems.rocketEngineT1));
-        input.put(13, new ItemStack(GCItems.partFins));
-        input.put(14, new ItemStack(GCItems.partFins));
+        input.put(1, new ItemStack(GCItems.NOSE_CONE));
+        input.put(2, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(3, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(4, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(5, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(6, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(7, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(8, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(9, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(10, new ItemStack(GCItems.ROCKET_FINS));
+        input.put(11, new ItemStack(GCItems.ROCKET_FINS));
+        input.put(12, new ItemStack(GCItems.TIER_1_ROCKET_ENGINE));
+        input.put(13, new ItemStack(GCItems.ROCKET_FINS));
+        input.put(14, new ItemStack(GCItems.ROCKET_FINS));
         input.put(15, ItemStack.EMPTY);
         input.put(16, ItemStack.EMPTY);
         input.put(17, ItemStack.EMPTY);
-        RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.rocketTierOne, 1), input);
+        RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.TIER_1_ROCKET, 1), input);
 
         Tag<Block> woodChestTag = BlockTags.getCollection().getOrCreate(new ResourceLocation("forge", "chests/wooden"));
 
@@ -130,43 +130,43 @@ public class RecipeManagerGC
             input2.put(15, woodChest);
             input2.put(16, ItemStack.EMPTY);
             input2.put(17, ItemStack.EMPTY);
-            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.rocketTierOneCargo1, 1), input2);
+            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.TIER_1_ROCKET_18_INVENTORY, 1), input2);
 
             input2 = new HashMap<Integer, ItemStack>(input);
             input2.put(15, ItemStack.EMPTY);
             input2.put(16, woodChest);
             input2.put(17, ItemStack.EMPTY);
-            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.rocketTierOneCargo1, 1), input2);
+            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.TIER_1_ROCKET_18_INVENTORY, 1), input2);
 
             input2 = new HashMap<Integer, ItemStack>(input);
             input2.put(15, ItemStack.EMPTY);
             input2.put(16, ItemStack.EMPTY);
             input2.put(17, woodChest);
-            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.rocketTierOneCargo1, 1), input2);
+            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.TIER_1_ROCKET_18_INVENTORY, 1), input2);
 
             input2 = new HashMap<Integer, ItemStack>(input);
             input2.put(15, woodChest);
             input2.put(16, woodChest);
             input2.put(17, ItemStack.EMPTY);
-            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.rocketTierOneCargo2, 1), input2);
+            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.TIER_1_ROCKET_36_INVENTORY, 1), input2);
 
             input2 = new HashMap<Integer, ItemStack>(input);
             input2.put(15, woodChest);
             input2.put(16, ItemStack.EMPTY);
             input2.put(17, woodChest);
-            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.rocketTierOneCargo2, 1), input2);
+            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.TIER_1_ROCKET_36_INVENTORY, 1), input2);
 
             input2 = new HashMap<Integer, ItemStack>(input);
             input2.put(15, ItemStack.EMPTY);
             input2.put(16, woodChest);
             input2.put(17, woodChest);
-            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.rocketTierOneCargo2, 1), input2);
+            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.TIER_1_ROCKET_36_INVENTORY, 1), input2);
 
             input2 = new HashMap<Integer, ItemStack>(input);
             input2.put(15, woodChest);
             input2.put(16, woodChest);
             input2.put(17, woodChest);
-            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.rocketTierOneCargo3, 1), input2);
+            RecipeUtil.addRocketBenchRecipe(new ItemStack(GCItems.TIER_1_ROCKET_54_INVENTORY, 1), input2);
         }
 
 
@@ -174,68 +174,68 @@ public class RecipeManagerGC
         //
 
         input = new HashMap<Integer, ItemStack>();
-        input.put(1, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(2, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(3, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(4, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(5, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(6, new ItemStack(GCItems.buggyMaterialSeat));
-        input.put(7, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(8, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(9, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(10, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(11, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(12, new ItemStack(GCItems.heavyPlatingTier1));
-        input.put(13, new ItemStack(GCItems.buggyMaterialWheel));
-        input.put(14, new ItemStack(GCItems.buggyMaterialWheel));
-        input.put(15, new ItemStack(GCItems.buggyMaterialWheel));
-        input.put(16, new ItemStack(GCItems.buggyMaterialWheel));
+        input.put(1, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(2, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(3, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(4, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(5, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(6, new ItemStack(GCItems.BUGGY_SEAT));
+        input.put(7, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(8, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(9, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(10, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(11, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(12, new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE));
+        input.put(13, new ItemStack(GCItems.BUGGY_WHEEL));
+        input.put(14, new ItemStack(GCItems.BUGGY_WHEEL));
+        input.put(15, new ItemStack(GCItems.BUGGY_WHEEL));
+        input.put(16, new ItemStack(GCItems.BUGGY_WHEEL));
         input.put(17, ItemStack.EMPTY);
         input.put(18, ItemStack.EMPTY);
         input.put(19, ItemStack.EMPTY);
-        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.buggy), input);
+        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.BUGGY), input);
 
         input2 = new HashMap<Integer, ItemStack>(input);
-        input2.put(17, new ItemStack(GCItems.buggyMaterialStorage));
+        input2.put(17, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
         input2.put(18, ItemStack.EMPTY);
         input2.put(19, ItemStack.EMPTY);
-        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.buggyInventory1), input2);
+        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.BUGGY_18_INVENTORY), input2);
 
         input2 = new HashMap<Integer, ItemStack>(input);
         input2.put(17, ItemStack.EMPTY);
-        input2.put(18, new ItemStack(GCItems.buggyMaterialStorage));
+        input2.put(18, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
         input2.put(19, ItemStack.EMPTY);
-        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.buggyInventory1), input2);
+        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.BUGGY_18_INVENTORY), input2);
 
         input2 = new HashMap<Integer, ItemStack>(input);
         input2.put(17, ItemStack.EMPTY);
         input2.put(18, ItemStack.EMPTY);
-        input2.put(19, new ItemStack(GCItems.buggyMaterialStorage));
-        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.buggyInventory1), input2);
+        input2.put(19, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
+        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.BUGGY_18_INVENTORY), input2);
 
         input2 = new HashMap<Integer, ItemStack>(input);
-        input2.put(17, new ItemStack(GCItems.buggyMaterialStorage));
-        input2.put(18, new ItemStack(GCItems.buggyMaterialStorage));
+        input2.put(17, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
+        input2.put(18, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
         input2.put(19, ItemStack.EMPTY);
-        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.buggyInventory2), input2);
+        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.BUGGY_36_INVENTORY), input2);
 
         input2 = new HashMap<Integer, ItemStack>(input);
-        input2.put(17, new ItemStack(GCItems.buggyMaterialStorage));
+        input2.put(17, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
         input2.put(18, ItemStack.EMPTY);
-        input2.put(19, new ItemStack(GCItems.buggyMaterialStorage));
-        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.buggyInventory2), input2);
+        input2.put(19, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
+        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.BUGGY_36_INVENTORY), input2);
 
         input2 = new HashMap<Integer, ItemStack>(input);
         input2.put(17, ItemStack.EMPTY);
-        input2.put(18, new ItemStack(GCItems.buggyMaterialStorage));
-        input2.put(19, new ItemStack(GCItems.buggyMaterialStorage));
-        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.buggyInventory2), input2);
+        input2.put(18, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
+        input2.put(19, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
+        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.BUGGY_36_INVENTORY), input2);
 
         input2 = new HashMap<Integer, ItemStack>(input);
-        input2.put(17, new ItemStack(GCItems.buggyMaterialStorage));
-        input2.put(18, new ItemStack(GCItems.buggyMaterialStorage));
-        input2.put(19, new ItemStack(GCItems.buggyMaterialStorage));
-        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.buggyInventory3), input2);
+        input2.put(17, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
+        input2.put(18, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
+        input2.put(19, new ItemStack(GCItems.BUGGY_STORAGE_BOX));
+        RecipeUtil.addBuggyBenchRecipe(new ItemStack(GCItems.BUGGY_54_INVENTORY), input2);
 
 //        aluminumIngots.addAll(OreDictionary.getOres("ingotAluminum"));
 //        ArrayList<ItemStack> addedList = new ArrayList<ItemStack>();
@@ -286,9 +286,9 @@ public class RecipeManagerGC
         //EmergencyKit
 //        RecipeUtil.addCustomRecipe(new ShapedRecipeNBT(new ItemStack(GCItems.emergencyKit), ItemEmergencyKit.getRecipe())); TODO Kit recipe
 
-        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedCopper, 1), "ingots/copper", "ingots/copper");
-        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedTin, 1), "ingots/tin", "ingots/tin");
-        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedAluminum, 1), "ingots/aluminum", "ingots/aluminum");
+        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.COMPRESSED_COPPER, 1), "ingots/copper", "ingots/copper");
+        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.COMPRESSED_TIN, 1), "ingots/tin", "ingots/tin");
+        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.COMPRESSED_ALUMINUM, 1), "ingots/aluminum", "ingots/aluminum");
 
 /*        // Support for all the spellings of Aluminum
         for (ItemStack stack : aluminumIngots)
@@ -299,25 +299,25 @@ public class RecipeManagerGC
         Collection<Item> bronzeItems = ItemTags.getCollection().getOrCreate(new ResourceLocation("forge", "ingots/bronze")).getAllElements();
         if (bronzeItems.size() > 0)
         {
-            CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedBronze, 1), "ingots/bronze", "ingots/bronze");
+            CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.COMPRESSED_BRONZE, 1), "ingots/bronze", "ingots/bronze");
         }
         Collection<Item> steelItems = ItemTags.getCollection().getOrCreate(new ResourceLocation("forge", "ingots/steel")).getAllElements();
         if (steelItems.size() > 0)
         {
-            CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedSteel, 1), "ingots/steel", "ingots/steel");
+            CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.COMPRESSED_STEEL, 1), "ingots/steel", "ingots/steel");
             CompressorRecipes.steelIngotsPresent = true;
         }
-        CompressorRecipes.steelRecipeGC = Arrays.asList(new ItemStack(Items.COAL), new ItemStack(GCItems.compressedIron, 1), new ItemStack(Items.COAL));
-        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedSteel, 1), Items.COAL, new ItemStack(GCItems.compressedIron, 1), Items.COAL);
-        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedBronze, 1), new ItemStack(GCItems.compressedCopper, 1), new ItemStack(GCItems.compressedTin, 1));
-        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedIron, 1), Items.IRON_INGOT, Items.IRON_INGOT);
-        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.compressedMeteoricIron, 1), meteoricIronIngot);
-        CompressorRecipes.addRecipe(new ItemStack(GCItems.heavyPlatingTier1, 2), "XYZ", "XYZ", 'X', new ItemStack(GCItems.compressedSteel, 1), 'Y', new ItemStack(GCItems.compressedAluminum, 1), 'Z', new ItemStack(GCItems.compressedBronze, 1));
+        CompressorRecipes.steelRecipeGC = Arrays.asList(new ItemStack(Items.COAL), new ItemStack(GCItems.COMPRESSED_IRON, 1), new ItemStack(Items.COAL));
+        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.COMPRESSED_STEEL, 1), Items.COAL, new ItemStack(GCItems.COMPRESSED_IRON, 1), Items.COAL);
+        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.COMPRESSED_BRONZE, 1), new ItemStack(GCItems.COMPRESSED_COPPER, 1), new ItemStack(GCItems.COMPRESSED_TIN, 1));
+        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.COMPRESSED_IRON, 1), Items.IRON_INGOT, Items.IRON_INGOT);
+        CompressorRecipes.addShapelessRecipe(new ItemStack(GCItems.COMPRESSED_METEORIC_IRON, 1), meteoricIronIngot);
+        CompressorRecipes.addRecipe(new ItemStack(GCItems.TIER_1_HEAVY_DUTY_PLATE, 2), "XYZ", "XYZ", 'X', new ItemStack(GCItems.COMPRESSED_STEEL, 1), 'Y', new ItemStack(GCItems.COMPRESSED_ALUMINUM, 1), 'Z', new ItemStack(GCItems.COMPRESSED_BRONZE, 1));
 
-        ItemStack solarPanels = new ItemStack(GCItems.compressedWaferSolar, 9);
-        ItemStack basicWafers = new ItemStack(GCItems.compressedWaferBasic, 3);
-        ItemStack advancedWafers = new ItemStack(GCItems.compressedWaferAdvanced, 1);
-        ItemStack silicon =  new ItemStack(GCItems.rawSilicon, 1);
+        ItemStack solarPanels = new ItemStack(GCItems.SOLAR_WAFER, 9);
+        ItemStack basicWafers = new ItemStack(GCItems.BASIC_WAFER, 3);
+        ItemStack advancedWafers = new ItemStack(GCItems.ADVANCED_WAFER, 1);
+        ItemStack silicon =  new ItemStack(GCItems.RAW_SILICON, 1);
         CircuitFabricatorRecipes.addRecipe(solarPanels, Arrays.asList( new ItemStack(Items.DIAMOND), silicon, silicon, new ItemStack(Items.REDSTONE), new ItemStack(Items.LAPIS_LAZULI, 1) ));
         CircuitFabricatorRecipes.addRecipe(basicWafers, Arrays.asList( new ItemStack(Items.DIAMOND), silicon, silicon, new ItemStack(Items.REDSTONE), new ItemStack(Blocks.REDSTONE_TORCH) ));
         CircuitFabricatorRecipes.addRecipe(advancedWafers, Arrays.asList( new ItemStack(Items.DIAMOND), silicon, silicon, new ItemStack(Items.REDSTONE), new ItemStack(Items.REPEATER) ));

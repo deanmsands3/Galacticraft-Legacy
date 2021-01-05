@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:buggy_storage_box"
+    ]
+  },
+  "criteria": {
+    "has_plates/iron_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:plates/iron"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:buggy_storage_box"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_plates/iron_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

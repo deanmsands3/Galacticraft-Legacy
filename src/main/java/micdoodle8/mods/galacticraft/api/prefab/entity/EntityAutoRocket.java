@@ -1044,7 +1044,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
             //Set the player's launchpad item for return on landing - or null if launchpads not removed
             if (stats != null && amountRemoved == 9)
             {
-                stats.setLaunchpadStack(new ItemStack(GCBlocks.landingPad, 9));
+                stats.setLaunchpadStack(new ItemStack(GCBlocks.ROCKET_LAUNCH_PAD, 9));
             }
 
             this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);

@@ -39,6 +39,7 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
     public BlockFluidTank(Properties builder)
     {
         super(builder);
+        this.setDefaultState(this.stateContainer.getBaseState().with(UP, false).with(DOWN, false));
     }
 
     @Override

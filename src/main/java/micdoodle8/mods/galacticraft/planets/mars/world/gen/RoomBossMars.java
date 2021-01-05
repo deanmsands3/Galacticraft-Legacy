@@ -102,7 +102,7 @@ public class RoomBossMars extends RoomBoss
                     }
                     else if (j == 1 && (i <= 2 || k <= 2 || i >= this.sizeX - 2 || k >= this.sizeZ - 2) && randomIn.nextInt(6) == 0)
                     {
-                        this.setBlockState(worldIn, MarsBlocks.creeperEgg.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                        this.setBlockState(worldIn, MarsBlocks.CREEPER_EGG.getDefaultState(), i, j, k, mutableBoundingBoxIn);
                     }
                     else
                     {
@@ -119,7 +119,7 @@ public class RoomBossMars extends RoomBoss
         //Is this position inside the chunk currently being generated?
         if (mutableBoundingBoxIn.isVecInside(blockpos))
         {
-            worldIn.setBlockState(blockpos, MarsBlocks.bossSpawner.getDefaultState(), 2);
+            worldIn.setBlockState(blockpos, MarsBlocks.MARS_BOSS_SPAWNER.getDefaultState(), 2);
             TileEntityDungeonSpawner spawner = (TileEntityDungeonSpawner) worldIn.getTileEntity(blockpos);
             if (spawner != null)
             {

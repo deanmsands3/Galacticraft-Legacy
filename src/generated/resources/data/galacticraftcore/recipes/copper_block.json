@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:copper_block"
+  }
+}

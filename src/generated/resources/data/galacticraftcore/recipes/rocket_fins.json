@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " Y ",
+    "XYX",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:tier_1_heavy_duty_plate"
+    },
+    "Y": {
+      "tag": "forge:plates/steel"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:rocket_fins"
+  }
+}

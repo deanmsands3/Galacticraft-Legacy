@@ -1,6 +1,5 @@
 {
   "variants": {
-    "inventory": [{ "model": "galacticraftcore:block/fuel_loader_model" }],
     "facing=north,msm=lr": { "model": "galacticraftcore:block/fuel_loader_lr" },
     "facing=east,msm=lr": { "model": "galacticraftcore:block/fuel_loader_lr", "y": 90 },
     "facing=south,msm=lr": { "model": "galacticraftcore:block/fuel_loader_lr", "y": 180 },

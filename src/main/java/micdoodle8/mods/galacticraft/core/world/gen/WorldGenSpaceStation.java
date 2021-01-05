@@ -14,7 +14,7 @@ public class WorldGenSpaceStation
 {
     public boolean place(IChunk chunk, BlockPos pos)
     {
-        BlockState state = GCBlocks.decoBlock1.getDefaultState();
+        BlockState state = GCBlocks.TIN_DECORATION_BLOCK_2.getDefaultState();
         chunk.setBlockState(pos.add(0, 0, 0), state, false);
         chunk.setBlockState(pos.add(0, 0, 1), state, false);
         chunk.setBlockState(pos.add(0, 0, 2), state, false);

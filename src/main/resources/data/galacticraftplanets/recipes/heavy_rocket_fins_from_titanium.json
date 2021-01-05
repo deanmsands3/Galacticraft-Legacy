@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "galacticraftplanets:heavy_rocket_fins"
+  },
+  "pattern": [
+    " Y ",
+    "XYX",
+    "X X"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "galacticraftplanets:tier_3_heavy_duty_plate"
+    },
+    "Y": {
+      "type": "galacticraftcore:advanced_metal",
+      "metal": "titanium_plate"
+    }
+  }
+}

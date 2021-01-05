@@ -21,23 +21,23 @@ public class BiomeMoon extends BiomeGC
         if (state == null) {
             return false;
         } else {
-            return state.getBlock() == GCBlocks.moonStone;
+            return state.getBlock() == GCBlocks.MOON_ROCK;
         }
     });
 
     public BiomeMoon(Builder biomeBuilder, boolean isAdaptive)
     {
         super(biomeBuilder, isAdaptive);
-        this.addStructure(GCFeatures.MOON_DUNGEON.withConfiguration(new DungeonConfiguration(GCBlocks.moonDungeonBrick.getDefaultState(), 25, 8, 16, 5, 6, RoomBoss.class, RoomTreasure.class)));
-        this.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, GCFeatures.MOON_DUNGEON.withConfiguration(new DungeonConfiguration(GCBlocks.moonDungeonBrick.getDefaultState(), 25, 8, 16, 5, 6, RoomBoss.class, RoomTreasure.class)).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
+        this.addStructure(GCFeatures.MOON_DUNGEON.withConfiguration(new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICKS.getDefaultState(), 25, 8, 16, 5, 6, RoomBoss.class, RoomTreasure.class)));
+        this.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, GCFeatures.MOON_DUNGEON.withConfiguration(new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICKS.getDefaultState(), 25, 8, 16, 5, 6, RoomBoss.class, RoomTreasure.class)).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
     }
 
     protected void addDefaultFeatures()
     {
-        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(FILLER_TYPE_MOON, GCBlocks.oreCopperMoon.getDefaultState(), 4)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(26, 0, 0, 60))));
-        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(FILLER_TYPE_MOON, GCBlocks.oreTinMoon.getDefaultState(), 4)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(23, 0, 0, 60))));
-        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(FILLER_TYPE_MOON, GCBlocks.oreCheeseMoon.getDefaultState(), 3)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(14, 0, 0, 85))));
-        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(FILLER_TYPE_MOON, GCBlocks.moonDirt.getDefaultState(), 32)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(20, 0, 0, 200))));
-        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, GCFeatures.SAPPHIRE_ORE.withConfiguration(new ReplaceBlockConfig(GCBlocks.moonStone.getDefaultState(), GCBlocks.oreSapphire.getDefaultState())).withPlacement(GCFeatures.SAPPHIRE_ORE_PLACEMENT.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
+        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(FILLER_TYPE_MOON, GCBlocks.MOON_COPPER_ORE.getDefaultState(), 4)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(26, 0, 0, 60))));
+        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(FILLER_TYPE_MOON, GCBlocks.MOON_TIN_ORE.getDefaultState(), 4)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(23, 0, 0, 60))));
+        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(FILLER_TYPE_MOON, GCBlocks.CHEESE_ORE.getDefaultState(), 3)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(14, 0, 0, 85))));
+        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(new OreFeatureConfig(FILLER_TYPE_MOON, GCBlocks.MOON_DIRT.getDefaultState(), 32)).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(20, 0, 0, 200))));
+        this.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, GCFeatures.SAPPHIRE_ORE.withConfiguration(new ReplaceBlockConfig(GCBlocks.MOON_ROCK.getDefaultState(), GCBlocks.SAPPHIRE_ORE.getDefaultState())).withPlacement(GCFeatures.SAPPHIRE_ORE_PLACEMENT.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
     }
 }

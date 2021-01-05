@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:iron_ingot_from_blasting"
+    ]
+  },
+  "criteria": {
+    "has_ores/iron_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ores/iron"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:iron_ingot_from_blasting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ores/iron_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

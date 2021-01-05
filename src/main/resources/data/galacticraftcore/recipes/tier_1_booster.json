@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "galacticraftcore:tier_1_booster"
+  },
+  "pattern": [
+    "ZYZ",
+    "ZWZ",
+    "XVX"
+  ],
+  "key": {
+    "V": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "W": {
+      "item": "galacticraftcore:partial_fuel_canister",
+      "data": 1
+    },
+    "X": {
+      "item": "galacticraftcore:tier_1_heavy_duty_plate"
+    },
+    "Y": {
+      "item": "minecraft:yellow_wool"
+    },
+    "Z": {
+      "type": "galacticraftcore:advanced_metal",
+      "metal": "meteoric_iron_plate"
+    }
+  }
+}

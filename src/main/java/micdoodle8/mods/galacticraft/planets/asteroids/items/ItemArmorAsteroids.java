@@ -40,17 +40,17 @@ public class ItemArmorAsteroids extends ArmorItem implements ISortable
     {
         if (this.getArmorMaterial() == EnumArmorAsteroids.ARMOR_TITANIUM)
         {
-            if (stack.getItem() == AsteroidsItems.titaniumHelmet)
+            if (stack.getItem() == AsteroidsItems.TITANIUM_HELMET)
             {
-                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/model/armor/titanium_1.png";
+                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/models/armor/titanium_layer_1.png";
             }
-            else if (stack.getItem() == AsteroidsItems.titaniumChestplate || stack.getItem() == AsteroidsItems.titaniumBoots)
+            else if (stack.getItem() == AsteroidsItems.TITANIUM_CHESTPLATE || stack.getItem() == AsteroidsItems.TITANIUM_BOOTS)
             {
-                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/model/armor/titanium_2.png";
+                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/models/armor/titanium_layer_2.png";
             }
-            else if (stack.getItem() == AsteroidsItems.titaniumLeggings)
+            else if (stack.getItem() == AsteroidsItems.TITANIUM_LEGGINGS)
             {
-                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/model/armor/titanium_3.png";
+                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/models/armor/titanium_layer_3.png";
             }
         }
 

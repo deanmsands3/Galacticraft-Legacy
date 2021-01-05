@@ -27,7 +27,7 @@ public class ContainerOxygenSealer extends Container
         this.sealer = sealer;
         this.addSlot(new SlotSpecific(sealer, 0, 33, 27, IItemElectric.class));
         this.addSlot(new SlotSpecific(sealer, 1, 10, 27, IItemOxygenSupply.class));
-        this.addSlot(new SlotSpecific(sealer, 2, 56, 27, new ItemStack(GCItems.ambientThermalController, 1)));
+        this.addSlot(new SlotSpecific(sealer, 2, 56, 27, new ItemStack(GCItems.AMBIENT_THERMAL_CONTROLLER, 1)));
 
         int var6;
         int var7;
@@ -94,7 +94,7 @@ public class ContainerOxygenSealer extends Container
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (stack.getItem() == GCItems.ambientThermalController)
+                else if (stack.getItem() == GCItems.AMBIENT_THERMAL_CONTROLLER)
                 {
                     if (!this.mergeItemStack(stack, 2, 3, false))
                     {

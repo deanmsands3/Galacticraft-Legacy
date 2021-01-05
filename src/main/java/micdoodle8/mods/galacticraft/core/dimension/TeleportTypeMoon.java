@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.core.dimension;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.vector.Vector3D;
 import micdoodle8.mods.galacticraft.api.world.ITeleportType;
-import micdoodle8.mods.galacticraft.core.entities.EntityLander;
+import micdoodle8.mods.galacticraft.core.entities.LanderEntity;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
@@ -91,7 +91,7 @@ public class TeleportTypeMoon implements ITeleportType
                 player.abilities.isFlying = false;
             }
 
-            EntityLander lander = new EntityLander(player);
+            LanderEntity lander = new LanderEntity(player);
             lander.setPosition(player.getPosX(), player.getPosY(), player.getPosZ());
 
             if (!newWorld.isRemote)

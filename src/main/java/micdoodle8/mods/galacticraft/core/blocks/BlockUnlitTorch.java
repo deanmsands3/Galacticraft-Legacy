@@ -130,7 +130,7 @@ public class BlockUnlitTorch extends TorchBlock implements IOxygenReliantBlock
         double d2 = (double) pos.getZ() + 0.5D;
 
         worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-        if (this == GCBlocks.unlitTorchLit)
+        if (this == GCBlocks.LIT_UNLIT_TORCH)
         {
             worldIn.addParticle(ParticleTypes.FLAME, d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }

@@ -118,8 +118,8 @@ public class BlockAirLockWall extends Block implements IPartialSealableBlock, IS
     {
         EnumAirLockSealConnection connection;
 
-        Block frameID = GCBlocks.airLockFrame;
-        Block sealID = GCBlocks.airLockSeal;
+        Block frameID = GCBlocks.AIR_LOCK_FRAME;
+        Block sealID = GCBlocks.AIR_LOCK_SEAL;
 
         Block idXMin = worldIn.getBlockState(pos.offset(Direction.WEST)).getBlock();
         Block idXMax = worldIn.getBlockState(pos.offset(Direction.WEST)).getBlock();
@@ -138,7 +138,7 @@ public class BlockAirLockWall extends Block implements IPartialSealableBlock, IS
                 {
                     Block blockID = worldIn.getBlockState(pos.offset(dir)).getBlock();
 
-                    if (blockID == GCBlocks.airLockFrame || blockID == GCBlocks.airLockSeal)
+                    if (blockID == GCBlocks.AIR_LOCK_FRAME || blockID == GCBlocks.AIR_LOCK_SEAL)
                     {
                         adjacentCount++;
                     }

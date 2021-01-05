@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.core.client.gui.container;
 
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementInfoRegion;
-import micdoodle8.mods.galacticraft.core.entities.EntityBuggy;
+import micdoodle8.mods.galacticraft.core.entities.BuggyEntity;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerBuggy;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
@@ -40,12 +40,12 @@ public class GuiBuggy extends GuiContainerGC<ContainerBuggy>
     {
         this.font.drawString(GCCoreUtil.translate("gui.message.fuel"), 8, 2 + 3, 4210752);
 
-        this.font.drawString(this.title.getFormattedText(), 8, this.container.buggyType == EntityBuggy.BuggyType.NO_INVENTORY ? 50 : 39, 4210752);
+        this.font.drawString(this.title.getFormattedText(), 8, this.container.buggyType == BuggyEntity.BuggyType.NO_INVENTORY ? 50 : 39, 4210752);
 
-        if (this.minecraft.player != null && this.minecraft.player.getRidingEntity() != null && this.minecraft.player.getRidingEntity() instanceof EntityBuggy)
+        if (this.minecraft.player != null && this.minecraft.player.getRidingEntity() != null && this.minecraft.player.getRidingEntity() instanceof BuggyEntity)
         {
             this.font.drawString(GCCoreUtil.translate("gui.message.fuel") + ":", 125, 15 + 3, 4210752);
-            final double percentage = ((EntityBuggy) this.minecraft.player.getRidingEntity()).getScaledFuelLevel(100);
+            final double percentage = ((BuggyEntity) this.minecraft.player.getRidingEntity()).getScaledFuelLevel(100);
             final String color = percentage > 80.0D ? EnumColor.BRIGHT_GREEN.getCode() : percentage > 40.0D ? EnumColor.ORANGE.getCode() : EnumColor.RED.getCode();
             final String str = percentage + "% " + GCCoreUtil.translate("gui.message.full");
             this.font.drawString(color + str, 117 - str.length() / 2, 20 + 8, 4210752);
@@ -62,9 +62,9 @@ public class GuiBuggy extends GuiContainerGC<ContainerBuggy>
         final int var6 = (this.height - this.ySize) / 2;
         this.blit(var5, var6, 0, 0, 176, this.ySize);
 
-        if (this.minecraft.player != null && this.minecraft.player.getRidingEntity() != null && this.minecraft.player.getRidingEntity() instanceof EntityBuggy)
+        if (this.minecraft.player != null && this.minecraft.player.getRidingEntity() != null && this.minecraft.player.getRidingEntity() instanceof BuggyEntity)
         {
-            final int fuelLevel = ((EntityBuggy) this.minecraft.player.getRidingEntity()).getScaledFuelLevel(38);
+            final int fuelLevel = ((BuggyEntity) this.minecraft.player.getRidingEntity()).getScaledFuelLevel(38);
 
             this.blit((this.width - this.xSize) / 2 + 72, (this.height - this.ySize) / 2 + 45 - fuelLevel, 176, 38 - fuelLevel, 42, fuelLevel);
         }

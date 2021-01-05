@@ -23,7 +23,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityFake extends TileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fakeBlock)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.MULTI_BLOCK)
     public static TileEntityType<TileEntityFake> TYPE;
     //NOTE: No need for networking in 1.8+: see comment in initialiseMultiTiles()
 
@@ -166,7 +166,7 @@ public class TileEntityFake extends TileEntity
                 Block b = world.getBlockState(vecToAdd).getBlock();
                 if (!(b instanceof BlockMulti))
                 {
-                    world.setBlockState(vecToAdd, GCBlocks.fakeBlock.getDefaultState().with(BlockMulti.MULTI_TYPE, thisTile.getMultiType()), 2);
+                    world.setBlockState(vecToAdd, GCBlocks.MULTI_BLOCK.getDefaultState().with(BlockMulti.MULTI_TYPE, thisTile.getMultiType()), 2);
                 }
                 world.setTileEntity(vecToAdd, new TileEntityFake(pos));
             }

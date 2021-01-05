@@ -608,7 +608,7 @@ public class TickHandlerClient
                 screenConnectionsUpdateList.clear();
                 for (TileEntityScreen te : updateListCopy)
                 {
-                    if (te.getWorld().getBlockState(te.getPos()).getBlock() == GCBlocks.screen)
+                    if (te.getWorld().getBlockState(te.getPos()).getBlock() == GCBlocks.DISPLAY_SCREEN)
                     {
                         if (te.refreshOnUpdate)
                         {

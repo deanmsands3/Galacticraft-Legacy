@@ -34,7 +34,7 @@ import java.util.EnumSet;
 
 public class TileEntityOxygenCollector extends TileEntityOxygen implements INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenCollector)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_COLLECTOR)
     public static TileEntityType<TileEntityOxygenCollector> TYPE;
 
     public boolean active;

@@ -10,7 +10,7 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityTier3Rocket;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.Tier3RocketEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -86,7 +86,7 @@ public class ItemTier3Rocket extends Item implements IHoldableItem, ISortable
                     BlockState state = context.getWorld().getBlockState(pos1);
                     final Block id = state.getBlock();
 
-                    if (id == GCBlocks.landingPadFull)
+                    if (id == GCBlocks.FULL_ROCKET_LAUNCH_PAD)
                     {
                         padFound = true;
                         tile = context.getWorld().getTileEntity(pos1);
@@ -164,7 +164,7 @@ public class ItemTier3Rocket extends Item implements IHoldableItem, ISortable
 
         if (stack.hasTag() && stack.getTag().contains("RocketFuel"))
         {
-            EntityTier3Rocket rocket = EntityTier3Rocket.createEntityTier3Rocket(Minecraft.getInstance().world, 0, 0, 0, EntityTier3Rocket.getTypeFromItem(stack.getItem()));
+            Tier3RocketEntity rocket = Tier3RocketEntity.createEntityTier3Rocket(Minecraft.getInstance().world, 0, 0, 0, Tier3RocketEntity.getTypeFromItem(stack.getItem()));
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + stack.getTag().getInt("RocketFuel") + " / " + rocket.fuelTank.getCapacity()));
         }
     }
@@ -214,7 +214,7 @@ public class ItemTier3Rocket extends Item implements IHoldableItem, ISortable
             return false;
         }
 
-        EntityTier3Rocket rocket = EntityTier3Rocket.createEntityTier3Rocket(worldIn, centerX, centerY, centerZ, EntityTier3Rocket.getTypeFromItem(stack.getItem()));
+        Tier3RocketEntity rocket = Tier3RocketEntity.createEntityTier3Rocket(worldIn, centerX, centerY, centerZ, Tier3RocketEntity.getTypeFromItem(stack.getItem()));
 
         rocket.rotationYaw += 45;
         rocket.setPosition(rocket.getPosX(), rocket.getPosY() + rocket.getOnPadYOffset(), rocket.getPosZ());

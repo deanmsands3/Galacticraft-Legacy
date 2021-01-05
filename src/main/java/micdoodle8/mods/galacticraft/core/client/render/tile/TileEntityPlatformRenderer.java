@@ -21,7 +21,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,39 +61,22 @@ public class TileEntityPlatformRenderer extends TileEntityRenderer<TileEntityPla
         }
     }
 
-    public static final ResourceLocation platformTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/platform_moving.png");
+    public static final ResourceLocation platformTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/hydraulic_platform.png");
     public static final ResourceLocation lightTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/misc/light.png");
     private final ModelPlatform platform = new ModelPlatform();
     private static final Map<Integer, Float> lastYMap = new HashMap<>();
     private static float lastPartialTicks = -1F;
-    private static Field yPosField = null;
 
     public TileEntityPlatformRenderer(TileEntityRendererDispatcher rendererDispatcherIn)
     {
         super(rendererDispatcherIn);
-        try
-        {
-            yPosField = Matrix4f.class.getDeclaredField("m13");
-            yPosField.setAccessible(true);
-        }
-        catch (NoSuchFieldException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void render(TileEntityPlatform platform, float partialTicks, MatrixStack matStack, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)
     {
-        float currentyPos = 0.0F;
-        try
-        {
-            currentyPos = (float) yPosField.get(matStack.getLast().getMatrix());
-        }
-        catch (IllegalAccessException e)
-        {
-            e.printStackTrace();
-        }
+        float currentyPos = matStack.getLast().getMatrix().m13;
+
         if (partialTicks != lastPartialTicks)
         {
             lastPartialTicks = partialTicks;
@@ -102,7 +84,7 @@ public class TileEntityPlatformRenderer extends TileEntityRenderer<TileEntityPla
         }
         BlockState state = platform.getWorld().getBlockState(platform.getPos());
         float yOffset = platform.getYOffset(partialTicks);
-        if (state.getBlock() == GCBlocks.platform && state.get(BlockPlatform.CORNER) == BlockPlatform.EnumCorner.NW)
+        if (state.getBlock() == GCBlocks.HYDRAULIC_PLATFORM && state.get(BlockPlatform.CORNER) == BlockPlatform.EnumCorner.NW)
         {
 //            GlStateManager.pushMatrix();
             matStack.push();

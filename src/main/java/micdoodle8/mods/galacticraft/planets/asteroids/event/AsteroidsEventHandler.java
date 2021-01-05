@@ -18,22 +18,22 @@ public class AsteroidsEventHandler
             switch (event.armorIndex)
             {
             case 0:
-                if (event.armorStack.getItem() == AsteroidsItems.thermalHelm)
+                if (event.armorStack.getItem() == AsteroidsItems.THERMAL_HELMET)
                 {
                     event.setArmorAddResult(ThermalArmorEvent.ArmorAddResult.ADD);
                 }
             case 1:
-                if (event.armorStack.getItem() == AsteroidsItems.thermalChestplate)
+                if (event.armorStack.getItem() == AsteroidsItems.THERMAL_CHESTPLATE)
                 {
                     event.setArmorAddResult(ThermalArmorEvent.ArmorAddResult.ADD);
                 }
             case 2:
-                if (event.armorStack.getItem() == AsteroidsItems.thermalLeggings)
+                if (event.armorStack.getItem() == AsteroidsItems.THERMAL_LEGGINGS)
                 {
                     event.setArmorAddResult(ThermalArmorEvent.ArmorAddResult.ADD);
                 }
             case 3:
-                if (event.armorStack.getItem() == AsteroidsItems.thermalBoots)
+                if (event.armorStack.getItem() == AsteroidsItems.THERMAL_BOOTS)
                 {
                     event.setArmorAddResult(ThermalArmorEvent.ArmorAddResult.ADD);
                 }

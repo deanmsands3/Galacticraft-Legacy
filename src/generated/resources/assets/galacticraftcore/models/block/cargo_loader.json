@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/machine_base",
+    "up": "galacticraftcore:block/machine_base",
+    "north": "galacticraftcore:block/cargo_loader",
+    "south": "galacticraftcore:block/cargo_loader",
+    "east": "galacticraftcore:block/machine_input",
+    "west": "galacticraftcore:block/machine_item_input",
+    "particle": "galacticraftcore:block/cargo_loader"
+  }
+}

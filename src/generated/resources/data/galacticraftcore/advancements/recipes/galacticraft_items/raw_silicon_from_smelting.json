@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:raw_silicon_from_smelting"
+    ]
+  },
+  "criteria": {
+    "has_ores/silicon_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ores/silicon"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:raw_silicon_from_smelting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ores/silicon_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

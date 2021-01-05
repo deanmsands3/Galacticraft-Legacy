@@ -19,7 +19,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntitySpaceStationBase extends TileEntityFake implements IMultiBlock
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.spaceStationBase)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.SPACE_STATION_BASE)
     public static TileEntityType<TileEntitySpaceStationBase> TYPE;
 
     public TileEntitySpaceStationBase()
@@ -52,7 +52,7 @@ public class TileEntitySpaceStationBase extends TileEntityFake implements IMulti
 
         List<BlockPos> positions = new LinkedList<>();
         this.getPositions(placedPosition, positions);
-        ((BlockMulti) GCBlocks.fakeBlock).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
+        ((BlockMulti) GCBlocks.MULTI_BLOCK).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
     }
 
     @Override
@@ -87,7 +87,7 @@ public class TileEntitySpaceStationBase extends TileEntityFake implements IMulti
         {
             BlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock && stateAt.get(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.SPACE_STATION_BASE)
+            if (stateAt.getBlock() == GCBlocks.MULTI_BLOCK && stateAt.get(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.SPACE_STATION_BASE)
             {
                 this.world.removeBlock(pos, false);
             }

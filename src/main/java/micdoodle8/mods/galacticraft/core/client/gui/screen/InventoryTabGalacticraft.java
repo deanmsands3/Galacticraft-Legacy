@@ -14,7 +14,7 @@ public class InventoryTabGalacticraft extends AbstractTab
 {
     public InventoryTabGalacticraft()
     {
-        super(0, new ItemStack(GCItems.oxMask));
+        super(0, new ItemStack(GCItems.OXYGEN_MASK));
     }
 
     @Override

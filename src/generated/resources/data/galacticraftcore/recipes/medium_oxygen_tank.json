@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ZZZ",
+    "XXX",
+    "YYY"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:tin_canister"
+    },
+    "Y": {
+      "tag": "forge:plates/tin"
+    },
+    "Z": {
+      "item": "minecraft:orange_wool"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:medium_oxygen_tank"
+  }
+}

@@ -1,0 +1,14 @@
+{
+    "variants": {
+      "type=solar": { "model": "galacticraftcore:block/multi_block" },
+      "type=ss_base":  { "model": "galacticraftcore:block/multi_block" },
+      "type=rocket_pad":  { "model": "galacticraftcore:block/rocket_launch_pad" },
+      "type=nasa_workbench": { "model": "galacticraftcore:block/multi_block" },
+      "type=solar_panel": { "model": "galacticraftcore:block/multi_block" },
+      "type=buggy_pad": { "model": "galacticraftcore:block/buggy_fueling_pad" },
+      "type=miner_base": { "model": "galacticraftcore:block/multi_block" },
+      "type=dish_large": { "model": "galacticraftcore:block/multi_block" },
+      "type=laser_turret": { "model": "galacticraftcore:block/multi_block" },
+      "type=cryo_chamber": { "model": "galacticraftcore:block/cryo_1" }
+    }
+}

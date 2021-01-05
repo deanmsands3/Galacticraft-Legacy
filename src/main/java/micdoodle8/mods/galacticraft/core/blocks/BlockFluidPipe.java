@@ -4,6 +4,7 @@ import micdoodle8.mods.galacticraft.api.tile.IColorable;
 import micdoodle8.mods.galacticraft.api.transmission.NetworkType;
 import micdoodle8.mods.galacticraft.api.transmission.tile.ITransmitter;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
+import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.items.ISortable;
@@ -30,6 +31,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -186,12 +188,11 @@ public class BlockFluidPipe extends BlockTransmitter implements IShiftDescriptio
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
-//    @Override
-//    public Item getItemDropped(BlockState state, Random rand, int fortune)
-//    {
-//        return Item.getItemFromBlock(GCBlocks.oxygenPipe);
-//        //Never drop the 'pull' variety of pipe
-//    }
+    @Override
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+    {
+        return new ItemStack(GCBlocks.FLUID_PIPE);
+    }
 
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)

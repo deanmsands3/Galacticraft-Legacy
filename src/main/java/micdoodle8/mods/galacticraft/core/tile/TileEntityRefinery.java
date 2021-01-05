@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
 
 public class TileEntityRefinery extends TileBaseElectricBlockWithInventory implements ISidedInventory, IFluidHandlerWrapper, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.refinery)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.REFINERY)
     public static TileEntityType<TileEntityRefinery> TYPE;
 
     private final int tankCapacity = 24000;
@@ -225,7 +225,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
             case 1:
                 return FluidUtil.isOilContainerAny(itemstack);
             case 2:
-                return FluidUtil.isPartialContainer(itemstack, GCItems.fuelCanister);
+                return FluidUtil.isPartialContainer(itemstack, GCItems.PARTIAL_FUEL_CANISTER);
             default:
                 return false;
             }

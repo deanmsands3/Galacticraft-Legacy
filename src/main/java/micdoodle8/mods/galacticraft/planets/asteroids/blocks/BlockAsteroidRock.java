@@ -153,7 +153,7 @@ public class BlockAsteroidRock extends Block implements IPlantableBlock, ITerraf
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
     {
-        if (this == AsteroidBlocks.oreIlmenite)
+        if (this == AsteroidBlocks.ILMENITE_ORE)
         {
             return new ItemStack(Item.getItemFromBlock(this), 1);
         }

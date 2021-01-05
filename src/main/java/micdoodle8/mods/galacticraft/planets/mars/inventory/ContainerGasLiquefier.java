@@ -128,7 +128,7 @@ public class ContainerGasLiquefier extends Container
 
                     if (!outputTankSlotsSuccess)
                     {
-                        if (FluidUtil.isFilledContainer(var4) || var4.getItem() == AsteroidsItems.atmosphericValve)
+                        if (FluidUtil.isFilledContainer(var4) || var4.getItem() == AsteroidsItems.ATMOSPHERIC_VALVE)
                         {
                             if (!this.mergeItemStack(var4, 1, 2, false))
                             {

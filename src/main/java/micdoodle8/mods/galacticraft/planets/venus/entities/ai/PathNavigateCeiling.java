@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.planets.venus.entities.ai;
 
-import micdoodle8.mods.galacticraft.planets.venus.entities.EntityJuicer;
+import micdoodle8.mods.galacticraft.planets.venus.entities.JuicerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -20,7 +20,7 @@ public class PathNavigateCeiling extends PathNavigator
 {
     protected WalkNodeProcessorCeiling nodeProcessor;
 
-    public PathNavigateCeiling(EntityJuicer entity, World worldIn)
+    public PathNavigateCeiling(JuicerEntity entity, World worldIn)
     {
         super(entity, worldIn);
     }

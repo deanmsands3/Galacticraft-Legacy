@@ -44,7 +44,7 @@ public class GuiSchematicTier3Rocket extends GuiContainerGC<ContainerSchematicTi
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        this.font.drawString(AsteroidsItems.rocketTierThree.getDisplayName(new ItemStack(AsteroidsItems.rocketTierThree, 1)).getFormattedText(), 7, -20 + 27, 4210752);
+        this.font.drawString(AsteroidsItems.TIER_3_ROCKET.getDisplayName(new ItemStack(AsteroidsItems.TIER_3_ROCKET, 1)).getFormattedText(), 7, -20 + 27, 4210752);
         this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, 220 - 104 + 2 + 27, 4210752);
     }
 

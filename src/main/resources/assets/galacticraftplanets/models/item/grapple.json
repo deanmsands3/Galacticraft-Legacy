@@ -1,7 +1,7 @@
 {
     "parent": "forge:item/default",
     "loader": "forge:obj",
-    "model": "galacticraftplanets:models/grapple.obj",
+    "model": "galacticraftplanets:models/obj/grapple.obj",
     "flip-v": true,
     "display": {
         "thirdperson": {

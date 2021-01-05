@@ -10,7 +10,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "B": {
-      "item": "galacticraftcore:oxygen_tank_heavy_full",
+      "item": "galacticraftcore:heavy_oxygen_tank",
       "data": 2700
     },
     "S": {

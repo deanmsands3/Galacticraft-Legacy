@@ -136,7 +136,7 @@ public class BlockUnlitTorchWall extends WallTorchBlock implements IOxygenRelian
 
         Direction enumfacing1 = enumfacing.getOpposite();
         worldIn.addParticle(ParticleTypes.SMOKE, d0 + d4 * (double) enumfacing1.getXOffset(), d1 + d3, d2 + d4 * (double) enumfacing1.getZOffset(), 0.0D, 0.0D, 0.0D);
-        if (this == GCBlocks.unlitTorchLit)
+        if (this == GCBlocks.LIT_UNLIT_TORCH)
         {
             worldIn.addParticle(ParticleTypes.FLAME, d0 + d4 * (double) enumfacing1.getXOffset(), d1 + d3, d2 + d4 * (double) enumfacing1.getZOffset(), 0.0D, 0.0D, 0.0D);
         }

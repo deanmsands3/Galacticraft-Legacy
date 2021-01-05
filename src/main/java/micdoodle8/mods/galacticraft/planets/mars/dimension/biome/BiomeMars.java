@@ -14,7 +14,7 @@ public class BiomeMars extends BiomeGC
 
     BiomeMars()
     {
-        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(MarsBlocks.rockSurface.getDefaultState(), MarsBlocks.rockMiddle.getDefaultState(), MarsBlocks.rockMiddle.getDefaultState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(2.5F).scale(0.4F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
+        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(MarsBlocks.MARS_FINE_REGOLITH.getDefaultState(), MarsBlocks.MARS_REGOLITH.getDefaultState(), MarsBlocks.MARS_REGOLITH.getDefaultState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(2.5F).scale(0.4F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
     }
 
 //    @Override

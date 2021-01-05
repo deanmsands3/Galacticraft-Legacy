@@ -28,33 +28,33 @@ public class IngredientAdvancedMetalSerializer implements IIngredientSerializer<
         String metal = JSONUtils.getString(json, "metal");
         if (metal.equals("meteoric_iron_ingot"))
         {
-            return Ingredient.fromStacks(new ItemStack(GCItems.ingotMeteoricIron, 1));// : new OreIngredient("ingotMeteoricIron");
+            return Ingredient.fromStacks(new ItemStack(GCItems.METEORIC_IRON_INGOT, 1));// : new OreIngredient("ingotMeteoricIron");
         }
         if (metal.equals("meteoric_iron_plate"))
         {
-            return Ingredient.fromStacks(new ItemStack(GCItems.compressedMeteoricIron, 1));// : new OreIngredient("compressedMeteoricIron");
+            return Ingredient.fromStacks(new ItemStack(GCItems.COMPRESSED_METEORIC_IRON, 1));// : new OreIngredient("compressedMeteoricIron");
         }
         if (metal.equals("desh_ingot"))
         {
-            return GalacticraftCore.isPlanetsLoaded ? Ingredient.fromStacks(new ItemStack(MarsItems.ingotDesh, 1)) : Ingredient.fromItems(GCItems.heavyPlatingTier1);
+            return GalacticraftCore.isPlanetsLoaded ? Ingredient.fromStacks(new ItemStack(MarsItems.DESH_INGOT, 1)) : Ingredient.fromItems(GCItems.TIER_1_HEAVY_DUTY_PLATE);
         }
         if (metal.equals("desh_plate"))
         {
-            return Ingredient.fromStacks(new ItemStack(MarsItems.compressedDesh, 1));// : new OreIngredient("compressedDesh");
+            return Ingredient.fromStacks(new ItemStack(MarsItems.COMPRESSED_DESH, 1));// : new OreIngredient("compressedDesh");
         }
         if (metal.equals("titanium_ingot"))
         {
-            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.ingotTitanium, 1));// : new OreIngredient("ingotTitanium");
+            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.TITANIUM_INGOT, 1));// : new OreIngredient("ingotTitanium");
         }
         if (metal.equals("titanium_plate"))
         {
-            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.compressedTitanium, 1));// : new OreIngredient("compressedTitanium");
+            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.COMPRESSED_TITANIUM, 1));// : new OreIngredient("compressedTitanium");
         }
         if (metal.equals("lead_ingot"))
         {
-            return Ingredient.fromStacks(new ItemStack(VenusItems.ingotLead, 1));// : new OreIngredient("ingotLead");
+            return Ingredient.fromStacks(new ItemStack(VenusItems.LEAD_INGOT, 1));// : new OreIngredient("ingotLead");
         }
-        return Ingredient.fromItems(GCItems.infiniteBatery);
+        return Ingredient.fromItems(GCItems.INFINITE_BATTERY);
     }
 
     public void write(PacketBuffer buffer, Ingredient ingredient)

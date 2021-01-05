@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import micdoodle8.mods.galacticraft.api.entity.IRocketType;
-import micdoodle8.mods.galacticraft.core.entities.EntityTier1Rocket;
+import micdoodle8.mods.galacticraft.core.entities.Tier1RocketEntity;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import net.minecraft.command.CommandSource;
@@ -37,7 +37,7 @@ public class CommandPlanetTeleport
             BlockPos spawnPoint = world.getSpawnPoint();
             GCPlayerStats stats = GCPlayerStats.get(target);
             stats.setRocketStacks(NonNullList.withSize(2, ItemStack.EMPTY));
-            stats.setRocketItem(EntityTier1Rocket.getItemFromType(IRocketType.EnumRocketType.DEFAULT));
+            stats.setRocketItem(Tier1RocketEntity.getItemFromType(IRocketType.EnumRocketType.DEFAULT));
 //        stats.setRocketItem(GCItems.rocketTierOne);
             stats.setFuelLevel(1000);
             stats.setCoordsTeleportedFromX(spawnPoint.getX());

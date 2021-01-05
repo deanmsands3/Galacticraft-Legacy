@@ -2,11 +2,11 @@ package micdoodle8.mods.galacticraft.core.client.model;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import micdoodle8.mods.galacticraft.core.entities.EntityLander;
+import micdoodle8.mods.galacticraft.core.entities.LanderEntity;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-public class ModelLander extends EntityModel<EntityLander>
+public class ModelLander extends EntityModel<LanderEntity>
 {
     ModelRenderer bodyMain1;
     ModelRenderer bodyMain2;
@@ -462,7 +462,7 @@ public class ModelLander extends EntityModel<EntityLander>
     }
 
     @Override
-    public void setRotationAngles(EntityLander entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setRotationAngles(LanderEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
     {
 
     }

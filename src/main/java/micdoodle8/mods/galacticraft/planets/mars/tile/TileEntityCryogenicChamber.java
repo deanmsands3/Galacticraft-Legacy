@@ -37,7 +37,7 @@ import java.util.List;
 
 public class TileEntityCryogenicChamber extends TileEntityFake implements IMultiBlock
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.cryoChamber)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.CRYOGENIC_CHAMBER)
     public static TileEntityType<TileEntityCryogenicChamber> TYPE;
 
     public boolean isOccupied;
@@ -145,7 +145,7 @@ public class TileEntityCryogenicChamber extends TileEntityFake implements IMulti
 
         List<BlockPos> positions = new LinkedList<>();
         this.getPositions(placedPosition, positions);
-        ((BlockMulti) GCBlocks.fakeBlock).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
+        ((BlockMulti) GCBlocks.MULTI_BLOCK).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
     }
 
     @Override
@@ -180,7 +180,7 @@ public class TileEntityCryogenicChamber extends TileEntityFake implements IMulti
         {
             BlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock && stateAt.get(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.CRYO_CHAMBER)
+            if (stateAt.getBlock() == GCBlocks.MULTI_BLOCK && stateAt.get(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.CRYO_CHAMBER)
             {
                 if (this.world.isRemote && this.world.rand.nextDouble() < 0.1D)
                 {

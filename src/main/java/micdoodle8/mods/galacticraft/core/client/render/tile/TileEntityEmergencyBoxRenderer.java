@@ -205,11 +205,11 @@ public class TileEntityEmergencyBoxRenderer extends TileEntityRenderer<TileEntit
         }
     }
 
-    private static final ResourceLocation boxTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/blocks/emergency_box.png");
-    private static final ResourceLocation flapTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/blocks/emergency_box_flap.png");
-    private static final ResourceLocation packTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/parachute/red.png");
-    private static final ResourceLocation oxygenMaskTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/oxygen.png");
-    private static final ResourceLocation oxygenTankTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/player.png");
+    private static final ResourceLocation boxTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/block/emergency_post.png");
+    private static final ResourceLocation flapTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/block/emergency_post_flap.png");
+    private static final ResourceLocation packTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/parachute/red.png");
+    private static final ResourceLocation oxygenMaskTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/oxygen_mask.png");
+    private static final ResourceLocation oxygenTankTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/oxygen_tank.png");
     private final Flap flapA = new Flap();
     private final Flap flapB = new Flap();
     private final Flap flapC = new Flap();
@@ -238,7 +238,7 @@ public class TileEntityEmergencyBoxRenderer extends TileEntityRenderer<TileEntit
         flapD.angle = emergencyBox.getAngleD(partialTicks);
         float height = Math.max(Math.max(flapA.angle, flapB.angle), Math.max(flapC.angle, flapD.angle)) / 90F;
 
-        if (height > 0F && state.getBlock() == GCBlocks.emergencyBoxKit)
+        if (height > 0F && state.getBlock() == GCBlocks.EMERGENCY_POST_KIT)
         {
 //            GlStateManager.pushMatrix();
             matStack.push();

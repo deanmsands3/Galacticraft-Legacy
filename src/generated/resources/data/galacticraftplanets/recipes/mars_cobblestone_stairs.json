@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "galacticraftplanets:mars_cobblestone"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:mars_cobblestone_stairs",
+    "count": 4
+  }
+}

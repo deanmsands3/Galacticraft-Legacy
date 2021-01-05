@@ -264,7 +264,7 @@ public class CompressorRecipes
                 {
                     continue;  //Intentional ItemStack null check
                 }
-                if (output.getItem() == GCItems.compressedSteel && recipe instanceof ShapelessOreRecipeGC)
+                if (output.getItem() == GCItems.COMPRESSED_STEEL && recipe instanceof ShapelessOreRecipeGC)
                 {
                     if (((ShapelessOreRecipeGC) recipe).matches(steelRecipeGC))
                     {
@@ -296,7 +296,7 @@ public class CompressorRecipes
                 {
                     continue;  //Intentional ItemStack null check
                 }
-                if (output.getItem() == GCItems.compressedSteel && recipe instanceof ShapelessOreRecipeGC)
+                if (output.getItem() == GCItems.COMPRESSED_STEEL && recipe instanceof ShapelessOreRecipeGC)
                 {
                     if (((ShapelessOreRecipeGC) recipe).matches(steelRecipeGC))
                     {

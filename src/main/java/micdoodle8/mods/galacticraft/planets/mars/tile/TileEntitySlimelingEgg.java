@@ -4,7 +4,7 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockSlimelingEgg;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlockNames;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class TileEntitySlimelingEgg extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.slimelingEgg)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.SLIMELING_EGG)
     public static TileEntityType<TileEntitySlimelingEgg> TYPE;
 
     public int timeToHatch = -1;
@@ -45,21 +45,21 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickableTileE
                 float colorGreen = 0.0F;
                 float colorBlue = 0.0F;
 
-                if (state.getBlock() == MarsBlocks.slimelingEggRed)
+                if (state.getBlock() == MarsBlocks.RED_SLIMELING_EGG)
                 {
                     colorRed = 1.0F;
                 }
-                else if (state.getBlock() == MarsBlocks.slimelingEggBlue)
+                else if (state.getBlock() == MarsBlocks.BLUE_SLIMELING_EGG)
                 {
                     colorBlue = 1.0F;
                 }
-                else if (state.getBlock() == MarsBlocks.slimelingEggYellow)
+                else if (state.getBlock() == MarsBlocks.YELLOW_SLIMELING_EGG)
                 {
                     colorRed = 1.0F;
                     colorGreen = 1.0F;
                 }
 
-                EntitySlimeling slimeling = EntitySlimeling.createEntitySlimeling(this.world, colorRed, colorGreen, colorBlue);
+                SlimelingEntity slimeling = SlimelingEntity.createEntitySlimeling(this.world, colorRed, colorGreen, colorBlue);
 
                 slimeling.setPosition(this.getPos().getX() + 0.5, this.getPos().getY() + 1.0, this.getPos().getZ() + 0.5);
                 slimeling.setOwnerId(UUID.fromString(this.lastTouchedPlayerUUID));

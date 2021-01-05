@@ -1,7 +1,7 @@
 {
 	"textures": {
-		"particle": "galacticraftcore:blocks/meteor_chunk",
-		"texture": "galacticraftcore:blocks/meteor_chunk"
+		"particle": "galacticraftcore:item/meteor_chunk",
+		"texture": "galacticraftcore:item/meteor_chunk"
 	},
 	"elements": [ 
 	{

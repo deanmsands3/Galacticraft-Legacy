@@ -37,7 +37,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityCrafting extends TileEntity implements IInventoryDefaults, ISidedInventory, IInventorySettable, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.crafting)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.MAGNETIC_CRAFTING_TABLE)
     public static TileEntityType<TileEntityCrafting> TYPE;
 
     private static final int SIZEINVENTORY = 9;

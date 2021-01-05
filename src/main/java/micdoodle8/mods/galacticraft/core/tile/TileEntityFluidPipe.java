@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 
 public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements IColorable
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fluidPipe)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.FLUID_PIPE)
     public static TileEntityType<TileEntityFluidPipe> TYPE;
 
     public FluidTankGC buffer = new FluidTankGC(1000, this);
@@ -43,6 +43,11 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
     public TileEntityFluidPipe()
     {
         super(TYPE, 100);
+    }
+
+    public TileEntityFluidPipe(TileEntityType<TileEntityFluidPipe> type)
+    {
+        super(type, 100);
     }
 
     @Override
@@ -302,10 +307,10 @@ public class TileEntityFluidPipe extends TileEntityFluidTransmitter implements I
         switch (((BlockFluidPipe) currentType).getMode())
         {
         case NORMAL:
-            block = GCBlocks.fluidPipePull;
+            block = GCBlocks.PULLED_FLUID_PIPE;
             break;
         default:
-            block = GCBlocks.fluidPipe;
+            block = GCBlocks.FLUID_PIPE;
             break;
         }
 

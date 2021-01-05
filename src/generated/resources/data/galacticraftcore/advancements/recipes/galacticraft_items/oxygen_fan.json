@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:oxygen_fan"
+    ]
+  },
+  "criteria": {
+    "has_wafers/basic_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:wafers/basic"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:oxygen_fan"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wafers/basic_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

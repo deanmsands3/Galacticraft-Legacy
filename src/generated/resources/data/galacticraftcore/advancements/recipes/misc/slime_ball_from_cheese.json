@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:slime_ball_from_cheese"
+    ]
+  },
+  "criteria": {
+    "has_cheese_curd": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:cheese_curd"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:slime_ball_from_cheese"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cheese_curd",
+      "has_the_recipe"
+    ]
+  ]
+}

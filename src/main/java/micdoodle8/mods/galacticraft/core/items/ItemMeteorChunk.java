@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.core.items;
 
 import micdoodle8.mods.galacticraft.core.GCItems;
-import micdoodle8.mods.galacticraft.core.entities.EntityMeteorChunk;
+import micdoodle8.mods.galacticraft.core.entities.MeteorChunkEntity;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
@@ -44,7 +44,7 @@ public class ItemMeteorChunk extends Item implements ISortable
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entityIn, int itemSlot, boolean isSelected)
     {
-        if (entityIn instanceof PlayerEntity && stack.getItem() == GCItems.meteorChunkHot && !world.isRemote)
+        if (entityIn instanceof PlayerEntity && stack.getItem() == GCItems.HOT_METEOR_CHUNK && !world.isRemote)
         {
             if (stack.hasTag())
             {
@@ -57,7 +57,7 @@ public class ItemMeteorChunk extends Item implements ISortable
                 }
                 else
                 {
-                    ((PlayerEntity) entityIn).inventory.setInventorySlotContents(itemSlot, new ItemStack(GCItems.meteorChunk, stack.getCount()));
+                    ((PlayerEntity) entityIn).inventory.setInventorySlotContents(itemSlot, new ItemStack(GCItems.METEOR_CHUNK, stack.getCount()));
 //                    stack.setItemDamage(0);
                     stack.setTag(null);
                 }
@@ -74,7 +74,7 @@ public class ItemMeteorChunk extends Item implements ISortable
     {
         super.onCreated(stack, world, entityPlayer);
 
-        if (stack.getItem() == GCItems.meteorChunkHot)
+        if (stack.getItem() == GCItems.HOT_METEOR_CHUNK)
         {
             stack.getOrCreateTag().putFloat("MeteorBurnTimeF", ItemMeteorChunk.METEOR_BURN_TIME);
         }
@@ -95,7 +95,7 @@ public class ItemMeteorChunk extends Item implements ISortable
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
-        if (stack.getItem() == GCItems.meteorChunkHot)
+        if (stack.getItem() == GCItems.HOT_METEOR_CHUNK)
         {
             float burnTime = 0.0F;
 
@@ -139,9 +139,9 @@ public class ItemMeteorChunk extends Item implements ISortable
 
         if (!world.isRemote)
         {
-            EntityMeteorChunk meteor = new EntityMeteorChunk(world, player, 1.0F);
+            MeteorChunkEntity meteor = new MeteorChunkEntity(world, player, 1.0F);
 
-            if (itemStack.getItem() == GCItems.meteorChunkHot)
+            if (itemStack.getItem() == GCItems.HOT_METEOR_CHUNK)
             {
                 meteor.setFire(20);
                 meteor.isHot = true;

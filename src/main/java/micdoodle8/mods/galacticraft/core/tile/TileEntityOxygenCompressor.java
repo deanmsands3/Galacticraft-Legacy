@@ -25,7 +25,7 @@ import java.util.EnumSet;
 
 public class TileEntityOxygenCompressor extends TileEntityOxygen implements INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.oxygenCompressor)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_COMPRESSOR)
     public static TileEntityType<TileEntityOxygenCompressor> TYPE;
 
     public static final int TANK_TRANSFER_SPEED = 2;

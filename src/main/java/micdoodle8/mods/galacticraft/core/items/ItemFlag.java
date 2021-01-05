@@ -2,7 +2,7 @@ package micdoodle8.mods.galacticraft.core.items;
 
 import micdoodle8.mods.galacticraft.api.item.IHoldableItemCustom;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
-import micdoodle8.mods.galacticraft.core.entities.EntityFlag;
+import micdoodle8.mods.galacticraft.core.entities.FlagEntity;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
@@ -74,9 +74,9 @@ public class ItemFlag extends Item implements IHoldableItemCustom, ISortable
 
             if (!worldIn.isRemote)
             {
-                final EntityFlag flag = new EntityFlag(worldIn, pos.getX() + 0.5F, pos.getY() + 1.0F, pos.getZ() + 0.5F, (int) (entity.rotationYaw - 90));
+                final FlagEntity flag = new FlagEntity(worldIn, pos.getX() + 0.5F, pos.getY() + 1.0F, pos.getZ() + 0.5F, (int) (entity.rotationYaw - 90));
 
-                if (worldIn.getEntitiesWithinAABB(EntityFlag.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 3, pos.getZ() + 1)).isEmpty())
+                if (worldIn.getEntitiesWithinAABB(FlagEntity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 3, pos.getZ() + 1)).isEmpty())
                 {
                     worldIn.addEntity(flag);
 //                    flag.setType(stack.getDamage());

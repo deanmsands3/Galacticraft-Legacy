@@ -14,7 +14,7 @@ import micdoodle8.mods.galacticraft.core.dimension.SpaceRace;
 import micdoodle8.mods.galacticraft.core.dimension.SpaceRaceManager;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlockWithInventory;
-import micdoodle8.mods.galacticraft.core.entities.EntityMeteor;
+import micdoodle8.mods.galacticraft.core.entities.MeteorEntity;
 import micdoodle8.mods.galacticraft.core.network.NetworkUtil;
 import micdoodle8.mods.galacticraft.core.tile.IMachineSides;
 import micdoodle8.mods.galacticraft.core.tile.IMachineSidesProperties;
@@ -63,7 +63,7 @@ import java.util.*;
 
 public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory implements IMultiBlock, ISidedInventory, IMachineSides, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.laserTurret)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.LASER_TURRET)
     public static TileEntityType<TileEntityLaserTurret> TYPE;
 
     private final float RANGE = 15.0F;
@@ -290,13 +290,13 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
                         Vector3 vecNoHeight = vec.clone();
                         vecNoHeight.y = 0;
                         // Make sure target is within range and not directly below turret:
-                        if ((vec.getMagnitudeSquared() < RANGE * RANGE || (targetMeteors && e instanceof EntityMeteor && vecNoHeight.getMagnitudeSquared() < METEOR_RANGE * METEOR_RANGE)) && Math.asin(vec.clone().normalize().y) > -Math.PI / 3.0)
+                        if ((vec.getMagnitudeSquared() < RANGE * RANGE || (targetMeteors && e instanceof MeteorEntity && vecNoHeight.getMagnitudeSquared() < METEOR_RANGE * METEOR_RANGE)) && Math.asin(vec.clone().normalize().y) > -Math.PI / 3.0)
                         {
                             if (e instanceof LivingEntity)
                             {
                                 list.add(new EntityEntrySortable((LivingEntity) e, vec.getMagnitude()));
                             }
-                            else if (targetMeteors && e instanceof EntityMeteor)
+                            else if (targetMeteors && e instanceof MeteorEntity)
                             {
                                 return e;
                             }
@@ -407,7 +407,7 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
                         LivingEntity entityLiving = (LivingEntity) toTarget;
                         entityLiving.attackEntityFrom(DamageSourceGC.laserTurret, 1.5F);
                     }
-                    else if (toTarget instanceof EntityMeteor)
+                    else if (toTarget instanceof MeteorEntity)
                     {
                         toTarget.remove();
                     }
@@ -584,7 +584,10 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
         {
             nbt.putString("ownerName", this.ownerName);
         }
-        nbt.putUniqueId("ownerUUID", this.ownerUUID);
+        if (this.ownerUUID != null)
+        {
+            nbt.putUniqueId("ownerUUID", this.ownerUUID);
+        }
 
         return nbt;
     }
@@ -710,7 +713,7 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
     {
         List<BlockPos> positions = new LinkedList<>();
         this.getPositions(placedPosition, positions);
-        ((BlockMulti) GCBlocks.fakeBlock).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
+        ((BlockMulti) GCBlocks.MULTI_BLOCK).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
     }
 
     @Override
@@ -724,14 +727,14 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
         {
             BlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock)
+            if (stateAt.getBlock() == GCBlocks.MULTI_BLOCK)
             {
                 BlockMulti.EnumBlockMultiType type = stateAt.get(BlockMulti.MULTI_TYPE);
                 if (type == BlockMulti.EnumBlockMultiType.LASER_TURRET)
                 {
                     if (this.world.isRemote)
                     {
-                        Minecraft.getInstance().particles.addBlockDestroyEffects(pos, VenusBlocks.laserTurret.getDefaultState());
+                        Minecraft.getInstance().particles.addBlockDestroyEffects(pos, VenusBlocks.LASER_TURRET.getDefaultState());
                     }
 
                     this.world.removeBlock(pos, false);

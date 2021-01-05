@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_top",
+  "textures": {
+    "side": "galacticraftplanets:block/venus_soft_rock",
+    "top": "galacticraftplanets:block/vapor_spout"
+  }
+}

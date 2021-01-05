@@ -1,0 +1,6 @@
+{
+    "parent": "block/block",
+    "loader": "forge:obj",
+    "model": "galacticraftplanets:models/obj/energy_beam_receiver.obj",
+    "flip-v": true
+}

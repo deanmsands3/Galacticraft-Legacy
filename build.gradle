@@ -5,24 +5,18 @@ def versionRev = 0
 
 buildscript {
 	repositories {
-		maven { url = 'https://files.minecraftforge.net/maven' }
+		maven { url 'https://files.minecraftforge.net/maven' }
+		maven { url 'https://repo.spongepowered.org/maven' }
 		jcenter()
 		mavenCentral()
 	}
 	dependencies {
 		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+		classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
 	}
 }
 apply plugin: 'net.minecraftforge.gradle'
-
-sourceSets.main {
-    java {
-        srcDirs = ['src/main/java', 'dependencies/main/java']
-    }
-    resources {
-        srcDirs = ['src/main/resources', 'dependencies/main/resources']
-    }
-}
+apply plugin: 'org.spongepowered.mixin'
 
 def versionBuild = 0
 if (System.getenv("BUILD_NUMBER") != null)
@@ -41,7 +35,7 @@ minecraft {
 	// stable_#            Stables are built at the discretion of the MCP team.
 	// Use non-default mappings at your own risk. they may not always work.
 	// Simply re-run your setup task after changing the mappings to update your workspace.
-	mappings channel: 'snapshot', version: '20200514-1.15.1'
+	mappings channel: 'snapshot', version: '20201225-1.15.1'
 	// makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
 	// accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -91,7 +85,7 @@ minecraft {
 			// Recommended logging level for the console
 			property 'forge.logging.console.level', 'debug'
 
-			args '--mod', 'galacticraftcore', '--all', '--output', file('src/generated/resources/')
+			args '--mod', 'galacticraftcore', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
 			mods {
 				galacticraftcore {
@@ -103,7 +97,7 @@ minecraft {
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
+	minecraft 'net.minecraftforge:forge:1.15.2-31.2.47'
 }
 
 repositories {
@@ -114,6 +108,16 @@ repositories {
 	maven {
 		url = "https://mod-buildcraft.com/maven/"
 	}
+}
+
+sourceSets {
+    main {
+    	ext.refMap = 'mixins.galacticraftcore.refmap.json'
+
+        resources {
+            srcDirs = ['src/main/resources/', 'src/generated/resources/']
+        }
+    }
 }
 
 dependencies {
@@ -196,6 +200,10 @@ task packCoreJar(type: Jar, dependsOn: "rePackAllJarCore") {
 		excludes.addAll(project.ext.planetsFiles)
 		excludes.addAll(project.ext.micdoodleCoreFiles)
 	}
+	manifest {
+        attributes("MixinConnector": "micdoodle8.mods.galacticraft.core.GCMixinConnector"
+        )
+    }
 }
 
 task packPlanetsJar(type: Jar, dependsOn: "rePackAllJarPlanets") { 
@@ -259,6 +267,10 @@ task packCoreJarDev(type: Jar, dependsOn: "classes") {
 		excludes.addAll('assets')
 		into 'src'
 	}
+	manifest {
+        attributes("MixinConnector": "micdoodle8.mods.galacticraft.core.GCMixinConnector"
+        )
+    }
 	
 	// Jar will always be updated
 	outputs.upToDateWhen {false}

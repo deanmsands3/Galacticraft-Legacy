@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import micdoodle8.mods.galacticraft.core.client.model.ModelEvolvedWitch;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedWitch;
+import micdoodle8.mods.galacticraft.core.client.model.EvolvedWitchModel;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedWitchEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
@@ -15,13 +15,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class LayerHeldItemEvolvedWitch extends CrossedArmsItemLayer<EntityEvolvedWitch, ModelEvolvedWitch>
+public class LayerHeldItemEvolvedWitch extends CrossedArmsItemLayer<EvolvedWitchEntity, EvolvedWitchModel>
 {
-    public LayerHeldItemEvolvedWitch(IEntityRenderer<EntityEvolvedWitch, ModelEvolvedWitch> p_i50916_1_) {
+    public LayerHeldItemEvolvedWitch(IEntityRenderer<EvolvedWitchEntity, EvolvedWitchModel> p_i50916_1_) {
         super(p_i50916_1_);
     }
 
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, EntityEvolvedWitch entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, EvolvedWitchEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ItemStack itemstack = entitylivingbaseIn.getHeldItemMainhand();
         matrixStackIn.push();
         if (itemstack.getItem() == Items.POTION) {

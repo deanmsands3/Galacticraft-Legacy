@@ -8,11 +8,13 @@ import micdoodle8.mods.galacticraft.planets.IPlanetsModuleClient;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.FluidTexturesGC;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.fx.ParticleTelepad;
+import micdoodle8.mods.galacticraft.planets.asteroids.client.render.entity.*;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.render.item.*;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.render.tile.TileEntityBeamReceiverRenderer;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.render.tile.TileEntityBeamReflectorRenderer;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.render.tile.TileEntityMinerBaseRenderer;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.render.tile.TileEntityShortRangeTelepadRenderer;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.AsteroidEntities;
 import micdoodle8.mods.galacticraft.planets.asteroids.event.AsteroidsEventHandlerClient;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityBeamReceiver;
@@ -32,6 +34,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -44,28 +47,26 @@ public class AsteroidsModuleClient implements IPlanetsModuleClient
     @Override
     public void init(FMLCommonSetupEvent event)
     {
-//        RenderingRegistry.registerEntityRenderingHandler(EntitySmallAsteroid.class, (EntityRendererManager manager) -> new RenderSmallAsteroid(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntityGrapple.class, (EntityRendererManager manager) -> new RenderGrapple(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntityEntryPod.class, (EntityRendererManager manager) -> new RenderEntryPod(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntityTier3Rocket.class, (EntityRendererManager manager) -> new RenderTier3Rocket(manager));
-//        RenderingRegistry.registerEntityRenderingHandler(EntityAstroMiner.class, (EntityRendererManager manager) -> new RenderAstroMiner(manager));
+        RenderingRegistry.registerEntityRenderingHandler(AsteroidEntities.SMALL_ASTEROID, SmallAsteroidRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AsteroidEntities.GRAPPLE, GrappleRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AsteroidEntities.ENTRY_POD, EntryPodRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AsteroidEntities.TIER_3_ROCKET, Tier3RocketRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AsteroidEntities.ASTRO_MINER, AstroMinerRenderer::new);
         MinecraftForge.EVENT_BUS.register(this);
 
         AsteroidsEventHandlerClient clientEventHandler = new AsteroidsEventHandlerClient();
         MinecraftForge.EVENT_BUS.register(clientEventHandler);
         FluidTexturesGC.init();
-//        AsteroidsModuleClient.registerBlockRenderers();
 
         RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockMinerBase, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.minerBaseFull, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockWalkway, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockWalkwayWire, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockWalkwayFluid, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.ASTRO_MINER_BASE, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.FULL_ASTRO_MINER_BASE, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.WALKWAY, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.WIRE_WALKWAY, cutout);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.FLUID_PIPE_WALKWAY, cutout);
         RenderType transluscent = RenderType.getTranslucent();
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.blockDenseIce, transluscent);
+        RenderTypeLookup.setRenderLayer(AsteroidBlocks.DENSE_ICE, transluscent);
 
-//          RenderingRegistry.registerEntityRenderingHandler(EntityAstroMiner.class, (RenderManager manager) -> new RenderAstroMiner());
         ClientRegistry.bindTileEntityRenderer(TileEntityBeamReflector.TYPE, TileEntityBeamReflectorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityBeamReceiver.TYPE, TileEntityBeamReceiverRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityMinerBase.TYPE, TileEntityMinerBaseRenderer::new);
@@ -75,16 +76,16 @@ public class AsteroidsModuleClient implements IPlanetsModuleClient
 //        {
 //            CraftGuideIntegration.register();
 //        }
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThree.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThreeCargo1.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThreeCargo2.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThreeCargo3.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.rocketTierThreeCreative.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.grapple.getRegistryName(), modelToWrap -> new ItemModelGrapple(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidsItems.astroMiner.getRegistryName(), modelToWrap -> new ItemModelAstroMiner(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidBlocks.shortRangeTelepad.getRegistryName(), modelToWrap -> new ItemModelTelepad(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidBlocks.beamReceiver.getRegistryName(), modelToWrap -> new ItemModelBeamReceiver(modelToWrap));
-        ClientProxyCore.setCustomModel(AsteroidBlocks.beamReflector.getRegistryName(), modelToWrap -> new ItemModelBeamReflector(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.TIER_3_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.TIER_3_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.TIER_3_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.TIER_3_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.CREATIVE_TIER_3_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocketT3(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.GRAPPLE.getRegistryName(), modelToWrap -> new ItemModelGrapple(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidsItems.ASTRO_MINER.getRegistryName(), modelToWrap -> new ItemModelAstroMiner(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidBlocks.SHORT_RANGE_TELEPAD.getRegistryName(), modelToWrap -> new ItemModelTelepad(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidBlocks.ENERGY_BEAM_RECEIVER.getRegistryName(), modelToWrap -> new ItemModelBeamReceiver(modelToWrap));
+        ClientProxyCore.setCustomModel(AsteroidBlocks.ENERGY_BEAM_REFLECTOR.getRegistryName(), modelToWrap -> new ItemModelBeamReflector(modelToWrap));
     }
 
 //    @Override
@@ -151,32 +152,32 @@ public class AsteroidsModuleClient implements IPlanetsModuleClient
     @OnlyIn(Dist.CLIENT)
     public static void loadTextures(TextureStitchEvent.Pre event)
     {
-        registerTexture(event, "minerbase");
-        registerTexture(event, "beam_reflector");
-        registerTexture(event, "beam_receiver");
-        registerTexture(event, "telepad_short");
-        registerTexture(event, "telepad_short0");
-        registerTexture(event, "grapple");
-        registerTexture(event, "tier3rocket");
-        registerTexture(event, "astro_miner");
-        registerTexture(event, "astro_miner_off");
-        registerTexture(event, "astro_miner_fx");
-        registerTexture(event, "space_pod");
-        registerTexture(event, "fluids/argon");
-        registerTexture(event, "fluids/atmosphericgases");
-        registerTexture(event, "fluids/carbondioxide");
-        registerTexture(event, "fluids/helium");
-        registerTexture(event, "fluids/liquidargon");
-        registerTexture(event, "fluids/liquidmethane");
-        registerTexture(event, "fluids/liquidnitrogen");
-        registerTexture(event, "fluids/liquidoxygen");
-        registerTexture(event, "fluids/methane");
-        registerTexture(event, "fluids/nitrogen");
+        registerTexture(event, "entity/astro_miner_base");
+        registerTexture(event, "entity/energy_beam_reflector");
+        registerTexture(event, "entity/energy_beam_receiver");
+        registerTexture(event, "entity/short_range_telepad/base");
+        registerTexture(event, "entity/short_range_telepad/input");
+        registerTexture(event, "entity/grapple");
+        registerTexture(event, "entity/tier_3_rocket");
+        registerTexture(event, "entity/astro_miner/main");
+        registerTexture(event, "entity/astro_miner/off");
+        registerTexture(event, "entity/astro_miner/fx");
+        registerTexture(event, "entity/entry_pod/pod");
+        registerTexture(event, "block/argon");
+        registerTexture(event, "block/atmospheric_gases");
+        registerTexture(event, "block/carbondioxide");
+        registerTexture(event, "block/helium");
+        registerTexture(event, "block/liquid_argon");
+        registerTexture(event, "block/liquid_methane");
+        registerTexture(event, "block/liquid_nitrogen");
+        registerTexture(event, "block/liquid_oxygen");
+        registerTexture(event, "block/methane");
+        registerTexture(event, "block/nitrogen");
     }
 
     private static void registerTexture(TextureStitchEvent.Pre event, String texture)
     {
-        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "blocks/" + texture));
+        event.addSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + texture));
     }
 
 //    public static void registerBlockRenderers()

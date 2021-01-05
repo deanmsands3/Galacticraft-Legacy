@@ -115,7 +115,7 @@ public class ContainerRefinery extends Container
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (FluidUtil.isPartialContainer(var4, GCItems.fuelCanister))
+                    else if (FluidUtil.isPartialContainer(var4, GCItems.PARTIAL_FUEL_CANISTER))
                     {
                         if (!this.mergeItemStack(var4, 2, 3, false))
                         {

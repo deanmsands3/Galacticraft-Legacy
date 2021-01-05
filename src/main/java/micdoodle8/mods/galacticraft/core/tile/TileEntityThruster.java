@@ -8,7 +8,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityThruster extends TileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.spinThruster)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.SPIN_THRUSTER)
     public static TileEntityType<TileEntityThruster> TYPE;
 
     public TileEntityThruster()

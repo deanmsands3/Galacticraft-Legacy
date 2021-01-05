@@ -48,7 +48,7 @@ import javax.annotation.Nullable;
 
 public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory implements ISidedInventory, IFluidHandlerWrapper, ILandingPadAttachable, IMachineSides, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fuelLoader)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.FUEL_LOADER)
     public static TileEntityType<TileEntityFuelLoader> TYPE;
 
     private final int tankCapacity = 12000;
@@ -195,7 +195,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     @Override
     public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
     {
-        return (slotID == 1 && itemstack != null && itemstack.getItem() == GCItems.fuelCanister) || (slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem()));
+        return (slotID == 1 && itemstack != null && itemstack.getItem() == GCItems.PARTIAL_FUEL_CANISTER) || (slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem()));
     }
 
     @Override

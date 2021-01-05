@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYX",
+    "ZWZ",
+    "XVX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/steel"
+    },
+    "Y": {
+      "item": "minecraft:crafting_table"
+    },
+    "Z": {
+      "item": "minecraft:lever"
+    },
+    "W": {
+      "tag": "forge:wafers/advanced"
+    },
+    "V": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:rocket_workbench"
+  }
+}

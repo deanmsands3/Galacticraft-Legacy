@@ -30,20 +30,6 @@ public class BlockIceAsteroids extends BreakableBlock implements ISortable
         super(builder);
     }
 
-//    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public BlockRenderLayer getRenderLayer()
-//    {
-//        return BlockRenderLayer.TRANSLUCENT;
-//    }
-
-//    @OnlyIn(Dist.CLIENT)
-//    @Override
-//    public ItemGroup getCreativeTabToDisplayOn()
-//    {
-//        return GalacticraftCore.galacticraftBlocksTab;
-//    }
-
     @Override
     public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te, ItemStack tool)
     {
@@ -66,12 +52,6 @@ public class BlockIceAsteroids extends BreakableBlock implements ISortable
         }
     }
 
-//    @Override
-//    public int quantityDropped(Random rand)
-//    {
-//        return 0;
-//    }
-
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random)
     {
@@ -83,8 +63,6 @@ public class BlockIceAsteroids extends BreakableBlock implements ISortable
                 return;
             }
 
-            spawnAsEntity(worldIn, pos, new ItemStack(this));
-//            this.dropBlockAsItem(worldIn, pos, worldIn.getBlockState(pos), 0);
             worldIn.setBlockState(pos, Blocks.WATER.getDefaultState());
         }
     }
@@ -100,10 +78,4 @@ public class BlockIceAsteroids extends BreakableBlock implements ISortable
     {
         return EnumSortCategory.GENERAL;
     }
-
-//    @Override
-//    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face)
-//    {
-//        return BlockFaceShape.UNDEFINED;
-//    }
 }

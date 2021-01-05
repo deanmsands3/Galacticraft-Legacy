@@ -45,13 +45,15 @@ public class TileEntityLaserTurretRenderer extends TileEntityRenderer<TileEntity
 
     private void updateModels()
     {
-        laserBase = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/laser.obj"), ImmutableList.of("baseConnector0", "baseConnector1"));
-        laserPhalange = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/laser.obj"), ImmutableList.of("phalange"));
-        laserPhalangeAxle = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/laser.obj"), ImmutableList.of("phalangeAxle"));
-        laserTurrets = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/laser.obj"), ImmutableList.of("turretLeft", "turretRight"));
-        laserTurretsOff = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/laser.obj"), ImmutableList.of("turretLeft_off", "turretRight_off"));
-        orb1 = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/orb.obj"), ImmutableList.of("inner_Icosphere"));
-        orb2 = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/orb.obj"), ImmutableList.of("inner_Icosphere.001"));
+        ResourceLocation laser = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/laser_turret.obj");
+        ResourceLocation orb = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/laser_turret_orb.obj");
+        laserBase = GCModelCache.INSTANCE.getModel(laser, ImmutableList.of("baseConnector0", "baseConnector1"));
+        laserPhalange = GCModelCache.INSTANCE.getModel(laser, ImmutableList.of("phalange"));
+        laserPhalangeAxle = GCModelCache.INSTANCE.getModel(laser, ImmutableList.of("phalangeAxle"));
+        laserTurrets = GCModelCache.INSTANCE.getModel(laser, ImmutableList.of("turretLeft", "turretRight"));
+        laserTurretsOff = GCModelCache.INSTANCE.getModel(laser, ImmutableList.of("turretLeft_off", "turretRight_off"));
+        orb1 = GCModelCache.INSTANCE.getModel(orb, ImmutableList.of("inner_Icosphere"));
+        orb2 = GCModelCache.INSTANCE.getModel(orb, ImmutableList.of("inner_Icosphere.001"));
     }
 
     @Override

@@ -22,7 +22,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
 {
     public static class TileEntityAluminumWireSwitchableT1 extends TileEntityAluminumWireSwitch
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireSwitchable)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.SWITCHABLE_ALUMINUM_WIRE)
         public static TileEntityType<TileEntityAluminumWireSwitchableT1> TYPE;
 
         public TileEntityAluminumWireSwitchableT1()
@@ -33,7 +33,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
 
     public static class TileEntityAluminumWireSwitchableT2 extends TileEntityAluminumWireSwitch
     {
-        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.aluminumWireSwitchableHeavy)
+        @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.SWITCHABLE_HEAVY_ALUMINUM_WIRE)
         public static TileEntityType<TileEntityAluminumWireSwitchableT2> TYPE;
 
         public TileEntityAluminumWireSwitchableT2()

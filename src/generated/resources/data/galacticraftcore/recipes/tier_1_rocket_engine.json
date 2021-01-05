@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " YV",
+    "XWX",
+    "XZX"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:tier_1_heavy_duty_plate"
+    },
+    "Y": {
+      "item": "minecraft:flint_and_steel"
+    },
+    "Z": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "W": {
+      "item": "galacticraftcore:tin_canister"
+    },
+    "V": {
+      "item": "minecraft:stone_button"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:tier_1_rocket_engine"
+  }
+}

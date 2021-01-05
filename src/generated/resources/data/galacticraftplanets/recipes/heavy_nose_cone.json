@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " Y ",
+    " X ",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftplanets:tier_3_heavy_duty_plate"
+    },
+    "Y": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:heavy_nose_cone"
+  }
+}

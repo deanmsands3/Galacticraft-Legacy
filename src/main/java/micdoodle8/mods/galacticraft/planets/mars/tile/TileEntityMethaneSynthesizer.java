@@ -60,7 +60,7 @@ import java.util.ArrayList;
 
 public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInventory implements ISidedInventory, IDisableableMachine, IFluidHandlerWrapper, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.methaneSynthesizer)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.METHANE_SYNTHESIZER)
     public static TileEntityType<TileEntityMethaneSynthesizer> TYPE;
 
     private final int tankCapacity = 4000;
@@ -154,14 +154,14 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
             ItemStack inputCanister = this.getInventory().get(2);
             if (!inputCanister.isEmpty())
             {
-                if (inputCanister.getItem() == AsteroidsItems.atmosphericValve && this.hasCO2 > 0)
+                if (inputCanister.getItem() == AsteroidsItems.ATMOSPHERIC_VALVE && this.hasCO2 > 0)
                 {
                     //CO2 -> CO2 tank
                     if (this.gasTank2.getFluidAmount() < this.gasTank2.getCapacity())
                     {
                         BlockState stateAbove = this.world.getBlockState(this.getPos().up());
                         Block blockAbove = stateAbove.getBlock();
-                        if (blockAbove.getMaterial(stateAbove) == Material.AIR && blockAbove != GCBlocks.breatheableAir && blockAbove != GCBlocks.brightBreatheableAir)
+                        if (blockAbove.getMaterial(stateAbove) == Material.AIR && blockAbove != GCBlocks.BREATHEABLE_AIR && blockAbove != GCBlocks.BRIGHT_BREATHEABLE_AIR)
                         {
                             if (!OxygenUtil.inOxygenBubble(this.world, this.getPos().getX() + 0.5D, this.getPos().getY() + 1D, this.getPos().getZ() + 0.5D))
                             {
@@ -228,10 +228,10 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
 
             if (liquid != null)
             {
-                FluidUtil.tryFillContainer(tank, liquid, this.getInventory(), slot, AsteroidsItems.methaneCanister);
+                FluidUtil.tryFillContainer(tank, liquid, this.getInventory(), slot, AsteroidsItems.PARTIAL_METHANE_CANISTER);
             }
         }
-        else if (!this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot).getItem() == AsteroidsItems.atmosphericValve)
+        else if (!this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot).getItem() == AsteroidsItems.ATMOSPHERIC_VALVE)
         {
             tank.drain(4, IFluidHandler.FluidAction.EXECUTE);
         }
@@ -259,7 +259,7 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
             return false;
         }
 
-        this.noCoal = this.getInventory().get(3).isEmpty() || this.getInventory().get(3).getItem() != MarsItems.carbonFragments;
+        this.noCoal = this.getInventory().get(3).isEmpty() || this.getInventory().get(3).getItem() != MarsItems.FRAGMENTED_CARBON;
 
         if (this.noCoal && this.coalPartial == 0 && (this.gasTank2.getFluid() == FluidStack.EMPTY || this.gasTank2.getFluidAmount() <= 0))
         {
@@ -417,9 +417,9 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
             case 0:
                 return ItemElectricBase.isElectricItemCharged(itemstack);
             case 3:
-                return itemstack.getItem() == MarsItems.carbonFragments;
+                return itemstack.getItem() == MarsItems.FRAGMENTED_CARBON;
             case 4:
-                return FluidUtil.isPartialContainer(itemstack, AsteroidsItems.methaneCanister);
+                return FluidUtil.isPartialContainer(itemstack, AsteroidsItems.PARTIAL_METHANE_CANISTER);
             default:
                 return false;
             }
@@ -455,9 +455,9 @@ public class TileEntityMethaneSynthesizer extends TileBaseElectricBlockWithInven
         case 1:
             return false;
         case 2:
-            return itemstack.getItem() == AsteroidsItems.atmosphericValve;
+            return itemstack.getItem() == AsteroidsItems.ATMOSPHERIC_VALVE;
         case 3:
-            return itemstack.getItem() == MarsItems.carbonFragments;
+            return itemstack.getItem() == MarsItems.FRAGMENTED_CARBON;
         case 4:
             return FluidUtil.isValidContainer(itemstack);
         }

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "fragmented_carbon",
+  "ingredients": [
+    {
+      "item": "minecraft:charcoal"
+    }
+  ],
+  "result": {
+    "item": "galacticraftplanets:fragmented_carbon",
+    "count": 4
+  }
+}

@@ -108,7 +108,7 @@ public class OxygenUtil
 
         // If entity is within air lock wall, check adjacent blocks for oxygen
         // The value is equal to the max distance from an adjacent oxygen block to the edge of a sealer wall
-        if (entity.world.getBlockState(entity.getPosition()).getBlock() == GCBlocks.airLockSeal)
+        if (entity.world.getBlockState(entity.getPosition()).getBlock() == GCBlocks.AIR_LOCK_SEAL)
         {
             offsetXZ = 0.75F;
         }
@@ -240,7 +240,7 @@ public class OxygenUtil
     private static synchronized BreathableAirResult testContactWithBreathableAir(World world, Block block, BlockPos pos, int limitCount)
     {
         checked.add(pos);
-        if (block == GCBlocks.breatheableAir || block == GCBlocks.brightBreatheableAir)
+        if (block == GCBlocks.BREATHEABLE_AIR || block == GCBlocks.BRIGHT_BREATHEABLE_AIR)
         {
             BlockState state = world.getBlockState(pos);
             return state.get(BlockThermalAir.THERMAL) ? BreathableAirResult.THERMAL_BREATHABLE : BreathableAirResult.BREATHABLE;

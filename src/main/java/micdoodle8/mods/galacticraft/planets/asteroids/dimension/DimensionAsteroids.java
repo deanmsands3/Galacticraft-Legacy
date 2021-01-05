@@ -10,7 +10,7 @@ import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.world.gen.BiomeMoonHills;
 import micdoodle8.mods.galacticraft.core.world.gen.dungeon.RoomTreasure;
 import micdoodle8.mods.galacticraft.planets.asteroids.AsteroidsModule;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityAstroMiner;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.world.gen.AsteroidChunkGenerator;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -476,7 +476,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
 
         ArrayList<BlockVec3> returnValues = new ArrayList<>();
         int i = 0;
-        int offset = EntityAstroMiner.MINE_LENGTH_AST / 2;
+        int offset = AstroMinerEntity.MINE_LENGTH_AST / 2;
         for (BlockVec3 target : targets.values())
         {
             BlockVec3 coords = target.clone();

@@ -35,7 +35,7 @@ public class SchematicTier3Rocket implements ISchematicPage
     @Override
     public ItemStack getRequiredItem()
     {
-        return new ItemStack(MarsItems.schematicRocketT3);
+        return new ItemStack(MarsItems.TIER_3_ROCKET_SCHEMATIC);
     }
 
     @OnlyIn(Dist.CLIENT)

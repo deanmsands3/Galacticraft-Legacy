@@ -25,7 +25,7 @@ import java.util.List;
 
 public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanced
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.bossSpawner)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.MOON_BOSS_SPAWNER)
     public static TileEntityType<TileEntityDungeonSpawner<?>> TYPE;
 
     public Class<E> bossClass;
@@ -166,10 +166,10 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
     public List<Class<? extends MobEntity>> getDisabledCreatures()
     {
         List<Class<? extends MobEntity>> list = new ArrayList<Class<? extends MobEntity>>();
-        list.add(EntityEvolvedSkeleton.class);
-        list.add(EntityEvolvedCreeper.class);
-        list.add(EntityEvolvedZombie.class);
-        list.add(EntityEvolvedSpider.class);
+        list.add(EvolvedSkeletonEntity.class);
+        list.add(EvolvedCreeperEntity.class);
+        list.add(EvolvedZombieEntity.class);
+        list.add(EvolvedSpiderEntity.class);
         return list;
     }
 

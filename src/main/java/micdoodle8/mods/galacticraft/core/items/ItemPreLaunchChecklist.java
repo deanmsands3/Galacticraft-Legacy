@@ -57,7 +57,7 @@ public class ItemPreLaunchChecklist extends Item implements ISortable
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack item, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
-        if (!item.isEmpty() && this == GCItems.heavyPlatingTier1)
+        if (!item.isEmpty() && this == GCItems.TIER_1_HEAVY_DUTY_PLATE)
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("item.tier1.desc")));
         }

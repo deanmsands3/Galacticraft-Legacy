@@ -2,12 +2,12 @@ package micdoodle8.mods.galacticraft.planets.mars.tile;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.sounds.GCSounds;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSkeleton;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSpider;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedZombie;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedSkeletonEntity;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedSpiderEntity;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedZombieEntity;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlockNames;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCreeperBoss;
+import micdoodle8.mods.galacticraft.planets.mars.entities.CreeperBossEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -17,23 +17,23 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<EntityCreeperBoss>
+public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<CreeperBossEntity>
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.cryoChamber)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.CRYOGENIC_CHAMBER)
     public static TileEntityType<TileEntityDungeonSpawnerMars> TYPE;
 
     public TileEntityDungeonSpawnerMars()
     {
-        super(TYPE, EntityCreeperBoss.class);
+        super(TYPE, CreeperBossEntity.class);
     }
 
     @Override
     public List<Class<? extends MobEntity>> getDisabledCreatures()
     {
         List<Class<? extends MobEntity>> list = new ArrayList<Class<? extends MobEntity>>();
-        list.add(EntityEvolvedSkeleton.class);
-        list.add(EntityEvolvedZombie.class);
-        list.add(EntityEvolvedSpider.class);
+        list.add(EvolvedSkeletonEntity.class);
+        list.add(EvolvedZombieEntity.class);
+        list.add(EvolvedSpiderEntity.class);
         return list;
     }
 

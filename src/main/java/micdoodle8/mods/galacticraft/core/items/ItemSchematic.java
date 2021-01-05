@@ -5,7 +5,7 @@ import micdoodle8.mods.galacticraft.api.recipe.SchematicRegistry;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
-import micdoodle8.mods.galacticraft.core.entities.EntityHangingSchematic;
+import micdoodle8.mods.galacticraft.core.entities.HangingSchematicEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
@@ -74,11 +74,11 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
-        if (stack.getItem() == GCItems.schematicBuggy)
+        if (stack.getItem() == GCItems.MOON_BUGGY_SCHEMATIC)
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.moonbuggy")));
         }
-        else if (stack.getItem() == GCItems.schematicRocketT2)
+        else if (stack.getItem() == GCItems.TIER_2_ROCKET_SCHEMATIC)
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.rocket_t2")));
 
@@ -104,7 +104,7 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
 
         if (facing != Direction.DOWN && facing != Direction.UP && context.getPlayer().canPlayerEdit(blockpos, facing, stack))
         {
-            EntityHangingSchematic entityhanging = this.createEntity(context.getWorld(), blockpos, facing, this.getIndex(stack.getDamage()));
+            HangingSchematicEntity entityhanging = this.createEntity(context.getWorld(), blockpos, facing, this.getIndex(stack.getDamage()));
 
             if (entityhanging != null && entityhanging.onValidSurface())
             {
@@ -126,9 +126,9 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
         }
     }
 
-    private EntityHangingSchematic createEntity(World worldIn, BlockPos pos, Direction clickedSide, int index)
+    private HangingSchematicEntity createEntity(World worldIn, BlockPos pos, Direction clickedSide, int index)
     {
-        return new EntityHangingSchematic(GCEntities.HANGING_SCHEMATIC, worldIn, pos, clickedSide, index);
+        return new HangingSchematicEntity(GCEntities.HANGING_SCHEMATIC, worldIn, pos, clickedSide, index);
     }
 
     /**
@@ -144,8 +144,8 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
      */
     public static void registerSchematicItems()
     {
-        SchematicRegistry.registerSchematicItem(new ItemStack(GCItems.schematicBuggy, 1));
-        SchematicRegistry.registerSchematicItem(new ItemStack(GCItems.schematicRocketT2, 1));
+        SchematicRegistry.registerSchematicItem(new ItemStack(GCItems.MOON_BUGGY_SCHEMATIC, 1));
+        SchematicRegistry.registerSchematicItem(new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC, 1));
     }
 
     /**
@@ -154,8 +154,8 @@ public class ItemSchematic extends Item implements ISchematicItem, ISortable
     @OnlyIn(Dist.CLIENT)
     public static void registerTextures()
     {
-        SchematicRegistry.registerTexture(new ResourceLocation(Constants.MOD_ID_CORE, "textures/items/schematic_buggy.png"));
-        SchematicRegistry.registerTexture(new ResourceLocation(Constants.MOD_ID_CORE, "textures/items/schematic_rocket_t2.png"));
+        SchematicRegistry.registerTexture(new ResourceLocation(Constants.MOD_ID_CORE, "textures/item/moon_buggy_schematic.png"));
+        SchematicRegistry.registerTexture(new ResourceLocation(Constants.MOD_ID_CORE, "textures/item/tier_2_rocket_schematic.png"));
     }
 
     @Override

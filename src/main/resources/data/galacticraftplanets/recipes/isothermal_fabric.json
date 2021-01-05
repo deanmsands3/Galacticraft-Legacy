@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "galacticraftplanets:isothermal_fabric"
+  },
+  "pattern": [
+    "XYX"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "galacticraftplanets:thermal_cloth"
+    },
+    "Y": {
+      "type": "galacticraftcore:advanced_metal",
+      "metal": "desh_ingot"
+    }
+  }
+}

@@ -1,6 +1,5 @@
 package micdoodle8.mods.galacticraft.api.vector;
 
-import com.sun.javafx.geom.Vec3f;
 import micdoodle8.mods.galacticraft.core.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -67,11 +66,6 @@ public class Vector3D implements Cloneable
     }
 
     public Vector3D(Vec3d par1)
-    {
-        this(par1.x, par1.y, par1.z);
-    }
-
-    public Vector3D(Vec3f par1)
     {
         this(par1.x, par1.y, par1.z);
     }

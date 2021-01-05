@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInventory implements ISidedInventory, IMachineSides, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.circuitFabricator)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.CIRCUIT_FABRICATOR)
     public static TileEntityType<TileEntityCircuitFabricator> TYPE;
 
     public static final int PROCESS_TIME_REQUIRED = 300;
@@ -127,11 +127,11 @@ public class TileEntityCircuitFabricator extends TileBaseElectricBlockWithInvent
             ItemStack resultItemStack = this.producingStack.copy();
             if (this.world.getDimension() instanceof IZeroGDimension)
             {
-                if (resultItemStack.getItem() == GCItems.compressedWaferBasic)
+                if (resultItemStack.getItem() == GCItems.BASIC_WAFER)
                 {
                     resultItemStack.setCount(5);
                 }
-                else if (resultItemStack.getItem() == GCItems.compressedWaferSolar)
+                else if (resultItemStack.getItem() == GCItems.SOLAR_WAFER)
                 {
                     resultItemStack.setCount(15);
                 }

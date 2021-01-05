@@ -1,0 +1,26 @@
+{
+  "result": {
+    "item": "galacticraftcore:partial_oil_canister",
+    "nbt": "{Damage:1001}"
+  },
+  "pattern": [
+    "WXW",
+    "WYW",
+    "WZW"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "W": {
+      "tag": "forge:plates/tin"
+    },
+    "X": {
+      "tag": "forge:plates/steel"
+    },
+    "Y": {
+      "item": "minecraft:glass"
+    },
+    "Z": {
+      "item": "galacticraftcore:tin_canister"
+    }
+  }
+}

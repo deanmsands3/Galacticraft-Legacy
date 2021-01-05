@@ -83,11 +83,11 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     @Override
     public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos)
     {
-        if (this == MarsBlocks.dungeonBrick)
+        if (this == MarsBlocks.MARS_DUNGEON_BRICKS)
         {
             return MaterialColor.GREEN;
         }
-        else if (this == MarsBlocks.rockSurface)
+        else if (this == MarsBlocks.MARS_FINE_REGOLITH)
         {
             return MaterialColor.DIRT;
         }
@@ -185,7 +185,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     @Override
     public boolean isValueable(BlockState state)
     {
-        return this == MarsBlocks.oreCopper || this == MarsBlocks.oreDesh || this == MarsBlocks.oreIron || this == MarsBlocks.oreTin;
+        return this == MarsBlocks.MARS_COPPER_ORE || this == MarsBlocks.DESH_ORE || this == MarsBlocks.MARS_IRON_ORE || this == MarsBlocks.MARS_TIN_ORE;
 //        switch (this.getMetaFromState(state))
 //        {
 //        case 0:
@@ -228,7 +228,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     {
         if (rand.nextInt(10) == 0)
         {
-            if (this == MarsBlocks.dungeonBrick)
+            if (this == MarsBlocks.MARS_DUNGEON_BRICKS)
             {
                 worldIn.addParticle(MarsParticles.DRIP, pos.getX() + rand.nextFloat(), pos.getY(), pos.getZ() + rand.nextFloat(), 0, 0, 0);
 
@@ -245,7 +245,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     {
         BlockState state = world.getBlockState(pos);
         BlockState stateAbove = world.getBlockState(pos.up());
-        return this == MarsBlocks.rockSurface && stateAbove.getShape(world, pos.up()) != VoxelShapes.fullCube();
+        return this == MarsBlocks.MARS_FINE_REGOLITH && stateAbove.getShape(world, pos.up()) != VoxelShapes.fullCube();
     }
 
     @Override
@@ -257,7 +257,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     @Override
     public boolean isReplaceableOreGen(BlockState state, IWorldReader world, BlockPos pos, java.util.function.Predicate<BlockState> target)
     {
-        return this == MarsBlocks.rockMiddle || this == MarsBlocks.stone;
+        return this == MarsBlocks.MARS_REGOLITH || this == MarsBlocks.MARS_STONE;
     }
 
 //    @Override
@@ -281,15 +281,15 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     @Override
     public EnumSortCategory getCategory()
     {
-        if (this == MarsBlocks.oreDesh || this == MarsBlocks.oreTin || this == MarsBlocks.oreIron || this == MarsBlocks.oreCopper)
+        if (this == MarsBlocks.DESH_ORE || this == MarsBlocks.MARS_TIN_ORE || this == MarsBlocks.MARS_IRON_ORE || this == MarsBlocks.MARS_COPPER_ORE)
         {
             return EnumSortCategory.ORE;
         }
-        else if (this == MarsBlocks.dungeonBrick)
+        else if (this == MarsBlocks.MARS_DUNGEON_BRICKS)
         {
             return EnumSortCategory.BRICKS;
         }
-        else if (this == MarsBlocks.deshBlock)
+        else if (this == MarsBlocks.DESH_BLOCK)
         {
             return EnumSortCategory.INGOT_BLOCK;
         }
@@ -305,7 +305,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
             return 0;
         }
 
-        if (this == MarsBlocks.oreDesh)
+        if (this == MarsBlocks.DESH_ORE)
         {
             Random rand = world instanceof World ? ((World) world).rand : new Random();
             return MathHelper.nextInt(rand, 2, 5);

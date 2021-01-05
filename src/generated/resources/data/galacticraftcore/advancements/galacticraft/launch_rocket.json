@@ -1,0 +1,29 @@
+{
+  "parent": "galacticraftcore:galacticraft/fuel_loader",
+  "display": {
+    "icon": {
+      "item": "minecraft:flint_and_steel",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.launch_rocket.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.launch_rocket.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "launch_rocket": {
+      "trigger": "galacticraftcore:launch_rocket"
+    }
+  },
+  "requirements": [
+    [
+      "launch_rocket"
+    ]
+  ]
+}

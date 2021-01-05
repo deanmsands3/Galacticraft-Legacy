@@ -8,7 +8,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityTreasureChestMars extends TileEntityTreasureChest
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.treasureChestTier2)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.TIER_2_TREASURE_CHEST)
     public static TileEntityType<TileEntityTreasureChestMars> TYPE;
 
     public TileEntityTreasureChestMars()

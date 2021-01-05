@@ -15,7 +15,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityPlayerDetector extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.concealedDetector)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.PLAYER_DETECTOR)
     public static TileEntityType<TileEntityPlayerDetector> TYPE;
 
     private int ticks = 24;
@@ -35,7 +35,7 @@ public class TileEntityPlayerDetector extends TileEntity implements ITickableTil
             this.ticks = 0;
             Direction facing = Direction.NORTH;
             BlockState state = this.world.getBlockState(this.pos);
-            if (state.getBlock() == GCBlocks.concealedDetector)
+            if (state.getBlock() == GCBlocks.PLAYER_DETECTOR)
             {
                 facing = state.get(BlockConcealedDetector.FACING);
             }

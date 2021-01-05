@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WYW",
+    "ZXZ",
+    "WYW"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:wafers/basic"
+    },
+    "Y": {
+      "tag": "forge:dusts/glowstone"
+    },
+    "Z": {
+      "tag": "forge:plates/steel"
+    },
+    "W": {
+      "item": "minecraft:piston"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:hydraulic_platform",
+    "count": 4
+  }
+}

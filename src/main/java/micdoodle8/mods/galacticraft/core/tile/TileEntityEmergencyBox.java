@@ -42,7 +42,7 @@ import java.util.List;
 
 public class TileEntityEmergencyBox extends TileEntity implements ITickableTileEntity, IPacketReceiver
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.emergencyBox)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.EMERGENCY_POST)
     public static TileEntityType<TileEntityEmergencyBox> TYPE;
 
     private static final float SPEED = 4F;
@@ -387,8 +387,8 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
             {
                 if (kitted)
                 {
-                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.emergencyKit), 0);
-                    this.world.setBlockState(this.pos, GCBlocks.emergencyBox.getDefaultState(), 3);
+                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.SPACE_EMERGENCY_KIT), 0);
+                    this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST.getDefaultState(), 3);
                     break;
                 }
                 else
@@ -397,7 +397,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
                     if (!stack.isEmpty() && stack.getItem() instanceof ItemEmergencyKit)
                     {
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
-                        this.world.setBlockState(this.pos, GCBlocks.emergencyBoxKit.getDefaultState(), 3);
+                        this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST_KIT.getDefaultState(), 3);
                         this.openW = false;
                         this.openS = false;
                         this.openE = false;
@@ -413,8 +413,8 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
             {
                 if (kitted)
                 {
-                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.emergencyKit), 0);
-                    this.world.setBlockState(this.pos, GCBlocks.emergencyBox.getDefaultState(), 3);
+                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.SPACE_EMERGENCY_KIT), 0);
+                    this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST.getDefaultState(), 3);
                     break;
                 }
                 else
@@ -423,7 +423,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
                     if (!stack.isEmpty() && stack.getItem() instanceof ItemEmergencyKit)
                     {
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
-                        this.world.setBlockState(this.pos, GCBlocks.emergencyBoxKit.getDefaultState(), 3);
+                        this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST_KIT.getDefaultState(), 3);
                         this.openN = false;
                         this.openS = false;
                         this.openE = false;
@@ -439,8 +439,8 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
             {
                 if (kitted)
                 {
-                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.emergencyKit), 0);
-                    this.world.setBlockState(this.pos, GCBlocks.emergencyBox.getDefaultState(), 3);
+                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.SPACE_EMERGENCY_KIT), 0);
+                    this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST.getDefaultState(), 3);
                     break;
                 }
                 else
@@ -449,7 +449,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
                     if (!stack.isEmpty() && stack.getItem() instanceof ItemEmergencyKit)
                     {
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
-                        this.world.setBlockState(this.pos, GCBlocks.emergencyBoxKit.getDefaultState(), 3);
+                        this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST_KIT.getDefaultState(), 3);
                         this.openN = false;
                         this.openW = false;
                         this.openE = false;
@@ -465,8 +465,8 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
             {
                 if (kitted)
                 {
-                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.emergencyKit), 0);
-                    this.world.setBlockState(this.pos, GCBlocks.emergencyBox.getDefaultState(), 3);
+                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(GCItems.SPACE_EMERGENCY_KIT), 0);
+                    this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST.getDefaultState(), 3);
                     break;
                 }
                 else
@@ -475,7 +475,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
                     if (!stack.isEmpty() && stack.getItem() instanceof ItemEmergencyKit)
                     {
                         player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
-                        this.world.setBlockState(this.pos, GCBlocks.emergencyBoxKit.getDefaultState(), 3);
+                        this.world.setBlockState(this.pos, GCBlocks.EMERGENCY_POST_KIT.getDefaultState(), 3);
                         this.openN = false;
                         this.openW = false;
                         this.openS = false;
@@ -618,13 +618,13 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
         BlockPos blockpos = vec.toBlockPos();
         Block b = this.world.getBlockState(blockpos).getBlock();
         BlockState newState;
-        if (b == GCBlocks.brightAir)
+        if (b == GCBlocks.BRIGHT_AIR)
         {
             newState = Blocks.AIR.getDefaultState();
         }
-        else if (b == GCBlocks.brightBreatheableAir)
+        else if (b == GCBlocks.BRIGHT_BREATHEABLE_AIR)
         {
-            newState = GCBlocks.breatheableAir.getDefaultState();
+            newState = GCBlocks.BREATHEABLE_AIR.getDefaultState();
         }
         else
         {
@@ -680,12 +680,12 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
         BlockState bs = this.world.getBlockState(blockPos);
         if (bs.getBlock() == Blocks.AIR)
         {
-            this.brightenAir(blockPos, GCBlocks.brightAir.getDefaultState());
+            this.brightenAir(blockPos, GCBlocks.BRIGHT_AIR.getDefaultState());
             return true;
         }
-        else if (bs.getBlock() == GCBlocks.breatheableAir)
+        else if (bs.getBlock() == GCBlocks.BREATHEABLE_AIR)
         {
-            this.brightenAir(blockPos, GCBlocks.brightBreatheableAir.getDefaultState());
+            this.brightenAir(blockPos, GCBlocks.BRIGHT_BREATHEABLE_AIR.getDefaultState());
             return true;
         }
 
@@ -693,12 +693,12 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickableTileE
         bs = this.world.getBlockState(blockPos);
         if (bs.getBlock() == Blocks.AIR)
         {
-            this.brightenAir(blockPos, GCBlocks.brightAir.getDefaultState());
+            this.brightenAir(blockPos, GCBlocks.BRIGHT_AIR.getDefaultState());
             return true;
         }
-        else if (bs.getBlock() == GCBlocks.breatheableAir)
+        else if (bs.getBlock() == GCBlocks.BREATHEABLE_AIR)
         {
-            this.brightenAir(blockPos, GCBlocks.brightBreatheableAir.getDefaultState());
+            this.brightenAir(blockPos, GCBlocks.BRIGHT_BREATHEABLE_AIR.getDefaultState());
             return true;
         }
 

@@ -33,7 +33,7 @@ public class SchematicTier2Rocket implements ISchematicPage
     @Override
     public ItemStack getRequiredItem()
     {
-        return new ItemStack(GCItems.schematicRocketT2, 1);
+        return new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC, 1);
     }
 
     @OnlyIn(Dist.CLIENT)

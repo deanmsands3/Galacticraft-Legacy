@@ -41,7 +41,7 @@ import java.util.List;
 
 public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHandlerWrapper
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.fluidTank)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.FLUID_TANK)
     public static TileEntityType<TileEntityFluidTank> TYPE;
 
     public FluidTankGC fluidTank = new FluidTankGC(16000, this);

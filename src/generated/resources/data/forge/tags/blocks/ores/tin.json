@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraftcore:tin_ore",
+    "galacticraftcore:moon_tin_ore",
+    "galacticraftplanets:mars_tin_ore",
+    "galacticraftplanets:venus_tin_ore"
+  ]
+}

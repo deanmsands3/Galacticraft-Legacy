@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "UVS",
+    "WZS",
+    "PXY"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/bronze"
+    },
+    "Y": {
+      "item": "galacticraftcore:oxygen_compressor"
+    },
+    "Z": {
+      "item": "galacticraftplanets:fluid_manipulator"
+    },
+    "W": {
+      "item": "galacticraftcore:fluid_pipe"
+    },
+    "V": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "U": {
+      "item": "galacticraftcore:heavy_oxygen_tank"
+    },
+    "S": {
+      "item": "galacticraftcore:medium_oxygen_tank"
+    },
+    "P": {
+      "item": "galacticraftcore:oxygen_decompressor"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:gas_liquefier"
+  }
+}

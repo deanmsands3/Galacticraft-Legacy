@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/advanced_machine_input",
+    "up": "galacticraftcore:block/advanced_machine_base",
+    "north": "galacticraftplanets:block/water_electrolyzer",
+    "south": "galacticraftplanets:block/machine_oxygen_output_warning",
+    "east": "galacticraftplanets:block/machine_water_input_warning",
+    "west": "galacticraftplanets:block/machine_oxygen_output_warning",
+    "particle": "galacticraftplanets:block/water_electrolyzer"
+  }
+}

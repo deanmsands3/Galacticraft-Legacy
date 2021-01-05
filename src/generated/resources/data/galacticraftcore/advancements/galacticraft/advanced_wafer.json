@@ -1,0 +1,35 @@
+{
+  "parent": "galacticraftcore:galacticraft/basic_wafer",
+  "display": {
+    "icon": {
+      "item": "galacticraftcore:advanced_wafer"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.advanced_wafer.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.advanced_wafer.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "advanced_wafer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:advanced_wafer"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "advanced_wafer"
+    ]
+  ]
+}

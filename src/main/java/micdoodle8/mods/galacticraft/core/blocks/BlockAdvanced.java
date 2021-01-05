@@ -56,7 +56,7 @@ public abstract class BlockAdvanced extends Block
 
     protected ActionResultType useWrench(World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
     {
-        if (heldItem.getItem() == GCItems.wrench)
+        if (heldItem.getItem() == GCItems.STANDARD_WRENCH)
         {
             if (playerIn.isSneaking())
             {
@@ -110,7 +110,7 @@ public abstract class BlockAdvanced extends Block
         if (entityPlayer != null && itemStack != null)
         {
             Item item = itemStack.getItem();
-            if (item == GCItems.wrench)
+            if (item == GCItems.STANDARD_WRENCH)
             {
                 return false;
             }

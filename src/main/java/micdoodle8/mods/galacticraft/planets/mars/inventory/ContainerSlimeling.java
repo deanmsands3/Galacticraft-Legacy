@@ -2,7 +2,7 @@ package micdoodle8.mods.galacticraft.planets.mars.inventory;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.inventory.SlotSpecific;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityMethaneSynthesizer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,9 +20,9 @@ public class ContainerSlimeling extends Container
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsContainerNames.SLIMELING)
     public static ContainerType<ContainerSlimeling> TYPE;
 
-    private final EntitySlimeling slimeling;
+    private final SlimelingEntity slimeling;
 
-    public ContainerSlimeling(int containerId, PlayerInventory playerInv, EntitySlimeling slimeling)
+    public ContainerSlimeling(int containerId, PlayerInventory playerInv, SlimelingEntity slimeling)
     {
         super(TYPE, containerId);
         this.slimeling = slimeling;
@@ -34,14 +34,14 @@ public class ContainerSlimeling extends Container
         this.slimeling.slimelingInventory.openInventory(playerInv.player);
     }
 
-    public EntitySlimeling getSlimeling()
+    public SlimelingEntity getSlimeling()
     {
         return slimeling;
     }
 
-    public static void addSlots(ContainerSlimeling container, PlayerInventory playerInventory, EntitySlimeling slimeling)
+    public static void addSlots(ContainerSlimeling container, PlayerInventory playerInventory, SlimelingEntity slimeling)
     {
-        Slot slot = new SlotSpecific(slimeling.slimelingInventory, 1, 9, 30, new ItemStack(MarsItems.slimelingCargo, 1));
+        Slot slot = new SlotSpecific(slimeling.slimelingInventory, 1, 9, 30, new ItemStack(MarsItems.SLIMELING_INVENTORY_BAG, 1));
         container.addSlot(slot);
 
         int var3;
@@ -69,9 +69,9 @@ public class ContainerSlimeling extends Container
         container.inventorySlots.addAll(container.inventorySlots.subList(0, 37));
     }
 
-    public static void addAdditionalSlots(ContainerSlimeling container, EntitySlimeling slimeling, ItemStack stack)
+    public static void addAdditionalSlots(ContainerSlimeling container, SlimelingEntity slimeling, ItemStack stack)
     {
-        if (!stack.isEmpty() && stack.getItem() == MarsItems.slimelingCargo)
+        if (!stack.isEmpty() && stack.getItem() == MarsItems.SLIMELING_INVENTORY_BAG)
         {
             //Note that if NEI is installed, this can be called by InventorySlimeling.setInventorySlotContents even if the container already has the slots
             if (container.inventorySlots.size() < 63)
@@ -125,7 +125,7 @@ public class ContainerSlimeling extends Container
                 }
                 else
                 {
-                    if (var4.getItem() == MarsItems.slimelingCargo)
+                    if (var4.getItem() == MarsItems.SLIMELING_INVENTORY_BAG)
                     {
                         if (!this.mergeItemStack(var4, 0, 1, false))
                         {

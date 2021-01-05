@@ -134,7 +134,7 @@ public class RoomBoss extends SizedPiece
         //Is this position inside the chunk currently being generated?
         if (mutableBoundingBoxIn.isVecInside(blockpos))
         {
-            worldIn.setBlockState(blockpos, GCBlocks.bossSpawner.getDefaultState(), 2);
+            worldIn.setBlockState(blockpos, GCBlocks.MOON_BOSS_SPAWNER.getDefaultState(), 2);
             TileEntityDungeonSpawner spawner = (TileEntityDungeonSpawner) worldIn.getTileEntity(blockpos);
             if (spawner != null)
             {

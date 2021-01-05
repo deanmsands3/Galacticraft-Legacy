@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "cracked=false": {
+      "model": "galacticraftplanets:block/red_slimeling_egg"
+    },
+    "cracked=true": {
+      "model": "galacticraftplanets:block/red_slimeling_egg_cracked"
+    }
+  }
+}

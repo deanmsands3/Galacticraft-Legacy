@@ -46,7 +46,7 @@ public class TileEntityMinerBaseRenderer extends TileEntityRenderer<TileEntityMi
 
     private void updateModels()
     {
-        minerBaseModelBaked = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/minerbase0.obj"), ImmutableList.of("dock"));
+        minerBaseModelBaked = GCModelCache.INSTANCE.getModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "models/obj/astro_miner_base.obj"), ImmutableList.of("dock"));
     }
 
     private int getMinerBaseLight(ILightReader lightReaderIn, BlockPos pos)

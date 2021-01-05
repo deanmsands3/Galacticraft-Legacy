@@ -13,7 +13,7 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityFake;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockCryoChamber;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.dimension.DimensionMars;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling;
+import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityCryogenicChamber;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityLaunchController;
 import micdoodle8.mods.galacticraft.planets.mars.world.gen.WorldGenEggs;
@@ -49,9 +49,9 @@ public class EventHandlerMars
         {
             EntityDamageSource source = (EntityDamageSource) event.getSource();
 
-            if (source.getTrueSource() instanceof EntitySlimeling && !source.getTrueSource().world.isRemote)
+            if (source.getTrueSource() instanceof SlimelingEntity && !source.getTrueSource().world.isRemote)
             {
-                ((EntitySlimeling) source.getTrueSource()).kills++;
+                ((SlimelingEntity) source.getTrueSource()).kills++;
             }
         }
     }
@@ -63,9 +63,9 @@ public class EventHandlerMars
         {
             Entity entity = event.getSource().getTrueSource();
 
-            if (entity instanceof EntitySlimeling)
+            if (entity instanceof SlimelingEntity)
             {
-                EntitySlimeling entitywolf = (EntitySlimeling) entity;
+                SlimelingEntity entitywolf = (SlimelingEntity) entity;
 
                 if (entitywolf.isTamed())
                 {
@@ -84,7 +84,7 @@ public class EventHandlerMars
         BlockState state = player.getEntityWorld().getBlockState(c);
         Block blockID = state.getBlock();
 
-        if (blockID == MarsBlocks.cryoChamber)
+        if (blockID == MarsBlocks.CRYOGENIC_CHAMBER)
         {
             if (!event.immediately && event.updateWorld && event.setSpawn)
             {

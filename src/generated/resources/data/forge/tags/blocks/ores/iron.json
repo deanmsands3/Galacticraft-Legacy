@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraftplanets:mars_iron_ore",
+    "galacticraftplanets:asteroid_iron_ore"
+  ]
+}

@@ -162,7 +162,7 @@ public class BlockVenusRock extends Block implements IPlantableBlock, ITerraform
     {
         BlockState state = world.getBlockState(pos);
 
-        if (state.getBlock() == VenusBlocks.rockHard || state.getBlock() == VenusBlocks.rockSoft)
+        if (state.getBlock() == VenusBlocks.VENUS_HARD_ROCK || state.getBlock() == VenusBlocks.VENUS_SOFT_ROCK)
         {
             BlockPos above = pos.offset(Direction.UP);
             BlockState stateAbove = world.getBlockState(above);
@@ -175,7 +175,7 @@ public class BlockVenusRock extends Block implements IPlantableBlock, ITerraform
     @Override
     public boolean isReplaceableOreGen(BlockState state, IWorldReader world, BlockPos pos, java.util.function.Predicate<BlockState> target)
     {
-        return state.getBlock() == VenusBlocks.rockHard;
+        return state.getBlock() == VenusBlocks.VENUS_HARD_ROCK;
     }
 
     @Override

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " X ",
+    "YUY",
+    "ZWZ"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/aluminum"
+    },
+    "Y": {
+      "tag": "forge:plates/iron"
+    },
+    "Z": {
+      "tag": "forge:dusts/redstone"
+    },
+    "W": {
+      "tag": "forge:wafers/basic"
+    },
+    "U": {
+      "item": "minecraft:repeater"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:frequency_module"
+  }
+}

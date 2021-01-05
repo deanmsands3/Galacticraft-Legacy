@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " XY",
+    "XXX",
+    "YX "
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:string"
+    },
+    "Y": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:canvas"
+  }
+}

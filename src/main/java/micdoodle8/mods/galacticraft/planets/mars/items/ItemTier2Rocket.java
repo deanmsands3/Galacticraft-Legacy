@@ -13,8 +13,8 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPad;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityCargoRocket;
-import micdoodle8.mods.galacticraft.planets.mars.entities.EntityTier2Rocket;
+import micdoodle8.mods.galacticraft.planets.mars.entities.CargoRocketEntity;
+import micdoodle8.mods.galacticraft.planets.mars.entities.Tier2RocketEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
@@ -85,7 +85,7 @@ public class ItemTier2Rocket extends Item implements IHoldableItem, ISortable
                     BlockPos pos1 = context.getPos().add(i, 0, j);
                     BlockState state = context.getWorld().getBlockState(pos1);
 
-                    if (state.getBlock() == GCBlocks.landingPadFull)
+                    if (state.getBlock() == GCBlocks.FULL_ROCKET_LAUNCH_PAD)
                     {
                         padFound = true;
                         tile = context.getWorld().getTileEntity(pos1);
@@ -141,13 +141,13 @@ public class ItemTier2Rocket extends Item implements IHoldableItem, ISortable
 
         EntityAutoRocket rocket;
 
-        if (this == MarsItems.rocketTierTwo || this == MarsItems.rocketTierTwoCargo1 || this == MarsItems.rocketTierTwoCargo2 || this == MarsItems.rocketTierTwoCargo3 || this == MarsItems.rocketTierTwoCreative)
+        if (this == MarsItems.TIER_2_ROCKET || this == MarsItems.TIER_2_ROCKET_18_INVENTORY || this == MarsItems.TIER_2_ROCKET_36_INVENTORY || this == MarsItems.TIER_2_ROCKET_54_INVENTORY || this == MarsItems.CREATIVE_TIER_2_ROCKET)
         {
-            rocket = EntityTier2Rocket.createEntityTier2Rocket(world, centerX, centerY, centerZ, EntityTier2Rocket.getTypeFromItem(this));
+            rocket = Tier2RocketEntity.createEntityTier2Rocket(world, centerX, centerY, centerZ, Tier2RocketEntity.getTypeFromItem(this));
         }
         else
         {
-            rocket = EntityCargoRocket.createEntityCargoRocket(world, centerX, centerY, centerZ, EntityCargoRocket.getTypeFromItem(this));
+            rocket = CargoRocketEntity.createEntityCargoRocket(world, centerX, centerY, centerZ, CargoRocketEntity.getTypeFromItem(this));
         }
 
         rocket.setPosition(rocket.getPosX(), rocket.getPosY() + rocket.getOnPadYOffset(), rocket.getPosZ());
@@ -161,7 +161,7 @@ public class ItemTier2Rocket extends Item implements IHoldableItem, ISortable
             }
             else
             {
-                ((EntityCargoRocket) rocket).fuelTank.fill(new FluidStack(GCFluids.FUEL.getFluid(), rocket.getMaxFuel()), IFluidHandler.FluidAction.EXECUTE);
+                ((CargoRocketEntity) rocket).fuelTank.fill(new FluidStack(GCFluids.FUEL.getFluid(), rocket.getMaxFuel()), IFluidHandler.FluidAction.EXECUTE);
             }
         }
         else if (stack.hasTag() && stack.getTag().contains("RocketFuel"))
@@ -220,11 +220,11 @@ public class ItemTier2Rocket extends Item implements IHoldableItem, ISortable
 
             if (par1ItemStack.getDamage() < 10)
             {
-                rocket = EntityTier2Rocket.createEntityTier2Rocket(Minecraft.getInstance().world, 0, 0, 0, EnumRocketType.values()[par1ItemStack.getDamage()]);
+                rocket = Tier2RocketEntity.createEntityTier2Rocket(Minecraft.getInstance().world, 0, 0, 0, EnumRocketType.values()[par1ItemStack.getDamage()]);
             }
             else
             {
-                rocket = EntityCargoRocket.createEntityCargoRocket(Minecraft.getInstance().world, 0, 0, 0, EnumRocketType.values()[par1ItemStack.getDamage() - 10]);
+                rocket = CargoRocketEntity.createEntityCargoRocket(Minecraft.getInstance().world, 0, 0, 0, EnumRocketType.values()[par1ItemStack.getDamage() - 10]);
             }
 
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + par1ItemStack.getTag().getInt("RocketFuel") + " / " + rocket.fuelTank.getCapacity()));

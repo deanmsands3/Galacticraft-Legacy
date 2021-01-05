@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "Z Z",
+    " Y ",
+    "ZXZ"
+  ],
+  "key": {
+    "Z": {
+      "tag": "forge:plates/steel"
+    },
+    "Y": {
+      "tag": "forge:wafers/basic"
+    },
+    "X": {
+      "tag": "forge:dusts/redstone"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:oxygen_fan"
+  }
+}

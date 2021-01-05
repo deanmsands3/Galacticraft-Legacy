@@ -6,6 +6,7 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.items.ItemSchematic;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
+import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -50,11 +51,11 @@ public class ItemSchematicTier2 extends ItemSchematic implements ISchematicItem,
     @Override
     public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
-        if (this == MarsItems.schematicRocketT3)
+        if (this == MarsItems.TIER_3_ROCKET_SCHEMATIC)
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.rocket_t3")));
         }
-        else if (this == MarsItems.schematicAstroMiner)
+        else if (this == MarsItems.ASTRO_MINER_SCHEMATIC)
         {
             tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.astro_miner")));
         }
@@ -85,9 +86,9 @@ public class ItemSchematicTier2 extends ItemSchematic implements ISchematicItem,
      */
     public static void registerSchematicItems()
     {
-        indexOffset = SchematicRegistry.registerSchematicItem(new ItemStack(MarsItems.schematicAstroMiner, 1));
-        SchematicRegistry.registerSchematicItem(new ItemStack(MarsItems.schematicRocketT3, 1));
-        SchematicRegistry.registerSchematicItem(new ItemStack(MarsItems.schematicCargoRocket, 1));
+        indexOffset = SchematicRegistry.registerSchematicItem(new ItemStack(MarsItems.ASTRO_MINER_SCHEMATIC, 1));
+        SchematicRegistry.registerSchematicItem(new ItemStack(MarsItems.TIER_3_ROCKET_SCHEMATIC, 1));
+        SchematicRegistry.registerSchematicItem(new ItemStack(MarsItems.CARGO_ROCKET_SCHEMATIC, 1));
     }
 
     /**
@@ -96,8 +97,8 @@ public class ItemSchematicTier2 extends ItemSchematic implements ISchematicItem,
     @OnlyIn(Dist.CLIENT)
     public static void registerTextures()
     {
-        SchematicRegistry.registerTexture(new ResourceLocation("galacticraftplanets", "textures/items/schematic_rocket_t3.png"));
-        SchematicRegistry.registerTexture(new ResourceLocation("galacticraftplanets", "textures/items/schematic_rocket_cargo.png"));
-        SchematicRegistry.registerTexture(new ResourceLocation("galacticraftplanets", "textures/items/schematic_astro_miner.png"));
+        SchematicRegistry.registerTexture(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/item/tier_3_rocket_schematic.png"));
+        SchematicRegistry.registerTexture(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/item/cargo_rocket_schematic.png"));
+        SchematicRegistry.registerTexture(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/item/astro_miner_schematic.png"));
     }
 }

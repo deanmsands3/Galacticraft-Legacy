@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:switchable_heavy_aluminum_wire"
+    ]
+  },
+  "criteria": {
+    "has_heavy_aluminum_wire": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:heavy_aluminum_wire"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:switchable_heavy_aluminum_wire"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_heavy_aluminum_wire",
+      "has_the_recipe"
+    ]
+  ]
+}

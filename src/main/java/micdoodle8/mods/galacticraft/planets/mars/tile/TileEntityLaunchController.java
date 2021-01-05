@@ -56,7 +56,7 @@ import java.util.*;
 
 public class TileEntityLaunchController extends TileBaseElectricBlockWithInventory implements ISidedInventory, ILandingPadAttachable, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.launchController)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.LAUNCH_CONTROLLER)
     public static TileEntityType<TileEntityLaunchController> TYPE;
 
     public static final int WATTS_PER_TICK = 1;
@@ -305,7 +305,12 @@ public class TileEntityLaunchController extends TileBaseElectricBlockWithInvento
     public CompoundNBT write(CompoundNBT nbt)
     {
         super.write(nbt);
-        nbt.putString("OwnerName", this.ownerUUID.toString());
+
+        if (this.ownerUUID != null)
+        {
+            nbt.putString("OwnerName", this.ownerUUID.toString());
+        }
+
         nbt.putInt("LaunchSelection", this.launchDropdownSelection);
         nbt.putInt("ControllerFrequency", this.frequency);
         nbt.putInt("TargetFrequency", this.destFrequency);

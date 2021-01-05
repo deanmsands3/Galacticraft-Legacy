@@ -23,7 +23,7 @@ public class OreBlockAsteroids extends Block implements IDetectableResource, ISo
     @Override
     public int getExpDrop(BlockState state, IWorldReader world, BlockPos pos, int fortune, int silktouch)
     {
-        if (this == AsteroidBlocks.oreIlmenite)
+        if (this == AsteroidBlocks.ILMENITE_ORE)
         {
             MathHelper.nextInt(RANDOM, 2, 3);
         }

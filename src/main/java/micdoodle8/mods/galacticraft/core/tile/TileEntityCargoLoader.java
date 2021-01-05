@@ -34,7 +34,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityCargoLoader extends TileEntityCargoBase implements ISidedInventory, ILandingPadAttachable, ILockable, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.cargoLoader)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.CARGO_LOADER)
     public static TileEntityType<TileEntityCargoLoader> TYPE;
 
     public boolean outOfItems;

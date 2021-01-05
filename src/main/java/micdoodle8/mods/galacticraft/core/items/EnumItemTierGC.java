@@ -11,7 +11,7 @@ public enum EnumItemTierGC implements IItemTier
 {
     STEEL(3, 768, 5.0F, 2, 8, () ->
     {
-        return Ingredient.fromItems(GCItems.compressedSteel);
+        return Ingredient.fromItems(GCItems.COMPRESSED_STEEL);
     });
 
     private final int harvestLevel;

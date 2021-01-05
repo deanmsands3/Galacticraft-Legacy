@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:thermal_cloth"
+    ]
+  },
+  "criteria": {
+    "has_wool_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:wool"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:thermal_cloth"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wool_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

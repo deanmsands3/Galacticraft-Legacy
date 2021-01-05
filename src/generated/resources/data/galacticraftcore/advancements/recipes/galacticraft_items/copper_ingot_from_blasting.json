@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:copper_ingot_from_blasting"
+    ]
+  },
+  "criteria": {
+    "has_ores/copper_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ores/copper"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:copper_ingot_from_blasting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ores/copper_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

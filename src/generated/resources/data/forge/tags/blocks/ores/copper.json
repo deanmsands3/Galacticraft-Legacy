@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraftcore:copper_ore",
+    "galacticraftcore:moon_copper_ore",
+    "galacticraftplanets:mars_copper_ore",
+    "galacticraftplanets:venus_copper_ore"
+  ]
+}

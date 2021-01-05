@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:repeater"
+    },
+    {
+      "item": "galacticraftcore:heavy_aluminum_wire"
+    }
+  ],
+  "result": {
+    "item": "galacticraftcore:switchable_heavy_aluminum_wire"
+  }
+}

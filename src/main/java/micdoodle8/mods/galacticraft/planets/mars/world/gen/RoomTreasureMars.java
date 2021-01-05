@@ -103,7 +103,7 @@ public class RoomTreasureMars extends RoomTreasure
                         BlockPos blockpos = new BlockPos(this.getXWithOffset(i, k), this.getYWithOffset(j), this.getZWithOffset(i, k));
                         if (boundingBox.isVecInside(blockpos))
                         {
-                            worldIn.setBlockState(blockpos, MarsBlocks.treasureChestTier2.getDefaultState().with(BlockTier2TreasureChest.FACING, this.getDirection().getOpposite()), 2);
+                            worldIn.setBlockState(blockpos, MarsBlocks.TIER_2_TREASURE_CHEST.getDefaultState().with(BlockTier2TreasureChest.FACING, this.getDirection().getOpposite()), 2);
                             TileEntityTreasureChest treasureChest = (TileEntityTreasureChest) worldIn.getTileEntity(blockpos);
                             if (treasureChest != null)
                             {

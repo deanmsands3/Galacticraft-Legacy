@@ -18,39 +18,39 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class LayerHeldItemEvolvedSkeletonBoss<T extends LivingEntity, M extends EntityModel<T> & IHasArm> extends LayerRenderer<T, M>
 {
-    public LayerHeldItemEvolvedSkeletonBoss(IEntityRenderer<T, M> p_i50934_1_) {
-        super(p_i50934_1_);
+    public LayerHeldItemEvolvedSkeletonBoss(IEntityRenderer<T, M> renderer)
+    {
+        super(renderer);
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        boolean flag = entitylivingbaseIn.getPrimaryHand() == HandSide.RIGHT;
-        ItemStack itemstack = flag ? entitylivingbaseIn.getHeldItemOffhand() : entitylivingbaseIn.getHeldItemMainhand();
-        ItemStack itemstack1 = flag ? entitylivingbaseIn.getHeldItemMainhand() : entitylivingbaseIn.getHeldItemOffhand();
-        if (!itemstack.isEmpty() || !itemstack1.isEmpty()) {
-            matrixStackIn.push();
-            if (this.getEntityModel().isChild) {
-                float f = 0.5F;
-                matrixStackIn.translate(0.0D, 0.75D, 0.0D);
-                matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-            }
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch)
+    {
+        boolean flag = entity.getPrimaryHand() == HandSide.RIGHT;
+        ItemStack itemstack = flag ? entity.getHeldItemOffhand() : entity.getHeldItemMainhand();
+        ItemStack itemstack1 = flag ? entity.getHeldItemMainhand() : entity.getHeldItemOffhand();
 
-            this.renderItemInHand(entitylivingbaseIn, itemstack1, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HandSide.RIGHT, matrixStackIn, bufferIn, packedLightIn);
-            this.renderItemInHand(entitylivingbaseIn, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, HandSide.LEFT, matrixStackIn, bufferIn, packedLightIn);
-            matrixStackIn.pop();
+        if (!itemstack.isEmpty() || !itemstack1.isEmpty())
+        {
+            matrixStack.push();
+            this.renderItemInHand(entity, itemstack1, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HandSide.RIGHT, matrixStack, buffer, packedLight);
+            this.renderItemInHand(entity, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, HandSide.LEFT, matrixStack, buffer, packedLight);
+            matrixStack.pop();
         }
     }
 
-    private void renderItemInHand(LivingEntity entity, ItemStack stack, ItemCameraTransforms.TransformType type, HandSide handSide, MatrixStack matStack, IRenderTypeBuffer bufferIn, int combinedLightIn) {
-        if (!stack.isEmpty()) {
-            matStack.push();
-            this.getEntityModel().translateHand(handSide, matStack);
-            matStack.rotate(Vector3f.XP.rotationDegrees(-90.0F));
-            matStack.rotate(Vector3f.YP.rotationDegrees(180.0F));
+    private void renderItemInHand(LivingEntity entity, ItemStack itemStack, ItemCameraTransforms.TransformType type, HandSide handSide, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight)
+    {
+        if (!itemStack.isEmpty())
+        {
+            matrixStack.push();
+            this.getEntityModel().translateHand(handSide, matrixStack);
+            matrixStack.rotate(Vector3f.XP.rotationDegrees(-90.0F));
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(180.0F));
             boolean flag = handSide == HandSide.LEFT;
-            matStack.translate((double)((float)(flag ? -1 : 1) / 16.0F), 0.125D, -0.625D);
-            Minecraft.getInstance().getFirstPersonRenderer().renderItemSide(entity, stack, type, flag, matStack, bufferIn, combinedLightIn);
-            matStack.pop();
+            matrixStack.translate((flag ? -1 : 1) / 16.0F, 0.125D, -0.625D);
+            Minecraft.getInstance().getFirstPersonRenderer().renderItemSide(entity, itemStack, type, flag, matrixStack, buffer, combinedLight);
+            matrixStack.pop();
         }
     }
 }

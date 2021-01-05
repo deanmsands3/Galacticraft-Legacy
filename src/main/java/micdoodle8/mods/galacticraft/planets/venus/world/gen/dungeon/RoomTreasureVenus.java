@@ -107,7 +107,7 @@ public class RoomTreasureVenus extends SizedPieceVenus
                         BlockPos blockpos = new BlockPos(this.getXWithOffset(i, k), this.getYWithOffset(j), this.getZWithOffset(i, k));
                         if (boundingBox.isVecInside(blockpos))
                         {
-                            worldIn.setBlockState(blockpos, VenusBlocks.treasureChestTier3.getDefaultState().with(BlockTier3TreasureChest.FACING, this.getDirection().getOpposite()), 2);
+                            worldIn.setBlockState(blockpos, VenusBlocks.TIER_3_TREASURE_CHEST.getDefaultState().with(BlockTier3TreasureChest.FACING, this.getDirection().getOpposite()), 2);
                             TileEntityTreasureChest treasureChest = (TileEntityTreasureChest) worldIn.getTileEntity(blockpos);
                             if (treasureChest != null)
                             {

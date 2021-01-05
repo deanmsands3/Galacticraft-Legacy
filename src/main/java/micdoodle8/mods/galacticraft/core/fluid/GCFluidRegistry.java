@@ -1,6 +1,5 @@
 package micdoodle8.mods.galacticraft.core.fluid;
 
-import micdoodle8.mods.galacticraft.core.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
@@ -23,17 +22,17 @@ public class GCFluidRegistry
     private final DeferredRegister<Block> blockRegister;
     private final DeferredRegister<Item> itemRegister;
 
-    public GCFluidRegistry()
+    public GCFluidRegistry(String modid)
     {
-        blockRegister = new DeferredRegister<>(ForgeRegistries.BLOCKS, Constants.MOD_ID_CORE);
-        fluidRegister = new DeferredRegister<>(ForgeRegistries.FLUIDS, Constants.MOD_ID_CORE);
-        itemRegister = new DeferredRegister<>(ForgeRegistries.ITEMS, Constants.MOD_ID_CORE);
+        blockRegister = DeferredRegister.create(ForgeRegistries.BLOCKS, modid);
+        fluidRegister = DeferredRegister.create(ForgeRegistries.FLUIDS, modid);
+        itemRegister = DeferredRegister.create(ForgeRegistries.ITEMS, modid);
     }
 
     public FluidRegistrationEntry<ForgeFlowingFluid.Source, ForgeFlowingFluid.Flowing, FlowingFluidBlock, BucketItem> register(String name, FluidAttributes.Builder builder, Material blockMaterial)
     {
         String flowingName = "flowing_" + name;
-        String bucketName = "bucket_" + name;
+        String bucketName = name + "_bucket";
         //Create the registry object with dummy entries that we can use as part of the supplier but that works as use in suppliers
         FluidRegistrationEntry<ForgeFlowingFluid.Source, ForgeFlowingFluid.Flowing, FlowingFluidBlock, BucketItem> fluidRegistryObject = new FluidRegistrationEntry<>(name);
         //Pass in suppliers that are wrapped instead of direct references to the registry objects, so that when we update the registry object to

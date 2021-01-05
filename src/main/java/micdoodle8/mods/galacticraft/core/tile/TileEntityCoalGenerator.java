@@ -31,7 +31,7 @@ import java.util.EnumSet;
 
 public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource implements IInventoryDefaults, ISidedInventory, IConnector, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.coalGenerator)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.COAL_GENERATOR)
     public static TileEntityType<TileEntityCoalGenerator> TYPE;
 
     //New energy rates:

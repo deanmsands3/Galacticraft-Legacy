@@ -1,0 +1,68 @@
+{
+  "parent": "galacticraftcore:galacticraft/rocket_workbench",
+  "display": {
+    "icon": {
+      "item": "galacticraftcore:tier_1_rocket"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.tier_1_rocket.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.tier_1_rocket.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "tier_1_rocket": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:tier_1_rocket"
+          }
+        ]
+      }
+    },
+    "tier_1_rocket_18_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:tier_1_rocket_18_inventory"
+          }
+        ]
+      }
+    },
+    "tier_1_rocket_36_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:tier_1_rocket_36_inventory"
+          }
+        ]
+      }
+    },
+    "tier_1_rocket_54_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:tier_1_rocket_54_inventory"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "tier_1_rocket",
+      "tier_1_rocket_18_inventory",
+      "tier_1_rocket_36_inventory",
+      "tier_1_rocket_54_inventory"
+    ]
+  ]
+}

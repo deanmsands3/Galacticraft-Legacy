@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WZW",
+    "YXY",
+    "WZW"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:oxygen_fan"
+    },
+    "Y": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "Z": {
+      "tag": "forge:plates/steel"
+    },
+    "W": {
+      "tag": "forge:plates/aluminum"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:oxygen_sealer"
+  }
+}

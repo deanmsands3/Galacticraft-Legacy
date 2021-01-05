@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:cheese_curd_from_blasting"
+    ]
+  },
+  "criteria": {
+    "has_ores/cheese_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ores/cheese"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:cheese_curd_from_blasting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ores/cheese_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

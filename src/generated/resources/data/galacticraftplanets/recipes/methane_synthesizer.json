@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "TVT",
+    "WZW",
+    "CXY"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/bronze"
+    },
+    "Y": {
+      "item": "galacticraftcore:oxygen_compressor"
+    },
+    "Z": {
+      "item": "galacticraftplanets:fluid_manipulator"
+    },
+    "W": {
+      "item": "galacticraftcore:fluid_pipe"
+    },
+    "V": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "T": {
+      "item": "galacticraftcore:heavy_oxygen_tank"
+    },
+    "C": {
+      "item": "galacticraftcore:electric_furnace"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:methane_synthesizer"
+  }
+}

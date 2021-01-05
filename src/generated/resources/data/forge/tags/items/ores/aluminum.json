@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraftcore:aluminum_ore",
+    "galacticraftplanets:asteroid_aluminum_ore",
+    "galacticraftplanets:venus_aluminum_ore"
+  ]
+}

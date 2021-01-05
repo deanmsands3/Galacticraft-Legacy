@@ -9,11 +9,13 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.registries.ObjectHolder;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 public class TileEntityLandingPadSingle extends TileEntity implements ITickableTileEntity
 {
-    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.landingPad)
+    @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ROCKET_LAUNCH_PAD)
     public static TileEntityType<TileEntityLandingPadSingle> TYPE;
 
     private int corner = 0;
@@ -28,13 +30,13 @@ public class TileEntityLandingPadSingle extends TileEntity implements ITickableT
     {
         if (!this.world.isRemote && this.corner == 0)
         {
-            final ArrayList<TileEntity> attachedLaunchPads = new ArrayList<>();
+            List<TileEntity> attachedLaunchPads = Lists.newArrayList();
 
             for (int x = this.getPos().getX() - 1; x < this.getPos().getX() + 2; x++)
             {
                 for (int z = this.getPos().getZ() - 1; z < this.getPos().getZ() + 2; z++)
                 {
-                    final TileEntity tile = this.world.getTileEntity(new BlockPos(x, this.getPos().getY(), z));
+                    TileEntity tile = this.world.getTileEntity(new BlockPos(x, this.getPos().getY(), z));
 
                     if (tile instanceof TileEntityLandingPadSingle && !tile.isRemoved() && ((TileEntityLandingPadSingle) tile).corner == 0)
                     {
@@ -45,22 +47,14 @@ public class TileEntityLandingPadSingle extends TileEntity implements ITickableT
 
             if (attachedLaunchPads.size() == 9)
             {
-                for (final TileEntity tile : attachedLaunchPads)
+                for (TileEntity tile : attachedLaunchPads)
                 {
                     this.world.removeTileEntity(tile.getPos());
                     ((TileEntityLandingPadSingle) tile).corner = 1;
                 }
 
-                this.world.setBlockState(this.getPos(), GCBlocks.landingPadFull.getDefaultState(), 2);
+                this.world.setBlockState(this.getPos(), GCBlocks.FULL_ROCKET_LAUNCH_PAD.getDefaultState(), 2);
             }
         }
     }
-
-//    @Override
-//    public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate)
-//    {
-//        return oldState.getBlock() != newSate.getBlock();
-//    }
-
-
 }

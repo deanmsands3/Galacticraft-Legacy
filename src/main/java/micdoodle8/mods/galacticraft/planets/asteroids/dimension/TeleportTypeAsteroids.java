@@ -11,7 +11,7 @@ import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.BlockAsteroidRock;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityEntryPod;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntryPodEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
@@ -270,7 +270,7 @@ public class TeleportTypeAsteroids implements ITeleportType
     {
         if (world.isAirBlock(new BlockPos(x, y, z)))
         {
-            Block block = world.rand.nextInt(3) == 0 ? AsteroidBlocks.rock0 : AsteroidBlocks.rock1;
+            Block block = world.rand.nextInt(3) == 0 ? AsteroidBlocks.DARK_ASTEROID_ROCK : AsteroidBlocks.GRAY_ASTEROID_ROCK;
             world.setBlockState(new BlockPos(x, y, z), block.getDefaultState(), 2);
         }
     }
@@ -327,7 +327,7 @@ public class TeleportTypeAsteroids implements ITeleportType
 
                 if (!newWorld.isRemote)
                 {
-                    EntityEntryPod entryPod = EntityEntryPod.createEntityEntryPod(player);
+                    EntryPodEntity entryPod = EntryPodEntity.createEntityEntryPod(player);
 
                     boolean previous = CompatibilityManager.forceLoadChunks((ServerWorld) newWorld);
                     entryPod.forceSpawn = true;
@@ -344,34 +344,34 @@ public class TeleportTypeAsteroids implements ITeleportType
     public void setupAdventureSpawn(ServerPlayerEntity player)
     {
         GCPlayerStats stats = GCPlayerStats.get(player);
-        SchematicRegistry.unlockNewPage(player, new ItemStack(GCItems.schematicRocketT2, 1)); //Knows how to build T2 rocket
-        SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.schematicRocketT3, 1)); //Knows how to build T3 rocket
-        SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.schematicAstroMiner, 1)); //Knows how to build Astro Miner
+        SchematicRegistry.unlockNewPage(player, new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC, 1)); //Knows how to build T2 rocket
+        SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.TIER_3_ROCKET_SCHEMATIC, 1)); //Knows how to build T3 rocket
+        SchematicRegistry.unlockNewPage(player, new ItemStack(MarsItems.ASTRO_MINER_SCHEMATIC, 1)); //Knows how to build Astro Miner
         NonNullList<ItemStack> rocketStacks = NonNullList.create();
         stats.setFuelLevel(1000);
-        rocketStacks.add(new ItemStack(GCItems.oxMask));
-        rocketStacks.add(new ItemStack(GCItems.oxygenGear));
-        rocketStacks.add(new ItemStack(GCItems.oxTankMedium));
-        rocketStacks.add(new ItemStack(GCItems.oxTankHeavy));
-        rocketStacks.add(new ItemStack(GCItems.oxTankHeavy));
-        rocketStacks.add(new ItemStack(AsteroidsItems.canisterLOX));
-        rocketStacks.add(new ItemStack(AsteroidsItems.canisterLOX));
-        rocketStacks.add(new ItemStack(AsteroidsItems.canisterLOX));
-        rocketStacks.add(new ItemStack(AsteroidsItems.thermalCloth, 32));
+        rocketStacks.add(new ItemStack(GCItems.OXYGEN_MASK));
+        rocketStacks.add(new ItemStack(GCItems.OXYGEN_GEAR));
+        rocketStacks.add(new ItemStack(GCItems.MEDIUM_OXYGEN_TANK));
+        rocketStacks.add(new ItemStack(GCItems.HEAVY_OXYGEN_TANK));
+        rocketStacks.add(new ItemStack(GCItems.HEAVY_OXYGEN_TANK));
+        rocketStacks.add(new ItemStack(AsteroidsItems.PARTIAL_LOX_CANISTER));
+        rocketStacks.add(new ItemStack(AsteroidsItems.PARTIAL_LOX_CANISTER));
+        rocketStacks.add(new ItemStack(AsteroidsItems.PARTIAL_LOX_CANISTER));
+        rocketStacks.add(new ItemStack(AsteroidsItems.THERMAL_CLOTH, 32));
         rocketStacks.add(new ItemStack(Blocks.GLASS_PANE, 16));
         rocketStacks.add(new ItemStack(Blocks.OAK_PLANKS, 32));
-        rocketStacks.add(new ItemStack(MarsItems.ingotDesh, 16)); //Desh ingot
-        rocketStacks.add(new ItemStack(GCItems.compressedWaferBasic, 8)); //Basic Wafer
-        rocketStacks.add(new ItemStack(GCItems.solarModule1, 2)); //Solar Panels
-        rocketStacks.add(new ItemStack(GCItems.dehydratedApple, 16));  //Canned food
+        rocketStacks.add(new ItemStack(MarsItems.DESH_INGOT, 16)); //Desh ingot
+        rocketStacks.add(new ItemStack(GCItems.BASIC_WAFER, 8)); //Basic Wafer
+        rocketStacks.add(new ItemStack(GCItems.FULL_SOLAR_MODULE, 2)); //Solar Panels
+        rocketStacks.add(new ItemStack(GCItems.DEHYDRATED_APPLES, 16));  //Canned food
         rocketStacks.add(new ItemStack(Items.EGG, 12));
 
         SpawnEggItem egg = SpawnEggItem.getEgg(EntityType.COW);
         ItemStack spawnEgg = new ItemStack(egg, 2);
         rocketStacks.add(spawnEgg);
         rocketStacks.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION, 4), Potions.LONG_NIGHT_VISION)); //Night Vision Potion
-        rocketStacks.add(new ItemStack(MarsBlocks.cryoChamber, 1)); //Cryogenic Chamber
-        rocketStacks.add(new ItemStack(MarsItems.rocketTierTwoCargo2, 1));
+        rocketStacks.add(new ItemStack(MarsBlocks.CRYOGENIC_CHAMBER, 1)); //Cryogenic Chamber
+        rocketStacks.add(new ItemStack(MarsItems.TIER_2_ROCKET_36_INVENTORY, 1));
         stats.setRocketStacks(rocketStacks);
     }
 }

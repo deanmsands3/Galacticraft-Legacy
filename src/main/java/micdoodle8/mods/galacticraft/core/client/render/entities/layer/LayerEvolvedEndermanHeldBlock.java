@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import micdoodle8.mods.galacticraft.core.client.model.ModelEvolvedEnderman;
-import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedEnderman;
+import micdoodle8.mods.galacticraft.core.client.model.EvolvedEndermanModel;
+import micdoodle8.mods.galacticraft.core.entities.EvolvedEndermanEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -16,14 +16,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class LayerEvolvedEndermanHeldBlock extends LayerRenderer<EntityEvolvedEnderman, ModelEvolvedEnderman>
+public class LayerEvolvedEndermanHeldBlock extends LayerRenderer<EvolvedEndermanEntity, EvolvedEndermanModel>
 {
-    public LayerEvolvedEndermanHeldBlock(IEntityRenderer<EntityEvolvedEnderman, ModelEvolvedEnderman> p_i50949_1_) {
+    public LayerEvolvedEndermanHeldBlock(IEntityRenderer<EvolvedEndermanEntity, EvolvedEndermanModel> p_i50949_1_) {
         super(p_i50949_1_);
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, EntityEvolvedEnderman entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, EvolvedEndermanEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         BlockState blockstate = entitylivingbaseIn.getHeldBlockState();
         if (blockstate != null) {
             matrixStackIn.push();

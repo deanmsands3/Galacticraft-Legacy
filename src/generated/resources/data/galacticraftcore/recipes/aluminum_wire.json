@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WWW",
+    "CCC",
+    "WWW"
+  ],
+  "key": {
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "C": {
+      "tag": "forge:ingots/aluminum"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:aluminum_wire",
+    "count": 6
+  }
+}

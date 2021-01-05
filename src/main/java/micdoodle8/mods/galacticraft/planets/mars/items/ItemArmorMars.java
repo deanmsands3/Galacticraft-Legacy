@@ -36,17 +36,17 @@ public class ItemArmorMars extends ArmorItem implements ISortable
     {
         if (this.getArmorMaterial() == EnumArmorMars.ARMOR_DESH)
         {
-            if (stack.getItem() == MarsItems.deshHelmet)
+            if (stack.getItem() == MarsItems.DESH_HELMET)
             {
-                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/model/armor/desh_1.png";
+                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/models/armor/desh_layer_1.png";
             }
-            else if (stack.getItem() == MarsItems.deshChestplate || stack.getItem() == MarsItems.deshBoots)
+            else if (stack.getItem() == MarsItems.DESH_CHESTPLATE || stack.getItem() == MarsItems.DESH_BOOTS)
             {
-                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/model/armor/desh_2.png";
+                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/models/armor/desh_layer_2.png";
             }
-            else if (stack.getItem() == MarsItems.deshLeggings)
+            else if (stack.getItem() == MarsItems.DESH_LEGGINGS)
             {
-                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/model/armor/desh_3.png";
+                return GalacticraftPlanets.TEXTURE_PREFIX + "textures/models/armor/desh_layer_3.png";
             }
         }
 
@@ -76,6 +76,6 @@ public class ItemArmorMars extends ArmorItem implements ISortable
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
     {
-        return repair.getItem() == MarsItems.ingotDesh;
+        return repair.getItem() == MarsItems.DESH_INGOT;
     }
 }

@@ -167,7 +167,7 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
     @Override
     public TileEntity createNewTileEntity(IBlockReader worldIn)
     {
-        return null;
+        return new TileEntityFake();
     }
 
     //    @Override
@@ -250,7 +250,7 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
 
     public void makeFakeBlock(World worldObj, BlockPos pos, BlockPos mainBlock, EnumBlockMultiType type)
     {
-        worldObj.setBlockState(pos, GCBlocks.fakeBlock.getDefaultState().with(MULTI_TYPE, type));
+        worldObj.setBlockState(pos, GCBlocks.MULTI_BLOCK.getDefaultState().with(MULTI_TYPE, type));
         worldObj.setTileEntity(pos, new TileEntityFake(mainBlock));
     }
 
@@ -443,7 +443,7 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
         BlockPos mainBlockPosition = ((TileEntityFake) tileEntity).mainBlockPosition;
         BlockState cryoChamber = worldIn.getBlockState(mainBlockPosition);
         Direction enumfacing = Direction.NORTH;
-        if (GalacticraftCore.isPlanetsLoaded && cryoChamber.getBlock() == MarsBlocks.cryoChamber)
+        if (GalacticraftCore.isPlanetsLoaded && cryoChamber.getBlock() == MarsBlocks.CRYOGENIC_CHAMBER)
         {
             enumfacing = cryoChamber.get(BlockCryoChamber.FACING);
         }

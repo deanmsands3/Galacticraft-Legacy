@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:display_screen"
+    ]
+  },
+  "criteria": {
+    "has_wafers/basic_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:wafers/basic"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:display_screen"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wafers/basic_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

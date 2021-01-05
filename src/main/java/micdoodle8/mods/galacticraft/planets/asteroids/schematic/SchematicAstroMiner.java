@@ -35,7 +35,7 @@ public class SchematicAstroMiner implements ISchematicPage
     @Override
     public ItemStack getRequiredItem()
     {
-        return new ItemStack(MarsItems.schematicAstroMiner);
+        return new ItemStack(MarsItems.ASTRO_MINER_SCHEMATIC);
     }
 
     @OnlyIn(Dist.CLIENT)

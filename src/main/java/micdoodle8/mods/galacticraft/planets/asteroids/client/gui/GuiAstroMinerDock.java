@@ -10,7 +10,7 @@ import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityAstroMiner;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.inventory.ContainerAstroMinerDock;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityMinerBase;
 import net.minecraft.client.gui.widget.button.Button;
@@ -53,7 +53,7 @@ public class GuiAstroMinerDock extends GuiContainerGC<ContainerAstroMinerDock>
         }
         else
         {
-            if (this.minerBase.linkedMinerDataAIState < EntityAstroMiner.AISTATE_TRAVELLING || this.minerBase.linkedMinerDataAIState == EntityAstroMiner.AISTATE_DOCKING)
+            if (this.minerBase.linkedMinerDataAIState < AstroMinerEntity.AISTATE_TRAVELLING || this.minerBase.linkedMinerDataAIState == AstroMinerEntity.AISTATE_DOCKING)
             {
                 this.recallButton.active = false;
             }
@@ -127,23 +127,23 @@ public class GuiAstroMinerDock extends GuiContainerGC<ContainerAstroMinerDock>
             return "";
         case -2:
             return EnumColor.ORANGE + GCCoreUtil.translate("gui.miner.out_of_range");
-        case EntityAstroMiner.AISTATE_OFFLINE:
+        case AstroMinerEntity.AISTATE_OFFLINE:
             return EnumColor.ORANGE + GCCoreUtil.translate("gui.miner.offline");
-        case EntityAstroMiner.AISTATE_STUCK:
+        case AstroMinerEntity.AISTATE_STUCK:
             this.extraLines = true;
             return EnumColor.RED + GCCoreUtil.translate("gui.miner.stuck");
-        case EntityAstroMiner.AISTATE_ATBASE:
+        case AstroMinerEntity.AISTATE_ATBASE:
             return EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.miner.docked");
-        case EntityAstroMiner.AISTATE_TRAVELLING:
+        case AstroMinerEntity.AISTATE_TRAVELLING:
             this.extraLines = true;
             return EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.miner.travelling");
-        case EntityAstroMiner.AISTATE_MINING:
+        case AstroMinerEntity.AISTATE_MINING:
             this.extraLines = true;
             return EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.miner.mining");
-        case EntityAstroMiner.AISTATE_RETURNING:
+        case AstroMinerEntity.AISTATE_RETURNING:
             this.extraLines = true;
             return EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.miner.returning");
-        case EntityAstroMiner.AISTATE_DOCKING:
+        case AstroMinerEntity.AISTATE_DOCKING:
             return EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.miner.docking");
         }
         return "";

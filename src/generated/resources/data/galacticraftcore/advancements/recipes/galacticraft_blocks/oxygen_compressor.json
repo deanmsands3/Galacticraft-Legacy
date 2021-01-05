@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:oxygen_compressor"
+    ]
+  },
+  "criteria": {
+    "has_oxygen_concentrator": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:oxygen_concentrator"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:oxygen_compressor"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_oxygen_concentrator",
+      "has_the_recipe"
+    ]
+  ]
+}

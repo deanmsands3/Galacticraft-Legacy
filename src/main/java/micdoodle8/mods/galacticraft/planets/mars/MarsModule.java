@@ -108,14 +108,14 @@ public class MarsModule implements IPlanetsModule
         MarsModule.planetMars.addMobInfo(new Biome.SpawnListEntry(GCEntities.EVOLVED_CREEPER, 8, 2, 3), EntityClassification.MONSTER);
         MarsModule.planetMars.addMobInfo(new Biome.SpawnListEntry(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), EntityClassification.MONSTER);
         MarsModule.planetMars.addChecklistKeys("equip_oxygen_suit", "thermal_padding");
-        MarsModule.planetMars.setSurfaceBlocks(Lists.newArrayList(MarsBlocks.rockSurface));
+        MarsModule.planetMars.setSurfaceBlocks(Lists.newArrayList(MarsBlocks.MARS_FINE_REGOLITH));
 
         GalaxyRegistry.registerPlanet(MarsModule.planetMars);
         GalacticraftRegistry.registerTeleportType(DimensionMars.class, new TeleportTypeMars());
         GalacticraftRegistry.registerRocketGui(DimensionMars.class, new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/mars_rocket_gui.png"));
-        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.schematicRocketT3, 1));
-        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.schematicAstroMiner, 1));
-        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.schematicCargoRocket, 1));
+        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.TIER_3_ROCKET_SCHEMATIC, 1));
+        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.ASTRO_MINER_SCHEMATIC, 1));
+        GalacticraftRegistry.addDungeonLoot(2, new ItemStack(MarsItems.CARGO_ROCKET_SCHEMATIC, 1));
 
 //        GalacticraftCore.proxy.registerFluidTexture(PlanetFluids.LIQUID_BACTERIAL_SLUDGE.getFluid(), new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/misc/underbecterial.png"));
         // TODO Fluid textures

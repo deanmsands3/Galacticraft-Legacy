@@ -1,8 +1,8 @@
 {
 "textures": {
-    "texture": "galacticraftcore:blocks/cryo_0",
-    "particle": "galacticraftcore:blocks/cryo_0",
-    "cryo_1": "galacticraftcore:blocks/cryo_1"
+    "texture": "galacticraftcore:block/cryogenic_chamber_0",
+    "particle": "galacticraftcore:block/cryogenic_chamber_0",
+    "cryo_1": "galacticraftcore:block/cryogenic_chamber_1"
 },
 "elements": [ 
 {

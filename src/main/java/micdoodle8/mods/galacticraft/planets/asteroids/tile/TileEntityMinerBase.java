@@ -15,7 +15,7 @@ import micdoodle8.mods.galacticraft.core.util.*;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlockNames;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.dimension.DimensionAsteroids;
-import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntityAstroMiner;
+import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -47,7 +47,7 @@ import java.util.Map.Entry;
 
 public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory implements ISidedInventory, IMultiBlock, IMachineSides
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.minerBaseFull)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.FULL_ASTRO_MINER_BASE)
     public static TileEntityType<TileEntityMinerBase> TYPE;
 
     public static final int HOLDSIZE = 72;
@@ -90,7 +90,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
 
     private final boolean spawnedMiner = false;
 
-    public EntityAstroMiner linkedMiner = null;
+    public AstroMinerEntity linkedMiner = null;
     public UUID linkedMinerID = null;
     private boolean initialised;
 
@@ -135,7 +135,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
                         for (int z = 0; z < 2; z++)
                         {
                             BlockPos pos = posMain.add(x, y, z);
-                            w.setBlockState(pos, AsteroidBlocks.minerBaseFull.getDefaultState(), 2);
+                            w.setBlockState(pos, AsteroidBlocks.FULL_ASTRO_MINER_BASE.getDefaultState(), 2);
                             final TileEntity tile = w.getTileEntity(pos);
 
                             if (tile instanceof TileEntityMinerBase)
@@ -178,7 +178,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
             {
                 if (this.getMaster() == null)
                 {
-                    this.world.setBlockState(this.getPos(), AsteroidBlocks.blockMinerBase.getDefaultState(), 2);
+                    this.world.setBlockState(this.getPos(), AsteroidBlocks.ASTRO_MINER_BASE.getDefaultState(), 2);
                 }
             }
         }
@@ -243,7 +243,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
             this.linkedMinerDataAIState = -3;
             return;
         }
-        EntityAstroMiner miner = this.linkedMiner;
+        AstroMinerEntity miner = this.linkedMiner;
         if (miner == null || !miner.isAlive())
         {
             this.linkedMinerDataAIState = -3;
@@ -291,7 +291,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
             if (this.linkedMinerID == null)
             {
 //                System.err.println("" + this.facing);
-                if (EntityAstroMiner.spawnMinerAtBase(this.world, this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1, this.facing, new BlockVec3(this), player))
+                if (AstroMinerEntity.spawnMinerAtBase(this.world, this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1, this.facing, new BlockVec3(this), player))
                 {
                     this.findTargetPoints();
                     return true;
@@ -590,7 +590,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
         if (this.isMaster)
         {
             ItemStack holding = entityPlayer.getActiveItemStack();
-            return holding == ItemStack.EMPTY || holding.getItem() != AsteroidsItems.astroMiner ? ActionResultType.SUCCESS : ActionResultType.PASS;
+            return holding == ItemStack.EMPTY || holding.getItem() != AsteroidsItems.ASTRO_MINER ? ActionResultType.SUCCESS : ActionResultType.PASS;
 
 //            entityPlayer.openGui(GalacticraftPlanets.instance, GuiIdsPlanets.MACHINE_ASTEROIDS, this.world, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ()); TODO guis
         }
@@ -650,7 +650,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
         {
             BlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == AsteroidBlocks.minerBaseFull) //GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.MINER_BASE)
+            if (stateAt.getBlock() == AsteroidBlocks.FULL_ASTRO_MINER_BASE) //GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.MINER_BASE)
             {
                 if (this.world.isRemote && this.world.rand.nextDouble() < 0.1D)
                 {
@@ -775,7 +775,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
         return null;
     }
 
-    public void linkMiner(EntityAstroMiner entityAstroMiner)
+    public void linkMiner(AstroMinerEntity entityAstroMiner)
     {
         this.linkedMiner = entityAstroMiner;
         this.linkedMinerID = this.linkedMiner.getUniqueID();
@@ -1024,7 +1024,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
         int s = this.targetPoints.size();
         for (int i = 0; i < s; i++)
         {
-            this.targetPoints.add(this.targetPoints.get(i).clone().modifyPositionFromSide(inLine, EntityAstroMiner.MINE_LENGTH + 6));
+            this.targetPoints.add(this.targetPoints.get(i).clone().modifyPositionFromSide(inLine, AstroMinerEntity.MINE_LENGTH + 6));
         }
 
         this.markDirty();

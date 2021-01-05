@@ -1,12 +1,12 @@
 {
-  "parent": "galacticraftcore:block/machine_tiered_rl",
+  "parent": "galacticraftcore:block/machine_base_rl",
   "textures": {
-    "particle": "galacticraftcore:blocks/machine",
-    "front": "galacticraftcore:blocks/machine_fuelloader",
-    "rear": "galacticraftcore:blocks/machine_fuelloader",
-    "side": "galacticraftcore:blocks/machine_side",
-    "el_in": "galacticraftcore:blocks/machine_input",
-    "el_out": "galacticraftcore:blocks/machine_oil_input",
-    "top": "galacticraftcore:blocks/machine",
-    "base": "galacticraftcore:blocks/machine" }
+    "particle": "galacticraftcore:block/fuel_loader",
+    "front": "galacticraftcore:block/fuel_loader",
+    "rear": "galacticraftcore:block/fuel_loader",
+    "side": "galacticraftcore:block/machine_side",
+    "el_in": "galacticraftcore:block/machine_input",
+    "el_out": "galacticraftcore:block/machine_oil_input",
+    "top": "galacticraftcore:block/machine_base",
+    "base": "galacticraftcore:block/machine_base" }
 }

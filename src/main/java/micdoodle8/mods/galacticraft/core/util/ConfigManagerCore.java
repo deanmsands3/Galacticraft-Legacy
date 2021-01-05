@@ -998,8 +998,6 @@ public class ConfigManagerCore
                     .define("meteor_block_damage_enabled", true);
 
             builder.pop();
-
-            challengeModeUpdate();
         }
         catch (final Exception e)
         {

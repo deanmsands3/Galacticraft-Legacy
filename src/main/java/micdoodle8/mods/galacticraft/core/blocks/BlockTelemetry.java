@@ -123,7 +123,7 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
             {
                 ItemStack held = entityPlayer.inventory.getCurrentItem();
                 //Look for Frequency Module
-                if (!held.isEmpty() && held.getItem() == GCItems.frequencyModule)
+                if (!held.isEmpty() && held.getItem() == GCItems.FREQUENCY_MODULE)
                 {
                     CompoundNBT fmData = held.getTag();
                     if (fmData != null && fmData.contains("linkedUUIDMost") && fmData.contains("linkedUUIDLeast"))

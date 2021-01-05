@@ -55,7 +55,7 @@ import javax.annotation.Nullable;
 
 public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory implements ISidedInventory, IDisableableMachine, IFluidHandlerWrapper, IOxygenStorage, IOxygenReceiver, INamedContainerProvider
 {
-    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.electrolyzer)
+    @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.WATER_ELECTROLYZER)
     public static TileEntityType<TileEntityElectrolyzer> TYPE;
 
     private final int tankCapacity = 4000;
@@ -204,7 +204,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
 
     private void checkFluidTankTransfer(int slot, FluidTank tank)
     {
-        if (!this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot).getItem() == AsteroidsItems.atmosphericValve)
+        if (!this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot).getItem() == AsteroidsItems.ATMOSPHERIC_VALVE)
         {
             tank.drain(4, IFluidHandler.FluidAction.EXECUTE);
         }

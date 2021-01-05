@@ -15,13 +15,12 @@ import micdoodle8.mods.galacticraft.core.client.DynamicTextureProper;
 import micdoodle8.mods.galacticraft.core.client.EventHandlerClient;
 import micdoodle8.mods.galacticraft.core.client.fx.*;
 import micdoodle8.mods.galacticraft.core.client.gui.screen.InventoryTabGalacticraft;
-import micdoodle8.mods.galacticraft.core.client.model.ModelRocketTier1;
+import micdoodle8.mods.galacticraft.core.client.model.Tier1RocketModel;
 import micdoodle8.mods.galacticraft.core.client.obj.GCModelCache;
 import micdoodle8.mods.galacticraft.core.client.render.entities.*;
 import micdoodle8.mods.galacticraft.core.client.render.item.*;
 import micdoodle8.mods.galacticraft.core.client.render.tile.*;
-import micdoodle8.mods.galacticraft.core.client.sounds.MusicTickerGC;
-import micdoodle8.mods.galacticraft.core.entities.EntityTier1Rocket;
+import micdoodle8.mods.galacticraft.core.entities.Tier1RocketEntity;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
 import micdoodle8.mods.galacticraft.core.entities.player.IPlayerClient;
 import micdoodle8.mods.galacticraft.core.entities.player.PlayerClient;
@@ -70,6 +69,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -79,7 +79,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -178,21 +177,21 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
         // ===============
 
         RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(GCBlocks.fluidPipe, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.fluidPipePull, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.cheeseBlock, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.concealedRedstone, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.emergencyBox, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.emergencyBoxKit, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.glowstoneTorch, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.glowstoneTorchWall, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.FLUID_PIPE, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.PULLED_FLUID_PIPE, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.CHEESE_BLOCK, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.HIDDEN_REDSTONE_WIRE, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.EMERGENCY_POST, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.EMERGENCY_POST_KIT, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.GLOWSTONE_TORCH, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.WALL_GLOWSTONE_TORCH, cutout);
 //        RenderTypeLookup.setRenderLayer(GCBlocks.grating, cutout);
 //        RenderTypeLookup.setRenderLayer(GCBlocks.platform, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorch, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorchWall, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorchLit, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.unlitTorchWallLit, cutout);
-        RenderTypeLookup.setRenderLayer(GCBlocks.fluidTank, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.UNLIT_TORCH, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.WALL_UNLIT_TORCH, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.LIT_UNLIT_TORCH, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.WALL_LIT_UNLIT_TORCH, cutout);
+        RenderTypeLookup.setRenderLayer(GCBlocks.FLUID_TANK, cutout);
 
         ClientProxyCore.registerInventoryTabs();
         ItemSchematic.registerTextures();
@@ -220,28 +219,17 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
             }
         }
 
-        try
-        {
-            Field ftc = Minecraft.getInstance().getClass().getDeclaredField(GCCoreUtil.isDeobfuscated() ? "mcMusicTicker" : "field_147126_aw");
-            ftc.setAccessible(true);
-            ftc.set(Minecraft.getInstance(), new MusicTickerGC(Minecraft.getInstance()));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        setCustomModel(GCItems.rocketTierOne.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCargo1.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCargo2.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCargo3.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.rocketTierOneCreative.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
-        setCustomModel(GCItems.buggy.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.buggyInventory1.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.buggyInventory2.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.buggyInventory3.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
-        setCustomModel(GCItems.flag.getRegistryName(), modelToWrap -> new ItemModelFlag(modelToWrap));
-        setCustomModel(GCBlocks.nasaWorkbench.getRegistryName(), modelToWrap -> new ItemModelWorkbench(modelToWrap));
+        setCustomModel(GCItems.TIER_1_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.TIER_1_ROCKET_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.TIER_1_ROCKET_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.TIER_1_ROCKET_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.CREATIVE_TIER_1_ROCKET.getRegistryName(), modelToWrap -> new ItemModelRocket(modelToWrap));
+        setCustomModel(GCItems.BUGGY.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
+        setCustomModel(GCItems.BUGGY_18_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
+        setCustomModel(GCItems.BUGGY_36_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
+        setCustomModel(GCItems.BUGGY_54_INVENTORY.getRegistryName(), modelToWrap -> new ItemModelBuggy(modelToWrap));
+        setCustomModel(GCItems.FLAG.getRegistryName(), modelToWrap -> new ItemModelFlag(modelToWrap));
+        setCustomModel(GCBlocks.ROCKET_WORKBENCH.getRegistryName(), modelToWrap -> new ItemModelWorkbench(modelToWrap));
 
         for (PartialCanister container : ClientProxyCore.canisters)
         {
@@ -251,6 +239,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
                 setCustomModel(modelResourceLocation, i_modelToWrap -> new ItemLiquidCanisterModel(i_modelToWrap));
             }
         }
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ItemStackTileEntityRendererGC.INSTANCE.init());
     }
 
     @Override
@@ -441,7 +430,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 //        event.getMap().loadTexture(new ResourceLocation("galacticraftcore:blocks/fluids/hydrogen_gas"));
 //        event.getMap().loadTexture(new ResourceLocation("galacticraftcore:blocks/bubble")); TODO Item/Block models
 //        new TextureDungeonFinder("galacticraftcore:items/dungeonfinder").registedistanceSmoker(event);
-        registerTexture(event, "model/arc_lamp");
+        registerTexture(event, "entity/arc_lamp");
     }
 
     private static void registerTexture(TextureStitchEvent.Pre event, String texture)
@@ -574,23 +563,24 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 
     public static void registerEntityRenderers()
     {
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.ROCKET_T1, RenderTier1Rocket::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SPIDER, RenderEvolvedSpider::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_ZOMBIE, RenderEvolvedZombie::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_CREEPER, RenderEvolvedCreeper::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SKELETON, RenderEvolvedSkeleton::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.SKELETON_BOSS, RenderEvolvedSkeletonBoss::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR, RenderMeteor::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.FLAG, RenderFlag::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.PARA_CHEST, RenderParaChest::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.TIER_1_ROCKET, Tier1RocketRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SPIDER, EvolvedSpiderRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_CREEPER, EvolvedCreeperRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SKELETON, EvolvedSkeletonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_SKELETON_BOSS, EvolvedSkeletonBossRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR, MeteorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.LARGE_METEOR, MeteorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.FLAG, FlagRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.PARACHEST, ParachestRenderer::new);
 ////        RenderingRegistry.registerEntityRenderingHandler(EntityAlienVillager.class, (EntityRendererManager manager) -> new RenderAlienVillager(manager)); TODO Villagers
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.LANDER, RenderLander::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.CELESTIAL_FAKE, RenderEntityFake::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.BUGGY, RenderBuggy::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR_CHUNK, RenderMeteorChunk::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.HANGING_SCHEMATIC, RenderSchematic::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_ENDERMAN, RenderEvolvedEnderman::new);
-        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_WITCH, RenderEvolvedWitch::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.LANDER, LanderRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.CELESTIAL_SCREEN, CelestialScreenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.BUGGY, BuggyRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.METEOR_CHUNK, MeteorChunkRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.HANGING_SCHEMATIC, HangingSchematicRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_ENDERMAN, EvolvedEndermanRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(GCEntities.EVOLVED_WITCH, EvolvedWitchRenderer::new);
     }
 
     private static void registerHandlers()
@@ -606,7 +596,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
 
     private static void registerTileEntityRenderers()
     {
-        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChest.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/treasure.png")));
+        ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChest.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/tier_1_treasure_chest.png"), GCBlocks.TIER_1_TREASURE_CHEST));
         ClientRegistry.bindTileEntityRenderer(TileEntitySolar.TileEntitySolarT1.TYPE, TileEntitySolarPanelRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntitySolar.TileEntitySolarT2.TYPE, TileEntitySolarPanelRenderer::new);
 ////        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOxygenDistributor.class, new TileEntityBubbleProviderRenderer<>(0.25F, 0.25F, 1.0F));

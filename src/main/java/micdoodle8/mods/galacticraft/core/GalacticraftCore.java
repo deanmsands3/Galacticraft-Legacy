@@ -260,7 +260,7 @@ public class GalacticraftCore
         GalacticraftCore.moonMoon.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_CREEPER, 8, 2, 3), EntityClassification.MONSTER);
         GalacticraftCore.moonMoon.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), EntityClassification.MONSTER);
         GalacticraftCore.moonMoon.addChecklistKeys("equip_oxygen_suit");
-        GalacticraftCore.moonMoon.setSurfaceBlocks(Lists.newArrayList(GCBlocks.moonTurf));
+        GalacticraftCore.moonMoon.setSurfaceBlocks(Lists.newArrayList(GCBlocks.MOON_TURF));
 
         //Satellites must always have a WorldProvider implementing IOrbitDimension
         GalacticraftCore.satelliteSpaceStation.setTierRequired(1);
@@ -301,8 +301,8 @@ public class GalacticraftCore
 //        GalacticraftRegistry.registerRocketGui(DimensionOverworldOrbit.class, new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/overworld_rocket_gui.png"));
 //        GalacticraftRegistry.registerRocketGui(WorldProviderSurface.class, new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/overworld_rocket_gui.png"));
 //        GalacticraftRegistry.registerRocketGui(DimensionMoon.class, new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/moon_rocket_gui.png"));
-        GalacticraftRegistry.addDungeonLoot(1, new ItemStack(GCItems.schematicBuggy, 1));
-        GalacticraftRegistry.addDungeonLoot(1, new ItemStack(GCItems.schematicRocketT2, 1));
+        GalacticraftRegistry.addDungeonLoot(1, new ItemStack(GCItems.MOON_BUGGY_SCHEMATIC, 1));
+        GalacticraftRegistry.addDungeonLoot(1, new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC, 1));
 
 //        if (ConfigManagerCore.enableCopperOreGen.get())
 //        {
@@ -331,33 +331,33 @@ public class GalacticraftCore
 //        GCFluidRegistry.registerDispenserBehaviours();
 //        if (CompatibilityManager.isBCraftEnergyLoaded()) GCFluidRegistry.registerBCFuel(); TODO BC Compat
 
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_MASK, EnumExtendedInventorySlot.MASK, GCItems.oxMask);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_GEAR, EnumExtendedInventorySlot.GEAR, GCItems.oxygenGear);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_LIGHT, EnumExtendedInventorySlot.LEFT_TANK, GCItems.oxTankLight);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_LIGHT, EnumExtendedInventorySlot.RIGHT_TANK, GCItems.oxTankLight);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_MEDIUM, EnumExtendedInventorySlot.LEFT_TANK, GCItems.oxTankMedium);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_MEDIUM, EnumExtendedInventorySlot.RIGHT_TANK, GCItems.oxTankMedium);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_HEAVY, EnumExtendedInventorySlot.LEFT_TANK, GCItems.oxTankHeavy);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_HEAVY, EnumExtendedInventorySlot.RIGHT_TANK, GCItems.oxTankHeavy);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_INFINITE, EnumExtendedInventorySlot.LEFT_TANK, GCItems.oxygenCanisterInfinite);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_INFINITE, EnumExtendedInventorySlot.RIGHT_TANK, GCItems.oxygenCanisterInfinite);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachutePlain);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteBlack);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteBlue);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteLime);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteBrown);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteDarkBlue);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteDarkGray);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteDarkGreen);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteGray);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteMagenta);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteOrange);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachutePink);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachutePurple);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteRed);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteTeal);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.parachuteYellow);
-        GalacticraftRegistry.registerGear(Constants.GEAR_ID_FREQUENCY_MODULE, EnumExtendedInventorySlot.FREQUENCY_MODULE, GCItems.frequencyModule);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_MASK, EnumExtendedInventorySlot.MASK, GCItems.OXYGEN_MASK);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_GEAR, EnumExtendedInventorySlot.GEAR, GCItems.OXYGEN_GEAR);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_LIGHT, EnumExtendedInventorySlot.LEFT_TANK, GCItems.LIGHT_OXYGEN_TANK);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_LIGHT, EnumExtendedInventorySlot.RIGHT_TANK, GCItems.LIGHT_OXYGEN_TANK);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_MEDIUM, EnumExtendedInventorySlot.LEFT_TANK, GCItems.MEDIUM_OXYGEN_TANK);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_MEDIUM, EnumExtendedInventorySlot.RIGHT_TANK, GCItems.MEDIUM_OXYGEN_TANK);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_HEAVY, EnumExtendedInventorySlot.LEFT_TANK, GCItems.HEAVY_OXYGEN_TANK);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_HEAVY, EnumExtendedInventorySlot.RIGHT_TANK, GCItems.HEAVY_OXYGEN_TANK);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_INFINITE, EnumExtendedInventorySlot.LEFT_TANK, GCItems.INFINITE_OXYGEN_TANK);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_OXYGEN_TANK_INFINITE, EnumExtendedInventorySlot.RIGHT_TANK, GCItems.INFINITE_OXYGEN_TANK);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.WHITE_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.BLACK_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.LIGHT_BLUE_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.LIME_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.BROWN_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.BLUE_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.GRAY_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.GREEN_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.LIGHT_GRAY_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.MAGENTA_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.ORANGE_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.PINK_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.PURPLE_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.RED_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.CYAN_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_PARACHUTE, EnumExtendedInventorySlot.PARACHUTE, GCItems.YELLOW_PARACHUTE);
+        GalacticraftRegistry.registerGear(Constants.GEAR_ID_FREQUENCY_MODULE, EnumExtendedInventorySlot.FREQUENCY_MODULE, GCItems.FREQUENCY_MODULE);
 
 //        GalacticraftCore.proxy.registerFluidTexture(GCFluids.OIL.getFluid(), new ResourceLocation(Constants.MOD_ID_CORE, "textures/misc/underoil.png"));
 //        GalacticraftCore.proxy.registerFluidTexture(GCFluids.FUEL.getFluid(), new ResourceLocation(Constants.MOD_ID_CORE, "textures/misc/underfuel.png")); TODO Fluid textures
@@ -483,8 +483,8 @@ public class GalacticraftCore
             e.printStackTrace();
         }
 
-        GalacticraftCore.galacticraftBlocksTab.setItemForTab(new ItemStack(GCBlocks.oxygenCompressor));
-        GalacticraftCore.galacticraftItemsTab.setItemForTab(new ItemStack(GCItems.rocketTierOne));
+        GalacticraftCore.galacticraftBlocksTab.setItemForTab(new ItemStack(GCBlocks.OXYGEN_COMPRESSOR));
+        GalacticraftCore.galacticraftItemsTab.setItemForTab(new ItemStack(GCItems.TIER_1_ROCKET));
 
 //        if (event.getSide() == LogicalSide.SERVER)
 //        {
@@ -581,6 +581,7 @@ public class GalacticraftCore
         if (config.getSpec() == ConfigManagerCore.COMMON_SPEC)
         {
             ConfigManagerCore.onConfigEvent();
+            ConfigManagerCore.challengeModeUpdate();
         }
     }
 
