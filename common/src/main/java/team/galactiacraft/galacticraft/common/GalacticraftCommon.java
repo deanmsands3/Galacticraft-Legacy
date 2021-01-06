@@ -18,7 +18,7 @@ public class GalacticraftCommon {
 
     public static void init() {
         // Using the architectury registry to defer the creation of new entries to when they are registered.
-        REGISTRIES.get().get(Registry.ITEM).register(new ResourceLocation(MOD_ID, "example_item"), () ->
+        REGISTRIES.get().get(Registry.ITEM_REGISTRY).register(new ResourceLocation(MOD_ID, "example_item"), () ->
                 new Item(new Item.Properties().tab(GalacticraftCommon.EXAMPLE_TAB)));
     }
 }

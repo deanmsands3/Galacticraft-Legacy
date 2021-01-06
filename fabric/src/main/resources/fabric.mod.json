@@ -12,9 +12,7 @@
     "entrypoints": {
         "main": ["team.galacticraft.galacticraft.fabric.GalacticraftFabric"]
     },
-    "mixins": [
-        "galacticraft.mixins.json"
-    ],
+    "mixins": [],
     "depends": {
         "fabricloader": ">=0.7.4",
         "fabric": "*",
