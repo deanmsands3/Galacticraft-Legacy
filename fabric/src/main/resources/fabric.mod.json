@@ -1,5 +1,24 @@
 {
     "schemaVersion": 1,
-    "id": "galacticraft-fabric",
-    "version": "0.1.0-modulate"
+    "id": "galacticraft",
+    "version": "${version}",
+    "name": "Galacticraft",
+    "authors": [
+        "Team Galacticraft"
+    ],
+    "license": "Galacticraft Custom License",
+    "icon": "assets/galacticraft/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": ["team.galacticraft.galacticraft.fabric.GalacticraftFabric"]
+    },
+    "mixins": [
+        "galacticraft.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.7.4",
+        "fabric": "*",
+        "minecraft": ">=1.16.4",
+        "architectury": ">=1.1.55"
+    }
 }

@@ -1,7 +1,11 @@
 package team.galacticraft.galacticraft.fabric;
 
-/**
- * Temp file, used to keep folder structure through git.
- */
-public class GalacticraftFabric {
+import net.fabricmc.api.ModInitializer;
+import team.galactiacraft.galacticraft.common.GalacticraftCommon;
+
+public class GalacticraftFabric implements ModInitializer {
+    @Override
+    public void onInitialize() {
+        GalacticraftCommon.init();
+    }
 }

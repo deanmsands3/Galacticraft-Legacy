@@ -1,7 +1,35 @@
 modLoader = "javafml"
 loaderVersion = "[31,)"
+#issueTrackerURL = ""
+license = "Galacticraft Custom License"
+
 [[mods]]
-modId = "galacticraft-forge"
+modId = "galacticraft"
 version = "${version}"
 displayName = "Galacticraft"
-description = ""
+authors = "Team Galacticraft"
+description = '''
+
+'''
+#logoFile = ""
+
+[[dependencies.galacticraft]]
+modId = "forge"
+mandatory = true
+versionRange = "[31,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.galacticraft]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.15.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.galacticraft]]
+modId = "architectury"
+mandatory = true
+versionRange = "[1.1.55,)"
+ordering = "AFTER"
+side = "BOTH"
