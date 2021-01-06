@@ -1,0 +1,68 @@
+{
+  "parent": "galacticraftcore:galacticraft/moon_buggy_schematic",
+  "display": {
+    "icon": {
+      "item": "galacticraftcore:buggy"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.moon_buggy.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.moon_buggy.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "buggy": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:buggy"
+          }
+        ]
+      }
+    },
+    "buggy_18_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:buggy_18_inventory"
+          }
+        ]
+      }
+    },
+    "buggy_36_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:buggy_36_inventory"
+          }
+        ]
+      }
+    },
+    "buggy_54_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:buggy_54_inventory"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "buggy",
+      "buggy_18_inventory",
+      "buggy_36_inventory",
+      "buggy_54_inventory"
+    ]
+  ]
+}

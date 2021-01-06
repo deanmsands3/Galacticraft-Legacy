@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:lunar_sapphire_from_blasting"
+    ]
+  },
+  "criteria": {
+    "has_ores/sapphire_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ores/sapphire"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:lunar_sapphire_from_blasting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ores/sapphire_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

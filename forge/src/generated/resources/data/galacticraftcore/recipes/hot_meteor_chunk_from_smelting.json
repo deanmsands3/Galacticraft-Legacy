@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "galacticraftcore:meteor_chunk"
+  },
+  "result": "galacticraftcore:hot_meteor_chunk",
+  "experience": 0.1,
+  "cookingtime": 200
+}

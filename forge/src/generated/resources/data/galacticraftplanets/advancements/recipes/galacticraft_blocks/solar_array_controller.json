@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:solar_array_controller"
+    ]
+  },
+  "criteria": {
+    "has_wafers/advanced_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:wafers/advanced"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:solar_array_controller"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wafers/advanced_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

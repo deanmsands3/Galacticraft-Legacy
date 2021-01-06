@@ -1,0 +1,12 @@
+{
+  "parent": "galacticraftcore:block/machine_base_lr",
+  "textures": {
+    "particle": "galacticraftcore:block/advanced_compressor",
+    "front": "galacticraftcore:block/advanced_compressor",
+    "rear": "galacticraftcore:block/advanced_machine_side",
+    "side": "galacticraftcore:block/advanced_machine_side",
+    "el_in": "galacticraftcore:block/advanced_machine_input",
+    "el_out": "galacticraftcore:block/advanced_machine_side",
+    "top": "galacticraftcore:block/advanced_machine_base",
+    "base": "galacticraftcore:block/advanced_machine_base" }
+}

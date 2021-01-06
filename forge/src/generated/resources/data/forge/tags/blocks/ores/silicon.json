@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraftcore:silicon_ore",
+    "galacticraftplanets:venus_silicon_ore"
+  ]
+}

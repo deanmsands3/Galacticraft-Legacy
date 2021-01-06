@@ -1,0 +1,7 @@
+{
+  "parent": "block/dragon_egg",
+  "textures": {
+    "particle": "galacticraftplanets:block/creeper_egg",
+    "all": "galacticraftplanets:block/creeper_egg"
+  }
+}

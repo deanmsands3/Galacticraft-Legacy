@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "galacticraftplanets:mars_cobblestone"
+  },
+  "result": "galacticraftplanets:mars_stone",
+  "experience": 0.1,
+  "cookingtime": 200
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:desh_block"
+    ]
+  },
+  "criteria": {
+    "has_desh_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftplanets:desh_ingot"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:desh_block"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_desh_ingot",
+      "has_the_recipe"
+    ]
+  ]
+}

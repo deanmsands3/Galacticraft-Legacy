@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "YYY",
+    "ZZZ"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:glass/colorless"
+    },
+    "Y": {
+      "tag": "forge:wafers/solar"
+    },
+    "Z": {
+      "item": "galacticraftcore:aluminum_wire"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:single_solar_module",
+    "count": 2
+  }
+}

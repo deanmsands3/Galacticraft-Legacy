@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYX",
+    "Y Y",
+    "XYX"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:glowstone_torch"
+    },
+    "Y": {
+      "tag": "forge:plates/tin"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:emergency_post"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:fluid_tank"
+    ]
+  },
+  "criteria": {
+    "has_glass_panes/colorless_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:glass_panes/colorless"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:fluid_tank"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_glass_panes/colorless_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

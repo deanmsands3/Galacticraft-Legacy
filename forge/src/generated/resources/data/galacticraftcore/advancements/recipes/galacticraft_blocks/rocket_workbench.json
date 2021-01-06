@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:rocket_workbench"
+    ]
+  },
+  "criteria": {
+    "has_wafers/advanced_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:wafers/advanced"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:rocket_workbench"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wafers/advanced_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

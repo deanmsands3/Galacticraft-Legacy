@@ -1,0 +1,58 @@
+{
+  "parent": "galacticraftcore:galacticraft/oxygen_compressor",
+  "display": {
+    "icon": {
+      "item": "galacticraftcore:medium_oxygen_tank",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.fill_tank.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.fill_tank.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "light_oxygen_tank": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:light_oxygen_tank"
+          }
+        ]
+      }
+    },
+    "medium_oxygen_tank": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:medium_oxygen_tank"
+          }
+        ]
+      }
+    },
+    "heavy_oxygen_tank": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:heavy_oxygen_tank"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "light_oxygen_tank",
+      "medium_oxygen_tank",
+      "heavy_oxygen_tank"
+    ]
+  ]
+}

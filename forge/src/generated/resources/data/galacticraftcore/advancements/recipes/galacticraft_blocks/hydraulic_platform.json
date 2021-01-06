@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:hydraulic_platform"
+    ]
+  },
+  "criteria": {
+    "has_piston": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:piston"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:hydraulic_platform"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_piston",
+      "has_the_recipe"
+    ]
+  ]
+}

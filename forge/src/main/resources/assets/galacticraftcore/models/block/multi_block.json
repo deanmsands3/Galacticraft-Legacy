@@ -1,0 +1,19 @@
+{
+    "elements": [
+        {   "from": [ 0, 0, 0 ],
+            "to": [ 0, 0, 0 ],
+            "faces": {
+                "down":  { "texture": "#texture", "cullface": "down" },
+                "up":    { "texture": "#texture", "cullface": "up" },
+                "north": { "texture": "#texture", "cullface": "north" },
+                "south": { "texture": "#texture", "cullface": "south" },
+                "west":  { "texture": "#texture", "cullface": "west" },
+                "east":  { "texture": "#texture", "cullface": "east" }
+            }
+        }
+    ],
+    "textures": {
+        "particle": "galacticraftcore:block/machine_base",
+        "texture": "galacticraftcore:block/machine_base"
+    }
+}

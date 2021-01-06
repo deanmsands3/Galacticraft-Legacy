@@ -1,0 +1,12 @@
+{
+  "parent": "galacticraftcore:block/machine_base_lr",
+  "textures": {
+    "particle": "galacticraftcore:block/fuel_loader",
+    "front": "galacticraftcore:block/fuel_loader",
+    "rear": "galacticraftcore:block/fuel_loader",
+    "side": "galacticraftcore:block/machine_side",
+    "el_in": "galacticraftcore:block/machine_input",
+    "el_out": "galacticraftcore:block/machine_oil_input",
+    "top": "galacticraftcore:block/machine_base",
+    "base": "galacticraftcore:block/machine_base" }
+}

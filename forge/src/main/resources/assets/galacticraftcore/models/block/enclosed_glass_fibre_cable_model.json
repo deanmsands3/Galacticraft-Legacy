@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "galacticraftcore:block/enclosed_glass_fibre_cable"
+    }
+}

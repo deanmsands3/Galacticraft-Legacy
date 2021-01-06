@@ -1,0 +1,25 @@
+{
+	"multipart": [
+		{	"when": { "middle":  "true" },
+			"apply": { "model": "galacticraftcore:block/fluid_pipe" }
+		},
+		{   "when": { "up": "true" },
+			"apply": { "model": "galacticraftcore:block/fluid_pipe_u" }
+		},
+		{   "when": { "down": "true" },
+			"apply": { "model": "galacticraftcore:block/fluid_pipe_u", "x": 180 }
+		},
+		{   "when": { "north": "true" },
+			"apply": { "model": "galacticraftcore:block/fluid_pipe_n" }
+		},
+		{   "when": { "east": "true" },
+			"apply": { "model": "galacticraftcore:block/fluid_pipe_n", "y": 90 }
+		},
+		{   "when": { "south": "true" },
+			"apply": { "model": "galacticraftcore:block/fluid_pipe_n", "y": 180 }
+		},
+		{   "when": { "west": "true" },
+			"apply": { "model": "galacticraftcore:block/fluid_pipe_n", "y": 270 }
+		}
+	]
+}

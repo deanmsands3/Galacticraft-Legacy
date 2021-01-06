@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:oxygen_mask"
+    ]
+  },
+  "criteria": {
+    "has_iron_helmet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:iron_helmet"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:oxygen_mask"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_iron_helmet",
+      "has_the_recipe"
+    ]
+  ]
+}

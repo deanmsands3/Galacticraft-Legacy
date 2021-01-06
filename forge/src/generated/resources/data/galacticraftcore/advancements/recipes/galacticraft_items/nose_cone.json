@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:nose_cone"
+    ]
+  },
+  "criteria": {
+    "has_tier_1_heavy_duty_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:tier_1_heavy_duty_plate"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:nose_cone"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tier_1_heavy_duty_plate",
+      "has_the_recipe"
+    ]
+  ]
+}

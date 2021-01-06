@@ -1,0 +1,35 @@
+{
+  "parent": "galacticraftcore:galacticraft/tier_1_rocket",
+  "display": {
+    "icon": {
+      "item": "galacticraftcore:fuel_loader"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.fuel_loader.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.fuel_loader.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "fuel_loader": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:fuel_loader"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "fuel_loader"
+    ]
+  ]
+}

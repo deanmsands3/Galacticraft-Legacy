@@ -1,0 +1,12 @@
+{
+  "parent": "galacticraftcore:block/machine_base_rl",
+  "textures": {
+    "particle": "galacticraftcore:block/deconstructor",
+    "front": "galacticraftcore:block/deconstructor",
+    "rear": "galacticraftcore:block/machine_side",
+    "side": "galacticraftcore:block/machine_side",
+    "el_in": "galacticraftcore:block/machine_input",
+    "el_out": "galacticraftcore:block/machine_side",
+    "top": "galacticraftcore:block/machine_base",
+    "base": "galacticraftcore:block/machine_base" }
+}

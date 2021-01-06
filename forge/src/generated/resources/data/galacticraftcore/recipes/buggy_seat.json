@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  X",
+    " YX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:plates/steel"
+    },
+    "Y": {
+      "tag": "forge:plates/iron"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:buggy_seat"
+  }
+}

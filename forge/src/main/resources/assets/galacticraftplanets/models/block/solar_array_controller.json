@@ -1,0 +1,25 @@
+{
+    "parent": "block/cube_all",
+    "elements": [
+        {   "from": [ 0, 4, 0 ],
+            "to": [ 16, 12.5, 16 ],
+            "faces": {
+                "down":  { "texture": "#down" },
+                "up":    { "texture": "#up" },
+                "north": { "texture": "#north", "cullface": "north" },
+                "south": { "texture": "#south", "cullface": "south" },
+                "west":  { "texture": "#west", "cullface": "west" },
+                "east":  { "texture": "#east", "cullface": "east" }
+            }
+        }
+    ],
+    "textures": {
+        "particle": "galacticraftcore:block/machine_base",
+        "down": "galacticraftcore:block/machine_base",
+        "up": "galacticraftcore:block/machine_base",
+        "north": "galacticraftplanets:block/solar_array_controller_side",
+        "east": "galacticraftplanets:block/solar_array_controller_output",
+        "south": "galacticraftplanets:block/solar_array_controller_side",
+        "west": "galacticraftplanets:block/solar_array_controller_side"
+    }
+}

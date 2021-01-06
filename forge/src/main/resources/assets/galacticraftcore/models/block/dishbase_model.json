@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "galacticraftcore:block/dishbase",
+        "down": "galacticraftcore:block/dishbase",
+        "up": "galacticraftcore:block/dishbase",
+        "north": "galacticraftcore:block/dishbase",
+        "east": "galacticraftcore:block/dishbase",
+        "south": "galacticraftcore:block/dishbase",
+        "west": "galacticraftcore:block/dishbase"
+    }
+}

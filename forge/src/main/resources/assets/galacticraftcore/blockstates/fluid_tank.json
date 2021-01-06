@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "down=false,up=false": { "model": "galacticraftcore:block/fluid_tank_ud" },
+        "down=true,up=false": { "model": "galacticraftcore:block/fluid_tank_u" },
+        "down=false,up=true": { "model": "galacticraftcore:block/fluid_tank_d" },
+        "down=true,up=true": { "model": "galacticraftcore:block/fluid_tank" }
+    }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "galacticraftcore:block/oxygen_detector",
+    "end": "galacticraftcore:block/machine_base"
+  }
+}

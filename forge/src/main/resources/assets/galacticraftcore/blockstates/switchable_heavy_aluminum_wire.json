@@ -1,0 +1,25 @@
+{
+    "multipart": [
+        {	"when": { "middle":  "true" },
+            "apply": { "model": "galacticraftcore:block/switchable_heavy_aluminum_wire" }
+        },
+        {   "when": { "up": "true" },
+            "apply": { "model": "galacticraftcore:block/switchable_heavy_aluminum_wire_u" }
+        },
+        {   "when": { "down": "true" },
+            "apply": { "model": "galacticraftcore:block/switchable_heavy_aluminum_wire_u", "x": 180 }
+        },
+        {   "when": { "north": "true" },
+            "apply": { "model": "galacticraftcore:block/switchable_heavy_aluminum_wire_n" }
+        },
+        {   "when": { "east": "true" },
+            "apply": { "model": "galacticraftcore:block/switchable_heavy_aluminum_wire_n", "y": 90 }
+        },
+        {   "when": { "south": "true" },
+            "apply": { "model": "galacticraftcore:block/switchable_heavy_aluminum_wire_n", "y": 180 }
+        },
+        {   "when": { "west": "true" },
+            "apply": { "model": "galacticraftcore:block/switchable_heavy_aluminum_wire_n", "y": 270 }
+        }
+    ]
+}

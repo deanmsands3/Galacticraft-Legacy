@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "minecraft:furnace_from_moon_rock"
+    ]
+  },
+  "criteria": {
+    "has_moon_rock": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:moon_rock"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "minecraft:furnace_from_moon_rock"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_moon_rock",
+      "has_the_recipe"
+    ]
+  ]
+}

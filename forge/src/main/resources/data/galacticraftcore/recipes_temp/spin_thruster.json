@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "galacticraftcore:spin_thruster"
+  },
+  "pattern": [
+    "   ",
+    "YWZ",
+    "PXP"
+  ],
+  "key": {
+    "P": {
+      "tag": "forge:plates/steel"
+    },
+    "W": {
+      "tag": "forge:wafers/advanced"
+    },
+    "X": {
+      "type": "galacticraftcore:advanced_metal",
+      "metal": "meteoric_iron_ingot"
+    },
+    "Y": {
+      "item": "galacticraftcore:partial_fuel_canister",
+      "data": 1
+    },
+    "Z": {
+      "item": "galacticraftcore:tier_1_rocket_engine"
+    }
+  }
+}

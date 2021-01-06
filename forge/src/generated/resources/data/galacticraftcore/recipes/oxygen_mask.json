@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:glass_panes/colorless"
+    },
+    "Y": {
+      "item": "minecraft:iron_helmet"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:oxygen_mask"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X X",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftplanets:thermal_cloth"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:thermal_boots"
+  }
+}

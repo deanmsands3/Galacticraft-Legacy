@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:hidden_redstone_wire"
+    ]
+  },
+  "criteria": {
+    "has_dusts/redstone_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:dusts/redstone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:hidden_redstone_wire"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dusts/redstone_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

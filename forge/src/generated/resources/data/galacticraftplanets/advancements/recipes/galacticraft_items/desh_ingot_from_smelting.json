@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftplanets:desh_ingot_from_smelting"
+    ]
+  },
+  "criteria": {
+    "has_ores/desh_tag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ores/desh"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftplanets:desh_ingot_from_smelting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ores/desh_tag",
+      "has_the_recipe"
+    ]
+  ]
+}

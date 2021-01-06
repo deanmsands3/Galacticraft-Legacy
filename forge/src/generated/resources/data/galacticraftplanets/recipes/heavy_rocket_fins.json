@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " Y ",
+    "XYX",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftplanets:tier_3_heavy_duty_plate"
+    },
+    "Y": {
+      "tag": "forge:ingots/desh"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:heavy_rocket_fins"
+  }
+}

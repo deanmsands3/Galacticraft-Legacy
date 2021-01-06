@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XWX",
+    "XYX",
+    " Z "
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:leather"
+    },
+    "Y": {
+      "tag": "forge:slimeballs"
+    },
+    "Z": {
+      "tag": "forge:chests/wooden"
+    },
+    "W": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:slimeling_inventory_bag"
+  }
+}

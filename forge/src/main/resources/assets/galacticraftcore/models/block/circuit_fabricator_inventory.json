@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "galacticraftcore:block/circuit_fabricator",
+        "down": "galacticraftcore:block/machine_base",
+        "up": "galacticraftcore:block/machine_base",
+        "north": "galacticraftcore:block/circuit_fabricator",
+        "east": "galacticraftcore:block/machine_input",
+        "south": "galacticraftcore:block/machine_side",
+        "west": "galacticraftcore:block/machine_side"
+    }
+}

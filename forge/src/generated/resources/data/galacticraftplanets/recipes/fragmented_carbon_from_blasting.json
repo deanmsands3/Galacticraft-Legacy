@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "tag": "minecraft:planks"
+  },
+  "result": "galacticraftplanets:fragmented_carbon",
+  "experience": 0.1,
+  "cookingtime": 100
+}

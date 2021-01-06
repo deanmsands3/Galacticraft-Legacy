@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYX",
+    "YZY",
+    "XYX"
+  ],
+  "key": {
+    "X": {
+      "tag": "forge:dyes/green"
+    },
+    "Y": {
+      "item": "minecraft:sugar"
+    },
+    "Z": {
+      "item": "galacticraftcore:cheese_curd"
+    }
+  },
+  "result": {
+    "item": "minecraft:slime_ball"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "X X",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftplanets:isothermal_fabric"
+    }
+  },
+  "result": {
+    "item": "galacticraftplanets:tier_2_thermal_leggings"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XYX",
+    "YZY",
+    "XYX"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:energy_storage"
+    },
+    "Y": {
+      "tag": "forge:plates/steel"
+    },
+    "Z": {
+      "tag": "forge:wafers/advanced"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:energy_storage_cluster"
+  }
+}

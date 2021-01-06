@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "heavy_aluminum_wire",
+  "pattern": [
+    "X",
+    "Y",
+    "Z"
+  ],
+  "key": {
+    "X": {
+      "tag": "minecraft:wool"
+    },
+    "Y": {
+      "item": "galacticraftcore:aluminum_wire"
+    },
+    "Z": {
+      "tag": "forge:ingots/aluminum"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:heavy_aluminum_wire"
+  }
+}

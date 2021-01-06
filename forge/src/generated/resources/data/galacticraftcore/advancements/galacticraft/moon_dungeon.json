@@ -1,0 +1,28 @@
+{
+  "parent": "galacticraftcore:galacticraft/moon",
+  "display": {
+    "icon": {
+      "item": "galacticraftcore:moon_dungeon_bricks"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.moon_dungeon.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.moon_dungeon.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "moon_dungeon": {
+      "trigger": "galacticraftcore:boss_moon"
+    }
+  },
+  "requirements": [
+    [
+      "moon_dungeon"
+    ]
+  ]
+}

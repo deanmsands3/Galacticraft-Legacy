@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WXW",
+    "WYW",
+    "VZV"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:anvil"
+    },
+    "Y": {
+      "tag": "forge:plates/meteoric_iron"
+    },
+    "Z": {
+      "tag": "forge:wafers/advanced"
+    },
+    "W": {
+      "tag": "forge:plates/steel"
+    },
+    "V": {
+      "item": "galacticraftcore:aluminum_wire"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:advanced_compressor"
+  }
+}

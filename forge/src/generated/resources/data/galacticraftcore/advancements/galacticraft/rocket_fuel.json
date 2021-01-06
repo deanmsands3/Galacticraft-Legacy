@@ -1,0 +1,35 @@
+{
+  "parent": "galacticraftcore:galacticraft/refinery",
+  "display": {
+    "icon": {
+      "item": "galacticraftcore:fuel_bucket"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.rocket_fuel.title"
+    },
+    "description": {
+      "translate": "advancement.galacticraft.rocket_fuel.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "fuel_bucket": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:fuel_bucket"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "fuel_bucket"
+    ]
+  ]
+}

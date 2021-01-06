@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "galacticraftcore:copper_canister"
+  },
+  "result": "galacticraftcore:copper_ingot",
+  "experience": 1.0,
+  "cookingtime": 200
+}

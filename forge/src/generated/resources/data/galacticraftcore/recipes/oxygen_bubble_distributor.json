@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WXW",
+    "YZY",
+    "WXW"
+  ],
+  "key": {
+    "X": {
+      "item": "galacticraftcore:oxygen_fan"
+    },
+    "Y": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "Z": {
+      "tag": "forge:plates/aluminum"
+    },
+    "W": {
+      "tag": "forge:plates/steel"
+    }
+  },
+  "result": {
+    "item": "galacticraftcore:oxygen_bubble_distributor"
+  }
+}

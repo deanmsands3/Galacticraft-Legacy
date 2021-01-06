@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "galacticraftplanets:block/light_gray_asteroid_rock"
+      },
+      {
+        "model": "galacticraftplanets:block/light_gray_asteroid_rock",
+        "y": 90
+      },
+      {
+        "model": "galacticraftplanets:block/light_gray_asteroid_rock",
+        "y": 180
+      },
+      {
+        "model": "galacticraftplanets:block/light_gray_asteroid_rock",
+        "y": 270
+      }
+    ]
+  }
+}

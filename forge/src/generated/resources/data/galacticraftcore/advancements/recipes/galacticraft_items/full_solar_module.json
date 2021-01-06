@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:full_solar_module"
+    ]
+  },
+  "criteria": {
+    "has_single_solar_module": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraftcore:single_solar_module"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "galacticraftcore:full_solar_module"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_single_solar_module",
+      "has_the_recipe"
+    ]
+  ]
+}
