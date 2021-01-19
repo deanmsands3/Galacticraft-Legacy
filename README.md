@@ -9,4 +9,5 @@ need to compile it yourself.
 ## Development Guidelines
 Follow the guidelines provided by [architectury](https://github.com/architectury).
 
-TLDR: all assets and non-loader specific code goes in `:common`, DO NOT, for the love of god, update gradle past `5.5.1`.
+## Module Note
+If it isnt loader specific it goes in `:common`.
