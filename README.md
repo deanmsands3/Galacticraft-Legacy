@@ -4,7 +4,8 @@ This branch of the Galacticraft repo is being refactored out to use [architectur
 
 ## Notice
 This branch is **NOT** in a playable state, no jars will be provided, if you want to play using this branch you will
-need to compile it yourself.
+need to compile it yourself.\
+Please note that no support will be provided for this branch. If you do compile it yourself you're on your own.
 
 ## Development Guidelines
 Follow the guidelines provided by [architectury](https://github.com/architectury).
