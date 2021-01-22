@@ -391,22 +391,49 @@ architectury {
 	platformSetupLoomIde()
 }
 
+repositories {
+	maven { url "https://dvs1.progwml6.com/files/maven/" }
+	maven { url "https://modmaven.dev/" }
+	maven { url "http://files.minecraftforge.net/maven/" }
+	maven { url "https://mod-buildcraft.com/maven/" }
+}
+
 dependencies {
-	minecraft("com.mojang:minecraft:1.15.1")
-//	mappings(minecraft.officialMojangMappings())
-	mappings(fileTree(dir: "mappings", include: "**.jar"))
-//	forge("net.minecraftforge:forge:${rootProject.architect.minecraft}-${rootProject.forge_version}")
+	minecraft("com.mojang:minecraft:${rootProject.minecraft_version}")
+	mappings(minecraft.officialMojangMappings())
+	forge("net.minecraftforge:forge:${rootProject.architectury.minecraft}-${rootProject.forge_version}")
 	modCompile("me.shedaniel:architectury:${rootProject.architectury_version}:forge")
 
 	compileOnly(project(path: ":common")) {
 		transitive = false
 	}
-	runtimeOnly(project(path: ":common", configuration: "transformForgeFakeMod")) {
+	runtimeOnly(project(path: ":common", configuration: "transformDevelopmentForge")) {
 		transitive = false
 	}
-	shadow(project(path: ":common", configuration: "transformForge")) {
+	shadow(project(path: ":common", configuration: "transformProductionForge")) {
 		transitive = false
 	}
+
+//	modCompile "mezz.jei:jei-${rootProject.minecraft_version}:${project.jei_version}:api"
+//	modRuntime "mezz.jei:jei_${rootProject.minecraft_version}:${project.jei_version}"
+
+//	modCompile "mekanism:Mekanism:${project.mekanism_version}:api"
+//	modRuntime "mekanism:Mekanism:${project.mekanism_version}"
+//	modRuntime "mekanism:Mekanism:${project.mekanism_version}:additions"
+//	modRuntime "mekanism:Mekanism:${project.mekanism_version}:generators"
+//	modRuntime "mekanism:Mekanism:${project.mekanism_version}:tools"
+//
+//	modCompile "appeng:appliedenergistics2:${project.ae2_version}:api"
+//	modRuntime "appeng:appliedenergistics2:${project.ae2_version}"
+//
+//	modCompile "com.github.glitchfiend.biomesoplenty:BiomesOPlenty:${project.bop_version}:api"
+//	modRuntime "com.github.glitchfiend.biomesoplenty:BiomesOPlenty:${project.bop_version}:universal"
+
+//	modCompile "com.mod-buildcraft:buildcraft-api:7.99.24.6"
+//	modCompile "redstone-flux:RedstoneFlux-1.12:2.1.0.6:universal"
+//	modCompile "actually-additions:ActuallyAdditions:1.12.2:r144"
+//	modCompile "industrial-craft:industrialcraft-2-2.8.109:ex112:api"
+//	modCompile "player-api:PlayerAPI:1.12.1:1.0"
 }
 
 shadowJar {

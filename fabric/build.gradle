@@ -11,7 +11,7 @@ architectury {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${rootProject.architect.minecraft}")
+    minecraft("com.mojang:minecraft:${rootProject.architectury.minecraft}")
     mappings(minecraft.officialMojangMappings())
     modCompile("net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}")
     modCompile("net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}")
@@ -20,10 +20,10 @@ dependencies {
     compileOnly(project(path: ":common")) {
         transitive = false
     }
-    runtimeOnly(project(path: ":common", configuration: "transformForgeFakeMod")) {
+    runtimeOnly(project(path: ":common", configuration: "transformDevelopmentFabric")) {
         transitive = false
     }
-    shadow(project(path: ":common", configuration: "transformed")) {
+    shadow(project(path: ":common", configuration: "transformProductionFabric")) {
         transitive = false
     }
 }
