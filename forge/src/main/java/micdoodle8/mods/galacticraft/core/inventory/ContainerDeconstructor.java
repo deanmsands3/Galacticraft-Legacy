@@ -4,19 +4,18 @@ import micdoodle8.mods.galacticraft.api.item.IItemElectric;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityDeconstructor;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerDeconstructor extends Container
+public class ContainerDeconstructor extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.DECONSTRUCTOR)
-    public static ContainerType<ContainerDeconstructor> TYPE;
+    public static MenuType<ContainerDeconstructor> TYPE;
 
     private final TileEntityDeconstructor deconstructor;
 
@@ -25,7 +24,7 @@ public class ContainerDeconstructor extends Container
 //        this(containerId, playerInv, new Inventory(11));
 //    }
 
-    public ContainerDeconstructor(int containerId, PlayerInventory playerInv, TileEntityDeconstructor deconstructor)
+    public ContainerDeconstructor(int containerId, Inventory playerInv, TileEntityDeconstructor deconstructor)
     {
         super(TYPE, containerId);
         this.deconstructor = deconstructor;
@@ -67,15 +66,15 @@ public class ContainerDeconstructor extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity entityplayer)
+    public void removed(Player entityplayer)
     {
-        super.onContainerClosed(entityplayer);
+        super.removed(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.deconstructor.isUsableByPlayer(par1EntityPlayer);
+        return this.deconstructor.stillValid(par1EntityPlayer);
     }
 
     /**
@@ -83,19 +82,19 @@ public class ContainerDeconstructor extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        Slot var3 = this.inventorySlots.get(par1);
+        Slot var3 = this.slots.get(par1);
 
-        if (var3 != null && var3.getHasStack())
+        if (var3 != null && var3.hasItem())
         {
-            ItemStack var4 = var3.getStack();
+            ItemStack var4 = var3.getItem();
             var2 = var4.copy();
 
             if (par1 <= 10)
             {
-                if (!this.mergeItemStack(var4, 11, 47, true))
+                if (!this.moveItemStackTo(var4, 11, 47, true))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -104,19 +103,19 @@ public class ContainerDeconstructor extends Container
             {
                 if (EnergyUtil.isElectricItem(var4.getItem()))
                 {
-                    if (!this.mergeItemStack(var4, 0, 1, false))
+                    if (!this.moveItemStackTo(var4, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (par1 < 38)
                 {
-                    if (!this.mergeItemStack(var4, 1, 2, false) && !this.mergeItemStack(var4, 38, 47, false))
+                    if (!this.moveItemStackTo(var4, 1, 2, false) && !this.moveItemStackTo(var4, 38, 47, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (!this.mergeItemStack(var4, 1, 2, false) && !this.mergeItemStack(var4, 11, 38, false))
+                else if (!this.moveItemStackTo(var4, 1, 2, false) && !this.moveItemStackTo(var4, 11, 38, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -124,11 +123,11 @@ public class ContainerDeconstructor extends Container
 
             if (var4.getCount() == 0)
             {
-                var3.putStack(ItemStack.EMPTY);
+                var3.set(ItemStack.EMPTY);
             }
             else
             {
-                var3.onSlotChanged();
+                var3.setChanged();
             }
 
             if (var4.getCount() == var2.getCount())

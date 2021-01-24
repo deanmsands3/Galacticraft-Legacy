@@ -3,9 +3,9 @@ package micdoodle8.mods.galacticraft.core.client.gui.screen;
 import micdoodle8.mods.galacticraft.core.dimension.DimensionSpaceStation;
 import micdoodle8.mods.galacticraft.core.tick.TickHandlerClient;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.dimension.DimensionType;
 
 public class GuiTeleporting extends Screen
 {
@@ -14,7 +14,7 @@ public class GuiTeleporting extends Screen
 
     public GuiTeleporting(DimensionType targetDimensionID)
     {
-        super(new StringTextComponent("Teleporting"));
+        super(new TextComponent("Teleporting"));
         this.targetDimensionID = targetDimensionID;
         String[] possibleStrings = new String[]{"Taking one small step", "Taking one giant leap", "Prepare for entry!"};
         this.message = possibleStrings[(int) (Math.random() * possibleStrings.length)];
@@ -39,14 +39,14 @@ public class GuiTeleporting extends Screen
     public void tick()
     {
         super.tick();
-        if (minecraft.player != null && minecraft.player.world != null)
+        if (minecraft.player != null && minecraft.player.level != null)
         {
             // Screen will exit when the player is in the target dimension and has started moving down
-            if (minecraft.player.world.getDimension().getType() == this.targetDimensionID)
+            if (minecraft.player.level.getDimension().getType() == this.targetDimensionID)
             {
-                if ((minecraft.player.world.getDimension() instanceof DimensionSpaceStation || (minecraft.player.getPosY() - minecraft.player.lastTickPosY) < 0.0))
+                if ((minecraft.player.level.getDimension() instanceof DimensionSpaceStation || (minecraft.player.getY() - minecraft.player.yOld) < 0.0))
                 {
-                    minecraft.displayGuiScreen(null);
+                    minecraft.setScreen(null);
                     TickHandlerClient.teleportingGui = null;
                 }
             }

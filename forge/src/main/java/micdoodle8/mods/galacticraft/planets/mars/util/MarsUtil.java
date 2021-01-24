@@ -2,8 +2,7 @@ package micdoodle8.mods.galacticraft.planets.mars.util;
 
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.core.recipe.NasaWorkbenchRecipe;
-import net.minecraft.item.ItemStack;
-
+import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 
 public class MarsUtil

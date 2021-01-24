@@ -1,9 +1,9 @@
 package micdoodle8.mods.galacticraft.api.entity;
 
 
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.TickableSound;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,8 +13,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public interface IEntityNoisy
 {
     @OnlyIn(Dist.CLIENT)
-    TickableSound getSoundUpdater();
+    AbstractTickableSoundInstance getSoundUpdater();
 
     @OnlyIn(Dist.CLIENT)
-    ISound setSoundUpdater(ClientPlayerEntity player);
+    SoundInstance setSoundUpdater(LocalPlayer player);
 }

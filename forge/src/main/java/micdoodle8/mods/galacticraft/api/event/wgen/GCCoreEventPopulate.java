@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.event.wgen;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.Random;
@@ -14,11 +14,11 @@ import java.util.Random;
  */
 public class GCCoreEventPopulate extends Event
 {
-    public final World world;
+    public final Level world;
     public final Random rand;
     public final BlockPos pos;
 
-    public GCCoreEventPopulate(World world, Random rand, BlockPos pos)
+    public GCCoreEventPopulate(Level world, Random rand, BlockPos pos)
     {
         this.world = world;
         this.rand = rand;
@@ -27,7 +27,7 @@ public class GCCoreEventPopulate extends Event
 
     public static class Pre extends GCCoreEventPopulate
     {
-        public Pre(World world, Random rand, BlockPos pos)
+        public Pre(Level world, Random rand, BlockPos pos)
         {
             super(world, rand, pos);
         }
@@ -35,7 +35,7 @@ public class GCCoreEventPopulate extends Event
 
     public static class Post extends GCCoreEventPopulate
     {
-        public Post(World world, Random rand, BlockPos pos)
+        public Post(Level world, Random rand, BlockPos pos)
         {
             super(world, rand, pos);
         }

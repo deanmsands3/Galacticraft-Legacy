@@ -17,20 +17,20 @@ import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityCryogenicChamber;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityLaunchController;
 import micdoodle8.mods.galacticraft.planets.mars.world.gen.WorldGenEggs;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.server.ServerChunkProvider;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -40,7 +40,7 @@ import org.lwjgl.opengl.GL11;
 
 public class EventHandlerMars
 {
-    private Feature<NoFeatureConfig> eggGenerator;
+    private Feature<NoneFeatureConfiguration> eggGenerator;
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event)
@@ -49,9 +49,9 @@ public class EventHandlerMars
         {
             EntityDamageSource source = (EntityDamageSource) event.getSource();
 
-            if (source.getTrueSource() instanceof SlimelingEntity && !source.getTrueSource().world.isRemote)
+            if (source.getEntity() instanceof SlimelingEntity && !source.getEntity().level.isClientSide)
             {
-                ((SlimelingEntity) source.getTrueSource()).kills++;
+                ((SlimelingEntity) source.getEntity()).kills++;
             }
         }
     }
@@ -59,7 +59,7 @@ public class EventHandlerMars
     @SubscribeEvent
     public void onLivingAttacked(LivingAttackEvent event)
     {
-        if (!event.getEntity().isInvulnerableTo(event.getSource()) && !event.getEntity().world.isRemote && event.getEntityLiving().getHealth() <= 0.0F && !(event.getSource().isFireDamage() && event.getEntityLiving().isPotionActive(Effects.FIRE_RESISTANCE)))
+        if (!event.getEntity().isInvulnerableTo(event.getSource()) && !event.getEntity().world.isRemote && event.getEntityLiving().getHealth() <= 0.0F && !(event.getSource().isFireDamage() && event.getEntityLiving().isPotionActive(MobEffects.FIRE_RESISTANCE)))
         {
             Entity entity = event.getSource().getTrueSource();
 
@@ -67,7 +67,7 @@ public class EventHandlerMars
             {
                 SlimelingEntity entitywolf = (SlimelingEntity) entity;
 
-                if (entitywolf.isTamed())
+                if (entitywolf.isTame())
                 {
 //                    event.entityLiving.recentlyHit = 100;
 //                    event.entityLiving.attackingPlayer = null; TODO
@@ -79,9 +79,9 @@ public class EventHandlerMars
     @SubscribeEvent
     public void onPlayerWakeUp(EventWakePlayer event)
     {
-        PlayerEntity player = event.getPlayer();
-        BlockPos c = player.getBedLocation(player.dimension);
-        BlockState state = player.getEntityWorld().getBlockState(c);
+        Player player = event.getPlayer();
+        BlockPos c = player.getRespawnPosition(player.dimension);
+        BlockState state = player.getCommandSenderWorld().getBlockState(c);
         Block blockID = state.getBlock();
 
         if (blockID == MarsBlocks.CRYOGENIC_CHAMBER)
@@ -92,13 +92,13 @@ public class EventHandlerMars
             }
             else if (!event.immediately && !event.updateWorld && event.setSpawn)
             {
-                if (!player.world.isRemote)
+                if (!player.level.isClientSide)
                 {
                     player.heal(5.0F);
                     GCPlayerStats.get(player).setCryogenicChamberCooldown(6000);
 
-                    ServerWorld ws = (ServerWorld) player.world;
-                    ws.updateAllPlayersSleepingFlag();
+                    ServerLevel ws = (ServerLevel) player.level;
+                    ws.updateSleepingPlayerList();
 //                    if (ws.areAllPlayersAsleep() && ws.getGameRules().getBoolean("doDaylightCycle"))
 //                    {
 //                        WorldUtil.setNextMorning(ws);
@@ -138,7 +138,7 @@ public class EventHandlerMars
     {
         if (this.eggGenerator == null)
         {
-            this.eggGenerator = new WorldGenEggs(NoFeatureConfig::deserialize);
+            this.eggGenerator = new WorldGenEggs(NoneFeatureConfiguration::deserialize);
         }
 
         if (event.world.getDimension() instanceof DimensionMars)
@@ -148,8 +148,8 @@ public class EventHandlerMars
 
             for (int eggCount = 0; eggCount < eggsPerChunk; ++eggCount)
             {
-                blockpos = event.pos.add(event.rand.nextInt(16) + 8, event.rand.nextInt(104) + 24, event.rand.nextInt(16) + 8);
-                this.eggGenerator.place(event.world, ((ServerChunkProvider) event.world.getChunkProvider()).getChunkGenerator(), event.rand, blockpos, new NoFeatureConfig());
+                blockpos = event.pos.offset(event.rand.nextInt(16) + 8, event.rand.nextInt(104) + 24, event.rand.nextInt(16) + 8);
+                this.eggGenerator.place(event.world, ((ServerChunkCache) event.world.getChunkSource()).getGenerator(), event.rand, blockpos, new NoneFeatureConfiguration());
             }
         }
     }
@@ -158,14 +158,14 @@ public class EventHandlerMars
     @SubscribeEvent
     public void orientCamera(OrientCameraEvent event)
     {
-        PlayerEntity entity = Minecraft.getInstance().player;
+        Player entity = Minecraft.getInstance().player;
 
         if (entity != null)
         {
-            int x = MathHelper.floor(entity.getPosX());
-            int y = MathHelper.floor(entity.getPosY());
-            int z = MathHelper.floor(entity.getPosZ());
-            TileEntity tile = Minecraft.getInstance().world.getTileEntity(new BlockPos(x, y - 1, z));
+            int x = Mth.floor(entity.getX());
+            int y = Mth.floor(entity.getY());
+            int z = Mth.floor(entity.getZ());
+            BlockEntity tile = Minecraft.getInstance().level.getBlockEntity(new BlockPos(x, y - 1, z));
 
             if (tile instanceof TileEntityFake)
             {
@@ -176,7 +176,7 @@ public class EventHandlerMars
             {
                 GL11.glRotatef(180, 0.0F, 1.0F, 0.0F);
 
-                switch (tile.getBlockState().get(BlockCryoChamber.FACING))
+                switch (tile.getBlockState().getValue(BlockCryoChamber.FACING))
                 {
                 case SOUTH:
                     GL11.glTranslatef(-0.4F, -0.5F, 4.1F);
@@ -203,7 +203,7 @@ public class EventHandlerMars
     @SubscribeEvent
     public void onLandingPadRemoved(EventLandingPadRemoval event)
     {
-        TileEntity tile = event.world.getTileEntity(event.pos);
+        BlockEntity tile = event.world.getBlockEntity(event.pos);
 
         if (tile instanceof IFuelDock)
         {

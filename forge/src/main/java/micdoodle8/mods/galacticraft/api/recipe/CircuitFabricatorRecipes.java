@@ -1,9 +1,8 @@
 package micdoodle8.mods.galacticraft.api.recipe;
 
 import micdoodle8.mods.galacticraft.core.util.RecipeUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +95,7 @@ public class CircuitFabricatorRecipes
         boolean found = false;
         for (int j = 0; j < validItems.size(); j++)
         {
-            if (inputStack.isItemEqual(validItems.get(j)))
+            if (inputStack.sameItem(validItems.get(j)))
             {
                 found = true;
                 break;
@@ -141,7 +140,7 @@ public class CircuitFabricatorRecipes
                 else if (recipeStack instanceof ItemStack)
                 {
                     ItemStack stack = ((ItemStack) recipeStack);
-                    if (stack.getItem() != inputStack.getItem() || stack.getDamage() != inputStack.getDamage() || !RecipeUtil.areItemStackTagsEqual(stack, inputStack))
+                    if (stack.getItem() != inputStack.getItem() || stack.getDamageValue() != inputStack.getDamageValue() || !RecipeUtil.areItemStackTagsEqual(stack, inputStack))
                     {
                         found = false;
                         break;
@@ -152,7 +151,7 @@ public class CircuitFabricatorRecipes
                     boolean listMatchOne = false;
                     for (ItemStack stack : (List<ItemStack>) recipeStack)
                     {
-                        if (stack.getItem() == inputStack.getItem() && stack.getDamage() == inputStack.getDamage() && RecipeUtil.areItemStackTagsEqual(stack, inputStack))
+                        if (stack.getItem() == inputStack.getItem() && stack.getDamageValue() == inputStack.getDamageValue() && RecipeUtil.areItemStackTagsEqual(stack, inputStack))
                         {
                             listMatchOne = true;
                             break;
@@ -195,7 +194,7 @@ public class CircuitFabricatorRecipes
         int count = 0;
         for (ItemStack output : new ArrayList<ItemStack>(recipeOutputs))
         {
-            if (ItemStack.areItemStacksEqual(match, output))
+            if (ItemStack.matches(match, output))
             {
                 recipeInputs.remove(count);
                 recipeOutputs.remove(count);
@@ -230,7 +229,7 @@ public class CircuitFabricatorRecipes
                 if (recipeStack instanceof ItemStack)
                 {
                     ItemStack stack = ((ItemStack) recipeStack);
-                    if (stack.getItem() == ingredient.getItem() && stack.getDamage() == ingredient.getDamage() && ItemStack.areItemStackTagsEqual(stack, ingredient))
+                    if (stack.getItem() == ingredient.getItem() && stack.getDamageValue() == ingredient.getDamageValue() && ItemStack.tagMatches(stack, ingredient))
                     {
                         recipe.set(i, newIngredient);
                     }
@@ -240,7 +239,7 @@ public class CircuitFabricatorRecipes
                     boolean listMatchOne = false;
                     for (ItemStack stack : (List<ItemStack>) recipeStack)
                     {
-                        if (stack.getItem() == ingredient.getItem() && stack.getDamage() == ingredient.getDamage() && ItemStack.areItemStackTagsEqual(stack, ingredient))
+                        if (stack.getItem() == ingredient.getItem() && stack.getDamageValue() == ingredient.getDamageValue() && ItemStack.tagMatches(stack, ingredient))
                         {
                             recipe.set(i, newIngredient);
                             break;

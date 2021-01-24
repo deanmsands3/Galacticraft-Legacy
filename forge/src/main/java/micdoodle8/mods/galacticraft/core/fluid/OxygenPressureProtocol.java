@@ -8,12 +8,21 @@ import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.GravelBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.SpongeBlock;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import java.util.List;
 
 public class OxygenPressureProtocol
@@ -74,7 +83,7 @@ public class OxygenPressureProtocol
         }
     }
 
-    public static void onEdgeBlockUpdated(World world, BlockPos vec)
+    public static void onEdgeBlockUpdated(Level world, BlockPos vec)
     {
         if (ConfigManagerCore.enableSealerEdgeChecks.get())
         {
@@ -83,12 +92,12 @@ public class OxygenPressureProtocol
     }
 
     @Deprecated
-    public static boolean canBlockPassAir(World world, Block block, BlockPos pos, Direction side)
+    public static boolean canBlockPassAir(Level world, Block block, BlockPos pos, Direction side)
     {
         return canBlockPassAir(world, world.getBlockState(pos), pos, side);
     }
 
-    public static boolean canBlockPassAir(World world, BlockState state, BlockPos pos, Direction side)
+    public static boolean canBlockPassAir(Level world, BlockState state, BlockPos pos, Direction side)
     {
         Block block = state.getBlock();
         if (block == null)
@@ -108,7 +117,7 @@ public class OxygenPressureProtocol
             return true;
         }
 
-        if (block.isOpaqueCube(state, world, pos))
+        if (block.isSolidRender(state, world, pos))
         {
             return block instanceof GravelBlock || state.getMaterial() == Material.WOOL || block instanceof SpongeBlock;
 
@@ -138,16 +147,16 @@ public class OxygenPressureProtocol
 //        } TODO Slab blocks permeability
 
         //Farmland etc only seals on the solid underside
-        if (block instanceof FarmlandBlock || block instanceof EnchantingTableBlock/* || block instanceof FlowingFluidBlock*/) // TODO Liquid permeability
+        if (block instanceof FarmBlock || block instanceof EnchantmentTableBlock/* || block instanceof FlowingFluidBlock*/) // TODO Liquid permeability
         {
             return side != Direction.UP;
         }
 
-        if (block instanceof PistonBlock)
+        if (block instanceof PistonBaseBlock)
         {
-            if (state.get(PistonBlock.EXTENDED).booleanValue())
+            if (state.getValue(PistonBaseBlock.EXTENDED).booleanValue())
             {
-                Direction facing = state.get(PistonBlock.FACING);
+                Direction facing = state.getValue(PistonBaseBlock.FACING);
                 return side != facing;
             }
             return false;

@@ -443,6 +443,10 @@ shadowJar {
 	classifier "shadow"
 }
 
+minecraft {
+	accessWidener = file('src/main/resources/galacticraft.forge.aw')
+}
+
 remapJar {
 	dependsOn(shadowJar)
 	input.set(shadowJar.archivePath)

@@ -1,14 +1,13 @@
 package micdoodle8.mods.galacticraft.api.world;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
-
 import java.lang.reflect.Method;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.phys.AABB;
 
 public class OxygenHooks
 {
@@ -67,7 +66,7 @@ public class OxygenHooks
      * @param bb    AxisAligned BB representing the block (e.g. a torch), or maybe the LogicalSide of a block
      * @return True if the bb is in oxygen, otherwise false.
      */
-    public static boolean isAABBInBreathableAirBlock(World world, AxisAlignedBB bb)
+    public static boolean isAABBInBreathableAirBlock(Level world, AABB bb)
     {
         try
         {
@@ -77,7 +76,7 @@ public class OxygenHooks
                 {
                     oxygenUtilClass = Class.forName("micdoodle8.mods.galacticraft.core.util.OxygenUtil");
                 }
-                breathableAirBlockMethod = oxygenUtilClass.getDeclaredMethod("isAABBInBreathableAirBlock", World.class, AxisAlignedBB.class);
+                breathableAirBlockMethod = oxygenUtilClass.getDeclaredMethod("isAABBInBreathableAirBlock", Level.class, AABB.class);
             }
             return (Boolean) breathableAirBlockMethod.invoke(null, world, bb);
         }
@@ -136,7 +135,7 @@ public class OxygenHooks
      * @param pos   The x, y, z position of the torch
      * @return True if there is a (sealed) oxygen block accessible, otherwise false.
      */
-    public static boolean checkTorchHasOxygen(World world, Block block, BlockPos pos)
+    public static boolean checkTorchHasOxygen(Level world, Block block, BlockPos pos)
     {
         try
         {
@@ -146,7 +145,7 @@ public class OxygenHooks
                 {
                     oxygenUtilClass = Class.forName("micdoodle8.mods.galacticraft.core.util.OxygenUtil");
                 }
-                torchHasOxygenMethod = oxygenUtilClass.getDeclaredMethod("checkTorchHasOxygen", World.class, BlockPos.class);
+                torchHasOxygenMethod = oxygenUtilClass.getDeclaredMethod("checkTorchHasOxygen", Level.class, BlockPos.class);
             }
             return (Boolean) torchHasOxygenMethod.invoke(null, world, pos);
         }
@@ -168,7 +167,7 @@ public class OxygenHooks
      * @param avgZ     or the average position of the centre of a living entity)
      * @return True if it is in an oxygen bubble, otherwise false
      */
-    public static boolean inOxygenBubble(World worldObj, double avgX, double avgY, double avgZ)
+    public static boolean inOxygenBubble(Level worldObj, double avgX, double avgY, double avgZ)
     {
         try
         {
@@ -178,7 +177,7 @@ public class OxygenHooks
                 {
                     oxygenUtilClass = Class.forName("micdoodle8.mods.galacticraft.core.util.OxygenUtil");
                 }
-                oxygenBubbleMethod = oxygenUtilClass.getDeclaredMethod("inOxygenBubble", World.class, double.class, double.class, double.class);
+                oxygenBubbleMethod = oxygenUtilClass.getDeclaredMethod("inOxygenBubble", Level.class, double.class, double.class, double.class);
             }
             return (Boolean) oxygenBubbleMethod.invoke(null, worldObj, avgX, avgY, avgZ);
         }
@@ -197,7 +196,7 @@ public class OxygenHooks
      * @param player
      * @return True if the setup is valid, otherwise false
      */
-    public static boolean hasValidOxygenSetup(ServerPlayerEntity player)
+    public static boolean hasValidOxygenSetup(ServerPlayer player)
     {
         try
         {
@@ -207,7 +206,7 @@ public class OxygenHooks
                 {
                     oxygenUtilClass = Class.forName("micdoodle8.mods.galacticraft.core.util.OxygenUtil");
                 }
-                validOxygenSetupMethod = oxygenUtilClass.getDeclaredMethod("hasValidOxygenSetup", ServerPlayerEntity.class);
+                validOxygenSetupMethod = oxygenUtilClass.getDeclaredMethod("hasValidOxygenSetup", ServerPlayer.class);
             }
             return (Boolean) validOxygenSetupMethod.invoke(null, player);
         }

@@ -15,23 +15,22 @@ import micdoodle8.mods.galacticraft.planets.asteroids.entities.EntryPodEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.AbstractChunkProvider;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.ChunkSource;
 import java.util.Random;
 
 public class TeleportTypeAsteroids implements ITeleportType
@@ -43,13 +42,13 @@ public class TeleportTypeAsteroids implements ITeleportType
     }
 
     @Override
-    public Vector3D getPlayerSpawnLocation(ServerWorld world, ServerPlayerEntity player)
+    public Vector3D getPlayerSpawnLocation(ServerLevel world, ServerPlayer player)
     {
         if (player != null)
         {
             GCPlayerStats stats = GCPlayerStats.get(player);
-            int x = MathHelper.floor(stats.getCoordsTeleportedFromX());
-            int z = MathHelper.floor(stats.getCoordsTeleportedFromZ());
+            int x = Mth.floor(stats.getCoordsTeleportedFromX());
+            int z = Mth.floor(stats.getCoordsTeleportedFromZ());
             int limit = ConfigManagerCore.otherPlanetWorldBorders.get() - 2;
             if (limit > 20)
             {
@@ -101,8 +100,8 @@ public class TeleportTypeAsteroids implements ITeleportType
                     {
                         GCLog.info("Testing asteroid at x" + (bv3.x) + " y" + (bv3.y) + " z" + bv3.z);
                     }
-                    this.loadChunksAround(bv3.x, bv3.z, 2, world.getChunkProvider());
-                    this.loadChunksAround(bv3.x, bv3.z, -3, world.getChunkProvider());
+                    this.loadChunksAround(bv3.x, bv3.z, 2, world.getChunkSource());
+                    this.loadChunksAround(bv3.x, bv3.z, -3, world.getChunkSource());
 
                     if (goodAsteroidEntry(world, bv3.x, bv3.y, bv3.z))
                     {
@@ -146,11 +145,11 @@ public class TeleportTypeAsteroids implements ITeleportType
         return new Vector3D(0, 310, 0);
     }
 
-    private boolean goodAsteroidEntry(World world, int x, int yorig, int z)
+    private boolean goodAsteroidEntry(Level world, int x, int yorig, int z)
     {
         for (int k = 208; k > 48; k--)
         {
-            if (!world.isAirBlock(new BlockPos(x, k, z)))
+            if (!world.isEmptyBlock(new BlockPos(x, k, z)))
             {
                 if (Math.abs(k - yorig) > 20)
                 {
@@ -186,39 +185,39 @@ public class TeleportTypeAsteroids implements ITeleportType
         return false;
     }
 
-    private void makeSmallLandingSpot(World world, int x, int z)
+    private void makeSmallLandingSpot(Level world, int x, int z)
     {
-        this.loadChunksAround(x, z, -1, world.getChunkProvider());
+        this.loadChunksAround(x, z, -1, world.getChunkSource());
 
         for (int k = 255; k > 48; k--)
         {
-            if (!world.isAirBlock(new BlockPos(x, k, z)))
+            if (!world.isEmptyBlock(new BlockPos(x, k, z)))
             {
                 this.makePlatform(world, x, k - 1, z);
                 return;
             }
-            if (!world.isAirBlock(new BlockPos(x - 1, k, z)))
+            if (!world.isEmptyBlock(new BlockPos(x - 1, k, z)))
             {
                 this.makePlatform(world, x - 1, k - 1, z);
                 return;
             }
-            if (!world.isAirBlock(new BlockPos(x - 1, k, z - 1)))
+            if (!world.isEmptyBlock(new BlockPos(x - 1, k, z - 1)))
             {
                 this.makePlatform(world, x - 1, k - 1, z - 1);
                 return;
             }
-            if (!world.isAirBlock(new BlockPos(x, k, z - 1)))
+            if (!world.isEmptyBlock(new BlockPos(x, k, z - 1)))
             {
                 this.makePlatform(world, x, k - 1, z - 1);
                 return;
             }
         }
 
-        this.makePlatform(world, x, 48 + world.rand.nextInt(128), z);
+        this.makePlatform(world, x, 48 + world.random.nextInt(128), z);
         return;
     }
 
-    private void loadChunksAround(int x, int z, int i, AbstractChunkProvider cp)
+    private void loadChunksAround(int x, int z, int i, ChunkSource cp)
     {
         cp.getChunk(x >> 4, z >> 4, true);
         if ((x + i) >> 4 != x >> 4)
@@ -236,7 +235,7 @@ public class TeleportTypeAsteroids implements ITeleportType
         }
     }
 
-    private void makePlatform(World world, int x, int y, int z)
+    private void makePlatform(Level world, int x, int y, int z)
     {
         for (int xx = -3; xx < 3; xx++)
         {
@@ -266,28 +265,28 @@ public class TeleportTypeAsteroids implements ITeleportType
         doBlock(world, x, y - 2, z - 1);
     }
 
-    private void doBlock(World world, int x, int y, int z)
+    private void doBlock(Level world, int x, int y, int z)
     {
-        if (world.isAirBlock(new BlockPos(x, y, z)))
+        if (world.isEmptyBlock(new BlockPos(x, y, z)))
         {
-            Block block = world.rand.nextInt(3) == 0 ? AsteroidBlocks.DARK_ASTEROID_ROCK : AsteroidBlocks.GRAY_ASTEROID_ROCK;
-            world.setBlockState(new BlockPos(x, y, z), block.getDefaultState(), 2);
+            Block block = world.random.nextInt(3) == 0 ? AsteroidBlocks.DARK_ASTEROID_ROCK : AsteroidBlocks.GRAY_ASTEROID_ROCK;
+            world.setBlock(new BlockPos(x, y, z), block.defaultBlockState(), 2);
         }
     }
 
     @Override
-    public Vector3D getEntitySpawnLocation(ServerWorld world, Entity entity)
+    public Vector3D getEntitySpawnLocation(ServerLevel world, Entity entity)
     {
-        return new Vector3D(entity.getPosX(), ConfigManagerCore.disableLander.get() ? 250.0 : 900.0, entity.getPosZ());
+        return new Vector3D(entity.getX(), ConfigManagerCore.disableLander.get() ? 250.0 : 900.0, entity.getZ());
     }
 
     @Override
-    public Vector3D getParaChestSpawnLocation(ServerWorld world, ServerPlayerEntity player, Random rand)
+    public Vector3D getParaChestSpawnLocation(ServerLevel world, ServerPlayer player, Random rand)
     {
         return null;
     }
 
-    private void preGenChunks(World w, int cx, int cz)
+    private void preGenChunks(Level w, int cx, int cz)
     {
         this.preGenChunk(w, cx, cz);
         for (int r = 1; r < 3; r++)
@@ -306,13 +305,13 @@ public class TeleportTypeAsteroids implements ITeleportType
         }
     }
 
-    private void preGenChunk(World w, int chunkX, int chunkZ)
+    private void preGenChunk(Level w, int chunkX, int chunkZ)
     {
         w.getChunk(chunkX, chunkZ);
     }
 
     @Override
-    public void onSpaceDimensionChanged(World newWorld, ServerPlayerEntity player, boolean ridingAutoRocket)
+    public void onSpaceDimensionChanged(Level newWorld, ServerPlayer player, boolean ridingAutoRocket)
     {
         if (!ridingAutoRocket && player != null)
         {
@@ -320,19 +319,19 @@ public class TeleportTypeAsteroids implements ITeleportType
 
             if (stats.getTeleportCooldown() <= 0)
             {
-                if (player.abilities.isFlying)
+                if (player.abilities.flying)
                 {
-                    player.abilities.isFlying = false;
+                    player.abilities.flying = false;
                 }
 
-                if (!newWorld.isRemote)
+                if (!newWorld.isClientSide)
                 {
                     EntryPodEntity entryPod = EntryPodEntity.createEntityEntryPod(player);
 
-                    boolean previous = CompatibilityManager.forceLoadChunks((ServerWorld) newWorld);
-                    entryPod.forceSpawn = true;
-                    newWorld.addEntity(entryPod);
-                    CompatibilityManager.forceLoadChunksEnd((ServerWorld) newWorld, previous);
+                    boolean previous = CompatibilityManager.forceLoadChunks((ServerLevel) newWorld);
+                    entryPod.forcedLoading = true;
+                    newWorld.addFreshEntity(entryPod);
+                    CompatibilityManager.forceLoadChunksEnd((ServerLevel) newWorld, previous);
                 }
 
                 stats.setTeleportCooldown(10);
@@ -341,7 +340,7 @@ public class TeleportTypeAsteroids implements ITeleportType
     }
 
     @Override
-    public void setupAdventureSpawn(ServerPlayerEntity player)
+    public void setupAdventureSpawn(ServerPlayer player)
     {
         GCPlayerStats stats = GCPlayerStats.get(player);
         SchematicRegistry.unlockNewPage(player, new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC, 1)); //Knows how to build T2 rocket
@@ -366,10 +365,10 @@ public class TeleportTypeAsteroids implements ITeleportType
         rocketStacks.add(new ItemStack(GCItems.DEHYDRATED_APPLES, 16));  //Canned food
         rocketStacks.add(new ItemStack(Items.EGG, 12));
 
-        SpawnEggItem egg = SpawnEggItem.getEgg(EntityType.COW);
+        SpawnEggItem egg = SpawnEggItem.byId(EntityType.COW);
         ItemStack spawnEgg = new ItemStack(egg, 2);
         rocketStacks.add(spawnEgg);
-        rocketStacks.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION, 4), Potions.LONG_NIGHT_VISION)); //Night Vision Potion
+        rocketStacks.add(PotionUtils.setPotion(new ItemStack(Items.POTION, 4), Potions.LONG_NIGHT_VISION)); //Night Vision Potion
         rocketStacks.add(new ItemStack(MarsBlocks.CRYOGENIC_CHAMBER, 1)); //Cryogenic Chamber
         rocketStacks.add(new ItemStack(MarsItems.TIER_2_ROCKET_36_INVENTORY, 1));
         stats.setRocketStacks(rocketStacks);

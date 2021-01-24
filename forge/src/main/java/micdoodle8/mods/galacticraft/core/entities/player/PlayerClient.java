@@ -16,17 +16,17 @@ import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.PlayerGearData;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class PlayerClient implements IPlayerClient
 {
@@ -35,7 +35,7 @@ public class PlayerClient implements IPlayerClient
     public static boolean startup;
 
     @Override
-    public void move(ClientPlayerEntity player, MoverType type, Vec3d motion)
+    public void move(LocalPlayer player, MoverType type, Vec3 motion)
     {
         this.updateFeet(player, motion.x, motion.z);
     }
@@ -47,20 +47,20 @@ public class PlayerClient implements IPlayerClient
 //    }
 
     @Override
-    public void onUpdate(ClientPlayerEntity player)
+    public void onUpdate(LocalPlayer player)
     {
         GCPlayerStatsClient stats = GCPlayerStatsClient.get(player);
         stats.setTick(stats.getTick() + 1);
 
-        if (stats.isUsingParachute() && !player.abilities.isFlying && !player.handleWaterMovement())
+        if (stats.isUsingParachute() && !player.abilities.flying && !player.updateInWaterState())
         {
-            player.setMotion(player.getMotion().mul(0.5, 1.0, 0.5));
-            player.setMotion(player.getMotion().x, -0.5, player.getMotion().z);
+            player.setDeltaMovement(player.getDeltaMovement().multiply(0.5, 1.0, 0.5));
+            player.setDeltaMovement(player.getDeltaMovement().x, -0.5, player.getDeltaMovement().z);
         }
     }
 
     @Override
-    public boolean isEntityInsideOpaqueBlock(ClientPlayerEntity player, boolean vanillaInside)
+    public boolean isEntityInsideOpaqueBlock(LocalPlayer player, boolean vanillaInside)
     {
         GCPlayerStatsClient stats = GCPlayerStatsClient.get(player);
         if (vanillaInside && stats.isInFreefall())
@@ -68,15 +68,15 @@ public class PlayerClient implements IPlayerClient
             stats.setInFreefall(false);
             return false;
         }
-        return !(player.getRidingEntity() instanceof EntityLanderBase) && vanillaInside;
+        return !(player.getVehicle() instanceof EntityLanderBase) && vanillaInside;
     }
 
     @Override
-    public void onTickPre(ClientPlayerEntity player)
+    public void onTickPre(LocalPlayer player)
     {
         GCPlayerStatsClient stats = GCPlayerStatsClient.get(player);
 
-        if (stats.getPlatformControlled() || player.world.getDimension() instanceof IGalacticraftDimension)
+        if (stats.getPlatformControlled() || player.level.getDimension() instanceof IGalacticraftDimension)
         {
             if (!startup)
             {
@@ -84,7 +84,7 @@ public class PlayerClient implements IPlayerClient
 //                stats.setInFreefall(stats.getPlatformControlled() || stats.getFreefallHandler().testFreefall(player)); TODO Freefall handler
                 startup = true;
             }
-            if (stats.getPlatformControlled() || player.world.getDimension() instanceof IZeroGDimension)
+            if (stats.getPlatformControlled() || player.level.getDimension() instanceof IZeroGDimension)
             {
                 stats.setInFreefallLast(stats.isInFreefall());
 //                stats.setInFreefall(stats.getPlatformControlled() || stats.getFreefallHandler().testFreefall(player));
@@ -114,29 +114,29 @@ public class PlayerClient implements IPlayerClient
 //        }
     }
 
-    public void cancelLimbSwing(ClientPlayerEntity player)
+    public void cancelLimbSwing(LocalPlayer player)
     {
-        player.limbSwing -= player.limbSwingAmount;
-        player.limbSwingAmount = player.prevLimbSwingAmount;
-        float adjust = Math.min(Math.abs(player.limbSwing), Math.abs(player.limbSwingAmount) / 3);
-        if (player.limbSwing < 0)
+        player.animationPosition -= player.animationSpeed;
+        player.animationSpeed = player.animationSpeedOld;
+        float adjust = Math.min(Math.abs(player.animationPosition), Math.abs(player.animationSpeed) / 3);
+        if (player.animationPosition < 0)
         {
-            player.limbSwing += adjust;
+            player.animationPosition += adjust;
         }
-        else if (player.limbSwing > 0)
+        else if (player.animationPosition > 0)
         {
-            player.limbSwing -= adjust;
+            player.animationPosition -= adjust;
         }
-        player.limbSwingAmount *= 0.9;
+        player.animationSpeed *= 0.9;
     }
 
     @Override
-    public void onTickPost(ClientPlayerEntity player)
+    public void onTickPost(LocalPlayer player)
     {
         GCPlayerStatsClient stats = GCPlayerStatsClient.get(player);
-        boolean ridingThirdPersonEntity = player.getRidingEntity() instanceof ICameraZoomEntity && ((ICameraZoomEntity) player.getRidingEntity()).defaultThirdPerson();
+        boolean ridingThirdPersonEntity = player.getVehicle() instanceof ICameraZoomEntity && ((ICameraZoomEntity) player.getVehicle()).defaultThirdPerson();
 
-        if (stats.getPlatformControlled() || player.world.getDimension() instanceof IZeroGDimension)
+        if (stats.getPlatformControlled() || player.level.getDimension() instanceof IZeroGDimension)
         {
 //            stats.getFreefallHandler().postVanillaMotion(player); TODO Freefall handler
 
@@ -161,7 +161,7 @@ public class PlayerClient implements IPlayerClient
                     float factor = 1F;
                     for (int i = 0; i <= stats.getLandingTicks(); i++)
                     {
-                        stats.getLandingYOffset()[i] = dYmax * MathHelper.sin(i * 3.1415926F / stats.getLandingTicks()) * factor;
+                        stats.getLandingYOffset()[i] = dYmax * Mth.sin(i * 3.1415926F / stats.getLandingTicks()) * factor;
                         factor *= 0.97F;
                     }
                 }
@@ -170,8 +170,8 @@ public class PlayerClient implements IPlayerClient
             if (stats.getLandingTicks() > 0)
             {
                 stats.setLandingTicks(stats.getLandingTicks() - 1);
-                player.limbSwing *= 0.8F;
-                player.limbSwingAmount = 0F;
+                player.animationPosition *= 0.8F;
+                player.animationSpeed = 0F;
             }
         }
         else
@@ -187,16 +187,16 @@ public class PlayerClient implements IPlayerClient
         {
             if (!ConfigManagerCore.disableVehicleCameraChanges.get())
             {
-                Minecraft.getInstance().gameSettings.thirdPersonView = 1;
+                Minecraft.getInstance().options.thirdPersonView = 1;
             }
         }
 
-        if (player.getRidingEntity() instanceof ICameraZoomEntity)
+        if (player.getVehicle() instanceof ICameraZoomEntity)
         {
             if (!ConfigManagerCore.disableVehicleCameraChanges.get())
             {
                 stats.setLastZoomed(true);
-                TickHandlerClient.zoom(((ICameraZoomEntity) player.getRidingEntity()).getCameraZoom());
+                TickHandlerClient.zoom(((ICameraZoomEntity) player.getVehicle()).getCameraZoom());
             }
         }
         else if (stats.isLastZoomed())
@@ -232,8 +232,8 @@ public class PlayerClient implements IPlayerClient
 //                {
 //                	player.height = 1.8F;
 //                } TODO Height adjust
-                AxisAlignedBB bounds = player.getBoundingBox();
-                player.setBoundingBox(new AxisAlignedBB(bounds.minX, bounds.minY, bounds.minZ, bounds.maxX, bounds.minY + (double) player.getHeight(), bounds.maxZ));
+                AABB bounds = player.getBoundingBox();
+                player.setBoundingBox(new AABB(bounds.minX, bounds.minY, bounds.minZ, bounds.maxX, bounds.minY + (double) player.getBbHeight(), bounds.maxZ));
             }
         }
 
@@ -241,12 +241,12 @@ public class PlayerClient implements IPlayerClient
         {
             stats.setUsingParachute(false);
             stats.setLastUsingParachute(false);
-            Minecraft.getInstance().gameSettings.thirdPersonView = stats.getThirdPersonView();
+            Minecraft.getInstance().options.thirdPersonView = stats.getThirdPersonView();
         }
 
         if (!stats.isLastUsingParachute() && stats.isUsingParachute())
         {
-            player.playSound(GCSounds.parachute, 0.95F + player.getRNG().nextFloat() * 0.1F, 1.0F);
+            player.playSound(GCSounds.parachute, 0.95F + player.getRandom().nextFloat() * 0.1F, 1.0F);
         }
 
         stats.setLastUsingParachute(stats.isUsingParachute());
@@ -254,7 +254,7 @@ public class PlayerClient implements IPlayerClient
     }
 
     @Override
-    public Direction getBedDirection(ClientPlayerEntity player, Direction vanillaDegrees)
+    public Direction getBedDirection(LocalPlayer player, Direction vanillaDegrees)
     {
 //        if (player.bedLocation != null)
 //        {
@@ -283,19 +283,19 @@ public class PlayerClient implements IPlayerClient
         return vanillaDegrees;
     }
 
-    private void updateFeet(ClientPlayerEntity player, double motionX, double motionZ)
+    private void updateFeet(LocalPlayer player, double motionX, double motionZ)
     {
         GCPlayerStatsClient stats = GCPlayerStatsClient.get(player);
         double motionSqrd = motionX * motionX + motionZ * motionZ;
 
         // If the player is on the moon, not airbourne and not riding anything
-        if (motionSqrd > 0.001 && player.world != null && player.world.getDimension() instanceof DimensionMoon && player.getRidingEntity() == null && !player.abilities.isFlying)
+        if (motionSqrd > 0.001 && player.level != null && player.level.getDimension() instanceof DimensionMoon && player.getVehicle() == null && !player.abilities.flying)
         {
-            int iPosX = MathHelper.floor(player.getPosX());
-            int iPosY = MathHelper.floor(player.getPosY() - 0.05);
-            int iPosZ = MathHelper.floor(player.getPosZ());
+            int iPosX = Mth.floor(player.getX());
+            int iPosY = Mth.floor(player.getY() - 0.05);
+            int iPosZ = Mth.floor(player.getZ());
             BlockPos pos1 = new BlockPos(iPosX, iPosY, iPosZ);
-            BlockState state = player.world.getBlockState(pos1);
+            BlockState state = player.level.getBlockState(pos1);
 
             // If the block below is the moon block
             if (state.getBlock() == GCBlocks.MOON_TURF)
@@ -359,7 +359,7 @@ public class PlayerClient implements IPlayerClient
 //    } TODO Cryo chamber
 
     @Override
-    public void onBuild(int i, ClientPlayerEntity player)
+    public void onBuild(int i, LocalPlayer player)
     {
         // 0 : opened GC inventory tab
         // 1,2,3 : Compressor, CF, Standard Wrench
@@ -383,26 +383,26 @@ public class PlayerClient implements IPlayerClient
         }
         flag |= 1 << i;
         stats.setBuildFlags((flag & 511) + (repeatCount << 9));
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BUILDFLAGS_UPDATE, GCCoreUtil.getDimensionType(player.world), new Object[]{stats.getBuildFlags()}));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BUILDFLAGS_UPDATE, GCCoreUtil.getDimensionType(player.level), new Object[]{stats.getBuildFlags()}));
         switch (i)
         {
         case 0:
         case 1:
         case 2:
         case 3:
-            player.sendMessage(ITextComponent.Serializer.fromJson("[{\"text\":\"" + GCCoreUtil.translate("gui.message.help1") + ": \",\"color\":\"white\"}," + "{\"text\":\" " + EnumColor.BRIGHT_GREEN + "wiki." + Constants.PREFIX + "com/wiki/1" + "\"," + "\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":" + "{\"text\":\"" + GCCoreUtil.translate("gui.message.clicklink") + "\",\"color\":\"yellow\"}}," + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + "http://wiki." + Constants.PREFIX + "com/wiki/1" + "\"}}]"));
-            player.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.message.help1a") + EnumColor.AQUA + " /gchelp"));
+            player.sendMessage(Component.Serializer.fromJson("[{\"text\":\"" + GCCoreUtil.translate("gui.message.help1") + ": \",\"color\":\"white\"}," + "{\"text\":\" " + EnumColor.BRIGHT_GREEN + "wiki." + Constants.PREFIX + "com/wiki/1" + "\"," + "\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":" + "{\"text\":\"" + GCCoreUtil.translate("gui.message.clicklink") + "\",\"color\":\"yellow\"}}," + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + "http://wiki." + Constants.PREFIX + "com/wiki/1" + "\"}}]"));
+            player.sendMessage(new TextComponent(GCCoreUtil.translate("gui.message.help1a") + EnumColor.AQUA + " /gchelp"));
             break;
         case 4:
         case 5:
         case 6:
-            player.sendMessage(ITextComponent.Serializer.fromJson("[{\"text\":\"" + GCCoreUtil.translate("gui.message.help2") + ": \",\"color\":\"white\"}," + "{\"text\":\" " + EnumColor.BRIGHT_GREEN + "wiki." + Constants.PREFIX + "com/wiki/2" + "\"," + "\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":" + "{\"text\":\"" + GCCoreUtil.translate("gui.message.clicklink") + "\",\"color\":\"yellow\"}}," + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + "http://wiki." + Constants.PREFIX + "com/wiki/2" + "\"}}]"));
+            player.sendMessage(Component.Serializer.fromJson("[{\"text\":\"" + GCCoreUtil.translate("gui.message.help2") + ": \",\"color\":\"white\"}," + "{\"text\":\" " + EnumColor.BRIGHT_GREEN + "wiki." + Constants.PREFIX + "com/wiki/2" + "\"," + "\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":" + "{\"text\":\"" + GCCoreUtil.translate("gui.message.clicklink") + "\",\"color\":\"yellow\"}}," + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + "http://wiki." + Constants.PREFIX + "com/wiki/2" + "\"}}]"));
             break;
         case 7:
-            player.sendMessage(ITextComponent.Serializer.fromJson("[{\"text\":\"" + GCCoreUtil.translate("gui.message.help3") + ": \",\"color\":\"white\"}," + "{\"text\":\" " + EnumColor.BRIGHT_GREEN + "wiki." + Constants.PREFIX + "com/wiki/oil" + "\"," + "\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":" + "{\"text\":\"" + GCCoreUtil.translate("gui.message.clicklink") + "\",\"color\":\"yellow\"}}," + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + "http://wiki." + Constants.PREFIX + "com/wiki/oil" + "\"}}]"));
+            player.sendMessage(Component.Serializer.fromJson("[{\"text\":\"" + GCCoreUtil.translate("gui.message.help3") + ": \",\"color\":\"white\"}," + "{\"text\":\" " + EnumColor.BRIGHT_GREEN + "wiki." + Constants.PREFIX + "com/wiki/oil" + "\"," + "\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":" + "{\"text\":\"" + GCCoreUtil.translate("gui.message.clicklink") + "\",\"color\":\"yellow\"}}," + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + "http://wiki." + Constants.PREFIX + "com/wiki/oil" + "\"}}]"));
             break;
         case 8:
-            player.sendMessage(ITextComponent.Serializer.fromJson("[{\"text\":\"" + GCCoreUtil.translate("gui.message.prelaunch") + ": \",\"color\":\"white\"}," + "{\"text\":\" " + EnumColor.BRIGHT_GREEN + "wiki." + Constants.PREFIX + "com/wiki/pre" + "\"," + "\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":" + "{\"text\":\"" + GCCoreUtil.translate("gui.message.clicklink") + "\",\"color\":\"yellow\"}}," + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + "http://wiki." + Constants.PREFIX + "com/wiki/pre" + "\"}}]"));
+            player.sendMessage(Component.Serializer.fromJson("[{\"text\":\"" + GCCoreUtil.translate("gui.message.prelaunch") + ": \",\"color\":\"white\"}," + "{\"text\":\" " + EnumColor.BRIGHT_GREEN + "wiki." + Constants.PREFIX + "com/wiki/pre" + "\"," + "\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":" + "{\"text\":\"" + GCCoreUtil.translate("gui.message.clicklink") + "\",\"color\":\"yellow\"}}," + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"" + "http://wiki." + Constants.PREFIX + "com/wiki/pre" + "\"}}]"));
             break;
         }
     }

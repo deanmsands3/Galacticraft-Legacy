@@ -1,23 +1,22 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.world.gen.base;
 
 import com.google.common.collect.Lists;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
 import java.util.List;
 import java.util.Random;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
 import static micdoodle8.mods.galacticraft.planets.asteroids.world.gen.AsteroidFeatures.CBASE_START;
 
 public class BaseStart extends BaseDeck
 {
     public List<StructurePiece> attachedComponents = Lists.newArrayList();
-    public List<MutableBoundingBox> componentBounds = Lists.newArrayList();
+    public List<BoundingBox> componentBounds = Lists.newArrayList();
 
-    public BaseStart(TemplateManager templateManager, CompoundNBT nbt)
+    public BaseStart(StructureManager templateManager, CompoundTag nbt)
     {
         super(CBASE_START, nbt);
     }
@@ -28,7 +27,7 @@ public class BaseStart extends BaseDeck
     }
 
     @Override
-    public void buildComponent(StructurePiece componentIn, List<StructurePiece> listIn, Random rand)
+    public void addChildren(StructurePiece componentIn, List<StructurePiece> listIn, Random rand)
     {
         attachedComponents.clear();
         componentBounds.clear();
@@ -45,6 +44,6 @@ public class BaseStart extends BaseDeck
 
         //TODO  applyAsteroidDamage();
 
-        super.buildComponent(componentIn, listIn, rand);
+        super.addChildren(componentIn, listIn, rand);
     }
 }

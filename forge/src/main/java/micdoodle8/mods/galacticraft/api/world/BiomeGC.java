@@ -1,15 +1,10 @@
 package micdoodle8.mods.galacticraft.api.world;
 
-import java.util.LinkedList;
 import java.util.Map;
 
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.AmbientEntity;
-import net.minecraft.entity.passive.WaterMobEntity;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biome;
 
 /**
  * This extension of BiomeGenBase contains the default initialiseMobLists()
@@ -19,14 +14,14 @@ public abstract class BiomeGC extends Biome implements IMobSpawnBiome
 {
 //    public final boolean isAdaptiveBiome;
 
-    protected BiomeGC(Biome.Builder biomeBuilder)
+    protected BiomeGC(Biome.BiomeBuilder biomeBuilder)
     {
         super(biomeBuilder);
         GalacticraftCore.biomesList.add(this);
 //        this.isAdaptiveBiome = false;
     }
 
-    protected BiomeGC(Biome.Builder biomeBuilder, boolean adaptive)
+    protected BiomeGC(Biome.BiomeBuilder biomeBuilder, boolean adaptive)
     {
         super(biomeBuilder);
 //        this.isAdaptiveBiome = adaptive;
@@ -52,15 +47,15 @@ public abstract class BiomeGC extends Biome implements IMobSpawnBiome
      * Override this if different behaviour is required.
      */
     @Override
-    public void initialiseMobLists(Map<SpawnListEntry, EntityClassification> mobInfo)
+    public void initialiseMobLists(Map<SpawnerData, MobCategory> mobInfo)
     {
-        for (EntityClassification classification : EntityClassification.values())
+        for (MobCategory classification : MobCategory.values())
         {
-            this.getSpawns(classification).clear();
+            this.getMobs(classification).clear();
         }
-        for (Map.Entry<SpawnListEntry, EntityClassification> entry : mobInfo.entrySet())
+        for (Map.Entry<SpawnerData, MobCategory> entry : mobInfo.entrySet())
         {
-            getSpawns(entry.getValue()).add(entry.getKey());
+            getMobs(entry.getValue()).add(entry.getKey());
         }
     }
 }

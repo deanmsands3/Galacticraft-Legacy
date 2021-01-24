@@ -4,25 +4,23 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.Language;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.core.BlockPos;
+import net.minecraft.locale.Language;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.LanguageMap;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -144,7 +142,7 @@ public class GCCoreUtil
 
     public static String translate(String key)
     {
-        String result = LanguageMap.getInstance().translateKey(key);
+        String result = Language.getInstance().getElement(key);
         int comment = result.indexOf('#');
         String ret = (comment > 0) ? result.substring(0, comment).trim() : result;
         for (int i = 0; i < key.length(); ++i)
@@ -168,7 +166,7 @@ public class GCCoreUtil
 
     public static String translateWithFormat(String key, Object... values)
     {
-        String translation = LanguageMap.getInstance().translateKey(key);
+        String translation = Language.getInstance().getElement(key);
         String result;
 
         try
@@ -193,19 +191,19 @@ public class GCCoreUtil
         return ret;
     }
 
-    public static void drawStringRightAligned(String string, int x, int y, int color, FontRenderer fontRendererObj)
+    public static void drawStringRightAligned(String string, int x, int y, int color, Font fontRendererObj)
     {
-        fontRendererObj.drawString(string, x - fontRendererObj.getStringWidth(string), y, color);
+        fontRendererObj.draw(string, x - fontRendererObj.width(string), y, color);
     }
 
-    public static void drawStringCentered(String string, int x, int y, int color, FontRenderer fontRendererObj)
+    public static void drawStringCentered(String string, int x, int y, int color, Font fontRendererObj)
     {
-        fontRendererObj.drawString(string, x - fontRendererObj.getStringWidth(string) / 2, y, color);
+        fontRendererObj.draw(string, x - fontRendererObj.width(string) / 2, y, color);
     }
 
     public static String lowerCaseNoun(String string)
     {
-        Language l = Minecraft.getInstance().getLanguageManager().getCurrentLanguage();
+        net.minecraft.client.resources.language.Language l = Minecraft.getInstance().getLanguageManager().getSelected();
         if (l.getCode().equals("de_DE"))
         {
             return string;
@@ -288,7 +286,7 @@ public class GCCoreUtil
 //        }
 //    } TODO ?
 
-    public static DimensionType getDimensionType(IWorldReader world)
+    public static DimensionType getDimensionType(LevelReader world)
     {
         return world.getDimension().getType();
     }
@@ -298,56 +296,56 @@ public class GCCoreUtil
         return dimension.getType();
     }
 
-    public static DimensionType getDimensionType(TileEntity tileEntity)
+    public static DimensionType getDimensionType(BlockEntity tileEntity)
     {
-        return tileEntity.getWorld().dimension.getType();
+        return tileEntity.getLevel().dimension.getType();
     }
 
-    public static Iterable<ServerWorld> getWorldServerList()
+    public static Iterable<ServerLevel> getWorldServerList()
     {
         MinecraftServer server = getServer();
         if (server != null)
         {
-            return server.getWorlds();
+            return server.getAllLevels();
         }
         return null;
     }
 
-    public static Iterable<ServerWorld> getWorldServerList(World world)
+    public static Iterable<ServerLevel> getWorldServerList(Level world)
     {
-        if (world instanceof ServerWorld)
+        if (world instanceof ServerLevel)
         {
-            return ((ServerWorld) world).getServer().getWorlds();
+            return ((ServerLevel) world).getServer().getAllLevels();
         }
         return GCCoreUtil.getWorldServerList();
     }
 
     public static void sendToAllDimensions(EnumSimplePacket packetType, Object[] data)
     {
-        for (ServerWorld world : GCCoreUtil.getWorldServerList())
+        for (ServerLevel world : GCCoreUtil.getWorldServerList())
         {
             DimensionType id = getDimensionType(world);
             GalacticraftCore.packetPipeline.sendToDimension(new PacketSimple(packetType, id, data), id);
         }
     }
 
-    public static void sendToAllAround(PacketSimple packet, World world, DimensionType dimID, BlockPos pos, double radius)
+    public static void sendToAllAround(PacketSimple packet, Level world, DimensionType dimID, BlockPos pos, double radius)
     {
         double x = pos.getX() + 0.5D;
         double y = pos.getY() + 0.5D;
         double z = pos.getZ() + 0.5D;
         double r2 = radius * radius;
-        for (PlayerEntity playerMP : world.getPlayers())
+        for (Player playerMP : world.players())
         {
             if (playerMP.dimension == dimID)
             {
-                final double dx = x - playerMP.getPosX();
-                final double dy = y - playerMP.getPosY();
-                final double dz = z - playerMP.getPosZ();
+                final double dx = x - playerMP.getX();
+                final double dy = y - playerMP.getY();
+                final double dz = z - playerMP.getZ();
 
                 if (dx * dx + dy * dy + dz * dz < r2)
                 {
-                    GalacticraftCore.packetPipeline.sendTo(packet, (ServerPlayerEntity) playerMP);
+                    GalacticraftCore.packetPipeline.sendTo(packet, (ServerPlayer) playerMP);
                 }
             }
         }
@@ -368,7 +366,7 @@ public class GCCoreUtil
      */
     public static float getAngleForRelativePosition(double nearestX, double nearestZ)
     {
-        return ((float) MathHelper.atan2(nearestX, -nearestZ) * Constants.RADIANS_TO_DEGREES + 360F) % 360F;
+        return ((float) Mth.atan2(nearestX, -nearestZ) * Constants.RADIANS_TO_DEGREES + 360F) % 360F;
     }
 
     /**
@@ -397,14 +395,14 @@ public class GCCoreUtil
         return server;
     }
 
-    public static ItemStack getMatchingItemEitherHand(PlayerEntity player, Item item)
+    public static ItemStack getMatchingItemEitherHand(Player player, Item item)
     {
-        ItemStack stack = player.inventory.getStackInSlot(player.inventory.currentItem);
+        ItemStack stack = player.inventory.getItem(player.inventory.selected);
         if (stack != null && stack.getItem() == item)
         {
             return stack;
         }
-        stack = player.inventory.offHandInventory.get(0);
+        stack = player.inventory.offhand.get(0);
         if (stack != null && stack.getItem() == item)
         {
             return stack;
@@ -452,7 +450,7 @@ public class GCCoreUtil
         result.add(new BlockPos(x + 1, y, z));
     }
 
-    public static void getPositionsAdjoiningLoaded(int x, int y, int z, List<BlockPos> result, World world)
+    public static void getPositionsAdjoiningLoaded(int x, int y, int z, List<BlockPos> result, Level world)
     {
         result.clear();
         if (y > 0)
@@ -464,22 +462,22 @@ public class GCCoreUtil
             result.add(new BlockPos(x, y + 1, z));
         }
         BlockPos pos = new BlockPos(x, y, z - 1);
-        if ((z & 15) > 0 || world.isBlockLoaded(pos))
+        if ((z & 15) > 0 || world.hasChunkAt(pos))
         {
             result.add(pos);
         }
         pos = new BlockPos(x, y, z + 1);
-        if ((z & 15) < 15 || world.isBlockLoaded(pos))
+        if ((z & 15) < 15 || world.hasChunkAt(pos))
         {
             result.add(pos);
         }
         pos = new BlockPos(x - 1, y, z);
-        if ((x & 15) > 0 || world.isBlockLoaded(pos))
+        if ((x & 15) > 0 || world.hasChunkAt(pos))
         {
             result.add(pos);
         }
         pos = new BlockPos(x + 1, y, z);
-        if ((x & 15) < 15 || world.isBlockLoaded(pos))
+        if ((x & 15) < 15 || world.hasChunkAt(pos))
         {
             result.add(pos);
         }
@@ -506,19 +504,19 @@ public class GCCoreUtil
         result.add(new BlockPos(x + 1, y, z));
     }
 
-    public static void spawnItem(World world, BlockPos pos, ItemStack stack)
+    public static void spawnItem(Level world, BlockPos pos, ItemStack stack)
     {
         float var = 0.7F;
         while (!stack.isEmpty())
         {
-            double dx = world.rand.nextFloat() * var + (1.0F - var) * 0.5D;
-            double dy = world.rand.nextFloat() * var + (1.0F - var) * 0.5D;
-            double dz = world.rand.nextFloat() * var + (1.0F - var) * 0.5D;
-            ItemEntity entityitem = new ItemEntity(world, pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz, stack.split(world.rand.nextInt(21) + 10));
+            double dx = world.random.nextFloat() * var + (1.0F - var) * 0.5D;
+            double dy = world.random.nextFloat() * var + (1.0F - var) * 0.5D;
+            double dz = world.random.nextFloat() * var + (1.0F - var) * 0.5D;
+            ItemEntity entityitem = new ItemEntity(world, pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz, stack.split(world.random.nextInt(21) + 10));
 
-            entityitem.setPickupDelay(10);
+            entityitem.setPickUpDelay(10);
 
-            world.addEntity(entityitem);
+            world.addFreshEntity(entityitem);
         }
     }
 

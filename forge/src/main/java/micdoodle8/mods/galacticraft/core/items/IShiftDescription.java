@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.core.items;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface IShiftDescription
 {

@@ -1,22 +1,19 @@
 package micdoodle8.mods.galacticraft.core.world.gen.dungeon;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
 import java.util.Random;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
 import static micdoodle8.mods.galacticraft.core.world.gen.GCFeatures.CMOON_DUNGEON_ENTRANCE;
 
 public class RoomEntrance extends SizedPiece
 {
-    public RoomEntrance(TemplateManager templateManager, CompoundNBT nbt)
+    public RoomEntrance(StructureManager templateManager, CompoundTag nbt)
     {
         super(CMOON_DUNGEON_ENTRANCE, nbt);
     }
@@ -24,15 +21,15 @@ public class RoomEntrance extends SizedPiece
     public RoomEntrance(DungeonConfiguration configuration, Random rand, int blockPosX, int blockPosZ)
     {
         super(CMOON_DUNGEON_ENTRANCE, configuration, rand.nextInt(4) + 6, 12, rand.nextInt(4) + 6, Direction.Plane.HORIZONTAL.random(rand));
-        this.setCoordBaseMode(Direction.SOUTH);
+        this.setOrientation(Direction.SOUTH);
         int sX = this.sizeX / 2;
         int sZ = this.sizeZ / 2;
 
-        this.boundingBox = new MutableBoundingBox(blockPosX - sX, configuration.getYPosition(), blockPosZ - sZ, blockPosX - sX + this.sizeX, configuration.getYPosition() + this.sizeY, blockPosZ - sZ + this.sizeZ);
+        this.boundingBox = new BoundingBox(blockPosX - sX, configuration.getYPosition(), blockPosZ - sZ, blockPosX - sX + this.sizeX, configuration.getYPosition() + this.sizeY, blockPosZ - sZ + this.sizeZ);
     }
 
     @Override
-    public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
+    public boolean postProcess(LevelAccessor worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, BoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
         for (int i = 0; i <= this.sizeX; i++)
         {
@@ -42,11 +39,11 @@ public class RoomEntrance extends SizedPiece
                 {
                     if (i == 0 || i == this.sizeX || j == 0 /*|| j == this.sizeY*/ || k == 0 || k == this.sizeZ)
                     {
-                        this.setBlockState(worldIn, this.configuration.getBrickBlock(), i, j, k, boundingBox);
+                        this.placeBlock(worldIn, this.configuration.getBrickBlock(), i, j, k, boundingBox);
                     }
                     else
                     {
-                        this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i, j, k, boundingBox);
+                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, boundingBox);
                     }
                 }
             }

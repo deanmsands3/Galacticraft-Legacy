@@ -3,22 +3,22 @@ package micdoodle8.mods.galacticraft.core.items;
 import micdoodle8.mods.galacticraft.core.blocks.BlockAdvanced;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Rarity;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IProperty;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -64,7 +64,7 @@ public class ItemUniversalWrench extends Item implements ISortable
 //        }
 //    }
 
-    public void wrenchUsed(PlayerEntity entityPlayer, BlockPos pos)
+    public void wrenchUsed(Player entityPlayer, BlockPos pos)
     {
 
     }
@@ -90,56 +90,56 @@ public class ItemUniversalWrench extends Item implements ISortable
 
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player)
+    public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player)
     {
         return true;
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, PlayerEntity player)
+    public void onCraftedBy(ItemStack stack, Level world, Player player)
     {
-        if (world.isRemote && player instanceof ClientPlayerEntity)
+        if (world.isClientSide && player instanceof LocalPlayer)
         {
-            ClientProxyCore.playerClientHandler.onBuild(3, (ClientPlayerEntity) player);
+            ClientProxyCore.playerClientHandler.onBuild(3, (LocalPlayer) player);
         }
     }
 
     @Override
-    public ActionResultType onItemUseFirst(ItemStack stackIn, ItemUseContext context)
+    public InteractionResult onItemUseFirst(ItemStack stackIn, UseOnContext context)
     {
-        if (context.getWorld().isRemote || context.getPlayer().isSneaking())
+        if (context.getLevel().isClientSide || context.getPlayer().isShiftKeyDown())
         {
             return ActionResultType.PASS;
         }
 
-        BlockState state = context.getWorld().getBlockState(context.getPos());
+        BlockState state = context.getLevel().getBlockState(context.getClickedPos());
 
         if (state.getBlock() instanceof BlockAdvanced)
         {
-            if (((BlockAdvanced) state.getBlock()).onUseWrench(context.getWorld(), context.getPos(), context.getPlayer(), context.getHand(), context.getItem(), new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), context.isInside())) == ActionResultType.SUCCESS)
+            if (((BlockAdvanced) state.getBlock()).onUseWrench(context.getLevel(), context.getClickedPos(), context.getPlayer(), context.getHand(), context.getItemInHand(), new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside())) == ActionResultType.SUCCESS)
             {
                 return ActionResultType.SUCCESS;
             }
         }
 
-        for (IProperty<?> entry : state.getProperties())
+        for (Property<?> entry : state.getProperties())
         {
-            if (entry instanceof DirectionProperty && entry.getName().equals("facing") && state.get(entry) instanceof Direction)
+            if (entry instanceof DirectionProperty && entry.getName().equals("facing") && state.getValue(entry) instanceof Direction)
             {
                 DirectionProperty property = (DirectionProperty) entry;
-                Collection<Direction> values = property.getAllowedValues();
+                Collection<Direction> values = property.getPossibleValues();
                 if (values.size() > 0)
                 {
                     boolean done = false;
-                    Direction currentFacing = state.get(property);
+                    Direction currentFacing = state.getValue(property);
 
                     // Special case: horizontal facings should be rotated around the Y axis - this includes most of GC's own blocks
                     if (values.size() == 4 && !values.contains(Direction.UP) && !values.contains(Direction.DOWN))
                     {
-                        Direction newFacing = currentFacing.rotateY();
+                        Direction newFacing = currentFacing.getClockWise();
                         if (values.contains(newFacing))
                         {
-                            context.getWorld().setBlockState(context.getPos(), state.with(property, newFacing));
+                            context.getLevel().setBlockAndUpdate(context.getClickedPos(), state.setValue(property, newFacing));
                             done = true;
                         }
                     }
@@ -149,16 +149,16 @@ public class ItemUniversalWrench extends Item implements ISortable
                         List<Direction> list = Arrays.asList(values.toArray(new Direction[0]));
                         int i = list.indexOf(currentFacing) + 1;
                         Direction newFacing = list.get(i >= list.size() ? 0 : i);
-                        context.getWorld().setBlockState(context.getPos(), state.with(property, newFacing));
+                        context.getLevel().setBlockAndUpdate(context.getClickedPos(), state.setValue(property, newFacing));
                     }
 
-                    ItemStack stack = context.getPlayer().getHeldItem(context.getHand()).copy();
-                    stack.damageItem(1, context.getPlayer(), (entity) ->
+                    ItemStack stack = context.getPlayer().getItemInHand(context.getHand()).copy();
+                    stack.hurtAndBreak(1, context.getPlayer(), (entity) ->
                     {
                     });
-                    context.getPlayer().setHeldItem(context.getHand(), stack);
+                    context.getPlayer().setItemInHand(context.getHand(), stack);
 
-                    TileEntity tile = context.getWorld().getTileEntity(context.getPos());
+                    BlockEntity tile = context.getLevel().getBlockEntity(context.getClickedPos());
 //                    if (tile instanceof TileBaseUniversalElectrical)
 //                        ((TileBaseUniversalElectrical) tile).updateFacing(); TODO Ic2 support
 

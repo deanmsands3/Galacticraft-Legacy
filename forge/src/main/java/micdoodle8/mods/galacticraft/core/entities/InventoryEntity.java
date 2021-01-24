@@ -1,71 +1,71 @@
 package micdoodle8.mods.galacticraft.core.entities;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-public abstract class InventoryEntity extends NetworkedEntity implements IInventory
+public abstract class InventoryEntity extends NetworkedEntity implements Container
 {
     protected NonNullList<ItemStack> stacks = NonNullList.withSize(0, ItemStack.EMPTY);
 
-    public InventoryEntity(EntityType<?> type, World world)
+    public InventoryEntity(EntityType<?> type, Level world)
     {
         super(type, world);
     }
 
     @Override
-    protected void readAdditional(CompoundNBT nbt)
+    protected void readAdditionalSaveData(CompoundTag nbt)
     {
-        ItemStackHelper.loadAllItems(nbt, this.stacks);
+        ContainerHelper.loadAllItems(nbt, this.stacks);
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT nbt)
+    protected void addAdditionalSaveData(CompoundTag nbt)
     {
-        ItemStackHelper.saveAllItems(nbt, this.stacks);
+        ContainerHelper.saveAllItems(nbt, this.stacks);
     }
 
     @Override
-    public ItemStack getStackInSlot(int var1)
+    public ItemStack getItem(int var1)
     {
         return this.stacks.get(var1);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
+    public ItemStack removeItem(int index, int count)
     {
-        ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
+        ItemStack itemstack = ContainerHelper.removeItem(this.stacks, index, count);
 
         if (!itemstack.isEmpty())
         {
-            this.markDirty();
+            this.setChanged();
         }
 
         return itemstack;
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
+    public ItemStack removeItemNoUpdate(int index)
     {
-        return ItemStackHelper.getAndRemove(this.stacks, index);
+        return ContainerHelper.takeItem(this.stacks, index);
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
+    public void setItem(int index, ItemStack stack)
     {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
+        if (stack.getCount() > this.getMaxStackSize())
         {
-            stack.setCount(this.getInventoryStackLimit());
+            stack.setCount(this.getMaxStackSize());
         }
 
-        this.markDirty();
+        this.setChanged();
     }
 
     @Override
@@ -83,37 +83,37 @@ public abstract class InventoryEntity extends NetworkedEntity implements IInvent
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 64;
     }
 
     @Override
-    public void markDirty()
+    public void setChanged()
     {
 
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity entityplayer)
+    public boolean stillValid(Player entityplayer)
     {
         return true;
     }
 
     //We don't use these because we use forge containers
     @Override
-    public void openInventory(PlayerEntity player)
+    public void startOpen(Player player)
     {
     }
 
     //We don't use these because we use forge containers
     @Override
-    public void closeInventory(PlayerEntity player)
+    public void stopOpen(Player player)
     {
     }
 
     @Override
-    public void clear()
+    public void clearContent()
     {
         for (int i = 0; i < this.stacks.size(); ++i)
         {

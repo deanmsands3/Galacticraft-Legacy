@@ -1,15 +1,14 @@
 package micdoodle8.mods.galacticraft.planets.mars.client.render.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-
+import com.mojang.blaze3d.vertex.PoseStack;
 import micdoodle8.mods.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.client.model.SludgelingModel;
 import micdoodle8.mods.galacticraft.planets.mars.entities.SludgelingEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,7 +18,7 @@ public class SludgelingRenderer extends MobRenderer<SludgelingEntity, Sludgeling
     private static final ResourceLocation TEXTURE = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/entity/sludgeling.png");
     private boolean sensorEnabled;
 
-    public SludgelingRenderer(EntityRendererManager renderManager)
+    public SludgelingRenderer(EntityRenderDispatcher renderManager)
     {
         super(renderManager, new SludgelingModel(), 0.3F);
     }
@@ -31,7 +30,7 @@ public class SludgelingRenderer extends MobRenderer<SludgelingEntity, Sludgeling
     }
 
     @Override
-    public void render(SludgelingEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    public void render(SludgelingEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight)
     {
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
 
@@ -51,7 +50,7 @@ public class SludgelingRenderer extends MobRenderer<SludgelingEntity, Sludgeling
     }
 
     @Override
-    protected void preRenderCallback(SludgelingEntity entity, MatrixStack matrixStack, float partialTickTime)
+    protected void preRenderCallback(SludgelingEntity entity, PoseStack matrixStack, float partialTickTime)
     {
         if (this.sensorEnabled)
         {

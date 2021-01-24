@@ -9,12 +9,12 @@ import micdoodle8.mods.galacticraft.planets.GuiIdsPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.client.gui.GuiSchematicCargoRocket;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerSchematicCargoRocket;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -40,15 +40,15 @@ public class SchematicCargoRocket implements ISchematicPage
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public ScreenManager.IScreenFactory<ContainerSchematicCargoRocket, GuiSchematicCargoRocket> getResultScreen(PlayerEntity player, BlockPos pos)
+    public MenuScreens.ScreenConstructor<ContainerSchematicCargoRocket, GuiSchematicCargoRocket> getResultScreen(Player player, BlockPos pos)
     {
         return GuiSchematicCargoRocket::new;
     }
 
     @Override
-    public SimpleNamedContainerProvider getContainerProvider(PlayerEntity player)
+    public SimpleMenuProvider getContainerProvider(Player player)
     {
-        return new SimpleNamedContainerProvider((w, p, pl) -> new ContainerSchematicCargoRocket(w, p), new TranslationTextComponent("container.schematic_cargo_rocket"));
+        return new SimpleMenuProvider((w, p, pl) -> new ContainerSchematicCargoRocket(w, p), new TranslatableComponent("container.schematic_cargo_rocket"));
     }
 
     @Override

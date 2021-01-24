@@ -12,16 +12,25 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.wrappers.ScheduledBlockChange;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.GravelBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SpongeBlock;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.Shapes;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -31,7 +40,7 @@ public class ThreadFindSeal
     public static AtomicBoolean anylooping = new AtomicBoolean();
     public AtomicBoolean looping = new AtomicBoolean();
 
-    private World world;
+    private Level world;
     private BlockVec3 head;
     private boolean sealed;
     private List<TileEntityOxygenSealer> sealers;
@@ -60,10 +69,10 @@ public class ThreadFindSeal
 
     public ThreadFindSeal(TileEntityOxygenSealer sealer)
     {
-        this(sealer.getWorld(), sealer.getPos().up(), sealer.getFindSealChecks(), new ArrayList<TileEntityOxygenSealer>(Collections.singletonList(sealer)));
+        this(sealer.getLevel(), sealer.getBlockPos().above(), sealer.getFindSealChecks(), new ArrayList<TileEntityOxygenSealer>(Collections.singletonList(sealer)));
     }
 
-    public ThreadFindSeal(World world, BlockPos head, int checkCount, List<TileEntityOxygenSealer> sealers)
+    public ThreadFindSeal(Level world, BlockPos head, int checkCount, List<TileEntityOxygenSealer> sealers)
     {
         if (ThreadFindSeal.anylooping.getAndSet(true))
         {
@@ -147,7 +156,7 @@ public class ThreadFindSeal
         long time1 = System.nanoTime();
 
         this.sealed = true;
-        TileEntity tile = this.head.getTileEntityOnSide(world, Direction.DOWN);
+        BlockEntity tile = this.head.getTileEntityOnSide(world, Direction.DOWN);
         this.foundAmbientThermal = tile instanceof TileEntityOxygenSealer && ((TileEntityOxygenSealer) tile).thermalControlEnabled();
         this.checkedAdd(this.head);
         this.currentLayer = new LinkedList<BlockVec3>();
@@ -389,24 +398,24 @@ public class ThreadFindSeal
             for (BlockVec3 checkedVec : this.airToReplace)
             {
                 //No block update for performance reasons; deal with unlit torches separately
-                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), breatheableAirID.getDefaultState().with(BlockThermalAir.THERMAL, ambientThermal), 0));
+                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), breatheableAirID.defaultBlockState().setValue(BlockThermalAir.THERMAL, ambientThermal), 0));
             }
             for (BlockVec3 checkedVec : this.airToReplaceBright)
             {
-                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), breatheableAirIDBright.getDefaultState().with(BlockThermalAir.THERMAL, ambientThermal), 0));
+                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), breatheableAirIDBright.defaultBlockState().setValue(BlockThermalAir.THERMAL, ambientThermal), 0));
             }
             for (BlockVec3 checkedVec : this.ambientThermalTracked)
             {
-                if (checkedVec.getBlockState(world).get(BlockThermalAir.THERMAL) != ambientThermal)
+                if (checkedVec.getBlockState(world).getValue(BlockThermalAir.THERMAL) != ambientThermal)
                 {
-                    changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), breatheableAirID.getDefaultState().with(BlockThermalAir.THERMAL, ambientThermal), 0));
+                    changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), breatheableAirID.defaultBlockState().setValue(BlockThermalAir.THERMAL, ambientThermal), 0));
                 }
             }
             for (BlockVec3 checkedVec : this.ambientThermalTrackedBright)
             {
-                if (checkedVec.getBlockState(world).get(BlockThermalAir.THERMAL) != ambientThermal)
+                if (checkedVec.getBlockState(world).getValue(BlockThermalAir.THERMAL) != ambientThermal)
                 {
-                    changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), breatheableAirIDBright.getDefaultState().with(BlockThermalAir.THERMAL, ambientThermal), 0));
+                    changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), breatheableAirIDBright.defaultBlockState().setValue(BlockThermalAir.THERMAL, ambientThermal), 0));
                 }
             }
 
@@ -425,15 +434,15 @@ public class ThreadFindSeal
             List<ScheduledBlockChange> changeList = new LinkedList<ScheduledBlockChange>();
             for (BlockVec3 checkedVec : this.breatheableToReplace)
             {
-                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), Blocks.AIR.getDefaultState(), 0));
+                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), Blocks.AIR.defaultBlockState(), 0));
             }
             for (BlockVec3 checkedVec : this.fireToReplace)
             {
-                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), Blocks.AIR.getDefaultState(), 2));
+                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), Blocks.AIR.defaultBlockState(), 2));
             }
             for (BlockVec3 checkedVec : this.breatheableToReplaceBright)
             {
-                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), GCBlocks.BRIGHT_AIR.getDefaultState(), 0));
+                changeList.add(new ScheduledBlockChange(checkedVec.toBlockPos(), GCBlocks.BRIGHT_AIR.defaultBlockState(), 0));
             }
             TickHandlerServer.scheduleNewBlockChange(GCCoreUtil.getDimensionType(this.world), changeList);
         }
@@ -455,7 +464,7 @@ public class ThreadFindSeal
         List<BlockVec3> toReplaceLocal = this.breatheableToReplace;
         List<BlockVec3> toReplaceLocalBright = this.breatheableToReplaceBright;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
-        World world = this.world;
+        Level world = this.world;
         int LogicalSide, bits;
 
         while (this.currentLayer.size() > 0)
@@ -516,7 +525,7 @@ public class ThreadFindSeal
                                 if (block != null && block != airBlock && block != airBlockBright)
                                 {
                                     //This test applies any necessary checkedAdd();
-                                    if (this.canBlockPassAirCheck(block, sideVec, Direction.byIndex(LogicalSide)))
+                                    if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
                                     {
                                         //Look outbound through partially sealable blocks in case there is breatheableAir to clear beyond
                                         nextLayer.add(sideVec);
@@ -562,7 +571,7 @@ public class ThreadFindSeal
         Block airBlockBright = GCBlocks.BRIGHT_AIR;
         List<BlockVec3> toReplaceLocal = this.breatheableToReplace;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
-        World world = this.world;
+        Level world = this.world;
         int LogicalSide, bits;
 
         while (this.currentLayer.size() > 0)
@@ -623,7 +632,7 @@ public class ThreadFindSeal
                                 if (block != null && block != airBlock && block != airBlockBright)
                                 {
                                     //This test applies any necessary checkedAdd();
-                                    if (this.canBlockPassAirCheck(block, sideVec, Direction.byIndex(LogicalSide)))
+                                    if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
                                     {
                                         //Look outbound through partially sealable blocks in case there is breatheableAir to clear beyond
                                         nextLayer.add(sideVec);
@@ -659,7 +668,7 @@ public class ThreadFindSeal
         Block airIDBright = GCBlocks.BRIGHT_AIR;
         Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
-        World world = this.world;
+        Level world = this.world;
         int LogicalSide, bits;
 
         while (this.sealed && this.currentLayer.size() > 0)
@@ -740,7 +749,7 @@ public class ThreadFindSeal
                                         //if LogicalSide != 0, no checkedAdd() - allows this sealer to be checked again from other sides
                                     }
                                 }
-                                else if (this.canBlockPassAirCheck(block, sideVec, Direction.byIndex(LogicalSide)))
+                                else if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
                                 {
                                     nextLayer.add(sideVec);
                                 }
@@ -755,7 +764,7 @@ public class ThreadFindSeal
                                 Block block = state == null ? null : state.getBlock();
                                 // id == null means the void or height y>255, both
                                 // of which are unsealed obviously
-                                if (block == null || block == airID || block == breatheableAirID || block == airIDBright || block == breatheableAirIDBright || this.canBlockPassAirCheck(block, sideVec, Direction.byIndex(LogicalSide)))
+                                if (block == null || block == airID || block == breatheableAirID || block == airIDBright || block == breatheableAirIDBright || this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
                                 {
                                     this.sealed = false;
                                     if (this.sealers.size() > 0)
@@ -796,7 +805,7 @@ public class ThreadFindSeal
         Block airIDBright = GCBlocks.BRIGHT_AIR;
         Block oxygenSealerID = GCBlocks.OXYGEN_SEALER;
         LinkedList<BlockVec3> nextLayer = new LinkedList<>();
-        World world = this.world;
+        Level world = this.world;
         int LogicalSide, bits;
 
         while (this.sealed && this.currentLayer.size() > 0)
@@ -877,7 +886,7 @@ public class ThreadFindSeal
                                         //if LogicalSide != 0, no checkedAdd() - allows this sealer to be checked again from other sides
                                     }
                                 }
-                                else if (this.canBlockPassAirCheck(block, sideVec, Direction.byIndex(LogicalSide)))
+                                else if (this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
                                 {
                                     nextLayer.add(sideVec);
                                 }
@@ -892,7 +901,7 @@ public class ThreadFindSeal
                                 Block block = state == null ? null : state.getBlock();
                                 // id == null means the void or height y>255, both
                                 // of which are unsealed obviously
-                                if (block == null || block == airID || block == breatheableAirID || block == airIDBright || block == breatheableAirIDBright || this.canBlockPassAirCheck(block, sideVec, Direction.byIndex(LogicalSide)))
+                                if (block == null || block == airID || block == breatheableAirID || block == airIDBright || block == breatheableAirIDBright || this.canBlockPassAirCheck(block, sideVec, Direction.from3DDataValue(LogicalSide)))
                                 {
                                     this.sealed = false;
                                     if (this.sealers.size() > 0)
@@ -1147,7 +1156,7 @@ public class ThreadFindSeal
                 }
                 if (blockPartial.isSealed(this.world, vecPos, face))
                 {
-                    vec.setSideDone(face.getIndex() ^ 1);
+                    vec.setSideDone(face.get3DDataValue() ^ 1);
                 }
             }
             checkedAdd(vec);
@@ -1163,7 +1172,7 @@ public class ThreadFindSeal
         }
 
         BlockState state = world.getBlockState(vec.toBlockPos());
-        if (state.isOpaqueCube(world, vec.toBlockPos()))
+        if (state.isSolidRender(world, vec.toBlockPos()))
         {
             checkedAdd(vec);
             //Gravel, wool and sponge are porous
@@ -1198,7 +1207,7 @@ public class ThreadFindSeal
         //Half slab seals on the top side or the bottom side according to its metadata
         if (block instanceof SlabBlock)
         {
-            boolean isTopSlab = state.get(SlabBlock.TYPE) == SlabType.TOP; //(vec.getBlockMetadata(this.world) & 8) == 8;
+            boolean isTopSlab = state.getValue(SlabBlock.TYPE) == SlabType.TOP; //(vec.getBlockMetadata(this.world) & 8) == 8;
             //Looking down onto a top slab or looking up onto a bottom slab
             if (side == Direction.DOWN && isTopSlab || side == Direction.UP && !isTopSlab)
             {
@@ -1213,7 +1222,7 @@ public class ThreadFindSeal
         }
 
         //Farmland etc only seals on the solid underside
-        if (block instanceof FarmlandBlock || block instanceof EnchantingTableBlock || block instanceof FlowingFluidBlock)
+        if (block instanceof FarmBlock || block instanceof EnchantmentTableBlock || block instanceof LiquidBlock)
         {
             if (side == Direction.UP)
             {
@@ -1227,18 +1236,18 @@ public class ThreadFindSeal
             return true;
         }
 
-        if (block instanceof PistonBlock)
+        if (block instanceof PistonBaseBlock)
         {
-            PistonBlock piston = (PistonBlock) block;
-            if (state.get(PistonBlock.EXTENDED))
+            PistonBaseBlock piston = (PistonBaseBlock) block;
+            if (state.getValue(PistonBaseBlock.EXTENDED))
             {
-                Direction facing = state.get(PistonBlock.FACING);
+                Direction facing = state.getValue(PistonBaseBlock.FACING);
                 if (side == facing)
                 {
                     this.checkCount--;
                     return false;
                 }
-                vec.setSideDone(facing.getOpposite().getIndex());
+                vec.setSideDone(facing.getOpposite().get3DDataValue());
                 checkedAdd(vec);
                 return true;
             }
@@ -1250,10 +1259,10 @@ public class ThreadFindSeal
         //including most modded blocks - Forge microblocks in particular is covered by this.
         // ### Any exceptions in mods should implement the IPartialSealableBlock interface ###
 //        if (block.isSideSolid(state, this.world, vec.toBlockPos(), Direction.byIndex(side ^| 1)))
-        if (vec.getBlockState(world).isSolidSide(world, vec.toBlockPos(), side.getOpposite()))
+        if (vec.getBlockState(world).isFaceSturdy(world, vec.toBlockPos(), side.getOpposite()))
         {
             //Solid on all sides
-            if (block.getMaterial(state).blocksMovement() && state.getShape(world, vec.toBlockPos()) == VoxelShapes.fullCube())
+            if (block.getMaterial(state).blocksMotion() && state.getShape(world, vec.toBlockPos()) == Shapes.block())
             {
                 checkedAdd(vec);
                 return false;
@@ -1279,9 +1288,9 @@ public class ThreadFindSeal
             {
                 continue;
             }
-            if (vec.getBlockState(world).isSolidSide(this.world, vec.toBlockPos(), dir))
+            if (vec.getBlockState(world).isFaceSturdy(this.world, vec.toBlockPos(), dir))
             {
-                vec.setSideDone(dir.getIndex());
+                vec.setSideDone(dir.get3DDataValue());
             }
         }
 

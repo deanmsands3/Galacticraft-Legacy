@@ -15,11 +15,11 @@ import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.energy.tile.*;
 import micdoodle8.mods.galacticraft.core.tile.ReceiverMode;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlockNames;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
@@ -28,7 +28,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEnergyHandlerGC, ILaserNode
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + AsteroidBlockNames.ENERGY_BEAM_RECEIVER)
-    public static TileEntityType<TileEntityBeamReceiver> TYPE;
+    public static BlockEntityType<TileEntityBeamReceiver> TYPE;
 
     @NetworkedField(targetSide = LogicalSide.CLIENT)
     public Direction facing = null;
@@ -51,15 +51,15 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
 
         if (this.preLoadFacing != -1)
         {
-            this.setFacing(Direction.byIndex(this.preLoadFacing));
+            this.setFacing(Direction.from3DDataValue(this.preLoadFacing));
             this.preLoadFacing = -1;
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.getTarget() != null && this.modeReceive == ReceiverMode.EXTRACT.ordinal() && this.facing != null)
             {
-                TileEntity tile = this.getAttachedTile();
+                BlockEntity tile = this.getAttachedTile();
 
                 if (tile instanceof TileBaseUniversalElectricalSource)
                 {
@@ -68,7 +68,7 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
 
                     if (electricalTile.storage.getEnergyStoredGC() > 0)
                     {
-                        EnergySourceAdjacent source = new EnergySourceAdjacent(Direction.byIndex(this.facing.getIndex() ^ 1));
+                        EnergySourceAdjacent source = new EnergySourceAdjacent(Direction.from3DDataValue(this.facing.get3DDataValue() ^ 1));
                         float toSend = Math.min(electricalTile.storage.getMaxExtract(), electricalTile.storage.getEnergyStoredGC());
                         float transmitted = this.getTarget().receiveEnergyGC(new EnergySourceWireless(Lists.newArrayList(this)), toSend, false);
                         electricalTile.extractEnergyGC(source, transmitted, false);
@@ -98,7 +98,7 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
                 }
                 else
                 {
-                    TileEntity tileAdj = this.getAttachedTile();
+                    BlockEntity tileAdj = this.getAttachedTile();
 
                     if (tileAdj instanceof TileBaseUniversalElectrical)
                     {
@@ -141,12 +141,12 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
     @Override
     public Vector3 getInputPoint()
     {
-        Vector3 headVec = new Vector3(this.getPos().getX() + 0.5F, this.getPos().getY() + 0.5F, this.getPos().getZ() + 0.5F);
+        Vector3 headVec = new Vector3(this.getBlockPos().getX() + 0.5F, this.getBlockPos().getY() + 0.5F, this.getBlockPos().getZ() + 0.5F);
         if (this.facing != null)
         {
-            headVec.x += this.facing.getXOffset() * 0.1F;
-            headVec.y += this.facing.getYOffset() * 0.1F;
-            headVec.z += this.facing.getZOffset() * 0.1F;
+            headVec.x += this.facing.getStepX() * 0.1F;
+            headVec.y += this.facing.getStepY() * 0.1F;
+            headVec.z += this.facing.getStepZ() * 0.1F;
         }
         return headVec;
     }
@@ -154,30 +154,30 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
     @Override
     public Vector3 getOutputPoint(boolean offset)
     {
-        Vector3 headVec = new Vector3(this.getPos().getX() + 0.5F, this.getPos().getY() + 0.5F, this.getPos().getZ() + 0.5F);
+        Vector3 headVec = new Vector3(this.getBlockPos().getX() + 0.5F, this.getBlockPos().getY() + 0.5F, this.getBlockPos().getZ() + 0.5F);
         if (this.facing != null)
         {
-            headVec.x += this.facing.getXOffset() * 0.1F;
-            headVec.y += this.facing.getYOffset() * 0.1F;
-            headVec.z += this.facing.getZOffset() * 0.1F;
+            headVec.x += this.facing.getStepX() * 0.1F;
+            headVec.y += this.facing.getStepY() * 0.1F;
+            headVec.z += this.facing.getStepZ() * 0.1F;
         }
         return headVec;
     }
 
     @Override
-    public TileEntity getTile()
+    public BlockEntity getTile()
     {
         return this;
     }
 
-    public TileEntity getAttachedTile()
+    public BlockEntity getAttachedTile()
     {
         if (this.facing == null)
         {
             return null;
         }
 
-        TileEntity tile = new BlockVec3(this).getTileEntityOnSide(this.world, this.facing);
+        BlockEntity tile = new BlockVec3(this).getTileEntityOnSide(this.level, this.facing);
 
         if (tile == null || tile.isRemoved())
         {
@@ -235,7 +235,7 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
             return 0;
         }
 
-        TileEntity tile = this.getAttachedTile();
+        BlockEntity tile = this.getAttachedTile();
 
         if (this.facing == null)
         {
@@ -258,7 +258,7 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
     @Override
     public float getEnergyStoredGC(EnergySource from)
     {
-        TileEntity tile = this.getAttachedTile();
+        BlockEntity tile = this.getAttachedTile();
 
         if (this.facing == null)
         {
@@ -271,7 +271,7 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
     @Override
     public float getMaxEnergyStoredGC(EnergySource from)
     {
-        TileEntity tile = this.getAttachedTile();
+        BlockEntity tile = this.getAttachedTile();
 
         if (this.facing == null)
         {
@@ -284,7 +284,7 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
     @Override
     public boolean nodeAvailable(EnergySource from)
     {
-        TileEntity tile = this.getAttachedTile();
+        BlockEntity tile = this.getAttachedTile();
 
         return this.facing != null;
 
@@ -300,7 +300,7 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
             }
             else
             {
-                TileEntity tile = new BlockVec3(this).getTileEntityOnSide(this.world, newDirection);
+                BlockEntity tile = new BlockVec3(this).getTileEntityOnSide(this.level, newDirection);
 
                 if (tile == null)
                 {
@@ -367,42 +367,42 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.preLoadFacing = nbt.getInt("FacingSide");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("FacingSide", this.facing == null ? this.preLoadFacing : this.facing.ordinal());
         return nbt;
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
-    private AxisAlignedBB renderAABB;
+    private AABB renderAABB;
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
+    public AABB getRenderBoundingBox()
     {
         if (this.renderAABB == null)
         {
-            this.renderAABB = new AxisAlignedBB(pos, pos.add(1, 2, 1));
+            this.renderAABB = new AABB(worldPosition, worldPosition.offset(1, 2, 1));
         }
         return this.renderAABB;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public double getMaxRenderDistanceSquared()
+    public double getViewDistance()
     {
         return Constants.RENDERDISTANCE_SHORT;
     }

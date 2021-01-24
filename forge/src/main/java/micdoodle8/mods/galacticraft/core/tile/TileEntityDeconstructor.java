@@ -15,21 +15,20 @@ import micdoodle8.mods.galacticraft.core.inventory.IInventoryDefaults;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -38,10 +37,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileEntityDeconstructor extends TileBaseElectricBlock implements IInventoryDefaults, ISidedInventory, IMachineSides, INamedContainerProvider
+public class TileEntityDeconstructor extends TileBaseElectricBlock implements IInventoryDefaults, WorldlyContainer, IMachineSides, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.DECONSTRUCTOR)
-    public static TileEntityType<TileEntityDeconstructor> TYPE;
+    public static BlockEntityType<TileEntityDeconstructor> TYPE;
 
     public static final float SALVAGE_CHANCE = 0.75F;
     public static final int PROCESS_TIME_REQUIRED_BASE = 250;
@@ -117,7 +116,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
     {
         for (ItemStack inList : salvageable)
         {
-            if (ItemStack.areItemsEqual(inList, itemStack))
+            if (ItemStack.isSame(inList, itemStack))
             {
                 return;
             }
@@ -129,7 +128,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
     {
         for (ItemStack inList : salvageable)
         {
-            if (ItemStack.areItemsEqual(inList, stack))
+            if (ItemStack.isSame(inList, stack))
             {
                 return true;
             }
@@ -142,7 +141,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             boolean updateInv = false;
 
@@ -154,7 +153,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
 
                     if ((this.processTicks * 5) % this.processTimeRequired == 5)
                     {
-                        this.world.playSound(null, this.getPos(), GCSounds.deconstructor, SoundCategory.BLOCKS, 0.25F, this.world.rand.nextFloat() * 0.04F + 0.38F);
+                        this.level.playSound(null, this.getBlockPos(), GCSounds.deconstructor, SoundCategory.BLOCKS, 0.25F, this.level.random.nextFloat() * 0.04F + 0.38F);
                     }
 
                     if (this.processTicks >= this.processTimeRequired)
@@ -176,7 +175,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
 
             if (updateInv)
             {
-                this.markDirty();
+                this.setChanged();
             }
         }
 
@@ -205,7 +204,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
                 this.addToOutputMatrix(output);
             }
         }
-        this.decrStackSize(1, 1);
+        this.removeItem(1, 1);
     }
 
     private List<ItemStack> getSalvageable(List<ItemStack> ingredients, ItemStack done)
@@ -237,7 +236,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
                         Iterator<ItemStack> it = ingredients2.iterator();
                         while (it.hasNext())
                         {
-                            if (ItemStack.areItemStacksEqual(it.next(), done))
+                            if (ItemStack.matches(it.next(), done))
                             {
                                 it.remove();  //prevent recursive A->{B}  B->{A} type recipe chains
                             }
@@ -267,7 +266,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
             boolean matched = false;
             for (ItemStack stack1 : ret)
             {
-                if (ItemStack.areItemsEqual(stack, stack1))
+                if (ItemStack.isSame(stack, stack1))
                 {
                     matched = true;
                     stack1.grow(stack.getCount());
@@ -295,7 +294,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
             int result = 0;
             for (int i = 0; i < count; i++)
             {
-                if (this.world.rand.nextFloat() < SALVAGE_CHANCE)
+                if (this.level.random.nextFloat() < SALVAGE_CHANCE)
                 {
                     result++;
                 }
@@ -314,7 +313,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
         for (INasaWorkbenchRecipe recipe : knownRecipes)
         {
             ItemStack test = recipe.getRecipeOutput();
-            if (ItemStack.areItemsEqual(test, stack) && test.getCount() == 1)
+            if (ItemStack.isSame(test, stack) && test.getCount() == 1)
             {
                 return toItemStackList(recipe.getRecipeInput().values());
             }
@@ -363,7 +362,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
     {
         if (input instanceof Ingredient)
         {
-            for (ItemStack obj : ((Ingredient) input).getMatchingStacks())
+            for (ItemStack obj : ((Ingredient) input).getItems())
             {
                 ItemStack ret = parseRecipeInput(obj);
                 if (ret != null)
@@ -437,35 +436,35 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
                 this.getInventory().set(i, stack);
                 return;
             }
-            if (!(ItemStack.areItemsEqual(stack, this.getInventory().get(i))))
+            if (!(ItemStack.isSame(stack, this.getInventory().get(i))))
             {
                 continue;
             }
             int size = this.getInventory().get(i).getCount();
-            if (size + stack.getCount() < this.getInventoryStackLimit())
+            if (size + stack.getCount() < this.getMaxStackSize())
             {
                 this.getInventory().get(i).grow(stack.getCount());
                 return;
             }
-            this.getInventory().get(i).setCount(this.getInventoryStackLimit());
-            stack.shrink(this.getInventoryStackLimit() - size);
+            this.getInventory().get(i).setCount(this.getMaxStackSize());
+            stack.shrink(this.getMaxStackSize() - size);
         }
-        GCCoreUtil.spawnItem(this.world, this.getPos(), stack);
+        GCCoreUtil.spawnItem(this.level, this.getBlockPos(), stack);
     }
 
     @Override
-    public void read(CompoundNBT par1NBTTagCompound)
+    public void load(CompoundTag par1NBTTagCompound)
     {
-        super.read(par1NBTTagCompound);
+        super.load(par1NBTTagCompound);
         this.processTicks = par1NBTTagCompound.getInt("smeltingTicks");
 
         this.readMachineSidesFromNBT(par1NBTTagCompound);  //Needed by IMachineSides
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("smeltingTicks", this.processTicks);
 
         this.addMachineSidesToNBT(nbt);  //Needed by IMachineSides
@@ -473,7 +472,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
+    public boolean canPlaceItem(int slotID, ItemStack itemStack)
     {
         if (slotID == 0)
         {
@@ -495,7 +494,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack par2ItemStack, Direction par3)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack par2ItemStack, Direction par3)
     {
         return slotID >= 2;
     }
@@ -509,7 +508,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
     @Override
     public Direction getFront()
     {
-        return BlockMachineBase.getFront(this.world.getBlockState(getPos()));
+        return BlockMachineBase.getFront(this.level.getBlockState(getBlockPos()));
     }
 
     @Override
@@ -518,7 +517,7 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return getFront().getCounterClockWise();
         case REAR:
             return getFront().getOpposite();
         case TOP:
@@ -527,14 +526,14 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
             return Direction.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return getFront().getClockWise();
         }
     }
 
     @Override
     public ItemStack getBatteryInSlot()
     {
-        return this.getStackInSlot(0);
+        return this.getItem(0);
     }
 
     //------------------
@@ -585,14 +584,14 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
     //------------------END OF IMachineSides implementation
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerDeconstructor(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.deconstructor");
+        return new TranslatableComponent("container.deconstructor");
     }
 }

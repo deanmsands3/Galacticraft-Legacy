@@ -7,32 +7,30 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityFallenMeteor;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.Random;
 
 public class BlockFallenMeteor extends Block implements IShiftDescription, ISortable
 {
-    private static final VoxelShape BOUNDS = VoxelShapes.create(0.15, 0.05, 0.15, 0.85, 0.75, 0.85);
+    private static final VoxelShape BOUNDS = Shapes.box(0.15, 0.05, 0.15, 0.85, 0.75, 0.85);
 
     public BlockFallenMeteor(Properties builder)
     {
@@ -40,7 +38,7 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         return BOUNDS;
     }
@@ -82,9 +80,9 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
 //    } TODO Meteor drops
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn)
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn)
     {
-        TileEntity tile = worldIn.getTileEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
 
         if (tile instanceof TileEntityFallenMeteor)
         {
@@ -99,36 +97,36 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
             {
                 final LivingEntity livingEntity = (LivingEntity) entityIn;
 
-                worldIn.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, 0.5F, 2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F);
+                worldIn.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, 0.5F, 2.6F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.8F);
 
                 for (int var5 = 0; var5 < 8; ++var5)
                 {
                     worldIn.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + Math.random(), pos.getY() + 0.2D + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
                 }
 
-                if (!livingEntity.isBurning())
+                if (!livingEntity.isOnFire())
                 {
-                    livingEntity.setFire(2);
+                    livingEntity.setSecondsOnFire(2);
                 }
 
-                double var9 = pos.getX() + 0.5F - livingEntity.getPosX();
+                double var9 = pos.getX() + 0.5F - livingEntity.getX();
                 double var7;
 
-                for (var7 = livingEntity.getPosZ() - pos.getZ(); var9 * var9 + var7 * var7 < 1.0E-4D; var7 = (Math.random() - Math.random()) * 0.01D)
+                for (var7 = livingEntity.getZ() - pos.getZ(); var9 * var9 + var7 * var7 < 1.0E-4D; var7 = (Math.random() - Math.random()) * 0.01D)
                 {
                     var9 = (Math.random() - Math.random()) * 0.01D;
                 }
 
-                livingEntity.knockBack(livingEntity, 1, var9, var7);
+                livingEntity.knockback(livingEntity, 1, var9, var7);
             }
         }
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack)
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack)
     {
-        world.setBlockState(pos, this.getDefaultState(), 3);
-        TileEntity tile = world.getTileEntity(pos);
+        world.setBlock(pos, this.defaultBlockState(), 3);
+        BlockEntity tile = world.getBlockEntity(pos);
 
         if (tile instanceof TileEntityFallenMeteor)
         {
@@ -137,47 +135,47 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving)
+    public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving)
     {
-        worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
+        worldIn.getBlockTicks().scheduleTick(pos, this, this.getTickDelay(worldIn));
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
-        worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
+        worldIn.getBlockTicks().scheduleTick(pos, this, this.getTickDelay(worldIn));
     }
 
     @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random)
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random)
     {
-        if (!worldIn.isRemote)
+        if (!worldIn.isClientSide)
         {
             this.tryToFall(worldIn, pos, state);
         }
     }
 
-    private void tryToFall(World world, BlockPos pos, BlockState state)
+    private void tryToFall(Level world, BlockPos pos, BlockState state)
     {
-        if (this.canFallBelow(world, pos.down()) && pos.getY() >= 0)
+        if (this.canFallBelow(world, pos.below()) && pos.getY() >= 0)
         {
-            int prevHeatLevel = ((TileEntityFallenMeteor) world.getTileEntity(pos)).getHeatLevel();
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+            int prevHeatLevel = ((TileEntityFallenMeteor) world.getBlockEntity(pos)).getHeatLevel();
+            world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
             BlockPos blockpos1;
 
-            for (blockpos1 = pos.down(); this.canFallBelow(world, blockpos1) && blockpos1.getY() > 0; blockpos1 = blockpos1.down())
+            for (blockpos1 = pos.below(); this.canFallBelow(world, blockpos1) && blockpos1.getY() > 0; blockpos1 = blockpos1.below())
             {
             }
 
             if (blockpos1.getY() >= 0)
             {
-                world.setBlockState(blockpos1.up(), state, 3);
-                ((TileEntityFallenMeteor) world.getTileEntity(blockpos1.up())).setHeatLevel(prevHeatLevel);
+                world.setBlock(blockpos1.above(), state, 3);
+                ((TileEntityFallenMeteor) world.getBlockEntity(blockpos1.above())).setHeatLevel(prevHeatLevel);
             }
         }
     }
 
-    private boolean canFallBelow(World world, BlockPos pos)
+    private boolean canFallBelow(Level world, BlockPos pos)
     {
         Block block = world.getBlockState(pos).getBlock();
 
@@ -195,11 +193,11 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
         }
     }
 
-    public static int colorMultiplier(IBlockReader worldIn, BlockPos pos)
+    public static int colorMultiplier(BlockGetter worldIn, BlockPos pos)
     {
         if (worldIn != null && pos != null)
         {
-            TileEntity tile = worldIn.getTileEntity(pos);
+            BlockEntity tile = worldIn.getBlockEntity(pos);
 
             if (tile instanceof TileEntityFallenMeteor)
             {
@@ -219,7 +217,7 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityFallenMeteor();
     }
@@ -271,7 +269,7 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -287,14 +285,14 @@ public class BlockFallenMeteor extends Block implements IShiftDescription, ISort
     }
 
     @Override
-    public int getExpDrop(BlockState state, IWorldReader world, BlockPos pos, int fortune, int silktouch)
+    public int getExpDrop(BlockState state, LevelReader world, BlockPos pos, int fortune, int silktouch)
     {
         if (state.getBlock() != this)
         {
             return 0;
         }
 
-        Random rand = world instanceof World ? ((World) world).rand : new Random();
-        return MathHelper.nextInt(rand, 3, 7);
+        Random rand = world instanceof Level ? ((Level) world).random : new Random();
+        return Mth.nextInt(rand, 3, 7);
     }
 }

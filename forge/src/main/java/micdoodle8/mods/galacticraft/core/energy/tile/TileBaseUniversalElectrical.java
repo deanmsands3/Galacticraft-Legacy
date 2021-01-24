@@ -3,12 +3,11 @@ package micdoodle8.mods.galacticraft.core.energy.tile;
 import micdoodle8.mods.galacticraft.api.item.ElectricItemHelper;
 import micdoodle8.mods.galacticraft.api.item.IItemElectric;
 import micdoodle8.mods.galacticraft.core.tile.ReceiverMode;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.util.EnumSet;
 
 
@@ -21,7 +20,7 @@ public abstract class TileBaseUniversalElectrical extends EnergyStorageTile
     //	public float energyStored = 0;
     private final float IC2surplusInGJ = 0F;
 
-    public TileBaseUniversalElectrical(TileEntityType<?> type)
+    public TileBaseUniversalElectrical(BlockEntityType<?> type)
     {
         super(type);
     }
@@ -147,16 +146,16 @@ public abstract class TileBaseUniversalElectrical extends EnergyStorageTile
     //		return 0.120F;
     //	}
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         //		this.energyStored = nbt.getFloat("energyStored");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         //		nbt.putFloat("energyStored", this.energyStored);
         return nbt;
     }
@@ -231,7 +230,7 @@ public abstract class TileBaseUniversalElectrical extends EnergyStorageTile
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
 //            if (!this.isAddedToEnergyNet)
 //            {

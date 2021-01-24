@@ -1,32 +1,31 @@
 package micdoodle8.mods.galacticraft.core.client.model;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import micdoodle8.mods.galacticraft.core.entities.EvolvedSkeletonEntity;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.client.renderer.entity.model.SkeletonModel;
+import net.minecraft.client.model.SkeletonModel;
+import net.minecraft.client.model.geom.ModelPart;
 
 public class EvolvedSkeletonModel extends SkeletonModel<EvolvedSkeletonEntity>
 {
-    ModelRenderer leftOxygenTank;
-    ModelRenderer rightOxygenTank;
-    ModelRenderer tubeRight2;
-    ModelRenderer tubeLeft1;
-    ModelRenderer tubeRight3;
-    ModelRenderer tubeRight4;
-    ModelRenderer tubeRight5;
-    ModelRenderer tubeLeft6;
-    ModelRenderer tubeRight7;
-    ModelRenderer tubeRight1;
-    ModelRenderer tubeLeft2;
-    ModelRenderer tubeLeft3;
-    ModelRenderer tubeLeft4;
-    ModelRenderer tubeLeft5;
-    ModelRenderer tubeLeft7;
-    ModelRenderer tubeRight6;
-    ModelRenderer oxygenMask;
+    ModelPart leftOxygenTank;
+    ModelPart rightOxygenTank;
+    ModelPart tubeRight2;
+    ModelPart tubeLeft1;
+    ModelPart tubeRight3;
+    ModelPart tubeRight4;
+    ModelPart tubeRight5;
+    ModelPart tubeLeft6;
+    ModelPart tubeRight7;
+    ModelPart tubeRight1;
+    ModelPart tubeLeft2;
+    ModelPart tubeLeft3;
+    ModelPart tubeLeft4;
+    ModelPart tubeLeft5;
+    ModelPart tubeLeft7;
+    ModelPart tubeRight6;
+    ModelPart oxygenMask;
 
     public EvolvedSkeletonModel()
     {
@@ -35,152 +34,152 @@ public class EvolvedSkeletonModel extends SkeletonModel<EvolvedSkeletonEntity>
 
     public EvolvedSkeletonModel(float size)
     {
-        this.textureWidth = 128;
-        this.textureHeight = 64;
+        this.texWidth = 128;
+        this.texHeight = 64;
         this.rightArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
         this.leftArmPose = BipedModel.ArmPose.BOW_AND_ARROW;
-        this.leftOxygenTank = new ModelRenderer(this, 48, 20);
+        this.leftOxygenTank = new ModelPart(this, 48, 20);
         this.leftOxygenTank.addBox(-1.5F, 0F, -1.5F, 3, 7, 3, size);
-        this.leftOxygenTank.setRotationPoint(2F, 2F, 3.8F);
-        this.leftOxygenTank.setTextureSize(128, 64);
+        this.leftOxygenTank.setPos(2F, 2F, 3.8F);
+        this.leftOxygenTank.setTexSize(128, 64);
         this.leftOxygenTank.mirror = true;
         this.setRotation(this.leftOxygenTank, 0F, 0F, 0F);
-        this.rightOxygenTank = new ModelRenderer(this, 48, 20);
+        this.rightOxygenTank = new ModelPart(this, 48, 20);
         this.rightOxygenTank.addBox(-1.5F, 0F, -1.5F, 3, 7, 3, size);
-        this.rightOxygenTank.setRotationPoint(-2F, 2F, 3.8F);
-        this.rightOxygenTank.setTextureSize(128, 64);
+        this.rightOxygenTank.setPos(-2F, 2F, 3.8F);
+        this.rightOxygenTank.setTexSize(128, 64);
         this.rightOxygenTank.mirror = true;
         this.setRotation(this.rightOxygenTank, 0F, 0F, 0F);
-        this.tubeRight2 = new ModelRenderer(this, 48, 30);
+        this.tubeRight2 = new ModelPart(this, 48, 30);
         this.tubeRight2.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeRight2.setRotationPoint(-2F, 2F, 6.8F);
-        this.tubeRight2.setTextureSize(128, 64);
+        this.tubeRight2.setPos(-2F, 2F, 6.8F);
+        this.tubeRight2.setTexSize(128, 64);
         this.tubeRight2.mirror = true;
         this.setRotation(this.tubeRight2, 0F, 0F, 0F);
-        this.tubeLeft1 = new ModelRenderer(this, 48, 30);
+        this.tubeLeft1 = new ModelPart(this, 48, 30);
         this.tubeLeft1.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeLeft1.setRotationPoint(2F, 3F, 5.8F);
-        this.tubeLeft1.setTextureSize(128, 64);
+        this.tubeLeft1.setPos(2F, 3F, 5.8F);
+        this.tubeLeft1.setTexSize(128, 64);
         this.tubeLeft1.mirror = true;
         this.setRotation(this.tubeLeft1, 0F, 0F, 0F);
-        this.tubeRight3 = new ModelRenderer(this, 48, 30);
+        this.tubeRight3 = new ModelPart(this, 48, 30);
         this.tubeRight3.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeRight3.setRotationPoint(-2F, 1F, 6.8F);
-        this.tubeRight3.setTextureSize(128, 64);
+        this.tubeRight3.setPos(-2F, 1F, 6.8F);
+        this.tubeRight3.setTexSize(128, 64);
         this.tubeRight3.mirror = true;
         this.setRotation(this.tubeRight3, 0F, 0F, 0F);
-        this.tubeRight4 = new ModelRenderer(this, 48, 30);
+        this.tubeRight4 = new ModelPart(this, 48, 30);
         this.tubeRight4.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeRight4.setRotationPoint(-2F, 0F, 6.8F);
-        this.tubeRight4.setTextureSize(128, 64);
+        this.tubeRight4.setPos(-2F, 0F, 6.8F);
+        this.tubeRight4.setTexSize(128, 64);
         this.tubeRight4.mirror = true;
         this.setRotation(this.tubeRight4, 0F, 0F, 0F);
-        this.tubeRight5 = new ModelRenderer(this, 48, 30);
+        this.tubeRight5 = new ModelPart(this, 48, 30);
         this.tubeRight5.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeRight5.setRotationPoint(-2F, -1F, 6.8F);
-        this.tubeRight5.setTextureSize(128, 64);
+        this.tubeRight5.setPos(-2F, -1F, 6.8F);
+        this.tubeRight5.setTexSize(128, 64);
         this.tubeRight5.mirror = true;
         this.setRotation(this.tubeRight5, 0F, 0F, 0F);
-        this.tubeLeft6 = new ModelRenderer(this, 48, 30);
+        this.tubeLeft6 = new ModelPart(this, 48, 30);
         this.tubeLeft6.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeLeft6.setRotationPoint(2F, -2F, 5.8F);
-        this.tubeLeft6.setTextureSize(128, 64);
+        this.tubeLeft6.setPos(2F, -2F, 5.8F);
+        this.tubeLeft6.setTexSize(128, 64);
         this.tubeLeft6.mirror = true;
         this.setRotation(this.tubeLeft6, 0F, 0F, 0F);
-        this.tubeRight7 = new ModelRenderer(this, 48, 30);
+        this.tubeRight7 = new ModelPart(this, 48, 30);
         this.tubeRight7.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeRight7.setRotationPoint(-2F, -3F, 4.8F);
-        this.tubeRight7.setTextureSize(128, 64);
+        this.tubeRight7.setPos(-2F, -3F, 4.8F);
+        this.tubeRight7.setTexSize(128, 64);
         this.tubeRight7.mirror = true;
         this.setRotation(this.tubeRight7, 0F, 0F, 0F);
-        this.tubeRight1 = new ModelRenderer(this, 48, 30);
+        this.tubeRight1 = new ModelPart(this, 48, 30);
         this.tubeRight1.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeRight1.setRotationPoint(-2F, 3F, 5.8F);
-        this.tubeRight1.setTextureSize(128, 64);
+        this.tubeRight1.setPos(-2F, 3F, 5.8F);
+        this.tubeRight1.setTexSize(128, 64);
         this.tubeRight1.mirror = true;
         this.setRotation(this.tubeRight1, 0F, 0F, 0F);
-        this.tubeLeft2 = new ModelRenderer(this, 48, 30);
+        this.tubeLeft2 = new ModelPart(this, 48, 30);
         this.tubeLeft2.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeLeft2.setRotationPoint(2F, 2F, 6.8F);
-        this.tubeLeft2.setTextureSize(128, 64);
+        this.tubeLeft2.setPos(2F, 2F, 6.8F);
+        this.tubeLeft2.setTexSize(128, 64);
         this.tubeLeft2.mirror = true;
         this.setRotation(this.tubeLeft2, 0F, 0F, 0F);
-        this.tubeLeft3 = new ModelRenderer(this, 48, 30);
+        this.tubeLeft3 = new ModelPart(this, 48, 30);
         this.tubeLeft3.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeLeft3.setRotationPoint(2F, 1F, 6.8F);
-        this.tubeLeft3.setTextureSize(128, 64);
+        this.tubeLeft3.setPos(2F, 1F, 6.8F);
+        this.tubeLeft3.setTexSize(128, 64);
         this.tubeLeft3.mirror = true;
         this.setRotation(this.tubeLeft3, 0F, 0F, 0F);
-        this.tubeLeft4 = new ModelRenderer(this, 48, 30);
+        this.tubeLeft4 = new ModelPart(this, 48, 30);
         this.tubeLeft4.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeLeft4.setRotationPoint(2F, 0F, 6.8F);
-        this.tubeLeft4.setTextureSize(128, 64);
+        this.tubeLeft4.setPos(2F, 0F, 6.8F);
+        this.tubeLeft4.setTexSize(128, 64);
         this.tubeLeft4.mirror = true;
         this.setRotation(this.tubeLeft4, 0F, 0F, 0F);
-        this.tubeLeft5 = new ModelRenderer(this, 48, 30);
+        this.tubeLeft5 = new ModelPart(this, 48, 30);
         this.tubeLeft5.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeLeft5.setRotationPoint(2F, -1F, 6.8F);
-        this.tubeLeft5.setTextureSize(128, 64);
+        this.tubeLeft5.setPos(2F, -1F, 6.8F);
+        this.tubeLeft5.setTexSize(128, 64);
         this.tubeLeft5.mirror = true;
         this.setRotation(this.tubeLeft5, 0F, 0F, 0F);
-        this.tubeLeft7 = new ModelRenderer(this, 48, 30);
+        this.tubeLeft7 = new ModelPart(this, 48, 30);
         this.tubeLeft7.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeLeft7.setRotationPoint(2F, -3F, 4.8F);
-        this.tubeLeft7.setTextureSize(128, 64);
+        this.tubeLeft7.setPos(2F, -3F, 4.8F);
+        this.tubeLeft7.setTexSize(128, 64);
         this.tubeLeft7.mirror = true;
         this.setRotation(this.tubeLeft7, 0F, 0F, 0F);
-        this.tubeRight6 = new ModelRenderer(this, 48, 30);
+        this.tubeRight6 = new ModelPart(this, 48, 30);
         this.tubeRight6.addBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, size);
-        this.tubeRight6.setRotationPoint(-2F, -2F, 5.8F);
-        this.tubeRight6.setTextureSize(128, 64);
+        this.tubeRight6.setPos(-2F, -2F, 5.8F);
+        this.tubeRight6.setTexSize(128, 64);
         this.tubeRight6.mirror = true;
         this.setRotation(this.tubeRight6, 0F, 0F, 0F);
-        this.oxygenMask = new ModelRenderer(this, 48, 0);
+        this.oxygenMask = new ModelPart(this, 48, 0);
         this.oxygenMask.addBox(-5F, -9F, -5F, 10, 10, 10, size);
-        this.oxygenMask.setRotationPoint(0F, 0F, 0F);
-        this.oxygenMask.setTextureSize(128, 64);
+        this.oxygenMask.setPos(0F, 0F, 0F);
+        this.oxygenMask.setTexSize(128, 64);
         this.oxygenMask.mirror = true;
         this.setRotation(this.oxygenMask, 0F, 0F, 0F);
 //        this.bipedCloak = new ModelRenderer(this, 0, 0);
 //        this.bipedCloak.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, par1);
 //        this.bipedEars = new ModelRenderer(this, 24, 0);
 //        this.bipedEars.addBox(-3.0F, -6.0F, -1.0F, 6, 6, 1, par1);
-        this.bipedHead = new ModelRenderer(this, 0, 0);
-        this.bipedHead.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, size);
-        this.bipedHead.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.bipedHeadwear = new ModelRenderer(this, 32, 0);
-        this.bipedHeadwear.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, size + 0.5F);
-        this.bipedHeadwear.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.bipedBody = new ModelRenderer(this, 16, 16);
-        this.bipedBody.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, size);
-        this.bipedBody.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.bipedRightArm = new ModelRenderer(this, 40, 16);
-        this.bipedRightArm.addBox(-1.0F, -2.0F, -1.0F, 2, 12, 2, size);
-        this.bipedRightArm.setRotationPoint(-5.0F, 2.0F, 0.0F);
-        this.bipedLeftArm = new ModelRenderer(this, 40, 16);
-        this.bipedLeftArm.mirror = true;
-        this.bipedLeftArm.addBox(-1.0F, -2.0F, -1.0F, 2, 12, 2, size);
-        this.bipedLeftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
-        this.bipedRightLeg = new ModelRenderer(this, 0, 16);
-        this.bipedRightLeg.addBox(-1.0F, 0.0F, -1.0F, 2, 12, 2, size);
-        this.bipedRightLeg.setRotationPoint(-2.0F, 12.0F, 0.0F);
-        this.bipedLeftLeg = new ModelRenderer(this, 0, 16);
-        this.bipedLeftLeg.mirror = true;
-        this.bipedLeftLeg.addBox(-1.0F, 0.0F, -1.0F, 2, 12, 2, size);
-        this.bipedLeftLeg.setRotationPoint(2.0F, 12.0F, 0.0F);
+        this.head = new ModelPart(this, 0, 0);
+        this.head.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, size);
+        this.head.setPos(0.0F, 0.0F, 0.0F);
+        this.hat = new ModelPart(this, 32, 0);
+        this.hat.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, size + 0.5F);
+        this.hat.setPos(0.0F, 0.0F, 0.0F);
+        this.body = new ModelPart(this, 16, 16);
+        this.body.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, size);
+        this.body.setPos(0.0F, 0.0F, 0.0F);
+        this.rightArm = new ModelPart(this, 40, 16);
+        this.rightArm.addBox(-1.0F, -2.0F, -1.0F, 2, 12, 2, size);
+        this.rightArm.setPos(-5.0F, 2.0F, 0.0F);
+        this.leftArm = new ModelPart(this, 40, 16);
+        this.leftArm.mirror = true;
+        this.leftArm.addBox(-1.0F, -2.0F, -1.0F, 2, 12, 2, size);
+        this.leftArm.setPos(5.0F, 2.0F, 0.0F);
+        this.rightLeg = new ModelPart(this, 0, 16);
+        this.rightLeg.addBox(-1.0F, 0.0F, -1.0F, 2, 12, 2, size);
+        this.rightLeg.setPos(-2.0F, 12.0F, 0.0F);
+        this.leftLeg = new ModelPart(this, 0, 16);
+        this.leftLeg.mirror = true;
+        this.leftLeg.addBox(-1.0F, 0.0F, -1.0F, 2, 12, 2, size);
+        this.leftLeg.setPos(2.0F, 12.0F, 0.0F);
     }
 
     @Override
     public void setRotationAngles(EvolvedSkeletonEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
     {
-        super.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        ClientUtil.copyModelAngles(this.bipedHead, this.oxygenMask);
+        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        ClientUtil.copyModelAngles(this.head, this.oxygenMask);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha)
+    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha)
     {
-        super.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderToBuffer(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         this.leftOxygenTank.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         this.rightOxygenTank.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         this.tubeRight2.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
@@ -198,20 +197,20 @@ public class EvolvedSkeletonModel extends SkeletonModel<EvolvedSkeletonEntity>
         this.tubeLeft7.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         this.tubeRight6.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         this.oxygenMask.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        this.bipedHead.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        this.bipedBody.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        this.bipedRightArm.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        this.bipedLeftArm.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        this.bipedRightLeg.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        this.bipedLeftLeg.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        this.bipedHeadwear.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.head.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.body.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.rightArm.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.leftArm.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.rightLeg.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.leftLeg.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.hat.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z)
+    private void setRotation(ModelPart model, float x, float y, float z)
     {
-        model.rotateAngleX = x;
-        model.rotateAngleY = y;
-        model.rotateAngleZ = z;
+        model.xRot = x;
+        model.yRot = y;
+        model.zRot = z;
     }
 
     //    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity entity)

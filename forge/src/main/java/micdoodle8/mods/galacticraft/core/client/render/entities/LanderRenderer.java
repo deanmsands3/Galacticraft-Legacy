@@ -1,20 +1,19 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.model.ModelLander;
 import micdoodle8.mods.galacticraft.core.entities.LanderEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,10 +23,10 @@ public class LanderRenderer extends EntityRenderer<LanderEntity>
     private static final ResourceLocation TEXTURE = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/lander.png");
     private final ModelLander landerModel = new ModelLander();
 
-    public LanderRenderer(EntityRendererManager manager)
+    public LanderRenderer(EntityRenderDispatcher manager)
     {
         super(manager);
-        this.shadowSize = 2F;
+        this.shadowRadius = 2F;
     }
 
     @Override
@@ -37,13 +36,13 @@ public class LanderRenderer extends EntityRenderer<LanderEntity>
     }
 
     @Override
-    public void render(LanderEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    public void render(LanderEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight)
     {
-        matrixStack.push();
-        final float interpolatedPitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+        matrixStack.pushPose();
+        final float interpolatedPitch = entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks;
         matrixStack.translate(0.0F, 1.55F, 0.0F);
-        matrixStack.rotate(new Quaternion(Vector3f.YP, entityYaw, true));
-        matrixStack.rotate(new Quaternion(Vector3f.ZN, interpolatedPitch, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, entityYaw, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.ZN, interpolatedPitch, true));
         float f6 = entity.timeSinceHit - partialTicks;
         float f7 = entity.currentDamage - partialTicks;
 
@@ -54,19 +53,19 @@ public class LanderRenderer extends EntityRenderer<LanderEntity>
 
         if (f6 > 0.0F)
         {
-            matrixStack.rotate(new Quaternion(Vector3f.XP, (float) Math.sin(f6) * 0.2F * f6 * f7 / 25.0F, true));
+            matrixStack.mulPose(new Quaternion(Vector3f.XP, (float) Math.sin(f6) * 0.2F * f6 * f7 / 25.0F, true));
         }
 
         matrixStack.scale(-1.0F, -1.0F, 1.0F);
-        IVertexBuilder ivertexbuilder = buffer.getBuffer(this.landerModel.getRenderType(this.getEntityTexture(entity)));
-        this.landerModel.render(matrixStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        matrixStack.pop();
+        VertexConsumer ivertexbuilder = buffer.getBuffer(this.landerModel.renderType(this.getEntityTexture(entity)));
+        this.landerModel.renderToBuffer(matrixStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        matrixStack.popPose();
     }
 
     @Override
-    public boolean shouldRender(LanderEntity entity, ClippingHelperImpl camera, double camX, double camY, double camZ)
+    public boolean shouldRender(LanderEntity entity, Frustum camera, double camX, double camY, double camZ)
     {
-        AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(2D, 1D, 2D);
-        return entity.isInRangeToRender3d(camX, camY, camZ) && camera.isBoundingBoxInFrustum(axisalignedbb);
+        AABB axisalignedbb = entity.getBoundingBox().inflate(2D, 1D, 2D);
+        return entity.shouldRender(camX, camY, camZ) && camera.isVisible(axisalignedbb);
     }
 }

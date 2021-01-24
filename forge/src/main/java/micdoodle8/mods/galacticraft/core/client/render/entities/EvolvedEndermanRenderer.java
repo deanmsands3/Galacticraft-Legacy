@@ -1,19 +1,18 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-
+import com.mojang.blaze3d.vertex.PoseStack;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
 import micdoodle8.mods.galacticraft.core.client.model.EvolvedEndermanModel;
 import micdoodle8.mods.galacticraft.core.client.render.entities.layer.LayerEvolvedEndermanEyes;
 import micdoodle8.mods.galacticraft.core.client.render.entities.layer.LayerEvolvedEndermanHeldBlock;
 import micdoodle8.mods.galacticraft.core.entities.EvolvedEndermanEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,7 +24,7 @@ public class EvolvedEndermanRenderer extends MobRenderer<EvolvedEndermanEntity, 
     private boolean sensorEnabled;
 
     //TODO Fix enderman rendering
-    public EvolvedEndermanRenderer(EntityRendererManager manager)
+    public EvolvedEndermanRenderer(EntityRenderDispatcher manager)
     {
         super(manager, new EvolvedEndermanModel(), 0.5F);
         this.addLayer(new LayerEvolvedEndermanEyes(this));
@@ -39,12 +38,12 @@ public class EvolvedEndermanRenderer extends MobRenderer<EvolvedEndermanEntity, 
     }
 
     @Override
-    public Vec3d getRenderOffset(EvolvedEndermanEntity entity, float partialTicks)
+    public Vec3 getRenderOffset(EvolvedEndermanEntity entity, float partialTicks)
     {
-        if (entity.isScreaming())
+        if (entity.isCreepy())
         {
             double d0 = 0.02D;
-            return new Vec3d(entity.getRNG().nextGaussian() * d0, 0.0D, entity.getRNG().nextGaussian() * d0);
+            return new Vec3(entity.getRandom().nextGaussian() * d0, 0.0D, entity.getRandom().nextGaussian() * d0);
         }
         else
         {
@@ -53,11 +52,11 @@ public class EvolvedEndermanRenderer extends MobRenderer<EvolvedEndermanEntity, 
     }
 
     @Override
-    public void render(EvolvedEndermanEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    public void render(EvolvedEndermanEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight)
     {
-        BlockState iblockstate = entity.getHeldBlockState();
+        BlockState iblockstate = entity.getCarriedBlock();
         this.endermanModel.isCarrying = iblockstate != null;
-        this.endermanModel.isAttacking = entity.isScreaming();
+        this.endermanModel.isAttacking = entity.isCreepy();
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
 
         if (OverlaySensorGlasses.overrideMobTexture())
@@ -70,7 +69,7 @@ public class EvolvedEndermanRenderer extends MobRenderer<EvolvedEndermanEntity, 
     }
 
     @Override
-    protected void preRenderCallback(EvolvedEndermanEntity entity, MatrixStack matrixStack, float partialTickTime)
+    protected void preRenderCallback(EvolvedEndermanEntity entity, PoseStack matrixStack, float partialTickTime)
     {
         if (this.sensorEnabled)
         {

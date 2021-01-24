@@ -6,19 +6,19 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.saveddata.SavedData;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class SpaceStationWorldData extends WorldSavedData
+public class SpaceStationWorldData extends SavedData
 {
     private String spaceStationName = "NoName";
     private String owner = "NoOwner";
@@ -28,7 +28,7 @@ public class SpaceStationWorldData extends WorldSavedData
     //    private DimensionType dimensionIdDynamic;
 //    private DimensionType dimensionIdStatic;
     private DimensionType dimensionType;
-    private CompoundNBT dataCompound;
+    private CompoundTag dataCompound;
 
     public SpaceStationWorldData(String dataName)
     {
@@ -50,7 +50,7 @@ public class SpaceStationWorldData extends WorldSavedData
     public void putAllowedAll(boolean b)
     {
         this.allowAllPlayers = b;
-        this.markDirty();
+        this.setDirty();
     }
 
     public String getOwner()
@@ -61,7 +61,7 @@ public class SpaceStationWorldData extends WorldSavedData
     public void putOwner(String name)
     {
         this.owner = name.replace(".", "");
-        this.markDirty();
+        this.setDirty();
     }
 
     public String getSpaceStationName()
@@ -111,7 +111,7 @@ public class SpaceStationWorldData extends WorldSavedData
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
         this.owner = nbt.getString("owner").replace(".", "");
         this.spaceStationName = nbt.getString("spaceStationName");
@@ -122,12 +122,12 @@ public class SpaceStationWorldData extends WorldSavedData
         }
         else
         {
-            this.dataCompound = new CompoundNBT();
+            this.dataCompound = new CompoundTag();
         }
 
         if (nbt.contains("homePlanetRes"))
         {
-            this.homePlanet = DimensionType.byName(new ResourceLocation(nbt.getString("homePlanetRes")));
+            this.homePlanet = DimensionType.getByName(new ResourceLocation(nbt.getString("homePlanetRes")));
         }
         else
         {
@@ -157,13 +157,13 @@ public class SpaceStationWorldData extends WorldSavedData
 
         this.allowAllPlayers = nbt.getBoolean("allowedAll");
 
-        ListNBT nbtList = nbt.getList("allowedPlayers", 10);
+        ListTag nbtList = nbt.getList("allowedPlayers", 10);
         this.allowedPlayers.clear();
 
         for (int i = 0; i < nbtList.size(); ++i)
         {
-            CompoundNBT compound = nbtList.getCompound(i);
-            UUID uid = compound.getUniqueId("allowedPlayer");
+            CompoundTag compound = nbtList.getCompound(i);
+            UUID uid = compound.getUUID("allowedPlayer");
 
             if (!this.allowedPlayers.contains(uid))
             {
@@ -173,7 +173,7 @@ public class SpaceStationWorldData extends WorldSavedData
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
         nbt.putString("owner", this.owner);
         nbt.putString("spaceStationName", this.spaceStationName);
@@ -183,7 +183,7 @@ public class SpaceStationWorldData extends WorldSavedData
         nbt.put("dataCompound", this.dataCompound);
         nbt.putBoolean("allowedAll", this.allowAllPlayers);
 
-        ListNBT nbtList = new ListNBT();
+        ListTag nbtList = new ListTag();
 
         for (int i = 0; i < this.allowedPlayers.size(); ++i)
         {
@@ -191,8 +191,8 @@ public class SpaceStationWorldData extends WorldSavedData
 
             if (player != null)
             {
-                CompoundNBT compound = new CompoundNBT();
-                compound.putUniqueId("allowedPlayer", player);
+                CompoundTag compound = new CompoundTag();
+                compound.putUUID("allowedPlayer", player);
                 nbtList.add(compound);
             }
         }
@@ -212,10 +212,10 @@ public class SpaceStationWorldData extends WorldSavedData
     /**
      * Retrieve a space station data entry, creating if necessary (with provided data)
      */
-    public static SpaceStationWorldData getStationData(MinecraftServer server, ResourceLocation stationID, DimensionType homeType/*, int providerIdDynamic, int providerIdStatic*/, PlayerEntity owner)
+    public static SpaceStationWorldData getStationData(MinecraftServer server, ResourceLocation stationID, ResourceKey<DimensionType> homeType/*, int providerIdDynamic, int providerIdStatic*/, Player owner)
     {
-        ServerWorld world = server.getWorld(homeType);
-        DimensionType providerType = DimensionType.byName(stationID);
+        ServerLevel world = server.getLevel(homeType);
+        ResourceKey<DimensionType> providerTypeKey = DimensionType.getByName(stationID);
 
 //        boolean foundMatch = false;
 //
@@ -223,14 +223,14 @@ public class SpaceStationWorldData extends WorldSavedData
         // being called on an incorrect
 //        for (Satellite satellite : GalaxyRegistry.getRegisteredSatellites().values())
 //        {
-//            if (satellite.getDimensionIdStatic() == providerType.getId() || satellite.getDimensionType() == providerType)
+//            if (satellite.getDimensionIdStatic() == providerTypeKey.getId() || satellite.getDimensionType() == providerTypeKey)
 //            {
 //                foundMatch = true;
 //                break;
 //            }
 //        }
 
-        if (providerType == null)
+        if (providerTypeKey == null)
         {
             return null;
         }
@@ -238,16 +238,16 @@ public class SpaceStationWorldData extends WorldSavedData
         {
 //            final String stationIdentifier = SpaceStationWorldData.getSpaceStationID(stationID);
             String id = stationID.toString();
-            SpaceStationWorldData stationData = world.getSavedData().get(() -> new SpaceStationWorldData(id), id);
+            SpaceStationWorldData stationData = world.getDataStorage().get(() -> new SpaceStationWorldData(id), id);
             if (stationData != null)
             {
                 return stationData;
             }
 
-            stationData = world.getSavedData().getOrCreate(() -> new SpaceStationWorldData(id), id);
+            stationData = world.getDataStorage().computeIfAbsent(() -> new SpaceStationWorldData(id), id);
 
 //            world.putData(Constants.GCDATAFOLDER + stationIdentifier, stationData);
-            stationData.dataCompound = new CompoundNBT();
+            stationData.dataCompound = new CompoundTag();
 
             if (owner != null)
             {
@@ -258,7 +258,7 @@ public class SpaceStationWorldData extends WorldSavedData
 
             if (owner != null)
             {
-                stationData.allowedPlayers.add(owner.getUniqueID());
+                stationData.allowedPlayers.add(owner.getUUID());
             }
 
             if (homeType == null)
@@ -280,8 +280,8 @@ public class SpaceStationWorldData extends WorldSavedData
 //                stationData.dimensionIdStatic = providerIdStatic;
 //            }
 
-            stationData.markDirty();
-            world.getServer().save(true, false, false);
+            stationData.setDirty();
+            world.getServer().saveAllChunks(true, false, false);
             return stationData;
         }
 

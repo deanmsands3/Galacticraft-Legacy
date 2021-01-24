@@ -5,23 +5,23 @@ import micdoodle8.mods.galacticraft.api.tile.ILockable;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityCargoBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerCargoBase extends Container
+public class ContainerCargoBase extends AbstractContainerMenu
 {
     public static class ContainerCargoLoader extends ContainerCargoBase
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CARGO_LOADER)
-        public static ContainerType<ContainerCargoLoader> TYPE;
+        public static MenuType<ContainerCargoLoader> TYPE;
 
-        public ContainerCargoLoader(int containerId, PlayerInventory playerInv, TileEntityCargoBase cargoTile)
+        public ContainerCargoLoader(int containerId, Inventory playerInv, TileEntityCargoBase cargoTile)
         {
             super(TYPE, containerId, playerInv, cargoTile);
         }
@@ -30,9 +30,9 @@ public class ContainerCargoBase extends Container
     public static class ContainerCargoUnloader extends ContainerCargoBase
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CARGO_UNLOADER)
-        public static ContainerType<ContainerCargoUnloader> TYPE;
+        public static MenuType<ContainerCargoUnloader> TYPE;
 
-        public ContainerCargoUnloader(int containerId, PlayerInventory playerInv, TileEntityCargoBase cargoTile)
+        public ContainerCargoUnloader(int containerId, Inventory playerInv, TileEntityCargoBase cargoTile)
         {
             super(TYPE, containerId, playerInv, cargoTile);
         }
@@ -41,7 +41,7 @@ public class ContainerCargoBase extends Container
     private final TileEntityCargoBase cargoTile;
     private boolean locked;
 
-    public ContainerCargoBase(ContainerType<?> type, int containerId, PlayerInventory playerInv, TileEntityCargoBase cargoTile)
+    public ContainerCargoBase(MenuType<?> type, int containerId, Inventory playerInv, TileEntityCargoBase cargoTile)
     {
         super(type, containerId);
         this.cargoTile = cargoTile;
@@ -85,35 +85,35 @@ public class ContainerCargoBase extends Container
     }
 
     @Override
-    public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player)
+    public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player)
     {
         if (this.locked && slotId > 0 && slotId < 15)
         {
             return ItemStack.EMPTY;
         }
-        return super.slotClick(slotId, dragType, clickTypeIn, player);
+        return super.clicked(slotId, dragType, clickTypeIn, player);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity var1)
+    public boolean stillValid(Player var1)
     {
-        return this.cargoTile.isUsableByPlayer(var1);
+        return this.cargoTile.stillValid(var1);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par2)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par2)
     {
         ItemStack var3 = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(par2);
+        final Slot slot = this.slots.get(par2);
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            final ItemStack var5 = slot.getStack();
+            final ItemStack var5 = slot.getItem();
             var3 = var5.copy();
 
             if (par2 < 15)
             {
-                if ((this.locked && par2 > 0) || !this.mergeItemStack(var5, 15, 51, true))
+                if ((this.locked && par2 > 0) || !this.moveItemStackTo(var5, 15, 51, true))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -122,19 +122,19 @@ public class ContainerCargoBase extends Container
             {
                 if (EnergyUtil.isElectricItem(var5.getItem()))
                 {
-                    if (!this.mergeItemStack(var5, 0, 1, false))
+                    if (!this.moveItemStackTo(var5, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (par2 < 42)
                 {
-                    if ((this.locked || !this.mergeItemStack(var5, 1, 15, false)) && !this.mergeItemStack(var5, 42, 51, false))
+                    if ((this.locked || !this.moveItemStackTo(var5, 1, 15, false)) && !this.moveItemStackTo(var5, 42, 51, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if ((this.locked || !this.mergeItemStack(var5, 1, 15, false)) && !this.mergeItemStack(var5, 15, 42, false))
+                else if ((this.locked || !this.moveItemStackTo(var5, 1, 15, false)) && !this.moveItemStackTo(var5, 15, 42, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -142,11 +142,11 @@ public class ContainerCargoBase extends Container
 
             if (var5.getCount() == 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (var5.getCount() == var3.getCount())

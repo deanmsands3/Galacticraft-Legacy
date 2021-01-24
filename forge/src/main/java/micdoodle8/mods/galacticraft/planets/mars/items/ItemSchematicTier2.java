@@ -7,13 +7,13 @@ import micdoodle8.mods.galacticraft.core.items.ItemSchematic;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -49,19 +49,19 @@ public class ItemSchematicTier2 extends ItemSchematic implements ISchematicItem,
 //    }
 
     @Override
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack par1ItemStack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         if (this == MarsItems.TIER_3_ROCKET_SCHEMATIC)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.rocket_t3")));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("schematic.rocket_t3")));
         }
         else if (this == MarsItems.ASTRO_MINER_SCHEMATIC)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.astro_miner")));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("schematic.astro_miner")));
         }
         else
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("schematic.cargo_rocket")));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("schematic.cargo_rocket")));
         }
     }
 

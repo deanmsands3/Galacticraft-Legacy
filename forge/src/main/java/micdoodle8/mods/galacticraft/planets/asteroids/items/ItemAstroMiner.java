@@ -13,18 +13,18 @@ import micdoodle8.mods.galacticraft.planets.ConfigManagerPlanets;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityMinerBase;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Rarity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -55,12 +55,12 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortable
 
 
     @Override
-    public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context)
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context)
     {
-        TileEntity tile = null;
-        PlayerEntity playerIn = context.getPlayer();
-        World worldIn = context.getWorld();
-        BlockPos pos = context.getPos();
+        BlockEntity tile = null;
+        Player playerIn = context.getPlayer();
+        Level worldIn = context.getLevel();
+        BlockPos pos = context.getClickedPos();
 
         if (playerIn == null)
         {
@@ -72,7 +72,7 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortable
 
             if (id == GCBlocks.MULTI_BLOCK)
             {
-                tile = worldIn.getTileEntity(pos);
+                tile = worldIn.getBlockEntity(pos);
 
                 if (tile instanceof TileEntityFake)
                 {
@@ -82,26 +82,26 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortable
 
             if (id == AsteroidBlocks.FULL_ASTRO_MINER_BASE)
             {
-                tile = worldIn.getTileEntity(pos);
+                tile = worldIn.getBlockEntity(pos);
             }
 
             if (tile instanceof TileEntityMinerBase)
             {
                 //Don't open GUI on client
-                if (worldIn.isRemote)
+                if (worldIn.isClientSide)
                 {
                     return ActionResultType.FAIL;
                 }
 
                 if (worldIn.dimension instanceof DimensionSpaceStation)
                 {
-                    playerIn.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.message.astro_miner7.fail")));
+                    playerIn.sendMessage(new TextComponent(GCCoreUtil.translate("gui.message.astro_miner7.fail")));
                     return ActionResultType.FAIL;
                 }
 
                 if (((TileEntityMinerBase) tile).getLinkedMiner() != null)
                 {
-                    playerIn.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.message.astro_miner.fail")));
+                    playerIn.sendMessage(new TextComponent(GCCoreUtil.translate("gui.message.astro_miner.fail")));
                     return ActionResultType.FAIL;
                 }
 
@@ -111,26 +111,26 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortable
                     return ActionResultType.FAIL;
                 }
 
-                ServerPlayerEntity playerMP = (ServerPlayerEntity) playerIn;
+                ServerPlayer playerMP = (ServerPlayer) playerIn;
                 GCPlayerStats stats = GCPlayerStats.get(playerIn);
 
                 int astroCount = stats.getAstroMinerCount();
-                if (astroCount >= ConfigManagerPlanets.astroMinerMax.get() && (!playerIn.abilities.isCreativeMode))
+                if (astroCount >= ConfigManagerPlanets.astroMinerMax.get() && (!playerIn.abilities.instabuild))
                 {
-                    playerIn.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.message.astro_miner2.fail")));
+                    playerIn.sendMessage(new TextComponent(GCCoreUtil.translate("gui.message.astro_miner2.fail")));
                     return ActionResultType.FAIL;
                 }
 
                 if (!((TileEntityMinerBase) tile).spawnMiner(playerMP))
                 {
-                    playerIn.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.message.astro_miner1.fail") + " " + GCCoreUtil.translate(AstroMinerEntity.blockingBlock.toString())));
+                    playerIn.sendMessage(new TextComponent(GCCoreUtil.translate("gui.message.astro_miner1.fail") + " " + GCCoreUtil.translate(AstroMinerEntity.blockingBlock.toString())));
                     return ActionResultType.FAIL;
                 }
 
-                if (!playerIn.abilities.isCreativeMode)
+                if (!playerIn.abilities.instabuild)
                 {
                     stats.setAstroMinerCount(stats.getAstroMinerCount() + 1);
-                    playerIn.getHeldItem(context.getHand()).shrink(1);
+                    playerIn.getItemInHand(context.getHand()).shrink(1);
                 }
                 return ActionResultType.SUCCESS;
             }
@@ -146,19 +146,19 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortable
 //    }
 
     @Override
-    public boolean shouldHoldLeftHandUp(PlayerEntity player)
+    public boolean shouldHoldLeftHandUp(Player player)
     {
         return true;
     }
 
     @Override
-    public boolean shouldHoldRightHandUp(PlayerEntity player)
+    public boolean shouldHoldRightHandUp(Player player)
     {
         return true;
     }
 
     @Override
-    public boolean shouldCrouch(PlayerEntity player)
+    public boolean shouldCrouch(Player player)
     {
         return true;
     }

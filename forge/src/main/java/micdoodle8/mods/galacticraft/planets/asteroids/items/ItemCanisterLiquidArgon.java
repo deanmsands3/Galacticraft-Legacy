@@ -2,12 +2,12 @@ package micdoodle8.mods.galacticraft.planets.asteroids.items;
 
 import micdoodle8.mods.galacticraft.core.items.ItemCanisterGeneric;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -66,11 +66,11 @@ public class ItemCanisterLiquidArgon extends ItemCanisterGeneric
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void addInformation(ItemStack par1ItemStack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        if (par1ItemStack.getMaxDamage() - par1ItemStack.getDamage() > 0)
+        if (par1ItemStack.getMaxDamage() - par1ItemStack.getDamageValue() > 0)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("item.canister.liquid_argon") + ": " + (par1ItemStack.getMaxDamage() - par1ItemStack.getDamage())));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("item.canister.liquid_argon") + ": " + (par1ItemStack.getMaxDamage() - par1ItemStack.getDamageValue())));
         }
     }
 }

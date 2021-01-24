@@ -1,7 +1,8 @@
 package micdoodle8.mods.galacticraft.api.event.oxygen;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 
@@ -13,12 +14,12 @@ import net.minecraftforge.eventbus.api.Cancelable;
  */
 public abstract class GCCoreOxygenSuffocationEvent extends LivingEvent
 {
-    public final Dimension dimension;
+    public final ResourceKey<Level> dimension;
 
     public GCCoreOxygenSuffocationEvent(LivingEntity entity)
     {
         super(entity);
-        this.dimension = entity.world.getDimension();
+        this.dimension = entity.level.dimension();
     }
 
     /**

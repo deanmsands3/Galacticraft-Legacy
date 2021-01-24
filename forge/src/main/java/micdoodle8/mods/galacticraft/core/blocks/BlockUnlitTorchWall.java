@@ -4,18 +4,17 @@ import micdoodle8.mods.galacticraft.api.block.IOxygenReliantBlock;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.TorchBlock;
-import net.minecraft.block.WallTorchBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -103,7 +102,7 @@ public class BlockUnlitTorchWall extends WallTorchBlock implements IOxygenRelian
 //        }
 //    }
 
-    private void checkOxygen(World world, BlockPos pos, BlockState state)
+    private void checkOxygen(Level world, BlockPos pos, BlockState state)
     {
         if (world.getDimension() instanceof IGalacticraftDimension)
         {
@@ -118,16 +117,16 @@ public class BlockUnlitTorchWall extends WallTorchBlock implements IOxygenRelian
         }
         else
         {
-            Direction enumfacing = state.get(HORIZONTAL_FACING);
-            world.setBlockState(pos, this.fallback.getDefaultState().with(HORIZONTAL_FACING, enumfacing), 2);
+            Direction enumfacing = state.getValue(FACING);
+            world.setBlock(pos, this.fallback.defaultBlockState().setValue(FACING, enumfacing), 2);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand)
     {
-        Direction enumfacing = stateIn.get(HORIZONTAL_FACING);
+        Direction enumfacing = stateIn.getValue(FACING);
         double d0 = (double) pos.getX() + 0.5D;
         double d1 = (double) pos.getY() + 0.7D;
         double d2 = (double) pos.getZ() + 0.5D;
@@ -135,30 +134,30 @@ public class BlockUnlitTorchWall extends WallTorchBlock implements IOxygenRelian
         double d4 = 0.27D;
 
         Direction enumfacing1 = enumfacing.getOpposite();
-        worldIn.addParticle(ParticleTypes.SMOKE, d0 + d4 * (double) enumfacing1.getXOffset(), d1 + d3, d2 + d4 * (double) enumfacing1.getZOffset(), 0.0D, 0.0D, 0.0D);
+        worldIn.addParticle(ParticleTypes.SMOKE, d0 + d4 * (double) enumfacing1.getStepX(), d1 + d3, d2 + d4 * (double) enumfacing1.getStepZ(), 0.0D, 0.0D, 0.0D);
         if (this == GCBlocks.LIT_UNLIT_TORCH)
         {
-            worldIn.addParticle(ParticleTypes.FLAME, d0 + d4 * (double) enumfacing1.getXOffset(), d1 + d3, d2 + d4 * (double) enumfacing1.getZOffset(), 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(ParticleTypes.FLAME, d0 + d4 * (double) enumfacing1.getStepX(), d1 + d3, d2 + d4 * (double) enumfacing1.getStepZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 
     @Override
-    public void onOxygenRemoved(World world, BlockPos pos, BlockState state)
+    public void onOxygenRemoved(Level world, BlockPos pos, BlockState state)
     {
         if (world.getDimension() instanceof IGalacticraftDimension)
         {
-            Direction enumfacing = state.get(HORIZONTAL_FACING);
-            world.setBlockState(pos, this.unlitVersion.getDefaultState().with(HORIZONTAL_FACING, enumfacing), 2);
+            Direction enumfacing = state.getValue(FACING);
+            world.setBlock(pos, this.unlitVersion.defaultBlockState().setValue(FACING, enumfacing), 2);
         }
     }
 
     @Override
-    public void onOxygenAdded(World world, BlockPos pos, BlockState state)
+    public void onOxygenAdded(Level world, BlockPos pos, BlockState state)
     {
         if (world.getDimension() instanceof IGalacticraftDimension)
         {
-            Direction enumfacing = state.get(HORIZONTAL_FACING);
-            world.setBlockState(pos, this.litVersion.getDefaultState().with(HORIZONTAL_FACING, enumfacing), 2);
+            Direction enumfacing = state.getValue(FACING);
+            world.setBlock(pos, this.litVersion.defaultBlockState().setValue(FACING, enumfacing), 2);
         }
     }
 
@@ -169,19 +168,19 @@ public class BlockUnlitTorchWall extends WallTorchBlock implements IOxygenRelian
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
-        builder.add(HORIZONTAL_FACING);
+        builder.add(FACING);
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         this.checkOxygen(worldIn, pos, state);
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
     {
         this.checkOxygen(worldIn, pos, state);
     }

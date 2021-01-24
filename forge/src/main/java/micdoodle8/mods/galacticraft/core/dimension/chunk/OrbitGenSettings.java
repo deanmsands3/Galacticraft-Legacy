@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.core.dimension.chunk;
 
-import net.minecraft.world.gen.GenerationSettings;
+import net.minecraft.world.level.levelgen.ChunkGeneratorSettings;
 
-public class OrbitGenSettings extends GenerationSettings
+public class OrbitGenSettings extends ChunkGeneratorSettings
 {
     public int getBiomeSize()
     {
@@ -20,7 +20,7 @@ public class OrbitGenSettings extends GenerationSettings
     }
 
     @Override
-    public int getBedrockFloorHeight()
+    public int getBedrockFloorPosition()
     {
         return 0;
     }

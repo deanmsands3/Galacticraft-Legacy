@@ -8,23 +8,21 @@ import micdoodle8.mods.galacticraft.core.network.IPacketReceiver;
 import micdoodle8.mods.galacticraft.core.network.PacketDynamic;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityParaChest;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.util.Mth;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -40,7 +38,7 @@ public class ParachestEntity extends Entity implements IPacketReceiver
     private boolean placedChest;
     public DyeColor color = DyeColor.WHITE;
 
-    public ParachestEntity(World world, NonNullList<ItemStack> cargo, int fuelLevel)
+    public ParachestEntity(Level world, NonNullList<ItemStack> cargo, int fuelLevel)
     {
         super(GCEntities.PARACHEST, world);
         this.cargo = NonNullList.withSize(cargo.size(), ItemStack.EMPTY);
@@ -49,24 +47,24 @@ public class ParachestEntity extends Entity implements IPacketReceiver
         this.fuelLevel = fuelLevel;
     }
 
-    public ParachestEntity(EntityType<ParachestEntity> type, World world)
+    public ParachestEntity(EntityType<ParachestEntity> type, Level world)
     {
         super(type, world);
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
     }
 
     @Override
-    protected void readAdditional(CompoundNBT nbt)
+    protected void readAdditionalSaveData(CompoundTag nbt)
     {
         int size = 56;
         if (nbt.contains("CargoLength"))
@@ -75,7 +73,7 @@ public class ParachestEntity extends Entity implements IPacketReceiver
         }
         this.cargo = NonNullList.withSize(size, ItemStack.EMPTY);
 
-        ItemStackHelper.loadAllItems(nbt, this.cargo);
+        ContainerHelper.loadAllItems(nbt, this.cargo);
 
         this.placedChest = nbt.getBoolean("placedChest");
         this.fuelLevel = nbt.getInt("FuelLevel");
@@ -87,14 +85,14 @@ public class ParachestEntity extends Entity implements IPacketReceiver
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        if (world.isRemote)
+        if (level.isClientSide)
         {
             return;
         }
         nbt.putInt("CargoLength", this.cargo.size());
-        ItemStackHelper.saveAllItems(nbt, this.cargo);
+        ContainerHelper.saveAllItems(nbt, this.cargo);
 
         nbt.putBoolean("placedChest", this.placedChest);
         nbt.putInt("FuelLevel", this.fuelLevel);
@@ -106,13 +104,13 @@ public class ParachestEntity extends Entity implements IPacketReceiver
     {
         if (!this.placedChest)
         {
-            if (this.onGround && !this.world.isRemote)
+            if (this.onGround && !this.level.isClientSide)
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    final int x = MathHelper.floor(this.getPosX());
-                    final int y = MathHelper.floor(this.getPosY());
-                    final int z = MathHelper.floor(this.getPosZ());
+                    final int x = Mth.floor(this.getX());
+                    final int y = Mth.floor(this.getY());
+                    final int z = Mth.floor(this.getZ());
 
                     if (tryPlaceAtPos(new BlockPos(x, y + i, z)))
                     {
@@ -128,9 +126,9 @@ public class ParachestEntity extends Entity implements IPacketReceiver
                         {
                             for (int zOff = -size; zOff <= size; zOff++)
                             {
-                                final int x = MathHelper.floor(this.getPosX()) + xOff;
-                                final int y = MathHelper.floor(this.getPosY()) + yOff;
-                                final int z = MathHelper.floor(this.getPosZ()) + zOff;
+                                final int x = Mth.floor(this.getX()) + xOff;
+                                final int y = Mth.floor(this.getY()) + yOff;
+                                final int z = Mth.floor(this.getZ()) + zOff;
 
                                 if (tryPlaceAtPos(new BlockPos(x, y, z)))
                                 {
@@ -145,8 +143,8 @@ public class ParachestEntity extends Entity implements IPacketReceiver
                 {
                     for (final ItemStack stack : this.cargo)
                     {
-                        final ItemEntity e = new ItemEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), stack);
-                        this.world.addEntity(e);
+                        final ItemEntity e = new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), stack);
+                        this.level.addFreshEntity(e);
                     }
                 }
 
@@ -155,22 +153,22 @@ public class ParachestEntity extends Entity implements IPacketReceiver
             }
             else
             {
-                this.setMotion(this.getMotion().subtract(0.0, 0.035, 0.0));
+                this.setDeltaMovement(this.getDeltaMovement().subtract(0.0, 0.035, 0.0));
             }
 
-            this.setMotion(this.getMotion().scale(0.8D));
-            this.move(MoverType.SELF, this.getMotion());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.8D));
+            this.move(MoverType.SELF, this.getDeltaMovement());
         }
 
-        if (!this.world.isRemote && this.ticksExisted % 5 == 0)
+        if (!this.level.isClientSide && this.tickCount % 5 == 0)
         {
-            GalacticraftCore.packetPipeline.sendToAllAround(new PacketDynamic(this), new PacketDistributor.TargetPoint(this.getPosX(), this.getPosY(), this.getPosZ(), 64.0, GCCoreUtil.getDimensionType(this.world)));
+            GalacticraftCore.packetPipeline.sendToAllAround(new PacketDynamic(this), new PacketDistributor.TargetPoint(this.getX(), this.getY(), this.getZ(), 64.0, GCCoreUtil.getDimensionType(this.level)));
         }
     }
 
     private boolean tryPlaceAtPos(BlockPos pos)
     {
-        BlockState state = this.world.getBlockState(pos);
+        BlockState state = this.level.getBlockState(pos);
         Block block = state.getBlock();
 
         if (block.getMaterial(state).isReplaceable())
@@ -187,11 +185,11 @@ public class ParachestEntity extends Entity implements IPacketReceiver
 
     private boolean placeChest(BlockPos pos)
     {
-        if (this.world.setBlockState(pos, GCBlocks.PARACHEST.getDefaultState(), 3))
+        if (this.level.setBlock(pos, GCBlocks.PARACHEST.defaultBlockState(), 3))
         {
             if (this.cargo != null)
             {
-                final TileEntity te = this.world.getTileEntity(pos);
+                final BlockEntity te = this.level.getBlockEntity(pos);
 
                 if (te instanceof TileEntityParaChest)
                 {
@@ -208,8 +206,8 @@ public class ParachestEntity extends Entity implements IPacketReceiver
                 {
                     for (ItemStack stack : this.cargo)
                     {
-                        final ItemEntity e = new ItemEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), stack);
-                        this.world.addEntity(e);
+                        final ItemEntity e = new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), stack);
+                        this.level.addFreshEntity(e);
                     }
                 }
             }
@@ -222,7 +220,7 @@ public class ParachestEntity extends Entity implements IPacketReceiver
     @Override
     public void getNetworkedData(ArrayList<Object> sendData)
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             sendData.add(this.color.getId());
         }
@@ -231,7 +229,7 @@ public class ParachestEntity extends Entity implements IPacketReceiver
     @Override
     public void decodePacketdata(ByteBuf buffer)
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             this.color = DyeColor.byId(buffer.readInt());
         }

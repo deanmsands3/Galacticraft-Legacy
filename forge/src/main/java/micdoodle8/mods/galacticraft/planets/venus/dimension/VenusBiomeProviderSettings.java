@@ -1,14 +1,14 @@
 package micdoodle8.mods.galacticraft.planets.venus.dimension;
 
-import net.minecraft.world.biome.provider.IBiomeProviderSettings;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.level.biome.BiomeSourceSettings;
+import net.minecraft.world.level.storage.LevelData;
 
-public class VenusBiomeProviderSettings implements IBiomeProviderSettings
+public class VenusBiomeProviderSettings implements BiomeSourceSettings
 {
-    private WorldInfo worldInfo;
+    private LevelData worldInfo;
     private VenusGenSettings generatorSettings;
 
-    public VenusBiomeProviderSettings(WorldInfo worldInfo)
+    public VenusBiomeProviderSettings(LevelData worldInfo)
     {
         this.worldInfo = worldInfo;
     }
@@ -19,7 +19,7 @@ public class VenusBiomeProviderSettings implements IBiomeProviderSettings
         return this;
     }
 
-    public WorldInfo getWorldInfo()
+    public LevelData getWorldInfo()
     {
         return this.worldInfo;
     }

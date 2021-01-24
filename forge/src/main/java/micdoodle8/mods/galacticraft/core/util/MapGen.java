@@ -1,17 +1,5 @@
 package micdoodle8.mods.galacticraft.core.util;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.OverworldGenSettings;
-import net.minecraft.world.gen.layer.Layer;
-import net.minecraft.world.gen.layer.LayerUtil;
-import net.minecraft.world.storage.WorldInfo;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -24,6 +12,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelType;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.levelgen.OverworldGeneratorSettings;
+import net.minecraft.world.level.newbiome.layer.Layer;
+import net.minecraft.world.level.newbiome.layer.Layers;
+import net.minecraft.world.level.storage.LevelData;
 
 public class MapGen /*extends BiomeProvider*/ implements Runnable
 {
@@ -57,10 +56,10 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
     private Random rand;
     private int[] heights;
     private double[] heighttemp;
-    private World world;
-    private WorldType worldType;
-    private WorldInfo worldInfo;
-    private OverworldGenSettings settings = null;
+    private Level world;
+    private LevelType worldType;
+    private LevelData worldInfo;
+    private OverworldGeneratorSettings settings = null;
 
     private Biome[] biomesGrid = null;  //Memory efficient to keep re-using the same one.
     private int[] biomesGridHeights = null;
@@ -73,13 +72,13 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
         {
             for (int k = -2; k <= 2; ++k)
             {
-                float f = 10.0F / MathHelper.sqrt((float) (j * j + k * k) + 0.2F);
+                float f = 10.0F / Mth.sqrt((float) (j * j + k * k) + 0.2F);
                 parabolicField[j + 2 + (k + 2) * 5] = f;
             }
         }
     }
 
-    public MapGen(World worldIn, int sx, int sz, int cx, int cz, int scale, File file)
+    public MapGen(Level worldIn, int sx, int sz, int cx, int cz, int scale, File file)
     {
         this.dimID = GCCoreUtil.getDimensionType(worldIn);
         this.biomeMapFactor = scale;
@@ -120,8 +119,8 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
         this.progressX = new AtomicInteger();
         this.progressZ = 0;
         this.world = worldIn;
-        this.worldInfo = worldIn.getWorldInfo();
-        this.worldType = worldInfo.getGenerator();
+        this.worldInfo = worldIn.getLevelData();
+        this.worldType = worldInfo.getGeneratorType();
         long seed = worldInfo.getSeed();
 //        this.biomeCache = new BiomeCache(this);
 //        String options = worldInfo.getGeneratorOptions();
@@ -130,7 +129,7 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
         {
 //            if (options != null)
             {
-                this.settings = new OverworldGenSettings();
+                this.settings = new OverworldGeneratorSettings();
 //                this.settings = ChunkGeneratorSettings.Factory.jsonToFactory(options).build();
             }
 //            if (CompatibilityManager.isBOPWorld(this.worldType))
@@ -141,7 +140,7 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
 //            }
 //            else TODO Bop support
             {
-                agenlayer = LayerUtil.func_227474_a_(seed, worldType, this.settings);
+                agenlayer = Layers.func_227474_a_(seed, worldType, this.settings);
             }
 //            agenlayer = getModdedBiomeGenerators(worldType, seed, agenlayer);
         }
@@ -768,12 +767,12 @@ public class MapGen /*extends BiomeProvider*/ implements Runnable
             listToReuse = new Biome[size];
         }
 
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (int x0 = 0; x0 < width; ++x0)
         {
             for (int z0 = 0; z0 < height; ++z0)
             {
-                pos.setPos(x + x0, 8, z + z0);
+                pos.set(x + x0, 8, z + z0);
                 listToReuse[(z + z0) * width + x0 + x] = this.world.getBiome(pos);
             }
         }

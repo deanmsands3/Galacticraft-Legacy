@@ -9,10 +9,10 @@ import micdoodle8.mods.galacticraft.api.transmission.tile.INetworkProvider;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
 import micdoodle8.mods.galacticraft.core.energy.grid.EnergyNetwork;
 import micdoodle8.mods.galacticraft.core.tick.TickHandlerServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -22,42 +22,42 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @author Calclavia
  */
 @SuppressWarnings({"rawtypes"})
-public abstract class TileBaseConductor extends TileEntity implements IConductor
+public abstract class TileBaseConductor extends BlockEntity implements IConductor
 {
     protected IGridNetwork network;
 
-    public TileEntity[] adjacentConnections = null;
+    public BlockEntity[] adjacentConnections = null;
 
-    public TileBaseConductor(TileEntityType<?> type)
+    public TileBaseConductor(BlockEntityType<?> type)
     {
         super(type);
     }
 
     @Override
-    public void validate()
+    public void clearRemoved()
     {
-        super.validate();
-        if (!this.world.isRemote)
+        super.clearRemoved();
+        if (!this.level.isClientSide)
         {
             TickHandlerServer.energyTransmitterUpdates.add(this);
         }
     }
 
     @Override
-    public void remove()
+    public void setRemoved()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.getNetwork().split(this);
         }
 
-        super.remove();
+        super.setRemoved();
     }
 
     @Override
     public void onChunkUnloaded()
     {
-        super.remove();
+        super.setRemoved();
         super.onChunkUnloaded();
     }
 
@@ -83,7 +83,7 @@ public abstract class TileBaseConductor extends TileEntity implements IConductor
     @Override
     public void refresh()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.adjacentConnections = null;
 
@@ -92,7 +92,7 @@ public abstract class TileBaseConductor extends TileEntity implements IConductor
             BlockVec3 thisVec = new BlockVec3(this);
             for (Direction side : Direction.values())
             {
-                TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
+                BlockEntity tileEntity = thisVec.getTileEntityOnSide(this.level, side);
 
                 if (tileEntity instanceof TileBaseConductor && ((TileBaseConductor) tileEntity).canConnect(side.getOpposite(), NetworkType.POWER))
                 {
@@ -110,20 +110,20 @@ public abstract class TileBaseConductor extends TileEntity implements IConductor
     }
 
     @Override
-    public TileEntity[] getAdjacentConnections()
+    public BlockEntity[] getAdjacentConnections()
     {
         /**
          * Cache the adjacentConnections.
          */
         if (this.adjacentConnections == null)
         {
-            this.adjacentConnections = new TileEntity[6];
+            this.adjacentConnections = new BlockEntity[6];
 
             BlockVec3 thisVec = new BlockVec3(this);
             for (int i = 0; i < 6; i++)
             {
-                Direction side = Direction.byIndex(i);
-                TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
+                Direction side = Direction.from3DDataValue(i);
+                BlockEntity tileEntity = thisVec.getTileEntityOnSide(this.level, side);
 
                 if (tileEntity instanceof IConnector)
                 {
@@ -152,9 +152,9 @@ public abstract class TileBaseConductor extends TileEntity implements IConductor
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
+    public AABB getRenderBoundingBox()
     {
-        return new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1);
+        return new AABB(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), this.getBlockPos().getX() + 1, this.getBlockPos().getY() + 1, this.getBlockPos().getZ() + 1);
     }
 
     @Override

@@ -2,11 +2,9 @@ package micdoodle8.mods.galacticraft.planets.mars.blocks;
 
 import micdoodle8.mods.galacticraft.core.blocks.BlockTier1TreasureChest;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityTreasureChestMars;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockTier2TreasureChest extends BlockTier1TreasureChest
 {
@@ -16,7 +14,7 @@ public class BlockTier2TreasureChest extends BlockTier1TreasureChest
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityTreasureChestMars();
     }

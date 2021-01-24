@@ -1,13 +1,10 @@
 package micdoodle8.mods.galacticraft.api.client.tabs;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.network.play.client.CCloseWindowPacket;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -86,9 +83,9 @@ public class TabRegistry
 
 	public static void openInventoryGui()
 	{
-		TabRegistry.mc.player.connection.sendPacket(new CCloseWindowPacket(mc.player.openContainer.windowId));
+		TabRegistry.mc.player.connection.send(new ServerboundContainerClosePacket(mc.player.containerMenu.containerId));
 		InventoryScreen inventory = new InventoryScreen(TabRegistry.mc.player);
-		TabRegistry.mc.displayGuiScreen(inventory);
+		TabRegistry.mc.setScreen(inventory);
 	}
 
 	public static void updateTabValues(int cornerX, int cornerY, Class<?> selectedButton)
@@ -110,7 +107,7 @@ public class TabRegistry
 		}
 	}
 
-	public static void addTabsToList(Consumer<Widget> add)
+	public static void addTabsToList(Consumer<AbstractWidget> add)
 	{
 		for (AbstractTab tab : TabRegistry.tabList)
 		{
@@ -142,9 +139,9 @@ public class TabRegistry
 
 	public static boolean doPotionOffsetVanilla()
 	{
-	    for (EffectInstance potioneffect : mc.player.getActivePotionEffects())
+	    for (MobEffectInstance potioneffect : mc.player.getActiveEffects())
 	    {
-	        if (potioneffect.getPotion().shouldRender(potioneffect))
+	        if (potioneffect.getEffect().shouldRender(potioneffect))
 	        {
 	            return true;
 	        }
@@ -210,7 +207,7 @@ public class TabRegistry
     public static int getRecipeBookOffset(InventoryScreen gui)
     {
         boolean widthTooNarrow = gui.width < 379;
-        gui.getRecipeGui().init(gui.width, gui.height, mc, widthTooNarrow, Minecraft.getInstance().player.container);
-        return gui.getRecipeGui().updateScreenPosition(widthTooNarrow, gui.width, gui.getXSize()) - (gui.width - 176) / 2;
+        gui.getRecipeBookComponent().init(gui.width, gui.height, mc, widthTooNarrow, Minecraft.getInstance().player.inventoryMenu);
+        return gui.getRecipeBookComponent().updateScreenPosition(widthTooNarrow, gui.width, gui.getXSize()) - (gui.width - 176) / 2;
     }
 }

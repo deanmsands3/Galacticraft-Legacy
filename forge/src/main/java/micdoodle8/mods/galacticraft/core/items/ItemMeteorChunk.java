@@ -5,17 +5,19 @@ import micdoodle8.mods.galacticraft.core.entities.MeteorChunkEntity;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.*;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -42,9 +44,9 @@ public class ItemMeteorChunk extends Item implements ISortable
 
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entityIn, int itemSlot, boolean isSelected)
+    public void inventoryTick(ItemStack stack, Level world, Entity entityIn, int itemSlot, boolean isSelected)
     {
-        if (entityIn instanceof PlayerEntity && stack.getItem() == GCItems.HOT_METEOR_CHUNK && !world.isRemote)
+        if (entityIn instanceof Player && stack.getItem() == GCItems.HOT_METEOR_CHUNK && !world.isClientSide)
         {
             if (stack.hasTag())
             {
@@ -57,7 +59,7 @@ public class ItemMeteorChunk extends Item implements ISortable
                 }
                 else
                 {
-                    ((PlayerEntity) entityIn).inventory.setInventorySlotContents(itemSlot, new ItemStack(GCItems.METEOR_CHUNK, stack.getCount()));
+                    ((Player) entityIn).inventory.setItem(itemSlot, new ItemStack(GCItems.METEOR_CHUNK, stack.getCount()));
 //                    stack.setItemDamage(0);
                     stack.setTag(null);
                 }
@@ -70,9 +72,9 @@ public class ItemMeteorChunk extends Item implements ISortable
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, PlayerEntity entityPlayer)
+    public void onCraftedBy(ItemStack stack, Level world, Player entityPlayer)
     {
-        super.onCreated(stack, world, entityPlayer);
+        super.onCraftedBy(stack, world, entityPlayer);
 
         if (stack.getItem() == GCItems.HOT_METEOR_CHUNK)
         {
@@ -93,7 +95,7 @@ public class ItemMeteorChunk extends Item implements ISortable
 
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         if (stack.getItem() == GCItems.HOT_METEOR_CHUNK)
         {
@@ -109,7 +111,7 @@ public class ItemMeteorChunk extends Item implements ISortable
                 burnTime = 45.0F;
             }
 
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("item.hot_description") + " " + burnTime + GCCoreUtil.translate("gui.seconds")));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("item.hot_description") + " " + burnTime + GCCoreUtil.translate("gui.seconds")));
         }
     }
 
@@ -126,34 +128,34 @@ public class ItemMeteorChunk extends Item implements ISortable
 //    }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand)
     {
-        ItemStack itemStack = player.getHeldItem(hand);
+        ItemStack itemStack = player.getItemInHand(hand);
 
-        if (!player.abilities.isCreativeMode)
+        if (!player.abilities.instabuild)
         {
             itemStack.shrink(1);
         }
 
-        world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL, 1.0F, 0.0001F / (Item.random.nextFloat() * 0.1F));
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundCategory.NEUTRAL, 1.0F, 0.0001F / (Item.random.nextFloat() * 0.1F));
 
-        if (!world.isRemote)
+        if (!world.isClientSide)
         {
             MeteorChunkEntity meteor = new MeteorChunkEntity(world, player, 1.0F);
 
             if (itemStack.getItem() == GCItems.HOT_METEOR_CHUNK)
             {
-                meteor.setFire(20);
+                meteor.setSecondsOnFire(20);
                 meteor.isHot = true;
             }
 
-            meteor.canBePickedUp = player.abilities.isCreativeMode ? 2 : 1;
-            world.addEntity(meteor);
+            meteor.canBePickedUp = player.abilities.instabuild ? 2 : 1;
+            world.addFreshEntity(meteor);
         }
 
-        player.swingArm(hand);
+        player.swing(hand);
 
-        return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
+        return new InteractionResultHolder<>(ActionResultType.SUCCESS, itemStack);
     }
 
     @Override

@@ -3,29 +3,34 @@ package micdoodle8.mods.galacticraft.core.client.render.tile;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.blocks.BlockArcLamp;
 import micdoodle8.mods.galacticraft.core.client.obj.GCModelCache;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityArclamp;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class TileEntityArclampRenderer extends TileEntityRenderer<TileEntityArclamp>
+public class TileEntityArclampRenderer extends BlockEntityRenderer<TileEntityArclamp>
 {
-    public static IBakedModel lampMetal;
+    public static BakedModel lampMetal;
 
-    public TileEntityArclampRenderer(TileEntityRendererDispatcher rendererDispatcherIn)
+    public TileEntityArclampRenderer(BlockEntityRenderDispatcher rendererDispatcherIn)
     {
         super(rendererDispatcherIn);
         GCModelCache.INSTANCE.reloadCallback(this::updateModels);
@@ -37,37 +42,37 @@ public class TileEntityArclampRenderer extends TileEntityRenderer<TileEntityArcl
     }
 
     @Override
-    public void render(TileEntityArclamp arclamp, float partialTicks, MatrixStack matStack, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)
+    public void render(TileEntityArclamp arclamp, float partialTicks, PoseStack matStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn)
     {
         int metaFacing = arclamp.facing;
 
         RenderSystem.disableRescaleNormal();
-        matStack.push();
+        matStack.pushPose();
         matStack.translate(0.5F, 0.5F, 0.5F);
 
-        RenderHelper.enableStandardItemLighting();
+        Lighting.turnBackOn();
         RenderSystem.enableRescaleNormal();
 
-        switch (arclamp.getBlockState().get(BlockArcLamp.FACING))
+        switch (arclamp.getBlockState().getValue(BlockArcLamp.FACING))
         {
         case DOWN:
             break;
         case UP:
-            matStack.rotate(new Quaternion(Vector3f.XP, 180.0F, true));
+            matStack.mulPose(new Quaternion(Vector3f.XP, 180.0F, true));
             if (metaFacing < 2)
             {
                 metaFacing ^= 1;
             }
             break;
         case NORTH:
-            matStack.rotate(new Quaternion(Vector3f.XP, 90.0F, true));
+            matStack.mulPose(new Quaternion(Vector3f.XP, 90.0F, true));
             metaFacing ^= 1;
             break;
         case SOUTH:
-            matStack.rotate(new Quaternion(Vector3f.XN, 90.0F, true));
+            matStack.mulPose(new Quaternion(Vector3f.XN, 90.0F, true));
             break;
         case WEST:
-            matStack.rotate(new Quaternion(Vector3f.ZN, 90.0F, true));
+            matStack.mulPose(new Quaternion(Vector3f.ZN, 90.0F, true));
             metaFacing -= 2;
             if (metaFacing < 0)
             {
@@ -75,7 +80,7 @@ public class TileEntityArclampRenderer extends TileEntityRenderer<TileEntityArcl
             }
             break;
         case EAST:
-            matStack.rotate(new Quaternion(Vector3f.ZP, 90.0F, true));
+            matStack.mulPose(new Quaternion(Vector3f.ZP, 90.0F, true));
             metaFacing += 2;
             if (metaFacing > 3)
             {
@@ -91,21 +96,21 @@ public class TileEntityArclampRenderer extends TileEntityRenderer<TileEntityArcl
         case 0:
             break;
         case 1:
-            matStack.rotate(new Quaternion(Vector3f.YP, 180.0F, true));
+            matStack.mulPose(new Quaternion(Vector3f.YP, 180.0F, true));
             break;
         case 2:
-            matStack.rotate(new Quaternion(Vector3f.YP, 90.0F, true));
+            matStack.mulPose(new Quaternion(Vector3f.YP, 90.0F, true));
             break;
         case 3:
-            matStack.rotate(new Quaternion(Vector3f.YP, 270.0F, true));
+            matStack.mulPose(new Quaternion(Vector3f.YP, 270.0F, true));
             break;
         }
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        matStack.rotate(new Quaternion(Vector3f.XN, 45.0F, true));
+        matStack.mulPose(new Quaternion(Vector3f.XN, 45.0F, true));
         matStack.scale(0.048F, 0.048F, 0.048F);
         ClientUtil.drawBakedModel(lampMetal, bufferIn, matStack, combinedLightIn);
-        RenderHelper.disableStandardItemLighting();
+        Lighting.turnOff();
 
         float greyLevel = arclamp.getEnabled() ? 1.0F : 26F / 255F;
         //Save the lighting state
@@ -115,26 +120,26 @@ public class TileEntityArclampRenderer extends TileEntityRenderer<TileEntityArcl
         ClientUtil.drawBakedModel(lampMetal, bufferIn, matStack, Constants.PACKED_LIGHT_FULL_BRIGHT);
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         RenderSystem.disableTexture();
-        Tessellator tess = Tessellator.getInstance();
-        BufferBuilder worldRenderer = tess.getBuffer();
+        Tesselator tess = Tesselator.getInstance();
+        BufferBuilder worldRenderer = tess.getBuilder();
         RenderSystem.color4f(greyLevel, greyLevel, greyLevel, 1.0F);
         RenderSystem.enableCull();
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION);
         float frameA = -3.4331F;  //These co-ordinates came originally from arclamp_light.obj model
         float frameB = -frameA;  //These co-ordinates came originally from arclamp_light.obj model
         float frameY = 2.3703F;  //These co-ordinates came originally from arclamp_light.obj model
-        Matrix4f last = matStack.getLast().getMatrix();
-        worldRenderer.pos(last, frameA, frameY, frameB).endVertex();
-        worldRenderer.pos(last, frameB, frameY, frameB).endVertex();
-        worldRenderer.pos(last, frameB, frameY, frameA).endVertex();
-        worldRenderer.pos(last, frameA, frameY, frameA).endVertex();
-        tess.draw();
+        Matrix4f last = matStack.last().pose();
+        worldRenderer.vertex(last, frameA, frameY, frameB).endVertex();
+        worldRenderer.vertex(last, frameB, frameY, frameB).endVertex();
+        worldRenderer.vertex(last, frameB, frameY, frameA).endVertex();
+        worldRenderer.vertex(last, frameA, frameY, frameA).endVertex();
+        tess.end();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableTexture();
         //? need to undo RenderSystem.glBlendFunc()?
 
         //Restore the lighting state
 //        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightMapSaveX, lightMapSaveY);
-        matStack.pop();
+        matStack.popPose();
     }
 }

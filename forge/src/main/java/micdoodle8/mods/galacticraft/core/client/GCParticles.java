@@ -2,9 +2,9 @@ package micdoodle8.mods.galacticraft.core.client;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.fx.*;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,23 +17,23 @@ import net.minecraftforge.registries.ObjectHolder;
 public class GCParticles
 {
     @ObjectHolder(ParticleTypeNames.whiteSmoke)
-    public static BasicParticleType WHITE_SMOKE_IDLE;
+    public static SimpleParticleType WHITE_SMOKE_IDLE;
     @ObjectHolder(ParticleTypeNames.whiteSmokeLaunched)
-    public static BasicParticleType WHITE_SMOKE_LAUNCHED;
+    public static SimpleParticleType WHITE_SMOKE_LAUNCHED;
     @ObjectHolder(ParticleTypeNames.whiteSmokeLarge)
-    public static BasicParticleType WHITE_SMOKE_IDLE_LARGE;
+    public static SimpleParticleType WHITE_SMOKE_IDLE_LARGE;
     @ObjectHolder(ParticleTypeNames.whiteSmokeLaunchedLarge)
-    public static BasicParticleType WHITE_SMOKE_LAUNCHED_LARGE;
+    public static SimpleParticleType WHITE_SMOKE_LAUNCHED_LARGE;
     @ObjectHolder(ParticleTypeNames.launchFlame)
     public static ParticleType<EntityParticleData> LAUNCH_FLAME_IDLE;
     @ObjectHolder(ParticleTypeNames.launchFlameLaunched)
     public static ParticleType<EntityParticleData> LAUNCH_FLAME_LAUNCHED;
     @ObjectHolder(ParticleTypeNames.launchSmoke)
-    public static BasicParticleType LAUNCH_SMOKE_TINY;
+    public static SimpleParticleType LAUNCH_SMOKE_TINY;
     @ObjectHolder(ParticleTypeNames.oilDrip)
-    public static BasicParticleType OIL_DRIP;
+    public static SimpleParticleType OIL_DRIP;
     @ObjectHolder(ParticleTypeNames.oxygen)
-    public static BasicParticleType OXYGEN;
+    public static SimpleParticleType OXYGEN;
     @ObjectHolder(ParticleTypeNames.landerFlame)
     public static ParticleType<EntityParticleData> LANDER_FLAME;
 
@@ -52,15 +52,15 @@ public class GCParticles
     {
         IForgeRegistry<ParticleType<?>> r = evt.getRegistry();
 
-        register(r, new BasicParticleType(false), ParticleTypeNames.whiteSmoke);
-        register(r, new BasicParticleType(false), ParticleTypeNames.whiteSmokeLaunched);
-        register(r, new BasicParticleType(false), ParticleTypeNames.whiteSmokeLarge);
-        register(r, new BasicParticleType(false), ParticleTypeNames.whiteSmokeLaunchedLarge);
+        register(r, new SimpleParticleType(false), ParticleTypeNames.whiteSmoke);
+        register(r, new SimpleParticleType(false), ParticleTypeNames.whiteSmokeLaunched);
+        register(r, new SimpleParticleType(false), ParticleTypeNames.whiteSmokeLarge);
+        register(r, new SimpleParticleType(false), ParticleTypeNames.whiteSmokeLaunchedLarge);
         register(r, new ParticleType<>(false, EntityParticleData.DESERIALIZER), ParticleTypeNames.launchFlame);
         register(r, new ParticleType<>(false, EntityParticleData.DESERIALIZER), ParticleTypeNames.launchFlameLaunched);
-        register(r, new BasicParticleType(false), ParticleTypeNames.launchSmoke);
-        register(r, new BasicParticleType(false), ParticleTypeNames.oilDrip);
-        register(r, new BasicParticleType(false), ParticleTypeNames.oxygen);
+        register(r, new SimpleParticleType(false), ParticleTypeNames.launchSmoke);
+        register(r, new SimpleParticleType(false), ParticleTypeNames.oilDrip);
+        register(r, new SimpleParticleType(false), ParticleTypeNames.oxygen);
         register(r, new ParticleType<>(false, EntityParticleData.DESERIALIZER), ParticleTypeNames.landerFlame);
     }
 }

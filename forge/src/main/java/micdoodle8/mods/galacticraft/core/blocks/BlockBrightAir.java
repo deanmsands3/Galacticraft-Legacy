@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.core.blocks;
 
-import net.minecraft.block.AirBlock;
+import net.minecraft.world.level.block.AirBlock;
 
 public class BlockBrightAir extends AirBlock
 {

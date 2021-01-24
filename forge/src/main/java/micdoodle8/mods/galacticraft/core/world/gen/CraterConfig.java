@@ -3,9 +3,9 @@ package micdoodle8.mods.galacticraft.core.world.gen;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public class CraterConfig implements IFeatureConfig {
+public class CraterConfig implements FeatureConfiguration {
    public final boolean largeCraters;
 
    public CraterConfig(boolean largeCraters) {

@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.core.wrappers;
 
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ScheduledBlockChange
 {

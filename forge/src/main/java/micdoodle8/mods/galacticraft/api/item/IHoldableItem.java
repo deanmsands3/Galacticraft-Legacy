@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.api.item;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Implement into an item class to allow player to hold it above their head
@@ -15,7 +15,7 @@ public interface IHoldableItem
      * @param player the player holding the item
      * @return true if player should hold the item above their head
      */
-    boolean shouldHoldLeftHandUp(PlayerEntity player);
+    boolean shouldHoldLeftHandUp(Player player);
 
     /**
      * Self-explanatory.
@@ -25,7 +25,7 @@ public interface IHoldableItem
      * @param player the player holding the item
      * @return true if player should hold the item above their head
      */
-    boolean shouldHoldRightHandUp(PlayerEntity player);
+    boolean shouldHoldRightHandUp(Player player);
 
     /**
      * Used to determine if player should crouch while holding this item.
@@ -35,5 +35,5 @@ public interface IHoldableItem
      * @param player the player holding the item
      * @return true if player should hold the item above their head
      */
-    boolean shouldCrouch(PlayerEntity player);
+    boolean shouldCrouch(Player player);
 }

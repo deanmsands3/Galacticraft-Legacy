@@ -4,18 +4,18 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemArmorAsteroids extends ArmorItem implements ISortable
 {
-    public ItemArmorAsteroids(EquipmentSlotType slotType, Item.Properties properties)
+    public ItemArmorAsteroids(EquipmentSlot slotType, Item.Properties properties)
     {
         super(EnumArmorAsteroids.ARMOR_TITANIUM, slotType, properties);
 //        this.setUnlocalizedName("titanium_" + assetSuffix);
@@ -36,9 +36,9 @@ public class ItemArmorAsteroids extends ArmorItem implements ISortable
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type)
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type)
     {
-        if (this.getArmorMaterial() == EnumArmorAsteroids.ARMOR_TITANIUM)
+        if (this.getMaterial() == EnumArmorAsteroids.ARMOR_TITANIUM)
         {
             if (stack.getItem() == AsteroidsItems.TITANIUM_HELMET)
             {
@@ -64,8 +64,8 @@ public class ItemArmorAsteroids extends ArmorItem implements ISortable
     }
 
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair)
     {
-        return repair.getItem() == this && repair.getDamage() == 6;
+        return repair.getItem() == this && repair.getDamageValue() == 6;
     }
 }

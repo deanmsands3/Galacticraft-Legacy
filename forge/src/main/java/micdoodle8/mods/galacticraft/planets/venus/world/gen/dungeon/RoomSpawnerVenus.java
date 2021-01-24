@@ -2,20 +2,17 @@ package micdoodle8.mods.galacticraft.planets.venus.world.gen.dungeon;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.entities.GCEntities;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.MobSpawnerTileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
 import static micdoodle8.mods.galacticraft.planets.venus.world.gen.VenusFeatures.CVENUS_DUNGEON_ENTRANCE;
@@ -23,7 +20,7 @@ import static micdoodle8.mods.galacticraft.planets.venus.world.gen.VenusFeatures
 
 public class RoomSpawnerVenus extends RoomEmptyVenus
 {
-    public RoomSpawnerVenus(TemplateManager templateManager, CompoundNBT nbt)
+    public RoomSpawnerVenus(StructureManager templateManager, CompoundTag nbt)
     {
         super(CVENUS_DUNGEON_SPAWNER, nbt);
     }
@@ -34,9 +31,9 @@ public class RoomSpawnerVenus extends RoomEmptyVenus
     }
 
     @Override
-    public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
+    public boolean postProcess(LevelAccessor worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, BoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
-        if (super.create(worldIn, chunkGeneratorIn, randomIn, mutableBoundingBoxIn, chunkPosIn))
+        if (super.postProcess(worldIn, chunkGeneratorIn, randomIn, mutableBoundingBoxIn, chunkPosIn))
         {
             for (int i = 1; i <= this.sizeX - 1; ++i)
             {
@@ -46,7 +43,7 @@ public class RoomSpawnerVenus extends RoomEmptyVenus
                     {
                         if (randomIn.nextFloat() < 0.05F)
                         {
-                            this.setBlockState(worldIn, Blocks.COBWEB.getDefaultState(), i, j, k, boundingBox);
+                            this.placeBlock(worldIn, Blocks.COBWEB.defaultBlockState(), i, j, k, boundingBox);
                         }
                     }
                 }
@@ -61,15 +58,15 @@ public class RoomSpawnerVenus extends RoomEmptyVenus
         return false;
     }
 
-    private void placeMobSpawner(IWorld worldIn, Random random, MutableBoundingBox chunkBox, int x, int y, int z)
+    private void placeMobSpawner(LevelAccessor worldIn, Random random, BoundingBox chunkBox, int x, int y, int z)
     {
-        this.setBlockState(worldIn, Blocks.SPAWNER.getDefaultState(), 1, 0, 1, boundingBox);
-        BlockPos blockpos = new BlockPos(this.getXWithOffset(1, 1), this.getYWithOffset(0), this.getZWithOffset(1, 1));
-        MobSpawnerTileEntity spawner = (MobSpawnerTileEntity) worldIn.getTileEntity(blockpos);
+        this.placeBlock(worldIn, Blocks.SPAWNER.defaultBlockState(), 1, 0, 1, boundingBox);
+        BlockPos blockpos = new BlockPos(this.getWorldX(1, 1), this.getWorldY(0), this.getWorldZ(1, 1));
+        SpawnerBlockEntity spawner = (SpawnerBlockEntity) worldIn.getBlockEntity(blockpos);
 
         if (spawner != null)
         {
-            spawner.getSpawnerBaseLogic().setEntityType(getMob(random));
+            spawner.getSpawner().setEntityId(getMob(random));
         }
     }
 

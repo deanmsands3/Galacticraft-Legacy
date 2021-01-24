@@ -1,108 +1,106 @@
 package micdoodle8.mods.galacticraft.planets.venus.client.fx;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import micdoodle8.mods.galacticraft.core.client.fx.ParticleOxygen;
+import net.minecraft.client.Camera;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.entity.Entity;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ParticleAcidExhaust extends SpriteTexturedParticle
+public class ParticleAcidExhaust extends TextureSheetParticle
 {
-    private final IAnimatedSprite animatedSprite;
+    private final SpriteSet animatedSprite;
     private final float smokeParticleScale;
 
-    public ParticleAcidExhaust(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double motionX, double motionY, double motionZ, IAnimatedSprite animatedSprite)
+    public ParticleAcidExhaust(Level worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double motionX, double motionY, double motionZ, SpriteSet animatedSprite)
     {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D);
-        this.motionX *= 0.10000000149011612D;
-        this.motionY *= 0.10000000149011612D;
-        this.motionZ *= 0.10000000149011612D;
-        this.motionX += motionX / 10.0F;
-        this.motionY += motionY;
-        this.motionZ += motionZ / 10.0F;
-        this.particleRed = (float) (Math.random() * 0.10000001192092896D + 0.8);
-        this.particleGreen = particleRed;
-        this.particleBlue = (float) (Math.random() * 0.10000001192092896D);
-        this.particleAlpha = 1.0F;
-        this.particleScale *= 0.5F;
-        this.smokeParticleScale = this.particleScale;
-        this.maxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
-        this.maxAge = (int) ((float) this.maxAge * 2.5F);
-        this.canCollide = true;
+        this.xd *= 0.10000000149011612D;
+        this.yd *= 0.10000000149011612D;
+        this.zd *= 0.10000000149011612D;
+        this.xd += motionX / 10.0F;
+        this.yd += motionY;
+        this.zd += motionZ / 10.0F;
+        this.rCol = (float) (Math.random() * 0.10000001192092896D + 0.8);
+        this.gCol = rCol;
+        this.bCol = (float) (Math.random() * 0.10000001192092896D);
+        this.alpha = 1.0F;
+        this.quadSize *= 0.5F;
+        this.smokeParticleScale = this.quadSize;
+        this.lifetime = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
+        this.lifetime = (int) ((float) this.lifetime * 2.5F);
+        this.hasPhysics = true;
         this.animatedSprite = animatedSprite;
     }
 
     @Override
-    public IParticleRenderType getRenderType()
+    public ParticleRenderType getRenderType()
     {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
-    public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks)
+    public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks)
     {
-        GlStateManager.disableLighting();
-        float f = ((float) this.age + partialTicks) / (float) this.maxAge * 32.0F;
-        f = MathHelper.clamp(f, 0.0F, 1.0F);
-        this.particleScale = this.smokeParticleScale * f;
-        super.renderParticle(buffer, renderInfo, partialTicks);
+        GlStateManager._disableLighting();
+        float f = ((float) this.age + partialTicks) / (float) this.lifetime * 32.0F;
+        f = Mth.clamp(f, 0.0F, 1.0F);
+        this.quadSize = this.smokeParticleScale * f;
+        super.render(buffer, renderInfo, partialTicks);
     }
 
     @Override
     public void tick()
     {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
 
-        if (this.age++ >= this.maxAge)
+        if (this.age++ >= this.lifetime)
         {
-            this.setExpired();
+            this.remove();
         }
 
-        this.selectSpriteWithAge(animatedSprite);
-        this.motionY += 0.004D;
-        this.move(this.motionX, this.motionY, this.motionZ);
+        this.setSpriteFromAge(animatedSprite);
+        this.yd += 0.004D;
+        this.move(this.xd, this.yd, this.zd);
 
-        if (this.posY == this.prevPosY)
+        if (this.y == this.yo)
         {
-            this.motionX *= 1.1D;
-            this.motionZ *= 1.1D;
+            this.xd *= 1.1D;
+            this.zd *= 1.1D;
         }
 
-        this.motionX *= 0.9599999785423279D;
-        this.motionY *= 0.9599999785423279D;
-        this.motionZ *= 0.9599999785423279D;
+        this.xd *= 0.9599999785423279D;
+        this.yd *= 0.9599999785423279D;
+        this.zd *= 0.9599999785423279D;
 
         if (this.onGround)
         {
-            this.motionX *= 0.699999988079071D;
-            this.motionZ *= 0.699999988079071D;
+            this.xd *= 0.699999988079071D;
+            this.zd *= 0.699999988079071D;
         }
 
-        this.selectSpriteWithAge(animatedSprite);
+        this.setSpriteFromAge(animatedSprite);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<BasicParticleType>
+    public static class Factory implements ParticleProvider<SimpleParticleType>
     {
-        private final IAnimatedSprite spriteSet;
+        private final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite spriteSet)
+        public Factory(SpriteSet spriteSet)
         {
             this.spriteSet = spriteSet;
         }
 
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle makeParticle(SimpleParticleType typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
         {
             return new ParticleAcidExhaust(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, spriteSet);
         }

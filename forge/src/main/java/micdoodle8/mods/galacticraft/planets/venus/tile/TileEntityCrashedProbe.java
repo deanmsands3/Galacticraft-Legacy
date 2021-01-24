@@ -5,30 +5,27 @@ import micdoodle8.mods.galacticraft.core.inventory.ContainerElectricFurnace;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityInventory;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlockNames;
 import micdoodle8.mods.galacticraft.planets.venus.inventory.ContainerCrashedProbe;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.Random;
 
-public class TileEntityCrashedProbe extends TileEntityInventory implements INamedContainerProvider
+public class TileEntityCrashedProbe extends TileEntityInventory implements MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.CRASHED_PROBE)
-    public static TileEntityType<TileEntityCrashedProbe> TYPE;
+    public static BlockEntityType<TileEntityCrashedProbe> TYPE;
 
     private boolean hasCoreToDrop;
     protected ResourceLocation lootTable;
@@ -75,9 +72,9 @@ public class TileEntityCrashedProbe extends TileEntityInventory implements IName
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         if (nbt.contains("ctd"))
         {
             this.hasCoreToDrop = nbt.getBoolean("ctd");
@@ -89,20 +86,20 @@ public class TileEntityCrashedProbe extends TileEntityInventory implements IName
 
         if (!this.checkLootAndRead(nbt))
         {
-            this.inventory = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-            ItemStackHelper.loadAllItems(nbt, this.getInventory());
+            this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+            ContainerHelper.loadAllItems(nbt, this.getInventory());
         }
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putBoolean("ctd", this.hasCoreToDrop);
 
         if (!this.checkLootAndWrite(nbt))
         {
-            ItemStackHelper.saveAllItems(nbt, this.getInventory());
+            ContainerHelper.saveAllItems(nbt, this.getInventory());
         }
         return nbt;
     }
@@ -114,24 +111,24 @@ public class TileEntityCrashedProbe extends TileEntityInventory implements IName
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot)
+    public ItemStack getItem(int slot)
     {
 //    	this.fillWithLoot(null);
-        return super.getStackInSlot(slot);
+        return super.getItem(slot);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
+    public ItemStack removeItem(int index, int count)
     {
 //        this.fillWithLoot(null);
-        return super.decrStackSize(index, count);
+        return super.removeItem(index, count);
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
+    public ItemStack removeItemNoUpdate(int index)
     {
 //        this.fillWithLoot(null);
-        return super.removeStackFromSlot(index);
+        return super.removeItemNoUpdate(index);
     }
 
     @Override
@@ -142,7 +139,7 @@ public class TileEntityCrashedProbe extends TileEntityInventory implements IName
     }
 
     @Override
-    public void clear()
+    public void clearContent()
     {
 //        this.fillWithLoot(null);
     }
@@ -163,7 +160,7 @@ public class TileEntityCrashedProbe extends TileEntityInventory implements IName
         return this.hasCoreToDrop;
     }
 
-    protected boolean checkLootAndRead(CompoundNBT compound)
+    protected boolean checkLootAndRead(CompoundTag compound)
     {
         if (compound.contains("LootTable", 8))
         {
@@ -177,7 +174,7 @@ public class TileEntityCrashedProbe extends TileEntityInventory implements IName
         }
     }
 
-    protected boolean checkLootAndWrite(CompoundNBT compound)
+    protected boolean checkLootAndWrite(CompoundTag compound)
     {
         if (this.lootTable != null)
         {
@@ -203,14 +200,14 @@ public class TileEntityCrashedProbe extends TileEntityInventory implements IName
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerCrashedProbe(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.crashed_probe");
+        return new TranslatableComponent("container.crashed_probe");
     }
 }

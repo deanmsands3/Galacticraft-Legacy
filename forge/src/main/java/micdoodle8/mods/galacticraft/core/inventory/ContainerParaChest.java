@@ -2,29 +2,29 @@ package micdoodle8.mods.galacticraft.core.inventory;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityParaChest;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerParaChest extends Container
+public class ContainerParaChest extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.PARACHEST)
-    public static ContainerType<ContainerParaChest> TYPE;
+    public static MenuType<ContainerParaChest> TYPE;
 
     private final TileEntityParaChest paraChest;
     public int numRows;
 
-    public ContainerParaChest(int containerId, PlayerInventory playerInv, TileEntityParaChest paraChest)
+    public ContainerParaChest(int containerId, Inventory playerInv, TileEntityParaChest paraChest)
     {
         super(TYPE, containerId);
         this.paraChest = paraChest;
-        this.numRows = (paraChest.getSizeInventory() - 3) / 9;
-        paraChest.openInventory(playerInv.player);
+        this.numRows = (paraChest.getContainerSize() - 3) / 9;
+        paraChest.startOpen(playerInv.player);
         int i = (this.numRows - 4) * 18 + 19;
         int j;
         int k;
@@ -37,9 +37,9 @@ public class ContainerParaChest extends Container
             }
         }
 
-        this.addSlot(new Slot(paraChest, paraChest.getSizeInventory() - 3, 125 + 0 * 18, (this.numRows == 0 ? 24 : 26) + this.numRows * 18));
-        this.addSlot(new Slot(paraChest, paraChest.getSizeInventory() - 2, 125 + 1 * 18, (this.numRows == 0 ? 24 : 26) + this.numRows * 18));
-        this.addSlot(new Slot(paraChest, paraChest.getSizeInventory() - 1, 75, (this.numRows == 0 ? 24 : 26) + this.numRows * 18));
+        this.addSlot(new Slot(paraChest, paraChest.getContainerSize() - 3, 125 + 0 * 18, (this.numRows == 0 ? 24 : 26) + this.numRows * 18));
+        this.addSlot(new Slot(paraChest, paraChest.getContainerSize() - 2, 125 + 1 * 18, (this.numRows == 0 ? 24 : 26) + this.numRows * 18));
+        this.addSlot(new Slot(paraChest, paraChest.getContainerSize() - 1, 75, (this.numRows == 0 ? 24 : 26) + this.numRows * 18));
 
         for (j = 0; j < 3; ++j)
         {
@@ -61,42 +61,42 @@ public class ContainerParaChest extends Container
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.paraChest.isUsableByPlayer(par1EntityPlayer);
+        return this.paraChest.stillValid(par1EntityPlayer);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par2)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par2)
     {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(par2);
-        final int b = this.inventorySlots.size();
+        Slot slot = this.slots.get(par2);
+        final int b = this.slots.size();
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            ItemStack itemstack1 = slot.getStack();
+            ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
 
-            if (par2 < this.paraChest.getSizeInventory())
+            if (par2 < this.paraChest.getContainerSize())
             {
-                if (!this.mergeItemStack(itemstack1, b - 36, b, true))
+                if (!this.moveItemStackTo(itemstack1, b - 36, b, true))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, this.paraChest.getSizeInventory(), false))
+            else if (!this.moveItemStackTo(itemstack1, 0, this.paraChest.getContainerSize(), false))
             {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.getCount() == 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
         }
 
@@ -107,16 +107,16 @@ public class ContainerParaChest extends Container
      * Callback for when the crafting gui is closed.
      */
     @Override
-    public void onContainerClosed(PlayerEntity par1EntityPlayer)
+    public void removed(Player par1EntityPlayer)
     {
-        super.onContainerClosed(par1EntityPlayer);
-        this.paraChest.closeInventory(par1EntityPlayer);
+        super.removed(par1EntityPlayer);
+        this.paraChest.stopOpen(par1EntityPlayer);
     }
 
     /**
      * Return this chest container's lower chest inventory.
      */
-    public IInventory getparachestInventory()
+    public Container getparachestInventory()
     {
         return this.paraChest;
     }

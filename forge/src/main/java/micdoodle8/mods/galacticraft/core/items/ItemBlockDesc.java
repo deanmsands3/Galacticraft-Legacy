@@ -7,22 +7,19 @@ import micdoodle8.mods.galacticraft.core.energy.EnergyDisplayHelper;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseElectricBlock;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import javax.annotation.Nullable;
+import com.mojang.blaze3d.platform.InputConstants;
 import java.util.List;
 
 public class ItemBlockDesc extends BlockItem
@@ -33,38 +30,38 @@ public class ItemBlockDesc extends BlockItem
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, PlayerEntity player)
+    public void onCraftedBy(ItemStack stack, Level world, Player player)
     {
-        if (!world.isRemote)
+        if (!world.isClientSide)
         {
             return;
         }
 
         //The player could be a FakePlayer made by another mod e.g. LogisticsPipes
-        if (player instanceof ClientPlayerEntity)
+        if (player instanceof LocalPlayer)
         {
             if (this.getBlock() == GCBlocks.FUEL_LOADER)
             {
-                ClientProxyCore.playerClientHandler.onBuild(4, (ClientPlayerEntity) player);
+                ClientProxyCore.playerClientHandler.onBuild(4, (LocalPlayer) player);
             }
             else if (this.getBlock() == GCBlocks.FUEL_LOADER)
             {
-                ClientProxyCore.playerClientHandler.onBuild(6, (ClientPlayerEntity) player);
+                ClientProxyCore.playerClientHandler.onBuild(6, (LocalPlayer) player);
             }
         }
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         if (this.getBlock() instanceof IShiftDescription && ((IShiftDescription) this.getBlock()).showDescription(stack))
         {
-            if (InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), 340))
+            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 340))
             {
-                List<String> descString = Minecraft.getInstance().fontRenderer.listFormattedStringToWidth(((IShiftDescription) this.getBlock()).getShiftDescription(stack), 150);
+                List<String> descString = Minecraft.getInstance().font.split(((IShiftDescription) this.getBlock()).getShiftDescription(stack), 150);
                 for (String string : descString)
                 {
-                    tooltip.add(new StringTextComponent(string));
+                    tooltip.add(new TextComponent(string));
                 }
             }
             else
@@ -93,7 +90,7 @@ public class ItemBlockDesc extends BlockItem
                         }
                     }
                 }*/
-                tooltip.add(new StringTextComponent(GCCoreUtil.translateWithFormat("item_desc.shift", Minecraft.getInstance().gameSettings.keyBindSneak.getLocalizedName())));
+                tooltip.add(new TextComponent(GCCoreUtil.translateWithFormat("item_desc.shift", Minecraft.getInstance().options.keyShift.getTranslatedKeyMessage())));
             }
         }
     }

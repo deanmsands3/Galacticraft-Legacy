@@ -1,46 +1,45 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.client.render.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.SmallAsteroidEntity;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SmallAsteroidRenderer extends EntityRenderer<SmallAsteroidEntity>
 {
-    public SmallAsteroidRenderer(EntityRendererManager manager)
+    public SmallAsteroidRenderer(EntityRenderDispatcher manager)
     {
         super(manager);
     }
 
     @Override
-    public void render(SmallAsteroidEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    public void render(SmallAsteroidEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight)
     {
-        BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
+        BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
         RenderSystem.disableRescaleNormal();
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(0, 0.5F, 0);
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(entity.rotationPitch));
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(entity.rotationYaw));
-        BlockState state = AsteroidBlocks.DARK_ASTEROID_ROCK.getDefaultState();
-        dispatcher.renderBlock(state, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
-        matrixStack.pop();
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(entity.xRot));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(entity.yRot));
+        BlockState state = AsteroidBlocks.DARK_ASTEROID_ROCK.defaultBlockState();
+        dispatcher.renderSingleBlock(state, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+        matrixStack.popPose();
     }
 
     @Override
     public ResourceLocation getEntityTexture(SmallAsteroidEntity entity)
     {
-        return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 }

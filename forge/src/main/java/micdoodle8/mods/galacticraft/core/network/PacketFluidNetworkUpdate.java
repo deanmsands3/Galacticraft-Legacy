@@ -6,13 +6,13 @@ import micdoodle8.mods.galacticraft.api.transmission.tile.IBufferTransmitter;
 import micdoodle8.mods.galacticraft.core.fluid.FluidNetwork;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -48,12 +48,12 @@ public class PacketFluidNetworkUpdate extends PacketBase
         return new PacketFluidNetworkUpdate(PacketType.ADD_TRANSMITTER, dimensionID, pos, newNetwork, transmittersAdded);
     }
 
-    public static void encode(final PacketFluidNetworkUpdate message, final PacketBuffer buf)
+    public static void encode(final PacketFluidNetworkUpdate message, final FriendlyByteBuf buf)
     {
         message.encodeInto(buf);
     }
 
-    public static PacketFluidNetworkUpdate decode(PacketBuffer buf)
+    public static PacketFluidNetworkUpdate decode(FriendlyByteBuf buf)
     {
         PacketFluidNetworkUpdate packet = new PacketFluidNetworkUpdate();
         packet.decodeInto(buf);
@@ -111,10 +111,10 @@ public class PacketFluidNetworkUpdate extends PacketBase
 
             for (IBufferTransmitter transmitter : this.transmittersAdded)
             {
-                TileEntity tile = (TileEntity) transmitter;
-                buffer.writeInt(tile.getPos().getX());
-                buffer.writeInt(tile.getPos().getY());
-                buffer.writeInt(tile.getPos().getZ());
+                BlockEntity tile = (BlockEntity) transmitter;
+                buffer.writeInt(tile.getBlockPos().getX());
+                buffer.writeInt(tile.getBlockPos().getY());
+                buffer.writeInt(tile.getBlockPos().getZ());
             }
             break;
         case FLUID:
@@ -174,9 +174,9 @@ public class PacketFluidNetworkUpdate extends PacketBase
     }
 
     @Override
-    public void handleClientSide(PlayerEntity player)
+    public void handleClientSide(Player player)
     {
-        TileEntity tile = player.world.getTileEntity(this.pos);
+        BlockEntity tile = player.level.getBlockEntity(this.pos);
 
         if (tile instanceof IBufferTransmitter)
         {
@@ -192,7 +192,7 @@ public class PacketFluidNetworkUpdate extends PacketBase
 
                 for (BlockPos pos : this.transmittersCoords)
                 {
-                    TileEntity transmitterTile = player.world.getTileEntity(pos);
+                    BlockEntity transmitterTile = player.level.getBlockEntity(pos);
 
                     if (transmitterTile instanceof IBufferTransmitter)
                     {
@@ -222,7 +222,7 @@ public class PacketFluidNetworkUpdate extends PacketBase
     }
 
     @Override
-    public void handleServerSide(PlayerEntity player)
+    public void handleServerSide(Player player)
     {
 
     }

@@ -1,31 +1,32 @@
 package micdoodle8.mods.galacticraft.core.client.render.item;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.wrappers.ModelTransformWrapper;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.resources.model.BakedModel;
 
-import static net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import static net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
 
 public class ItemModelFlag extends ModelTransformWrapper
 {
-    public ItemModelFlag(IBakedModel modelToWrap)
+    public ItemModelFlag(BakedModel modelToWrap)
     {
         super(modelToWrap);
     }
 
     @Override
-    protected boolean getTransformForPerspective(TransformType cameraTransformType, MatrixStack mat)
+    protected boolean getTransformForPerspective(TransformType cameraTransformType, PoseStack mat)
     {
         if (cameraTransformType == ItemCameraTransforms.TransformType.GUI)
         {
-            mat.push();
+            mat.pushPose();
             mat.scale(0.25F, 0.25F, 0.25F);
             mat.translate(-0.22F, -1.6F, 0.0F);
-            mat.rotate(new Quaternion(0.5F, 0.0F, 0.0F, false));
-            mat.rotate(new Quaternion(0.0F, -Constants.halfPI / 2.0F, 0.0F, false));
+            mat.mulPose(new Quaternion(0.5F, 0.0F, 0.0F, false));
+            mat.mulPose(new Quaternion(0.0F, -Constants.halfPI / 2.0F, 0.0F, false));
             return true;
         }
 

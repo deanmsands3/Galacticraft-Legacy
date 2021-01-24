@@ -11,18 +11,17 @@ import micdoodle8.mods.galacticraft.core.client.fx.EntityParticleData;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.HashMap;
@@ -32,30 +31,30 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
 {
     private double lastMotionY;
 
-    public LanderEntity(EntityType<LanderEntity> type, World world)
+    public LanderEntity(EntityType<LanderEntity> type, Level world)
     {
         super(type, world);
     }
 
-    public LanderEntity(ServerPlayerEntity player)
+    public LanderEntity(ServerPlayer player)
     {
         super(GCEntities.LANDER, player);
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
 
     }
 
     @Override
-    public double getMountedYOffset()
+    public double getRideHeight()
     {
         return 2.25;
     }
@@ -71,21 +70,21 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
     {
         super.tick();
 
-        this.lastMotionY = this.getMotion().y;
+        this.lastMotionY = this.getDeltaMovement().y;
     }
 
     @Override
-    protected void readAdditional(CompoundNBT nbt)
+    protected void readAdditionalSaveData(CompoundTag nbt)
     {
-        super.readAdditional(nbt);
+        super.readAdditionalSaveData(nbt);
 
-        this.lastMotionY = this.getMotion().y;
+        this.lastMotionY = this.getDeltaMovement().y;
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        super.writeAdditional(nbt);
+        super.addAdditionalSaveData(nbt);
     }
 
 //    @Override
@@ -101,9 +100,9 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
 //    }
 
     @Override
-    public boolean processInitialInteract(PlayerEntity player, Hand hand)
+    public boolean interact(Player player, InteractionHand hand)
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             if (!this.onGround)
             {
@@ -112,25 +111,25 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
 
             if (!this.getPassengers().isEmpty())
             {
-                this.removePassengers();
+                this.ejectPassengers();
             }
 
             return true;
         }
 
-        if (this.getPassengers().isEmpty() && player instanceof ServerPlayerEntity)
+        if (this.getPassengers().isEmpty() && player instanceof ServerPlayer)
         {
 //            GCCoreUtil.openParachestInv((ServerPlayerEntity) player, this);
             return true;
         }
-        else if (player instanceof ServerPlayerEntity)
+        else if (player instanceof ServerPlayer)
         {
             if (!this.onGround)
             {
                 return false;
             }
 
-            this.removePassengers();
+            this.ejectPassengers();
             return true;
         }
         else
@@ -153,22 +152,22 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
         switch (key)
         {
         case 0:
-            this.rotationPitch = Math.min(Math.max(this.rotationPitch - 0.5F * turnFactor, -angle), angle);
+            this.xRot = Math.min(Math.max(this.xRot - 0.5F * turnFactor, -angle), angle);
             return true;
         case 1:
-            this.rotationPitch = Math.min(Math.max(this.rotationPitch + 0.5F * turnFactor, -angle), angle);
+            this.xRot = Math.min(Math.max(this.xRot + 0.5F * turnFactor, -angle), angle);
             return true;
         case 2:
-            this.rotationYaw -= 0.5F * turnFactor;
+            this.yRot -= 0.5F * turnFactor;
             return true;
         case 3:
-            this.rotationYaw += 0.5F * turnFactor;
+            this.yRot += 0.5F * turnFactor;
             return true;
         case 4:
-            this.setMotion(getMotion().x, Math.min(this.getMotion().y + 0.03F, this.getPosY() < 90 ? -0.15 : -1.0), getMotion().z);
+            this.setDeltaMovement(getDeltaMovement().x, Math.min(this.getDeltaMovement().y + 0.03F, this.getY() < 90 ? -0.15 : -1.0), getDeltaMovement().z);
             return true;
         case 5:
-            this.setMotion(getMotion().x, Math.min(this.getMotion().y - 0.022F, -1.0), getMotion().z);
+            this.setDeltaMovement(getDeltaMovement().x, Math.min(this.getDeltaMovement().y - 0.022F, -1.0), getDeltaMovement().z);
             return true;
         }
 
@@ -178,19 +177,19 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
     @Override
     public void spawnParticles()
     {
-        if (this.ticks > 40 && this.rotationPitch != 0.0000001F)
+        if (this.ticks > 40 && this.xRot != 0.0000001F)
         {
-            double sinPitch = Math.sin(this.rotationPitch / Constants.RADIANS_TO_DEGREES_D);
-            final double x1 = 4 * Math.cos(this.rotationYaw / Constants.RADIANS_TO_DEGREES_D) * sinPitch;
-            final double z1 = 4 * Math.sin(this.rotationYaw / Constants.RADIANS_TO_DEGREES_D) * sinPitch;
-            final double y1 = -4 * Math.abs(Math.cos(this.rotationPitch / Constants.RADIANS_TO_DEGREES_D));
+            double sinPitch = Math.sin(this.xRot / Constants.RADIANS_TO_DEGREES_D);
+            final double x1 = 4 * Math.cos(this.yRot / Constants.RADIANS_TO_DEGREES_D) * sinPitch;
+            final double z1 = 4 * Math.sin(this.yRot / Constants.RADIANS_TO_DEGREES_D) * sinPitch;
+            final double y1 = -4 * Math.abs(Math.cos(this.xRot / Constants.RADIANS_TO_DEGREES_D));
 
             final Map<Vector3, Vector3> particleMap = new HashMap<Vector3, Vector3>();
-            particleMap.put(new Vector3(), new Vector3((float) x1, (float) (y1 + this.getMotion().y / 2), (float) z1));
+            particleMap.put(new Vector3(), new Vector3((float) x1, (float) (y1 + this.getDeltaMovement().y / 2), (float) z1));
             LivingEntity passenger = this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof LivingEntity) ? null : (LivingEntity) this.getPassengers().get(0);
-            this.world.addParticle(new EntityParticleData(GCParticles.LANDER_FLAME, passenger != null ? passenger.getUniqueID() : getUniqueID()),
-                    this.getPosX(), this.getPosY() + 1D + this.getMotion().y / 2, this.getPosZ(),
-                    x1, y1 + this.getMotion().y / 2, z1);
+            this.level.addParticle(new EntityParticleData(GCParticles.LANDER_FLAME, passenger != null ? passenger.getUUID() : getUUID()),
+                    this.getX(), this.getY() + 1D + this.getDeltaMovement().y / 2, this.getZ(),
+                    x1, y1 + this.getDeltaMovement().y / 2, z1);
         }
     }
 
@@ -199,17 +198,17 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
     {
         super.tickInAir();
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             if (!this.onGround)
             {
-                this.setMotion(getMotion().add(0.0, -0.008D, 0.0));
+                this.setDeltaMovement(getDeltaMovement().add(0.0, -0.008D, 0.0));
             }
 
-            double motY = -1 * Math.sin(this.rotationPitch / Constants.RADIANS_TO_DEGREES_D);
-            double motX = Math.cos(this.rotationYaw / Constants.RADIANS_TO_DEGREES_D) * motY;
-            double motZ = Math.sin(this.rotationYaw / Constants.RADIANS_TO_DEGREES_D) * motY;
-            this.setMotion(motX / 2.0, getMotion().y, motZ / 2.0);
+            double motY = -1 * Math.sin(this.xRot / Constants.RADIANS_TO_DEGREES_D);
+            double motX = Math.cos(this.yRot / Constants.RADIANS_TO_DEGREES_D) * motY;
+            double motZ = Math.sin(this.yRot / Constants.RADIANS_TO_DEGREES_D) * motY;
+            this.setDeltaMovement(motX / 2.0, getDeltaMovement().y, motZ / 2.0);
         }
     }
 
@@ -217,31 +216,31 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
     public void tickOnGround()
     {
         //Signal switch off flames
-        this.rotationPitch = 0.0000001F;
+        this.xRot = 0.0000001F;
     }
 
     @Override
     public void onGroundHit()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (Math.abs(this.lastMotionY) > 2.0D)
             {
                 for (Entity entity : this.getPassengers())
                 {
                     entity.stopRiding();
-                    if (entity instanceof ServerPlayerEntity)
+                    if (entity instanceof ServerPlayer)
                     {
-                        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_RESET_THIRD_PERSON, GCCoreUtil.getDimensionType(this.world), new Object[]{}), (ServerPlayerEntity) entity);
+                        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_RESET_THIRD_PERSON, GCCoreUtil.getDimensionType(this.level), new Object[]{}), (ServerPlayer) entity);
                     }
-                    entity.setMotion(0.0, 0.0, 0.0);
-                    entity.setPosition(entity.getPosX(), this.getPosY() + this.getMountedYOffset(), entity.getPosZ());
-                    if (this.world instanceof ServerWorld)
+                    entity.setDeltaMovement(0.0, 0.0, 0.0);
+                    entity.setPos(entity.getX(), this.getY() + this.getRideHeight(), entity.getZ());
+                    if (this.level instanceof ServerLevel)
                     {
-                        ((ServerWorld) this.world).chunkCheck(entity);
+                        ((ServerLevel) this.level).updateChunkPos(entity);
                     }
                 }
-                this.world.createExplosion(this, this.getPosX(), this.getPosY(), this.getPosZ(), 12, Explosion.Mode.BREAK);
+                this.level.explode(this, this.getX(), this.getY(), this.getZ(), 12, Explosion.Mode.BREAK);
 
                 this.remove();
             }
@@ -258,10 +257,10 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
 
         if (this.ticks >= 40 && this.ticks < 45)
         {
-            this.setMotion(this.getMotion().x, this.getInitialMotionY(), this.getMotion().z);
+            this.setDeltaMovement(this.getDeltaMovement().x, this.getInitialMotionY(), this.getDeltaMovement().z);
         }
 
-        return new Vector3D((float) this.getMotion().x, (float) (this.ticks < 40 ? 0 : this.getMotion().y), (float) this.getMotion().z);
+        return new Vector3D((float) this.getDeltaMovement().x, (float) (this.ticks < 40 ? 0 : this.getDeltaMovement().y), (float) this.getDeltaMovement().z);
     }
 
     @Override
@@ -289,31 +288,31 @@ public class LanderEntity extends EntityLanderBase implements IIgnoreShift, ICam
     }
 
     @Override
-    protected boolean canTriggerWalking()
+    protected boolean isMovementNoisy()
     {
         return false;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox()
+    public AABB getCollideBox()
     {
         return null;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox(Entity par1Entity)
+    public AABB getCollideAgainstBox(Entity par1Entity)
     {
         return null;
     }
 
     @Override
-    public boolean canBePushed()
+    public boolean isPushable()
     {
         return false;
     }
 
     @Override
-    public boolean canBeCollidedWith()
+    public boolean isPickable()
     {
         return this.isAlive();
     }

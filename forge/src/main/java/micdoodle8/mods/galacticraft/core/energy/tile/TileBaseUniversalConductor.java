@@ -2,10 +2,10 @@ package micdoodle8.mods.galacticraft.core.energy.tile;
 
 import micdoodle8.mods.galacticraft.core.energy.EnergyConfigHandler;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -14,7 +14,7 @@ public abstract class TileBaseUniversalConductor extends TileBaseConductor imple
     protected boolean isAddedToEnergyNet;
     private final float IC2surplusJoules = 0F;
 
-    public TileBaseUniversalConductor(TileEntityType<?> type)
+    public TileBaseUniversalConductor(BlockEntityType<?> type)
     {
         super(type);
     }
@@ -25,7 +25,7 @@ public abstract class TileBaseUniversalConductor extends TileBaseConductor imple
     }
 
     @Override
-    public TileEntity[] getAdjacentConnections()
+    public BlockEntity[] getAdjacentConnections()
     {
         return EnergyUtil.getAdjacentPowerConnections(this);
     }
@@ -219,7 +219,7 @@ public abstract class TileBaseUniversalConductor extends TileBaseConductor imple
 
         float receiveGC = (float) (maxReceive * EnergyConfigHandler.RF_RATIO.get());
         float sentGC = receiveGC - this.getNetwork().produce(receiveGC, !simulate, 1);
-        return MathHelper.floor(sentGC / EnergyConfigHandler.RF_RATIO.get());
+        return Mth.floor(sentGC / EnergyConfigHandler.RF_RATIO.get());
     }
 
     //ForgeEnergy OR BuildCraft (method name clash!)
@@ -245,7 +245,7 @@ public abstract class TileBaseUniversalConductor extends TileBaseConductor imple
             return 0;
         }
 
-        return MathHelper.floor(this.getNetwork().getRequest(this) / EnergyConfigHandler.RF_RATIO.get());
+        return Mth.floor(this.getNetwork().getRequest(this) / EnergyConfigHandler.RF_RATIO.get());
     }
 
     //ForgeEnergy

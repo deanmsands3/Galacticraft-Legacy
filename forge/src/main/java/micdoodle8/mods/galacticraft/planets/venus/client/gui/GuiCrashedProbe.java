@@ -5,9 +5,9 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.venus.inventory.ContainerCrashedProbe;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityCrashedProbe;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.opengl.GL11;
 
 public class GuiCrashedProbe extends GuiContainerGC<ContainerCrashedProbe>
@@ -16,29 +16,29 @@ public class GuiCrashedProbe extends GuiContainerGC<ContainerCrashedProbe>
 
     private final TileEntityCrashedProbe probe;
 
-    public GuiCrashedProbe(ContainerCrashedProbe container, PlayerInventory playerInv, ITextComponent title)
+    public GuiCrashedProbe(ContainerCrashedProbe container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
         this.probe = container.getProbe();
-        this.ySize = 133;
-        this.xSize = 176;
+        this.imageHeight = 133;
+        this.imageWidth = 176;
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
+    protected void renderBg(float var1, int var2, int var3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GuiCrashedProbe.guiTexture);
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
-        this.blit(var5, var6, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(GuiCrashedProbe.guiTexture);
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
+        this.blit(var5, var6, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        String displayString = this.getTitle().getFormattedText();
-        this.font.drawString(displayString, this.xSize / 2 - this.font.getStringWidth(displayString) / 2, 7, 4210752);
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 94, 4210752);
+        String displayString = this.getTitle().getColoredString();
+        this.font.draw(displayString, this.imageWidth / 2 - this.font.width(displayString) / 2, 7, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, this.imageHeight - 94, 4210752);
     }
 }

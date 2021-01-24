@@ -1,23 +1,21 @@
 package micdoodle8.mods.galacticraft.core.world.gen.dungeon;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
 import java.util.Random;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 public abstract class DirectionalPiece extends Piece
 {
     private Direction direction;
 
-    public DirectionalPiece(IStructurePieceType type, CompoundNBT nbt)
+    public DirectionalPiece(StructurePieceType type, CompoundTag nbt)
     {
         super(type, nbt);
     }
 
-    public DirectionalPiece(IStructurePieceType type, DungeonConfiguration configuration, Direction direction)
+    public DirectionalPiece(StructurePieceType type, DungeonConfiguration configuration, Direction direction)
     {
         super(type, configuration);
         this.direction = direction;
@@ -34,7 +32,7 @@ public abstract class DirectionalPiece extends Piece
     }
 
     @Override
-    protected void writeStructureToNBT(CompoundNBT tagCompound)
+    protected void writeStructureToNBT(CompoundTag tagCompound)
     {
         super.writeStructureToNBT(tagCompound);
 
@@ -42,13 +40,13 @@ public abstract class DirectionalPiece extends Piece
     }
 
     @Override
-    protected void readStructureFromNBT(CompoundNBT nbt)
+    protected void readStructureFromNBT(CompoundTag nbt)
     {
         super.readStructureFromNBT(nbt);
 
         if (nbt.contains("direction"))
         {
-            this.direction = Direction.byIndex(nbt.getInt("direction"));
+            this.direction = Direction.from3DDataValue(nbt.getInt("direction"));
         }
         else
         {
@@ -68,12 +66,12 @@ public abstract class DirectionalPiece extends Piece
         int randDir = rand.nextInt(3);
         do
         {
-            randomDir = Direction.byHorizontalIndex((getDirection().getOpposite().getHorizontalIndex() + 1 + randDir) % 4);
-            MutableBoundingBox extension = getExtension(randomDir, this.configuration.getHallwayLengthMin() + rand.nextInt(this.configuration.getHallwayLengthMax() - this.configuration.getHallwayLengthMin()), 3);
-            blockX = extension.minX;
-            blockZ = extension.minZ;
-            sizeX = extension.maxX - extension.minX;
-            sizeZ = extension.maxZ - extension.minZ;
+            randomDir = Direction.from2DDataValue((getDirection().getOpposite().get2DDataValue() + 1 + randDir) % 4);
+            BoundingBox extension = getExtension(randomDir, this.configuration.getHallwayLengthMin() + rand.nextInt(this.configuration.getHallwayLengthMax() - this.configuration.getHallwayLengthMin()), 3);
+            blockX = extension.x0;
+            blockZ = extension.z0;
+            sizeX = extension.x1 - extension.x0;
+            sizeZ = extension.z1 - extension.z0;
             valid = !startPiece.checkIntersection(extension);
             attempts--;
             randDir++;

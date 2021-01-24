@@ -5,10 +5,10 @@ import micdoodle8.mods.galacticraft.api.vector.Vector2;
 import micdoodle8.mods.galacticraft.api.vector.Vector3D;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -42,15 +42,15 @@ public class PacketEntityUpdate extends PacketBase
 
     public PacketEntityUpdate(Entity entity)
     {
-        this(entity.getEntityId(), new Vector3D(entity.getPosX(), entity.getPosY(), entity.getPosZ()), new Vector2(entity.rotationYaw, entity.rotationPitch), new Vector3D(entity.getMotion()), entity.onGround, GCCoreUtil.getDimensionType(entity.world));
+        this(entity.getId(), new Vector3D(entity.getX(), entity.getY(), entity.getZ()), new Vector2(entity.yRot, entity.xRot), new Vector3D(entity.getDeltaMovement()), entity.onGround, GCCoreUtil.getDimensionType(entity.level));
     }
 
-    public static void encode(final PacketEntityUpdate message, final PacketBuffer buf)
+    public static void encode(final PacketEntityUpdate message, final FriendlyByteBuf buf)
     {
         message.encodeInto(buf);
     }
 
-    public static PacketEntityUpdate decode(PacketBuffer buf)
+    public static PacketEntityUpdate decode(FriendlyByteBuf buf)
     {
         PacketEntityUpdate packet = new PacketEntityUpdate();
         packet.decodeInto(buf);
@@ -102,24 +102,24 @@ public class PacketEntityUpdate extends PacketBase
     }
 
     @Override
-    public void handleClientSide(PlayerEntity player)
+    public void handleClientSide(Player player)
     {
         this.setEntityData(player);
     }
 
     @Override
-    public void handleServerSide(PlayerEntity player)
+    public void handleServerSide(Player player)
     {
         this.setEntityData(player);
     }
 
-    private void setEntityData(PlayerEntity player)
+    private void setEntityData(Player player)
     {
-        Entity entity = player.world.getEntityByID(this.entityID);
+        Entity entity = player.level.getEntity(this.entityID);
 
         if (entity instanceof IEntityFullSync)
         {
-            if (player.world.isRemote || player.getUniqueID().equals(((IEntityFullSync) entity).getOwnerUUID()) || ((IEntityFullSync) entity).getOwnerUUID() == null)
+            if (player.level.isClientSide || player.getUUID().equals(((IEntityFullSync) entity).getOwnerUUID()) || ((IEntityFullSync) entity).getOwnerUUID() == null)
             {
                 IEntityFullSync controllable = (IEntityFullSync) entity;
                 controllable.setPositionRotationAndMotion(this.position.x, this.position.y, this.position.z, this.rotationYaw, this.rotationPitch, this.motion.x, this.motion.y, this.motion.z, this.onGround);

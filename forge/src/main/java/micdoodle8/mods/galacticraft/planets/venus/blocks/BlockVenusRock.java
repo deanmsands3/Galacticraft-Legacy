@@ -4,16 +4,16 @@ import micdoodle8.mods.galacticraft.api.block.IPlantableBlock;
 import micdoodle8.mods.galacticraft.api.block.ITerraformableBlock;
 import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.IPlantable;
 
 public class BlockVenusRock extends Block implements IPlantableBlock, ITerraformableBlock, ISortable
@@ -31,7 +31,7 @@ public class BlockVenusRock extends Block implements IPlantableBlock, ITerraform
 //    }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te, ItemStack tool)
+    public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, BlockEntity te, ItemStack tool)
     {
 //        player.addStat(Stats.getBlockStats(this));
 //        player.addExhaustion(0.025F);
@@ -140,7 +140,7 @@ public class BlockVenusRock extends Block implements IPlantableBlock, ITerraform
 //    }
 
     @Override
-    public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable)
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable)
     {
         return false;
     }
@@ -158,13 +158,13 @@ public class BlockVenusRock extends Block implements IPlantableBlock, ITerraform
     }
 
     @Override
-    public boolean isTerraformable(World world, BlockPos pos)
+    public boolean isTerraformable(Level world, BlockPos pos)
     {
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() == VenusBlocks.VENUS_HARD_ROCK || state.getBlock() == VenusBlocks.VENUS_SOFT_ROCK)
         {
-            BlockPos above = pos.offset(Direction.UP);
+            BlockPos above = pos.relative(Direction.UP);
             BlockState stateAbove = world.getBlockState(above);
             return stateAbove.getBlock().isAir(stateAbove, world, above);
         }
@@ -173,7 +173,7 @@ public class BlockVenusRock extends Block implements IPlantableBlock, ITerraform
     }
 
     @Override
-    public boolean isReplaceableOreGen(BlockState state, IWorldReader world, BlockPos pos, java.util.function.Predicate<BlockState> target)
+    public boolean isReplaceableOreGen(BlockState state, LevelReader world, BlockPos pos, java.util.function.Predicate<BlockState> target)
     {
         return state.getBlock() == VenusBlocks.VENUS_HARD_ROCK;
     }

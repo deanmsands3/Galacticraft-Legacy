@@ -4,27 +4,27 @@ import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.IShearable;
 
 import javax.annotation.Nonnull;
@@ -39,7 +39,7 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
 {
     public static final EnumProperty<EnumVineType> VINE_TYPE = EnumProperty.create("vine_type", EnumVineType.class);
 
-    public enum EnumVineType implements IStringSerializable
+    public enum EnumVineType implements StringRepresentable
     {
         VINE_0("cavernous_vines_1"),
         VINE_1("cavernous_vines_2"),
@@ -60,7 +60,7 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
         }
 
         @Override
-        public String getName()
+        public String getSerializedName()
         {
             return this.name().toLowerCase(Locale.ROOT);
         }
@@ -74,22 +74,22 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     public BlockCavernousVine(Properties builder)
     {
         super(builder);
-        this.setDefaultState(this.stateContainer.getBaseState().with(VINE_TYPE, EnumVineType.VINE_0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(VINE_TYPE, EnumVineType.VINE_0));
     }
 
-    public boolean canBlockStay(World world, BlockPos pos)
+    public boolean canBlockStay(Level world, BlockPos pos)
     {
-        BlockState stateAbove = world.getBlockState(pos.up());
+        BlockState stateAbove = world.getBlockState(pos.above());
         return stateAbove.getBlock() == this || stateAbove.getMaterial().isSolid();
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        World world = context.getWorld();
-        BlockPos pos = context.getPos();
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
 
-        if (world.getBlockState(pos).isReplaceable(context) && this.canBlockStay(world, pos))
+        if (world.getBlockState(pos).canBeReplaced(context) && this.canBlockStay(world, pos))
         {
             return super.getStateForPlacement(context);
         }
@@ -97,12 +97,12 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
         this.checkAndDropBlock(world, pos);
     }
 
-    protected void checkAndDropBlock(World world, BlockPos pos)
+    protected void checkAndDropBlock(Level world, BlockPos pos)
     {
         if (!this.canBlockStay(world, pos))
         {
@@ -111,35 +111,35 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity)
     {
         if (entity instanceof LivingEntity)
         {
-            if (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.isFlying)
+            if (entity instanceof Player && ((Player) entity).abilities.flying)
             {
                 return;
             }
 
-            entity.setMotion(entity.getMotion().x, 0.06F, entity.getMotion().z);
-            entity.rotationYaw += 0.4F;
+            entity.setDeltaMovement(entity.getDeltaMovement().x, 0.06F, entity.getDeltaMovement().z);
+            entity.yRot += 0.4F;
 
-            ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.POISON, 5, 20, false, true));
+            ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.POISON, 5, 20, false, true));
         }
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos)
+    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos)
     {
         return this.getVineLight(world, pos);
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context)
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
     {
-        return VoxelShapes.empty();
+        return Shapes.empty();
     }
 
-    public int getVineLength(IBlockReader world, BlockPos pos)
+    public int getVineLength(BlockGetter world, BlockPos pos)
     {
         int vineCount = 0;
         int y2 = pos.getY();
@@ -153,7 +153,7 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
         return vineCount;
     }
 
-    public int getVineLight(IBlockReader world, BlockPos pos)
+    public int getVineLight(BlockGetter world, BlockPos pos)
     {
         int vineCount = 0;
         int y2 = pos.getY();
@@ -168,15 +168,15 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     }
 
     @Override
-    public int tickRate(IWorldReader world)
+    public int getTickDelay(LevelReader world)
     {
         return 50;
     }
 
     @Override
-    public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand)
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, Random rand)
     {
-        if (!world.isRemote)
+        if (!world.isClientSide)
         {
             for (int y2 = pos.getY() - 1; y2 >= pos.getY() - 2; y2--)
             {
@@ -189,21 +189,21 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
                 }
             }
 
-            world.setBlockState(pos.down(), state.with(VINE_TYPE, EnumVineType.byId(this.getVineLength(world, pos))), 2);
-            world.getChunkProvider().getLightManager().checkBlock(pos);
+            world.setBlock(pos.below(), state.setValue(VINE_TYPE, EnumVineType.byId(this.getVineLength(world, pos))), 2);
+            world.getChunkSource().getLightEngine().checkBlock(pos);
         }
         this.checkAndDropBlock(world, pos);
     }
 
     @Override
-    public boolean isShearable(@Nonnull ItemStack itemStack, IWorldReader world, BlockPos pos)
+    public boolean isShearable(@Nonnull ItemStack itemStack, LevelReader world, BlockPos pos)
     {
         return true;
     }
 
     @Nonnull
     @Override
-    public List<ItemStack> onSheared(@Nonnull ItemStack itemStack, IWorld world, BlockPos pos, int fortune)
+    public List<ItemStack> onSheared(@Nonnull ItemStack itemStack, LevelAccessor world, BlockPos pos, int fortune)
     {
         List<ItemStack> ret = Lists.newArrayList();
         ret.add(new ItemStack(this));
@@ -211,7 +211,7 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     }
 
     @Override
-    public boolean isLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity)
+    public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity)
     {
         return true;
     }
@@ -219,7 +219,7 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     @Override
     public String getShiftDescription(ItemStack itemStack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -229,7 +229,7 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(VINE_TYPE);
     }

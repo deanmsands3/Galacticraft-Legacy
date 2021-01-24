@@ -7,20 +7,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.dimension.DimensionAsteroids;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.BushBlock;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(BushBlock.class)
 public abstract class MixinBushBlock
 {
     @Inject(method = "isValidPosition(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/IWorldReader;Lnet/minecraft/util/math/BlockPos;)Z", cancellable = true, at = @At("HEAD"))
-    private void isValidPosition(BlockState state, IWorldReader world, BlockPos pos, CallbackInfoReturnable info)
+    private void isValidPosition(BlockState state, LevelReader world, BlockPos pos, CallbackInfoReturnable info)
     {
-        BlockPos blockpos = pos.down();
+        BlockPos blockpos = pos.below();
 
         // hopefully it is a good condition for nether wart in asteroids dimension
         if (state.getBlock() == Blocks.NETHER_WART && world.getDimension() instanceof DimensionAsteroids)

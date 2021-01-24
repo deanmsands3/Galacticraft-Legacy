@@ -5,15 +5,15 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti.EnumBlockMultiType;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
@@ -24,7 +24,7 @@ import java.util.List;
 public class TileEntityNasaWorkbench extends TileEntityFake implements IMultiBlock
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.ROCKET_WORKBENCH)
-    public static TileEntityType<TileEntityNasaWorkbench> TYPE;
+    public static BlockEntityType<TileEntityNasaWorkbench> TYPE;
 
     private boolean initialised;
 
@@ -34,7 +34,7 @@ public class TileEntityNasaWorkbench extends TileEntityFake implements IMultiBlo
     }
 
     @Override
-    public ActionResultType onActivated(PlayerEntity entityPlayer)
+    public InteractionResult onActivated(Player entityPlayer)
     {
 //        entityPlayer.openGui(GalacticraftCore.instance, GuiIdsCore.NASA_WORKBENCH_ROCKET, this.world, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ()); TODO guis
         return ActionResultType.SUCCESS;
@@ -45,15 +45,15 @@ public class TileEntityNasaWorkbench extends TileEntityFake implements IMultiBlo
     {
         if (!this.initialised)
         {
-            this.initialised = this.initialiseMultiTiles(this.getPos(), this.world);
+            this.initialised = this.initialiseMultiTiles(this.getBlockPos(), this.level);
         }
     }
 
     @Override
-    public void onCreate(World world, BlockPos placedPosition)
+    public void onCreate(Level world, BlockPos placedPosition)
     {
         this.mainBlockPosition = placedPosition;
-        this.markDirty();
+        this.setChanged();
         List<BlockPos> positions = new ArrayList<>();
         this.getPositions(placedPosition, positions);
         ((BlockMulti) GCBlocks.MULTI_BLOCK).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
@@ -68,7 +68,7 @@ public class TileEntityNasaWorkbench extends TileEntityFake implements IMultiBlo
     @Override
     public void getPositions(BlockPos placedPosition, List<BlockPos> positions)
     {
-        int buildHeight = this.world.getHeight() - 1;
+        int buildHeight = this.level.getMaxBuildHeight() - 1;
 
         for (int y = 1; y < 3; y++)
         {
@@ -96,32 +96,32 @@ public class TileEntityNasaWorkbench extends TileEntityFake implements IMultiBlo
     }
 
     @Override
-    public void onDestroy(TileEntity callingBlock)
+    public void onDestroy(BlockEntity callingBlock)
     {
-        final BlockPos thisBlock = getPos();
+        final BlockPos thisBlock = getBlockPos();
         List<BlockPos> positions = new ArrayList<>();
         this.getPositions(thisBlock, positions);
 
         for (BlockPos pos : positions)
         {
-            BlockState stateAt = this.world.getBlockState(pos);
+            BlockState stateAt = this.level.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.MULTI_BLOCK && stateAt.get(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.NASA_WORKBENCH)
+            if (stateAt.getBlock() == GCBlocks.MULTI_BLOCK && stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.NASA_WORKBENCH)
             {
-                if (this.world.isRemote && this.world.rand.nextDouble() < 0.05D)
+                if (this.level.isClientSide && this.level.random.nextDouble() < 0.05D)
                 {
-                    Minecraft.getInstance().particles.addBlockDestroyEffects(pos, this.world.getBlockState(thisBlock));
+                    Minecraft.getInstance().particleEngine.destroy(pos, this.level.getBlockState(thisBlock));
                 }
-                this.world.removeBlock(pos, false);
+                this.level.removeBlock(pos, false);
             }
         }
-        this.world.destroyBlock(thisBlock, true);
+        this.level.destroyBlock(thisBlock, true);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
+    public AABB getRenderBoundingBox()
     {
-        return new AxisAlignedBB(getPos().getX() - 1, getPos().getY() - 1, getPos().getZ() - 1, getPos().getX() + 2, getPos().getY() + 5, getPos().getZ() + 2);
+        return new AABB(getBlockPos().getX() - 1, getBlockPos().getY() - 1, getBlockPos().getZ() - 1, getBlockPos().getX() + 2, getBlockPos().getY() + 5, getBlockPos().getZ() + 2);
     }
 }

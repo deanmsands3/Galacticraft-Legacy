@@ -1,18 +1,17 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.model.MeteorChunkModel;
 import micdoodle8.mods.galacticraft.core.entities.MeteorChunkEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class MeteorChunkRenderer extends EntityRenderer<MeteorChunkEntity>
 {
@@ -20,10 +19,10 @@ public class MeteorChunkRenderer extends EntityRenderer<MeteorChunkEntity>
     private static final ResourceLocation HOT_TEXTURE = new ResourceLocation(Constants.MOD_ID_CORE, "textures/item/hot_meteor_chunk.png");
     private final MeteorChunkModel model = new MeteorChunkModel();
 
-    public MeteorChunkRenderer(EntityRendererManager renderManager)
+    public MeteorChunkRenderer(EntityRenderDispatcher renderManager)
     {
         super(renderManager);
-        this.shadowSize = 0.1F;
+        this.shadowRadius = 0.1F;
     }
 
     @Override
@@ -40,15 +39,15 @@ public class MeteorChunkRenderer extends EntityRenderer<MeteorChunkEntity>
     }
 
     @Override
-    public void render(MeteorChunkEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    public void render(MeteorChunkEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight)
     {
-        matrixStack.push();
-        float interpolatedPitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+        matrixStack.pushPose();
+        float interpolatedPitch = entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks;
         matrixStack.scale(0.3F, 0.3F, 0.3F);
-        matrixStack.rotate(new Quaternion(Vector3f.YP, entityYaw, true));
-        matrixStack.rotate(new Quaternion(Vector3f.ZN, interpolatedPitch, true));
-        IVertexBuilder ivertexbuilder = buffer.getBuffer(this.model.getRenderType(this.getEntityTexture(entity)));
-        this.model.render(matrixStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        matrixStack.pop();
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, entityYaw, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.ZN, interpolatedPitch, true));
+        VertexConsumer ivertexbuilder = buffer.getBuffer(this.model.renderType(this.getEntityTexture(entity)));
+        this.model.renderToBuffer(matrixStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        matrixStack.popPose();
     }
 }

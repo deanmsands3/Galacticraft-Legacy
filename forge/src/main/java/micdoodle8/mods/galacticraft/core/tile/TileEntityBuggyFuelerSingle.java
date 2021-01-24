@@ -3,20 +3,20 @@ package micdoodle8.mods.galacticraft.core.tile;
 import micdoodle8.mods.galacticraft.core.GCBlockNames;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
-public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickableTileEntity
+public class TileEntityBuggyFuelerSingle extends BlockEntity implements TickableBlockEntity
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.BUGGY_FUELING_PAD)
-    public static TileEntityType<TileEntityBuggyFuelerSingle> TYPE;
+    public static BlockEntityType<TileEntityBuggyFuelerSingle> TYPE;
 
     private int corner = 0;
 
@@ -28,15 +28,15 @@ public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickable
     @Override
     public void tick()
     {
-        if (!this.world.isRemote && this.corner == 0)
+        if (!this.level.isClientSide && this.corner == 0)
         {
-            List<TileEntity> attachedLaunchPads = Lists.newArrayList();
+            List<BlockEntity> attachedLaunchPads = Lists.newArrayList();
 
-            for (int x = this.getPos().getX() - 1; x < this.getPos().getX() + 2; x++)
+            for (int x = this.getBlockPos().getX() - 1; x < this.getBlockPos().getX() + 2; x++)
             {
-                for (int z = this.getPos().getZ() - 1; z < this.getPos().getZ() + 2; z++)
+                for (int z = this.getBlockPos().getZ() - 1; z < this.getBlockPos().getZ() + 2; z++)
                 {
-                    TileEntity tile = this.world.getTileEntity(new BlockPos(x, this.getPos().getY(), z));
+                    BlockEntity tile = this.level.getBlockEntity(new BlockPos(x, this.getBlockPos().getY(), z));
 
                     if (tile instanceof TileEntityBuggyFuelerSingle && !tile.isRemoved() && ((TileEntityBuggyFuelerSingle) tile).corner == 0)
                     {
@@ -47,13 +47,13 @@ public class TileEntityBuggyFuelerSingle extends TileEntity implements ITickable
 
             if (attachedLaunchPads.size() == 9)
             {
-                for (TileEntity tile : attachedLaunchPads)
+                for (BlockEntity tile : attachedLaunchPads)
                 {
-                    this.world.removeTileEntity(tile.getPos());
+                    this.level.removeBlockEntity(tile.getBlockPos());
                     ((TileEntityBuggyFuelerSingle) tile).corner = 1;
                 }
 
-                this.world.setBlockState(this.getPos(), GCBlocks.FULL_BUGGY_FUELING_PAD.getDefaultState(), 2);
+                this.level.setBlock(this.getBlockPos(), GCBlocks.FULL_BUGGY_FUELING_PAD.defaultBlockState(), 2);
             }
         }
     }

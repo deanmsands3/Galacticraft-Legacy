@@ -4,8 +4,10 @@ import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.items.*;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -240,22 +242,22 @@ public class GCItems
 
     public static Item.Properties defaultBuilder()
     {
-        return new Item.Properties().group(GalacticraftCore.galacticraftItemsTab);
+        return new Item.Properties().tab(GalacticraftCore.galacticraftItemsTab);
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> evt)
     {
         IForgeRegistry<Item> r = evt.getRegistry();
-        register(r, new ItemOxygenTank(defaultBuilder().maxDamage(900)), GCItemNames.LIGHT_OXYGEN_TANK);
-        register(r, new ItemOxygenTank(defaultBuilder().maxDamage(1800)), GCItemNames.MEDIUM_OXYGEN_TANK);
-        register(r, new ItemOxygenTank(defaultBuilder().maxDamage(2700)), GCItemNames.HEAVY_OXYGEN_TANK);
-        register(r, new ItemOxygenMask(defaultBuilder().maxStackSize(1)), GCItemNames.OXYGEN_MASK);
-        register(r, new ItemTier1Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), GCItemNames.TIER_1_ROCKET);
-        register(r, new ItemTier1Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), GCItemNames.TIER_1_ROCKET_18_INVENTORY);
-        register(r, new ItemTier1Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), GCItemNames.TIER_1_ROCKET_36_INVENTORY);
-        register(r, new ItemTier1Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), GCItemNames.TIER_1_ROCKET_54_INVENTORY);
-        register(r, new ItemTier1Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), GCItemNames.CREATIVE_TIER_1_ROCKET);
+        register(r, new ItemOxygenTank(defaultBuilder().durability(900)), GCItemNames.LIGHT_OXYGEN_TANK);
+        register(r, new ItemOxygenTank(defaultBuilder().durability(1800)), GCItemNames.MEDIUM_OXYGEN_TANK);
+        register(r, new ItemOxygenTank(defaultBuilder().durability(2700)), GCItemNames.HEAVY_OXYGEN_TANK);
+        register(r, new ItemOxygenMask(defaultBuilder().stacksTo(1)), GCItemNames.OXYGEN_MASK);
+        register(r, new ItemTier1Rocket(defaultBuilder().durability(0).stacksTo(1)), GCItemNames.TIER_1_ROCKET);
+        register(r, new ItemTier1Rocket(defaultBuilder().durability(0).stacksTo(1)), GCItemNames.TIER_1_ROCKET_18_INVENTORY);
+        register(r, new ItemTier1Rocket(defaultBuilder().durability(0).stacksTo(1)), GCItemNames.TIER_1_ROCKET_36_INVENTORY);
+        register(r, new ItemTier1Rocket(defaultBuilder().durability(0).stacksTo(1)), GCItemNames.TIER_1_ROCKET_54_INVENTORY);
+        register(r, new ItemTier1Rocket(defaultBuilder().durability(0).stacksTo(1)), GCItemNames.CREATIVE_TIER_1_ROCKET);
         register(r, new ItemSensorGlasses(defaultBuilder()), GCItemNames.SENSOR_GLASSES);
         register(r, new ItemPickaxeGC(defaultBuilder()), GCItemNames.HEAVY_DUTY_PICKAXE);
         register(r, new ItemAxeGC(defaultBuilder()), GCItemNames.HEAVY_DUTY_AXE);
@@ -275,31 +277,31 @@ public class GCItems
         register(r, new ItemBase(defaultBuilder()), GCItemNames.ROCKET_FINS);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.NOSE_CONE);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.SENSOR_LENS);
-        register(r, new ItemBuggy(defaultBuilder().maxStackSize(1)), GCItemNames.BUGGY);
-        register(r, new ItemBuggy(defaultBuilder().maxStackSize(1)), GCItemNames.BUGGY_18_INVENTORY);
-        register(r, new ItemBuggy(defaultBuilder().maxStackSize(1)), GCItemNames.BUGGY_36_INVENTORY);
-        register(r, new ItemBuggy(defaultBuilder().maxStackSize(1)), GCItemNames.BUGGY_54_INVENTORY);
-        register(r, new ItemFlag(defaultBuilder().maxDamage(0)), GCItemNames.FLAG);
+        register(r, new ItemBuggy(defaultBuilder().stacksTo(1)), GCItemNames.BUGGY);
+        register(r, new ItemBuggy(defaultBuilder().stacksTo(1)), GCItemNames.BUGGY_18_INVENTORY);
+        register(r, new ItemBuggy(defaultBuilder().stacksTo(1)), GCItemNames.BUGGY_36_INVENTORY);
+        register(r, new ItemBuggy(defaultBuilder().stacksTo(1)), GCItemNames.BUGGY_54_INVENTORY);
+        register(r, new ItemFlag(defaultBuilder().durability(0)), GCItemNames.FLAG);
         register(r, new ItemOxygenGear(defaultBuilder()), GCItemNames.OXYGEN_GEAR);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.CANVAS);
-        register(r, new ItemOilCanister(defaultBuilder().maxDamage(ItemCanisterGeneric.EMPTY_CAPACITY)), GCItemNames.PARTIAL_OIL_CANISTER);
-        register(r, new ItemFuelCanister(defaultBuilder().maxDamage(ItemCanisterGeneric.EMPTY_CAPACITY)), GCItemNames.PARTIAL_FUEL_CANISTER);
+        register(r, new ItemOilCanister(defaultBuilder().durability(ItemCanisterGeneric.EMPTY_CAPACITY)), GCItemNames.PARTIAL_OIL_CANISTER);
+        register(r, new ItemFuelCanister(defaultBuilder().durability(ItemCanisterGeneric.EMPTY_CAPACITY)), GCItemNames.PARTIAL_FUEL_CANISTER);
         register(r, new ItemCanisterOxygenInfinite(defaultBuilder()), GCItemNames.INFINITE_OXYGEN_TANK);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.STEEL_POLE);
-        register(r, new ItemSchematic(defaultBuilder().maxDamage(0).maxStackSize(1)), GCItemNames.MOON_BUGGY_SCHEMATIC);
-        register(r, new ItemSchematic(defaultBuilder().maxDamage(0).maxStackSize(1)), GCItemNames.TIER_2_ROCKET_SCHEMATIC);
+        register(r, new ItemSchematic(defaultBuilder().durability(0).stacksTo(1)), GCItemNames.MOON_BUGGY_SCHEMATIC);
+        register(r, new ItemSchematic(defaultBuilder().durability(0).stacksTo(1)), GCItemNames.TIER_2_ROCKET_SCHEMATIC);
         register(r, new ItemKey(defaultBuilder()), GCItemNames.TIER_1_DUNGEON_KEY);
-        register(r, new ItemBattery(defaultBuilder().maxDamage(ItemElectricBase.DAMAGE_RANGE)), GCItemNames.BATTERY);
+        register(r, new ItemBattery(defaultBuilder().durability(ItemElectricBase.DAMAGE_RANGE)), GCItemNames.BATTERY);
         register(r, new ItemBatteryInfinite(defaultBuilder()), GCItemNames.INFINITE_BATTERY);
-        register(r, new ItemMeteorChunk(defaultBuilder().maxStackSize(16)), GCItemNames.METEOR_CHUNK);
-        register(r, new ItemMeteorChunk(defaultBuilder().maxStackSize(16)), GCItemNames.HOT_METEOR_CHUNK);
-        register(r, new ItemUniversalWrench(defaultBuilder().maxDamage(256)), GCItemNames.STANDARD_WRENCH);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(1).saturation(0.1F).fastToEat().build())), GCItemNames.CHEESE_CURD);
+        register(r, new ItemMeteorChunk(defaultBuilder().stacksTo(16)), GCItemNames.METEOR_CHUNK);
+        register(r, new ItemMeteorChunk(defaultBuilder().stacksTo(16)), GCItemNames.HOT_METEOR_CHUNK);
+        register(r, new ItemUniversalWrench(defaultBuilder().durability(256)), GCItemNames.STANDARD_WRENCH);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(1).saturationMod(0.1F).fast().build())), GCItemNames.CHEESE_CURD);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.RAW_METEORIC_IRON);
         register(r, new ItemPreLaunchChecklist(defaultBuilder()), GCItemNames.PRELAUNCH_CHECKLIST);
         register(r, new ItemDungeonFinder(defaultBuilder()), GCItemNames.DUNGEON_LOCATOR);
 //        register(r, new ItemIC2Compat(defaultBuilder()), ItemNames.ic2compat); TODO
-        register(r, new ItemEmergencyKit(defaultBuilder().maxDamage(0)), GCItemNames.SPACE_EMERGENCY_KIT);
+        register(r, new ItemEmergencyKit(defaultBuilder().durability(0)), GCItemNames.SPACE_EMERGENCY_KIT);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.SINGLE_SOLAR_MODULE);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.FULL_SOLAR_MODULE);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.RAW_SILICON);
@@ -322,20 +324,20 @@ public class GCItems
         register(r, new ItemBase(defaultBuilder()), GCItemNames.BUGGY_STORAGE_BOX);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.TIN_CANISTER);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.COPPER_CANISTER);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(8).saturation(0.3F).build())), GCItemNames.DEHYDRATED_APPLES);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(8).saturation(0.6F).build())), GCItemNames.DEHYDRATED_CARROTS);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(4).saturation(0.3F).build())), GCItemNames.DEHYDRATED_MELONS);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.3F).build())), GCItemNames.DEHYDRATED_POTATOES);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.1F).build())), GCItemNames.CHEESE_SLICE);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(4).saturation(0.8F).build())), GCItemNames.BURGER_BUN);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(2).saturation(0.3F).build())), GCItemNames.GROUND_BEEF);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(4).saturation(0.6F).build())), GCItemNames.COOKED_BEEF_PATTY);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(14).saturation(1.0F).build())), GCItemNames.CHEESEBURGER);
-        register(r, new ItemBase(defaultBuilder().food((new Food.Builder()).hunger(8).saturation(0.6F).build())), GCItemNames.CANNED_BEEF);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(8).saturationMod(0.3F).build())), GCItemNames.DEHYDRATED_APPLES);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(8).saturationMod(0.6F).build())), GCItemNames.DEHYDRATED_CARROTS);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.3F).build())), GCItemNames.DEHYDRATED_MELONS);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(2).saturationMod(0.3F).build())), GCItemNames.DEHYDRATED_POTATOES);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(2).saturationMod(0.1F).build())), GCItemNames.CHEESE_SLICE);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.8F).build())), GCItemNames.BURGER_BUN);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(2).saturationMod(0.3F).build())), GCItemNames.GROUND_BEEF);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.6F).build())), GCItemNames.COOKED_BEEF_PATTY);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(14).saturationMod(1.0F).build())), GCItemNames.CHEESEBURGER);
+        register(r, new ItemBase(defaultBuilder().food((new FoodProperties.Builder()).nutrition(8).saturationMod(0.6F).build())), GCItemNames.CANNED_BEEF);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.METEORIC_IRON_INGOT);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.COMPRESSED_METEORIC_IRON);
         register(r, new ItemBase(defaultBuilder()), GCItemNames.LUNAR_SAPPHIRE);
-        Item.Properties parachuteProps = defaultBuilder().maxDamage(0).maxStackSize(1);
+        Item.Properties parachuteProps = defaultBuilder().durability(0).stacksTo(1);
         register(r, new ItemParaChute(DyeColor.WHITE, parachuteProps), GCItemNames.WHITE_PARACHUTE);
         register(r, new ItemParaChute(DyeColor.BLACK, parachuteProps), GCItemNames.BLACK_PARACHUTE);
         register(r, new ItemParaChute(DyeColor.LIGHT_BLUE, parachuteProps), GCItemNames.LIGHT_BLUE_PARACHUTE);

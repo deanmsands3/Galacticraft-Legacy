@@ -1,8 +1,7 @@
 package micdoodle8.mods.galacticraft.core.entities.player;
 
 import micdoodle8.mods.galacticraft.api.recipe.ISchematicPage;
-import net.minecraft.util.math.AxisAlignedBB;
-
+import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 
 public interface IStatsClientCapability
@@ -41,9 +40,9 @@ public interface IStatsClientCapability
 
     void setOxygenSetupValid(boolean oxygenSetupValid);
 
-    AxisAlignedBB getBoundingBoxBefore();
+    AABB getBoundingBoxBefore();
 
-    void setBoundingBoxBefore(AxisAlignedBB boundingBoxBefore);
+    void setBoundingBoxBefore(AABB boundingBoxBefore);
 
     boolean isLastOnGround();
 

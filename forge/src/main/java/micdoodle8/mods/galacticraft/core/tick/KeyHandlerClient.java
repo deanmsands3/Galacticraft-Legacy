@@ -14,62 +14,62 @@ import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.TickEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyHandlerClient extends KeyHandler
 {
-    public static KeyBinding galaxyMap;
-    public static KeyBinding openFuelGui;
-    public static KeyBinding toggleAdvGoggles;
+    public static KeyMapping galaxyMap;
+    public static KeyMapping openFuelGui;
+    public static KeyMapping toggleAdvGoggles;
 
     static
     {
-        galaxyMap = new KeyBinding(GCCoreUtil.translate("keybind.map"), GLFW.GLFW_KEY_M, Constants.MOD_NAME_SIMPLE);
-        openFuelGui = new KeyBinding(GCCoreUtil.translate("keybind.spaceshipinv"), GLFW.GLFW_KEY_F, Constants.MOD_NAME_SIMPLE);
-        toggleAdvGoggles = new KeyBinding(GCCoreUtil.translate("keybind.sensortoggle"), GLFW.GLFW_KEY_K, Constants.MOD_NAME_SIMPLE);
+        galaxyMap = new KeyMapping(GCCoreUtil.translate("keybind.map"), GLFW.GLFW_KEY_M, Constants.MOD_NAME_SIMPLE);
+        openFuelGui = new KeyMapping(GCCoreUtil.translate("keybind.spaceshipinv"), GLFW.GLFW_KEY_F, Constants.MOD_NAME_SIMPLE);
+        toggleAdvGoggles = new KeyMapping(GCCoreUtil.translate("keybind.sensortoggle"), GLFW.GLFW_KEY_K, Constants.MOD_NAME_SIMPLE);
         // See ConfigManagerCore.class.get() for actual defaults. These do nothing
     }
 
-    public static KeyBinding accelerateKey;
-    public static KeyBinding decelerateKey;
-    public static KeyBinding leftKey;
-    public static KeyBinding rightKey;
-    public static KeyBinding upKey;
-    public static KeyBinding downKey;
-    public static KeyBinding spaceKey;
-    public static KeyBinding leftShiftKey;
+    public static KeyMapping accelerateKey;
+    public static KeyMapping decelerateKey;
+    public static KeyMapping leftKey;
+    public static KeyMapping rightKey;
+    public static KeyMapping upKey;
+    public static KeyMapping downKey;
+    public static KeyMapping spaceKey;
+    public static KeyMapping leftShiftKey;
     private static final Minecraft mc = Minecraft.getInstance();
 
     public KeyHandlerClient()
     {
-        super(new KeyBinding[]{KeyHandlerClient.galaxyMap, KeyHandlerClient.openFuelGui, KeyHandlerClient.toggleAdvGoggles}, new boolean[]{false, false, false}, KeyHandlerClient.getVanillaKeyBindings(), new boolean[]{false, true, true, true, true, true, true});
+        super(new KeyMapping[]{KeyHandlerClient.galaxyMap, KeyHandlerClient.openFuelGui, KeyHandlerClient.toggleAdvGoggles}, new boolean[]{false, false, false}, KeyHandlerClient.getVanillaKeyBindings(), new boolean[]{false, true, true, true, true, true, true});
     }
 
-    private static KeyBinding[] getVanillaKeyBindings()
+    private static KeyMapping[] getVanillaKeyBindings()
     {
-        KeyBinding invKey = KeyHandlerClient.mc.gameSettings.keyBindInventory;
-        KeyHandlerClient.accelerateKey = KeyHandlerClient.mc.gameSettings.keyBindForward;
-        KeyHandlerClient.decelerateKey = KeyHandlerClient.mc.gameSettings.keyBindBack;
-        KeyHandlerClient.leftKey = KeyHandlerClient.mc.gameSettings.keyBindLeft;
-        KeyHandlerClient.rightKey = KeyHandlerClient.mc.gameSettings.keyBindRight;
-        KeyHandlerClient.upKey = KeyHandlerClient.mc.gameSettings.keyBindForward;
-        KeyHandlerClient.downKey = KeyHandlerClient.mc.gameSettings.keyBindBack;
-        KeyHandlerClient.spaceKey = KeyHandlerClient.mc.gameSettings.keyBindJump;
-        KeyHandlerClient.leftShiftKey = KeyHandlerClient.mc.gameSettings.keyBindSneak;
-        return new KeyBinding[]{invKey, KeyHandlerClient.accelerateKey, KeyHandlerClient.decelerateKey, KeyHandlerClient.leftKey, KeyHandlerClient.rightKey, KeyHandlerClient.spaceKey, KeyHandlerClient.leftShiftKey};
+        KeyMapping invKey = KeyHandlerClient.mc.options.keyInventory;
+        KeyHandlerClient.accelerateKey = KeyHandlerClient.mc.options.keyUp;
+        KeyHandlerClient.decelerateKey = KeyHandlerClient.mc.options.keyDown;
+        KeyHandlerClient.leftKey = KeyHandlerClient.mc.options.keyLeft;
+        KeyHandlerClient.rightKey = KeyHandlerClient.mc.options.keyRight;
+        KeyHandlerClient.upKey = KeyHandlerClient.mc.options.keyUp;
+        KeyHandlerClient.downKey = KeyHandlerClient.mc.options.keyDown;
+        KeyHandlerClient.spaceKey = KeyHandlerClient.mc.options.keyJump;
+        KeyHandlerClient.leftShiftKey = KeyHandlerClient.mc.options.keyShift;
+        return new KeyMapping[]{invKey, KeyHandlerClient.accelerateKey, KeyHandlerClient.decelerateKey, KeyHandlerClient.leftKey, KeyHandlerClient.rightKey, KeyHandlerClient.spaceKey, KeyHandlerClient.leftShiftKey};
     }
 
     @Override
-    public void keyDown(TickEvent.Type types, KeyBinding kb, boolean tickEnd, boolean isRepeat)
+    public void keyDown(TickEvent.Type types, KeyMapping kb, boolean tickEnd, boolean isRepeat)
     {
         if (KeyHandlerClient.mc.player != null && tickEnd)
         {
-            ClientPlayerEntity playerBase = PlayerUtil.getPlayerBaseClientFromPlayer(KeyHandlerClient.mc.player, false);
+            LocalPlayer playerBase = PlayerUtil.getPlayerBaseClientFromPlayer(KeyHandlerClient.mc.player, false);
 
             if (playerBase == null)
             {
@@ -80,7 +80,7 @@ public class KeyHandlerClient extends KeyHandler
 
             if (kb == KeyHandlerClient.galaxyMap)
             {
-                if (KeyHandlerClient.mc.currentScreen == null)
+                if (KeyHandlerClient.mc.screen == null)
                 {
 //                    KeyHandlerClient.mc.player.openGui(GalacticraftCore.instance, GuiIdsCore.GALAXY_MAP, KeyHandlerClient.mc.world, (int) KeyHandlerClient.mc.player.getPosX(), (int) KeyHandlerClient.mc.player.getPosY(), (int) KeyHandlerClient.mc.player.getPosZ());
                     // TODO Gui
@@ -88,9 +88,9 @@ public class KeyHandlerClient extends KeyHandler
             }
             else if (kb == KeyHandlerClient.openFuelGui)
             {
-                if (playerBase.getRidingEntity() instanceof EntitySpaceshipBase || playerBase.getRidingEntity() instanceof BuggyEntity)
+                if (playerBase.getVehicle() instanceof EntitySpaceshipBase || playerBase.getVehicle() instanceof BuggyEntity)
                 {
-                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_OPEN_FUEL_GUI, GCCoreUtil.getDimensionType(mc.world), new Object[]{PlayerUtil.getName(playerBase)}));
+                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_OPEN_FUEL_GUI, GCCoreUtil.getDimensionType(mc.level), new Object[]{PlayerUtil.getName(playerBase)}));
                 }
             }
             else if (kb == KeyHandlerClient.toggleAdvGoggles)
@@ -102,7 +102,7 @@ public class KeyHandlerClient extends KeyHandler
             }
         }
 
-        if (KeyHandlerClient.mc.player != null && KeyHandlerClient.mc.currentScreen == null)
+        if (KeyHandlerClient.mc.player != null && KeyHandlerClient.mc.screen == null)
         {
             int keyNum = -1;
 
@@ -131,14 +131,14 @@ public class KeyHandlerClient extends KeyHandler
                 keyNum = 5;
             }
 
-            Entity entityTest = KeyHandlerClient.mc.player.getRidingEntity();
+            Entity entityTest = KeyHandlerClient.mc.player.getVehicle();
             if (entityTest != null && entityTest instanceof IControllableEntity && keyNum != -1)
             {
                 IControllableEntity entity = (IControllableEntity) entityTest;
 
-                if (kb == KeyHandlerClient.mc.gameSettings.keyBindInventory)
+                if (kb == KeyHandlerClient.mc.options.keyInventory)
                 {
-                    KeyBinding.setKeyBindState(KeyHandlerClient.mc.gameSettings.keyBindInventory.getKey(), false);
+                    KeyMapping.set(KeyHandlerClient.mc.options.keyInventory.getKey(), false);
                 }
 
                 entity.pressKey(keyNum);
@@ -151,14 +151,14 @@ public class KeyHandlerClient extends KeyHandler
                 {
                     if (kb == KeyHandlerClient.leftShiftKey)
                     {
-                        autoRocket.setMotion(autoRocket.getMotion().x, autoRocket.getMotion().y - 0.02, autoRocket.getMotion().z);
-                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_SHIP_MOTION_Y, GCCoreUtil.getDimensionType(mc.world), new Object[]{autoRocket.getEntityId(), false}));
+                        autoRocket.setDeltaMovement(autoRocket.getDeltaMovement().x, autoRocket.getDeltaMovement().y - 0.02, autoRocket.getDeltaMovement().z);
+                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_SHIP_MOTION_Y, GCCoreUtil.getDimensionType(mc.level), new Object[]{autoRocket.getId(), false}));
                     }
 
                     if (kb == KeyHandlerClient.spaceKey)
                     {
-                        autoRocket.setMotion(autoRocket.getMotion().x, autoRocket.getMotion().y + 0.02, autoRocket.getMotion().z);
-                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_SHIP_MOTION_Y, GCCoreUtil.getDimensionType(mc.world), new Object[]{autoRocket.getEntityId(), true}));
+                        autoRocket.setDeltaMovement(autoRocket.getDeltaMovement().x, autoRocket.getDeltaMovement().y + 0.02, autoRocket.getDeltaMovement().z);
+                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_SHIP_MOTION_Y, GCCoreUtil.getDimensionType(mc.level), new Object[]{autoRocket.getId(), true}));
                     }
                 }
             }
@@ -166,7 +166,7 @@ public class KeyHandlerClient extends KeyHandler
     }
 
     @Override
-    public void keyUp(TickEvent.Type types, KeyBinding kb, boolean tickEnd)
+    public void keyUp(TickEvent.Type types, KeyMapping kb, boolean tickEnd)
     {
     }
 }

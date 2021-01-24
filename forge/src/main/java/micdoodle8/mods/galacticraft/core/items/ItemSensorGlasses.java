@@ -4,13 +4,13 @@ import micdoodle8.mods.galacticraft.api.item.ISensorGlassesArmor;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,7 +36,7 @@ public class ItemSensorGlasses extends ArmorItem implements ISortable, ISensorGl
 //    }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type)
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type)
     {
         return Constants.TEXTURE_PREFIX + "textures/models/armor/sensor_glasses.png";
     }
@@ -49,7 +49,7 @@ public class ItemSensorGlasses extends ArmorItem implements ISortable, ISensorGl
     }
 
     @Override
-    public void renderHelmetOverlay(ItemStack stack, PlayerEntity player, int width, int height, float partialTicks)
+    public void renderHelmetOverlay(ItemStack stack, Player player, int width, int height, float partialTicks)
     {
 //        OverlaySensorGlasses.renderSensorGlassesMain(stack, player, partialTicks);
 //        OverlaySensorGlasses.renderSensorGlassesValueableBlocks(stack, player, partialTicks); TODO Overlays

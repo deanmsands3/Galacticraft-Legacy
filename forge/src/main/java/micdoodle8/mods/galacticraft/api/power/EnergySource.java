@@ -1,8 +1,7 @@
 package micdoodle8.mods.galacticraft.api.power;
 
-import net.minecraft.util.Direction;
-
 import java.util.List;
+import net.minecraft.core.Direction;
 
 public abstract class EnergySource
 {

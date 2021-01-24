@@ -2,12 +2,12 @@ package micdoodle8.mods.galacticraft.core.util;
 
 import com.google.common.collect.Lists;
 import micdoodle8.mods.galacticraft.core.energy.EnergyConfigHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
@@ -20,6 +20,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static net.minecraftforge.common.ForgeConfigSpec.*;
+
+import Builder;
+import ConfigValue;
+import DoubleValue;
 
 public class ConfigManagerCore
 {
@@ -741,7 +745,7 @@ public class ConfigManagerCore
 
             disableRocketLaunchDimensions = builder.comment("IDs of dimensions where rockets should not launch - this should always include the Nether.")
                     .translation("gc.configgui.rocket_disabled_dimensions")
-                    .define("dimensions_where_rockets_cannot_launch", Lists.newArrayList(DimensionType.THE_NETHER.getRegistryName().toString(), DimensionType.THE_END.getRegistryName().toString()));
+                    .define("dimensions_where_rockets_cannot_launch", Lists.newArrayList(DimensionType.NETHER.getRegistryName().toString(), DimensionType.THE_END.getRegistryName().toString()));
 
             disableRocketsToOverworld = builder.comment("If true, rockets will be unable to reach the Overworld (only use this in special modpacks!)")
                     .translation("gc.configgui.rocket_disable_overworld_return")

@@ -2,10 +2,9 @@ package micdoodle8.mods.galacticraft.planets.mars.dimension.biome;
 
 import micdoodle8.mods.galacticraft.api.world.BiomeGC;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;
 
 public class BiomeMars extends BiomeGC
 {
@@ -14,7 +13,7 @@ public class BiomeMars extends BiomeGC
 
     BiomeMars()
     {
-        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(MarsBlocks.MARS_FINE_REGOLITH.getDefaultState(), MarsBlocks.MARS_REGOLITH.getDefaultState(), MarsBlocks.MARS_REGOLITH.getDefaultState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(2.5F).scale(0.4F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
+        super((new Biome.BiomeBuilder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderBaseConfiguration(MarsBlocks.MARS_FINE_REGOLITH.defaultBlockState(), MarsBlocks.MARS_REGOLITH.defaultBlockState(), MarsBlocks.MARS_REGOLITH.defaultBlockState())).precipitation(Biome.RainType.NONE).category(Category.NONE).depth(2.5F).scale(0.4F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
     }
 
 //    @Override
@@ -24,7 +23,7 @@ public class BiomeMars extends BiomeGC
 //    }
 
     @Override
-    public float getSpawningChance()
+    public float getCreatureProbability()
     {
         return 0.1F;
     }

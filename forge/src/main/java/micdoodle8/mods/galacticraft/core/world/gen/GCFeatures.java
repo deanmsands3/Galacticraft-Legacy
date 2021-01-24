@@ -4,11 +4,15 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.world.gen.dungeon.*;
 import micdoodle8.mods.galacticraft.core.world.gen.placement.SapphirePlacement;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
 import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.placement.NoPlacementConfig;
-import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.ReplaceBlockFeature;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneDecoratorConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.ReplaceBlockConfiguration;
+import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -24,20 +28,20 @@ public class GCFeatures
     public static final DeferredRegister<Feature<?>> FEATURES = new DeferredRegister<>(ForgeRegistries.FEATURES, Constants.MOD_ID_CORE);
 
     public static final StructureDungeon MOON_DUNGEON = new StructureDungeon(DungeonConfiguration::deserialize);
-    public static final CraterFeature MOON_CRATER = new CraterFeature(NoFeatureConfig::deserialize);
+    public static final CraterFeature MOON_CRATER = new CraterFeature(NoneFeatureConfiguration::deserialize);
 //    public static final CraterConfig SMALL_CRATERS = new CraterConfig(false);
     public static final CraterConfig LARGE_AND_SMALL_CRATERS = new CraterConfig(true);
-    public static final Feature<ReplaceBlockConfig> SAPPHIRE_ORE = new ReplaceBlockFeature(ReplaceBlockConfig::deserialize);
-    public static IStructurePieceType CMOON_DUNGEON_START = DungeonStart::new;
-    public static IStructurePieceType CMOON_DUNGEON_CORRIDOR = Corridor::new;
-    public static IStructurePieceType CMOON_DUNGEON_EMPTY = RoomEmpty::new;
-    public static IStructurePieceType CMOON_DUNGEON_BOSS = RoomBoss::new;
-    public static IStructurePieceType CMOON_DUNGEON_TREASURE = RoomTreasure::new;
-    public static IStructurePieceType CMOON_DUNGEON_SPAWNER = RoomSpawner::new;
-    public static IStructurePieceType CMOON_DUNGEON_CHEST = RoomChest::new;
-    public static IStructurePieceType CMOON_DUNGEON_ENTRANCE = RoomEntrance::new;
+    public static final Feature<ReplaceBlockConfiguration> SAPPHIRE_ORE = new ReplaceBlockFeature(ReplaceBlockConfiguration::deserialize);
+    public static StructurePieceType CMOON_DUNGEON_START = DungeonStart::new;
+    public static StructurePieceType CMOON_DUNGEON_CORRIDOR = Corridor::new;
+    public static StructurePieceType CMOON_DUNGEON_EMPTY = RoomEmpty::new;
+    public static StructurePieceType CMOON_DUNGEON_BOSS = RoomBoss::new;
+    public static StructurePieceType CMOON_DUNGEON_TREASURE = RoomTreasure::new;
+    public static StructurePieceType CMOON_DUNGEON_SPAWNER = RoomSpawner::new;
+    public static StructurePieceType CMOON_DUNGEON_CHEST = RoomChest::new;
+    public static StructurePieceType CMOON_DUNGEON_ENTRANCE = RoomEntrance::new;
 
-    public static final Placement<NoPlacementConfig> SAPPHIRE_ORE_PLACEMENT = new SapphirePlacement(NoPlacementConfig::deserialize);
+    public static final FeatureDecorator<NoneDecoratorConfiguration> SAPPHIRE_ORE_PLACEMENT = new SapphirePlacement(NoneDecoratorConfiguration::deserialize);
 
     @SubscribeEvent
     public static void registerFeatures(RegistryEvent.Register<Feature<?>> event)
@@ -56,7 +60,7 @@ public class GCFeatures
     }
 
     @SubscribeEvent
-    public static void registerPlacements(RegistryEvent.Register<Placement<?>> event)
+    public static void registerPlacements(RegistryEvent.Register<FeatureDecorator<?>> event)
     {
         GCBlocks.register(event.getRegistry(), SAPPHIRE_ORE_PLACEMENT, "sapphire_ore");
     }

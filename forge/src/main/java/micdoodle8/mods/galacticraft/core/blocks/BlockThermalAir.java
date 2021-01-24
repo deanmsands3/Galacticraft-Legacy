@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.core.blocks;
 
-import net.minecraft.block.AirBlock;
-import net.minecraft.state.BooleanProperty;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public abstract class BlockThermalAir extends AirBlock
 {

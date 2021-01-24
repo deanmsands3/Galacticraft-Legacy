@@ -2,18 +2,17 @@ package micdoodle8.mods.galacticraft.core.blocks;
 
 import micdoodle8.mods.galacticraft.core.tile.IMultiBlock;
 import micdoodle8.mods.galacticraft.core.tile.TileEntitySpaceStationBase;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.HitResult;
 import javax.annotation.Nullable;
 
 public class BlockSpaceStationBase extends Block
@@ -24,7 +23,7 @@ public class BlockSpaceStationBase extends Block
     }
 
     @Override
-    public float getBlockHardness(BlockState blockState, IBlockReader worldIn, BlockPos pos)
+    public float getDestroySpeed(BlockState blockState, BlockGetter worldIn, BlockPos pos)
     {
         return -1.0F;
     }
@@ -48,20 +47,20 @@ public class BlockSpaceStationBase extends Block
 //    }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        final TileEntity tileAt = worldIn.getTileEntity(pos);
+        final BlockEntity tileAt = worldIn.getBlockEntity(pos);
 
         if (tileAt instanceof IMultiBlock)
         {
             ((IMultiBlock) tileAt).onDestroy(tileAt);
         }
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntitySpaceStationBase();
     }
@@ -73,11 +72,11 @@ public class BlockSpaceStationBase extends Block
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
     {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
 
-        TileEntity tile = worldIn.getTileEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
 
         if (tile instanceof IMultiBlock)
         {
@@ -86,24 +85,24 @@ public class BlockSpaceStationBase extends Block
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
     {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param)
+    public boolean triggerEvent(BlockState state, Level worldIn, BlockPos pos, int id, int param)
     {
-        super.eventReceived(state, worldIn, pos, id, param);
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(id, param);
+        super.triggerEvent(state, worldIn, pos, id, param);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity != null && tileentity.triggerEvent(id, param);
     }
 
     @Override
     @Nullable
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos)
+    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider) tileentity : null;
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity instanceof MenuProvider ? (MenuProvider) tileentity : null;
     }
 }

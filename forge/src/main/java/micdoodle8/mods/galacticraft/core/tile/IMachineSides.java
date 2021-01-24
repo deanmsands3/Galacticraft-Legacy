@@ -2,13 +2,13 @@ package micdoodle8.mods.galacticraft.core.tile;
 
 import micdoodle8.mods.galacticraft.api.tile.ITileClientUpdates;
 import micdoodle8.mods.galacticraft.core.tile.IMachineSidesProperties.MachineSidesModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -373,23 +373,23 @@ public interface IMachineSides extends ITileClientUpdates
      * @param key        The name given to the machine sides property in the calling block e.g. SIDES
      * @return A blockstate with the property added
      */
-    static BlockState addPropertyForTile(BlockState state, TileEntity tile, IMachineSidesProperties renderType, EnumProperty<MachineSidesModel> key)
+    static BlockState addPropertyForTile(BlockState state, BlockEntity tile, IMachineSidesProperties renderType, EnumProperty<MachineSidesModel> key)
     {
         if (tile instanceof IMachineSides)
         {
             IMachineSides tileSides = (IMachineSides) tile;
-            return state.with(key, tileSides.buildBlockStateProperty());
+            return state.setValue(key, tileSides.buildBlockStateProperty());
         }
         else
         {
-            return state.with(key, renderType.getDefault());
+            return state.setValue(key, renderType.getDefault());
         }
     }
 
     /**
      * For testing purposes - Sneak Wrench to activate this
      */
-    default void nextSideConfiguration(TileEntity te)
+    default void nextSideConfiguration(BlockEntity te)
     {
         if (this.getConfigurationType() == IMachineSidesProperties.NOT_CONFIGURABLE)
         {
@@ -420,7 +420,7 @@ public interface IMachineSides extends ITileClientUpdates
             //Override this for 3 or more configurable sides!
         }
 
-        if (te.getWorld().isRemote)
+        if (te.getLevel().isClientSide)
         {
 //            te.getWorld().markBlockRangeForRenderUpdate(te.getPos(), te.getPos()); TODO Needed?
         }
@@ -492,12 +492,12 @@ public interface IMachineSides extends ITileClientUpdates
      */
     void setupMachineSides(int length);
 
-    default void addMachineSidesToNBT(CompoundNBT par1nbtTagCompound)
+    default void addMachineSidesToNBT(CompoundTag par1nbtTagCompound)
     {
-        ListNBT tagList = new ListNBT();
+        ListTag tagList = new ListTag();
         for (MachineSidePack msp : this.getAllMachineSides())
         {
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
             msp.writeToNBT(tag);
             tagList.add(tag);
         }
@@ -505,9 +505,9 @@ public interface IMachineSides extends ITileClientUpdates
     }
 
 
-    default void readMachineSidesFromNBT(CompoundNBT par1nbtTagCompound)
+    default void readMachineSidesFromNBT(CompoundTag par1nbtTagCompound)
     {
-        ListNBT tagList = par1nbtTagCompound.getList("macsides", 10);
+        ListTag tagList = par1nbtTagCompound.getList("macsides", 10);
         MachineSidePack[] msps = this.getAllMachineSides();
         if (tagList.size() == msps.length)
         {
@@ -537,7 +537,7 @@ public interface IMachineSides extends ITileClientUpdates
         {
             msps[i].set((Integer) data.get(i + 1));
         }
-        BlockPos pos = ((TileEntity) this).getPos();
+        BlockPos pos = ((BlockEntity) this).getBlockPos();
 //        ((TileEntity)this).getWorld().markBlockRangeForRenderUpdate(pos, pos); TODO Needed?
     }
 
@@ -557,13 +557,13 @@ public interface IMachineSides extends ITileClientUpdates
             this.set(defaultFace);
         }
 
-        public void writeToNBT(CompoundNBT tag)
+        public void writeToNBT(CompoundTag tag)
         {
             tag.putInt("ts", this.theSide.ordinal());
             tag.putInt("cf", this.currentFace.ordinal());
         }
 
-        public void readFromNBT(CompoundNBT tag)
+        public void readFromNBT(CompoundTag tag)
         {
             int ts = -1;
             int cf = -1;

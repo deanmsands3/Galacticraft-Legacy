@@ -1,30 +1,30 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.client.render.item;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.ModelTransformWrapper;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.BakedModel;
 
 public class ItemModelGrapple extends ModelTransformWrapper
 {
-    public ItemModelGrapple(IBakedModel modelToWrap)
+    public ItemModelGrapple(BakedModel modelToWrap)
     {
         super(modelToWrap);
     }
 
     @Override
-    protected boolean getTransformForPerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat)
+    protected boolean getTransformForPerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat)
     {
         if (cameraTransformType == ItemCameraTransforms.TransformType.GUI)
         {
-            mat.push();
-            mat.rotate(new Quaternion(30.0F, 45.0F, 0.0F, true));
+            mat.pushPose();
+            mat.mulPose(new Quaternion(30.0F, 45.0F, 0.0F, true));
             mat.scale(0.7F, 0.7F, 0.7F);
             mat.translate(-0.3F, 1.15F, 0.0F);
-            mat.rotate(new Quaternion(0.0F, Constants.halfPI, 0.0F, false));
+            mat.mulPose(new Quaternion(0.0F, Constants.halfPI, 0.0F, false));
 //            mat.translate(-0.15F, 0.0F, -0.15F);
 //            mat.rotate(new Quaternion(30.0F, 225.0F, 0.0F, true));
 //            mat.scale(0.57F, 0.57F, 0.57F);

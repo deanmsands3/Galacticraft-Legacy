@@ -2,7 +2,7 @@ package micdoodle8.mods.galacticraft.core.util;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 
@@ -77,7 +77,7 @@ public class ThreadVersionCheck extends Thread
 
                             if (sideToCheck.equals(LogicalSide.CLIENT))
                             {
-                                Minecraft.getInstance().player.sendMessage(new StringTextComponent(EnumColor.GREY + "New " + EnumColor.DARK_AQUA + Constants.MOD_NAME_SIMPLE + EnumColor.GREY + " version available! v" + remoteMajVer + "." + remoteMinVer + "." + remotePatchVer + ".xxx" + EnumColor.DARK_BLUE + " http://micdoodle8.com/"));
+                                Minecraft.getInstance().player.sendMessage(new TextComponent(EnumColor.GREY + "New " + EnumColor.DARK_AQUA + Constants.MOD_NAME_SIMPLE + EnumColor.GREY + " version available! v" + remoteMajVer + "." + remoteMinVer + "." + remotePatchVer + ".xxx" + EnumColor.DARK_BLUE + " http://micdoodle8.com/"));
                             }
                             else if (sideToCheck.equals(LogicalSide.SERVER))
                             {

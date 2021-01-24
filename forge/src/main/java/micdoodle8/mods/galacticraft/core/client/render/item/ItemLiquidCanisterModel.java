@@ -1,17 +1,17 @@
 package micdoodle8.mods.galacticraft.core.client.render.item;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 
 import javax.annotation.Nonnull;
@@ -19,11 +19,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class ItemLiquidCanisterModel implements IBakedModel
+public class ItemLiquidCanisterModel implements BakedModel
 {
-    private final IBakedModel iBakedModel;
+    private final BakedModel iBakedModel;
 
-    public ItemLiquidCanisterModel(IBakedModel i_modelToWrap)
+    public ItemLiquidCanisterModel(BakedModel i_modelToWrap)
     {
         this.iBakedModel = i_modelToWrap;
     }
@@ -35,21 +35,21 @@ public class ItemLiquidCanisterModel implements IBakedModel
     }
 
     @Override
-    public ItemOverrideList getOverrides()
+    public ItemOverrides getOverrides()
     {
         return BakedLiquidCanisterOverrideHandler.INSTANCE;
     }
 
     @Override
-    public boolean isAmbientOcclusion()
+    public boolean useAmbientOcclusion()
     {
-        return iBakedModel.isAmbientOcclusion();
+        return iBakedModel.useAmbientOcclusion();
     }
 
     @Override
     public boolean isAmbientOcclusion(BlockState state)
     {
-        return isAmbientOcclusion();
+        return useAmbientOcclusion();
     }
 
     @Override
@@ -59,21 +59,21 @@ public class ItemLiquidCanisterModel implements IBakedModel
     }
 
     @Override
-    public boolean isBuiltInRenderer()
+    public boolean isCustomRenderer()
     {
-        return iBakedModel.isBuiltInRenderer();
+        return iBakedModel.isCustomRenderer();
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture()
+    public TextureAtlasSprite getParticleIcon()
     {
-        return iBakedModel.getParticleTexture();
+        return iBakedModel.getParticleIcon();
     }
 
     @Override
     public TextureAtlasSprite getParticleTexture(@Nonnull IModelData data)
     {
-        return iBakedModel.getParticleTexture();
+        return iBakedModel.getParticleIcon();
     }
 
     @Override
@@ -83,12 +83,12 @@ public class ItemLiquidCanisterModel implements IBakedModel
     }
 
     @Override
-    public ItemCameraTransforms getItemCameraTransforms()
+    public ItemTransforms getTransforms()
     {
-        return iBakedModel.getItemCameraTransforms();
+        return iBakedModel.getTransforms();
     }
 
-    private static final class BakedLiquidCanisterOverrideHandler extends ItemOverrideList
+    private static final class BakedLiquidCanisterOverrideHandler extends ItemOverrides
     {
         public static final BakedLiquidCanisterOverrideHandler INSTANCE = new BakedLiquidCanisterOverrideHandler();
 
@@ -98,14 +98,14 @@ public class ItemLiquidCanisterModel implements IBakedModel
         }
 
         @Override
-        public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, World world, LivingEntity entity)
+        public BakedModel resolve(BakedModel originalModel, ItemStack stack, Level world, LivingEntity entity)
         {
             if (stack.getTag() == null)
             {
                 ItemStack copy = stack.copy();
-                copy.setTag(new CompoundNBT());
+                copy.setTag(new CompoundTag());
                 copy.getTag().putBoolean("Unbreakable", true);
-                return Minecraft.getInstance().getItemRenderer().getItemModelMesher().getItemModel(copy);
+                return Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(copy);
             }
             return originalModel;
         }

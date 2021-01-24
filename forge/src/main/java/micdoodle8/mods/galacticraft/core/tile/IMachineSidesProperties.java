@@ -3,8 +3,8 @@ package micdoodle8.mods.galacticraft.core.tile;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import micdoodle8.mods.galacticraft.core.tile.IMachineSides.Face;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 /**
  * Used to create the blockState property corresponding to the machine sides,
@@ -90,7 +90,7 @@ public class IMachineSidesProperties
     /**
      * The strings match the blockState model implementation for rendering
      */
-    public enum MachineSidesModel implements IStringSerializable
+    public enum MachineSidesModel implements StringRepresentable
     {
         //Don't change the order, the ordinal is important for the predicate definitions
         LEFT1("lr"),
@@ -122,7 +122,7 @@ public class IMachineSidesProperties
         }
 
         @Override
-        public String getName()
+        public String getSerializedName()
         {
             return this.name;
         }

@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.core.dimension;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.world.biome.provider.BiomeProviderType;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.level.biome.BiomeSourceType;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -14,21 +14,21 @@ import static micdoodle8.mods.galacticraft.core.GCBlocks.register;
 
 public class MoonBiomeProviderTypes
 {
-    public static final DeferredRegister<BiomeProviderType<?, ?>> BIOME_PROVIDER_TYPES = new DeferredRegister<>(ForgeRegistries.BIOME_PROVIDER_TYPES, Constants.MOD_ID_PLANETS);
+    public static final DeferredRegister<BiomeSourceType<?, ?>> BIOME_PROVIDER_TYPES = new DeferredRegister<>(ForgeRegistries.BIOME_PROVIDER_TYPES, Constants.MOD_ID_PLANETS);
 
-    public static final BiomeProviderType<MoonBiomeProviderSettings, MoonBiomeProvider> MOON_TYPE = newType();
+    public static final BiomeSourceType<MoonBiomeProviderSettings, MoonBiomeProvider> MOON_TYPE = newType();
 
     // TODO Yikes, fix this once forge makes BiomeProviderType constructor public
-    private static BiomeProviderType<MoonBiomeProviderSettings, MoonBiomeProvider> newType()
+    private static BiomeSourceType<MoonBiomeProviderSettings, MoonBiomeProvider> newType()
     {
-        Class<?> c = BiomeProviderType.class;
+        Class<?> c = BiomeSourceType.class;
         try
         {
             Constructor<?> cons = c.getDeclaredConstructor(Function.class, Function.class);
             cons.setAccessible(true);
             Function<MoonBiomeProviderSettings, MoonBiomeProvider> f1 = MoonBiomeProvider::new;
-            Function<WorldInfo, MoonBiomeProviderSettings> f2 = MoonBiomeProviderSettings::new;
-            return (BiomeProviderType<MoonBiomeProviderSettings, MoonBiomeProvider>)cons.newInstance(f1, f2);
+            Function<LevelData, MoonBiomeProviderSettings> f2 = MoonBiomeProviderSettings::new;
+            return (BiomeSourceType<MoonBiomeProviderSettings, MoonBiomeProvider>)cons.newInstance(f1, f2);
         }
         catch (NoSuchMethodException e)
         {

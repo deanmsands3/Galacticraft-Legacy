@@ -3,18 +3,17 @@ package micdoodle8.mods.galacticraft.planets.asteroids.world.gen.base;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
 import static micdoodle8.mods.galacticraft.planets.asteroids.world.gen.AsteroidFeatures.CBASE_HANGAR;
@@ -26,7 +25,7 @@ public class BaseHangar extends SizedPiece
     public static final int HANGARLENGTH = 42;
     public static final int HANGARHEIGHT = 15;
 
-    public BaseHangar(TemplateManager templateManager, CompoundNBT nbt)
+    public BaseHangar(StructureManager templateManager, CompoundTag nbt)
     {
         super(CBASE_HANGAR, nbt);
     }
@@ -39,32 +38,32 @@ public class BaseHangar extends SizedPiece
             int w = this.sizeX;
             this.sizeX = this.sizeZ;
             this.sizeZ = w;
-            this.setCoordBaseMode(direction.getOpposite()); //Maybe a bug in vanilla here?
+            this.setOrientation(direction.getOpposite()); //Maybe a bug in vanilla here?
         }
         else
         {
-            this.setCoordBaseMode(direction);
+            this.setOrientation(direction);
         }
         int yPos = configuration.getYPosition();
-        this.boundingBox = new MutableBoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos + this.sizeY, blockPosZ + this.sizeZ);
+        this.boundingBox = new BoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos + this.sizeY, blockPosZ + this.sizeZ);
         //TODO check save nbt
     }
 
     @Override
-    public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
+    public boolean postProcess(LevelAccessor worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, BoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
-        BlockState blockAir = Blocks.AIR.getDefaultState();
-        BlockState blockPlain = GCBlocks.TIN_DECORATION_BLOCK_2.getDefaultState();
-        BlockState blockPattern = GCBlocks.TIN_DECORATION_BLOCK_1.getDefaultState();
-        BlockState blockGrid = AsteroidBlocks.WALKWAY.getDefaultState();
+        BlockState blockAir = Blocks.AIR.defaultBlockState();
+        BlockState blockPlain = GCBlocks.TIN_DECORATION_BLOCK_2.defaultBlockState();
+        BlockState blockPattern = GCBlocks.TIN_DECORATION_BLOCK_1.defaultBlockState();
+        BlockState blockGrid = AsteroidBlocks.WALKWAY.defaultBlockState();
 //        BlockState blockSlab = GCBlocks.slabGCHalf.getStateFromMeta(1);
 //        BlockState upsideSlab = GCBlocks.slabGCHalf.getStateFromMeta(9);
 //        BlockState blockWall = GCBlocks.wallGC.getStateFromMeta(1);
 //        BlockState decoWall = GCBlocks.wallGC.getStateFromMeta(0);
 //        BlockState moonWall = GCBlocks.wallGC.getStateFromMeta(2); TODO Slabs and walls
-        BlockState blockBars = Blocks.IRON_BARS.getDefaultState();
-        BlockState blockDesh = MarsBlocks.DESH_BLOCK.getDefaultState();
-        BlockState blockRedstone = GCBlocks.HIDDEN_REDSTONE_WIRE.getDefaultState();
+        BlockState blockBars = Blocks.IRON_BARS.defaultBlockState();
+        BlockState blockDesh = MarsBlocks.DESH_BLOCK.defaultBlockState();
+        BlockState blockRedstone = GCBlocks.HIDDEN_REDSTONE_WIRE.defaultBlockState();
 //        Block blockStair = GCBlocks.tinStairs2;
         Block arcLamp = GCBlocks.ARC_LAMP;
         int stairmeta = 1;
@@ -118,7 +117,7 @@ public class BaseHangar extends SizedPiece
                     {
                         continue;
                     }
-                    this.setBlockState(worldIn, blockAir, xx, y, zz, mutableBoundingBoxIn);
+                    this.placeBlock(worldIn, blockAir, xx, y, zz, mutableBoundingBoxIn);
                 }
             }
         }
@@ -143,13 +142,13 @@ public class BaseHangar extends SizedPiece
 
         for (int y = 7; y <= maxY; y++)
         {
-            this.setBlockState(worldIn, blockPlain, 4, y, HANGARLENGTH, mutableBoundingBoxIn);
-            this.setBlockState(worldIn, blockPlain, 22, y, HANGARLENGTH, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, blockPlain, 4, y, HANGARLENGTH, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, blockPlain, 22, y, HANGARLENGTH, mutableBoundingBoxIn);
         }
         for (int y = 9; y <= maxY; y++)
         {
-            this.setBlockState(worldIn, this.configuration.getWallBlock(), 6, y, HANGARLENGTH, mutableBoundingBoxIn);
-            this.setBlockState(worldIn, this.configuration.getWallBlock(), 20, y, HANGARLENGTH, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, this.configuration.getWallBlock(), 6, y, HANGARLENGTH, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, this.configuration.getWallBlock(), 20, y, HANGARLENGTH, mutableBoundingBoxIn);
         }
 
 //        for (int xx = 0; xx <= 3; xx++)
@@ -201,49 +200,49 @@ public class BaseHangar extends SizedPiece
 
             if (zz % 3 == 1)
             {
-                this.setBlockState(worldIn, blockPlain, 4, maxY, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockPlain, 22, maxY, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPlain, 4, maxY, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPlain, 22, maxY, zz, mutableBoundingBoxIn);
             }
             else
             {
-                this.setBlockState(worldIn, blockPattern, 4, maxY, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockPattern, 22, maxY, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPattern, 4, maxY, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPattern, 22, maxY, zz, mutableBoundingBoxIn);
             }
 
             //Top middle
             if (zz < HANGARLENGTH - 1)
             {
-                this.setBlockState(worldIn, blockGrid, 9, maxY, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockRedstone, 11, maxY, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockGrid, 13, maxY, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockRedstone, 15, maxY, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockGrid, 17, maxY, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockGrid, 9, maxY, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockRedstone, 11, maxY, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockGrid, 13, maxY, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockRedstone, 15, maxY, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockGrid, 17, maxY, zz, mutableBoundingBoxIn);
             }
 
             //Floor
-            this.setBlockState(worldIn, blockPattern, 7, 0, zz, mutableBoundingBoxIn);
-            this.setBlockState(worldIn, blockPattern, 9, 0, zz, mutableBoundingBoxIn);
-            this.setBlockState(worldIn, blockPattern, 19, 0, zz, mutableBoundingBoxIn);
-            this.setBlockState(worldIn, blockPattern, 17, 0, zz, mutableBoundingBoxIn);
-            this.setBlockState(worldIn, blockGrid, 8, 0, zz, mutableBoundingBoxIn);
-            this.setBlockState(worldIn, blockGrid, 18, 0, zz, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, blockPattern, 7, 0, zz, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, blockPattern, 9, 0, zz, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, blockPattern, 19, 0, zz, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, blockPattern, 17, 0, zz, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, blockGrid, 8, 0, zz, mutableBoundingBoxIn);
+            this.placeBlock(worldIn, blockGrid, 18, 0, zz, mutableBoundingBoxIn);
 
             if (zz > HANGARLENGTH - 5)
             {
-                this.setBlockState(worldIn, blockPlain, 10, 0, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockPlain, 16, 0, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockPlain, 11, 0, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockPlain, 15, 0, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPlain, 10, 0, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPlain, 16, 0, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPlain, 11, 0, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPlain, 15, 0, zz, mutableBoundingBoxIn);
             }
 
             if (zz > HANGARLENGTH - 4)
             {
-                this.setBlockState(worldIn, blockPlain, 12, 0, zz, mutableBoundingBoxIn);
-                this.setBlockState(worldIn, blockPlain, 14, 0, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPlain, 12, 0, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPlain, 14, 0, zz, mutableBoundingBoxIn);
             }
             if (zz > HANGARLENGTH - 3)
             {
-                this.setBlockState(worldIn, blockPlain, 13, 0, zz, mutableBoundingBoxIn);
+                this.placeBlock(worldIn, blockPlain, 13, 0, zz, mutableBoundingBoxIn);
             }
         }
 
@@ -426,51 +425,51 @@ public class BaseHangar extends SizedPiece
         return true;
     }
 
-    private void floorStrut(World worldIn, BlockState blockWall, BlockState decoWall, int zz, MutableBoundingBox mutableBoundingBoxIn)
+    private void floorStrut(Level worldIn, BlockState blockWall, BlockState decoWall, int zz, BoundingBox mutableBoundingBoxIn)
     {
-        this.setBlockState(worldIn, blockWall, 1, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, decoWall, 2, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, blockWall, 3, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, decoWall, 4, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, blockWall, 5, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, decoWall, 6, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, decoWall, 20, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, blockWall, 21, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, decoWall, 22, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, blockWall, 23, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, decoWall, 24, 0, zz, mutableBoundingBoxIn);
-        this.setBlockState(worldIn, blockWall, 25, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, blockWall, 1, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, decoWall, 2, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, blockWall, 3, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, decoWall, 4, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, blockWall, 5, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, decoWall, 6, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, decoWall, 20, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, blockWall, 21, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, decoWall, 22, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, blockWall, 23, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, decoWall, 24, 0, zz, mutableBoundingBoxIn);
+        this.placeBlock(worldIn, blockWall, 25, 0, zz, mutableBoundingBoxIn);
     }
 
-    private void extrude(World worldIn, Random rand, int solid, BlockState blockstateIn, int x, int y, int z, MutableBoundingBox boundingBoxIn)
+    private void extrude(Level worldIn, Random rand, int solid, BlockState blockstateIn, int x, int y, int z, BoundingBox boundingBoxIn)
     {
         for (int zz = z; zz >= rand.nextInt(4 * (4 - solid)); zz--)
         {
-            this.setBlockState(worldIn, blockstateIn, x, y, zz, boundingBoxIn);
+            this.placeBlock(worldIn, blockstateIn, x, y, zz, boundingBoxIn);
         }
     }
 
-    private void extrudeDuo(World worldIn, Random rand, int solid, BlockState blockA, BlockState blockB, int x, int y, int z, MutableBoundingBox boundingBoxIn)
+    private void extrudeDuo(Level worldIn, Random rand, int solid, BlockState blockA, BlockState blockB, int x, int y, int z, BoundingBox boundingBoxIn)
     {
         for (int zz = z; zz >= rand.nextInt(4 * (4 - solid)); zz--)
         {
-            this.setBlockState(worldIn, (zz % 2 == 0) ? blockA : blockB, x, y, zz, boundingBoxIn);
+            this.placeBlock(worldIn, (zz % 2 == 0) ? blockA : blockB, x, y, zz, boundingBoxIn);
         }
     }
 
-    private void extrudeTrio(World worldIn, Random rand, int solid, BlockState blockA, BlockState blockB, int x, int y, int z, MutableBoundingBox boundingBoxIn)
+    private void extrudeTrio(Level worldIn, Random rand, int solid, BlockState blockA, BlockState blockB, int x, int y, int z, BoundingBox boundingBoxIn)
     {
         for (int zz = z; zz >= rand.nextInt(4 * (4 - solid)); zz--)
         {
-            this.setBlockState(worldIn, (zz % 3 == 0) ? blockA : blockB, x, y, zz, boundingBoxIn);
+            this.placeBlock(worldIn, (zz % 3 == 0) ? blockA : blockB, x, y, zz, boundingBoxIn);
         }
     }
 
-    private void extrudeTrioOff(World worldIn, Random rand, int solid, BlockState blockA, BlockState blockB, int x, int y, int z, MutableBoundingBox boundingBoxIn)
+    private void extrudeTrioOff(Level worldIn, Random rand, int solid, BlockState blockA, BlockState blockB, int x, int y, int z, BoundingBox boundingBoxIn)
     {
         for (int zz = z; zz >= rand.nextInt(4 * (4 - solid)); zz--)
         {
-            this.setBlockState(worldIn, (zz % 3 == 1) ? blockA : blockB, x, y, zz, boundingBoxIn);
+            this.placeBlock(worldIn, (zz % 3 == 1) ? blockA : blockB, x, y, zz, boundingBoxIn);
         }
     }
 }

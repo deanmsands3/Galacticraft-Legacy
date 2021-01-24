@@ -8,25 +8,24 @@ import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityLaunchController;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.BlockHitResult;
 import javax.annotation.Nullable;
 
 public class BlockLaunchController extends BlockTileGC implements IShiftDescription, IPartialSealableBlock, ISortable
@@ -39,7 +38,7 @@ public class BlockLaunchController extends BlockTileGC implements IShiftDescript
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
     {
 //        int metadata = getMetaFromState(state);
 
@@ -49,7 +48,7 @@ public class BlockLaunchController extends BlockTileGC implements IShiftDescript
 //        worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 3);
 
         WorldUtil.markAdjacentPadForUpdate(worldIn, pos);
-        TileEntity var8 = worldIn.getTileEntity(pos);
+        BlockEntity var8 = worldIn.getBlockEntity(pos);
 //        if (var8 instanceof IChunkLoader && !worldIn.isRemote && ConfigManagerPlanets.launchControllerChunkLoad && placer instanceof PlayerEntity)
 //        {
 //            ((IChunkLoader) var8).setOwnerName(placer.getName());
@@ -59,17 +58,17 @@ public class BlockLaunchController extends BlockTileGC implements IShiftDescript
 //        {
 //            ((TileEntityLaunchController) var8).setOwnerName(placer.getName());
 //        }
-        ((TileEntityLaunchController) var8).setOwnerUUID(placer.getUniqueID());
+        ((TileEntityLaunchController) var8).setOwnerUUID(placer.getUUID());
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public ActionResultType onMachineActivated(World worldIn, BlockPos pos, BlockState state, PlayerEntity playerIn, Hand hand, ItemStack heldItem, BlockRayTraceResult hit)
+    public InteractionResult onMachineActivated(Level worldIn, BlockPos pos, BlockState state, Player playerIn, InteractionHand hand, ItemStack heldItem, BlockHitResult hit)
     {
 //        playerIn.openGui(GalacticraftPlanets.instance, GuiIdsPlanets.MACHINE_MARS, worldIn, pos.getX(), pos.getY(), pos.getZ()); TODO guis
         return ActionResultType.SUCCESS;
@@ -89,7 +88,7 @@ public class BlockLaunchController extends BlockTileGC implements IShiftDescript
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityLaunchController();
     }
@@ -101,7 +100,7 @@ public class BlockLaunchController extends BlockTileGC implements IShiftDescript
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid)
+    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
     {
         WorldUtil.markAdjacentPadForUpdate(world, pos);
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
@@ -110,7 +109,7 @@ public class BlockLaunchController extends BlockTileGC implements IShiftDescript
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -135,7 +134,7 @@ public class BlockLaunchController extends BlockTileGC implements IShiftDescript
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(FACING);
     }
@@ -147,7 +146,7 @@ public class BlockLaunchController extends BlockTileGC implements IShiftDescript
     }
 
     @Override
-    public boolean isSealed(World world, BlockPos pos, Direction direction)
+    public boolean isSealed(Level world, BlockPos pos, Direction direction)
     {
         return true;
     }

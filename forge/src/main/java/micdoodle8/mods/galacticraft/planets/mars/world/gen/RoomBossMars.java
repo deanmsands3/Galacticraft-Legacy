@@ -5,23 +5,22 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner;
 import micdoodle8.mods.galacticraft.core.world.gen.dungeon.DungeonConfiguration;
 import micdoodle8.mods.galacticraft.core.world.gen.dungeon.RoomBoss;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
 import static micdoodle8.mods.galacticraft.planets.mars.world.gen.MarsFeatures.CMARS_DUNGEON_BOSS;
 
 public class RoomBossMars extends RoomBoss
 {
-    public RoomBossMars(TemplateManager templateManager, CompoundNBT nbt)
+    public RoomBossMars(StructureManager templateManager, CompoundTag nbt)
     {
         super(CMARS_DUNGEON_BOSS, nbt);
     }
@@ -37,7 +36,7 @@ public class RoomBossMars extends RoomBoss
     }
 
     @Override
-    public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
+    public boolean postProcess(LevelAccessor worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, BoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
         for (int i = 0; i <= this.sizeX; i++)
         {
@@ -50,8 +49,8 @@ public class RoomBossMars extends RoomBoss
                         boolean placeBlock = true;
                         if (getDirection().getAxis() == Direction.Axis.Z)
                         {
-                            int start = (this.boundingBox.maxX - this.boundingBox.minX) / 2 - 1;
-                            int end = (this.boundingBox.maxX - this.boundingBox.minX) / 2 + 1;
+                            int start = (this.boundingBox.x1 - this.boundingBox.x0) / 2 - 1;
+                            int end = (this.boundingBox.x1 - this.boundingBox.x0) / 2 + 1;
                             if (i > start && i <= end && j < 3 && j > 0)
                             {
                                 if (getDirection() == Direction.SOUTH && k == 0)
@@ -66,8 +65,8 @@ public class RoomBossMars extends RoomBoss
                         }
                         else
                         {
-                            int start = (this.boundingBox.maxZ - this.boundingBox.minZ) / 2 - 1;
-                            int end = (this.boundingBox.maxZ - this.boundingBox.minZ) / 2 + 1;
+                            int start = (this.boundingBox.z1 - this.boundingBox.z0) / 2 - 1;
+                            int end = (this.boundingBox.z1 - this.boundingBox.z0) / 2 + 1;
                             if (k > start && k <= end && j < 3 && j > 0)
                             {
                                 if (getDirection() == Direction.EAST && i == 0)
@@ -82,31 +81,31 @@ public class RoomBossMars extends RoomBoss
                         }
                         if (placeBlock)
                         {
-                            this.setBlockState(worldIn, this.configuration.getBrickBlock(), i, j, k, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, this.configuration.getBrickBlock(), i, j, k, mutableBoundingBoxIn);
                         }
                         else
                         {
-                            this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, mutableBoundingBoxIn);
                         }
                     }
                     else if (j == this.sizeY)
                     {
                         if ((i <= 2 || k <= 2 || i >= this.sizeX - 2 || k >= this.sizeZ - 2) && randomIn.nextInt(4) == 0)
                         {
-                            this.setBlockState(worldIn, Blocks.GLOWSTONE.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, Blocks.GLOWSTONE.defaultBlockState(), i, j, k, mutableBoundingBoxIn);
                         }
                         else
                         {
-                            this.setBlockState(worldIn, this.configuration.getBrickBlock(), i, j, k, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, this.configuration.getBrickBlock(), i, j, k, mutableBoundingBoxIn);
                         }
                     }
                     else if (j == 1 && (i <= 2 || k <= 2 || i >= this.sizeX - 2 || k >= this.sizeZ - 2) && randomIn.nextInt(6) == 0)
                     {
-                        this.setBlockState(worldIn, MarsBlocks.CREEPER_EGG.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                        this.placeBlock(worldIn, MarsBlocks.CREEPER_EGG.defaultBlockState(), i, j, k, mutableBoundingBoxIn);
                     }
                     else
                     {
-                        this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, mutableBoundingBoxIn);
                     }
                 }
             }
@@ -115,15 +114,15 @@ public class RoomBossMars extends RoomBoss
         int spawnerX = this.sizeX / 2;
         int spawnerY = 1;
         int spawnerZ = this.sizeZ / 2;
-        BlockPos blockpos = new BlockPos(this.getXWithOffset(spawnerX, spawnerZ), this.getYWithOffset(spawnerY), this.getZWithOffset(spawnerX, spawnerZ));
+        BlockPos blockpos = new BlockPos(this.getWorldX(spawnerX, spawnerZ), this.getWorldY(spawnerY), this.getWorldZ(spawnerX, spawnerZ));
         //Is this position inside the chunk currently being generated?
-        if (mutableBoundingBoxIn.isVecInside(blockpos))
+        if (mutableBoundingBoxIn.isInside(blockpos))
         {
-            worldIn.setBlockState(blockpos, MarsBlocks.MARS_BOSS_SPAWNER.getDefaultState(), 2);
-            TileEntityDungeonSpawner spawner = (TileEntityDungeonSpawner) worldIn.getTileEntity(blockpos);
+            worldIn.setBlock(blockpos, MarsBlocks.MARS_BOSS_SPAWNER.defaultBlockState(), 2);
+            TileEntityDungeonSpawner spawner = (TileEntityDungeonSpawner) worldIn.getBlockEntity(blockpos);
             if (spawner != null)
             {
-                spawner.setRoom(new Vector3(this.boundingBox.minX + 1, this.boundingBox.minY + 1, this.boundingBox.minZ + 1), new Vector3(this.sizeX - 1, this.sizeY - 1, this.sizeZ - 1));
+                spawner.setRoom(new Vector3(this.boundingBox.x0 + 1, this.boundingBox.y0 + 1, this.boundingBox.z0 + 1), new Vector3(this.sizeX - 1, this.sizeY - 1, this.sizeZ - 1));
             }
         }
 

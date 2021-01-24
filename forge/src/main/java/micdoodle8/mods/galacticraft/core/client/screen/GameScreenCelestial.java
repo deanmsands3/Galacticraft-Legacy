@@ -11,12 +11,8 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.client.render.RenderPlanet;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.util.Mth;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.BufferUtils;
@@ -36,8 +32,8 @@ public class GameScreenCelestial implements IGameScreen
     private float scale;
 
     private final int lineSegments = 90;
-    private final float cos = MathHelper.cos(Constants.twoPI / lineSegments);
-    private final float sin = MathHelper.sin(Constants.twoPI / lineSegments);
+    private final float cos = Mth.cos(Constants.twoPI / lineSegments);
+    private final float sin = Mth.sin(Constants.twoPI / lineSegments);
 
     private DoubleBuffer planes;
 

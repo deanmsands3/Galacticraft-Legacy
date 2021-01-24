@@ -2,8 +2,7 @@ package micdoodle8.mods.galacticraft.planets.asteroids.entities;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBlocks;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -31,7 +30,7 @@ public class AsteroidEntities
 
     private static EntityType<AstroMinerEntity> astroMiner()
     {
-        return EntityType.Builder.create(AstroMinerEntity::new, EntityClassification.MISC)
+        return EntityType.Builder.of(AstroMinerEntity::new, EntityClassification.MISC)
                 .size(2.6F, 1.8F)
                 .immuneToFire()
                 .setUpdateInterval(10)
@@ -42,7 +41,7 @@ public class AsteroidEntities
 
     private static EntityType<EntryPodEntity> entryPod()
     {
-        return EntityType.Builder.create(EntryPodEntity::new, EntityClassification.MISC)
+        return EntityType.Builder.of(EntryPodEntity::new, EntityClassification.MISC)
                 .size(2.6F, 1.8F)
                 .immuneToFire()
                 .setUpdateInterval(10)
@@ -53,7 +52,7 @@ public class AsteroidEntities
 
     private static EntityType<GrappleEntity> grapple()
     {
-        return EntityType.Builder.create(GrappleEntity::new, EntityClassification.MISC)
+        return EntityType.Builder.of(GrappleEntity::new, EntityClassification.MISC)
                 .size(0.75F, 0.75F)
                 .immuneToFire()
                 .setUpdateInterval(10)
@@ -64,7 +63,7 @@ public class AsteroidEntities
 
     private static EntityType<SmallAsteroidEntity> smallAsteroid()
     {
-        return EntityType.Builder.create(SmallAsteroidEntity::new, EntityClassification.MISC)
+        return EntityType.Builder.of(SmallAsteroidEntity::new, EntityClassification.MISC)
                 .size(1.0F, 1.0F)
                 .immuneToFire()
                 .setUpdateInterval(10)
@@ -75,7 +74,7 @@ public class AsteroidEntities
 
     private static EntityType<Tier3RocketEntity> rocketT3()
     {
-        return EntityType.Builder.create(Tier3RocketEntity::new, EntityClassification.MISC)
+        return EntityType.Builder.of(Tier3RocketEntity::new, EntityClassification.MISC)
                 .size(1.8F, 6.0F)
                 .immuneToFire()
                 .setUpdateInterval(10)

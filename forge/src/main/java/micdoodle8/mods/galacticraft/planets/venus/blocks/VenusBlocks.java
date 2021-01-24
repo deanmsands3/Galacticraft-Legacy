@@ -8,13 +8,13 @@ import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner;
 import micdoodle8.mods.galacticraft.planets.client.renderer.ItemStackTileEntityRendererPlanets;
 import micdoodle8.mods.galacticraft.planets.venus.tile.*;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,42 +27,42 @@ import static micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBloc
 @ObjectHolder(Constants.MOD_ID_PLANETS)
 public class VenusBlocks
 {
-    public static final Block VENUS_SOFT_ROCK = new BlockVenusRock(Block.Properties.create(Material.ROCK).hardnessAndResistance(2.2F));
-    public static final Block VENUS_VOLCANIC_ROCK = new BlockVenusRock(Block.Properties.from(VENUS_SOFT_ROCK));
-    public static final Block PUMICE = new BlockVenusRock(Block.Properties.from(VENUS_SOFT_ROCK));
-    public static final Block LEAD_BLOCK = new BlockVenusRock(Block.Properties.from(VENUS_SOFT_ROCK));
+    public static final Block VENUS_SOFT_ROCK = new BlockVenusRock(Block.Properties.of(Material.STONE).strength(2.2F));
+    public static final Block VENUS_VOLCANIC_ROCK = new BlockVenusRock(Block.Properties.copy(VENUS_SOFT_ROCK));
+    public static final Block PUMICE = new BlockVenusRock(Block.Properties.copy(VENUS_SOFT_ROCK));
+    public static final Block LEAD_BLOCK = new BlockVenusRock(Block.Properties.copy(VENUS_SOFT_ROCK));
 
-    public static final Block VENUS_HARD_ROCK = new BlockVenusRock(Block.Properties.from(VENUS_SOFT_ROCK).hardnessAndResistance(3.0F));
+    public static final Block VENUS_HARD_ROCK = new BlockVenusRock(Block.Properties.copy(VENUS_SOFT_ROCK).strength(3.0F));
 
-    public static final Block VENUS_ALUMINUM_ORE = new BlockOreVenus(Block.Properties.from(VENUS_SOFT_ROCK).hardnessAndResistance(5.0F));
+    public static final Block VENUS_ALUMINUM_ORE = new BlockOreVenus(Block.Properties.copy(VENUS_SOFT_ROCK).strength(5.0F));
 
-    public static final Block VENUS_COPPER_ORE = new BlockOreVenus(Block.Properties.from(VENUS_SOFT_ROCK));
-    public static final Block GALENA_ORE = new BlockOreVenus(Block.Properties.from(VENUS_SOFT_ROCK));
-    public static final Block VENUS_QUARTZ_ORE = new BlockOreVenus(Block.Properties.from(VENUS_SOFT_ROCK));
-    public static final Block VENUS_SILICON_ORE = new BlockOreVenus(Block.Properties.from(VENUS_SOFT_ROCK));
-    public static final Block VENUS_TIN_ORE = new BlockOreVenus(Block.Properties.from(VENUS_SOFT_ROCK));
-    public static final Block SOLAR_ORE = new BlockOreVenus(Block.Properties.from(VENUS_SOFT_ROCK));
+    public static final Block VENUS_COPPER_ORE = new BlockOreVenus(Block.Properties.copy(VENUS_SOFT_ROCK));
+    public static final Block GALENA_ORE = new BlockOreVenus(Block.Properties.copy(VENUS_SOFT_ROCK));
+    public static final Block VENUS_QUARTZ_ORE = new BlockOreVenus(Block.Properties.copy(VENUS_SOFT_ROCK));
+    public static final Block VENUS_SILICON_ORE = new BlockOreVenus(Block.Properties.copy(VENUS_SOFT_ROCK));
+    public static final Block VENUS_TIN_ORE = new BlockOreVenus(Block.Properties.copy(VENUS_SOFT_ROCK));
+    public static final Block SOLAR_ORE = new BlockOreVenus(Block.Properties.copy(VENUS_SOFT_ROCK));
 
-    public static final Block RED_VENUS_DUNGEON_BRICKS = new BlockDungeonBrick(Block.Properties.from(VENUS_SOFT_ROCK).hardnessAndResistance(40.0F));
-    public static final Block ORANGE_VENUS_DUNGEON_BRICKS = new BlockDungeonBrick(Block.Properties.from(RED_VENUS_DUNGEON_BRICKS));
+    public static final Block RED_VENUS_DUNGEON_BRICKS = new BlockDungeonBrick(Block.Properties.copy(VENUS_SOFT_ROCK).strength(40.0F));
+    public static final Block ORANGE_VENUS_DUNGEON_BRICKS = new BlockDungeonBrick(Block.Properties.copy(RED_VENUS_DUNGEON_BRICKS));
 
-    public static final Block VAPOR_SPOUT = new BlockSpout(Block.Properties.create(Material.ROCK).hardnessAndResistance(4.5F));
+    public static final Block VAPOR_SPOUT = new BlockSpout(Block.Properties.of(Material.STONE).strength(4.5F));
 
-    public static final Block VENUS_BOSS_SPAWNER = new BlockBossSpawnerVenus(Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops());
+    public static final Block VENUS_BOSS_SPAWNER = new BlockBossSpawnerVenus(Block.Properties.of(Material.STONE).strength(1000000.0F).noDrops());
 
-    public static final Block TIER_3_TREASURE_CHEST = new BlockTier3TreasureChest(Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13).noDrops());
+    public static final Block TIER_3_TREASURE_CHEST = new BlockTier3TreasureChest(Block.Properties.of(Material.STONE).strength(100000.0F).sound(SoundType.STONE).lightLevel(13).noDrops());
 
-    public static final Block WEB_STRING = new BlockTorchWeb(Block.Properties.create(Material.WEB).doesNotBlockMovement().notSolid());
-    public static final Block WEB_TORCH = new BlockTorchWeb(Block.Properties.from(WEB_STRING).lightValue(15).notSolid());
+    public static final Block WEB_STRING = new BlockTorchWeb(Block.Properties.of(Material.WEB).noCollission().noOcclusion());
+    public static final Block WEB_TORCH = new BlockTorchWeb(Block.Properties.copy(WEB_STRING).lightLevel(15).noOcclusion());
 
-    public static final Block GEOTHERMAL_GENERATOR = new BlockGeothermalGenerator(Block.Properties.create(Material.ROCK).hardnessAndResistance(1.0F).sound(SoundType.METAL));
-    public static final Block SOLAR_ARRAY_MODULE = new BlockSolarArrayModule(Block.Properties.from(GEOTHERMAL_GENERATOR));
-    public static final Block SOLAR_ARRAY_CONTROLLER = new BlockSolarArrayController(Block.Properties.from(GEOTHERMAL_GENERATOR));
-    public static final Block LASER_TURRET = new BlockLaserTurret(Block.Properties.from(GEOTHERMAL_GENERATOR));
+    public static final Block GEOTHERMAL_GENERATOR = new BlockGeothermalGenerator(Block.Properties.of(Material.STONE).strength(1.0F).sound(SoundType.METAL));
+    public static final Block SOLAR_ARRAY_MODULE = new BlockSolarArrayModule(Block.Properties.copy(GEOTHERMAL_GENERATOR));
+    public static final Block SOLAR_ARRAY_CONTROLLER = new BlockSolarArrayController(Block.Properties.copy(GEOTHERMAL_GENERATOR));
+    public static final Block LASER_TURRET = new BlockLaserTurret(Block.Properties.copy(GEOTHERMAL_GENERATOR));
 
-    public static final Block CRASHED_PROBE = new BlockCrashedProbe(Block.Properties.create(Material.IRON).tickRandomly().hardnessAndResistance(4.5F).sound(SoundType.METAL).notSolid());
+    public static final Block CRASHED_PROBE = new BlockCrashedProbe(Block.Properties.of(Material.METAL).randomTicks().strength(4.5F).sound(SoundType.METAL).noOcclusion());
 
-    public static final Block SCORCHED_VENUS_ROCK = new BlockScorchedRock(Block.Properties.create(Material.ROCK).tickRandomly().hardnessAndResistance(0.9F, 2.5F));
+    public static final Block SCORCHED_VENUS_ROCK = new BlockScorchedRock(Block.Properties.of(Material.STONE).randomTicks().strength(0.9F, 2.5F));
 
     //    @ObjectHolder(VenusBlockNames.venusBlock) public static Block venusBlock;
 //    @ObjectHolder(VenusBlockNames.spout)
@@ -180,7 +180,7 @@ public class VenusBlocks
     public static void registerItemBlocks(RegistryEvent.Register<Item> evt)
     {
         IForgeRegistry<Item> r = evt.getRegistry();
-        Item.Properties props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
+        Item.Properties props = GCItems.defaultBuilder().tab(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(VENUS_SOFT_ROCK), new BlockItem(VENUS_SOFT_ROCK, props));
         register(r, Registry.BLOCK.getKey(VENUS_VOLCANIC_ROCK), new BlockItem(VENUS_VOLCANIC_ROCK, props));
         register(r, Registry.BLOCK.getKey(PUMICE), new BlockItem(PUMICE, props));
@@ -252,17 +252,17 @@ public class VenusBlocks
 //    }
 
     @SubscribeEvent
-    public static void initTileEntities(RegistryEvent.Register<TileEntityType<?>> evt)
+    public static void initTileEntities(RegistryEvent.Register<BlockEntityType<?>> evt)
     {
-        IForgeRegistry<TileEntityType<?>> r = evt.getRegistry();
+        IForgeRegistry<BlockEntityType<?>> r = evt.getRegistry();
 
-        register(r, TileEntityType.Builder.create(TileEntityCrashedProbe::new, CRASHED_PROBE).build(null), VenusBlockNames.CRASHED_PROBE);
-        register(r, TileEntityType.Builder.create(TileEntityDungeonSpawner::new, VENUS_BOSS_SPAWNER).build(null), VenusBlockNames.VENUS_BOSS_SPAWNER);
-        register(r, TileEntityType.Builder.create(TileEntityGeothermalGenerator::new, GEOTHERMAL_GENERATOR).build(null), VenusBlockNames.GEOTHERMAL_GENERATOR);
-        register(r, TileEntityType.Builder.create(TileEntityLaserTurret::new, LASER_TURRET).build(null), VenusBlockNames.LASER_TURRET);
-        register(r, TileEntityType.Builder.create(TileEntitySolarArrayController::new, SOLAR_ARRAY_CONTROLLER).build(null), VenusBlockNames.SOLAR_ARRAY_CONTROLLER);
-        register(r, TileEntityType.Builder.create(TileEntitySolarArrayModule::new, SOLAR_ARRAY_MODULE).build(null), VenusBlockNames.SOLAR_ARRAY_MODULE);
-        register(r, TileEntityType.Builder.create(TileEntitySpout::new, VAPOR_SPOUT).build(null), VenusBlockNames.VAPOR_SPOUT);
-        register(r, TileEntityType.Builder.create(TileEntityTreasureChestVenus::new, TIER_3_TREASURE_CHEST).build(null), VenusBlockNames.TIER_3_TREASURE_CHEST);
+        register(r, BlockEntityType.Builder.of(TileEntityCrashedProbe::new, CRASHED_PROBE).build(null), VenusBlockNames.CRASHED_PROBE);
+        register(r, BlockEntityType.Builder.of(TileEntityDungeonSpawner::new, VENUS_BOSS_SPAWNER).build(null), VenusBlockNames.VENUS_BOSS_SPAWNER);
+        register(r, BlockEntityType.Builder.of(TileEntityGeothermalGenerator::new, GEOTHERMAL_GENERATOR).build(null), VenusBlockNames.GEOTHERMAL_GENERATOR);
+        register(r, BlockEntityType.Builder.of(TileEntityLaserTurret::new, LASER_TURRET).build(null), VenusBlockNames.LASER_TURRET);
+        register(r, BlockEntityType.Builder.of(TileEntitySolarArrayController::new, SOLAR_ARRAY_CONTROLLER).build(null), VenusBlockNames.SOLAR_ARRAY_CONTROLLER);
+        register(r, BlockEntityType.Builder.of(TileEntitySolarArrayModule::new, SOLAR_ARRAY_MODULE).build(null), VenusBlockNames.SOLAR_ARRAY_MODULE);
+        register(r, BlockEntityType.Builder.of(TileEntitySpout::new, VAPOR_SPOUT).build(null), VenusBlockNames.VAPOR_SPOUT);
+        register(r, BlockEntityType.Builder.of(TileEntityTreasureChestVenus::new, TIER_3_TREASURE_CHEST).build(null), VenusBlockNames.TIER_3_TREASURE_CHEST);
     }
 }

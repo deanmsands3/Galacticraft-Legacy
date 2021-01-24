@@ -3,23 +3,20 @@ package micdoodle8.mods.galacticraft.core.client.gui.container;
 import micdoodle8.mods.galacticraft.core.client.gui.element.GuiElementInfoRegion;
 import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.BeaconContainer;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GuiContainerGC<T extends Container> extends ContainerScreen<T>
+public abstract class GuiContainerGC<T extends AbstractContainerMenu> extends AbstractContainerScreen<T>
 {
     public List<GuiElementInfoRegion> infoRegions = new ArrayList<>();
 
-    public GuiContainerGC(T container, PlayerInventory playerInventory, ITextComponent title)
+    public GuiContainerGC(T container, Inventory playerInventory, Component title)
     {
         super(container, playerInventory, title);
     }
@@ -29,7 +26,7 @@ public abstract class GuiContainerGC<T extends Container> extends ContainerScree
     {
         this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+        this.renderTooltip(mouseX, mouseY);
 
         for (int k = 0; k < this.infoRegions.size(); ++k)
         {
@@ -48,17 +45,17 @@ public abstract class GuiContainerGC<T extends Container> extends ContainerScree
 
     public int getTooltipOffset(int par1, int par2)
     {
-        for (int i1 = 0; i1 < this.container.inventorySlots.size(); ++i1)
+        for (int i1 = 0; i1 < this.menu.slots.size(); ++i1)
         {
-            Slot slot = this.container.inventorySlots.get(i1);
+            Slot slot = this.menu.slots.get(i1);
 
-            if (slot.isEnabled() && this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, par1, par2))
+            if (slot.isActive() && this.isHovering(slot.x, slot.y, 16, 16, par1, par2))
             {
-                ItemStack itemStack = slot.getStack();
+                ItemStack itemStack = slot.getItem();
 
                 if (!itemStack.isEmpty())
                 {
-                    List list = itemStack.getTooltip(this.minecraft.player, this.minecraft.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+                    List list = itemStack.getTooltipLines(this.minecraft.player, this.minecraft.options.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
                     int size = list.size();
 
                     if (CompatibilityManager.isWailaLoaded())

@@ -4,23 +4,22 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.Dynamic;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationSettings;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.ChunkGeneratorSettings;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-public class CraterFeature extends Feature<NoFeatureConfig>
+public class CraterFeature extends Feature<NoneFeatureConfiguration>
 {
     private CraterGenerator craterGen;
 
-    public CraterFeature(Function<Dynamic<?>, ? extends NoFeatureConfig> configFactory)
+    public CraterFeature(Function<Dynamic<?>, ? extends NoneFeatureConfiguration> configFactory)
     {
         super(configFactory);
     }
@@ -34,17 +33,17 @@ public class CraterFeature extends Feature<NoFeatureConfig>
     }
 
     @Override
-    public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config)
+    public boolean place(LevelAccessor worldIn, ChunkGenerator<? extends ChunkGeneratorSettings> generator, Random rand, BlockPos pos, NoneFeatureConfiguration config)
     {
         this.makeCraters(worldIn, pos, craterGen.getCentres(pos));
         return true;
     }
 
-    private void makeCraters(IWorld world, BlockPos pos, List<WorldCrater> craters)
+    private void makeCraters(LevelAccessor world, BlockPos pos, List<WorldCrater> craters)
     {
         if (craters.isEmpty()) return;
 
-        BlockPos.Mutable mutable = new BlockPos.Mutable(pos);
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(pos);
         for (int x = 0; x < 16; x++)
         {
             for (int z = 0; z < 16; z++)
@@ -83,10 +82,10 @@ public class CraterFeature extends Feature<NoFeatureConfig>
                     mutable.setZ(pos.getZ() + z);
                     if (Blocks.AIR != world.getBlockState(mutable).getBlock())
                     {
-                        this.setBlockState(world, mutable, Blocks.AIR.getDefaultState());
+                        this.setBlock(world, mutable, Blocks.AIR.defaultBlockState());
                         if (++dug >= toDig && !largestIsFresh)
                         {
-                            this.setBlockState(world, mutable.down(), GCBlocks.MOON_TURF.getDefaultState());
+                            this.setBlock(world, mutable.below(), GCBlocks.MOON_TURF.defaultBlockState());
                         }
                     }
                 }
@@ -207,7 +206,7 @@ public class CraterFeature extends Feature<NoFeatureConfig>
 
         public List<WorldCrater> getCentres(BlockPos pos)
         {
-            BlockPos.Mutable mutable = new BlockPos.Mutable();
+            BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             List<WorldCrater> res = Lists.newArrayList();
             for (List<LocalCraterBB> list : ImmutableList.of(craterList, freshCraterList))
             {
@@ -217,7 +216,7 @@ public class CraterFeature extends Feature<NoFeatureConfig>
                     BlockPos modPosIn = new BlockPos(Math.floorMod(posIn.getX(), REPEAT_SIZE), posIn.getY(), Math.floorMod(posIn.getZ(), REPEAT_SIZE));
                     if (bb.intersects(modPosIn.getX() * SCALE, (modPosIn.getX() + 15) * SCALE, modPosIn.getZ() * SCALE, (modPosIn.getZ() + 15) * SCALE))
                     {
-                        mutable.setPos(Math.round(bb.getCentreX() * REPEAT_SIZE) + (pos.getX() - modPosIn.getX()), 8, Math.round(bb.getCentreZ() * REPEAT_SIZE) + (pos.getZ() - modPosIn.getZ()));
+                        mutable.set(Math.round(bb.getCentreX() * REPEAT_SIZE) + (pos.getX() - modPosIn.getX()), 8, Math.round(bb.getCentreZ() * REPEAT_SIZE) + (pos.getZ() - modPosIn.getZ()));
                         int rad = Math.round((bb.getSize() / 2.0F) * REPEAT_SIZE);
                         double depthMult = (0.5 + rad / 45.0) * bb.depthMult;
                         res.add(new WorldCrater(mutable.getX(), mutable.getZ(), rad, depthMult, list == freshCraterList));

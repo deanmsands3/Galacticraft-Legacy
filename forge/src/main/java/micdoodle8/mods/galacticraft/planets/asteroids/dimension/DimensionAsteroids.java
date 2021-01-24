@@ -12,24 +12,22 @@ import micdoodle8.mods.galacticraft.core.world.gen.dungeon.RoomTreasure;
 import micdoodle8.mods.galacticraft.planets.asteroids.AsteroidsModule;
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
 import micdoodle8.mods.galacticraft.planets.asteroids.world.gen.AsteroidChunkGenerator;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.SharedConstants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SharedConstants;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProviderType;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSourceType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,10 +42,10 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
     private AsteroidSaveData datafile;
     private double solarMultiplier = -1D;
 
-    public DimensionAsteroids(World worldIn, DimensionType typeIn)
+    public DimensionAsteroids(Level worldIn, DimensionType typeIn)
     {
         super(worldIn, typeIn, 0.0F);
-        this.nether = true;
+        this.hasCeiling = true;
     }
 
     //	@Override
@@ -57,10 +55,10 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
 //	}
 
     @Override
-    public ChunkGenerator createChunkGenerator()
+    public ChunkGenerator createRandomLevelGenerator()
     {
         AsteroidGenSettings settings = new AsteroidGenSettings();
-        return new AsteroidChunkGenerator(this.world, BiomeProviderType.FIXED.create(BiomeProviderType.FIXED.createSettings(world.getWorldInfo()).setBiome(BiomeMoonHills.moonBiomeHills)), settings);
+        return new AsteroidChunkGenerator(this.level, BiomeSourceType.FIXED.create(BiomeSourceType.FIXED.createSettings(level.getLevelData()).setBiome(BiomeMoonHills.moonBiomeHills)), settings);
     }
 
     @Override
@@ -70,9 +68,9 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
     }
 
     @Override
-    public Vec3d getFogColor(float celestialAngle, float partialTicks)
+    public Vec3 getFogColor(float celestialAngle, float partialTicks)
     {
-        return new Vec3d(0, 0, 0);
+        return new Vec3(0, 0, 0);
     }
 
 //    @Override
@@ -112,7 +110,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
 //    }
 
     @Override
-    public float calculateCelestialAngle(long par1, float par3)
+    public float getTimeOfDay(long par1, float par3)
     {
         return 0.25F;
     }
@@ -144,13 +142,13 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
 
     @Override
     @Nullable
-    public BlockPos findSpawn(ChunkPos chunkPosIn, boolean checkValid)
+    public BlockPos getSpawnPosInChunk(ChunkPos chunkPosIn, boolean checkValid)
     {
-        for (int i = chunkPosIn.getXStart(); i <= chunkPosIn.getXEnd(); ++i)
+        for (int i = chunkPosIn.getMinBlockX(); i <= chunkPosIn.getMaxBlockX(); ++i)
         {
-            for (int j = chunkPosIn.getZStart(); j <= chunkPosIn.getZEnd(); ++j)
+            for (int j = chunkPosIn.getMinBlockZ(); j <= chunkPosIn.getMaxBlockZ(); ++j)
             {
-                BlockPos blockpos = this.findSpawn(i, j, checkValid);
+                BlockPos blockpos = this.getValidSpawnPosition(i, j, checkValid);
                 if (blockpos != null)
                 {
                     return blockpos;
@@ -163,24 +161,24 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
 
     @Override
     @Nullable
-    public BlockPos findSpawn(int posX, int posZ, boolean checkValid)
+    public BlockPos getValidSpawnPosition(int posX, int posZ, boolean checkValid)
     {
-        BlockPos.Mutable blockpos$mutableblockpos = new BlockPos.Mutable(posX, 0, posZ);
-        Biome biome = this.world.getBiome(blockpos$mutableblockpos);
-        BlockState blockstate = biome.getSurfaceBuilderConfig().getTop();
-        if (checkValid && !blockstate.getBlock().isIn(BlockTags.VALID_SPAWN))
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(posX, 0, posZ);
+        Biome biome = this.level.getBiome(blockpos$mutableblockpos);
+        BlockState blockstate = biome.getSurfaceBuilderConfig().getTopMaterial();
+        if (checkValid && !blockstate.getBlock().is(BlockTags.VALID_SPAWN))
         {
             return null;
         }
         else
         {
-            Chunk chunk = this.world.getChunk(posX >> 4, posZ >> 4);
-            int i = chunk.getTopBlockY(Heightmap.Type.MOTION_BLOCKING, posX & 15, posZ & 15);
+            LevelChunk chunk = this.level.getChunk(posX >> 4, posZ >> 4);
+            int i = chunk.getHeight(Heightmap.Type.MOTION_BLOCKING, posX & 15, posZ & 15);
             if (i < 0)
             {
                 return null;
             }
-            else if (chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE, posX & 15, posZ & 15) > chunk.getTopBlockY(Heightmap.Type.OCEAN_FLOOR, posX & 15, posZ & 15))
+            else if (chunk.getHeight(Heightmap.Type.WORLD_SURFACE, posX & 15, posZ & 15) > chunk.getHeight(Heightmap.Type.OCEAN_FLOOR, posX & 15, posZ & 15))
             {
                 return null;
             }
@@ -188,8 +186,8 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
             {
                 for (int j = i + 1; j >= 0; --j)
                 {
-                    blockpos$mutableblockpos.setPos(posX, j, posZ);
-                    BlockState blockstate1 = this.world.getBlockState(blockpos$mutableblockpos);
+                    blockpos$mutableblockpos.set(posX, j, posZ);
+                    BlockState blockstate1 = this.level.getBlockState(blockpos$mutableblockpos);
                     if (!blockstate1.getFluidState().isEmpty())
                     {
                         break;
@@ -197,7 +195,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
 
                     if (blockstate1.equals(blockstate))
                     {
-                        return blockpos$mutableblockpos.up().toImmutable();
+                        return blockpos$mutableblockpos.above().immutable();
                     }
                 }
 
@@ -207,7 +205,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
     }
 
     @Override
-    public boolean doesXZShowFog(int x, int z)
+    public boolean isFoggyAt(int x, int z)
     {
         return false;
     }
@@ -226,7 +224,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
 
     //Overriding so that beds do not explode on Asteroids
     @Override
-    public boolean canRespawnHere()
+    public boolean mayRespawn()
     {
         if (EventHandlerGC.bedActivated)
         {
@@ -303,7 +301,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
         try
         {
             this.datafile = new AsteroidSaveData(AsteroidSaveData.saveDataID);
-            this.datafile.read(((ServerWorld) this.world).getSavedData().load(AsteroidSaveData.saveDataID, SharedConstants.getVersion().getWorldVersion()));
+            this.datafile.load(((ServerLevel) this.level).getDataStorage().readTagFromDisk(AsteroidSaveData.saveDataID, SharedConstants.getCurrentVersion().getWorldVersion()));
         }
         catch (IOException e)
         {
@@ -314,7 +312,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
         if (this.datafile == null)
         {
             this.datafile = new AsteroidSaveData(AsteroidSaveData.saveDataID);
-            ((ServerWorld) this.world).getSavedData().set(this.datafile);
+            ((ServerLevel) this.level).getDataStorage().set(this.datafile);
             this.writeToNBT(this.datafile.datacompound);
         }
         else
@@ -325,14 +323,14 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
         this.dataNotLoaded = false;
     }
 
-    private void readFromNBT(CompoundNBT nbt)
+    private void readFromNBT(CompoundTag nbt)
     {
-        ListNBT coordList = nbt.getList("coords", 10);
+        ListTag coordList = nbt.getList("coords", 10);
         if (coordList.size() > 0)
         {
             for (int j = 0; j < coordList.size(); j++)
             {
-                CompoundNBT tag1 = coordList.getCompound(j);
+                CompoundTag tag1 = coordList.getCompound(j);
 
                 if (tag1 != null)
                 {
@@ -342,27 +340,27 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
         }
     }
 
-    private void writeToNBT(CompoundNBT nbt)
+    private void writeToNBT(CompoundTag nbt)
     {
-        ListNBT coordList = new ListNBT();
+        ListTag coordList = new ListTag();
         for (AsteroidData coords : this.asteroids)
         {
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
             coords.writeToNBT(tag);
             coordList.add(tag);
         }
         nbt.put("coords", coordList);
-        this.datafile.markDirty();
+        this.datafile.setDirty();
     }
 
-    private void addToNBT(CompoundNBT nbt, AsteroidData coords)
+    private void addToNBT(CompoundTag nbt, AsteroidData coords)
     {
-        ListNBT coordList = nbt.getList("coords", 10);
-        CompoundNBT tag = new CompoundNBT();
+        ListTag coordList = nbt.getList("coords", 10);
+        CompoundTag tag = new CompoundTag();
         coords.writeToNBT(tag);
         coordList.add(tag);
         nbt.put("coords", coordList);
-        this.datafile.markDirty();
+        this.datafile.setDirty();
     }
 
 
@@ -577,7 +575,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
             return false;
         }
 
-        public CompoundNBT writeToNBT(CompoundNBT tag)
+        public CompoundTag writeToNBT(CompoundTag tag)
         {
             tag.putInt("x", this.centre.x);
             tag.putInt("y", this.centre.y);
@@ -587,7 +585,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
             return tag;
         }
 
-        public static AsteroidData readFromNBT(CompoundNBT tag)
+        public static AsteroidData readFromNBT(CompoundTag tag)
         {
             BlockVec3 tempVector = new BlockVec3();
             tempVector.x = tag.getInt("x");
@@ -634,7 +632,7 @@ public class DimensionAsteroids extends DimensionSpace implements ISolarLevel
     }
 
     @Override
-    public boolean hasSkyLight()
+    public boolean isHasSkyLight()
     {
         return false;
     }

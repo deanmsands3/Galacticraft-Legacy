@@ -12,16 +12,15 @@ import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.dimension.biome.BiomeMars;
 import micdoodle8.mods.galacticraft.planets.mars.world.gen.MarsChunkGenerator;
 import micdoodle8.mods.galacticraft.planets.mars.world.gen.RoomTreasureMars;
-import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.provider.BiomeProviderType;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.BiomeSourceType;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,7 +32,7 @@ public class DimensionMars extends DimensionSpace implements IGalacticraftDimens
 {
     private double solarMultiplier = -1D;
 
-    public DimensionMars(World worldIn, DimensionType typeIn)
+    public DimensionMars(Level worldIn, DimensionType typeIn)
     {
         super(worldIn, typeIn, 0.0F);
     }
@@ -46,10 +45,10 @@ public class DimensionMars extends DimensionSpace implements IGalacticraftDimens
 //    }
 
     @Override
-    public Vec3d getFogColor(float celestialAngle, float partialTicks)
+    public Vec3 getFogColor(float celestialAngle, float partialTicks)
     {
         float f = 1.0F - this.getStarBrightness(1.0F);
-        return new Vec3d(210F / 255F * f, 120F / 255F * f, 59F / 255F * f);
+        return new Vec3(210F / 255F * f, 120F / 255F * f, 59F / 255F * f);
     }
 
 
@@ -82,8 +81,8 @@ public class DimensionMars extends DimensionSpace implements IGalacticraftDimens
     @OnlyIn(Dist.CLIENT)
     public float getStarBrightness(float par1)
     {
-        float f1 = this.world.getCelestialAngle(par1);
-        float f2 = 1.0F - (MathHelper.cos(f1 * Constants.twoPI) * 2.0F + 0.25F);
+        float f1 = this.level.getTimeOfDay(par1);
+        float f2 = 1.0F - (Mth.cos(f1 * Constants.twoPI) * 2.0F + 0.25F);
 
         if (f2 < 0.0F)
         {
@@ -118,7 +117,7 @@ public class DimensionMars extends DimensionSpace implements IGalacticraftDimens
 
     //Overriding so that beds do not explode on Mars
     @Override
-    public boolean canRespawnHere()
+    public boolean mayRespawn()
     {
         if (EventHandlerGC.bedActivated)
         {
@@ -183,28 +182,28 @@ public class DimensionMars extends DimensionSpace implements IGalacticraftDimens
 
 
     @Override
-    public ChunkGenerator<?> createChunkGenerator()
+    public ChunkGenerator<?> createRandomLevelGenerator()
     {
         MarsGenSettings settings = new MarsGenSettings();
-        return new MarsChunkGenerator(this.world, BiomeProviderType.FIXED.create(BiomeProviderType.FIXED.createSettings(this.world.getWorldInfo()).setBiome(BiomeMars.marsFlat)), settings);
+        return new MarsChunkGenerator(this.level, BiomeSourceType.FIXED.create(BiomeSourceType.FIXED.createSettings(this.level.getLevelData()).setBiome(BiomeMars.marsFlat)), settings);
     }
 
     @Nullable
     @Override
-    public BlockPos findSpawn(ChunkPos chunkPosIn, boolean checkValid)
+    public BlockPos getSpawnPosInChunk(ChunkPos chunkPosIn, boolean checkValid)
     {
         return null;
     }
 
     @Nullable
     @Override
-    public BlockPos findSpawn(int posX, int posZ, boolean checkValid)
+    public BlockPos getValidSpawnPosition(int posX, int posZ, boolean checkValid)
     {
         return null;
     }
 
     @Override
-    public boolean doesXZShowFog(int x, int z)
+    public boolean isFoggyAt(int x, int z)
     {
         return false;
     }

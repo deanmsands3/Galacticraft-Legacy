@@ -1,11 +1,12 @@
 package micdoodle8.mods.galacticraft.core.items;
 
+import FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import micdoodle8.mods.galacticraft.core.GCItems;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -72,7 +73,7 @@ public class ItemCanisterGenericHandler implements IFluidHandlerItem, ICapabilit
     @Override
     public boolean isFluidValid(int tank, @Nonnull FluidStack stack)
     {
-        int capacityPlusOne = container.getDamage();
+        int capacityPlusOne = container.getDamageValue();
         if (capacityPlusOne >= ItemCanisterGeneric.EMPTY_CAPACITY)
         {
             for (ItemCanisterGeneric i : GCItems.canisterTypes)

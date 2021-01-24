@@ -8,37 +8,34 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityOxygenSealer;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityParaChest;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -49,30 +46,30 @@ public class BlockParaChest extends Block implements IShiftDescription, ISortabl
 {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
-    protected static final VoxelShape NOT_CONNECTED_AABB = VoxelShapes.create(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
+    protected static final VoxelShape NOT_CONNECTED_AABB = Shapes.box(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
 
     public BlockParaChest(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        this.registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         return NOT_CONNECTED_AABB;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state)
+    public RenderShape getRenderShape(BlockState state)
     {
         return BlockRenderType.MODEL;
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        return this.getDefaultState().with(FACING, context.getPlayer().getHorizontalFacing());
+        return this.defaultBlockState().setValue(FACING, context.getPlayer().getDirection());
     }
 
 //    @Override
@@ -106,19 +103,19 @@ public class BlockParaChest extends Block implements IShiftDescription, ISortabl
 //    }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit)
     {
-        if (worldIn.isRemote)
+        if (worldIn.isClientSide)
         {
             return ActionResultType.SUCCESS;
         }
         else
         {
-            IInventory iinventory = this.getInventory(worldIn, pos);
+            Container iinventory = this.getInventory(worldIn, pos);
 
-            if (iinventory != null && playerIn instanceof ServerPlayerEntity)
+            if (iinventory != null && playerIn instanceof ServerPlayer)
             {
-                NetworkHooks.openGui((ServerPlayerEntity) playerIn, getContainer(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
+                NetworkHooks.openGui((ServerPlayer) playerIn, getMenuProvider(state, worldIn, pos), buf -> buf.writeBlockPos(pos));
                 return ActionResultType.SUCCESS;
             }
 
@@ -127,33 +124,33 @@ public class BlockParaChest extends Block implements IShiftDescription, ISortabl
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
     {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
     {
-        TileEntityParaChest tileentitychest = (TileEntityParaChest) worldIn.getTileEntity(pos);
+        TileEntityParaChest tileentitychest = (TileEntityParaChest) worldIn.getBlockEntity(pos);
 
         if (tileentitychest != null)
         {
-            tileentitychest.updateContainingBlockInfo();
+            tileentitychest.clearCache();
         }
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        TileEntityParaChest tileentitychest = (TileEntityParaChest) worldIn.getTileEntity(pos);
+        TileEntityParaChest tileentitychest = (TileEntityParaChest) worldIn.getBlockEntity(pos);
 
         if (tileentitychest != null)
         {
             Random syncRandom = GCCoreUtil.getRandom(pos);
-            for (int j1 = 0; j1 < tileentitychest.getSizeInventory(); ++j1)
+            for (int j1 = 0; j1 < tileentitychest.getContainerSize(); ++j1)
             {
-                ItemStack itemstack = tileentitychest.getStackInSlot(j1);
+                ItemStack itemstack = tileentitychest.getItem(j1);
 
                 if (itemstack != null)
                 {
@@ -162,33 +159,33 @@ public class BlockParaChest extends Block implements IShiftDescription, ISortabl
                     float f1 = syncRandom.nextFloat() * 0.8F + 0.1F;
                     ItemEntity entityitem;
 
-                    for (float f2 = syncRandom.nextFloat() * 0.8F + 0.1F; !itemstack.isEmpty(); worldIn.addEntity(entityitem))
+                    for (float f2 = syncRandom.nextFloat() * 0.8F + 0.1F; !itemstack.isEmpty(); worldIn.addFreshEntity(entityitem))
                     {
                         entityitem = new ItemEntity(worldIn, pos.getX() + f, pos.getY() + f1, pos.getZ() + f2, itemstack.split(syncRandom.nextInt(21) + 10));
                         float f3 = 0.05F;
 //                        entityitem.motionX = (float) syncRandom.nextGaussian() * f3;
 //                        entityitem.motionY = (float) syncRandom.nextGaussian() * f3 + 0.2F;
 //                        entityitem.motionZ = (float) syncRandom.nextGaussian() * f3;
-                        entityitem.setMotion(syncRandom.nextGaussian() * f3, syncRandom.nextGaussian() * f3 + 0.2F, syncRandom.nextGaussian() * f3);
+                        entityitem.setDeltaMovement(syncRandom.nextGaussian() * f3, syncRandom.nextGaussian() * f3 + 0.2F, syncRandom.nextGaussian() * f3);
                     }
                 }
             }
 
-            worldIn.updateComparatorOutputLevel(pos, null);
+            worldIn.updateNeighbourForOutputSignal(pos, null);
         }
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
-    public IInventory getInventory(World par1World, BlockPos pos)
+    public Container getInventory(Level par1World, BlockPos pos)
     {
-        Object object = par1World.getTileEntity(pos);
+        Object object = par1World.getBlockEntity(pos);
 
         if (object == null)
         {
             return null;
         }
-        else if (par1World.getBlockState(pos.up()).isNormalCube(par1World, pos.up()))
+        else if (par1World.getBlockState(pos.above()).isRedstoneConductor(par1World, pos.above()))
         {
             return null;
         }
@@ -198,16 +195,16 @@ public class BlockParaChest extends Block implements IShiftDescription, ISortabl
         }
         else
         {
-            return (IInventory) object;
+            return (Container) object;
         }
     }
 
-    public static boolean isCatSittingAbove(World worldIn, BlockPos pos)
+    public static boolean isCatSittingAbove(Level worldIn, BlockPos pos)
     {
-        List<CatEntity> list = worldIn.getEntitiesWithinAABB(CatEntity.class, new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1));
+        List<Cat> list = worldIn.getEntitiesOfClass(Cat.class, new AABB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1));
         if (!list.isEmpty())
         {
-            for (CatEntity catentity : list)
+            for (Cat catentity : list)
             {
                 if (catentity.isSitting())
                 {
@@ -221,7 +218,7 @@ public class BlockParaChest extends Block implements IShiftDescription, ISortabl
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityParaChest();
     }
@@ -235,7 +232,7 @@ public class BlockParaChest extends Block implements IShiftDescription, ISortabl
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -258,7 +255,7 @@ public class BlockParaChest extends Block implements IShiftDescription, ISortabl
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(COLOR, FACING);
     }
@@ -282,18 +279,18 @@ public class BlockParaChest extends Block implements IShiftDescription, ISortabl
     }
 
     @Override
-    public boolean eventReceived(BlockState state, World worldIn, BlockPos pos, int id, int param)
+    public boolean triggerEvent(BlockState state, Level worldIn, BlockPos pos, int id, int param)
     {
-        super.eventReceived(state, worldIn, pos, id, param);
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(id, param);
+        super.triggerEvent(state, worldIn, pos, id, param);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity != null && tileentity.triggerEvent(id, param);
     }
 
     @Override
     @Nullable
-    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos)
+    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider) tileentity : null;
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
+        return tileentity instanceof MenuProvider ? (MenuProvider) tileentity : null;
     }
 }

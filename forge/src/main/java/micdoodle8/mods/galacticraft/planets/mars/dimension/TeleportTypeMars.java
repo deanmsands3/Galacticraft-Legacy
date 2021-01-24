@@ -6,11 +6,10 @@ import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.planets.mars.entities.LandingBalloonsEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import java.util.Random;
 
 public class TeleportTypeMars implements ITeleportType
@@ -22,7 +21,7 @@ public class TeleportTypeMars implements ITeleportType
     }
 
     @Override
-    public Vector3D getPlayerSpawnLocation(ServerWorld world, ServerPlayerEntity player)
+    public Vector3D getPlayerSpawnLocation(ServerLevel world, ServerPlayer player)
     {
         if (player != null)
         {
@@ -60,19 +59,19 @@ public class TeleportTypeMars implements ITeleportType
     }
 
     @Override
-    public Vector3D getEntitySpawnLocation(ServerWorld world, Entity entity)
+    public Vector3D getEntitySpawnLocation(ServerLevel world, Entity entity)
     {
-        return new Vector3D(entity.getPosX(), ConfigManagerCore.disableLander.get() ? 250.0 : 900.0, entity.getPosZ());
+        return new Vector3D(entity.getX(), ConfigManagerCore.disableLander.get() ? 250.0 : 900.0, entity.getZ());
     }
 
     @Override
-    public Vector3D getParaChestSpawnLocation(ServerWorld world, ServerPlayerEntity player, Random rand)
+    public Vector3D getParaChestSpawnLocation(ServerLevel world, ServerPlayer player, Random rand)
     {
         return null;
     }
 
     @Override
-    public void onSpaceDimensionChanged(World newWorld, ServerPlayerEntity player, boolean ridingAutoRocket)
+    public void onSpaceDimensionChanged(Level newWorld, ServerPlayer player, boolean ridingAutoRocket)
     {
         if (!ridingAutoRocket && player != null)
         {
@@ -80,19 +79,19 @@ public class TeleportTypeMars implements ITeleportType
 
             if (stats.getTeleportCooldown() <= 0)
             {
-                if (player.abilities.isFlying)
+                if (player.abilities.flying)
                 {
-                    player.abilities.isFlying = false;
+                    player.abilities.flying = false;
                 }
 
                 LandingBalloonsEntity lander = LandingBalloonsEntity.createEntityLandingBalloons(player);
 
-                if (!newWorld.isRemote)
+                if (!newWorld.isClientSide)
                 {
-                    boolean previous = CompatibilityManager.forceLoadChunks((ServerWorld) newWorld);
-                    lander.forceSpawn = true;
-                    newWorld.addEntity(lander);
-                    CompatibilityManager.forceLoadChunksEnd((ServerWorld) newWorld, previous);
+                    boolean previous = CompatibilityManager.forceLoadChunks((ServerLevel) newWorld);
+                    lander.forcedLoading = true;
+                    newWorld.addFreshEntity(lander);
+                    CompatibilityManager.forceLoadChunksEnd((ServerLevel) newWorld, previous);
                 }
 
                 stats.setTeleportCooldown(10);
@@ -101,7 +100,7 @@ public class TeleportTypeMars implements ITeleportType
     }
 
     @Override
-    public void setupAdventureSpawn(ServerPlayerEntity player)
+    public void setupAdventureSpawn(ServerPlayer player)
     {
         // TODO Auto-generated method stub
 

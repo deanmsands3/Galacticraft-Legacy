@@ -1,9 +1,8 @@
 package micdoodle8.mods.galacticraft.core.recipe;
 
 import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -27,11 +26,11 @@ public class NasaWorkbenchRecipe implements INasaWorkbenchRecipe
     }
 
     @Override
-    public boolean matches(IInventory inventory)
+    public boolean matches(Container inventory)
     {
         for (Entry<Integer, ItemStack> entry : this.input.entrySet())
         {
-            ItemStack stackAt = inventory.getStackInSlot(entry.getKey());
+            ItemStack stackAt = inventory.getItem(entry.getKey());
 
             if (!this.checkItemEquals(stackAt, entry.getValue()))
             {
@@ -48,7 +47,7 @@ public class NasaWorkbenchRecipe implements INasaWorkbenchRecipe
         {
             return false;
         }
-        return target.isEmpty() && input.isEmpty() || target.getItem() == input.getItem() && (/*target.getDamage() == OreDictionary.WILDCARD_VALUE ||*/ target.getDamage() == input.getDamage());
+        return target.isEmpty() && input.isEmpty() || target.getItem() == input.getItem() && (/*target.getDamage() == OreDictionary.WILDCARD_VALUE ||*/ target.getDamageValue() == input.getDamageValue());
     }
 
     @Override

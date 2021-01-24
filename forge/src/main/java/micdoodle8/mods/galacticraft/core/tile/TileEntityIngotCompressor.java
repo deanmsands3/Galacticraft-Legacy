@@ -10,23 +10,22 @@ import micdoodle8.mods.galacticraft.core.inventory.IInventoryDefaults;
 import micdoodle8.mods.galacticraft.core.inventory.PersistantInventoryCrafting;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
@@ -36,10 +35,10 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class TileEntityIngotCompressor extends TileEntityAdvanced implements IInventoryDefaults, ISidedInventory, INamedContainerProvider
+public class TileEntityIngotCompressor extends TileEntityAdvanced implements IInventoryDefaults, WorldlyContainer, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.COMPRESSOR)
-    public static TileEntityType<TileEntityIngotCompressor> TYPE;
+    public static BlockEntityType<TileEntityIngotCompressor> TYPE;
 
     public static final int PROCESS_TIME_REQUIRED = 200;
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -52,7 +51,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
 
     private ItemStack producingStack = ItemStack.EMPTY;
     public PersistantInventoryCrafting compressingCraftMatrix = new PersistantInventoryCrafting();
-    public final Set<PlayerEntity> playersUsing = new HashSet<PlayerEntity>();
+    public final Set<Player> playersUsing = new HashSet<Player>();
     private static final Random random = new Random();
 
     public TileEntityIngotCompressor()
@@ -66,7 +65,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             boolean updateInv = false;
             boolean flag = this.furnaceBurnTime > 0;
@@ -91,7 +90,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
 
                         if (fuel.getCount() == 0)
                         {
-                            this.getInventory().set(0, fuel.getItem().getContainerItem(fuel));
+                            this.getInventory().set(0, fuel.getItem().getCraftingRemainingItem(fuel));
                         }
                     }
                 }
@@ -103,7 +102,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
 
                 if (this.processTicks % 40 == 0 && this.processTicks > TileEntityIngotCompressor.PROCESS_TIME_REQUIRED / 2)
                 {
-                    this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.3F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+                    this.level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundCategory.BLOCKS, 0.3F, this.level.random.nextFloat() * 0.1F + 0.9F);
                 }
 
                 if (this.processTicks == TileEntityIngotCompressor.PROCESS_TIME_REQUIRED)
@@ -125,7 +124,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
 
             if (updateInv)
             {
-                this.markDirty();
+                this.setChanged();
             }
         }
 
@@ -134,7 +133,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
 
     public void updateInput()
     {
-        this.producingStack = CompressorRecipes.findMatchingRecipe(this.compressingCraftMatrix, this.world);
+        this.producingStack = CompressorRecipes.findMatchingRecipe(this.compressingCraftMatrix, this.level);
     }
 
     private boolean canSmelt()
@@ -148,23 +147,23 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
         {
             return true;
         }
-        if (!this.getInventory().get(1).isItemEqual(itemstack))
+        if (!this.getInventory().get(1).sameItem(itemstack))
         {
             return false;
         }
         int result = this.getInventory().get(1).getCount() + itemstack.getCount();
-        return result <= this.getInventoryStackLimit() && result <= itemstack.getMaxStackSize();
+        return result <= this.getMaxStackSize() && result <= itemstack.getMaxStackSize();
     }
 
     public static boolean isItemCompressorInput(ItemStack stack)
     {
-        for (IRecipe recipe : CompressorRecipes.getRecipeList())
+        for (Recipe recipe : CompressorRecipes.getRecipeList())
         {
             if (recipe instanceof ShapedRecipesGC)
             {
                 for (ItemStack itemstack1 : ((ShapedRecipesGC) recipe).recipeItems)
                 {
-                    if (stack.getItem() == itemstack1.getItem() && (itemstack1.getDamage() == 32767 || stack.getDamage() == itemstack1.getDamage()))
+                    if (stack.getItem() == itemstack1.getItem() && (itemstack1.getDamageValue() == 32767 || stack.getDamageValue() == itemstack1.getDamageValue()))
                     {
                         return true;
                     }
@@ -226,7 +225,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
             ItemStack resultItemStack = this.producingStack;
             if (ConfigManagerCore.quickMode.get())
             {
-                if (resultItemStack.getItem().getTranslationKey(resultItemStack).contains("compressed"))
+                if (resultItemStack.getItem().getDescriptionId(resultItemStack).contains("compressed"))
                 {
                     resultItemStack.grow(resultItemStack.getCount());
                 }
@@ -236,12 +235,12 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
             {
                 this.getInventory().set(1, resultItemStack.copy());
             }
-            else if (this.getInventory().get(1).isItemEqual(resultItemStack))
+            else if (this.getInventory().get(1).sameItem(resultItemStack))
             {
                 if (this.getInventory().get(1).getCount() + resultItemStack.getCount() > 64)
                 {
                     resultItemStack.grow(this.getInventory().get(1).getCount() - 64);
-                    GCCoreUtil.spawnItem(this.world, this.getPos(), resultItemStack);
+                    GCCoreUtil.spawnItem(this.level, this.getBlockPos(), resultItemStack);
                     this.getInventory().get(1).setCount(64);
                 }
                 else
@@ -250,15 +249,15 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
                 }
             }
 
-            for (int i = 0; i < this.compressingCraftMatrix.getSizeInventory(); i++)
+            for (int i = 0; i < this.compressingCraftMatrix.getContainerSize(); i++)
             {
-                if (!this.compressingCraftMatrix.getStackInSlot(i).isEmpty() && this.compressingCraftMatrix.getStackInSlot(i).getItem() == Items.WATER_BUCKET)
+                if (!this.compressingCraftMatrix.getItem(i).isEmpty() && this.compressingCraftMatrix.getItem(i).getItem() == Items.WATER_BUCKET)
                 {
                     this.compressingCraftMatrix.setInventorySlotContentsNoUpdate(i, new ItemStack(Items.BUCKET));
                 }
                 else
                 {
-                    this.compressingCraftMatrix.decrStackSize(i, 1);
+                    this.compressingCraftMatrix.removeItem(i, 1);
                 }
             }
             this.updateInput();
@@ -266,28 +265,28 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.processTicks = nbt.getInt("smeltingTicks");
-        ListNBT var2 = nbt.getList("Items", 10);
+        ListTag var2 = nbt.getList("Items", 10);
 
-        this.inventory = NonNullList.withSize(this.getSizeInventory() - this.compressingCraftMatrix.getSizeInventory(), ItemStack.EMPTY);
+        this.inventory = NonNullList.withSize(this.getContainerSize() - this.compressingCraftMatrix.getContainerSize(), ItemStack.EMPTY);
 
-        ListNBT nbttaglist = nbt.getList("Items", 10);
+        ListTag nbttaglist = nbt.getList("Items", 10);
 
         for (int i = 0; i < nbttaglist.size(); ++i)
         {
-            CompoundNBT nbttagcompound = nbttaglist.getCompound(i);
+            CompoundTag nbttagcompound = nbttaglist.getCompound(i);
             int j = nbttagcompound.getByte("Slot") & 255;
 
             if (j >= 0 && j < this.getInventory().size())
             {
-                this.getInventory().set(j, ItemStack.read(nbttagcompound));
+                this.getInventory().set(j, ItemStack.of(nbttagcompound));
             }
-            else if (j < this.getInventory().size() + this.compressingCraftMatrix.getSizeInventory())
+            else if (j < this.getInventory().size() + this.compressingCraftMatrix.getContainerSize())
             {
-                this.compressingCraftMatrix.setInventorySlotContents(j - this.getInventory().size(), ItemStack.read(nbttagcompound));
+                this.compressingCraftMatrix.setItem(j - this.getInventory().size(), ItemStack.of(nbttagcompound));
             }
         }
 
@@ -295,31 +294,31 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("smeltingTicks", this.processTicks);
-        ListNBT var2 = new ListNBT();
+        ListTag var2 = new ListTag();
         int i;
 
         for (i = 0; i < this.getInventory().size(); ++i)
         {
             if (!this.getInventory().get(i).isEmpty())
             {
-                CompoundNBT tagCompound = new CompoundNBT();
+                CompoundTag tagCompound = new CompoundTag();
                 tagCompound.putByte("Slot", (byte) i);
-                this.getInventory().get(i).write(tagCompound);
+                this.getInventory().get(i).save(tagCompound);
                 var2.add(tagCompound);
             }
         }
 
-        for (i = 0; i < this.compressingCraftMatrix.getSizeInventory(); ++i)
+        for (i = 0; i < this.compressingCraftMatrix.getContainerSize(); ++i)
         {
-            if (!this.compressingCraftMatrix.getStackInSlot(i).isEmpty())
+            if (!this.compressingCraftMatrix.getItem(i).isEmpty())
             {
-                CompoundNBT tagCompound = new CompoundNBT();
+                CompoundTag tagCompound = new CompoundTag();
                 tagCompound.putByte("Slot", (byte) (i + this.getInventory().size()));
-                this.compressingCraftMatrix.getStackInSlot(i).write(tagCompound);
+                this.compressingCraftMatrix.getItem(i).save(tagCompound);
                 var2.add(tagCompound);
             }
         }
@@ -335,33 +334,33 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     }
 
     @Override
-    public int getSizeInventory()
+    public int getContainerSize()
     {
-        return super.getSizeInventory() + this.compressingCraftMatrix.getSizeInventory();
+        return super.getContainerSize() + this.compressingCraftMatrix.getContainerSize();
     }
 
     @Override
-    public ItemStack getStackInSlot(int par1)
+    public ItemStack getItem(int par1)
     {
         if (par1 >= this.getInventory().size())
         {
-            return this.compressingCraftMatrix.getStackInSlot(par1 - this.getInventory().size());
+            return this.compressingCraftMatrix.getItem(par1 - this.getInventory().size());
         }
 
         return this.getInventory().get(par1);
     }
 
     @Override
-    public ItemStack decrStackSize(int par1, int par2)
+    public ItemStack removeItem(int par1, int par2)
     {
         if (par1 >= this.getInventory().size())
         {
-            ItemStack result = this.compressingCraftMatrix.decrStackSize(par1 - this.getInventory().size(), par2);
+            ItemStack result = this.compressingCraftMatrix.removeItem(par1 - this.getInventory().size(), par2);
             if (!result.isEmpty())
             {
                 this.updateInput();
             }
-            this.markDirty();
+            this.setChanged();
             return result;
         }
 
@@ -373,7 +372,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
             {
                 var3 = this.getInventory().get(par1);
                 this.getInventory().set(par1, ItemStack.EMPTY);
-                this.markDirty();
+                this.setChanged();
                 return var3;
             }
             else
@@ -385,7 +384,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
                     this.getInventory().set(par1, ItemStack.EMPTY);
                 }
 
-                this.markDirty();
+                this.setChanged();
                 return var3;
             }
         }
@@ -396,19 +395,19 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int par1)
+    public ItemStack removeItemNoUpdate(int par1)
     {
         if (par1 >= this.getInventory().size())
         {
-            this.markDirty();
-            return this.compressingCraftMatrix.removeStackFromSlot(par1 - this.getInventory().size());
+            this.setChanged();
+            return this.compressingCraftMatrix.removeItemNoUpdate(par1 - this.getInventory().size());
         }
 
         if (!this.getInventory().get(par1).isEmpty())
         {
             ItemStack var2 = this.getInventory().get(par1);
             this.getInventory().set(par1, ItemStack.EMPTY);
-            this.markDirty();
+            this.setChanged();
             return var2;
         }
         else
@@ -418,23 +417,23 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     }
 
     @Override
-    public void setInventorySlotContents(int par1, ItemStack stack)
+    public void setItem(int par1, ItemStack stack)
     {
         if (par1 >= this.getInventory().size())
         {
-            this.compressingCraftMatrix.setInventorySlotContents(par1 - this.getInventory().size(), stack);
+            this.compressingCraftMatrix.setItem(par1 - this.getInventory().size(), stack);
             this.updateInput();
         }
         else
         {
             this.getInventory().set(par1, stack);
 
-            if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit())
+            if (!stack.isEmpty() && stack.getCount() > this.getMaxStackSize())
             {
-                stack.setCount(this.getInventoryStackLimit());
+                stack.setCount(this.getMaxStackSize());
             }
         }
-        this.markDirty();
+        this.setChanged();
     }
 
     @Override
@@ -452,15 +451,15 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 64;
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.world.getTileEntity(this.getPos()) == this && par1EntityPlayer.getDistanceSq(this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D) <= 64.0D;
+        return this.level.getBlockEntity(this.getBlockPos()) == this && par1EntityPlayer.distanceToSqr(this.getBlockPos().getX() + 0.5D, this.getBlockPos().getY() + 0.5D, this.getBlockPos().getZ() + 0.5D) <= 64.0D;
     }
 
 //    @Override
@@ -470,7 +469,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
 //    }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
+    public boolean canPlaceItem(int slotID, ItemStack itemStack)
     {
         if (slotID == 0)
         {
@@ -480,8 +479,8 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
         {
             if (!this.producingStack.isEmpty())
             {
-                ItemStack stackInSlot = this.getStackInSlot(slotID);
-                return !stackInSlot.isEmpty() && stackInSlot.isItemEqual(itemStack);
+                ItemStack stackInSlot = this.getItem(slotID);
+                return !stackInSlot.isEmpty() && stackInSlot.sameItem(itemStack);
             }
             return TileEntityIngotCompressor.isItemCompressorInput(itemStack);
         }
@@ -505,7 +504,7 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
             {
                 continue;
             }
-            ItemStack stack1 = this.getStackInSlot(i);
+            ItemStack stack1 = this.getItem(i);
             if (stack1.isEmpty())
             {
                 continue;
@@ -517,13 +516,13 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
                 {
                     continue;
                 }
-                ItemStack stack2 = this.getStackInSlot(j);
+                ItemStack stack2 = this.getItem(j);
                 if (stack2.isEmpty())
                 {
                     continue;
                 }
 
-                if (stack1.isItemEqual(stack2))
+                if (stack1.sameItem(stack2))
                 {
                     if (stack2.getCount() >= stack1.getCount())
                     {
@@ -559,13 +558,13 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack par2ItemStack, Direction par3)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack par2ItemStack, Direction par3)
     {
-        return this.isItemValidForSlot(slotID, par2ItemStack);
+        return this.canPlaceItem(slotID, par2ItemStack);
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack par2ItemStack, Direction par3)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack par2ItemStack, Direction par3)
     {
         return slotID == 1;
     }
@@ -589,14 +588,14 @@ public class TileEntityIngotCompressor extends TileEntityAdvanced implements IIn
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerIngotCompressor(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.compressor");
+        return new TranslatableComponent("container.compressor");
     }
 }

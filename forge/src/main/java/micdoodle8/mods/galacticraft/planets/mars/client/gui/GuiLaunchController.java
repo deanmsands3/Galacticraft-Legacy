@@ -17,19 +17,17 @@ import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerLaunchContro
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars.EnumSimplePacketMars;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityLaunchController;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.SharedConstants;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-
+import net.minecraft.SharedConstants;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-
+import com.mojang.blaze3d.platform.Lighting;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -50,10 +48,10 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
 
     private int cannotEditTimer;
 
-    public GuiLaunchController(ContainerLaunchController container, PlayerInventory playerInv, ITextComponent title)
+    public GuiLaunchController(ContainerLaunchController container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
-        this.ySize = 209;
+        this.imageHeight = 209;
         this.launchController = container.getLaunchController();
     }
 
@@ -77,7 +75,7 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
         this.enableControllerButton.setMessage(this.launchController.getDisabled(0) ? GCCoreUtil.translate("gui.button.enable") : GCCoreUtil.translate("gui.button.disable"));
         this.hideDestinationFrequency.setMessage(!this.launchController.getDisabled(2) ? GCCoreUtil.translate("gui.button.unhide_dest") : GCCoreUtil.translate("gui.button.hide_dest"));
         // Hacky way of rendering buttons properly, possibly bugs here:
-        List<Widget> buttonList = new ArrayList<>(this.buttons);
+        List<AbstractWidget> buttonList = new ArrayList<>(this.buttons);
 //        List<GuiLabel> labelList = new ArrayList<>(this.labelList);
         List<GuiElementInfoRegion> infoRegions = new ArrayList<>(this.infoRegions);
 //        this.buttons.clear();
@@ -87,7 +85,7 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
 
         GL11.glColor3f(1, 1, 1);
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        RenderHelper.disableStandardItemLighting();
+        Lighting.turnOff();
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
@@ -114,7 +112,7 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
 //		GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        RenderHelper.enableStandardItemLighting();
+        Lighting.turnBackOn();
 
         if (Math.random() < 0.025 && !destinationFrequency.isTextFocused)
         {
@@ -159,7 +157,7 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
 
     public boolean isValid(String string)
     {
-        if (string.length() > 0 && SharedConstants.isAllowedCharacter(string.charAt(string.length() - 1)))
+        if (string.length() > 0 && SharedConstants.isAllowedChatCharacter(string.charAt(string.length() - 1)))
         {
             try
             {
@@ -182,8 +180,8 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
     {
         super.init();
         this.buttons.clear();
-        final int xLeft = (this.width - this.xSize) / 2;
-        final int yTop = (this.height - this.ySize) / 2;
+        final int xLeft = (this.width - this.imageWidth) / 2;
+        final int yTop = (this.height - this.imageHeight) / 2;
         this.enableControllerButton = new Button(xLeft + 70 + 124 - 72, yTop + 16, 48, 20, GCCoreUtil.translate("gui.button.enable"), (button) ->
         {
             if (!PlayerUtil.getName(this.minecraft.player).equals(this.launchController.getOwnerUUID()))
@@ -191,7 +189,7 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
                 this.cannotEditTimer = 50;
                 return;
             }
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, minecraft.world.getDimension().getType(), new Object[]{this.launchController.getPos(), 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, minecraft.level.getDimension().getType(), new Object[]{this.launchController.getBlockPos(), 0}));
         });
         this.frequency = new GuiElementTextBox(this, xLeft + 66, yTop + 16, 48, 20, "", true, 6, false);
         this.destinationFrequency = new GuiElementTextBox(this, xLeft + 45, yTop + 16 + 22, 48, 20, "", true, 6, false);
@@ -202,7 +200,7 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
                 this.cannotEditTimer = 50;
                 return;
             }
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, minecraft.world.getDimension().getType(), new Object[]{this.launchController.getPos(), 2}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, minecraft.level.getDimension().getType(), new Object[]{this.launchController.getBlockPos(), 2}));
         });
         this.openAdvancedConfig = new Button(xLeft + 48, yTop + 62, 80, 20, GCCoreUtil.translate("gui.launch_controller.advanced") + "...", (button) ->
         {
@@ -211,7 +209,7 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
                 this.cannotEditTimer = 50;
                 return;
             }
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_SWITCH_LAUNCH_CONTROLLER_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{this.launchController.getPos(), 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_SWITCH_LAUNCH_CONTROLLER_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{this.launchController.getBlockPos(), 0}));
         });
         this.buttons.add(this.enableControllerButton);
         this.buttons.add(this.frequency);
@@ -246,26 +244,26 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        String displayString = "Owned " + this.getTitle().getFormattedText();
-        this.font.drawString(displayString, this.xSize / 2 - this.font.getStringWidth(displayString) / 2, 5, 4210752);
+        String displayString = "Owned " + this.getTitle().getColoredString();
+        this.font.draw(displayString, this.imageWidth / 2 - this.font.width(displayString) / 2, 5, 4210752);
 
         if (this.cannotEditTimer > 0)
         {
-            this.font.drawString("Owned", this.xSize / 2 - this.font.getStringWidth(displayString) / 2, 5, this.cannotEditTimer % 30 < 15 ? ColorUtil.to32BitColor(255, 255, 100, 100) : 4210752);
+            this.font.draw("Owned", this.imageWidth / 2 - this.font.width(displayString) / 2, 5, this.cannotEditTimer % 30 < 15 ? ColorUtil.to32BitColor(255, 255, 100, 100) : 4210752);
             this.cannotEditTimer--;
         }
 
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, 115, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, 115, 4210752);
         displayString = this.getStatus();
-        this.font.drawString(displayString, this.xSize / 2 - this.font.getStringWidth(displayString) / 2, 86, 4210752);
+        this.font.draw(displayString, this.imageWidth / 2 - this.font.width(displayString) / 2, 86, 4210752);
         //		displayString = ElectricityDisplay.getDisplay(this.launchController.ueWattsPerTick * 20, ElectricUnit.WATT);
         //		this.font.drawString(displayString, this.xSize - 26 - this.font.getStringWidth(displayString), 94, 4210752);
         //		displayString = ElectricityDisplay.getDisplay(this.launchController.getVoltage(), ElectricUnit.VOLTAGE);
         //		this.font.drawString(displayString, this.xSize - 26 - this.font.getStringWidth(displayString), 104, 4210752);
-        this.font.drawString(GCCoreUtil.translate("gui.message.frequency") + ":", 7, 22, 4210752);
-        this.font.drawString(GCCoreUtil.translate("gui.message.dest_frequency") + ":", 7, 44, 4210752);
+        this.font.draw(GCCoreUtil.translate("gui.message.frequency") + ":", 7, 22, 4210752);
+        this.font.draw(GCCoreUtil.translate("gui.message.dest_frequency") + ":", 7, 44, 4210752);
 
     }
 
@@ -290,14 +288,14 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void renderBg(float par1, int par2, int par3)
     {
         GL11.glPushMatrix();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.textureManager.bindTexture(GuiLaunchController.launchControllerGui);
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
-        this.blit(var5, var6, 0, 0, this.xSize, this.ySize);
+        this.minecraft.textureManager.bind(GuiLaunchController.launchControllerGui);
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
+        this.blit(var5, var6, 0, 0, this.imageWidth, this.imageHeight);
 
         List<String> electricityDesc = new ArrayList<String>();
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
@@ -316,7 +314,7 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementTextBox textBox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementTextBox textBox, Player player)
     {
         return PlayerUtil.getName(player).equals(this.launchController.getOwnerUUID());
     }
@@ -329,12 +327,12 @@ public class GuiLaunchController extends GuiContainerGC<ContainerLaunchControlle
             if (textBox.equals(this.frequency))
             {
                 this.launchController.frequency = textBox.getIntegerValue();
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{0, this.launchController.getPos(), this.launchController.frequency}));
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{0, this.launchController.getBlockPos(), this.launchController.frequency}));
             }
             else if (textBox.equals(this.destinationFrequency))
             {
                 this.launchController.destFrequency = textBox.getIntegerValue();
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{2, this.launchController.getPos(), this.launchController.destFrequency}));
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{2, this.launchController.getBlockPos(), this.launchController.destFrequency}));
             }
         }
     }

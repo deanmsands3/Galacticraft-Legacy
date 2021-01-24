@@ -5,9 +5,9 @@ import micdoodle8.mods.galacticraft.api.transmission.tile.INetworkConnection;
 import micdoodle8.mods.galacticraft.core.event.EventHandlerGC;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,18 +30,18 @@ public class ChunkPowerHandler
     @SubscribeEvent
     public void onChunkLoad(ChunkEvent.Load event)
     {
-        if (!event.getWorld().isRemote() && event.getChunk() instanceof Chunk)
+        if (!event.getWorld().isRemote() && event.getChunk() instanceof LevelChunk)
         {
             try
             {
                 ArrayList<Object> tileList = Lists.newArrayList();
-                tileList.addAll(((Chunk) event.getChunk()).getTileEntityMap().values());
+                tileList.addAll(((LevelChunk) event.getChunk()).getBlockEntities().values());
 
                 for (Object o : tileList)
                 {
-                    if (o instanceof TileEntity)
+                    if (o instanceof BlockEntity)
                     {
-                        TileEntity tile = (TileEntity) o;
+                        BlockEntity tile = (BlockEntity) o;
 
                         if (tile instanceof INetworkConnection)
                         {

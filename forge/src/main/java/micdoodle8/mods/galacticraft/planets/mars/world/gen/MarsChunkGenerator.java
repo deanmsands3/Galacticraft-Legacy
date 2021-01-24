@@ -2,14 +2,14 @@ package micdoodle8.mods.galacticraft.planets.mars.world.gen;
 
 import micdoodle8.mods.galacticraft.planets.mars.dimension.MarsGenSettings;
 import micdoodle8.mods.galacticraft.planets.venus.dimension.VenusGenSettings;
-import net.minecraft.util.Util;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.gen.NoiseChunkGenerator;
-import net.minecraft.world.gen.OctavesNoiseGenerator;
+import net.minecraft.Util;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
-public class MarsChunkGenerator extends NoiseChunkGenerator<MarsGenSettings>
+public class MarsChunkGenerator extends NoiseBasedChunkGenerator<MarsGenSettings>
 {
     private static final float[] BIOME_WEIGHTS = Util.make(new float[25], (weights) ->
     {
@@ -29,12 +29,12 @@ public class MarsChunkGenerator extends NoiseChunkGenerator<MarsGenSettings>
 //
 //    private final MapGenDungeon dungeonGenerator = new MapGenDungeonMars(new DungeonConfiguration(MarsBlocks.marsBlock.getDefaultState().with(BlockBasicMars.BASIC_TYPE, BlockBasicMars.EnumBlockBasic.DUNGEON_BRICK), 30, 8, 16, 7, 7, RoomBossMars.class, RoomTreasureMars.class));
 
-    private final OctavesNoiseGenerator depthNoise;
+    private final PerlinNoise depthNoise;
 
-    public MarsChunkGenerator(IWorld worldIn, BiomeProvider biomeProvider, MarsGenSettings settingsIn)
+    public MarsChunkGenerator(LevelAccessor worldIn, BiomeSource biomeProvider, MarsGenSettings settingsIn)
     {
         super(worldIn, biomeProvider, 4, 8, 128, settingsIn, true);
-        this.depthNoise = new OctavesNoiseGenerator(this.randomSeed, 15, 0);
+        this.depthNoise = new PerlinNoise(this.random, 15, 0);
     }
 
 //    public ChunkProviderMars(World par1World, long seed, boolean mapFeaturesEnabled)
@@ -137,20 +137,20 @@ public class MarsChunkGenerator extends NoiseChunkGenerator<MarsGenSettings>
 
     // get depth / scale
     @Override
-    protected double[] getBiomeNoiseColumn(int x, int z)
+    protected double[] getDepthAndScale(int x, int z)
     {
         double[] depthAndScale = new double[2];
         float scaleF1 = 0.0F;
         float depthF1 = 0.0F;
         float divisor = 0.0F;
         int j = this.getSeaLevel();
-        float baseDepth = this.biomeProvider.getNoiseBiome(x, j, z).getDepth();
+        float baseDepth = this.biomeSource.getNoiseBiome(x, j, z).getDepth();
 
         for (int xMod = -2; xMod <= 2; ++xMod)
         {
             for (int zMod = -2; zMod <= 2; ++zMod)
             {
-                Biome biomeAt = this.biomeProvider.getNoiseBiome(x + xMod, j,z + zMod);
+                Biome biomeAt = this.biomeSource.getNoiseBiome(x + xMod, j,z + zMod);
                 float biomeDepth = biomeAt.getDepth();
                 float biomeScale = biomeAt.getScale();
 
@@ -228,11 +228,11 @@ public class MarsChunkGenerator extends NoiseChunkGenerator<MarsGenSettings>
         final int topSlideMax = 0;
         final int topSlideScale = 3;
 
-        calcNoiseColumn(noiseColumn, x, z, xzScale, yScale, xzOtherScale, yOtherScale, topSlideScale, topSlideMax);
+        fillNoiseColumn(noiseColumn, x, z, xzScale, yScale, xzOtherScale, yOtherScale, topSlideScale, topSlideMax);
     }
 
     @Override
-    public int getGroundHeight()
+    public int getSpawnHeight()
     {
         return 69;
     }

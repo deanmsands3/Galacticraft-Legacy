@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.core.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -12,7 +12,7 @@ public class StackSorted
 
     public StackSorted(Block block)
     {
-        this(Item.getItemFromBlock(block));
+        this(Item.byBlock(block));
     }
 
     public StackSorted(Item item)

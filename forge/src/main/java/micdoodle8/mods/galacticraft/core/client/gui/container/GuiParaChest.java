@@ -4,9 +4,9 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.entities.IScaleableFuelLevel;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerParaChest;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityParaChest;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.opengl.GL11;
 
 public class GuiParaChest extends GuiContainerGC<ContainerParaChest>
@@ -21,37 +21,37 @@ public class GuiParaChest extends GuiContainerGC<ContainerParaChest>
         }
     }
 
-    private final PlayerInventory playerInv;
+    private final Inventory playerInv;
     private final TileEntityParaChest parachest;
 
     private int inventorySlots = 0;
 
-    public GuiParaChest(ContainerParaChest container, PlayerInventory playerInv, ITextComponent title)
+    public GuiParaChest(ContainerParaChest container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
 //        super(new ContainerParaChest(playerInv, parachest, Minecraft.getInstance().player), playerInv, new TranslationTextComponent("container.para_chest"));
         this.playerInv = playerInv;
         this.parachest = container.getParaChest();
         this.passEvents = false;
-        this.inventorySlots = parachest.getSizeInventory();
-        this.ySize = 146 + this.inventorySlots * 2;
+        this.inventorySlots = parachest.getContainerSize();
+        this.imageHeight = 146 + this.inventorySlots * 2;
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        this.font.drawString(this.title.getFormattedText(), 8, 6, 4210752);
-        this.font.drawString(this.title.getFormattedText(), 8, this.ySize - 103 + (this.inventorySlots == 3 ? 2 : 4), 4210752);
+        this.font.draw(this.title.getColoredString(), 8, 6, 4210752);
+        this.font.draw(this.title.getColoredString(), 8, this.imageHeight - 103 + (this.inventorySlots == 3 ? 2 : 4), 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void renderBg(float par1, int par2, int par3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GuiParaChest.parachestTexture[(this.inventorySlots - 3) / 18]);
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.blit(k, l, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(GuiParaChest.parachestTexture[(this.inventorySlots - 3) / 18]);
+        int k = (this.width - this.imageWidth) / 2;
+        int l = (this.height - this.imageHeight) / 2;
+        this.blit(k, l, 0, 0, this.imageWidth, this.imageHeight);
 
         if (this.parachest instanceof IScaleableFuelLevel)
         {

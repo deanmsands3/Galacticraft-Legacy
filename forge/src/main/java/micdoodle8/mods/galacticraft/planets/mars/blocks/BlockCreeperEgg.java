@@ -7,24 +7,24 @@ import micdoodle8.mods.galacticraft.core.items.IShiftDescription;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DragonEggBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DragonEggBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockCreeperEgg extends DragonEggBlock implements IShiftDescription, ISortable
 {
-    protected static final VoxelShape DRAGON_EGG_AABB = VoxelShapes.create(0.0625D, 0.0D, 0.0625D, 0.9375D, 1.0D, 0.9375D);
+    protected static final VoxelShape DRAGON_EGG_AABB = Shapes.box(0.0625D, 0.0D, 0.0625D, 0.9375D, 1.0D, 0.9375D);
 
     public BlockCreeperEgg(Properties builder)
     {
@@ -32,69 +32,69 @@ public class BlockCreeperEgg extends DragonEggBlock implements IShiftDescription
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         return DRAGON_EGG_AABB;
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit)
     {
         return ActionResultType.PASS;
     }
 
     @Override
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player)
+    public void attack(BlockState state, Level worldIn, BlockPos pos, Player player)
     {
     }
 
     @Override
-    public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion)
+    public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion)
     {
-        if (!world.isRemote)
+        if (!world.isClientSide)
         {
             EvolvedCreeperEntity creeper = new EvolvedCreeperEntity(GCEntities.EVOLVED_CREEPER, world);
-            creeper.setPosition(pos.getX() + 0.5, pos.getY() + 3, pos.getZ() + 0.5);
+            creeper.setPos(pos.getX() + 0.5, pos.getY() + 3, pos.getZ() + 0.5);
             creeper.setChild(true);
-            world.addEntity(creeper);
+            world.addFreshEntity(creeper);
         }
 
         world.removeBlock(pos, false);
-        this.onExplosionDestroy(world, pos, explosion);
+        this.wasExploded(world, pos, explosion);
     }
 
     @Override
-    public boolean canDropFromExplosion(Explosion explose)
+    public boolean dropFromExplosion(Explosion explose)
     {
         return false;
     }
 
     @Override
-    public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player)
+    public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player)
     {
-        ItemStack stack = player.inventory.getCurrentItem();
+        ItemStack stack = player.inventory.getSelected();
         if (stack.isEmpty())
         {
-            return player.canHarvestBlock(world.getBlockState(pos));
+            return player.canDestroy(world.getBlockState(pos));
         }
         return stack.getItem() == MarsItems.STICKY_DESH_PICKAXE;
     }
 
     @Override
-    public float getPlayerRelativeBlockHardness(BlockState state, PlayerEntity player, IBlockReader worldIn, BlockPos pos)
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter worldIn, BlockPos pos)
     {
-        ItemStack stack = player.inventory.getCurrentItem();
+        ItemStack stack = player.inventory.getSelected();
         if (stack != ItemStack.EMPTY && stack.getItem() == MarsItems.STICKY_DESH_PICKAXE)
         {
             return 0.2F;
         }
-        return super.getPlayerRelativeBlockHardness(state, player, worldIn, pos);
+        return super.getDestroyProgress(state, player, worldIn, pos);
     }
 
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override

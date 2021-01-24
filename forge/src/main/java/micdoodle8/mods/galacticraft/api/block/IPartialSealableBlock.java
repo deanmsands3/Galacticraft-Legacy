@@ -1,10 +1,10 @@
 package micdoodle8.mods.galacticraft.api.block;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 
 public interface IPartialSealableBlock
 {
-    boolean isSealed(World world, BlockPos pos, Direction direction);
+    boolean isSealed(Level world, BlockPos pos, Direction direction);
 }

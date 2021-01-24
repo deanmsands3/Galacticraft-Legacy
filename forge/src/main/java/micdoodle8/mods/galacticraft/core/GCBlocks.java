@@ -7,11 +7,19 @@ import micdoodle8.mods.galacticraft.core.items.ItemBlockWallOrFloorDesc;
 import micdoodle8.mods.galacticraft.core.tile.*;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockDungeonBrick;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
+import net.minecraft.core.Registry;
 import net.minecraft.item.*;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,68 +35,68 @@ import com.google.common.collect.Lists;
 @ObjectHolder(Constants.MOD_ID_CORE)
 public class GCBlocks
 {
-    public static final Block BREATHEABLE_AIR = new BlockBreathableAir(Block.Properties.create(Material.AIR).doesNotBlockMovement().noDrops().hardnessAndResistance(0.0F, 10000.0F).noDrops());
-    public static final Block BRIGHT_AIR = new BlockBrightAir(Block.Properties.from(BREATHEABLE_AIR).lightValue(15).noDrops());
-    public static final Block BRIGHT_BREATHEABLE_AIR = new BlockBrightBreathableAir(Block.Properties.from(BRIGHT_AIR).noDrops());
+    public static final Block BREATHEABLE_AIR = new BlockBreathableAir(Block.Properties.of(Material.AIR).noCollission().noDrops().strength(0.0F, 10000.0F).noDrops());
+    public static final Block BRIGHT_AIR = new BlockBrightAir(Block.Properties.copy(BREATHEABLE_AIR).lightLevel(15).noDrops());
+    public static final Block BRIGHT_BREATHEABLE_AIR = new BlockBrightBreathableAir(Block.Properties.copy(BRIGHT_AIR).noDrops());
 
-    public static final Block ARC_LAMP = new BlockArcLamp(Block.Properties.create(Material.GLASS).hardnessAndResistance(0.1F).sound(SoundType.METAL).lightValue(13));
+    public static final Block ARC_LAMP = new BlockArcLamp(Block.Properties.of(Material.GLASS).strength(0.1F).sound(SoundType.METAL).lightLevel(13));
 
-    public static final Block TIER_1_TREASURE_CHEST = new BlockTier1TreasureChest(Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13).noDrops());
+    public static final Block TIER_1_TREASURE_CHEST = new BlockTier1TreasureChest(Block.Properties.of(Material.STONE).strength(100000.0F).sound(SoundType.STONE).lightLevel(13).noDrops());
 
-    public static final Block ROCKET_LAUNCH_PAD = new BlockPad(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
-    public static final Block BUGGY_FUELING_PAD = new BlockPad(Block.Properties.from(ROCKET_LAUNCH_PAD));
-    public static final Block FULL_ROCKET_LAUNCH_PAD = new BlockPadFull(Block.Properties.from(ROCKET_LAUNCH_PAD));
-    public static final Block FULL_BUGGY_FUELING_PAD = new BlockPadFull(Block.Properties.from(ROCKET_LAUNCH_PAD));
+    public static final Block ROCKET_LAUNCH_PAD = new BlockPad(Block.Properties.of(Material.METAL).strength(1.0F, 10.0F).sound(SoundType.METAL));
+    public static final Block BUGGY_FUELING_PAD = new BlockPad(Block.Properties.copy(ROCKET_LAUNCH_PAD));
+    public static final Block FULL_ROCKET_LAUNCH_PAD = new BlockPadFull(Block.Properties.copy(ROCKET_LAUNCH_PAD));
+    public static final Block FULL_BUGGY_FUELING_PAD = new BlockPadFull(Block.Properties.copy(ROCKET_LAUNCH_PAD));
 
-    public static final Block UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.0F).lightValue(3).sound(SoundType.WOOD));
-    public static final Block WALL_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH).lootFrom(UNLIT_TORCH));
-    public static final Block LIT_UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.from(UNLIT_TORCH).lightValue(14).lootFrom(UNLIT_TORCH));
-    public static final Block WALL_LIT_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(14).lootFrom(UNLIT_TORCH));
-    public static final Block GLOWSTONE_TORCH = new BlockGlowstoneTorch(Block.Properties.from(UNLIT_TORCH).lightValue(12));
-    public static final Block WALL_GLOWSTONE_TORCH = new BlockGlowstoneTorchWall(Block.Properties.from(UNLIT_TORCH).lightValue(12).lootFrom(GLOWSTONE_TORCH));
+    public static final Block UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.of(Material.DECORATION).noCollission().strength(0.0F).lightLevel(3).sound(SoundType.WOOD));
+    public static final Block WALL_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.copy(UNLIT_TORCH).dropsLike(UNLIT_TORCH));
+    public static final Block LIT_UNLIT_TORCH = new BlockUnlitTorch(Block.Properties.copy(UNLIT_TORCH).lightLevel(14).dropsLike(UNLIT_TORCH));
+    public static final Block WALL_LIT_UNLIT_TORCH = new BlockUnlitTorchWall(Block.Properties.copy(UNLIT_TORCH).lightLevel(14).dropsLike(UNLIT_TORCH));
+    public static final Block GLOWSTONE_TORCH = new BlockGlowstoneTorch(Block.Properties.copy(UNLIT_TORCH).lightLevel(12));
+    public static final Block WALL_GLOWSTONE_TORCH = new BlockGlowstoneTorchWall(Block.Properties.copy(UNLIT_TORCH).lightLevel(12).dropsLike(GLOWSTONE_TORCH));
 
-    public static final Block OXYGEN_BUBBLE_DISTRIBUTOR = new BlockOxygenDistributor(Block.Properties.create(Material.ROCK).hardnessAndResistance(1.0F).sound(SoundType.METAL));
-    public static final Block OXYGEN_COLLECTOR = new BlockOxygenCollector(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block ROCKET_WORKBENCH = new BlockNasaWorkbench(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block AIR_LOCK_FRAME = new BlockAirLockFrame(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block AIR_LOCK_CONTROLLER = new BlockAirLockController(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block COMPRESSOR = new BlockIngotCompressor(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block ELECTRIC_COMPRESSOR = new BlockIngotCompressorElectric(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block ADVANCED_COMPRESSOR = new BlockIngotCompressorElectricAdvanced(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block COAL_GENERATOR = new BlockCoalGenerator(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block CIRCUIT_FABRICATOR = new BlockCircuitFabricator(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block OXYGEN_STORAGE_MODULE = new BlockOxygenStorageModule(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block DECONSTRUCTOR = new BlockDeconstructor(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block CHROMATIC_APPLICATOR = new BlockPainter(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block MAGNETIC_CRAFTING_TABLE = new BlockCrafting(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block REFINERY = new BlockRefinery(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block FUEL_LOADER = new BlockFuelLoader(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block OXYGEN_COMPRESSOR = new BlockOxygenCompressor(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block OXYGEN_DECOMPRESSOR = new BlockOxygenCompressor(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block OXYGEN_SEALER = new BlockOxygenSealer(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block OXYGEN_DETECTOR = new BlockOxygenDetector(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block CARGO_LOADER = new BlockCargoLoader(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block CARGO_UNLOADER = new BlockCargoUnloader(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block BASIC_SOLAR_PANEL = new BlockSolar(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block ADVANCED_SOLAR_PANEL = new BlockSolarAdvanced(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_BUBBLE_DISTRIBUTOR = new BlockOxygenDistributor(Block.Properties.of(Material.STONE).strength(1.0F).sound(SoundType.METAL));
+    public static final Block OXYGEN_COLLECTOR = new BlockOxygenCollector(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ROCKET_WORKBENCH = new BlockNasaWorkbench(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block AIR_LOCK_FRAME = new BlockAirLockFrame(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block AIR_LOCK_CONTROLLER = new BlockAirLockController(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block COMPRESSOR = new BlockIngotCompressor(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ELECTRIC_COMPRESSOR = new BlockIngotCompressorElectric(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ADVANCED_COMPRESSOR = new BlockIngotCompressorElectricAdvanced(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block COAL_GENERATOR = new BlockCoalGenerator(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block CIRCUIT_FABRICATOR = new BlockCircuitFabricator(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_STORAGE_MODULE = new BlockOxygenStorageModule(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block DECONSTRUCTOR = new BlockDeconstructor(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block CHROMATIC_APPLICATOR = new BlockPainter(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block MAGNETIC_CRAFTING_TABLE = new BlockCrafting(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block REFINERY = new BlockRefinery(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block FUEL_LOADER = new BlockFuelLoader(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_COMPRESSOR = new BlockOxygenCompressor(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_DECOMPRESSOR = new BlockOxygenCompressor(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_SEALER = new BlockOxygenSealer(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block OXYGEN_DETECTOR = new BlockOxygenDetector(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block CARGO_LOADER = new BlockCargoLoader(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block CARGO_UNLOADER = new BlockCargoUnloader(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block BASIC_SOLAR_PANEL = new BlockSolar(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ADVANCED_SOLAR_PANEL = new BlockSolarAdvanced(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
 //    public static final Block radioTelescope = new BlockDish(Block.Properties.from(oxygenDistributor));
-    public static final Block ENERGY_STORAGE = new BlockEnergyStorageModule(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block ENERGY_STORAGE_CLUSTER = new BlockEnergyStorageCluster(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block ELECTRIC_FURNACE = new BlockFurnaceElectric(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block ELECTRIC_ARC_FURNACE = new BlockFurnaceArc(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ENERGY_STORAGE = new BlockEnergyStorageModule(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ENERGY_STORAGE_CLUSTER = new BlockEnergyStorageCluster(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ELECTRIC_FURNACE = new BlockFurnaceElectric(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block ELECTRIC_ARC_FURNACE = new BlockFurnaceArc(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
 //    public static final Block panelLighting = new BlockPanelLighting(Block.Properties.from(oxygenDistributor));
 //    public static final Block spinThruster = new BlockSpinThruster(Block.Properties.from(oxygenDistributor));
-    public static final Block TELEMETRY_UNIT = new BlockTelemetry(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block HIDDEN_REDSTONE_WIRE = new BlockConcealedRedstone(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block HIDDEN_REDSTONE_REPEATER = new BlockConcealedRepeater(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
-    public static final Block PLAYER_DETECTOR = new BlockConcealedDetector(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block TELEMETRY_UNIT = new BlockTelemetry(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block HIDDEN_REDSTONE_WIRE = new BlockConcealedRedstone(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block HIDDEN_REDSTONE_REPEATER = new BlockConcealedRepeater(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
+    public static final Block PLAYER_DETECTOR = new BlockConcealedDetector(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR));
 
-    public static final Block AIR_LOCK_SEAL = new BlockAirLockWall(Block.Properties.from(OXYGEN_BUBBLE_DISTRIBUTOR).hardnessAndResistance(1000.0F).tickRandomly().noDrops());
+    public static final Block AIR_LOCK_SEAL = new BlockAirLockWall(Block.Properties.copy(OXYGEN_BUBBLE_DISTRIBUTOR).strength(1000.0F).randomTicks().noDrops());
 
-    public static final Block FLUID_PIPE = new BlockFluidPipe(Block.Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS), BlockFluidPipe.EnumPipeMode.NORMAL);
-    public static final Block PULLED_FLUID_PIPE = new BlockFluidPipe(Block.Properties.from(FLUID_PIPE).lootFrom(FLUID_PIPE), BlockFluidPipe.EnumPipeMode.PULL);
+    public static final Block FLUID_PIPE = new BlockFluidPipe(Block.Properties.of(Material.GLASS).strength(0.3F).sound(SoundType.GLASS), BlockFluidPipe.EnumPipeMode.NORMAL);
+    public static final Block PULLED_FLUID_PIPE = new BlockFluidPipe(Block.Properties.copy(FLUID_PIPE).dropsLike(FLUID_PIPE), BlockFluidPipe.EnumPipeMode.PULL);
 
-    public static final Block FALLEN_METEOR = new BlockFallenMeteor(Block.Properties.create(Material.ROCK).hardnessAndResistance(40.0F).sound(SoundType.STONE));
+    public static final Block FALLEN_METEOR = new BlockFallenMeteor(Block.Properties.of(Material.STONE).strength(40.0F).sound(SoundType.STONE));
 //    public static final Block spaceGlassVanilla = new BlockSpaceGlass(builder, GlassType.VANILLA, GlassFrame.PLAIN, null);
 //    public static final Block spaceGlassClear = new BlockSpaceGlass(builder, GlassType.CLEAR, GlassFrame.PLAIN, null);
 //    public static final Block spaceGlassTinVanilla = new BlockSpaceGlass(builder, GlassType.VANILLA, GlassFrame.TIN_DECO, GCBlocks.spaceGlassVanilla);
@@ -96,68 +104,68 @@ public class GCBlocks
 //    public static final Block spaceGlassStrong = new BlockSpaceGlass(builder, GlassType.STRONG, GlassFrame.PLAIN, null);
 //    public static final Block spaceGlassTinStrong = new BlockSpaceGlass(builder, GlassType.STRONG, GlassFrame.TIN_DECO, GCBlocks.spaceGlassStrong);
 
-    public static final Block SPACE_STATION_BASE = new BlockSpaceStationBase(Block.Properties.create(Material.ROCK).hardnessAndResistance(-1.0F, 3600000.0F).noDrops());
+    public static final Block SPACE_STATION_BASE = new BlockSpaceStationBase(Block.Properties.of(Material.STONE).strength(-1.0F, 3600000.0F).noDrops());
 
-    public static final Block MULTI_BLOCK = new BlockMulti(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 3600000.0F).sound(SoundType.METAL).notSolid().noDrops());
+    public static final Block MULTI_BLOCK = new BlockMulti(Block.Properties.of(Material.METAL).strength(1.0F, 3600000.0F).sound(SoundType.METAL).noOcclusion().noDrops());
 
 //    public static final Block sealableBlock = new BlockEnclosed(builder);
 
-    public static final Block PARACHEST = new BlockParaChest(Block.Properties.create(Material.WOOD).hardnessAndResistance(3.0F).sound(SoundType.WOOD));
+    public static final Block PARACHEST = new BlockParaChest(Block.Properties.of(Material.WOOD).strength(3.0F).sound(SoundType.WOOD));
 
-    public static final Block ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.create(Material.WOOL).hardnessAndResistance(0.2F).sound(SoundType.CLOTH));
-    public static final Block HEAVY_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.from(ALUMINUM_WIRE));
-    public static final Block SWITCHABLE_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.from(ALUMINUM_WIRE));
-    public static final Block SWITCHABLE_HEAVY_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.from(ALUMINUM_WIRE));
+    public static final Block ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.of(Material.WOOL).strength(0.2F).sound(SoundType.WOOL));
+    public static final Block HEAVY_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.copy(ALUMINUM_WIRE));
+    public static final Block SWITCHABLE_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.copy(ALUMINUM_WIRE));
+    public static final Block SWITCHABLE_HEAVY_ALUMINUM_WIRE = new BlockAluminumWire(Block.Properties.copy(ALUMINUM_WIRE));
 
-    public static final Block CHEESE_BLOCK = new BlockCheese(Block.Properties.create(Material.CAKE).hardnessAndResistance(0.5F).sound(SoundType.CLOTH));
+    public static final Block CHEESE_BLOCK = new BlockCheese(Block.Properties.of(Material.CAKE).strength(0.5F).sound(SoundType.WOOL));
 
-    public static final Block DISPLAY_SCREEN = new BlockScreen(Block.Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(1.0F).sound(SoundType.STONE));
+    public static final Block DISPLAY_SCREEN = new BlockScreen(Block.Properties.of(Material.DECORATION).strength(1.0F).sound(SoundType.STONE));
 
-    public static final Block FLUID_TANK = new BlockFluidTank(Block.Properties.create(Material.GLASS).hardnessAndResistance(3.0F, 8.0F).sound(SoundType.GLASS));
+    public static final Block FLUID_TANK = new BlockFluidTank(Block.Properties.of(Material.GLASS).strength(3.0F, 8.0F).sound(SoundType.GLASS));
 
-    public static final Block MOON_BOSS_SPAWNER = new BlockBossSpawner(Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops());
+    public static final Block MOON_BOSS_SPAWNER = new BlockBossSpawner(Block.Properties.of(Material.STONE).strength(1000000.0F).noDrops());
 
-    public static final Block HYDRAULIC_PLATFORM = new BlockPlatform(Block.Properties.create(Material.IRON).hardnessAndResistance(1.0F, 10.0F).sound(SoundType.METAL));
+    public static final Block HYDRAULIC_PLATFORM = new BlockPlatform(Block.Properties.of(Material.METAL).strength(1.0F, 10.0F).sound(SoundType.METAL));
 
-    public static final Block EMERGENCY_POST = new BlockEmergencyBox(Block.Properties.create(Material.IRON).hardnessAndResistance(4.0F, 70.0F).lightValue(15).sound(SoundType.METAL));
-    public static final Block EMERGENCY_POST_KIT = new BlockEmergencyBoxKit(Block.Properties.from(EMERGENCY_POST));
+    public static final Block EMERGENCY_POST = new BlockEmergencyBox(Block.Properties.of(Material.METAL).strength(4.0F, 70.0F).lightLevel(15).sound(SoundType.METAL));
+    public static final Block EMERGENCY_POST_KIT = new BlockEmergencyBoxKit(Block.Properties.copy(EMERGENCY_POST));
 
-    public static final Block COPPER_ORE = new OreBlockGC(Block.Properties.create(Material.ROCK).sound(SoundType.STONE));
-    public static final Block TIN_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
-    public static final Block ALUMINUM_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
-    public static final Block SILICON_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
-    public static final Block MOON_COPPER_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
-    public static final Block MOON_TIN_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
-    public static final Block CHEESE_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
-    public static final Block SAPPHIRE_ORE = new OreBlockGC(Block.Properties.from(COPPER_ORE));
+    public static final Block COPPER_ORE = new OreBlockGC(Block.Properties.of(Material.STONE).sound(SoundType.STONE));
+    public static final Block TIN_ORE = new OreBlockGC(Block.Properties.copy(COPPER_ORE));
+    public static final Block ALUMINUM_ORE = new OreBlockGC(Block.Properties.copy(COPPER_ORE));
+    public static final Block SILICON_ORE = new OreBlockGC(Block.Properties.copy(COPPER_ORE));
+    public static final Block MOON_COPPER_ORE = new OreBlockGC(Block.Properties.copy(COPPER_ORE));
+    public static final Block MOON_TIN_ORE = new OreBlockGC(Block.Properties.copy(COPPER_ORE));
+    public static final Block CHEESE_ORE = new OreBlockGC(Block.Properties.copy(COPPER_ORE));
+    public static final Block SAPPHIRE_ORE = new OreBlockGC(Block.Properties.copy(COPPER_ORE));
 
-    public static final Block MOON_DIRT = new BlockSimple(Block.Properties.create(Material.ROCK).sound(SoundType.STONE));
-    public static final Block MOON_ROCK = new BlockSimple(Block.Properties.from(MOON_DIRT));
-    public static final Block MOON_TURF = new BlockSimple(Block.Properties.from(MOON_DIRT));
-    public static final Block MOON_DUNGEON_BRICKS = new BlockDungeonBrick(Block.Properties.from(MOON_DIRT));
+    public static final Block MOON_DIRT = new BlockSimple(Block.Properties.of(Material.STONE).sound(SoundType.STONE));
+    public static final Block MOON_ROCK = new BlockSimple(Block.Properties.copy(MOON_DIRT));
+    public static final Block MOON_TURF = new BlockSimple(Block.Properties.copy(MOON_DIRT));
+    public static final Block MOON_DUNGEON_BRICKS = new BlockDungeonBrick(Block.Properties.copy(MOON_DIRT));
 
-    public static final Block TIN_DECORATION_BLOCK_1 = new DecoBlock(Block.Properties.create(Material.ROCK).sound(SoundType.STONE));
-    public static final Block TIN_DECORATION_BLOCK_2 = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
-    public static final Block COPPER_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
-    public static final Block TIN_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
-    public static final Block ALUMINUM_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
-    public static final Block METEORIC_IRON_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
-    public static final Block SILICON_BLOCK = new DecoBlock(Block.Properties.from(TIN_DECORATION_BLOCK_1));
+    public static final Block TIN_DECORATION_BLOCK_1 = new DecoBlock(Block.Properties.of(Material.STONE).sound(SoundType.STONE));
+    public static final Block TIN_DECORATION_BLOCK_2 = new DecoBlock(Block.Properties.copy(TIN_DECORATION_BLOCK_1));
+    public static final Block COPPER_BLOCK = new DecoBlock(Block.Properties.copy(TIN_DECORATION_BLOCK_1));
+    public static final Block TIN_BLOCK = new DecoBlock(Block.Properties.copy(TIN_DECORATION_BLOCK_1));
+    public static final Block ALUMINUM_BLOCK = new DecoBlock(Block.Properties.copy(TIN_DECORATION_BLOCK_1));
+    public static final Block METEORIC_IRON_BLOCK = new DecoBlock(Block.Properties.copy(TIN_DECORATION_BLOCK_1));
+    public static final Block SILICON_BLOCK = new DecoBlock(Block.Properties.copy(TIN_DECORATION_BLOCK_1));
 
-    public static final StairsBlock TIN_DECORATION_STAIRS_1 = new StairsBlockGC(() -> TIN_DECORATION_BLOCK_1.getDefaultState(), Block.Properties.from(TIN_DECORATION_BLOCK_1));
-    public static final StairsBlock TIN_DECORATION_STAIRS_2 = new StairsBlockGC(() -> TIN_DECORATION_BLOCK_2.getDefaultState(), Block.Properties.from(TIN_DECORATION_BLOCK_2));
-    public static final StairsBlock MOON_ROCK_STAIRS = new StairsBlockGC(() -> MOON_ROCK.getDefaultState(), Block.Properties.from(MOON_ROCK));
-    public static final StairsBlock MOON_DUNGEON_BRICK_STAIRS = new StairsBlockGC(() -> MOON_DUNGEON_BRICKS.getDefaultState(), Block.Properties.from(MOON_DUNGEON_BRICKS));
+    public static final StairBlock TIN_DECORATION_STAIRS_1 = new StairsBlockGC(() -> TIN_DECORATION_BLOCK_1.defaultBlockState(), Block.Properties.copy(TIN_DECORATION_BLOCK_1));
+    public static final StairBlock TIN_DECORATION_STAIRS_2 = new StairsBlockGC(() -> TIN_DECORATION_BLOCK_2.defaultBlockState(), Block.Properties.copy(TIN_DECORATION_BLOCK_2));
+    public static final StairBlock MOON_ROCK_STAIRS = new StairsBlockGC(() -> MOON_ROCK.defaultBlockState(), Block.Properties.copy(MOON_ROCK));
+    public static final StairBlock MOON_DUNGEON_BRICK_STAIRS = new StairsBlockGC(() -> MOON_DUNGEON_BRICKS.defaultBlockState(), Block.Properties.copy(MOON_DUNGEON_BRICKS));
 
-    public static final SlabBlock TIN_DECORATION_SLAB_1 = new SlabBlockGC(Block.Properties.from(TIN_DECORATION_BLOCK_1));
-    public static final SlabBlock TIN_DECORATION_SLAB_2 = new SlabBlockGC(Block.Properties.from(TIN_DECORATION_BLOCK_2));
-    public static final SlabBlock MOON_ROCK_SLAB = new SlabBlockGC(Block.Properties.from(MOON_ROCK));
-    public static final SlabBlock MOON_DUNGEON_BRICK_SLAB = new SlabBlockGC(Block.Properties.from(MOON_DUNGEON_BRICKS));
+    public static final SlabBlock TIN_DECORATION_SLAB_1 = new SlabBlockGC(Block.Properties.copy(TIN_DECORATION_BLOCK_1));
+    public static final SlabBlock TIN_DECORATION_SLAB_2 = new SlabBlockGC(Block.Properties.copy(TIN_DECORATION_BLOCK_2));
+    public static final SlabBlock MOON_ROCK_SLAB = new SlabBlockGC(Block.Properties.copy(MOON_ROCK));
+    public static final SlabBlock MOON_DUNGEON_BRICK_SLAB = new SlabBlockGC(Block.Properties.copy(MOON_DUNGEON_BRICKS));
 
-    public static final WallBlock TIN_DECORATION_WALL_1 = new WallBlockGC(Block.Properties.from(TIN_DECORATION_BLOCK_1));
-    public static final WallBlock TIN_DECORATION_WALL_2 = new WallBlockGC(Block.Properties.from(TIN_DECORATION_BLOCK_2));
-    public static final WallBlock MOON_ROCK_WALL = new WallBlockGC(Block.Properties.from(MOON_ROCK));
-    public static final WallBlock MOON_DUNGEON_BRICK_WALL = new WallBlockGC(Block.Properties.from(MOON_DUNGEON_BRICKS));
+    public static final WallBlock TIN_DECORATION_WALL_1 = new WallBlockGC(Block.Properties.copy(TIN_DECORATION_BLOCK_1));
+    public static final WallBlock TIN_DECORATION_WALL_2 = new WallBlockGC(Block.Properties.copy(TIN_DECORATION_BLOCK_2));
+    public static final WallBlock MOON_ROCK_WALL = new WallBlockGC(Block.Properties.copy(MOON_ROCK));
+    public static final WallBlock MOON_DUNGEON_BRICK_WALL = new WallBlockGC(Block.Properties.copy(MOON_DUNGEON_BRICKS));
 //    public static final Block grating = new BlockGrating(builder);
 //    public static final Block gratingWater = new BlockGrating(builder);
 //    public static final Block gratingLava = new BlockGrating(builder);
@@ -407,7 +415,7 @@ public class GCBlocks
     public static void registerItemBlocks(RegistryEvent.Register<Item> evt)
     {
         IForgeRegistry<Item> r = evt.getRegistry();
-        Item.Properties props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
+        Item.Properties props = GCItems.defaultBuilder().tab(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(ARC_LAMP), new BlockItem(ARC_LAMP, props));
         register(r, Registry.BLOCK.getKey(TIER_1_TREASURE_CHEST), new ItemBlockDesc(TIER_1_TREASURE_CHEST, props.setISTER(() -> () -> ItemStackTileEntityRendererGC.INSTANCE)));
         register(r, Registry.BLOCK.getKey(ROCKET_LAUNCH_PAD), new BlockItem(ROCKET_LAUNCH_PAD, props));
@@ -489,7 +497,7 @@ public class GCBlocks
         register(r, Registry.BLOCK.getKey(METEORIC_IRON_BLOCK), new BlockItem(METEORIC_IRON_BLOCK, props));
         register(r, Registry.BLOCK.getKey(SILICON_BLOCK), new BlockItem(SILICON_BLOCK, props));
         register(r, Registry.BLOCK.getKey(HYDRAULIC_PLATFORM), new ItemBlockDesc(HYDRAULIC_PLATFORM, props));
-        props = props.group(null);
+        props = props.tab(null);
         register(r, Registry.BLOCK.getKey(UNLIT_TORCH), new ItemBlockWallOrFloorDesc(UNLIT_TORCH, WALL_UNLIT_TORCH, props));
         register(r, Registry.BLOCK.getKey(LIT_UNLIT_TORCH), new ItemBlockWallOrFloorDesc(LIT_UNLIT_TORCH, WALL_LIT_UNLIT_TORCH, props));
     }
@@ -748,64 +756,64 @@ public class GCBlocks
 //    }
 
     @SubscribeEvent
-    public static void initTileEntities(RegistryEvent.Register<TileEntityType<?>> evt)
+    public static void initTileEntities(RegistryEvent.Register<BlockEntityType<?>> evt)
     {
-        IForgeRegistry<TileEntityType<?>> r = evt.getRegistry();
+        IForgeRegistry<BlockEntityType<?>> r = evt.getRegistry();
 
-        register(r, TileEntityType.Builder.create(TileEntityTreasureChest::new, TIER_1_TREASURE_CHEST).build(null), GCBlockNames.TIER_1_TREASURE_CHEST);
-        register(r, TileEntityType.Builder.create(TileEntityOxygenDistributor::new, OXYGEN_BUBBLE_DISTRIBUTOR).build(null), GCBlockNames.OXYGEN_BUBBLE_DISTRIBUTOR);
-        register(r, TileEntityType.Builder.create(TileEntityOxygenCollector::new, OXYGEN_COLLECTOR).build(null), GCBlockNames.OXYGEN_COLLECTOR);
-        register(r, TileEntityType.Builder.create(TileEntityFluidPipe::new, FLUID_PIPE, PULLED_FLUID_PIPE).build(null), GCBlockNames.FLUID_PIPE);
-        register(r, TileEntityType.Builder.create(TileEntityAirLock::new, AIR_LOCK_FRAME).build(null), GCBlockNames.AIR_LOCK_FRAME);
-        register(r, TileEntityType.Builder.create(TileEntityRefinery::new, REFINERY).build(null), GCBlockNames.REFINERY);
-        register(r, TileEntityType.Builder.create(TileEntityNasaWorkbench::new, ROCKET_WORKBENCH).build(null), GCBlockNames.ROCKET_WORKBENCH);
-        register(r, TileEntityType.Builder.create(TileEntityDeconstructor::new, DECONSTRUCTOR).build(null), GCBlockNames.DECONSTRUCTOR);
-        register(r, TileEntityType.Builder.create(TileEntityOxygenCompressor::new, OXYGEN_COMPRESSOR).build(null), GCBlockNames.OXYGEN_COMPRESSOR);
-        register(r, TileEntityType.Builder.create(TileEntityOxygenDecompressor::new, OXYGEN_DECOMPRESSOR).build(null), GCBlockNames.OXYGEN_DECOMPRESSOR);
-        register(r, TileEntityType.Builder.create(TileEntityFuelLoader::new, FUEL_LOADER).build(null), GCBlockNames.FUEL_LOADER);
-        register(r, TileEntityType.Builder.create(TileEntityLandingPadSingle::new, ROCKET_LAUNCH_PAD).build(null), GCBlockNames.ROCKET_LAUNCH_PAD);
-        register(r, TileEntityType.Builder.create(TileEntityLandingPad::new, FULL_ROCKET_LAUNCH_PAD).build(null), GCBlockNames.FULL_ROCKET_LAUNCH_PAD);
-        register(r, TileEntityType.Builder.create(TileEntitySpaceStationBase::new, SPACE_STATION_BASE).build(null), GCBlockNames.SPACE_STATION_BASE);
-        register(r, TileEntityType.Builder.create(TileEntityFake::new, MULTI_BLOCK).build(null), GCBlockNames.MULTI_BLOCK);
-        register(r, TileEntityType.Builder.create(TileEntityOxygenSealer::new, OXYGEN_SEALER).build(null), GCBlockNames.OXYGEN_SEALER);
-        register(r, TileEntityType.Builder.create(TileEntityDungeonSpawner::new, MOON_BOSS_SPAWNER).build(null), GCBlockNames.MOON_BOSS_SPAWNER);
-        register(r, TileEntityType.Builder.create(TileEntityOxygenDetector::new, OXYGEN_DETECTOR).build(null), GCBlockNames.OXYGEN_DETECTOR);
-        register(r, TileEntityType.Builder.create(TileEntityBuggyFueler::new, FULL_BUGGY_FUELING_PAD).build(null), GCBlockNames.FULL_BUGGY_FUELING_PAD);
-        register(r, TileEntityType.Builder.create(TileEntityBuggyFuelerSingle::new, BUGGY_FUELING_PAD).build(null), GCBlockNames.BUGGY_FUELING_PAD);
-        register(r, TileEntityType.Builder.create(TileEntityCargoLoader::new, CARGO_LOADER).build(null), GCBlockNames.CARGO_LOADER);
-        register(r, TileEntityType.Builder.create(TileEntityCargoUnloader::new, CARGO_UNLOADER).build(null), GCBlockNames.CARGO_UNLOADER);
-        register(r, TileEntityType.Builder.create(TileEntityParaChest::new, PARACHEST).build(null), GCBlockNames.PARACHEST);
-        register(r, TileEntityType.Builder.create(TileEntitySolar.TileEntitySolarT1::new, BASIC_SOLAR_PANEL).build(null), GCBlockNames.BASIC_SOLAR_PANEL);
-        register(r, TileEntityType.Builder.create(TileEntitySolar.TileEntitySolarT2::new, ADVANCED_SOLAR_PANEL).build(null), GCBlockNames.ADVANCED_SOLAR_PANEL);
+        register(r, BlockEntityType.Builder.of(TileEntityTreasureChest::new, TIER_1_TREASURE_CHEST).build(null), GCBlockNames.TIER_1_TREASURE_CHEST);
+        register(r, BlockEntityType.Builder.of(TileEntityOxygenDistributor::new, OXYGEN_BUBBLE_DISTRIBUTOR).build(null), GCBlockNames.OXYGEN_BUBBLE_DISTRIBUTOR);
+        register(r, BlockEntityType.Builder.of(TileEntityOxygenCollector::new, OXYGEN_COLLECTOR).build(null), GCBlockNames.OXYGEN_COLLECTOR);
+        register(r, BlockEntityType.Builder.of(TileEntityFluidPipe::new, FLUID_PIPE, PULLED_FLUID_PIPE).build(null), GCBlockNames.FLUID_PIPE);
+        register(r, BlockEntityType.Builder.of(TileEntityAirLock::new, AIR_LOCK_FRAME).build(null), GCBlockNames.AIR_LOCK_FRAME);
+        register(r, BlockEntityType.Builder.of(TileEntityRefinery::new, REFINERY).build(null), GCBlockNames.REFINERY);
+        register(r, BlockEntityType.Builder.of(TileEntityNasaWorkbench::new, ROCKET_WORKBENCH).build(null), GCBlockNames.ROCKET_WORKBENCH);
+        register(r, BlockEntityType.Builder.of(TileEntityDeconstructor::new, DECONSTRUCTOR).build(null), GCBlockNames.DECONSTRUCTOR);
+        register(r, BlockEntityType.Builder.of(TileEntityOxygenCompressor::new, OXYGEN_COMPRESSOR).build(null), GCBlockNames.OXYGEN_COMPRESSOR);
+        register(r, BlockEntityType.Builder.of(TileEntityOxygenDecompressor::new, OXYGEN_DECOMPRESSOR).build(null), GCBlockNames.OXYGEN_DECOMPRESSOR);
+        register(r, BlockEntityType.Builder.of(TileEntityFuelLoader::new, FUEL_LOADER).build(null), GCBlockNames.FUEL_LOADER);
+        register(r, BlockEntityType.Builder.of(TileEntityLandingPadSingle::new, ROCKET_LAUNCH_PAD).build(null), GCBlockNames.ROCKET_LAUNCH_PAD);
+        register(r, BlockEntityType.Builder.of(TileEntityLandingPad::new, FULL_ROCKET_LAUNCH_PAD).build(null), GCBlockNames.FULL_ROCKET_LAUNCH_PAD);
+        register(r, BlockEntityType.Builder.of(TileEntitySpaceStationBase::new, SPACE_STATION_BASE).build(null), GCBlockNames.SPACE_STATION_BASE);
+        register(r, BlockEntityType.Builder.of(TileEntityFake::new, MULTI_BLOCK).build(null), GCBlockNames.MULTI_BLOCK);
+        register(r, BlockEntityType.Builder.of(TileEntityOxygenSealer::new, OXYGEN_SEALER).build(null), GCBlockNames.OXYGEN_SEALER);
+        register(r, BlockEntityType.Builder.of(TileEntityDungeonSpawner::new, MOON_BOSS_SPAWNER).build(null), GCBlockNames.MOON_BOSS_SPAWNER);
+        register(r, BlockEntityType.Builder.of(TileEntityOxygenDetector::new, OXYGEN_DETECTOR).build(null), GCBlockNames.OXYGEN_DETECTOR);
+        register(r, BlockEntityType.Builder.of(TileEntityBuggyFueler::new, FULL_BUGGY_FUELING_PAD).build(null), GCBlockNames.FULL_BUGGY_FUELING_PAD);
+        register(r, BlockEntityType.Builder.of(TileEntityBuggyFuelerSingle::new, BUGGY_FUELING_PAD).build(null), GCBlockNames.BUGGY_FUELING_PAD);
+        register(r, BlockEntityType.Builder.of(TileEntityCargoLoader::new, CARGO_LOADER).build(null), GCBlockNames.CARGO_LOADER);
+        register(r, BlockEntityType.Builder.of(TileEntityCargoUnloader::new, CARGO_UNLOADER).build(null), GCBlockNames.CARGO_UNLOADER);
+        register(r, BlockEntityType.Builder.of(TileEntityParaChest::new, PARACHEST).build(null), GCBlockNames.PARACHEST);
+        register(r, BlockEntityType.Builder.of(TileEntitySolar.TileEntitySolarT1::new, BASIC_SOLAR_PANEL).build(null), GCBlockNames.BASIC_SOLAR_PANEL);
+        register(r, BlockEntityType.Builder.of(TileEntitySolar.TileEntitySolarT2::new, ADVANCED_SOLAR_PANEL).build(null), GCBlockNames.ADVANCED_SOLAR_PANEL);
 //        register(r, TileEntityType.Builder.create(TileEntityDish::new, radioTelescope).build(null), BlockNames.radioTelescope);
-        register(r, TileEntityType.Builder.create(TileEntityCrafting::new, MAGNETIC_CRAFTING_TABLE).build(null), GCBlockNames.MAGNETIC_CRAFTING_TABLE);
-        register(r, TileEntityType.Builder.create(TileEntityEnergyStorageModule.TileEntityEnergyStorageModuleT1::new, ENERGY_STORAGE).build(null), GCBlockNames.ENERGY_STORAGE);
-        register(r, TileEntityType.Builder.create(TileEntityEnergyStorageModule.TileEntityEnergyStorageModuleT2::new, ENERGY_STORAGE_CLUSTER).build(null), GCBlockNames.ENERGY_STORAGE_CLUSTER);
-        register(r, TileEntityType.Builder.create(TileEntityCoalGenerator::new, COAL_GENERATOR).build(null), GCBlockNames.COAL_GENERATOR);
-        register(r, TileEntityType.Builder.create(TileEntityElectricFurnace.TileEntityElectricFurnaceT1::new, ELECTRIC_FURNACE).build(null), GCBlockNames.ELECTRIC_FURNACE);
-        register(r, TileEntityType.Builder.create(TileEntityElectricFurnace.TileEntityElectricFurnaceT2::new, ELECTRIC_ARC_FURNACE).build(null), GCBlockNames.ELECTRIC_ARC_FURNACE);
-        register(r, TileEntityType.Builder.create(TileEntityAluminumWire.TileEntityAluminumWireT1::new, ALUMINUM_WIRE).build(null), GCBlockNames.ALUMINUM_WIRE);
-        register(r, TileEntityType.Builder.create(TileEntityAluminumWire.TileEntityAluminumWireT2::new, HEAVY_ALUMINUM_WIRE).build(null), GCBlockNames.HEAVY_ALUMINUM_WIRE);
-        register(r, TileEntityType.Builder.create(TileEntityAluminumWireSwitch.TileEntityAluminumWireSwitchableT1::new, SWITCHABLE_ALUMINUM_WIRE).build(null), GCBlockNames.SWITCHABLE_ALUMINUM_WIRE);
-        register(r, TileEntityType.Builder.create(TileEntityAluminumWireSwitch.TileEntityAluminumWireSwitchableT2::new, SWITCHABLE_HEAVY_ALUMINUM_WIRE).build(null), GCBlockNames.SWITCHABLE_HEAVY_ALUMINUM_WIRE);
+        register(r, BlockEntityType.Builder.of(TileEntityCrafting::new, MAGNETIC_CRAFTING_TABLE).build(null), GCBlockNames.MAGNETIC_CRAFTING_TABLE);
+        register(r, BlockEntityType.Builder.of(TileEntityEnergyStorageModule.TileEntityEnergyStorageModuleT1::new, ENERGY_STORAGE).build(null), GCBlockNames.ENERGY_STORAGE);
+        register(r, BlockEntityType.Builder.of(TileEntityEnergyStorageModule.TileEntityEnergyStorageModuleT2::new, ENERGY_STORAGE_CLUSTER).build(null), GCBlockNames.ENERGY_STORAGE_CLUSTER);
+        register(r, BlockEntityType.Builder.of(TileEntityCoalGenerator::new, COAL_GENERATOR).build(null), GCBlockNames.COAL_GENERATOR);
+        register(r, BlockEntityType.Builder.of(TileEntityElectricFurnace.TileEntityElectricFurnaceT1::new, ELECTRIC_FURNACE).build(null), GCBlockNames.ELECTRIC_FURNACE);
+        register(r, BlockEntityType.Builder.of(TileEntityElectricFurnace.TileEntityElectricFurnaceT2::new, ELECTRIC_ARC_FURNACE).build(null), GCBlockNames.ELECTRIC_ARC_FURNACE);
+        register(r, BlockEntityType.Builder.of(TileEntityAluminumWire.TileEntityAluminumWireT1::new, ALUMINUM_WIRE).build(null), GCBlockNames.ALUMINUM_WIRE);
+        register(r, BlockEntityType.Builder.of(TileEntityAluminumWire.TileEntityAluminumWireT2::new, HEAVY_ALUMINUM_WIRE).build(null), GCBlockNames.HEAVY_ALUMINUM_WIRE);
+        register(r, BlockEntityType.Builder.of(TileEntityAluminumWireSwitch.TileEntityAluminumWireSwitchableT1::new, SWITCHABLE_ALUMINUM_WIRE).build(null), GCBlockNames.SWITCHABLE_ALUMINUM_WIRE);
+        register(r, BlockEntityType.Builder.of(TileEntityAluminumWireSwitch.TileEntityAluminumWireSwitchableT2::new, SWITCHABLE_HEAVY_ALUMINUM_WIRE).build(null), GCBlockNames.SWITCHABLE_HEAVY_ALUMINUM_WIRE);
 //        register(r, TileEntityType.Builder.create(TileEntityAluminumWireSwitch::new, "GC Switchable Aluminum Wire").build(null));
-        register(r, TileEntityType.Builder.create(TileEntityFallenMeteor::new, FALLEN_METEOR).build(null), GCBlockNames.FALLEN_METEOR);
-        register(r, TileEntityType.Builder.create(TileEntityIngotCompressor::new, COMPRESSOR).build(null), GCBlockNames.COMPRESSOR);
-        register(r, TileEntityType.Builder.create(TileEntityElectricIngotCompressor.TileEntityElectricIngotCompressorT1::new, ELECTRIC_COMPRESSOR).build(null), GCBlockNames.ELECTRIC_COMPRESSOR);
-        register(r, TileEntityType.Builder.create(TileEntityElectricIngotCompressor.TileEntityElectricIngotCompressorT2::new, ADVANCED_COMPRESSOR).build(null), GCBlockNames.ADVANCED_COMPRESSOR);
-        register(r, TileEntityType.Builder.create(TileEntityCircuitFabricator::new, CIRCUIT_FABRICATOR).build(null), GCBlockNames.CIRCUIT_FABRICATOR);
-        register(r, TileEntityType.Builder.create(TileEntityAirLockController::new, AIR_LOCK_CONTROLLER).build(null), GCBlockNames.AIR_LOCK_CONTROLLER);
-        register(r, TileEntityType.Builder.create(TileEntityOxygenStorageModule::new, OXYGEN_STORAGE_MODULE).build(null), GCBlockNames.OXYGEN_STORAGE_MODULE);
+        register(r, BlockEntityType.Builder.of(TileEntityFallenMeteor::new, FALLEN_METEOR).build(null), GCBlockNames.FALLEN_METEOR);
+        register(r, BlockEntityType.Builder.of(TileEntityIngotCompressor::new, COMPRESSOR).build(null), GCBlockNames.COMPRESSOR);
+        register(r, BlockEntityType.Builder.of(TileEntityElectricIngotCompressor.TileEntityElectricIngotCompressorT1::new, ELECTRIC_COMPRESSOR).build(null), GCBlockNames.ELECTRIC_COMPRESSOR);
+        register(r, BlockEntityType.Builder.of(TileEntityElectricIngotCompressor.TileEntityElectricIngotCompressorT2::new, ADVANCED_COMPRESSOR).build(null), GCBlockNames.ADVANCED_COMPRESSOR);
+        register(r, BlockEntityType.Builder.of(TileEntityCircuitFabricator::new, CIRCUIT_FABRICATOR).build(null), GCBlockNames.CIRCUIT_FABRICATOR);
+        register(r, BlockEntityType.Builder.of(TileEntityAirLockController::new, AIR_LOCK_CONTROLLER).build(null), GCBlockNames.AIR_LOCK_CONTROLLER);
+        register(r, BlockEntityType.Builder.of(TileEntityOxygenStorageModule::new, OXYGEN_STORAGE_MODULE).build(null), GCBlockNames.OXYGEN_STORAGE_MODULE);
 //        register(r, TileEntityType.Builder.create(TileEntityThruster::new, spinThruster).build(null), BlockNames.spinThruster);
-        register(r, TileEntityType.Builder.create(TileEntityArclamp::new, ARC_LAMP).build(null), GCBlockNames.ARC_LAMP);
-        register(r, TileEntityType.Builder.create(TileEntityScreen::new, DISPLAY_SCREEN).build(null), GCBlockNames.DISPLAY_SCREEN);
+        register(r, BlockEntityType.Builder.of(TileEntityArclamp::new, ARC_LAMP).build(null), GCBlockNames.ARC_LAMP);
+        register(r, BlockEntityType.Builder.of(TileEntityScreen::new, DISPLAY_SCREEN).build(null), GCBlockNames.DISPLAY_SCREEN);
 //        register(r, TileEntityType.Builder.create(TileEntityPanelLight::new, panelLighting).build(null), BlockNames.panelLighting);
-        register(r, TileEntityType.Builder.create(TileEntityTelemetry::new, TELEMETRY_UNIT).build(null), GCBlockNames.TELEMETRY_UNIT);
-        register(r, TileEntityType.Builder.create(TileEntityPainter::new, CHROMATIC_APPLICATOR).build(null), GCBlockNames.CHROMATIC_APPLICATOR);
-        register(r, TileEntityType.Builder.create(TileEntityFluidTank::new, FLUID_TANK).build(null), GCBlockNames.FLUID_TANK);
-        register(r, TileEntityType.Builder.create(TileEntityPlayerDetector::new, PLAYER_DETECTOR).build(null), GCBlockNames.PLAYER_DETECTOR);
-        register(r, TileEntityType.Builder.create(TileEntityPlatform::new, HYDRAULIC_PLATFORM).build(null), GCBlockNames.HYDRAULIC_PLATFORM);
-        register(r, TileEntityType.Builder.create(TileEntityEmergencyBox::new, EMERGENCY_POST, EMERGENCY_POST_KIT).build(null), GCBlockNames.EMERGENCY_POST);
+        register(r, BlockEntityType.Builder.of(TileEntityTelemetry::new, TELEMETRY_UNIT).build(null), GCBlockNames.TELEMETRY_UNIT);
+        register(r, BlockEntityType.Builder.of(TileEntityPainter::new, CHROMATIC_APPLICATOR).build(null), GCBlockNames.CHROMATIC_APPLICATOR);
+        register(r, BlockEntityType.Builder.of(TileEntityFluidTank::new, FLUID_TANK).build(null), GCBlockNames.FLUID_TANK);
+        register(r, BlockEntityType.Builder.of(TileEntityPlayerDetector::new, PLAYER_DETECTOR).build(null), GCBlockNames.PLAYER_DETECTOR);
+        register(r, BlockEntityType.Builder.of(TileEntityPlatform::new, HYDRAULIC_PLATFORM).build(null), GCBlockNames.HYDRAULIC_PLATFORM);
+        register(r, BlockEntityType.Builder.of(TileEntityEmergencyBox::new, EMERGENCY_POST, EMERGENCY_POST_KIT).build(null), GCBlockNames.EMERGENCY_POST);
 //        register(r, TileEntityType.Builder.create(TileEntityNull::new, "GC Null Tile").build(null));
     }
 }

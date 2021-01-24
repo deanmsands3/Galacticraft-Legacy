@@ -1,50 +1,58 @@
 package micdoodle8.mods.galacticraft.core.entities;
 
 import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.passive.OcelotEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.world.World;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.SwellGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Ocelot;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.SharedMonsterAttributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import java.util.UUID;
 
-public class EvolvedCreeperEntity extends CreeperEntity implements IEntityBreathable
+public class EvolvedCreeperEntity extends Creeper implements IEntityBreathable
 {
     //    private float sizeXBase = -1.0F;
 //    private float sizeYBase;
-    private static final DataParameter<Boolean> IS_CHILD = EntityDataManager.createKey(EvolvedCreeperEntity.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_CHILD = SynchedEntityData.defineId(EvolvedCreeperEntity.class, EntityDataSerializers.BOOLEAN);
     private static final UUID babySpeedBoostUUID = UUID.fromString("ef67a435-32a4-4efd-b218-e7431438b109");
     private static final AttributeModifier babySpeedBoostModifier = new AttributeModifier(babySpeedBoostUUID, "Baby speed boost evolved creeper", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
 
-    public EvolvedCreeperEntity(EntityType<? extends EvolvedCreeperEntity> type, World worldIn)
+    public EvolvedCreeperEntity(EntityType<? extends EvolvedCreeperEntity> type, Level worldIn)
     {
         super(type, worldIn);
-        this.goalSelector.goals.clear();
-        this.goalSelector.addGoal(1, new SwimGoal(this));
-        this.goalSelector.addGoal(2, new CreeperSwellGoal(this));
-        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
+        this.goalSelector.availableGoals.clear();
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new SwellGoal(this));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0D, 1.2D));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(5, new RandomWalkingGoal(this, 0.8D));
-        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.8D));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
-        super.registerData();
-        this.dataManager.register(IS_CHILD, false);
+        super.defineSynchedData();
+        this.entityData.define(IS_CHILD, false);
     }
 
     @Override
@@ -55,20 +63,20 @@ public class EvolvedCreeperEntity extends CreeperEntity implements IEntityBreath
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        super.writeAdditional(nbt);
+        super.addAdditionalSaveData(nbt);
 
-        if (this.isChild())
+        if (this.isBaby())
         {
             nbt.putBoolean("IsBaby", true);
         }
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
-        super.readAdditional(nbt);
+        super.readAdditionalSaveData(nbt);
 
         if (nbt.getBoolean("IsBaby"))
         {
@@ -107,34 +115,34 @@ public class EvolvedCreeperEntity extends CreeperEntity implements IEntityBreath
 //    }
 
     @Override
-    public boolean isChild()
+    public boolean isBaby()
     {
-        return this.dataManager.get(IS_CHILD);
+        return this.entityData.get(IS_CHILD);
     }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity p_70693_1_)
+    protected int getExperienceReward(Player p_70693_1_)
     {
-        if (this.isChild())
+        if (this.isBaby())
         {
-            this.experienceValue = (this.experienceValue * 5) / 2;
+            this.xpReward = (this.xpReward * 5) / 2;
         }
 
-        return super.getExperiencePoints(p_70693_1_);
+        return super.getExperienceReward(p_70693_1_);
     }
 
     public void setChild(boolean isChild)
     {
-        this.dataManager.set(IS_CHILD, isChild);
+        this.entityData.set(IS_CHILD, isChild);
 
-        if (this.world != null && !this.world.isRemote)
+        if (this.level != null && !this.level.isClientSide)
         {
-            IAttributeInstance iattributeinstance = this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+            AttributeInstance iattributeinstance = this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
             iattributeinstance.removeModifier(babySpeedBoostModifier);
 
             if (isChild)
             {
-                iattributeinstance.applyModifier(babySpeedBoostModifier);
+                iattributeinstance.addModifier(babySpeedBoostModifier);
             }
         }
 

@@ -6,24 +6,24 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityFluidTank;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.FluidUtil;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,30 +34,30 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
 {
     public static final BooleanProperty UP = BooleanProperty.create("up");
     public static final BooleanProperty DOWN = BooleanProperty.create("down");
-    private static final VoxelShape BOUNDS = VoxelShapes.create(0.05F, 0.0F, 0.05F, 0.95F, 1.0F, 0.95F);
+    private static final VoxelShape BOUNDS = Shapes.box(0.05F, 0.0F, 0.05F, 0.95F, 1.0F, 0.95F);
 
     public BlockFluidTank(Properties builder)
     {
         super(builder);
-        this.setDefaultState(this.stateContainer.getBaseState().with(UP, false).with(DOWN, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(UP, false).setValue(DOWN, false));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         return BOUNDS;
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        TileEntity tile = worldIn.getTileEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof TileEntityFluidTank)
         {
             TileEntityFluidTank tank = (TileEntityFluidTank) tile;
 //            tank.onBreak(); TODO Spill event needed?
         }
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
 //    @Override
@@ -87,7 +87,7 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -97,17 +97,17 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(UP, DOWN);
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos)
     {
-        BlockState stateAbove = worldIn.getBlockState(currentPos.up());
-        BlockState stateBelow = worldIn.getBlockState(currentPos.down());
-        return stateIn.with(UP, stateAbove.getBlock() == this).with(DOWN, stateBelow.getBlock() == this);
+        BlockState stateAbove = worldIn.getBlockState(currentPos.above());
+        BlockState stateBelow = worldIn.getBlockState(currentPos.below());
+        return stateIn.setValue(UP, stateAbove.getBlock() == this).setValue(DOWN, stateBelow.getBlock() == this);
     }
 
     //    @Override
@@ -119,7 +119,7 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
 //    }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return new TileEntityFluidTank();
     }
@@ -158,9 +158,9 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
 //    }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit)
     {
-        if (super.onBlockActivated(state, worldIn, pos, playerIn, hand, hit) == ActionResultType.SUCCESS)
+        if (super.use(state, worldIn, pos, playerIn, hand, hit) == ActionResultType.SUCCESS)
         {
             return ActionResultType.SUCCESS;
         }
@@ -170,12 +170,12 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
         	return ActionResultType.PASS;
         }
 
-        ItemStack current = playerIn.inventory.getCurrentItem();
-        int slot = playerIn.inventory.currentItem;
+        ItemStack current = playerIn.inventory.getSelected();
+        int slot = playerIn.inventory.selected;
 
         if (!current.isEmpty())
         {
-            TileEntity tile = worldIn.getTileEntity(pos);
+            BlockEntity tile = worldIn.getBlockEntity(pos);
 
             if (tile instanceof TileEntityFluidTank)
             {
@@ -187,10 +187,10 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
                     FluidActionResult forgeResult = FluidUtil.interactWithFluidHandler(current, holder.orElse(null), playerIn);
                     if (forgeResult.isSuccess())
                     {
-                        playerIn.inventory.setInventorySlotContents(slot, forgeResult.result);
-                        if (playerIn.container != null)
+                        playerIn.inventory.setItem(slot, forgeResult.result);
+                        if (playerIn.inventoryMenu != null)
                         {
-                            playerIn.container.detectAndSendChanges();
+                            playerIn.inventoryMenu.broadcastChanges();
                         }
                         return ActionResultType.SUCCESS;
                     }
@@ -204,9 +204,9 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos)
+    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos)
     {
-        TileEntity tile = world.getTileEntity(pos);
+        BlockEntity tile = world.getBlockEntity(pos);
 
         if (tile instanceof TileEntityFluidTank)
         {

@@ -8,23 +8,23 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.blocks.BlockAdvanced;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class TileEntityFake extends TileEntity
+public class TileEntityFake extends BlockEntity
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.MULTI_BLOCK)
-    public static TileEntityType<TileEntityFake> TYPE;
+    public static BlockEntityType<TileEntityFake> TYPE;
     //NOTE: No need for networking in 1.8+: see comment in initialiseMultiTiles()
 
     // The the position of the main block
@@ -35,7 +35,7 @@ public class TileEntityFake extends TileEntity
         this(TYPE);
     }
 
-    public TileEntityFake(TileEntityType<?> type)
+    public TileEntityFake(BlockEntityType<?> type)
     {
         super(type);
     }
@@ -60,7 +60,7 @@ public class TileEntityFake extends TileEntity
     {
         if (this.mainBlockPosition != null)
         {
-            TileEntity tileEntity = this.world.getTileEntity(this.mainBlockPosition);
+            BlockEntity tileEntity = this.level.getBlockEntity(this.mainBlockPosition);
 
             if (tileEntity instanceof IMultiBlock)
             {
@@ -70,11 +70,11 @@ public class TileEntityFake extends TileEntity
         }
     }
 
-    public ActionResultType onBlockActivated(World worldIn, BlockPos pos, PlayerEntity player)
+    public InteractionResult onBlockActivated(Level worldIn, BlockPos pos, Player player)
     {
         if (this.mainBlockPosition != null)
         {
-            TileEntity tileEntity = this.world.getTileEntity(this.mainBlockPosition);
+            BlockEntity tileEntity = this.level.getBlockEntity(this.mainBlockPosition);
 
             if (tileEntity instanceof IMultiBlock)
             {
@@ -85,26 +85,26 @@ public class TileEntityFake extends TileEntity
         return ActionResultType.PASS;
     }
 
-    public ActionResultType onBlockWrenched(World world, BlockPos pos, PlayerEntity entityPlayer, Hand hand, BlockRayTraceResult hit)
+    public InteractionResult onBlockWrenched(Level world, BlockPos pos, Player entityPlayer, InteractionHand hand, BlockHitResult hit)
     {
         if (this.mainBlockPosition != null)
         {
-            BlockState state = this.world.getBlockState(this.mainBlockPosition);
+            BlockState state = this.level.getBlockState(this.mainBlockPosition);
 
             if (state.getBlock() instanceof BlockAdvanced)
             {
-                return ((BlockAdvanced) state.getBlock()).onBlockActivated(state, world, this.mainBlockPosition, entityPlayer, hand, hit);
+                return ((BlockAdvanced) state.getBlock()).use(state, world, this.mainBlockPosition, entityPlayer, hand, hit);
             }
         }
 
         return ActionResultType.PASS;
     }
 
-    public TileEntity getMainBlockTile()
+    public BlockEntity getMainBlockTile()
     {
         if (this.mainBlockPosition != null)
         {
-            return this.world.getTileEntity(this.mainBlockPosition);
+            return this.level.getBlockEntity(this.mainBlockPosition);
         }
 
         return null;
@@ -114,10 +114,10 @@ public class TileEntityFake extends TileEntity
      * Reads a tile entity from NBT.
      */
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
-        CompoundNBT tag = nbt.getCompound("mainBlockPosition");
+        super.load(nbt);
+        CompoundTag tag = nbt.getCompound("mainBlockPosition");
         this.mainBlockPosition = new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
     }
 
@@ -125,13 +125,13 @@ public class TileEntityFake extends TileEntity
      * Writes a tile entity to NBT.
      */
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
 
         if (this.mainBlockPosition != null)
         {
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
             tag.putInt("x", this.mainBlockPosition.getX());
             tag.putInt("y", this.mainBlockPosition.getY());
             tag.putInt("z", this.mainBlockPosition.getZ());
@@ -141,12 +141,12 @@ public class TileEntityFake extends TileEntity
         return nbt;
     }
 
-    protected boolean initialiseMultiTiles(BlockPos pos, World world)
+    protected boolean initialiseMultiTiles(BlockPos pos, Level world)
     {
         IMultiBlock thisTile = (IMultiBlock) this;
 
         //Client can create its own fake blocks and tiles - no need for networking in 1.8+
-        if (world.isRemote)
+        if (world.isClientSide)
         {
             thisTile.onCreate(world, pos);
         }
@@ -156,7 +156,7 @@ public class TileEntityFake extends TileEntity
         boolean result = true;
         for (BlockPos vecToAdd : positions)
         {
-            TileEntity tile = world.getTileEntity(vecToAdd);
+            BlockEntity tile = world.getBlockEntity(vecToAdd);
             if (tile instanceof TileEntityFake)
             {
                 ((TileEntityFake) tile).mainBlockPosition = pos;
@@ -166,16 +166,16 @@ public class TileEntityFake extends TileEntity
                 Block b = world.getBlockState(vecToAdd).getBlock();
                 if (!(b instanceof BlockMulti))
                 {
-                    world.setBlockState(vecToAdd, GCBlocks.MULTI_BLOCK.getDefaultState().with(BlockMulti.MULTI_TYPE, thisTile.getMultiType()), 2);
+                    world.setBlock(vecToAdd, GCBlocks.MULTI_BLOCK.defaultBlockState().setValue(BlockMulti.MULTI_TYPE, thisTile.getMultiType()), 2);
                 }
-                world.setTileEntity(vecToAdd, new TileEntityFake(pos));
+                world.setBlockEntity(vecToAdd, new TileEntityFake(pos));
             }
             else
             {
                 result = false;
             }
         }
-        if (result == false && !world.isRemote)
+        if (result == false && !world.isClientSide)
         {
 //            //Try again to create all the multiblocks - currently disabled because making new tiles here interferes with server->client tileEntity sync during worldgen (Abandoned Base)
 //            thisTile.onCreate(world, pos);

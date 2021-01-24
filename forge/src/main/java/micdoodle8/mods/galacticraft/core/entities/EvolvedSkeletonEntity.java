@@ -6,29 +6,24 @@ import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Effects;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.SharedMonsterAttributes;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 
-public class EvolvedSkeletonEntity extends SkeletonEntity implements IEntityBreathable, ITumblable
+public class EvolvedSkeletonEntity extends Skeleton implements IEntityBreathable, ITumblable
 {
-    private static final DataParameter<Float> SPIN_PITCH = EntityDataManager.createKey(EvolvedSkeletonEntity.class, DataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> SPIN_PITCH = SynchedEntityData.defineId(EvolvedSkeletonEntity.class, EntityDataSerializers.FLOAT);
     private float tumbling = 0F;
     private float tumbleAngle = 0F;
 
-    public EvolvedSkeletonEntity(EntityType<? extends EvolvedSkeletonEntity> type, World worldIn)
+    public EvolvedSkeletonEntity(EntityType<? extends EvolvedSkeletonEntity> type, Level worldIn)
     {
         super(type, worldIn);
     }
@@ -123,7 +118,7 @@ public class EvolvedSkeletonEntity extends SkeletonEntity implements IEntityBrea
         {
             if (this.tumbling == 0F)
             {
-                this.tumbling = (this.world.rand.nextFloat() + 0.5F) * value;
+                this.tumbling = (this.level.random.nextFloat() + 0.5F) * value;
             }
         }
         else
@@ -146,7 +141,7 @@ public class EvolvedSkeletonEntity extends SkeletonEntity implements IEntityBrea
                 }
             }
 
-            if (!this.world.isRemote)
+            if (!this.level.isClientSide)
             {
                 this.setSpinPitch(this.tumbling);
             }
@@ -167,34 +162,34 @@ public class EvolvedSkeletonEntity extends SkeletonEntity implements IEntityBrea
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
-        super.registerData();
-        this.getDataManager().register(SPIN_PITCH, 0.0F);
+        super.defineSynchedData();
+        this.getEntityData().define(SPIN_PITCH, 0.0F);
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
-        super.readAdditional(nbt);
+        super.readAdditionalSaveData(nbt);
         this.tumbling = nbt.getFloat("tumbling");
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        super.writeAdditional(nbt);
+        super.addAdditionalSaveData(nbt);
         nbt.putFloat("tumbling", this.tumbling);
     }
 
     public float getSpinPitch()
     {
-        return this.getDataManager().get(SPIN_PITCH);
+        return this.getEntityData().get(SPIN_PITCH);
     }
 
     public void setSpinPitch(float pitch)
     {
-        this.getDataManager().set(SPIN_PITCH, pitch);
+        this.getEntityData().set(SPIN_PITCH, pitch);
     }
 
     @Override
@@ -217,22 +212,22 @@ public class EvolvedSkeletonEntity extends SkeletonEntity implements IEntityBrea
     @Override
     public float getTumbleAxisX()
     {
-        double velocity2 = this.getMotion().x * this.getMotion().x + this.getMotion().z * this.getMotion().z;
+        double velocity2 = this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().z * this.getDeltaMovement().z;
         if (velocity2 == 0D)
         {
             return 1F;
         }
-        return (float) (this.getMotion().z / MathHelper.sqrt(velocity2));
+        return (float) (this.getDeltaMovement().z / Mth.sqrt(velocity2));
     }
 
     @Override
     public float getTumbleAxisZ()
     {
-        double velocity2 = this.getMotion().x * this.getMotion().x + this.getMotion().z * this.getMotion().z;
+        double velocity2 = this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().z * this.getDeltaMovement().z;
         if (velocity2 == 0D)
         {
             return 0F;
         }
-        return (float) (this.getMotion().x / MathHelper.sqrt(velocity2));
+        return (float) (this.getDeltaMovement().x / Mth.sqrt(velocity2));
     }
 }

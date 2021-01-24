@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.planets.venus.dimension;
 
-import net.minecraft.world.gen.GenerationSettings;
+import net.minecraft.world.level.levelgen.ChunkGeneratorSettings;
 
-public class VenusGenSettings extends GenerationSettings
+public class VenusGenSettings extends ChunkGeneratorSettings
 {
     public int getBiomeSize()
     {
@@ -20,7 +20,7 @@ public class VenusGenSettings extends GenerationSettings
     }
 
     @Override
-    public int getBedrockFloorHeight()
+    public int getBedrockFloorPosition()
     {
         return 0;
     }

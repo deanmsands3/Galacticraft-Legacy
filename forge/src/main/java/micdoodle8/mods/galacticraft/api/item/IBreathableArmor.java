@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.item;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Implement into Armor items
@@ -31,5 +31,5 @@ public interface IBreathableArmor
      * @return true if this armor item is valid for the provided oxygen gear
      * type
      */
-    boolean canBreathe(ItemStack helmetInSlot, PlayerEntity playerWearing, EnumGearType type);
+    boolean canBreathe(ItemStack helmetInSlot, Player playerWearing, EnumGearType type);
 }

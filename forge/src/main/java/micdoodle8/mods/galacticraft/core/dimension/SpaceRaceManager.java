@@ -13,16 +13,14 @@ import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FlagData;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,11 +48,11 @@ public class SpaceRaceManager
         {
             boolean playerOnline = false;
 
-            for (ServerPlayerEntity player : PlayerUtil.getPlayersOnline())
+            for (ServerPlayer player : PlayerUtil.getPlayersOnline())
             {
                 if (race.getPlayerNames().contains(PlayerUtil.getName(player)))
                 {
-                    CelestialBody body = GalaxyRegistry.getCelestialBodyFromDimensionID(player.world.getDimension().getType());
+                    CelestialBody body = GalaxyRegistry.getCelestialBodyFromDimensionID(player.level.getDimension().getType());
 
                     if (body != null)
                     {
@@ -75,26 +73,26 @@ public class SpaceRaceManager
         }
     }
 
-    public static void loadSpaceRaces(CompoundNBT nbt)
+    public static void loadSpaceRaces(CompoundTag nbt)
     {
-        ListNBT tagList = nbt.getList("SpaceRaceList", 10);
+        ListTag tagList = nbt.getList("SpaceRaceList", 10);
 
         for (int i = 0; i < tagList.size(); i++)
         {
-            CompoundNBT nbt2 = tagList.getCompound(i);
+            CompoundTag nbt2 = tagList.getCompound(i);
             SpaceRace race = new SpaceRace();
             race.loadFromNBT(nbt2);
             SpaceRaceManager.spaceRaces.add(race);
         }
     }
 
-    public static CompoundNBT saveSpaceRaces(CompoundNBT nbt)
+    public static CompoundTag saveSpaceRaces(CompoundTag nbt)
     {
-        ListNBT tagList = new ListNBT();
+        ListTag tagList = new ListTag();
 
         for (SpaceRace race : SpaceRaceManager.spaceRaces)
         {
-            CompoundNBT nbt2 = new CompoundNBT();
+            CompoundTag nbt2 = new CompoundTag();
             race.saveToNBT(nbt2);
             tagList.add(nbt2);
         }
@@ -129,7 +127,7 @@ public class SpaceRaceManager
         return null;
     }
 
-    public static void sendSpaceRaceData(MinecraftServer theServer, ServerPlayerEntity toPlayer, SpaceRace spaceRace)
+    public static void sendSpaceRaceData(MinecraftServer theServer, ServerPlayer toPlayer, SpaceRace spaceRace)
     {
         if (spaceRace != null)
         {
@@ -142,12 +140,12 @@ public class SpaceRaceManager
 
             if (toPlayer != null)
             {
-                GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SPACE_RACE_DATA, GCCoreUtil.getDimensionType(toPlayer.world), objList), toPlayer);
+                GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SPACE_RACE_DATA, GCCoreUtil.getDimensionType(toPlayer.level), objList), toPlayer);
                 spaceRace.updatePlayerSchematics(toPlayer);
             }
             else
             {
-                for (ServerWorld server : theServer.getWorlds())
+                for (ServerLevel server : theServer.getAllLevels())
                 {
                     GalacticraftCore.packetPipeline.sendToDimension(new PacketSimple(EnumSimplePacket.C_UPDATE_SPACE_RACE_DATA, GCCoreUtil.getDimensionType(server), objList), GCCoreUtil.getDimensionType(server));
                 }
@@ -164,18 +162,18 @@ public class SpaceRaceManager
     {
         for (String member : race.getPlayerNames())
         {
-            ServerPlayerEntity memberObj = PlayerUtil.getPlayerForUsernameVanilla(server, member);
+            ServerPlayer memberObj = PlayerUtil.getPlayerForUsernameVanilla(server, member);
 
             if (memberObj != null)
             {
-                memberObj.sendMessage(new StringTextComponent(EnumColor.DARK_AQUA + GCCoreUtil.translateWithFormat("gui.space_race.chat.remove_success", EnumColor.RED + player + EnumColor.DARK_AQUA)).setStyle(new Style().setColor(TextFormatting.DARK_AQUA)));
+                memberObj.sendMessage(new TextComponent(EnumColor.DARK_AQUA + GCCoreUtil.translateWithFormat("gui.space_race.chat.remove_success", EnumColor.RED + player + EnumColor.DARK_AQUA)).setStyle(new Style().setColor(TextFormatting.DARK_AQUA)));
             }
         }
 
         List<String> playerList = new ArrayList<String>();
         playerList.add(player);
         SpaceRace newRace = SpaceRaceManager.addSpaceRace(new SpaceRace(playerList, SpaceRace.DEFAULT_NAME, new FlagData(48, 32), new Vector3(1, 1, 1)));
-        ServerPlayerEntity playerToRemove = PlayerUtil.getPlayerBaseServerFromPlayerUsername(server, player, true);
+        ServerPlayer playerToRemove = PlayerUtil.getPlayerBaseServerFromPlayerUsername(server, player, true);
 
         if (playerToRemove != null)
         {
@@ -184,7 +182,7 @@ public class SpaceRaceManager
         }
     }
 
-    public static void teamUnlockSchematic(ServerPlayerEntity player, ItemStack stack)
+    public static void teamUnlockSchematic(ServerPlayer player, ItemStack stack)
     {
         SpaceRace race = SpaceRaceManager.getSpaceRaceFromPlayer(PlayerUtil.getName(player));
         if (race == null)
@@ -199,7 +197,7 @@ public class SpaceRaceManager
                 continue;
             }
 
-            ServerPlayerEntity memberObj = PlayerUtil.getPlayerForUsernameVanilla(server, member);
+            ServerPlayer memberObj = PlayerUtil.getPlayerForUsernameVanilla(server, member);
             if (memberObj != null)
             {
                 SchematicRegistry.unlockNewPage(memberObj, stack);

@@ -19,12 +19,12 @@ import micdoodle8.mods.galacticraft.core.network.IPacket;
 import micdoodle8.mods.galacticraft.core.network.PacketFluidNetworkUpdate;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -41,7 +41,7 @@ import java.util.*;
  *
  * @author aidancbrady
  */
-public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitter<FluidStack>, TileEntity>
+public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitter<FluidStack>, BlockEntity>
 {
     public Map<BlockPos, IFluidHandler> acceptors = Maps.newHashMap();
     public Map<BlockPos, EnumSet<Direction>> acceptorDirections = Maps.newHashMap();
@@ -50,7 +50,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
     private final Set<DelayQueue> updateQueue = Sets.newLinkedHashSet();
     public FluidStack buffer;
     private int capacity;
-    private World world;
+    private Level world;
     private int prevBufferAmount;
     private boolean needsUpdate;
     public float fluidScale;
@@ -301,14 +301,14 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
         this.onUpdate();
     }
 
-    public void addUpdate(ServerPlayerEntity player)
+    public void addUpdate(ServerPlayer player)
     {
         this.updateQueue.add(new DelayQueue(player));
     }
 
     private IPacket getAddTransmitterUpdate()
     {
-        BlockPos pos = ((TileEntity) this.pipes.iterator().next()).getPos();
+        BlockPos pos = ((BlockEntity) this.pipes.iterator().next()).getBlockPos();
         return PacketFluidNetworkUpdate.getAddTransmitterUpdate(GCCoreUtil.getDimensionType(this.world), pos, this.firstUpdate, this.pipesAdded);
     }
 
@@ -348,7 +348,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
 
                 if (this.updateDelay == 0)
                 {
-                    BlockPos pos = ((TileEntity) this.pipes.iterator().next()).getPos();
+                    BlockPos pos = ((BlockEntity) this.pipes.iterator().next()).getBlockPos();
                     GalacticraftCore.packetPipeline.sendToAllAround(this.getAddTransmitterUpdate(), new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 30.0, GCCoreUtil.getDimensionType(this.world)));
                     this.firstUpdate = false;
                     this.pipesAdded.clear();
@@ -378,7 +378,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
 
             if (this.didTransfer != this.prevTransfer || this.needsUpdate)
             {
-                BlockPos pos = ((TileEntity) this.pipes.iterator().next()).getPos();
+                BlockPos pos = ((BlockEntity) this.pipes.iterator().next()).getBlockPos();
                 GalacticraftCore.packetPipeline.sendToAllAround(PacketFluidNetworkUpdate.getFluidUpdate(GCCoreUtil.getDimensionType(this.world), pos, this.buffer, this.didTransfer), new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 20.0, GCCoreUtil.getDimensionType(this.world)));
                 this.needsUpdate = false;
             }
@@ -456,7 +456,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
                 continue;
             }
 
-            TileEntity tile = this.world.getTileEntity(coords);
+            BlockEntity tile = this.world.getBlockEntity(coords);
 
             if (tile == null)
             {
@@ -497,7 +497,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
             while (it.hasNext())
             {
                 ITransmitter transmitter = it.next();
-                TileEntity tileTransmitter = (TileEntity) transmitter;
+                BlockEntity tileTransmitter = (BlockEntity) transmitter;
 
                 if (transmitter == null)
                 {
@@ -507,7 +507,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
 
                 transmitter.onNetworkChanged();
 
-                if (tileTransmitter.isRemoved() || tileTransmitter.getWorld() == null)
+                if (tileTransmitter.isRemoved() || tileTransmitter.getLevel() == null)
                 {
                     it.remove();
                     continue;
@@ -516,7 +516,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
                 {
                     if (this.world == null)
                     {
-                        this.world = tileTransmitter.getWorld();
+                        this.world = tileTransmitter.getLevel();
                     }
 
                     transmitter.setNetwork(this);
@@ -551,9 +551,9 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
             while (it.hasNext())
             {
                 IBufferTransmitter<FluidStack> transmitter = it.next();
-                TileEntity tile = (TileEntity) transmitter;
+                BlockEntity tile = (BlockEntity) transmitter;
 
-                if (transmitter == null || tile.isRemoved() || tile.getWorld() == null)
+                if (transmitter == null || tile.isRemoved() || tile.getLevel() == null)
                 {
                     it.remove();
                     continue;
@@ -565,15 +565,15 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
                 }
 
                 int i = 0;
-                for (TileEntity acceptor : transmitter.getAdjacentConnections())
+                for (BlockEntity acceptor : transmitter.getAdjacentConnections())
                 {
                     if (!(acceptor instanceof IBufferTransmitter) && acceptor != null)
                     {
-                        Direction facing = Direction.byIndex(i).getOpposite();
+                        Direction facing = Direction.from3DDataValue(i).getOpposite();
                         LazyOptional<IFluidHandler> handler = acceptor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
                         if (handler.isPresent())
                         {
-                            BlockPos acceptorPos = tile.getPos().offset(facing.getOpposite());
+                            BlockPos acceptorPos = tile.getBlockPos().relative(facing.getOpposite());
                             EnumSet<Direction> facingSet = this.acceptorDirections.get(acceptorPos);
                             if (facingSet != null)
                             {
@@ -620,7 +620,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
     @Override
     public void split(IBufferTransmitter<FluidStack> splitPoint)
     {
-        if (splitPoint instanceof TileEntity)
+        if (splitPoint instanceof BlockEntity)
         {
             this.pipes.remove(splitPoint);
 
@@ -628,17 +628,17 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
              * Loop through the connected blocks and attempt to see if there are
              * connections between the two points elsewhere.
              */
-            TileEntity[] connectedBlocks = splitPoint.getAdjacentConnections();
+            BlockEntity[] connectedBlocks = splitPoint.getAdjacentConnections();
 
-            for (TileEntity connectedBlockA : connectedBlocks)
+            for (BlockEntity connectedBlockA : connectedBlocks)
             {
                 if (connectedBlockA instanceof INetworkConnection)
                 {
-                    for (final TileEntity connectedBlockB : connectedBlocks)
+                    for (final BlockEntity connectedBlockB : connectedBlocks)
                     {
                         if (connectedBlockA != connectedBlockB && connectedBlockB instanceof INetworkConnection)
                         {
-                            Pathfinder finder = new PathfinderChecker(((TileEntity) splitPoint).getWorld(), (INetworkConnection) connectedBlockB, NetworkType.FLUID, splitPoint);
+                            Pathfinder finder = new PathfinderChecker(((BlockEntity) splitPoint).getLevel(), (INetworkConnection) connectedBlockB, NetworkType.FLUID, splitPoint);
                             finder.init(new BlockVec3(connectedBlockA));
 
                             if (finder.results.size() > 0)
@@ -651,7 +651,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
 
                                 for (BlockVec3 node : finder.closedSet)
                                 {
-                                    TileEntity nodeTile = node.getTileEntity(((TileEntity) splitPoint).getWorld());
+                                    BlockEntity nodeTile = node.getTileEntity(((BlockEntity) splitPoint).getLevel());
 
                                     if (nodeTile instanceof INetworkProvider)
                                     {
@@ -672,7 +672,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
 
                                 for (BlockVec3 node : finder.closedSet)
                                 {
-                                    TileEntity nodeTile = node.getTileEntity(((TileEntity) splitPoint).getWorld());
+                                    BlockEntity nodeTile = node.getTileEntity(((BlockEntity) splitPoint).getLevel());
 
                                     if (nodeTile instanceof IBufferTransmitter)
                                     {
@@ -713,10 +713,10 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
 
     public static class DelayQueue
     {
-        public ServerPlayerEntity player;
+        public ServerPlayer player;
         public int delay;
 
-        public DelayQueue(ServerPlayerEntity player)
+        public DelayQueue(ServerPlayer player)
         {
             this.player = player;
             this.delay = 5;

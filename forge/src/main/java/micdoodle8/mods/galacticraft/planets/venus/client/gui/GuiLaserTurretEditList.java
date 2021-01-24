@@ -10,13 +10,13 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.venus.network.PacketSimpleVenus;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityLaserTurret;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.LanguageMap;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -46,7 +46,7 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
 
     public GuiLaserTurretEditList(TileEntityLaserTurret turret)
     {
-        super(new StringTextComponent("Edit Turret List"));
+        super(new TextComponent("Edit Turret List"));
         this.laserTurret = turret;
     }
 
@@ -79,7 +79,7 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
                 {
                     boolean isPlayer = selected.value.contains(GCCoreUtil.translate("gui.message.player") + ": ");
                     String toSend = isPlayer ? selected.value.substring(8) : selected.value;
-                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_MODIFY_LASER_TARGET, GCCoreUtil.getDimensionType(laserTurret.getWorld()), new Object[]{isPlayer ? 2 : 3, laserTurret.getPos(), toSend}));
+                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_MODIFY_LASER_TARGET, GCCoreUtil.getDimensionType(laserTurret.getLevel()), new Object[]{isPlayer ? 2 : 3, laserTurret.getBlockPos(), toSend}));
                     if (isPlayer)
                     {
                         laserTurret.removePlayer(toSend);
@@ -130,7 +130,7 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
                     EntityType<?> entry = getEntityEntry();
                     if (entry != null)
                     {
-                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_MODIFY_LASER_TARGET, GCCoreUtil.getDimensionType(laserTurret.getWorld()), new Object[]{1, laserTurret.getPos(), entry.getRegistryName().toString()}));
+                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_MODIFY_LASER_TARGET, GCCoreUtil.getDimensionType(laserTurret.getLevel()), new Object[]{1, laserTurret.getBlockPos(), entry.getRegistryName().toString()}));
                         laserTurret.addEntity(entry.getRegistryName());
                     }
                 }
@@ -138,7 +138,7 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
                 {
                     if (name.text != null && !name.text.isEmpty())
                     {
-                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_MODIFY_LASER_TARGET, GCCoreUtil.getDimensionType(laserTurret.getWorld()), new Object[]{0, laserTurret.getPos(), name.text}));
+                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_MODIFY_LASER_TARGET, GCCoreUtil.getDimensionType(laserTurret.getLevel()), new Object[]{0, laserTurret.getBlockPos(), name.text}));
                         laserTurret.addPlayer(name.text);
                     }
                 }
@@ -165,7 +165,7 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
             switch (mode)
             {
             case MAIN:
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_OPEN_LASER_TURRET_GUI, GCCoreUtil.getDimensionType(laserTurret.getWorld()), new Object[]{laserTurret.getPos()}));
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_OPEN_LASER_TURRET_GUI, GCCoreUtil.getDimensionType(laserTurret.getLevel()), new Object[]{laserTurret.getBlockPos()}));
                 break;
             default:
                 mode = EnumMode.MAIN;
@@ -197,7 +197,7 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
     {
         this.renderBackground();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GuiLaserTurretEditList.backgroundTexture);
+        this.minecraft.getTextureManager().bind(GuiLaserTurretEditList.backgroundTexture);
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
         this.blit(var5, var6, 0, mode == EnumMode.MAIN ? 0 : 144, this.xSize, this.ySize);
@@ -211,12 +211,12 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
         else if (this.mode == EnumMode.ADD_PLAYER)
         {
             String displayString = GCCoreUtil.translate("gui.message.enter_player");
-            this.font.drawString(displayString, var5 + this.xSize / 2 - this.font.getStringWidth(displayString) / 2, var6 + 5, 4210752);
+            this.font.draw(displayString, var5 + this.xSize / 2 - this.font.width(displayString) / 2, var6 + 5, 4210752);
         }
         else if (this.mode == EnumMode.ADD_ENTITY)
         {
             String displayString = GCCoreUtil.translate("gui.message.enter_entity");
-            this.font.drawString(displayString, var5 + this.xSize / 2 - this.font.getStringWidth(displayString) / 2, var6 + 5, 4210752);
+            this.font.draw(displayString, var5 + this.xSize / 2 - this.font.width(displayString) / 2, var6 + 5, 4210752);
         }
     }
 
@@ -246,7 +246,7 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
                 EntityType<?> entry = ForgeRegistries.ENTITIES.getValue(loc);
                 if (entry != null)
                 {
-                    if (this.name.text.equalsIgnoreCase(entry.getName().getFormattedText()))
+                    if (this.name.text.equalsIgnoreCase(entry.getDescription().getColoredString()))
                     {
                         return entry;
                     }
@@ -257,7 +257,7 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
                 EntityType<?> entry = ForgeRegistries.ENTITIES.getValue(loc);
                 if (entry != null)
                 {
-                    if (this.name.text.equalsIgnoreCase(LanguageMap.getInstance().translateKey("entity." + entry.getName() + "")))
+                    if (this.name.text.equalsIgnoreCase(Language.getInstance().getElement("entity." + entry.getDescription() + "")))
                     {
                         return entry;
                     }
@@ -269,9 +269,9 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementTextBox textBox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementTextBox textBox, Player player)
     {
-        return player.getUniqueID().equals(this.laserTurret.getOwnerUUID());
+        return player.getUUID().equals(this.laserTurret.getOwnerUUID());
     }
 
     @Override
@@ -314,13 +314,13 @@ public class GuiLaserTurretEditList extends Screen implements GuiElementTextBox.
     public void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected)
     {
         this.laserTurret.alwaysIgnoreSpaceRace = newSelected;
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{2, this.laserTurret.getPos(), this.laserTurret.alwaysIgnoreSpaceRace ? 1 : 0}));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{2, this.laserTurret.getBlockPos(), this.laserTurret.alwaysIgnoreSpaceRace ? 1 : 0}));
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckbox checkbox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementCheckbox checkbox, Player player)
     {
-        return player.getUniqueID().equals(this.laserTurret.getOwnerUUID());
+        return player.getUUID().equals(this.laserTurret.getOwnerUUID());
     }
 
     @Override

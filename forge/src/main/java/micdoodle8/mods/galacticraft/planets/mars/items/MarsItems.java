@@ -3,8 +3,7 @@ package micdoodle8.mods.galacticraft.planets.mars.items;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.items.ItemBase;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -82,7 +81,7 @@ public class MarsItems
 
     public static Item.Properties defaultBuilder()
     {
-        return new Item.Properties().group(GalacticraftCore.galacticraftItemsTab);
+        return new Item.Properties().tab(GalacticraftCore.galacticraftItemsTab);
     }
 
 //    public static ArmorMaterial ARMORDESH = EnumHelper.addArmorMaterial("DESH", "", 42, new int[] { 4, 7, 9, 4 }, 12, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.0F);
@@ -117,16 +116,16 @@ public class MarsItems
 //        @ObjectHolder(MarsItemNames.rocketCargo2) public static Item rocketCargo2;
 //        @ObjectHolder(MarsItemNames.rocketCargo3) public static Item rocketCargo3;
 //        @ObjectHolder(MarsItemNames.rocketCargoCreative) public static Item rocketCargoCreative;
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.TIER_2_ROCKET);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.TIER_2_ROCKET_18_INVENTORY);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.TIER_2_ROCKET_36_INVENTORY);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.TIER_2_ROCKET_54_INVENTORY);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.CREATIVE_TIER_2_ROCKET);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.CARGO_ROCKET_18_INVENTORY);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.CARGO_ROCKET_36_INVENTORY);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.CARGO_ROCKET_54_INVENTORY);
-        register(r, new ItemTier2Rocket(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.CREATIVE_CARGO_ROCKET);
-        register(r, new ItemKeyMars(defaultBuilder().maxDamage(0).maxStackSize(1)), MarsItemNames.TIER_2_DUNGEON_KEY);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.TIER_2_ROCKET);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.TIER_2_ROCKET_18_INVENTORY);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.TIER_2_ROCKET_36_INVENTORY);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.TIER_2_ROCKET_54_INVENTORY);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.CREATIVE_TIER_2_ROCKET);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.CARGO_ROCKET_18_INVENTORY);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.CARGO_ROCKET_36_INVENTORY);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.CARGO_ROCKET_54_INVENTORY);
+        register(r, new ItemTier2Rocket(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.CREATIVE_CARGO_ROCKET);
+        register(r, new ItemKeyMars(defaultBuilder().durability(0).stacksTo(1)), MarsItemNames.TIER_2_DUNGEON_KEY);
         register(r, new ItemSchematicTier2(defaultBuilder()), MarsItemNames.TIER_3_ROCKET_SCHEMATIC);
         register(r, new ItemSchematicTier2(defaultBuilder()), MarsItemNames.CARGO_ROCKET_SCHEMATIC);
         register(r, new ItemSchematicTier2(defaultBuilder()), MarsItemNames.ASTRO_MINER_SCHEMATIC);

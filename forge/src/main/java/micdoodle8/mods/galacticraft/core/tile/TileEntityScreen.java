@@ -8,12 +8,12 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.blocks.BlockScreen;
 import micdoodle8.mods.galacticraft.core.client.screen.DrawGameScreen;
 import micdoodle8.mods.galacticraft.core.tick.TickHandlerClient;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ObjectHolder;
@@ -25,7 +25,7 @@ import java.util.List;
 public class TileEntityScreen extends TileEntityAdvanced implements ITileClientUpdates
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.DISPLAY_SCREEN)
-    public static TileEntityType<TileEntityScreen> TYPE;
+    public static BlockEntityType<TileEntityScreen> TYPE;
 
     public static float FRAMEBORDER = 0.098F;  //used for rendering
     public int imageType;
@@ -47,7 +47,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     private boolean doneClientUpdate = false;
     //Used on client LogicalSide only
     public boolean refreshOnUpdate = false;
-    private AxisAlignedBB renderAABB;
+    private AABB renderAABB;
     private static final boolean LOGGING = false;
 
     public TileEntityScreen()
@@ -81,40 +81,40 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         this.connectedRight = connectedRightL;
     }
 
-    public TileEntity setVerifiedConnectedUp(BlockVec3 vec, Direction direction)
+    public BlockEntity setVerifiedConnectedUp(BlockVec3 vec, Direction direction)
     {
-        TileEntity tileUp = vec.getTileEntityOnSide(this.world, 1);
-        this.setConnectedUp(tileUp instanceof TileEntityScreen && tileUp.getBlockState().get(BlockScreen.FACING) == direction && !tileUp.isRemoved());
+        BlockEntity tileUp = vec.getTileEntityOnSide(this.level, 1);
+        this.setConnectedUp(tileUp instanceof TileEntityScreen && tileUp.getBlockState().getValue(BlockScreen.FACING) == direction && !tileUp.isRemoved());
         return tileUp;
     }
 
-    public TileEntity setVerifiedConnectedDown(BlockVec3 vec, Direction direction)
+    public BlockEntity setVerifiedConnectedDown(BlockVec3 vec, Direction direction)
     {
-        TileEntity tileDown = vec.getTileEntityOnSide(this.world, 0);
-        this.setConnectedDown(tileDown instanceof TileEntityScreen && tileDown.getBlockState().get(BlockScreen.FACING) == direction && !tileDown.isRemoved());
+        BlockEntity tileDown = vec.getTileEntityOnSide(this.level, 0);
+        this.setConnectedDown(tileDown instanceof TileEntityScreen && tileDown.getBlockState().getValue(BlockScreen.FACING) == direction && !tileDown.isRemoved());
         return tileDown;
     }
 
-    public TileEntity setVerifiedConnectedLeft(BlockVec3 vec, Direction direction)
+    public BlockEntity setVerifiedConnectedLeft(BlockVec3 vec, Direction direction)
     {
         Direction side = this.getLeft(direction);
-        TileEntity tileLeft = vec.getTileEntityOnSide(this.world, side);
-        this.setConnectedLeft(tileLeft instanceof TileEntityScreen && tileLeft.getBlockState().get(BlockScreen.FACING) == direction && !tileLeft.isRemoved());
+        BlockEntity tileLeft = vec.getTileEntityOnSide(this.level, side);
+        this.setConnectedLeft(tileLeft instanceof TileEntityScreen && tileLeft.getBlockState().getValue(BlockScreen.FACING) == direction && !tileLeft.isRemoved());
         return tileLeft;
     }
 
-    public TileEntity setVerifiedConnectedRight(BlockVec3 vec, Direction direction)
+    public BlockEntity setVerifiedConnectedRight(BlockVec3 vec, Direction direction)
     {
         Direction side = this.getRight(direction);
-        TileEntity tileRight = vec.getTileEntityOnSide(this.world, side);
-        this.setConnectedRight(tileRight instanceof TileEntityScreen && tileRight.getBlockState().get(BlockScreen.FACING) == direction && !tileRight.isRemoved());
+        BlockEntity tileRight = vec.getTileEntityOnSide(this.level, side);
+        this.setConnectedRight(tileRight instanceof TileEntityScreen && tileRight.getBlockState().getValue(BlockScreen.FACING) == direction && !tileRight.isRemoved());
         return tileRight;
     }
 
     @Override
     public void onLoad()
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             this.clientOnLoad();
             this.screen = new DrawGameScreen(1.0F, 1.0F, this);
@@ -147,12 +147,12 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     public Direction getFront()
     {
-        return this.getFacing(this.world.getBlockState(getPos()));
+        return this.getFacing(this.level.getBlockState(getBlockPos()));
     }
 
     private Direction getFacing(BlockState state)
     {
-        return state.get(BlockScreen.FACING);
+        return state.getValue(BlockScreen.FACING);
     }
 
     /**
@@ -164,9 +164,9 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     public void breakScreen(BlockState state)
     {
         BlockVec3 vec = new BlockVec3(this);
-        Direction direction = state.get(BlockScreen.FACING);
-        TileEntity tile;
-        Direction facingRight = getFacing(state).rotateY();
+        Direction direction = state.getValue(BlockScreen.FACING);
+        BlockEntity tile;
+        Direction facingRight = getFacing(state).getClockWise();
 
         int left = this.connectionsLeft;
         int right = this.connectionsRight;
@@ -189,8 +189,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
                 else
                 {
                     BlockVec3 newVec = vec.clone().modifyPositionFromSide(facingRight, x).modifyPositionFromSide(Direction.DOWN, z);
-                    tile = newVec.getTileEntity(this.world);
-                    if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == direction)
+                    tile = newVec.getTileEntity(this.level);
+                    if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == direction)
                     {
                         ((TileEntityScreen) tile).resetToSingle();
                     }
@@ -207,8 +207,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
         if (doUp)
         {
-            tile = vec.getTileEntityOnSide(this.world, 1);
-            if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == direction && !tile.isRemoved())
+            tile = vec.getTileEntityOnSide(this.level, 1);
+            if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == direction && !tile.isRemoved())
             {
                 if (doLeft)
                 {
@@ -227,8 +227,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         }
         if (doDown)
         {
-            tile = vec.getTileEntityOnSide(this.world, 0);
-            if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == direction && !tile.isRemoved())
+            tile = vec.getTileEntityOnSide(this.level, 0);
+            if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == direction && !tile.isRemoved())
             {
                 if (doLeft)
                 {
@@ -247,8 +247,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         }
         if (doLeft)
         {
-            tile = vec.getTileEntityOnSide(this.world, this.getLeft(direction));
-            if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == direction && !tile.isRemoved())
+            tile = vec.getTileEntityOnSide(this.level, this.getLeft(direction));
+            if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == direction && !tile.isRemoved())
             {
                 if (doUp)
                 {
@@ -267,8 +267,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         }
         if (doRight)
         {
-            tile = vec.getTileEntityOnSide(this.world, this.getRight(direction));
-            if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == direction && !tile.isRemoved())
+            tile = vec.getTileEntityOnSide(this.level, this.getRight(direction));
+            if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == direction && !tile.isRemoved())
             {
                 if (doUp)
                 {
@@ -300,8 +300,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             this.log("Starting connection check");
         }
 
-        BlockState iblockstate = this.world.getBlockState(this.pos);
-        Direction facing = iblockstate.get(BlockScreen.FACING);
+        BlockState iblockstate = this.level.getBlockState(this.worldPosition);
+        Direction facing = iblockstate.getValue(BlockScreen.FACING);
 
 //        int meta = this.getBlockMetadata();
         if (facing.getAxis() == Direction.Axis.Y)
@@ -311,10 +311,10 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             return;
         }
 
-        TileEntity tileUp = null;
-        TileEntity tileDown = null;
-        TileEntity tileLeft = null;
-        TileEntity tileRight = null;
+        BlockEntity tileUp = null;
+        BlockEntity tileDown = null;
+        BlockEntity tileLeft = null;
+        BlockEntity tileRight = null;
         BlockVec3 vec = new BlockVec3(this);
 
         //First, basic check that a neighbour is there and in the same orientation
@@ -362,7 +362,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         if (doScreen)
         {
             this.checkScreenSize();
-            this.markDirty();
+            this.setChanged();
         }
     }
 
@@ -377,7 +377,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
      */
     public void changeChannel()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (++this.imageType >= GalacticraftRegistry.getMaxScreenTypes())
             {
@@ -409,7 +409,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
             this.doneClientUpdate = false;
             this.refreshConnections(true);
-            this.markDirty();
+            this.setChanged();
 
             if (!this.doneClientUpdate)
             {
@@ -419,9 +419,9 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.imageType = nbt.getInt("type");
         this.connectionsDown = nbt.getInt("connectionsDown");
         this.connectionsUp = nbt.getInt("connectionsUp");
@@ -439,9 +439,9 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("type", this.imageType);
         nbt.putInt("connectionsDown", this.connectionsDown);
         nbt.putInt("connectionsUp", this.connectionsUp);
@@ -452,9 +452,9 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     public void checkScreenSize()
@@ -467,7 +467,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         int down = 0;
         int left = 0;
         int right = 0;
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
 
         BlockVec3 vec = new BlockVec3(this);
         TileEntityScreen tile = this;
@@ -476,7 +476,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             if (tile.connectedUp)
             {
                 up++;
-                TileEntity newTile = vec.getTileEntityOnSide(this.world, 1);
+                BlockEntity newTile = vec.getTileEntityOnSide(this.level, 1);
                 if (newTile instanceof TileEntityScreen)
                 {
                     tile = (TileEntityScreen) newTile;
@@ -487,7 +487,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
                     System.out.println("Debug - connected up to a non-screen tile");
 //    				tile.connectedUp = false;
                     this.setConnectedUp(false);
-                    tile.markDirty();
+                    tile.setChanged();
                     up--;
                     break;
                 }
@@ -505,7 +505,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             if (tile.connectedDown)
             {
                 down++;
-                TileEntity newTile = vec.getTileEntityOnSide(this.world, 0);
+                BlockEntity newTile = vec.getTileEntityOnSide(this.level, 0);
                 if (newTile instanceof TileEntityScreen)
                 {
                     tile = (TileEntityScreen) newTile;
@@ -516,7 +516,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
                     System.out.println("Debug - connected down to a non-screen tile");
 //    				tile.connectedDown = false;
                     this.setConnectedDown(false);
-                    tile.markDirty();
+                    tile.setChanged();
                     down--;
                     break;
                 }
@@ -535,7 +535,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             if (tile.connectedLeft)
             {
                 left++;
-                TileEntity newTile = vec.getTileEntityOnSide(this.world, leftside);
+                BlockEntity newTile = vec.getTileEntityOnSide(this.level, leftside);
                 if (newTile instanceof TileEntityScreen)
                 {
                     tile = (TileEntityScreen) newTile;
@@ -546,7 +546,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
                     System.out.println("Debug - connected left to a non-screen tile");
 //    				tile.connectedLeft = false;
                     this.setConnectedLeft(false);
-                    tile.markDirty();
+                    tile.setChanged();
                     left--;
                     break;
                 }
@@ -565,7 +565,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             if (tile.connectedRight)
             {
                 right++;
-                TileEntity newTile = vec.getTileEntityOnSide(this.world, rightside);
+                BlockEntity newTile = vec.getTileEntityOnSide(this.level, rightside);
                 if (newTile instanceof TileEntityScreen)
                 {
                     tile = (TileEntityScreen) newTile;
@@ -576,7 +576,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
                     System.out.println("Debug - connected right to a non-screen tile");
 //    				tile.connectedRight = false;
                     this.setConnectedRight(false);
-                    tile.markDirty();
+                    tile.setChanged();
                     right--;
                     break;
                 }
@@ -593,13 +593,13 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         }
 
         vec = new BlockVec3(this);
-        TileEntity newtile = vec.getTileEntityOnSide(this.world, 1);
+        BlockEntity newtile = vec.getTileEntityOnSide(this.level, 1);
         TileEntityScreen tileUp = (newtile instanceof TileEntityScreen) ? (TileEntityScreen) newtile : null;
-        newtile = vec.getTileEntityOnSide(this.world, 0);
+        newtile = vec.getTileEntityOnSide(this.level, 0);
         TileEntityScreen tileDown = (newtile instanceof TileEntityScreen) ? (TileEntityScreen) newtile : null;
-        newtile = vec.getTileEntityOnSide(this.world, leftside);
+        newtile = vec.getTileEntityOnSide(this.level, leftside);
         TileEntityScreen tileLeft = (newtile instanceof TileEntityScreen) ? (TileEntityScreen) newtile : null;
-        newtile = vec.getTileEntityOnSide(this.world, rightside);
+        newtile = vec.getTileEntityOnSide(this.level, rightside);
         TileEntityScreen tileRight = (newtile instanceof TileEntityScreen) ? (TileEntityScreen) newtile : null;
         //Prevent 3 x 1 and longer
         if (left + right == 0 && up + down >= 1)
@@ -730,20 +730,20 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         int barrierLeft = left;
         int barrierRight = right;
 
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
         BlockVec3 vec = new BlockVec3(this);
         ArrayList<TileEntityScreen> screenList = new ArrayList<TileEntityScreen>();
 
 //		int side = this.getRight(facing);
-        Direction side = getFront().rotateY();
+        Direction side = getFront().getClockWise();
 
         for (int x = -left; x <= right; x++)
         {
             for (int z = -up; z <= down; z++)
             {
                 BlockVec3 newVec = vec.clone().modifyPositionFromSide(side, x).modifyPositionFromSide(Direction.DOWN, z);
-                TileEntity tile = newVec.getTileEntity(this.world);
-                if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == facing && !tile.isRemoved())
+                BlockEntity tile = newVec.getTileEntity(this.level);
+                if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == facing && !tile.isRemoved())
                 {
                     TileEntityScreen screenTile = (TileEntityScreen) tile;
                     screenList.add(screenTile);
@@ -796,8 +796,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
         DrawGameScreen newScreen = null;
         boolean serverside = true;
-        TileEntity bottomLeft = vec.clone().modifyPositionFromSide(side, -left).modifyPositionFromSide(Direction.DOWN, down).getTileEntity(this.world);
-        if (this.world.isRemote)
+        BlockEntity bottomLeft = vec.clone().modifyPositionFromSide(side, -left).modifyPositionFromSide(Direction.DOWN, down).getTileEntity(this.level);
+        if (this.level.isClientSide)
         {
             if (bottomLeft instanceof TileEntityScreen)  //It always will be if reached this far
             {
@@ -828,7 +828,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
                 if (serverside)
                 {
                     screenTile.imageType = this.imageType;
-                    screenTile.markDirty();
+                    screenTile.setChanged();
                     screenTile.updateAllInDimension();
                 }
                 screenTile.refreshConnections(false);
@@ -861,8 +861,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         this.setConnectedUp(false);
         this.setConnectedDown(false);
         this.refreshOnUpdate = false;
-        this.markDirty();
-        if (this.world.isRemote)
+        this.setChanged();
+        if (this.level.isClientSide)
         {
             this.screen = new DrawGameScreen(1.0F, 1.0F, this);
         }
@@ -878,7 +878,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
      */
     private Direction getLeft(Direction direction)
     {
-        return direction.rotateYCCW();
+        return direction.getCounterClockWise();
 //        switch (meta)
 //        {
 //        case 2:
@@ -899,7 +899,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
      */
     private Direction getRight(Direction direction)
     {
-        return direction.rotateY();
+        return direction.getClockWise();
 //        switch (direction)
 //        {
 //        case NORTH:
@@ -916,14 +916,14 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     private boolean canJoinRight()
     {
-        Direction dir = this.getBlockState().get(BlockScreen.FACING);
-        TileEntity te = new BlockVec3(this).getTileEntityOnSide(this.world, this.getRight(dir));
+        Direction dir = this.getBlockState().getValue(BlockScreen.FACING);
+        BlockEntity te = new BlockVec3(this).getTileEntityOnSide(this.level, this.getRight(dir));
         if (!(te instanceof TileEntityScreen))
         {
             return false;
         }
         TileEntityScreen screenTile = (TileEntityScreen) te;
-        if (screenTile.getBlockState().get(BlockScreen.FACING) != dir)
+        if (screenTile.getBlockState().getValue(BlockScreen.FACING) != dir)
         {
             return false;
         }
@@ -949,14 +949,14 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     private boolean canJoinLeft()
     {
-        Direction dir = this.getBlockState().get(BlockScreen.FACING);
-        TileEntity te = new BlockVec3(this).getTileEntityOnSide(this.world, this.getLeft(dir));
+        Direction dir = this.getBlockState().getValue(BlockScreen.FACING);
+        BlockEntity te = new BlockVec3(this).getTileEntityOnSide(this.level, this.getLeft(dir));
         if (!(te instanceof TileEntityScreen))
         {
             return false;
         }
         TileEntityScreen screenTile = (TileEntityScreen) te;
-        if (screenTile.getBlockState().get(BlockScreen.FACING) != dir)
+        if (screenTile.getBlockState().getValue(BlockScreen.FACING) != dir)
         {
             return false;
         }
@@ -981,14 +981,14 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     private boolean canJoinUp()
     {
-        Direction dir = this.getBlockState().get(BlockScreen.FACING);
-        TileEntity te = new BlockVec3(this).getTileEntityOnSide(this.world, 1);
+        Direction dir = this.getBlockState().getValue(BlockScreen.FACING);
+        BlockEntity te = new BlockVec3(this).getTileEntityOnSide(this.level, 1);
         if (!(te instanceof TileEntityScreen))
         {
             return false;
         }
         TileEntityScreen screenTile = (TileEntityScreen) te;
-        if (screenTile.getBlockState().get(BlockScreen.FACING) != dir)
+        if (screenTile.getBlockState().getValue(BlockScreen.FACING) != dir)
         {
             return false;
         }
@@ -1013,14 +1013,14 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     private boolean canJoinDown()
     {
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
-        TileEntity te = new BlockVec3(this).getTileEntityOnSide(this.world, 0);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
+        BlockEntity te = new BlockVec3(this).getTileEntityOnSide(this.level, 0);
         if (!(te instanceof TileEntityScreen))
         {
             return false;
         }
         TileEntityScreen screenTile = (TileEntityScreen) te;
-        if (screenTile.getBlockState().get(BlockScreen.FACING) != facing)
+        if (screenTile.getBlockState().getValue(BlockScreen.FACING) != facing)
         {
             return false;
         }
@@ -1045,12 +1045,12 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     private void joinRight()
     {
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
         Direction side = this.getRight(facing);
         BlockVec3 vec = new BlockVec3(this);
         for (int z = -this.connectionsUp; z <= this.connectionsDown; z++)
         {
-            TileEntity tile;
+            BlockEntity tile;
             BlockVec3 newVec = vec.clone().modifyPositionFromSide(Direction.DOWN, z);
             if (z == 0)
             {
@@ -1058,15 +1058,15 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             }
             else
             {
-                tile = newVec.getTileEntity(this.world);
+                tile = newVec.getTileEntity(this.level);
             }
-            if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == facing && !tile.isRemoved())
+            if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == facing && !tile.isRemoved())
             {
                 TileEntityScreen screenTile = (TileEntityScreen) tile;
 //				screenTile.connectedRight = true;
                 screenTile.setConnectedRight(true);
-                TileEntity te2 = newVec.getTileEntityOnSide(this.world, side);
-                if (te2 instanceof TileEntityScreen && te2.getBlockState().get(BlockScreen.FACING) == facing && !te2.isRemoved())
+                BlockEntity te2 = newVec.getTileEntityOnSide(this.level, side);
+                if (te2 instanceof TileEntityScreen && te2.getBlockState().getValue(BlockScreen.FACING) == facing && !te2.isRemoved())
                 {
                     screenTile.tryConnectRight((TileEntityScreen) te2);
                 }
@@ -1076,12 +1076,12 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     private void joinLeft()
     {
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
         Direction side = this.getLeft(facing);
         BlockVec3 vec = new BlockVec3(this);
         for (int z = -this.connectionsUp; z <= this.connectionsDown; z++)
         {
-            TileEntity tile;
+            BlockEntity tile;
             BlockVec3 newVec = vec.clone().modifyPositionFromSide(Direction.DOWN, z);
             if (z == 0)
             {
@@ -1089,15 +1089,15 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             }
             else
             {
-                tile = newVec.getTileEntity(this.world);
+                tile = newVec.getTileEntity(this.level);
             }
-            if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == facing && !tile.isRemoved())
+            if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == facing && !tile.isRemoved())
             {
                 TileEntityScreen screenTile = (TileEntityScreen) tile;
 //				screenTile.connectedLeft = true;
                 screenTile.setConnectedLeft(true);
-                TileEntity te2 = newVec.getTileEntityOnSide(this.world, side);
-                if (te2 instanceof TileEntityScreen && te2.getBlockState().get(BlockScreen.FACING) == facing && !te2.isRemoved())
+                BlockEntity te2 = newVec.getTileEntityOnSide(this.level, side);
+                if (te2 instanceof TileEntityScreen && te2.getBlockState().getValue(BlockScreen.FACING) == facing && !te2.isRemoved())
                 {
                     screenTile.tryConnectLeft((TileEntityScreen) te2);
                 }
@@ -1107,13 +1107,13 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     private void joinUp()
     {
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
 //    	EnumFacing LogicalSide = EnumFacing.getFront(this.getRight(facing));
-        Direction side = getFront().rotateY();
+        Direction side = getFront().getClockWise();
         BlockVec3 vec = new BlockVec3(this);
         for (int x = -this.connectionsLeft; x <= this.connectionsRight; x++)
         {
-            TileEntity tile;
+            BlockEntity tile;
             BlockVec3 newVec = vec.clone().modifyPositionFromSide(side, x);
             if (x == 0)
             {
@@ -1121,15 +1121,15 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             }
             else
             {
-                tile = newVec.getTileEntity(this.world);
+                tile = newVec.getTileEntity(this.level);
             }
-            if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == facing && !tile.isRemoved())
+            if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == facing && !tile.isRemoved())
             {
                 TileEntityScreen screenTile = (TileEntityScreen) tile;
 //				screenTile.connectedUp = true;
                 screenTile.setConnectedUp(true);
-                TileEntity te2 = newVec.getTileEntityOnSide(this.world, 1);
-                if (te2 instanceof TileEntityScreen && te2.getBlockState().get(BlockScreen.FACING) == facing && !te2.isRemoved())
+                BlockEntity te2 = newVec.getTileEntityOnSide(this.level, 1);
+                if (te2 instanceof TileEntityScreen && te2.getBlockState().getValue(BlockScreen.FACING) == facing && !te2.isRemoved())
                 {
                     screenTile.tryConnectUp((TileEntityScreen) te2);
                 }
@@ -1139,13 +1139,13 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     private void joinDown()
     {
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
 //    	EnumFacing LogicalSide = EnumFacing.getFront(this.getRight(facing));
-        Direction side = getFront().rotateY();
+        Direction side = getFront().getClockWise();
         BlockVec3 vec = new BlockVec3(this);
         for (int x = -this.connectionsLeft; x <= this.connectionsRight; x++)
         {
-            TileEntity tile;
+            BlockEntity tile;
             BlockVec3 newVec = vec.clone().modifyPositionFromSide(side, x);
             if (x == 0)
             {
@@ -1153,15 +1153,15 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
             }
             else
             {
-                tile = newVec.getTileEntity(this.world);
+                tile = newVec.getTileEntity(this.level);
             }
-            if (tile instanceof TileEntityScreen && tile.getBlockState().get(BlockScreen.FACING) == facing && !tile.isRemoved())
+            if (tile instanceof TileEntityScreen && tile.getBlockState().getValue(BlockScreen.FACING) == facing && !tile.isRemoved())
             {
                 TileEntityScreen screenTile = (TileEntityScreen) tile;
 //				screenTile.connectedDown = true;
                 screenTile.setConnectedDown(true);
-                TileEntity te2 = newVec.getTileEntityOnSide(this.world, 0);
-                if (te2 instanceof TileEntityScreen && te2.getBlockState().get(BlockScreen.FACING) == facing && !te2.isRemoved())
+                BlockEntity te2 = newVec.getTileEntityOnSide(this.level, 0);
+                if (te2 instanceof TileEntityScreen && te2.getBlockState().getValue(BlockScreen.FACING) == facing && !te2.isRemoved())
                 {
                     screenTile.tryConnectDown((TileEntityScreen) te2);
                 }
@@ -1181,7 +1181,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 //		if (this.connectedRight) screenTile.connectedRight = true;
         screenTile.setConnectedDown(true);
         BlockVec3 vec = null;
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
         if (this.connectedLeft)
         {
             vec = new BlockVec3(screenTile);
@@ -1219,7 +1219,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 //		if (this.connectedRight) screenTile.connectedRight = true;
         screenTile.setConnectedUp(true);
         BlockVec3 vec = null;
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
         if (this.connectedLeft)
         {
             vec = new BlockVec3(screenTile);
@@ -1262,7 +1262,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 //		if (this.connectedDown) screenTile.connectedDown = true;
         screenTile.setConnectedRight(true);
         BlockVec3 vec = null;
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
         if (this.connectedUp)
         {
             vec = new BlockVec3(screenTile);
@@ -1305,7 +1305,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 //		if (this.connectedDown) screenTile.connectedDown = true;
         screenTile.setConnectedLeft(true);
         BlockVec3 vec = null;
-        Direction facing = this.getBlockState().get(BlockScreen.FACING);
+        Direction facing = this.getBlockState().getValue(BlockScreen.FACING);
         if (this.connectedUp)
         {
             vec = new BlockVec3(screenTile);
@@ -1351,7 +1351,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         {
             connections += "R";
         }
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             strSide = "C";
         }
@@ -1405,18 +1405,18 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
+    public AABB getRenderBoundingBox()
     {
         if (this.renderAABB == null)
         {
-            this.renderAABB = new AxisAlignedBB(pos, pos.add(1, 1, 1));
+            this.renderAABB = new AABB(worldPosition, worldPosition.offset(1, 1, 1));
         }
         return this.renderAABB;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public double getMaxRenderDistanceSquared()
+    public double getViewDistance()
     {
         return Constants.RENDERDISTANCE_MEDIUM;
     }

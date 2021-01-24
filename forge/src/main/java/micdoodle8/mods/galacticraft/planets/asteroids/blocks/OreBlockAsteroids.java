@@ -3,14 +3,13 @@ package micdoodle8.mods.galacticraft.planets.asteroids.blocks;
 import micdoodle8.mods.galacticraft.api.block.IDetectableResource;
 import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.storage.loot.LootContext;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
 import java.util.List;
 
 public class OreBlockAsteroids extends Block implements IDetectableResource, ISortable
@@ -21,11 +20,11 @@ public class OreBlockAsteroids extends Block implements IDetectableResource, ISo
     }
 
     @Override
-    public int getExpDrop(BlockState state, IWorldReader world, BlockPos pos, int fortune, int silktouch)
+    public int getExpDrop(BlockState state, LevelReader world, BlockPos pos, int fortune, int silktouch)
     {
         if (this == AsteroidBlocks.ILMENITE_ORE)
         {
-            MathHelper.nextInt(RANDOM, 2, 3);
+            Mth.nextInt(RANDOM, 2, 3);
         }
 
         return super.getExpDrop(state, world, pos, fortune, silktouch);

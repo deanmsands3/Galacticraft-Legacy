@@ -4,10 +4,10 @@ import micdoodle8.mods.galacticraft.api.prefab.world.gen.DimensionSpace;
 import micdoodle8.mods.galacticraft.core.dimension.chunk.OrbitGenSettings;
 import micdoodle8.mods.galacticraft.core.world.gen.BiomeOrbit;
 import micdoodle8.mods.galacticraft.core.world.gen.ChunkGeneratorOrbit;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.provider.BiomeProviderType;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.BiomeSourceType;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,7 +24,7 @@ public abstract class DimensionSpaceStation extends DimensionSpace
 {
 //    private SpinManager spinManager = new SpinManager(this);
 
-    public DimensionSpaceStation(World worldIn, DimensionType typeIn, float lightMod)
+    public DimensionSpaceStation(Level worldIn, DimensionType typeIn, float lightMod)
     {
         super(worldIn, typeIn, lightMod);
 //        this.getSpinManager().registerServerSide();
@@ -36,10 +36,10 @@ public abstract class DimensionSpaceStation extends DimensionSpace
 //    }
 
     @Override
-    public ChunkGenerator<?> createChunkGenerator()
+    public ChunkGenerator<?> createRandomLevelGenerator()
     {
         OrbitGenSettings settings = new OrbitGenSettings();
-        return new ChunkGeneratorOrbit(this.world, BiomeProviderType.FIXED.create(BiomeProviderType.FIXED.createSettings(world.getWorldInfo()).setBiome(BiomeOrbit.space)), settings);
+        return new ChunkGeneratorOrbit(this.level, BiomeSourceType.FIXED.create(BiomeSourceType.FIXED.createSettings(level.getLevelData()).setBiome(BiomeOrbit.space)), settings);
     }
 
     @Override

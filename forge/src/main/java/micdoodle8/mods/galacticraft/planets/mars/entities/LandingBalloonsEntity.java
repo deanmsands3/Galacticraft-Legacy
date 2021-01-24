@@ -10,18 +10,17 @@ import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.planets.mars.util.MarsUtil;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -33,17 +32,17 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
     private float rotationPitchSpeed;
     private float rotationYawSpeed;
 
-    public LandingBalloonsEntity(EntityType<? extends LandingBalloonsEntity> type, World worldIn)
+    public LandingBalloonsEntity(EntityType<? extends LandingBalloonsEntity> type, Level worldIn)
     {
         super(type, worldIn);
 //        this.setSize(2.0F, 2.0F);
-        this.rotationPitchSpeed = this.rand.nextFloat();
-        this.rotationYawSpeed = this.rand.nextFloat();
+        this.rotationPitchSpeed = this.random.nextFloat();
+        this.rotationYawSpeed = this.random.nextFloat();
     }
 
-    public static LandingBalloonsEntity createEntityLandingBalloons(ServerPlayerEntity player)
+    public static LandingBalloonsEntity createEntityLandingBalloons(ServerPlayer player)
     {
-        LandingBalloonsEntity balloons = new LandingBalloonsEntity(MarsEntities.LANDING_BALLOONS, player.world);
+        LandingBalloonsEntity balloons = new LandingBalloonsEntity(MarsEntities.LANDING_BALLOONS, player.level);
 
         GCPlayerStats stats = GCPlayerStats.get(player);
         balloons.stacks = NonNullList.withSize(stats.getRocketStacks().size() + 1, ItemStack.EMPTY);
@@ -61,7 +60,7 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
             }
         }
 
-        balloons.setPositionAndRotation(player.getPosX(), player.getPosY(), player.getPosZ(), 0, 0);
+        balloons.absMoveTo(player.getX(), player.getY(), player.getZ(), 0, 0);
 
         player.startRiding(balloons, true);
 //        this.setSize(2.0F, 2.0F);
@@ -69,15 +68,15 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public double getMountedYOffset()
+    public double getRideHeight()
     {
-        return super.getMountedYOffset() - 0.9;
+        return super.getRideHeight() - 0.9;
     }
 
     @Override
@@ -110,22 +109,22 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
 
         if (!this.onGround)
         {
-            this.rotationPitch += this.rotationPitchSpeed;
-            this.rotationYaw += this.rotationYawSpeed;
+            this.xRot += this.rotationPitchSpeed;
+            this.yRot += this.rotationYawSpeed;
         }
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
-        super.readAdditional(nbt);
+        super.readAdditionalSaveData(nbt);
         this.groundHitCount = nbt.getInt("GroundHitCount");
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        super.writeAdditional(nbt);
+        super.addAdditionalSaveData(nbt);
         nbt.putInt("GroundHitCount", this.groundHitCount);
     }
 
@@ -142,32 +141,32 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
 //    }
 
     @Override
-    public boolean processInitialInteract(PlayerEntity player, Hand hand)
+    public boolean interact(Player player, InteractionHand hand)
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             if (!this.onGround)
             {
                 return false;
             }
 
-            this.removePassengers();
+            this.ejectPassengers();
 
             return true;
         }
-        else if (this.getPassengers().isEmpty() && this.groundHitCount >= 14 && player instanceof ServerPlayerEntity)
+        else if (this.getPassengers().isEmpty() && this.groundHitCount >= 14 && player instanceof ServerPlayer)
         {
 //            MarsUtil.openParachestInventory((ServerPlayerEntity) player, this);  TODO guis
             return true;
         }
-        else if (player instanceof ServerPlayerEntity)
+        else if (player instanceof ServerPlayer)
         {
             if (!this.onGround)
             {
                 return false;
             }
 
-            this.removePassengers();
+            this.ejectPassengers();
             return true;
         }
         else
@@ -246,21 +245,21 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
     @Override
     public void tickInAir()
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             if (this.groundHitCount == 0)
             {
-                this.setMotion(this.getMotion().x, -this.getPosY() / 50.0D, this.getMotion().z);
+                this.setDeltaMovement(this.getDeltaMovement().x, -this.getY() / 50.0D, this.getDeltaMovement().z);
             }
             else if (this.groundHitCount < 14 || this.shouldMove())
             {
-                this.setMotion(this.getMotion().x, this.getMotion().y * 0.95 - 0.08, this.getMotion().z);
+                this.setDeltaMovement(this.getDeltaMovement().x, this.getDeltaMovement().y * 0.95 - 0.08, this.getDeltaMovement().z);
             }
             else
             {
                 if (!this.shouldMove())
                 {
-                    this.setMotion(0.0, 0.0, 0.0);
+                    this.setDeltaMovement(0.0, 0.0, 0.0);
                     this.rotationPitchSpeed = 0.0F;
                     this.rotationYawSpeed = 0.0F;
                 }
@@ -287,9 +286,9 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
             {
                 this.groundHitCount++;
                 double mag = (1.0D / this.groundHitCount) * 4.0D;
-                double mX = this.rand.nextDouble() - 0.5;
+                double mX = this.random.nextDouble() - 0.5;
                 double mY = 1.0D;
-                double mZ = this.rand.nextDouble() - 0.5;
+                double mZ = this.random.nextDouble() - 0.5;
                 mX *= mag / 3.0D;
                 mY *= mag;
                 mZ *= mag / 3.0D;
@@ -300,7 +299,7 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
         if (this.ticks >= 40 && this.ticks < 45)
         {
 //            this.motionY = this.getInitialMotionY();
-            this.setMotion(this.getMotion().x, this.getInitialMotionY(), this.getMotion().z);
+            this.setDeltaMovement(this.getDeltaMovement().x, this.getInitialMotionY(), this.getDeltaMovement().z);
         }
 
         if (!this.shouldMove())
@@ -308,7 +307,7 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
             return new Vector3D(0, 0, 0);
         }
 
-        return new Vector3D(this.getMotion().x, this.ticks < 40 ? 0 : this.getMotion().y, this.getMotion().z);
+        return new Vector3D(this.getDeltaMovement().x, this.ticks < 40 ? 0 : this.getDeltaMovement().y, this.getDeltaMovement().z);
     }
 
     @Override
@@ -316,7 +315,7 @@ public class LandingBalloonsEntity extends EntityLanderBase implements IIgnoreSh
     {
         ArrayList<Object> objList = new ArrayList<Object>();
         objList.addAll(super.getNetworkedData());
-        if ((this.world.isRemote && this.hasReceivedPacket && this.groundHitCount <= 14) || (!this.world.isRemote && this.groundHitCount == 14))
+        if ((this.level.isClientSide && this.hasReceivedPacket && this.groundHitCount <= 14) || (!this.level.isClientSide && this.groundHitCount == 14))
         {
             objList.add(this.groundHitCount);
         }

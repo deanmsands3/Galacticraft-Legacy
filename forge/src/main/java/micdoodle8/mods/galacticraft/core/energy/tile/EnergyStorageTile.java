@@ -8,9 +8,9 @@ import micdoodle8.mods.galacticraft.api.transmission.tile.IElectrical;
 import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
 import micdoodle8.mods.galacticraft.core.tile.ReceiverMode;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityAdvanced;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.LogicalSide;
 
 public abstract class EnergyStorageTile extends TileEntityAdvanced implements IEnergyHandlerGC, IElectrical
@@ -23,31 +23,31 @@ public abstract class EnergyStorageTile extends TileEntityAdvanced implements IE
     @NetworkedField(targetSide = LogicalSide.CLIENT)
     public int poweredByTierGC = 1;
 
-    public EnergyStorageTile(TileEntityType<?> type)
+    public EnergyStorageTile(BlockEntityType<?> type)
     {
         super(type);
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
 
-        super.read(nbt);
+        super.load(nbt);
         this.storage.readFromNBT(nbt);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         this.storage.writeToNBT(nbt);
         return nbt;
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     public abstract ReceiverMode getModeFromDirection(Direction direction);

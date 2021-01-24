@@ -2,11 +2,10 @@ package micdoodle8.mods.galacticraft.core.client.obj;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
-import net.minecraft.client.renderer.model.BlockModel;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.IUnbakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.ModelLoader;
@@ -44,7 +43,7 @@ public class BaseModelCache {
         protected IModelGeometry<?> model;
 
         protected final ResourceLocation rl;
-        private final Map<IModelConfiguration, IBakedModel> bakedMap = new Object2ObjectOpenHashMap<>();
+        private final Map<IModelConfiguration, BakedModel> bakedMap = new Object2ObjectOpenHashMap<>();
 
         protected ModelData(ResourceLocation rl) {
             this.rl = rl;
@@ -57,7 +56,7 @@ public class BaseModelCache {
         protected void setup() {
         }
 
-        public IBakedModel bake(IModelConfiguration config) {
+        public BakedModel bake(IModelConfiguration config) {
             return bakedMap.computeIfAbsent(config, c -> model.bake(c, ModelLoader.instance(), ModelLoader.defaultTextureGetter(), SimpleModelTransform.IDENTITY, ItemOverrideList.EMPTY, rl));
         }
 
@@ -81,7 +80,7 @@ public class BaseModelCache {
 
     public static class JSONModelData extends ModelData {
 
-        private IBakedModel bakedModel;
+        private BakedModel bakedModel;
 
         private JSONModelData(ResourceLocation rl) {
             super(rl);
@@ -91,7 +90,7 @@ public class BaseModelCache {
         protected void reload(ModelBakeEvent evt) {
             super.reload(evt);
             bakedModel = evt.getModelRegistry().get(rl);
-            IUnbakedModel unbaked = evt.getModelLoader().getUnbakedModel(rl);
+            UnbakedModel unbaked = evt.getModelLoader().getUnbakedModel(rl);
             if (unbaked instanceof BlockModel) {
                 model = ((BlockModel) unbaked).customData.getCustomGeometry();
             }
@@ -102,7 +101,7 @@ public class BaseModelCache {
             ModelLoader.addSpecialModel(rl);
         }
 
-        public IBakedModel getBakedModel() {
+        public BakedModel getBakedModel() {
             return bakedModel;
         }
     }

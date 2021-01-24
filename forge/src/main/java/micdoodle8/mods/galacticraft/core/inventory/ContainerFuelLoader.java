@@ -5,22 +5,22 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityFuelLoader;
 import micdoodle8.mods.galacticraft.core.util.FluidUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerFuelLoader extends Container
+public class ContainerFuelLoader extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.FUEL_LOADER)
-    public static ContainerType<ContainerFuelLoader> TYPE;
+    public static MenuType<ContainerFuelLoader> TYPE;
 
     private final TileEntityFuelLoader fuelLoader;
 
-    public ContainerFuelLoader(int containerId, PlayerInventory playerInv, TileEntityFuelLoader fuelLoader)
+    public ContainerFuelLoader(int containerId, Inventory playerInv, TileEntityFuelLoader fuelLoader)
     {
         super(TYPE, containerId);
         this.fuelLoader = fuelLoader;
@@ -52,26 +52,26 @@ public class ContainerFuelLoader extends Container
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity var1)
+    public boolean stillValid(Player var1)
     {
-        return this.fuelLoader.isUsableByPlayer(var1);
+        return this.fuelLoader.stillValid(var1);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par2)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par2)
     {
         ItemStack var3 = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(par2);
+        final Slot slot = this.slots.get(par2);
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            final ItemStack var5 = slot.getStack();
+            final ItemStack var5 = slot.getItem();
             var3 = var5.copy();
             boolean movedToMachineSlot = false;
 
             if (par2 < 2)
             {
-                if (!this.mergeItemStack(var5, 2, 38, true))
+                if (!this.moveItemStackTo(var5, 2, 38, true))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -80,7 +80,7 @@ public class ContainerFuelLoader extends Container
             {
                 if (EnergyUtil.isElectricItem(var5.getItem()))
                 {
-                    if (!this.mergeItemStack(var5, 0, 1, false))
+                    if (!this.moveItemStackTo(var5, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -90,7 +90,7 @@ public class ContainerFuelLoader extends Container
                 {
                     if (FluidUtil.isFuelContainerAny(var5))
                     {
-                        if (!this.mergeItemStack(var5, 1, 2, false))
+                        if (!this.moveItemStackTo(var5, 1, 2, false))
                         {
                             return ItemStack.EMPTY;
                         }
@@ -98,12 +98,12 @@ public class ContainerFuelLoader extends Container
                     }
                     else if (par2 < 29)
                     {
-                        if (!this.mergeItemStack(var5, 29, 38, false))
+                        if (!this.moveItemStackTo(var5, 29, 38, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (!this.mergeItemStack(var5, 2, 29, false))
+                    else if (!this.moveItemStackTo(var5, 2, 29, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -117,16 +117,16 @@ public class ContainerFuelLoader extends Container
                 {
                     ItemStack remainder = var3.copy();
                     remainder.shrink(1);
-                    slot.putStack(remainder);
+                    slot.set(remainder);
                 }
                 else
                 {
-                    slot.putStack(ItemStack.EMPTY);
+                    slot.set(ItemStack.EMPTY);
                 }
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (var5.getCount() == var3.getCount())

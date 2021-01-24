@@ -3,13 +3,13 @@ package micdoodle8.mods.galacticraft.core.items;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -66,7 +66,7 @@ public class ItemFuelCanister extends ItemCanisterGeneric implements ISortable
     @Override
     public String getTranslationKey(ItemStack stack)
     {
-        if (stack.getDamage() == 1)
+        if (stack.getDamageValue() == 1)
         {
             return "item.galacticraftcore.fuel_canister";
         }
@@ -76,11 +76,11 @@ public class ItemFuelCanister extends ItemCanisterGeneric implements ISortable
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void addInformation(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
-        if (stack.getMaxDamage() - stack.getDamage() > 0)
+        if (stack.getMaxDamage() - stack.getDamageValue() > 0)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + (stack.getMaxDamage() - stack.getDamage())));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + (stack.getMaxDamage() - stack.getDamageValue())));
         }
     }
 

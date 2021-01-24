@@ -6,23 +6,12 @@ import micdoodle8.mods.galacticraft.api.block.IPlantableBlock;
 import micdoodle8.mods.galacticraft.api.block.ITerraformableBlock;
 import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.IPlantable;
 
 import java.util.Random;
@@ -59,11 +48,11 @@ public class BlockOreVenus extends Block implements IDetectableResource, IPlanta
 
 
     @Override
-    public int getExpDrop(BlockState state, IWorldReader world, BlockPos pos, int fortune, int silktouch)
+    public int getExpDrop(BlockState state, LevelReader world, BlockPos pos, int fortune, int silktouch)
     {
         if (state.getBlock() == VenusBlocks.VENUS_QUARTZ_ORE || state.getBlock() == VenusBlocks.VENUS_SILICON_ORE)
         {
-            return MathHelper.nextInt(world instanceof World ? ((World) world).rand : new Random(), 2, 5);
+            return Mth.nextInt(world instanceof Level ? ((Level) world).random : new Random(), 2, 5);
         }
         return 0;
     }

@@ -3,11 +3,11 @@ package micdoodle8.mods.galacticraft.core.client.gui.element;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.opengl.GL11;
 
 public class GuiElementDropdown extends Button
@@ -17,7 +17,7 @@ public class GuiElementDropdown extends Button
     public boolean dropdownClicked;
     public String[] optionStrings;
     public int selectedOption = -1;
-    public FontRenderer font;
+    public Font font;
     private final IDropboxCallback parentGui;
 
     public GuiElementDropdown(IDropboxCallback parentClass, int x, int y, String... text)
@@ -27,14 +27,14 @@ public class GuiElementDropdown extends Button
         });
         Minecraft minecraft = Minecraft.getInstance();
         this.parentGui = parentClass;
-        this.font = minecraft.fontRenderer;
+        this.font = minecraft.font;
         this.optionStrings = text;
 
         int largestString = Integer.MIN_VALUE;
 
         for (String element : text)
         {
-            largestString = Math.max(largestString, this.font.getStringWidth(element));
+            largestString = Math.max(largestString, this.font.width(element));
         }
 
         this.width = largestString + 8 + 15;
@@ -60,27 +60,27 @@ public class GuiElementDropdown extends Button
             GL11.glTranslatef(0, 0, 500);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.isHovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
-            AbstractGui.fill(this.x, this.y, this.x + this.width - 15, this.y + (this.dropdownClicked ? this.height * this.optionStrings.length : this.height), ColorUtil.to32BitColor(255, 0, 0, 0));
-            AbstractGui.fill(this.x + 1, this.y + 1, this.x + this.width - 16, this.y + (this.dropdownClicked ? this.height * this.optionStrings.length : this.height) - 1, ColorUtil.to32BitColor(255, 150, 150, 150));
-            AbstractGui.fill(this.x + this.width - 15, this.y, this.x + this.width - 1, this.y + this.height, ColorUtil.to32BitColor(255, 0, 0, 0));
-            AbstractGui.fill(this.x + this.width - 15, this.y + 1, this.x + this.width - 2, this.y + this.height - 1, ColorUtil.to32BitColor(255, 150, 150, 150));
+            GuiComponent.fill(this.x, this.y, this.x + this.width - 15, this.y + (this.dropdownClicked ? this.height * this.optionStrings.length : this.height), ColorUtil.to32BitColor(255, 0, 0, 0));
+            GuiComponent.fill(this.x + 1, this.y + 1, this.x + this.width - 16, this.y + (this.dropdownClicked ? this.height * this.optionStrings.length : this.height) - 1, ColorUtil.to32BitColor(255, 150, 150, 150));
+            GuiComponent.fill(this.x + this.width - 15, this.y, this.x + this.width - 1, this.y + this.height, ColorUtil.to32BitColor(255, 0, 0, 0));
+            GuiComponent.fill(this.x + this.width - 15, this.y + 1, this.x + this.width - 2, this.y + this.height - 1, ColorUtil.to32BitColor(255, 150, 150, 150));
 
             if (this.dropdownClicked && par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height * this.optionStrings.length)
             {
                 int hoverPos = (par3 - this.y) / this.height;
-                AbstractGui.fill(this.x + 1, this.y + this.height * hoverPos + 1, this.x + this.width - 16, this.y + this.height * (hoverPos + 1) - 1, ColorUtil.to32BitColor(255, 175, 175, 175));
+                GuiComponent.fill(this.x + 1, this.y + this.height * hoverPos + 1, this.x + this.width - 16, this.y + this.height * (hoverPos + 1) - 1, ColorUtil.to32BitColor(255, 175, 175, 175));
             }
 
             if (this.dropdownClicked)
             {
                 for (int i = 0; i < this.optionStrings.length; i++)
                 {
-                    this.font.drawStringWithShadow(this.optionStrings[i], this.x + this.width / 2 - 7 - this.font.getStringWidth(this.optionStrings[i]) / 2, this.y + (this.height - 6) / 2 + this.height * i, ColorUtil.to32BitColor(255, 255, 255, 255));
+                    this.font.drawShadow(this.optionStrings[i], this.x + this.width / 2 - 7 - this.font.width(this.optionStrings[i]) / 2, this.y + (this.height - 6) / 2 + this.height * i, ColorUtil.to32BitColor(255, 255, 255, 255));
                 }
             }
             else
             {
-                this.font.drawStringWithShadow(this.optionStrings[this.selectedOption], this.x + this.width / 2 - 7 - this.font.getStringWidth(this.optionStrings[this.selectedOption]) / 2, this.y + (this.height - 6) / 2, ColorUtil.to32BitColor(255, 255, 255, 255));
+                this.font.drawShadow(this.optionStrings[this.selectedOption], this.x + this.width / 2 - 7 - this.font.width(this.optionStrings[this.selectedOption]) / 2, this.y + (this.height - 6) / 2, ColorUtil.to32BitColor(255, 255, 255, 255));
             }
 
             Minecraft minecraft = Minecraft.getInstance();
@@ -133,7 +133,7 @@ public class GuiElementDropdown extends Button
 
     public interface IDropboxCallback
     {
-        boolean canBeClickedBy(GuiElementDropdown dropdown, PlayerEntity player);
+        boolean canBeClickedBy(GuiElementDropdown dropdown, Player player);
 
         void onSelectionChanged(GuiElementDropdown dropdown, int selection);
 

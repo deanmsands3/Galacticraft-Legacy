@@ -6,32 +6,31 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityCircuitFabricator;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.FurnaceResultSlot;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.FurnaceResultSlot;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ContainerCircuitFabricator extends Container
+public class ContainerCircuitFabricator extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.CIRCUIT_FABRICATOR)
-    public static ContainerType<ContainerCircuitFabricator> TYPE;
+    public static MenuType<ContainerCircuitFabricator> TYPE;
 
     private final TileEntityCircuitFabricator fabricator;
 
-    public ContainerCircuitFabricator(int containerId, PlayerInventory playerInv, TileEntityCircuitFabricator fabricator)
+    public ContainerCircuitFabricator(int containerId, Inventory playerInv, TileEntityCircuitFabricator fabricator)
     {
         super(TYPE, containerId);
         this.fabricator = fabricator;
@@ -82,15 +81,15 @@ public class ContainerCircuitFabricator extends Container
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.fabricator.isUsableByPlayer(par1EntityPlayer);
+        return this.fabricator.stillValid(par1EntityPlayer);
     }
 
     @Override
-    public void onCraftMatrixChanged(IInventory par1IInventory)
+    public void slotsChanged(Container par1IInventory)
     {
-        super.onCraftMatrixChanged(par1IInventory);
+        super.slotsChanged(par1IInventory);
     }
 
     /**
@@ -98,27 +97,27 @@ public class ContainerCircuitFabricator extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(par1);
-        final int b = this.inventorySlots.size();
+        Slot slot = this.slots.get(par1);
+        final int b = this.slots.size();
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            ItemStack var4 = slot.getStack();
+            ItemStack var4 = slot.getItem();
             var2 = var4.copy();
 
             if (par1 < b - 36)
             {
-                if (!this.mergeItemStack(var4, b - 36, b, true))
+                if (!this.moveItemStackTo(var4, b - 36, b, true))
                 {
                     return ItemStack.EMPTY;
                 }
 
                 if (par1 == 6)
                 {
-                    slot.onSlotChange(var4, var2);
+                    slot.onQuickCraft(var4, var2);
                 }
             }
             else
@@ -126,14 +125,14 @@ public class ContainerCircuitFabricator extends Container
                 Item i = var4.getItem();
                 if (EnergyUtil.isElectricItem(i))
                 {
-                    if (!this.mergeItemStack(var4, 0, 1, false))
+                    if (!this.moveItemStackTo(var4, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (i == Items.DIAMOND)
                 {
-                    if (!this.mergeItemStack(var4, 1, 2, false))
+                    if (!this.moveItemStackTo(var4, 1, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -147,26 +146,26 @@ public class ContainerCircuitFabricator extends Container
                 }
                 else if (i == Items.REDSTONE)
                 {
-                    if (!this.mergeItemStack(var4, 4, 5, false))
+                    if (!this.moveItemStackTo(var4, 4, 5, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (i == Items.REPEATER || i == new ItemStack(Blocks.REDSTONE_TORCH).getItem() || i == Items.BLUE_DYE)
                 {
-                    if (!this.mergeItemStack(var4, 5, 6, false))
+                    if (!this.moveItemStackTo(var4, 5, 6, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (par1 < b - 9)
                 {
-                    if (!this.mergeItemStack(var4, b - 9, b, false))
+                    if (!this.moveItemStackTo(var4, b - 9, b, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (!this.mergeItemStack(var4, b - 36, b - 9, false))
+                else if (!this.moveItemStackTo(var4, b - 36, b - 9, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -174,11 +173,11 @@ public class ContainerCircuitFabricator extends Container
 
             if (var4.getCount() == 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (var4.getCount() == var2.getCount())
@@ -200,11 +199,11 @@ public class ContainerCircuitFabricator extends Container
         int acceptTotal = 0;
         for (int i = a; i < b; i++)
         {
-            Slot slot = this.inventorySlots.get(i);
+            Slot slot = this.slots.get(i);
 
             if (slot != null)
             {
-                ItemStack target = slot.getStack();
+                ItemStack target = slot.getItem();
                 if (matchingStacks(stack, target))
                 {
                     acceptSlots.add(slot);
@@ -221,12 +220,12 @@ public class ContainerCircuitFabricator extends Container
 
         for (Slot slot : acceptSlots)
         {
-            ItemStack target = slot.getStack();
+            ItemStack target = slot.getItem();
             if (target.isEmpty())
             {
                 target = stack.copy();
                 target.setCount(1);
-                slot.putStack(target);
+                slot.set(target);
                 stack.shrink(1);
                 if (stack.isEmpty())
                 {
@@ -245,10 +244,10 @@ public class ContainerCircuitFabricator extends Container
 
             for (Slot slot : acceptSlots)
             {
-                ItemStack target = slot.getStack();
+                ItemStack target = slot.getItem();
                 stack.shrink(target.getMaxStackSize() - target.getCount());
                 target.setCount(target.getMaxStackSize());
-                slot.onSlotChanged();
+                slot.setChanged();
             }
             return true;
         }
@@ -268,20 +267,20 @@ public class ContainerCircuitFabricator extends Container
                 int smallestStack = 64;
                 for (Slot slot : acceptSlots)
                 {
-                    ItemStack target = slot.getStack();
+                    ItemStack target = slot.getItem();
                     if (target.getCount() < smallestStack)
                     {
                         smallestStack = target.getCount();
                         neediest = slot;
                     }
                 }
-                neediest.getStack().grow(1);
+                neediest.getItem().grow(1);
                 stack.shrink(1);
             }
             while (!stack.isEmpty());
             for (Slot slot : acceptSlots)
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
             return true;
         }
@@ -292,11 +291,11 @@ public class ContainerCircuitFabricator extends Container
             int targetSize = stack.getMaxStackSize() - minQuantity;
             for (Slot slot : acceptSlots)
             {
-                ItemStack target = slot.getStack();
+                ItemStack target = slot.getItem();
                 stack.shrink(targetSize - target.getCount());
                 acceptTotal -= targetSize - target.getCount();
                 target.setCount(targetSize);
-                slot.onSlotChanged();
+                slot.setChanged();
             }
         }
 
@@ -307,7 +306,7 @@ public class ContainerCircuitFabricator extends Container
         {
             if (slot != null)
             {
-                ItemStack target = slot.getStack();
+                ItemStack target = slot.getItem();
                 int transfer = average;
                 if (modulus > 0)
                 {
@@ -322,11 +321,11 @@ public class ContainerCircuitFabricator extends Container
                 target.grow(transfer);
                 if (target.getCount() > target.getMaxStackSize())
                 {
-                    GCLog.info("Shift clicking - slot " + slot.slotNumber + " wanted more than it could accept:" + target.getCount());
+                    GCLog.info("Shift clicking - slot " + slot.index + " wanted more than it could accept:" + target.getCount());
                     stack.grow(target.getCount() - target.getMaxStackSize());
                     target.setCount(target.getMaxStackSize());
                 }
-                slot.onSlotChanged();
+                slot.setChanged();
                 if (stack.isEmpty())
                 {
                     break;
@@ -341,7 +340,7 @@ public class ContainerCircuitFabricator extends Container
     {
         for (ItemStack stack : CircuitFabricatorRecipes.slotValidItems.get(1))
         {
-            if (stack.isItemEqual(test))
+            if (stack.sameItem(test))
             {
                 return true;
             }
@@ -351,6 +350,6 @@ public class ContainerCircuitFabricator extends Container
 
     private boolean matchingStacks(ItemStack stack, ItemStack target)
     {
-        return target.isEmpty() || target.getItem() == stack.getItem() /*&& (!stack.getHasSubtypes() || stack.getMetadata() == target.getMetadata())*/ && ItemStack.areItemStackTagsEqual(stack, target) && (target.isStackable() && target.getCount() < target.getMaxStackSize());
+        return target.isEmpty() || target.getItem() == stack.getItem() /*&& (!stack.getHasSubtypes() || stack.getMetadata() == target.getMetadata())*/ && ItemStack.tagMatches(stack, target) && (target.isStackable() && target.getCount() < target.getMaxStackSize());
     }
 }

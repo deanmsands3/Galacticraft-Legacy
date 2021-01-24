@@ -16,23 +16,23 @@ import micdoodle8.mods.galacticraft.core.util.FluidUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.FluidHandlerWrapper;
 import micdoodle8.mods.galacticraft.core.wrappers.IFluidHandlerWrapper;
 import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -42,14 +42,14 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
-
+import FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory implements ISidedInventory, IFluidHandlerWrapper, ILandingPadAttachable, IMachineSides, INamedContainerProvider
+public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IFluidHandlerWrapper, ILandingPadAttachable, IMachineSides, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.FUEL_LOADER)
-    public static TileEntityType<TileEntityFuelLoader> TYPE;
+    public static BlockEntityType<TileEntityFuelLoader> TYPE;
 
     private final int tankCapacity = 12000;
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -76,7 +76,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.loadedFuelLastTick = false;
 
@@ -93,11 +93,11 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
                 BlockVec3 thisVec = new BlockVec3(this);
                 for (final Direction dir : Direction.values())
                 {
-                    final TileEntity pad = thisVec.getTileEntityOnSide(this.world, dir);
+                    final BlockEntity pad = thisVec.getTileEntityOnSide(this.level, dir);
 
                     if (pad instanceof TileEntityFake)
                     {
-                        final TileEntity mainTile = ((TileEntityFake) pad).getMainBlockTile();
+                        final BlockEntity mainTile = ((TileEntityFake) pad).getMainBlockTile();
 
                         if (mainTile instanceof IFuelable)
                         {
@@ -129,9 +129,9 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     }
 
     @Override
-    public void read(CompoundNBT par1NBTTagCompound)
+    public void load(CompoundTag par1NBTTagCompound)
     {
-        super.read(par1NBTTagCompound);
+        super.load(par1NBTTagCompound);
 
         if (par1NBTTagCompound.contains("fuelTank"))
         {
@@ -142,13 +142,13 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
 
         if (this.fuelTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundNBT()));
+            nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundTag()));
         }
 
         this.addMachineSidesToNBT(nbt);  //Needed by IMachineSides
@@ -157,7 +157,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 1;
     }
@@ -171,13 +171,13 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        return this.isItemValidForSlot(slotID, itemstack);
+        return this.canPlaceItem(slotID, itemstack);
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         if (slotID == 1 && !itemstack.isEmpty())
         {
@@ -193,7 +193,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
 //    }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         return (slotID == 1 && itemstack != null && itemstack.getItem() == GCItems.PARTIAL_FUEL_CANISTER) || (slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem()));
     }
@@ -285,7 +285,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     }
 
     @Override
-    public boolean canAttachToLandingPad(IWorldReader world, BlockPos pos)
+    public boolean canAttachToLandingPad(LevelReader world, BlockPos pos)
     {
         return true;
     }
@@ -293,10 +293,10 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (state.getBlock() instanceof BlockFuelLoader)
         {
-            return state.get(BlockFuelLoader.FACING);
+            return state.getValue(BlockFuelLoader.FACING);
         }
         return Direction.NORTH;
     }
@@ -356,7 +356,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return getFront().getCounterClockWise();
         case REAR:
             return getFront().getOpposite();
         case TOP:
@@ -365,7 +365,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
             return Direction.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return getFront().getClockWise();
         }
     }
 
@@ -376,7 +376,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
         {
         case RIGHT:
         default:
-            return getFront().rotateYCCW();
+            return getFront().getCounterClockWise();
         case REAR:
             return getFront().getOpposite();
         case TOP:
@@ -384,7 +384,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
         case BOTTOM:
             return Direction.DOWN;
         case LEFT:
-            return getFront().rotateY();
+            return getFront().getClockWise();
         }
     }
 
@@ -436,14 +436,14 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     //------------------END OF IMachineSides implementation
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerFuelLoader(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.fuel_loader");
+        return new TranslatableComponent("container.fuel_loader");
     }
 }

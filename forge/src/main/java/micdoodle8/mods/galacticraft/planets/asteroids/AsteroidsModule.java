@@ -26,10 +26,10 @@ import micdoodle8.mods.galacticraft.planets.asteroids.world.gen.BiomeAsteroids;
 import micdoodle8.mods.galacticraft.planets.mars.MarsModule;
 import micdoodle8.mods.galacticraft.planets.mars.dimension.biome.BiomeMars;
 import micdoodle8.mods.galacticraft.planets.venus.inventory.VenusContainers;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -59,7 +59,7 @@ public class AsteroidsModule implements IPlanetsModule
     public AsteroidsModule()
     {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modBus.addGenericListener(ContainerType.class, AsteroidsContainers::initContainers);
+        modBus.addGenericListener(MenuType.class, AsteroidsContainers::initContainers);
     }
 
     @Override

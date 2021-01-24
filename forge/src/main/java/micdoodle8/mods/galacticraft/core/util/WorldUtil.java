@@ -1,7 +1,6 @@
 package micdoodle8.mods.galacticraft.core.util;
 
 import com.google.common.collect.*;
-import io.netty.buffer.Unpooled;
 import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
 import micdoodle8.mods.galacticraft.api.entity.IAntiGrav;
 import micdoodle8.mods.galacticraft.api.galaxies.*;
@@ -28,39 +27,34 @@ import micdoodle8.mods.galacticraft.core.items.ItemParaChute;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SRespawnPacket;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.GameType;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.server.TicketType;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ModDimension;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -73,12 +67,12 @@ import java.util.Map.Entry;
 
 public class WorldUtil
 {
-    public static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, Constants.MOD_ID_CORE);
+//    public static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries., Constants.MOD_ID_CORE);
     //    public static HashMap<DimensionType, DimensionType> registeredSpaceStations;  //Dimension IDs and providers (providers are -26 or -27 by default)
-    public static HashSet<DimensionType> registeredSpaceStations = new HashSet<>();
+    public static HashSet<ResourceKey<DimensionType>> registeredSpaceStations = new HashSet<>();
     //    public static Map<DimensionType, ResourceLocation> dimNames = new TreeMap<>();  //Dimension IDs and dimension names
-    public static Map<ServerPlayerEntity, HashMap<String, DimensionType>> celestialMapCache = new MapMaker().weakKeys().makeMap();
-    public static List<DimensionType> registeredPlanets;
+    public static Map<ServerPlayer, HashMap<String, DimensionType>> celestialMapCache = new MapMaker().weakKeys().makeMap();
+    public static List<ResourceKey<DimensionType>> registeredPlanets;
 
 //    public static DimensionType MOON_DIMENSION;
 ////    public static final RegistryObject<ModDimension> MOON_MOD_DIMENSION = register("moon", WorldUtil::moonFactory);
@@ -133,31 +127,33 @@ public class WorldUtil
 //        }
 //    }
 
-    public static ResourceLocation getSpaceStationRes(PlayerEntity owner)
+    public static ResourceLocation getSpaceStationRes(Player owner)
     {
-        return getSpaceStationRes(owner.getUniqueID());
+        return getSpaceStationRes(owner.getUUID());
     }
 
     public static ResourceLocation getSpaceStationRes(UUID owner)
     {
-        return new ResourceLocation(Constants.SS_PREFiX + owner);
+        return new ResourceLocation(Constants.SS_PREFIX + owner);
     }
 
-    public static boolean doesSpaceStationExist(PlayerEntity owner)
+    public static boolean doesSpaceStationExist(Player owner)
     {
         ResourceLocation id = getSpaceStationRes(owner);
-        return DimensionType.byName(id) != null;
+        return ResourceKey.VALUES.containsValue(ResourceKey.create(Registry.DIMENSION_REGISTRY, id));
     }
 
-    public static DimensionType createNewSpaceStation(UUID owner, boolean keepLoaded)
+    public static ResourceKey<DimensionType> createNewSpaceStation(UUID owner, boolean keepLoaded)
     {
-        DimensionType type;
+        ResourceKey<DimensionType> type;
         ResourceLocation id = getSpaceStationRes(owner);
-        if (DimensionType.byName(id) == null)
+        if (!ResourceKey.VALUES.containsValue(ResourceKey.create(Registry.DIMENSION_REGISTRY, id)))
         {
-            type = DimensionManager.registerDimension(id, GCDimensions.SPACE_STATION_MOD_DIMENSION, new PacketBuffer(Unpooled.buffer()), true);
+//            type = DimensionManager.registerDimension(id, GCDimensions.SPACE_STATION_MOD_DIMENSION, new FriendlyByteBuf(Unpooled.buffer()), true);
 //            type.setRegistryName(id);
-            DimensionManager.keepLoaded(type, keepLoaded);
+//            DimensionManager.keepLoaded(type, keepLoaded);
+
+            type = Registry.register(Registry.DIMENSION_REGISTRY, id, GCDimensions.SPACE_STATION_MOD_DIMENSION)
             WorldUtil.registeredSpaceStations.add(type);
             return type;
         }
@@ -166,10 +162,10 @@ public class WorldUtil
 
     public static float getGravityFactor(Entity entity)
     {
-        if (entity.world.getDimension() instanceof IGalacticraftDimension)
+        if (entity.level.dimension() instanceof IGalacticraftDimension)
         {
-            final IGalacticraftDimension customProvider = (IGalacticraftDimension) entity.world.getDimension();
-            float returnValue = MathHelper.sqrt(0.08F / (0.08F - customProvider.getGravity()));
+            final IGalacticraftDimension customProvider = (IGalacticraftDimension) entity.level.dimension();
+            float returnValue = Mth.sqrt(0.08F / (0.08F - customProvider.getGravity()));
             if (returnValue > 2.5F)
             {
                 returnValue = 2.5F;
@@ -190,7 +186,7 @@ public class WorldUtil
         }
     }
 
-    public static Vector3 getWorldColor(World world)
+    public static Vector3 getWorldColor(Level world)
     {
 //        if (GalacticraftCore.isPlanetsLoaded && world.getDimension() instanceof WorldProviderVenus)
 //        {
@@ -266,18 +262,18 @@ public class WorldUtil
      * @param playerBase - the player who will be riding the rocket (needed for space station permissions)
      * @return a List of integers which are the dimension IDs
      */
-    public static List<DimensionType> getPossibleDimensionsForSpaceshipTier(int tier, ServerPlayerEntity playerBase)
+    public static List<ResourceKey<DimensionType>> getPossibleDimensionsForSpaceshipTier(int tier, ServerPlayer playerBase)
     {
-        List<DimensionType> temp = new ArrayList<>();
+        List<ResourceKey<DimensionType>> temp = new ArrayList<>();
 
         if (!ConfigManagerCore.disableRocketsToOverworld.get())
         {
-            temp.add(DimensionType.OVERWORLD);
+            temp.add(DimensionType.OVERWORLD_LOCATION);
         }
 
-        for (DimensionType element : WorldUtil.registeredPlanets)
+        for (ResourceKey<DimensionType> element : WorldUtil.registeredPlanets)
         {
-            if (element == DimensionType.OVERWORLD)
+            if (element == DimensionType.OVERWORLD_LOCATION)
             {
                 continue;
             }
@@ -306,26 +302,26 @@ public class WorldUtil
 //            }
         }
 
-        for (DimensionType element : WorldUtil.registeredSpaceStations)
+        for (ResourceKey<DimensionType> element : WorldUtil.registeredSpaceStations)
         {
-            final SpaceStationWorldData data = SpaceStationWorldData.getStationData(playerBase.getServer(), element.getRegistryName(), DimensionType.OVERWORLD, null);
+            final SpaceStationWorldData data = SpaceStationWorldData.getStationData(playerBase.getServer(), element.getRegistryName(), DimensionType.OVERWORLD_LOCATION, null);
 
-            if (!ConfigManagerCore.spaceStationsRequirePermission.get() || data.getAllowedAll() || data.getAllowedPlayers().contains(playerBase.getUniqueID()) || ArrayUtils.contains(playerBase.server.getPlayerList().getOppedPlayerNames(), playerBase.getName()))
+            if (!ConfigManagerCore.spaceStationsRequirePermission.get() || data.getAllowedAll() || data.getAllowedPlayers().contains(playerBase.getUUID()) || ArrayUtils.contains(playerBase.server.getPlayerList().getOpNames(), playerBase.getName()))
             {
                 //Satellites always reachable from their own homeworld or from its other satellites
                 if (playerBase != null)
                 {
-                    DimensionType currentWorld = playerBase.dimension;
+                    DimensionType currentWorld = playerBase.level.dimensionType();
                     //Player is on homeworld
                     if (currentWorld == data.getHomePlanet())
                     {
                         temp.add(element);
                         continue;
                     }
-                    if (playerBase.world.getDimension() instanceof IOrbitDimension)
+                    if (playerBase.level.dimension() instanceof IOrbitDimension)
                     {
                         //Player is currently on another space station around the same planet
-                        final SpaceStationWorldData dataCurrent = SpaceStationWorldData.getStationData(playerBase.getServer(), playerBase.dimension.getRegistryName(), DimensionType.OVERWORLD, null);
+                        final SpaceStationWorldData dataCurrent = SpaceStationWorldData.getStationData(playerBase.getServer(), playerBase.level.dimension().getRegistryName(), DimensionType.OVERWORLD_LOCATION, null);
                         if (dataCurrent.getHomePlanet() == data.getHomePlanet())
                         {
                             temp.add(element);
@@ -335,7 +331,7 @@ public class WorldUtil
                 }
 
                 //Testing dimension is a satellite, but with a different homeworld - test its tier
-                Dimension homeWorld = WorldUtil.getProviderForDimensionServer(data.getHomePlanet());
+                LevelStem homeWorld = WorldUtil.getProviderForDimensionServer(data.getHomePlanet());
 
                 if (homeWorld != null)
                 {
@@ -357,7 +353,7 @@ public class WorldUtil
         return temp;
     }
 
-    public static CelestialBody getReachableCelestialBodiesForDimensionID(DimensionType id)
+    public static CelestialBody getReachableCelestialBodiesForDimensionID(ResourceKey<DimensionType> id)
     {
         List<CelestialBody> celestialBodyList = Lists.newArrayList();
         celestialBodyList.addAll(GalaxyRegistry.getRegisteredMoons().values());
@@ -406,7 +402,7 @@ public class WorldUtil
      * @param id
      * @return
      */
-    public static World getWorldForDimensionServer(DimensionType id)
+    public static Level getWorldForDimensionServer(ResourceKey<Level> id)
     {
         MinecraftServer theServer = GCCoreUtil.getServer();
         if (theServer == null)
@@ -414,7 +410,7 @@ public class WorldUtil
             GCLog.debug("Called WorldUtil server LogicalSide method but FML returned no server - is this a bug?");
             return null;
         }
-        return theServer.getWorld(id);
+        return theServer.getLevel(id);
     }
 
     /**
@@ -424,23 +420,23 @@ public class WorldUtil
      * @param id
      * @return
      */
-    public static Dimension getProviderForDimensionServer(DimensionType id)
+    public static ResourceKey<Level> getProviderForDimensionServer(DimensionType id)
     {
-        World ws = getWorldForDimensionServer(id);
+        Level ws = getWorldForDimensionServer(id);
         if (ws != null)
         {
-            return ws.dimension;
+            return ws.dimension();
         }
         return null;
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static Dimension getProviderForDimensionClient(DimensionType id)
+    public static ResourceKey<Level> getProviderForDimensionClient(DimensionType id)
     {
-        World ws = ClientProxyCore.mc.world;
+        Level ws = ClientProxyCore.mc.level;
         if (ws != null && GCCoreUtil.getDimensionType(ws) == id)
         {
-            return ws.dimension;
+            return ws.dimension();
         }
         return null;
 //        return DimensionManager.createProviderFor(id);
@@ -455,12 +451,12 @@ public class WorldUtil
      * @param playerBase - the player who will be riding the rocket (needed for checking space station permissions)
      * @return a Map of the names of the dimension vs. the dimension IDs
      */
-    public static HashMap<String, DimensionType> getArrayOfPossibleDimensions(int tier, ServerPlayerEntity playerBase)
+    public static HashMap<String, DimensionType> getArrayOfPossibleDimensions(int tier, ServerPlayer playerBase)
     {
-        List<DimensionType> ids = WorldUtil.getPossibleDimensionsForSpaceshipTier(tier, playerBase);
+        List<ResourceKey<DimensionType>> ids = WorldUtil.getPossibleDimensionsForSpaceshipTier(tier, playerBase);
         final HashMap<String, DimensionType> map = new HashMap<>(ids.size(), 1F);
 
-        for (DimensionType id : ids)
+        for (ResourceKey<DimensionType> id : ids)
         {
             CelestialBody celestialBody = getReachableCelestialBodiesForDimensionID(id);
 
@@ -520,7 +516,7 @@ public class WorldUtil
      * @param playerBase - the player who will be riding the rocket (needed for checking space station permissions)
      * @return a Map of the names of the dimension vs. the dimension IDs
      */
-    public static HashMap<String, DimensionType> getArrayOfPossibleDimensionsAgain(int tier, ServerPlayerEntity playerBase)
+    public static HashMap<String, DimensionType> getArrayOfPossibleDimensionsAgain(int tier, ServerPlayer playerBase)
     {
         HashMap<String, DimensionType> map = WorldUtil.celestialMapCache.get(playerBase);
         if (map != null)
@@ -558,7 +554,7 @@ public class WorldUtil
         {
             for (File var5 : var2)
             {
-                if (var5.getName().startsWith(Constants.SS_PREFiX) && var5.getName().endsWith(".dat"))
+                if (var5.getName().startsWith(Constants.SS_PREFIX) && var5.getName().endsWith(".dat"))
                 {
                     try
                     {
@@ -568,29 +564,29 @@ public class WorldUtil
                         String name = var5.getName();
                         String id = name;
                         SpaceStationWorldData worldDataTemp = new SpaceStationWorldData(id);
-                        name = name.substring(Constants.SS_PREFiX.length(), name.length() - 4);
+                        name = name.substring(Constants.SS_PREFIX.length(), name.length() - 4);
                         UUID ownerID = UUID.fromString(name);
                         ResourceLocation registeredID = getSpaceStationRes(ownerID);
 //                        int registeredID = Integer.parseInt(name);
 
                         FileInputStream fileinputstream = new FileInputStream(var5);
-                        CompoundNBT nbttagcompound = CompressedStreamTools.readCompressed(fileinputstream);
+                        CompoundTag nbttagcompound = NbtIo.readCompressed(fileinputstream);
                         fileinputstream.close();
-                        worldDataTemp.read(nbttagcompound.getCompound("data"));
+                        worldDataTemp.load(nbttagcompound.getCompound("data"));
 
                         // Search for id in server-defined statically loaded dimensions
                         int index = Collections.binarySearch(ConfigManagerCore.staticLoadDimensions.get(), registeredID.toString());
 
 //                        DimensionType providerID = index >= 0 ? worldDataTemp.getDimensionIdStatic() : worldDataTemp.getDimensionIdDynamic();
-                        if (DimensionType.byName(registeredID) == null)
+                        if (DimensionType.getByName(registeredID) == null)
                         {
                             createNewSpaceStation(ownerID, false);
                         }
-                        DimensionType type = DimensionType.byName(registeredID);
+                        DimensionType type = DimensionType.getByName(registeredID);
                         WorldUtil.registeredSpaceStations.add(type);
                         if (index >= 0) // Keep loaded
                         {
-                            theServer.getWorld(type);
+                            theServer.getLevel(type);
                         }
                     }
                     catch (Exception e)
@@ -754,7 +750,7 @@ public class WorldUtil
 //        return SpaceStationWorldData.getStationData(world, dimID.getRegistryName(), homePlanetID, dynamicProviderID, staticProviderID, player);
 //    }
 
-    public static Entity transferEntityToDimension(Entity entity, DimensionType dimensionID, ServerWorld world)
+    public static Entity transferEntityToDimension(Entity entity, DimensionType dimensionID, ServerLevel world)
     {
         return WorldUtil.transferEntityToDimension(entity, dimensionID, world, true, null);
     }
@@ -764,9 +760,9 @@ public class WorldUtil
      * If the entity left the old world it was in, it will now automatically be removed from that old world before the next update tick.
      * (See WorldUtil.removeEntityFromWorld())
      */
-    public static Entity transferEntityToDimension(Entity entity, DimensionType dimensionID, ServerWorld world, boolean transferInv, EntityAutoRocket ridingRocket)
+    public static Entity transferEntityToDimension(Entity entity, DimensionType dimensionID, ServerLevel world, boolean transferInv, EntityAutoRocket ridingRocket)
     {
-        if (!world.isRemote)
+        if (!world.isClientSide)
         {
             //GalacticraftCore.packetPipeline.sendToAll(new PacketSimple(EnumSimplePacket.C_UPDATE_PLANETS_LIST, WorldUtil.getPlanetList()));
 
@@ -774,7 +770,7 @@ public class WorldUtil
 
             if (mcServer != null)
             {
-                final ServerWorld var6 = mcServer.getWorld(dimensionID);
+                final ServerLevel var6 = mcServer.getLevel(dimensionID);
 
                 if (var6 == null)
                 {
@@ -794,19 +790,19 @@ public class WorldUtil
         return null;
     }
 
-    private static Entity teleportEntity(ServerWorld worldNew, Entity entity, DimensionType dimID, ITeleportType type, boolean transferInv, EntityAutoRocket ridingRocket)
+    private static Entity teleportEntity(ServerLevel worldNew, Entity entity, DimensionType dimID, ITeleportType type, boolean transferInv, EntityAutoRocket ridingRocket)
     {
 //        Entity otherRiddenEntity = null;
-        if (entity.getRidingEntity() != null)
+        if (entity.getVehicle() != null)
         {
-            if (entity.getRidingEntity() instanceof EntitySpaceshipBase)
+            if (entity.getVehicle() instanceof EntitySpaceshipBase)
             {
-                entity.startRiding(entity.getRidingEntity());
+                entity.startRiding(entity.getVehicle());
             }
-            else if (entity.getRidingEntity() instanceof CelestialScreenEntity)
+            else if (entity.getVehicle() instanceof CelestialScreenEntity)
             {
-                Entity e = entity.getRidingEntity();
-                e.removePassengers();
+                Entity e = entity.getVehicle();
+                e.ejectPassengers();
                 e.remove();
             }
 //        	else
@@ -1061,52 +1057,52 @@ public class WorldUtil
 //        }
 
         Vector3D spawnLocation;
-        float yaw = entity.rotationYaw;
-        float pitch = entity.rotationPitch;
+        float yaw = entity.yRot;
+        float pitch = entity.xRot;
         if (ridingRocket != null)
         {
             spawnLocation = new Vector3D(ridingRocket);
         }
         else
         {
-            spawnLocation = type.getPlayerSpawnLocation((ServerWorld) entity.world, (ServerPlayerEntity) entity);
+            spawnLocation = type.getPlayerSpawnLocation((ServerLevel) entity.level, (ServerPlayer) entity);
         }
 
-        if (entity instanceof ServerPlayerEntity)
+        if (entity instanceof ServerPlayer)
         {
             ChunkPos chunkpos = new ChunkPos(spawnLocation.toBlockPos());
-            worldNew.getChunkProvider().registerTicket(TicketType.POST_TELEPORT, chunkpos, 1, entity.getEntityId());
+            worldNew.getChunkSource().registerTicket(TicketType.POST_TELEPORT, chunkpos, 1, entity.getId());
             entity.stopRiding();
-            if (((ServerPlayerEntity) entity).isSleeping())
+            if (((ServerPlayer) entity).isSleeping())
             {
 //                ((ServerPlayerEntity) entity).wakeUpPlayer(true, true, false);
-                ((ServerPlayerEntity) entity).wakeUp();
+                ((ServerPlayer) entity).stopSleeping();
             }
 
-            if (worldNew == entity.world)
+            if (worldNew == entity.level)
             {
-                ((ServerPlayerEntity) entity).connection.setPlayerLocation(spawnLocation.x, spawnLocation.y, spawnLocation.z, yaw, pitch, Collections.emptySet());
+                ((ServerPlayer) entity).connection.teleport(spawnLocation.x, spawnLocation.y, spawnLocation.z, yaw, pitch, Collections.emptySet());
             }
             else
             {
-                ((ServerPlayerEntity) entity).teleport(worldNew, spawnLocation.x, spawnLocation.y, spawnLocation.z, yaw, pitch);
+                ((ServerPlayer) entity).teleportTo(worldNew, spawnLocation.x, spawnLocation.y, spawnLocation.z, yaw, pitch);
             }
 
-            entity.setRotationYawHead(yaw);
+            entity.setYHeadRot(yaw);
         }
         else
         {
-            float f1 = MathHelper.wrapDegrees(yaw);
-            float f = MathHelper.wrapDegrees(pitch);
-            f = MathHelper.clamp(f, -90.0F, 90.0F);
-            if (worldNew == entity.world)
+            float f1 = Mth.wrapDegrees(yaw);
+            float f = Mth.wrapDegrees(pitch);
+            f = Mth.clamp(f, -90.0F, 90.0F);
+            if (worldNew == entity.level)
             {
-                entity.setLocationAndAngles(spawnLocation.x, spawnLocation.y, spawnLocation.z, f1, f);
-                entity.setRotationYawHead(f1);
+                entity.moveTo(spawnLocation.x, spawnLocation.y, spawnLocation.z, f1, f);
+                entity.setYHeadRot(f1);
             }
             else
             {
-                entity.detach();
+                entity.unRide();
                 entity.dimension = worldNew.dimension.getType();
                 Entity entityOld = entity;
                 entity = entity.getType().create(worldNew);
@@ -1115,9 +1111,9 @@ public class WorldUtil
                     return entity;
                 }
 
-                entity.copyDataFromOld(entityOld);
-                entity.setLocationAndAngles(spawnLocation.x, spawnLocation.y, spawnLocation.z, f1, f);
-                entity.setRotationYawHead(f1);
+                entity.restoreFrom(entityOld);
+                entity.moveTo(spawnLocation.x, spawnLocation.y, spawnLocation.z, f1, f);
+                entity.setYHeadRot(f1);
                 worldNew.addFromAnotherDimension(entity); // Special "summon" method
             }
         }
@@ -1126,19 +1122,19 @@ public class WorldUtil
 //            facing.updateLook(source, entity);
 //        }
 
-        if (!(entity instanceof LivingEntity) || !((LivingEntity) entity).isElytraFlying())
+        if (!(entity instanceof LivingEntity) || !((LivingEntity) entity).isFallFlying())
         {
-            entity.setMotion(entity.getMotion().mul(1.0D, 0.0D, 1.0D));
+            entity.setDeltaMovement(entity.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D));
             entity.onGround = true;
         }
 
         //Update PlayerStatsGC
-        if (entity instanceof ServerPlayerEntity)
+        if (entity instanceof ServerPlayer)
         {
-            ServerPlayerEntity player = (ServerPlayerEntity) entity;
+            ServerPlayer player = (ServerPlayer) entity;
 
             GCPlayerStats stats = GCPlayerStats.get(player);
-            if (ridingRocket == null && type.useParachute() && stats.getExtendedInventory().getStackInSlot(4) != ItemStack.EMPTY && stats.getExtendedInventory().getStackInSlot(4).getItem() instanceof ItemParaChute)
+            if (ridingRocket == null && type.useParachute() && stats.getExtendedInventory().getItem(4) != ItemStack.EMPTY && stats.getExtendedInventory().getItem(4).getItem() instanceof ItemParaChute)
             {
                 GCPlayerHandler.setUsingParachute(player, stats, true);
             }
@@ -1179,21 +1175,21 @@ public class WorldUtil
 
             if (transferInv && stats.getChestSpawnCooldown() == 0)
             {
-                stats.setChestSpawnVector(type.getParaChestSpawnLocation((ServerWorld) entity.world, player, new Random()));
+                stats.setChestSpawnVector(type.getParaChestSpawnLocation((ServerLevel) entity.level, player, new Random()));
                 stats.setChestSpawnCooldown(200);
             }
         }
 
         if (ridingRocket != null)
         {
-            boolean previous = CompatibilityManager.forceLoadChunks((ServerWorld) worldNew);
-            ridingRocket.forceSpawn = true;
-            worldNew.addEntity(ridingRocket);
-            ridingRocket.setWorld(worldNew);
+            boolean previous = CompatibilityManager.forceLoadChunks((ServerLevel) worldNew);
+            ridingRocket.forcedLoading = true;
+            worldNew.addFreshEntity(ridingRocket);
+            ridingRocket.setLevel(worldNew);
 //            worldNew.updateEntityWithOptionalForce(ridingRocket, true);
-            CompatibilityManager.forceLoadChunksEnd((ServerWorld) worldNew, previous);
+            CompatibilityManager.forceLoadChunksEnd((ServerLevel) worldNew, previous);
             entity.startRiding(ridingRocket);
-            GCLog.debug("Entering rocket at : " + entity.getPosX() + "," + entity.getPosZ() + " rocket at: " + ridingRocket.getPosY() + "," + ridingRocket.getPosZ());
+            GCLog.debug("Entering rocket at : " + entity.getX() + "," + entity.getZ() + " rocket at: " + ridingRocket.getY() + "," + ridingRocket.getZ());
         }
 //        else if (otherRiddenEntity != null)
 //        {
@@ -1211,12 +1207,12 @@ public class WorldUtil
 //            worldNew.updateEntityWithOptionalForce(otherRiddenEntity, true);
 //        }
 
-        if (entity instanceof ServerPlayerEntity)
+        if (entity instanceof ServerPlayer)
         {
 //            if (dimChange) FMLCommonHandler.instance().firePlayerChangedDimensionEvent((ServerPlayerEntity) entity, oldDimID, dimID);
 
             //Spawn in a lander if appropriate
-            type.onSpaceDimensionChanged(worldNew, (ServerPlayerEntity) entity, ridingRocket != null);
+            type.onSpaceDimensionChanged(worldNew, (ServerPlayer) entity, ridingRocket != null);
         }
 
         return entity;
@@ -1314,7 +1310,7 @@ public class WorldUtil
 //        }
 //        CompatibilityManager.forceLoadChunksEnd(worldNew, previous);
 //    }
-    public static ServerWorld getStartWorld(ServerWorld unchanged)
+    public static ServerLevel getStartWorld(ServerLevel unchanged)
     {
         if (ConfigManagerCore.challengeSpawnHandling)
         {
@@ -1329,10 +1325,10 @@ public class WorldUtil
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static PlayerEntity forceRespawnClient(DimensionType dimID, WorldType worldType, GameType gameType)
+    public static Player forceRespawnClient(DimensionType dimID, GameType gameType)
     {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        SRespawnPacket fakePacket = new SRespawnPacket(dimID, WorldInfo.byHashing(player.world.getWorldInfo().getSeed()), worldType, gameType);
+        LocalPlayer player = Minecraft.getInstance().player;
+        ClientboundRespawnPacket fakePacket = new ClientboundRespawnPacket(dimID, player.level.dimension(), 0l, gameType, gameType, player.level.isDebug(), false, true);
         player.connection.handleRespawn(fakePacket);
         return player;
     }
@@ -1369,7 +1365,7 @@ public class WorldUtil
 //
 //        var1.isDead = false;
 //    }
-    public static SpaceStationRecipe getSpaceStationRecipe(DimensionType planetID)
+    public static SpaceStationRecipe getSpaceStationRecipe(ResourceKey<DimensionType> planetID)
     {
         for (SpaceStationType type : GalacticraftRegistry.getSpaceStationData())
         {
@@ -1582,7 +1578,7 @@ public class WorldUtil
 //        }
 //    }
 
-    public static void toCelestialSelection(ServerPlayerEntity player, GCPlayerStats stats, int tier)
+    public static void toCelestialSelection(ServerPlayer player, GCPlayerStats stats, int tier)
     {
         player.stopRiding();
         stats.setSpaceshipTier(tier);
@@ -1597,15 +1593,15 @@ public class WorldUtil
         }
 
         boolean canCreateStations = PermissionAPI.hasPermission(player, Constants.PERMISSION_CREATE_STATION);
-        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_DIMENSION_LIST, GCCoreUtil.getDimensionType(player.world), new Object[]{PlayerUtil.getName(player), dimensionList, canCreateStations}), player);
+        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_DIMENSION_LIST, GCCoreUtil.getDimensionType(player.level), new Object[]{PlayerUtil.getName(player), dimensionList, canCreateStations}), player);
         stats.setUsingPlanetSelectionGui(true);
         stats.setSavedPlanetList(dimensionList);
-        Entity fakeEntity = new CelestialScreenEntity(player.world, player.getPosX(), player.getPosY(), player.getPosZ());
-        player.world.addEntity(fakeEntity);
+        Entity fakeEntity = new CelestialScreenEntity(player.level, player.getX(), player.getY(), player.getZ());
+        player.level.addFreshEntity(fakeEntity);
         player.startRiding(fakeEntity);
     }
 
-    public static Vector3 getFootprintPosition(World world, float rotation, Vector3 startPosition, BlockVec3 playerCenter)
+    public static Vector3 getFootprintPosition(Level world, float rotation, Vector3 startPosition, BlockVec3 playerCenter)
     {
         Vector3 position = startPosition.clone();
         float footprintScale = 0.375F;
@@ -1628,13 +1624,13 @@ public class WorldUtil
             {
                 for (Direction direction : Direction.values())
                 {
-                    BlockPos offsetPos = posMain.offset(direction);
+                    BlockPos offsetPos = posMain.relative(direction);
                     if (direction != Direction.DOWN && direction != Direction.UP)
                     {
                         if (!world.getBlockState(offsetPos).getBlock().isAir(world.getBlockState(offsetPos), world, offsetPos))
                         {
-                            position.x += direction.getXOffset();
-                            position.z += direction.getZOffset();
+                            position.x += direction.getStepX();
+                            position.z += direction.getStepZ();
                             break;
                         }
                     }
@@ -1731,7 +1727,7 @@ public class WorldUtil
             return "overworld";
         }
 
-        return DimensionType.getKey(wp.getType()).toString();
+        return DimensionType.getName(wp.getType()).toString();
     }
 
     private static void insertChecklistEntries(CelestialBody body, List<CelestialBody> bodiesDone, List<List<String>> checklistValues)
@@ -1792,25 +1788,25 @@ public class WorldUtil
         return null;
     }
 
-    public static void markAdjacentPadForUpdate(World worldIn, BlockPos pos)
+    public static void markAdjacentPadForUpdate(Level worldIn, BlockPos pos)
     {
         BlockPos offsetPos;
         for (int dX = -2; dX <= 2; dX++)
         {
             for (int dZ = -2; dZ <= 2; dZ++)
             {
-                offsetPos = pos.add(dX, 0, dZ);
+                offsetPos = pos.offset(dX, 0, dZ);
                 final BlockState blockState = worldIn.getBlockState(offsetPos);
 
                 if (blockState.getBlock() == GCBlocks.FULL_ROCKET_LAUNCH_PAD)
                 {
-                    worldIn.notifyBlockUpdate(offsetPos, blockState, blockState, 3);
+                    worldIn.sendBlockUpdated(offsetPos, blockState, blockState, 3);
                 }
             }
         }
     }
 
-    public static void setNextMorning(ServerWorld world)
+    public static void setNextMorning(ServerLevel world)
     {
         if (world.getDimension() instanceof DimensionSpace)
         {
@@ -1825,7 +1821,7 @@ public class WorldUtil
         else
         {
             long newTime = world.getDayTime();
-            for (ServerWorld worldServer : GCCoreUtil.getWorldServerList(world))
+            for (ServerLevel worldServer : GCCoreUtil.getWorldServerList(world))
             {
                 if (worldServer == world)
                 {

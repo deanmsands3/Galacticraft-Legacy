@@ -18,20 +18,20 @@ import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.FluidUtil;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -40,10 +40,10 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
-public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileClientUpdates, INamedContainerProvider
+public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileClientUpdates, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.OXYGEN_SEALER)
-    public static TileEntityType<TileEntityOxygenSealer> TYPE;
+    public static BlockEntityType<TileEntityOxygenSealer> TYPE;
 
     @NetworkedField(targetSide = LogicalSide.CLIENT)
     public boolean sealed;
@@ -81,7 +81,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
     @Override
     public void onLoad()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (!TileEntityOxygenSealer.loadedTiles.contains(this))
             {
@@ -96,19 +96,19 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
     }
 
     @Override
-    public void remove()
+    public void setRemoved()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             TileEntityOxygenSealer.loadedTiles.remove(this);
         }
-        super.remove();
+        super.setRemoved();
     }
 
     @Override
     public void onChunkUnloaded()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             TileEntityOxygenSealer.loadedTiles.remove(this);
         }
@@ -130,9 +130,9 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
         {
             return 0;
         }
-        BlockPos posAbove = new BlockPos(this.getPos().getX(), this.getPos().getY() + 1, this.getPos().getZ());
-        BlockState stateAbove = this.world.getBlockState(posAbove);
-        if (!(stateAbove.getBlock().isAir(stateAbove, this.world, posAbove)) && !OxygenPressureProtocol.canBlockPassAir(this.world, stateAbove, this.getPos().up(), Direction.UP))
+        BlockPos posAbove = new BlockPos(this.getBlockPos().getX(), this.getBlockPos().getY() + 1, this.getBlockPos().getZ());
+        BlockState stateAbove = this.level.getBlockState(posAbove);
+        if (!(stateAbove.getBlock().isAir(stateAbove, this.level, posAbove)) && !OxygenPressureProtocol.canBlockPassAir(this.level, stateAbove, this.getBlockPos().above(), Direction.UP))
         {
             // The vent is blocked
             return 0;
@@ -143,16 +143,16 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
 
     public boolean thermalControlEnabled()
     {
-        ItemStack oxygenItemStack = this.getStackInSlot(2);
+        ItemStack oxygenItemStack = this.getItem(2);
         return oxygenItemStack != null && oxygenItemStack.getItem() == GCItems.AMBIENT_THERMAL_CONTROLLER && this.hasEnoughEnergyToRun && !this.disabled;
     }
 
     @Override
     public void tick()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
-            ItemStack oxygenItemStack = this.getStackInSlot(1);
+            ItemStack oxygenItemStack = this.getItem(1);
             if (oxygenItemStack != null && oxygenItemStack.getItem() instanceof IItemOxygenSupply)
             {
                 IItemOxygenSupply oxygenItem = (IItemOxygenSupply) oxygenItemStack.getItem();
@@ -181,7 +181,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
         this.oxygenPerTick = this.sealed ? 2 : UNSEALED_OXYGENPERTICK;
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             // Some code to count the number of Oxygen Sealers being updated,
             // tick by tick - needed for queueing
@@ -251,16 +251,16 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (this.isItemValidForSlot(slotID, itemstack))
+        if (this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
             case 0:
                 return ItemElectricBase.isElectricItemCharged(itemstack);
             case 1:
-                return itemstack.getDamage() < itemstack.getItem().getMaxDamage();
+                return itemstack.getDamageValue() < itemstack.getItem().getMaxDamage();
             case 2:
                 return itemstack.getItem() == GCItems.AMBIENT_THERMAL_CONTROLLER;
             default:
@@ -271,7 +271,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         switch (slotID)
         {
@@ -291,7 +291,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
 //    }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         if (itemstack.isEmpty())
         {
@@ -321,10 +321,10 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (state.getBlock() instanceof BlockOxygenSealer)
         {
-            return state.get(BlockOxygenSealer.FACING);
+            return state.getValue(BlockOxygenSealer.FACING);
         }
         return Direction.NORTH;
     }
@@ -332,13 +332,13 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
     @Override
     public Direction getElectricInputDirection()
     {
-        return getFront().rotateY();
+        return getFront().getClockWise();
     }
 
     @Override
     public ItemStack getBatteryInSlot()
     {
-        return this.getStackInSlot(0);
+        return this.getItem(0);
     }
 
     @Override
@@ -359,31 +359,31 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
         return EnumSet.noneOf(Direction.class);
     }
 
-    public static HashMap<BlockVec3, TileEntityOxygenSealer> getSealersAround(World world, BlockPos pos, int rSquared)
+    public static HashMap<BlockVec3, TileEntityOxygenSealer> getSealersAround(Level world, BlockPos pos, int rSquared)
     {
         HashMap<BlockVec3, TileEntityOxygenSealer> ret = new HashMap<BlockVec3, TileEntityOxygenSealer>();
 
         for (TileEntityOxygenSealer tile : new ArrayList<TileEntityOxygenSealer>(TileEntityOxygenSealer.loadedTiles))
         {
-            if (tile != null && tile.getWorld() == world && tile.getDistanceSq(pos.getX(), pos.getY(), pos.getZ()) < rSquared)
+            if (tile != null && tile.getLevel() == world && tile.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < rSquared)
             {
-                ret.put(new BlockVec3(tile.getPos()), tile);
+                ret.put(new BlockVec3(tile.getBlockPos()), tile);
             }
         }
 
         return ret;
     }
 
-    public static TileEntityOxygenSealer getNearestSealer(World world, double x, double y, double z)
+    public static TileEntityOxygenSealer getNearestSealer(Level world, double x, double y, double z)
     {
         TileEntityOxygenSealer ret = null;
         double dist = 96 * 96D;
 
-        for (Object tile : world.loadedTileEntityList)
+        for (Object tile : world.blockEntityList)
         {
             if (tile instanceof TileEntityOxygenSealer)
             {
-                double testDist = ((TileEntityOxygenSealer) tile).getDistanceSq(x, y, z);
+                double testDist = ((TileEntityOxygenSealer) tile).distanceToSqr(x, y, z);
                 if (testDist < dist)
                 {
                     dist = testDist;
@@ -396,7 +396,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
     }
 
     @Override
-    public void sendUpdateToClient(ServerPlayerEntity player)
+    public void sendUpdateToClient(ServerPlayer player)
     {
         if (this.sealed || this.threadSeal == null || this.threadSeal.leakTrace == null || this.threadSeal.leakTrace.isEmpty())
         {
@@ -406,8 +406,8 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
         int index = 0;
         for (BlockVec3 vec : this.threadSeal.leakTrace)
         {
-            int dx = vec.x - this.pos.getX() + 128;
-            int dz = vec.z - this.pos.getZ() + 128;
+            int dx = vec.x - this.worldPosition.getX() + 128;
+            int dz = vec.z - this.worldPosition.getZ() + 128;
             int dy = vec.y;
             int composite;
             if (dx < 0 || dx > 255 || dz < 0 || dz > 255 || dy < 0)
@@ -420,7 +420,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
             }
             data[index++] = composite;
         }
-        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_LEAK_DATA, GCCoreUtil.getDimensionType(player.world), new Object[]{this.getPos(), data}), player);
+        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_LEAK_DATA, GCCoreUtil.getDimensionType(player.level), new Object[]{this.getBlockPos(), data}), player);
     }
 
     @Override
@@ -443,7 +443,7 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
                     int dx = (comp >> 16) - 128;
                     int dy = (comp >> 8) & 255;
                     int dz = (comp & 255) - 128;
-                    this.leaksClient.add(new BlockVec3(this.pos.getX() + dx, dy, this.pos.getZ() + dz));
+                    this.leaksClient.add(new BlockVec3(this.worldPosition.getX() + dx, dy, this.worldPosition.getZ() + dz));
                 }
             }
         }
@@ -456,14 +456,14 @@ public class TileEntityOxygenSealer extends TileEntityOxygen implements ITileCli
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerOxygenSealer(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.oxygen_sealer");
+        return new TranslatableComponent("container.oxygen_sealer");
     }
 }

@@ -1,45 +1,42 @@
 package micdoodle8.mods.galacticraft.planets.mars.entities;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.projectile.DamagingProjectileEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class TNTProjectileEntity extends DamagingProjectileEntity
+public class TNTProjectileEntity extends AbstractHurtingProjectile
 {
-    public TNTProjectileEntity(EntityType<? extends TNTProjectileEntity> type, World worldIn)
+    public TNTProjectileEntity(EntityType<? extends TNTProjectileEntity> type, Level worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.0F, 1.0F);
     }
 
-    public static TNTProjectileEntity createEntityProjectileTNT(World world, LivingEntity entityShooting, double motX, double motY, double motZ)
+    public static TNTProjectileEntity createEntityProjectileTNT(Level world, LivingEntity entityShooting, double motX, double motY, double motZ)
     {
         TNTProjectileEntity projectileTNT = new TNTProjectileEntity(MarsEntities.TNT_PROJECTILE, world);
 //        this.setSize(1.0F, 1.0F);
-        projectileTNT.shootingEntity = entityShooting;
-        projectileTNT.setLocationAndAngles(entityShooting.getPosX(), entityShooting.getPosY(), entityShooting.getPosZ(), entityShooting.rotationYaw, entityShooting.rotationPitch);
-        projectileTNT.setPosition(projectileTNT.getPosX(), projectileTNT.getPosY(), projectileTNT.getPosZ());
-        projectileTNT.setMotion(Vec3d.ZERO);
-        motX = motX + projectileTNT.rand.nextGaussian() * 0.4D;
-        motY = motY + projectileTNT.rand.nextGaussian() * 0.4D;
-        motZ = motZ + projectileTNT.rand.nextGaussian() * 0.4D;
-        double d0 = MathHelper.sqrt(motX * motX + motY * motY + motZ * motZ);
-        projectileTNT.accelerationX = motX / d0 * 0.1D;
-        projectileTNT.accelerationY = motY / d0 * 0.1D;
-        projectileTNT.accelerationZ = motZ / d0 * 0.1D;
+        projectileTNT.owner = entityShooting;
+        projectileTNT.moveTo(entityShooting.getX(), entityShooting.getY(), entityShooting.getZ(), entityShooting.yRot, entityShooting.xRot);
+        projectileTNT.setPos(projectileTNT.getX(), projectileTNT.getY(), projectileTNT.getZ());
+        projectileTNT.setDeltaMovement(Vec3.ZERO);
+        motX = motX + projectileTNT.random.nextGaussian() * 0.4D;
+        motY = motY + projectileTNT.random.nextGaussian() * 0.4D;
+        motZ = motZ + projectileTNT.random.nextGaussian() * 0.4D;
+        double d0 = Mth.sqrt(motX * motX + motY * motY + motZ * motZ);
+        projectileTNT.xPower = motX / d0 * 0.1D;
+        projectileTNT.yPower = motY / d0 * 0.1D;
+        projectileTNT.zPower = motZ / d0 * 0.1D;
         return projectileTNT;
     }
 //
@@ -51,29 +48,29 @@ public class TNTProjectileEntity extends DamagingProjectileEntity
 //    }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public boolean isBurning()
+    public boolean isOnFire()
     {
         return false;
     }
 
     @Override
-    protected void onImpact(RayTraceResult movingObjectPosition)
+    protected void onHit(HitResult movingObjectPosition)
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (movingObjectPosition.getType() == RayTraceResult.Type.ENTITY)
             {
-                EntityRayTraceResult entityResult = (EntityRayTraceResult) movingObjectPosition;
-                if (!(entityResult.getEntity() instanceof CreeperEntity))
+                EntityHitResult entityResult = (EntityHitResult) movingObjectPosition;
+                if (!(entityResult.getEntity() instanceof Creeper))
                 {
                     float difficulty = 0;
-                    switch (this.world.getDifficulty())
+                    switch (this.level.getDifficulty())
                     {
                     case HARD:
                         difficulty = 2F;
@@ -82,17 +79,17 @@ public class TNTProjectileEntity extends DamagingProjectileEntity
                         difficulty = 1F;
                         break;
                     }
-                    entityResult.getEntity().attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 6.0F + 3.0F * difficulty);
+                    entityResult.getEntity().hurt(DamageSource.fireball(this, this.owner), 6.0F + 3.0F * difficulty);
                 }
             }
 
-            this.world.createExplosion(null, this.getPosX(), this.getPosY(), this.getPosZ(), 1.0F, false, this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) ? Explosion.Mode.BREAK : Explosion.Mode.NONE);
+            this.level.explode(null, this.getX(), this.getY(), this.getZ(), 1.0F, false, this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ? Explosion.Mode.BREAK : Explosion.Mode.NONE);
             this.remove();
         }
     }
 
     @Override
-    public boolean canBeCollidedWith()
+    public boolean isPickable()
     {
         return true;
     }

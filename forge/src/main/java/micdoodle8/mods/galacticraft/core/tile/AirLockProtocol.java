@@ -1,18 +1,17 @@
 package micdoodle8.mods.galacticraft.core.tile;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import java.util.ArrayList;
 import java.util.HashSet;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 class AirLockProtocol
 {
     private ArrayList<BlockPos> adjacentAirLocks;
     private final HashSet<BlockPos> checked;
-    private final World world;
-    private final TileEntity head;
+    private final Level world;
+    private final BlockEntity head;
     private final int maxLoops;
 
     private int airLocksDimension1Min = 0;
@@ -27,19 +26,19 @@ class AirLockProtocol
     public int minZ = 6000000;
     public int maxZ = -6000000;
 
-    public AirLockProtocol(TileEntity head)
+    public AirLockProtocol(BlockEntity head)
     {
         this.adjacentAirLocks = new ArrayList<BlockPos>();
         this.checked = new HashSet<BlockPos>();
-        this.world = head.getWorld();
+        this.world = head.getLevel();
         this.head = head;
         this.maxLoops = 26;
     }
 
     private void loopThrough(BlockPos pos, int loops)
     {
-        int xAligned = this.head.getPos().getX();
-        int zAligned = this.head.getPos().getZ();
+        int xAligned = this.head.getBlockPos().getX();
+        int zAligned = this.head.getBlockPos().getZ();
         for (int x = -1; x <= 1; x++)
         {
             int xTest = pos.getX() + x;
@@ -57,7 +56,7 @@ class AirLockProtocol
                             if (!this.checked.contains(testPos))
                             {
                                 this.checked.add(testPos);
-                                if (this.world.getTileEntity(testPos) instanceof TileEntityAirLock)
+                                if (this.world.getBlockEntity(testPos) instanceof TileEntityAirLock)
                                 {
                                     this.adjacentAirLocks.add(testPos);
                                     if (loops > 1)
@@ -87,7 +86,7 @@ class AirLockProtocol
                     if (!this.checked.contains(testPos))
                     {
                         this.checked.add(testPos);
-                        if (this.world.getTileEntity(testPos) instanceof TileEntityAirLock)
+                        if (this.world.getBlockEntity(testPos) instanceof TileEntityAirLock)
                         {
                             this.adjacentAirLocks.add(testPos);
                             if (loops > 1)
@@ -103,7 +102,7 @@ class AirLockProtocol
 
     public int calculate(boolean horizontal)
     {
-        if (this.world.isRemote)
+        if (this.world.isClientSide)
         {
             return -1;
         }
@@ -117,7 +116,7 @@ class AirLockProtocol
 
         this.adjacentAirLocks = new ArrayList<BlockPos>();
         this.checked.clear();
-        final BlockPos headPos = this.head.getPos();
+        final BlockPos headPos = this.head.getBlockPos();
         this.checked.add(headPos);
         this.adjacentAirLocks.add(headPos);
 
@@ -201,7 +200,7 @@ class AirLockProtocol
     {
         for (int y = this.minY; y <= this.maxY; y++)
         {
-            final TileEntity tileAt = this.world.getTileEntity(new BlockPos(this.minX, y, this.minZ));
+            final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(this.minX, y, this.minZ));
 
             if (tileAt instanceof TileEntityAirLock)
             {
@@ -211,7 +210,7 @@ class AirLockProtocol
 
         for (int y = this.minY; y <= this.maxY; y++)
         {
-            final TileEntity tileAt = this.world.getTileEntity(new BlockPos(this.maxX, y, this.maxZ));
+            final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(this.maxX, y, this.maxZ));
 
             if (tileAt instanceof TileEntityAirLock)
             {
@@ -223,7 +222,7 @@ class AirLockProtocol
         {
             for (int x = this.minX; x <= this.maxX; x++)
             {
-                final TileEntity tileAt = this.world.getTileEntity(new BlockPos(x, this.maxY, this.maxZ));
+                final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(x, this.maxY, this.maxZ));
 
                 if (tileAt instanceof TileEntityAirLock)
                 {
@@ -233,7 +232,7 @@ class AirLockProtocol
 
             for (int x = this.minX; x <= this.maxX; x++)
             {
-                final TileEntity tileAt = this.world.getTileEntity(new BlockPos(x, this.minY, this.maxZ));
+                final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(x, this.minY, this.maxZ));
 
                 if (tileAt instanceof TileEntityAirLock)
                 {
@@ -245,7 +244,7 @@ class AirLockProtocol
         {
             for (int z = this.minZ; z <= this.maxZ; z++)
             {
-                final TileEntity tileAt = this.world.getTileEntity(new BlockPos(this.maxX, this.maxY, z));
+                final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(this.maxX, this.maxY, z));
 
                 if (tileAt instanceof TileEntityAirLock)
                 {
@@ -255,7 +254,7 @@ class AirLockProtocol
 
             for (int z = this.minZ; z <= this.maxZ; z++)
             {
-                final TileEntity tileAt = this.world.getTileEntity(new BlockPos(this.maxX, this.minY, z));
+                final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(this.maxX, this.minY, z));
 
                 if (tileAt instanceof TileEntityAirLock)
                 {
@@ -271,7 +270,7 @@ class AirLockProtocol
         {
             for (int x = this.minX; x <= this.maxX; x++)
             {
-                final TileEntity tileAt = this.world.getTileEntity(new BlockPos(x, this.minY, this.maxZ));
+                final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(x, this.minY, this.maxZ));
 
                 if (tileAt instanceof TileEntityAirLock)
                 {
@@ -281,7 +280,7 @@ class AirLockProtocol
 
             for (int x = this.minX; x <= this.maxX; x++)
             {
-                final TileEntity tileAt = this.world.getTileEntity(new BlockPos(x, this.minY, this.minZ));
+                final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(x, this.minY, this.minZ));
 
                 if (tileAt instanceof TileEntityAirLock)
                 {
@@ -294,7 +293,7 @@ class AirLockProtocol
         {
             for (int z = this.minZ; z <= this.maxZ; z++)
             {
-                final TileEntity tileAt = this.world.getTileEntity(new BlockPos(this.maxX, this.minY, z));
+                final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(this.maxX, this.minY, z));
 
                 if (tileAt instanceof TileEntityAirLock)
                 {
@@ -304,7 +303,7 @@ class AirLockProtocol
 
             for (int z = this.minZ; z <= this.maxZ; z++)
             {
-                final TileEntity tileAt = this.world.getTileEntity(new BlockPos(this.minX, this.minY, z));
+                final BlockEntity tileAt = this.world.getBlockEntity(new BlockPos(this.minX, this.minY, z));
 
                 if (tileAt instanceof TileEntityAirLock)
                 {

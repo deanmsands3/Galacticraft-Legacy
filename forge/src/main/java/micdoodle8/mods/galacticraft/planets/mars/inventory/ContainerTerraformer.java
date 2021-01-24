@@ -5,30 +5,30 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.inventory.SlotSpecific;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityTerraformer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Items;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ContainerTerraformer extends Container
+public class ContainerTerraformer extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsContainerNames.TERRAFORMER)
-    public static ContainerType<ContainerTerraformer> TYPE;
+    public static MenuType<ContainerTerraformer> TYPE;
 
     private final TileEntityTerraformer terraformer;
     private static LinkedList<ItemStack> saplingList = null;
 
-    public ContainerTerraformer(int containerId, PlayerInventory playerInv, TileEntityTerraformer terraformer)
+    public ContainerTerraformer(int containerId, Inventory playerInv, TileEntityTerraformer terraformer)
     {
         super(TYPE, containerId);
         this.terraformer = terraformer;
@@ -81,37 +81,37 @@ public class ContainerTerraformer extends Container
             this.addSlot(new Slot(playerInv, var6, 8 + var6 * 18, 213));
         }
 
-        this.terraformer.openInventory(playerInv.player);
+        this.terraformer.startOpen(playerInv.player);
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity entityplayer)
+    public void removed(Player entityplayer)
     {
-        super.onContainerClosed(entityplayer);
-        this.terraformer.closeInventory(entityplayer);
+        super.removed(entityplayer);
+        this.terraformer.stopOpen(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.terraformer.isUsableByPlayer(par1EntityPlayer);
+        return this.terraformer.stillValid(par1EntityPlayer);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(par1);
-        final int b = this.inventorySlots.size();
+        final Slot slot = this.slots.get(par1);
+        final int b = this.slots.size();
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            final ItemStack var4 = slot.getStack();
+            final ItemStack var4 = slot.getItem();
             var2 = var4.copy();
 
             if (par1 < b - 36)
             {
-                if (!this.mergeItemStack(var4, b - 36, b, true))
+                if (!this.moveItemStackTo(var4, b - 36, b, true))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -120,47 +120,47 @@ public class ContainerTerraformer extends Container
             {
                 if (EnergyUtil.isElectricItem(var4.getItem()))
                 {
-                    if (!this.mergeItemStack(var4, 1, 2, false))
+                    if (!this.moveItemStackTo(var4, 1, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (var4.getItem() == Items.WATER_BUCKET)
                 {
-                    if (!this.mergeItemStack(var4, 0, 1, false))
+                    if (!this.moveItemStackTo(var4, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (var4.getItem() == Items.BONE_MEAL)
                 {
-                    if (!this.mergeItemStack(var4, 2, 6, false))
+                    if (!this.moveItemStackTo(var4, 2, 6, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (this.getSlot(6).isItemValid(var4))
+                else if (this.getSlot(6).mayPlace(var4))
                 {
-                    if (!this.mergeItemStack(var4, 6, 10, false))
+                    if (!this.moveItemStackTo(var4, 6, 10, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (var4.getItem() == Items.WHEAT_SEEDS)
                 {
-                    if (!this.mergeItemStack(var4, 10, 14, false))
+                    if (!this.moveItemStackTo(var4, 10, 14, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (par1 < b - 9)
                 {
-                    if (!this.mergeItemStack(var4, b - 9, b, false))
+                    if (!this.moveItemStackTo(var4, b - 9, b, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (!this.mergeItemStack(var4, b - 36, b - 9, false))
+                else if (!this.moveItemStackTo(var4, b - 36, b - 9, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -168,11 +168,11 @@ public class ContainerTerraformer extends Container
 
             if (var4.isEmpty())
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (var4.getCount() == var2.getCount())
@@ -195,7 +195,7 @@ public class ContainerTerraformer extends Container
 
         for (ItemStack sapling : saplingList)
         {
-            if (sapling.isItemEqual(stack))
+            if (sapling.sameItem(stack))
             {
                 return true;
             }
@@ -208,7 +208,7 @@ public class ContainerTerraformer extends Container
     {
         ContainerTerraformer.saplingList = new LinkedList<>();
 
-        for (Item item : ItemTags.SAPLINGS.getAllElements())
+        for (Item item : ItemTags.SAPLINGS.getValues())
         {
             ContainerTerraformer.saplingList.add(new ItemStack(item, 1));
         }

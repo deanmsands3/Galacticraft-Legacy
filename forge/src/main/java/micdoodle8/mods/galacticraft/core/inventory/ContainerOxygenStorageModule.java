@@ -3,22 +3,22 @@ package micdoodle8.mods.galacticraft.core.inventory;
 import micdoodle8.mods.galacticraft.api.item.IItemOxygenSupply;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityOxygenStorageModule;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerOxygenStorageModule extends Container
+public class ContainerOxygenStorageModule extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.OXYGEN_STORAGE_MODULE)
-    public static ContainerType<ContainerOxygenStorageModule> TYPE;
+    public static MenuType<ContainerOxygenStorageModule> TYPE;
 
     private final TileEntityOxygenStorageModule storageModule;
 
-    public ContainerOxygenStorageModule(int containerId, PlayerInventory playerInv, TileEntityOxygenStorageModule storageModule)
+    public ContainerOxygenStorageModule(int containerId, Inventory playerInv, TileEntityOxygenStorageModule storageModule)
     {
         super(TYPE, containerId);
         this.storageModule = storageModule;
@@ -48,14 +48,14 @@ public class ContainerOxygenStorageModule extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity entityplayer)
+    public void removed(Player entityplayer)
     {
-        super.onContainerClosed(entityplayer);
+        super.removed(entityplayer);
         this.storageModule.playersUsing.remove(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
         return true;
     }
@@ -65,20 +65,20 @@ public class ContainerOxygenStorageModule extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(par1);
-        final int b = this.inventorySlots.size();
+        final Slot slot = this.slots.get(par1);
+        final int b = this.slots.size();
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            final ItemStack stack = slot.getStack();
+            final ItemStack stack = slot.getItem();
             var2 = stack.copy();
 
             if (par1 < 1)
             {
-                if (!this.mergeItemStack(stack, b - 36, b, true))
+                if (!this.moveItemStackTo(stack, b - 36, b, true))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -87,7 +87,7 @@ public class ContainerOxygenStorageModule extends Container
             {
                 if (stack.getItem() instanceof IItemOxygenSupply)
                 {
-                    if (!this.mergeItemStack(stack, 0, 1, false))
+                    if (!this.moveItemStackTo(stack, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -96,12 +96,12 @@ public class ContainerOxygenStorageModule extends Container
                 {
                     if (par1 < b - 9)
                     {
-                        if (!this.mergeItemStack(stack, b - 9, b, false))
+                        if (!this.moveItemStackTo(stack, b - 9, b, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (!this.mergeItemStack(stack, b - 36, b - 9, false))
+                    else if (!this.moveItemStackTo(stack, b - 36, b - 9, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -110,11 +110,11 @@ public class ContainerOxygenStorageModule extends Container
 
             if (stack.getCount() == 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (stack.getCount() == var2.getCount())

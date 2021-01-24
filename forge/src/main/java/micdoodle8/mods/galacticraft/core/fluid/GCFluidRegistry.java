@@ -1,12 +1,11 @@
 package micdoodle8.mods.galacticraft.core.fluid;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
@@ -29,12 +28,12 @@ public class GCFluidRegistry
         itemRegister = DeferredRegister.create(ForgeRegistries.ITEMS, modid);
     }
 
-    public FluidRegistrationEntry<ForgeFlowingFluid.Source, ForgeFlowingFluid.Flowing, FlowingFluidBlock, BucketItem> register(String name, FluidAttributes.Builder builder, Material blockMaterial)
+    public FluidRegistrationEntry<ForgeFlowingFluid.Source, ForgeFlowingFluid.Flowing, LiquidBlock, BucketItem> register(String name, FluidAttributes.Builder builder, Material blockMaterial)
     {
         String flowingName = "flowing_" + name;
         String bucketName = name + "_bucket";
         //Create the registry object with dummy entries that we can use as part of the supplier but that works as use in suppliers
-        FluidRegistrationEntry<ForgeFlowingFluid.Source, ForgeFlowingFluid.Flowing, FlowingFluidBlock, BucketItem> fluidRegistryObject = new FluidRegistrationEntry<>(name);
+        FluidRegistrationEntry<ForgeFlowingFluid.Source, ForgeFlowingFluid.Flowing, LiquidBlock, BucketItem> fluidRegistryObject = new FluidRegistrationEntry<>(name);
         //Pass in suppliers that are wrapped instead of direct references to the registry objects, so that when we update the registry object to
         // point to a new object it gets updated properly.
         ForgeFlowingFluid.Properties properties = new ForgeFlowingFluid.Properties(fluidRegistryObject::getStillFluid,

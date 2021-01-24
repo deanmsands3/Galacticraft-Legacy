@@ -4,26 +4,26 @@ import micdoodle8.mods.galacticraft.api.item.IItemElectric;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityElectricFurnace;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.FurnaceResultSlot;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.world.World;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.FurnaceResultSlot;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerElectricFurnace extends Container
+public class ContainerElectricFurnace extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.ELECTRIC_FURNACE)
-    public static ContainerType<ContainerElectricFurnace> TYPE;
+    public static MenuType<ContainerElectricFurnace> TYPE;
 
     private final TileEntityElectricFurnace furnace;
 
-    public ContainerElectricFurnace(int containerId, PlayerInventory playerInv, TileEntityElectricFurnace furnace)
+    public ContainerElectricFurnace(int containerId, Inventory playerInv, TileEntityElectricFurnace furnace)
     {
         super(TYPE, containerId);
         this.furnace = furnace;
@@ -36,7 +36,7 @@ public class ContainerElectricFurnace extends Container
 
         // Smelting result
         this.addSlot(new FurnaceResultSlot(playerInv.player, furnace, 2, 109, 25));
-        if (furnace.getSizeInventory() > 2)
+        if (furnace.getContainerSize() > 2)
         {
             this.addSlot(new FurnaceResultSlot(playerInv.player, furnace, 3, 127, 25));
         }
@@ -55,7 +55,7 @@ public class ContainerElectricFurnace extends Container
             this.addSlot(new Slot(playerInv, var3, 8 + var3 * 18, 142));
         }
 
-        furnace.openInventory(playerInv.player);
+        furnace.startOpen(playerInv.player);
 //        inventory.playersUsing.add(playerInv.player);
     }
 
@@ -65,17 +65,17 @@ public class ContainerElectricFurnace extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity player)
+    public void removed(Player player)
     {
-        super.onContainerClosed(player);
-        furnace.closeInventory(player);
+        super.removed(player);
+        furnace.stopOpen(player);
 //        this.inventory.playersUsing.remove(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.furnace.isUsableByPlayer(par1EntityPlayer);
+        return this.furnace.stillValid(par1EntityPlayer);
     }
 
     /**
@@ -83,66 +83,66 @@ public class ContainerElectricFurnace extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int par1)
+    public ItemStack quickMoveStack(Player player, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        Slot var3 = this.inventorySlots.get(par1);
-        int off = this.furnace.getSizeInventory() > 2 ? 1 : 0;
+        Slot var3 = this.slots.get(par1);
+        int off = this.furnace.getContainerSize() > 2 ? 1 : 0;
 
-        if (var3 != null && var3.getHasStack())
+        if (var3 != null && var3.hasItem())
         {
-            ItemStack var4 = var3.getStack();
+            ItemStack var4 = var3.getItem();
             var2 = var4.copy();
 
             if (par1 >= 2 && par1 <= 2 + off)
             {
-                if (!this.mergeItemStack(var4, 3 + off, 39 + off, true))
+                if (!this.moveItemStackTo(var4, 3 + off, 39 + off, true))
                 {
                     return ItemStack.EMPTY;
                 }
 
-                var3.onSlotChange(var4, var2);
+                var3.onQuickCraft(var4, var2);
             }
             else if (par1 != 1 && par1 != 0)
             {
                 if (EnergyUtil.isElectricItem(var4.getItem()))
                 {
-                    if (!this.mergeItemStack(var4, 0, 1, false))
+                    if (!this.moveItemStackTo(var4, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (checkRoastable(player.world, var4))
+                else if (checkRoastable(player.level, var4))
                 {
-                    if (!this.mergeItemStack(var4, 1, 2, false))
+                    if (!this.moveItemStackTo(var4, 1, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (par1 >= 3 + off && par1 < 30 + off)
                 {
-                    if (!this.mergeItemStack(var4, 30 + off, 39 + off, false))
+                    if (!this.moveItemStackTo(var4, 30 + off, 39 + off, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (par1 >= 30 + off && par1 < 39 + off && !this.mergeItemStack(var4, 3 + off, 30 + off, false))
+                else if (par1 >= 30 + off && par1 < 39 + off && !this.moveItemStackTo(var4, 3 + off, 30 + off, false))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (!this.mergeItemStack(var4, 3 + off, 39 + off, false))
+            else if (!this.moveItemStackTo(var4, 3 + off, 39 + off, false))
             {
                 return ItemStack.EMPTY;
             }
 
             if (var4.getCount() == 0)
             {
-                var3.putStack(ItemStack.EMPTY);
+                var3.set(ItemStack.EMPTY);
             }
             else
             {
-                var3.onSlotChanged();
+                var3.setChanged();
             }
 
             if (var4.getCount() == var2.getCount())
@@ -156,8 +156,8 @@ public class ContainerElectricFurnace extends Container
         return var2;
     }
 
-    protected boolean checkRoastable(World world, ItemStack stack)
+    protected boolean checkRoastable(Level world, ItemStack stack)
     {
-        return world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(stack), world).isPresent();
+        return world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), world).isPresent();
     }
 }

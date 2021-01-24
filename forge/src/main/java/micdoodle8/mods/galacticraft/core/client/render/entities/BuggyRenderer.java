@@ -2,45 +2,45 @@ package micdoodle8.mods.galacticraft.core.client.render.entities;
 
 import org.lwjgl.opengl.GL11;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.obj.GCModelCache;
 import micdoodle8.mods.galacticraft.core.entities.BuggyEntity;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class BuggyRenderer extends EntityRenderer<BuggyEntity>
 {
-    private IBakedModel mainModel;
-    private IBakedModel radarDish;
-    private IBakedModel wheelLeftCover;
-    private IBakedModel wheelRight;
-    private IBakedModel wheelLeft;
-    private IBakedModel wheelRightCover;
-    private IBakedModel cargoLeft;
-    private IBakedModel cargoMid;
-    private IBakedModel cargoRight;
+    private BakedModel mainModel;
+    private BakedModel radarDish;
+    private BakedModel wheelLeftCover;
+    private BakedModel wheelRight;
+    private BakedModel wheelLeft;
+    private BakedModel wheelRightCover;
+    private BakedModel cargoLeft;
+    private BakedModel cargoMid;
+    private BakedModel cargoRight;
     private static final ResourceLocation OBJ_MODEL = new ResourceLocation(Constants.MOD_ID_CORE, "models/obj/buggy.obj");
 
-    public BuggyRenderer(EntityRendererManager manager)
+    public BuggyRenderer(EntityRenderDispatcher manager)
     {
         super(manager);
-        this.shadowSize = 1.0F;
+        this.shadowRadius = 1.0F;
         GCModelCache.INSTANCE.reloadCallback(this::updateModels);
     }
 
@@ -60,20 +60,20 @@ public class BuggyRenderer extends EntityRenderer<BuggyEntity>
     @Override
     public ResourceLocation getEntityTexture(BuggyEntity entity)
     {
-        return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 
     @Override
-    public void render(BuggyEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    public void render(BuggyEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight)
     {
-        float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+        float pitch = entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks;
         RenderSystem.disableRescaleNormal();
-        matrixStack.push();
-        matrixStack.rotate(new Quaternion(Vector3f.YP, entityYaw, true));
-        matrixStack.rotate(new Quaternion(Vector3f.ZN, pitch, true));
+        matrixStack.pushPose();
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, entityYaw, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.ZN, pitch, true));
         matrixStack.scale(0.41F, 0.41F, 0.41F);
 
-        if (Minecraft.isAmbientOcclusionEnabled())
+        if (Minecraft.useAmbientOcclusion())
         {
             RenderSystem.shadeModel(GL11.GL_SMOOTH);
         }
@@ -83,53 +83,53 @@ public class BuggyRenderer extends EntityRenderer<BuggyEntity>
         }
 
         // Front wheels
-        matrixStack.push();
+        matrixStack.pushPose();
         float dZ = -2.727F;
         float dY = 0.976F;
         float dX = 1.25F;
         float rotation = entity.wheelRotationX;
         matrixStack.translate(dX, dY, dZ);
-        matrixStack.rotate(new Quaternion(Vector3f.YP, entity.wheelRotationZ, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, entity.wheelRotationZ, true));
         ClientUtil.drawBakedModel(this.wheelRightCover, buffer, matrixStack, packedLight);
-        matrixStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.XP, rotation, true));
         ClientUtil.drawBakedModel(this.wheelRight, buffer, matrixStack, packedLight);
-        matrixStack.pop();
+        matrixStack.popPose();
 
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(-dX, dY, dZ);
-        matrixStack.rotate(new Quaternion(Vector3f.YP, entity.wheelRotationZ, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, entity.wheelRotationZ, true));
         ClientUtil.drawBakedModel(this.wheelLeftCover, buffer, matrixStack, packedLight);
-        matrixStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.XP, rotation, true));
         ClientUtil.drawBakedModel(this.wheelLeft, buffer, matrixStack, packedLight);
-        matrixStack.pop();
+        matrixStack.popPose();
 
         // Back wheels
-        matrixStack.push();
+        matrixStack.pushPose();
         dX = 1.9F;
         dZ = -dZ;
         matrixStack.translate(dX, dY, dZ);
-        matrixStack.rotate(new Quaternion(Vector3f.YP, -entity.wheelRotationZ, true));
-        matrixStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, -entity.wheelRotationZ, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.XP, rotation, true));
         ClientUtil.drawBakedModel(this.wheelRight, buffer, matrixStack, packedLight);
-        matrixStack.pop();
+        matrixStack.popPose();
 
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(-dX, dY, dZ);
-        matrixStack.rotate(new Quaternion(Vector3f.YP, -entity.wheelRotationZ, true));
-        matrixStack.rotate(new Quaternion(Vector3f.XP, rotation, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, -entity.wheelRotationZ, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.XP, rotation, true));
         ClientUtil.drawBakedModel(this.wheelLeft, buffer, matrixStack, packedLight);
-        matrixStack.pop();
+        matrixStack.popPose();
 
         ClientUtil.drawBakedModel(this.mainModel, buffer, matrixStack, packedLight);
 
         // Radar Dish
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(-1.178F, 4.1F, -2.397F);
-        int ticks = entity.ticksExisted + entity.getEntityId() * 10000;
-        matrixStack.rotate(new Quaternion(Vector3f.XP, (float)Math.sin(ticks * 0.05) * 50.0F, true));
-        matrixStack.rotate(new Quaternion(Vector3f.ZP, (float)Math.cos(ticks * 0.1) * 50.0F, true));
+        int ticks = entity.tickCount + entity.getId() * 10000;
+        matrixStack.mulPose(new Quaternion(Vector3f.XP, (float)Math.sin(ticks * 0.05) * 50.0F, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.ZP, (float)Math.cos(ticks * 0.1) * 50.0F, true));
         ClientUtil.drawBakedModel(this.radarDish, buffer, matrixStack, packedLight);
-        matrixStack.pop();
+        matrixStack.popPose();
 
         switch (entity.buggyType)
         {
@@ -143,14 +143,14 @@ public class BuggyRenderer extends EntityRenderer<BuggyEntity>
             break;
         }
 
-        matrixStack.pop();
-        RenderHelper.enableStandardItemLighting();
+        matrixStack.popPose();
+        Lighting.turnBackOn();
     }
 
     @Override
-    public boolean shouldRender(BuggyEntity entity, ClippingHelperImpl camera, double camX, double camY, double camZ)
+    public boolean shouldRender(BuggyEntity entity, Frustum camera, double camX, double camY, double camZ)
     {
-        AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(2D, 1D, 2D);
-        return entity.isInRangeToRender3d(camX, camY, camZ) && camera.isBoundingBoxInFrustum(axisalignedbb);
+        AABB axisalignedbb = entity.getBoundingBox().inflate(2D, 1D, 2D);
+        return entity.shouldRender(camX, camY, camZ) && camera.isVisible(axisalignedbb);
     }
 }

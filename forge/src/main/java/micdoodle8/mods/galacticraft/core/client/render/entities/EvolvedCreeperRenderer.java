@@ -1,16 +1,16 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.gui.overlay.OverlaySensorGlasses;
 import micdoodle8.mods.galacticraft.core.client.model.EvolvedCreeperModel;
 import micdoodle8.mods.galacticraft.core.client.render.entities.layer.EvolvedCreeperChargeLayer;
 import micdoodle8.mods.galacticraft.core.entities.EvolvedCreeperEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -20,18 +20,18 @@ public class EvolvedCreeperRenderer extends MobRenderer<EvolvedCreeperEntity, Ev
     private static final ResourceLocation TEXTURE = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/evolved_creeper.png");
     private boolean sensorEnabled;
 
-    public EvolvedCreeperRenderer(EntityRendererManager manager)
+    public EvolvedCreeperRenderer(EntityRenderDispatcher manager)
     {
         super(manager, new EvolvedCreeperModel(), 0.5F);
         this.addLayer(new EvolvedCreeperChargeLayer(this));
     }
 
     @Override
-    protected void preRenderCallback(EvolvedCreeperEntity entity, MatrixStack matrixStack, float partialTickTime)
+    protected void preRenderCallback(EvolvedCreeperEntity entity, PoseStack matrixStack, float partialTickTime)
     {
-        float f = entity.getCreeperFlashIntensity(partialTickTime);
-        float f1 = 1.0F + MathHelper.sin(f * 100.0F) * f * 0.01F;
-        f = MathHelper.clamp(f, 0.0F, 1.0F);
+        float f = entity.getSwelling(partialTickTime);
+        float f1 = 1.0F + Mth.sin(f * 100.0F) * f * 0.01F;
+        f = Mth.clamp(f, 0.0F, 1.0F);
         f = f * f;
         f = f * f;
         float f2 = (1.0F + f * 0.4F) * f1;
@@ -49,8 +49,8 @@ public class EvolvedCreeperRenderer extends MobRenderer<EvolvedCreeperEntity, Ev
     @Override
     protected float getOverlayProgress(EvolvedCreeperEntity entity, float partialTicks)
     {
-        float f = entity.getCreeperFlashIntensity(partialTicks);
-        return (int)(f * 10.0F) % 2 == 0 ? 0.0F : MathHelper.clamp(f, 0.5F, 1.0F);
+        float f = entity.getSwelling(partialTicks);
+        return (int)(f * 10.0F) % 2 == 0 ? 0.0F : Mth.clamp(f, 0.5F, 1.0F);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class EvolvedCreeperRenderer extends MobRenderer<EvolvedCreeperEntity, Ev
     }
 
     @Override
-    public void render(EvolvedCreeperEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    public void render(EvolvedCreeperEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight)
     {
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
 

@@ -12,21 +12,20 @@ import micdoodle8.mods.galacticraft.core.client.sounds.GCSounds;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.client.fx.MarsParticles;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
@@ -81,18 +80,18 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     }
 
     @Override
-    public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos)
+    public MaterialColor getMapColor(BlockState state, BlockGetter worldIn, BlockPos pos)
     {
         if (this == MarsBlocks.MARS_DUNGEON_BRICKS)
         {
-            return MaterialColor.GREEN;
+            return MaterialColor.COLOR_GREEN;
         }
         else if (this == MarsBlocks.MARS_FINE_REGOLITH)
         {
             return MaterialColor.DIRT;
         }
 
-        return MaterialColor.RED;
+        return MaterialColor.COLOR_RED;
     }
 
 //    @Override
@@ -199,7 +198,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     }
 
     @Override
-    public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable)
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable)
     {
         return false;
     }
@@ -224,7 +223,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState state, World worldIn, BlockPos pos, Random rand)
+    public void animateTick(BlockState state, Level worldIn, BlockPos pos, Random rand)
     {
         if (rand.nextInt(10) == 0)
         {
@@ -241,21 +240,21 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     }
 
     @Override
-    public boolean isTerraformable(World world, BlockPos pos)
+    public boolean isTerraformable(Level world, BlockPos pos)
     {
         BlockState state = world.getBlockState(pos);
-        BlockState stateAbove = world.getBlockState(pos.up());
-        return this == MarsBlocks.MARS_FINE_REGOLITH && stateAbove.getShape(world, pos.up()) != VoxelShapes.fullCube();
+        BlockState stateAbove = world.getBlockState(pos.above());
+        return this == MarsBlocks.MARS_FINE_REGOLITH && stateAbove.getShape(world, pos.above()) != Shapes.block();
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
     {
-        return new ItemStack(Item.getItemFromBlock(this), 1);
+        return new ItemStack(Item.byBlock(this), 1);
     }
 
     @Override
-    public boolean isReplaceableOreGen(BlockState state, IWorldReader world, BlockPos pos, java.util.function.Predicate<BlockState> target)
+    public boolean isReplaceableOreGen(BlockState state, LevelReader world, BlockPos pos, java.util.function.Predicate<BlockState> target)
     {
         return this == MarsBlocks.MARS_REGOLITH || this == MarsBlocks.MARS_STONE;
     }
@@ -298,7 +297,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
 
 
     @Override
-    public int getExpDrop(BlockState state, IWorldReader world, BlockPos pos, int fortune, int silktouch)
+    public int getExpDrop(BlockState state, LevelReader world, BlockPos pos, int fortune, int silktouch)
     {
         if (state.getBlock() != this)
         {
@@ -307,8 +306,8 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
 
         if (this == MarsBlocks.DESH_ORE)
         {
-            Random rand = world instanceof World ? ((World) world).rand : new Random();
-            return MathHelper.nextInt(rand, 2, 5);
+            Random rand = world instanceof Level ? ((Level) world).random : new Random();
+            return Mth.nextInt(rand, 2, 5);
         }
 
         return 0;

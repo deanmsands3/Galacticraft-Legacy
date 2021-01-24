@@ -1,19 +1,20 @@
 package micdoodle8.mods.galacticraft.core.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.dimension.DimensionType;
 
 public abstract class PacketBase implements IPacket
 {
-    private DimensionType dimensionID;
+    private ResourceKey<DimensionType> dimensionID;
 
     public PacketBase()
     {
         this.dimensionID = null;
     }
 
-    public PacketBase(DimensionType dimensionID)
+    public PacketBase(ResourceKey<DimensionType> dimensionID)
     {
         this.dimensionID = dimensionID;
     }
@@ -32,11 +33,11 @@ public abstract class PacketBase implements IPacket
     @Override
     public void decodeInto(ByteBuf buffer)
     {
-        this.dimensionID = DimensionType.byName(new ResourceLocation(NetworkUtil.readUTF8String(buffer)));
+        this.dimensionID = ResourceKey.create(new ResourceLocation(NetworkUtil.readUTF8String(buffer)));
     }
 
     @Override
-    public DimensionType getDimensionID()
+    public ResourceKey<DimensionType> getDimensionID()
     {
         return dimensionID;
     }

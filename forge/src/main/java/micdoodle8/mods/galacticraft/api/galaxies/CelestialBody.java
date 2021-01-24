@@ -2,14 +2,15 @@ package micdoodle8.mods.galacticraft.api.galaxies;
 
 import com.google.common.collect.Maps;
 import micdoodle8.mods.galacticraft.api.world.*;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.LanguageMap;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.locale.Language;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
@@ -26,7 +27,7 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
     protected float relativeOrbitTime = 1.0F;
     protected float phaseShift = 0.0F;
     protected DimensionType dimensionType = null;
-    protected Class<? extends Dimension> providerClass;
+    protected Class<? extends LevelStem> providerClass;
     protected String dimensionSuffix;
     protected boolean autoRegisterDimension = false;
     protected boolean isReachable = false;
@@ -37,7 +38,7 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
     protected LinkedList<Biome> biomeInfo;
     public LinkedList<Biome> biomesToGenerate;
     public BiomeGC[] biomesToAdapt;
-    protected Map<SpawnListEntry, EntityClassification> mobInfo;
+    protected Map<MobSpawnSettings.SpawnerData, MobCategory> mobInfo;
 
     protected ResourceLocation celestialBodyIcon;
 
@@ -72,7 +73,7 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
     public String getLocalizedName()
     {
         String s = this.getUnlocalizedName();
-        s = s == null ? "" : LanguageMap.getInstance().translateKey(s);
+        s = s == null ? "" : Language.getInstance().getOrDefault(s);
         int comment = s.indexOf('#');
         return (comment > 0) ? s.substring(0, comment).trim() : s;
     }
@@ -175,12 +176,12 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
         return this;
     }
 
-    public CelestialBody setDimensionInfo(DimensionType dimType, Class<? extends Dimension> providerClass)
+    public CelestialBody setDimensionInfo(DimensionType dimType, Class<? extends LevelStem> providerClass)
     {
         return this.setDimensionInfo(dimType, providerClass, true);
     }
 
-    public CelestialBody setDimensionInfo(DimensionType type, Class<? extends Dimension> providerClass, boolean autoRegister)
+    public CelestialBody setDimensionInfo(DimensionType type, Class<? extends LevelStem> providerClass, boolean autoRegister)
     {
         this.dimensionType = type;
         this.providerClass = providerClass;
@@ -200,7 +201,7 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
         return this.dimensionType;
     }
 
-    public Class<? extends Dimension> getWorldProvider()
+    public Class<? extends LevelStem> getWorldProvider()
     {
         return this.providerClass;
     }
@@ -355,7 +356,7 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
         return this.biomeInfo;
     }
 
-    public void addMobInfo(SpawnListEntry entry, EntityClassification classification)
+    public void addMobInfo(MobSpawnSettings.SpawnerData entry, MobCategory classification)
     {
         if (this.mobInfo == null)
         {

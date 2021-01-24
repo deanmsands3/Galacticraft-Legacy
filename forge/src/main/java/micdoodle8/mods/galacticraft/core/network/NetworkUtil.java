@@ -10,20 +10,20 @@ import micdoodle8.mods.galacticraft.core.tile.FluidTankGC;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import micdoodle8.mods.galacticraft.core.wrappers.FlagData;
 import micdoodle8.mods.galacticraft.core.wrappers.Footprint;
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
@@ -86,9 +86,9 @@ public class NetworkUtil
                 buffer.writeFloat(storage.getMaxExtract());
                 buffer.writeFloat(storage.getEnergyStoredGC());
             }
-            else if (dataValue instanceof CompoundNBT)
+            else if (dataValue instanceof CompoundTag)
             {
-                NetworkUtil.writeNBTTagCompound((CompoundNBT) dataValue, buffer);
+                NetworkUtil.writeNBTTagCompound((CompoundTag) dataValue, buffer);
             }
             else if (dataValue instanceof FluidTankGC)
             {
@@ -105,7 +105,7 @@ public class NetworkUtil
             }
             else if (dataValue instanceof Entity)
             {
-                buffer.writeInt(((Entity) dataValue).getEntityId());
+                buffer.writeInt(((Entity) dataValue).getId());
             }
             else if (dataValue instanceof Vector3)
             {
@@ -192,7 +192,7 @@ public class NetworkUtil
             }
             else if (dataValue instanceof Direction)
             {
-                buffer.writeInt(((Direction) dataValue).getIndex());
+                buffer.writeInt(((Direction) dataValue).get3DDataValue());
             }
             else if (dataValue instanceof BlockPos)
             {
@@ -256,7 +256,7 @@ public class NetworkUtil
             }
             else if (clazz.equals(DimensionType.class))
             {
-                objList.add(DimensionType.byName(new ResourceLocation(readUTF8String(buffer))));
+                objList.add(DimensionType.getByName(new ResourceLocation(readUTF8String(buffer))));
             }
             else if (clazz.equals(byte[].class))
             {
@@ -271,7 +271,7 @@ public class NetworkUtil
                 storage.setEnergyStored(buffer.readFloat());
                 objList.add(storage);
             }
-            else if (clazz.equals(CompoundNBT.class))
+            else if (clazz.equals(CompoundTag.class))
             {
                 try
                 {
@@ -343,7 +343,7 @@ public class NetworkUtil
             }
             else if (clazz.equals(Direction.class))
             {
-                objList.add(Direction.byIndex(buffer.readInt()));
+                objList.add(Direction.from3DDataValue(buffer.readInt()));
             }
             else if (clazz.equals(BlockPos.class))
             {
@@ -358,7 +358,7 @@ public class NetworkUtil
         return objList;
     }
 
-    public static Object getFieldValueFromStream(Field field, ByteBuf buffer, World world) throws IOException
+    public static Object getFieldValueFromStream(Field field, ByteBuf buffer, Level world) throws IOException
     {
         Class<?> dataValue = field.getType();
 
@@ -396,9 +396,9 @@ public class NetworkUtil
         }
         else if (dataValue.equals(DimensionType.class))
         {
-            return DimensionType.byName(new ResourceLocation(readUTF8String(buffer)));
+            return DimensionType.getByName(new ResourceLocation(readUTF8String(buffer)));
         }
-        else if (dataValue.equals(CompoundNBT.class))
+        else if (dataValue.equals(CompoundTag.class))
         {
             return NetworkUtil.readNBTTagCompound(buffer);
         }
@@ -446,7 +446,7 @@ public class NetworkUtil
         }
         else if (dataValue.equals(Direction.class))
         {
-            return Direction.byIndex(buffer.readInt());
+            return Direction.from3DDataValue(buffer.readInt());
         }
         else if (dataValue.equals(BlockPos.class))
         {
@@ -464,7 +464,7 @@ public class NetworkUtil
             {
                 if (c.equals(Entity.class))
                 {
-                    return world.getEntityByID(buffer.readInt());
+                    return world.getEntity(buffer.readInt());
                 }
 
                 c = c.getSuperclass();
@@ -482,7 +482,7 @@ public class NetworkUtil
         if (itemID >= 0)
         {
             byte stackSize = buffer.readByte();
-            itemstack = new ItemStack(Item.getItemById(itemID), stackSize);
+            itemstack = new ItemStack(Item.byId(itemID), stackSize);
             if (buffer.readBoolean())
             {
                 itemstack.setTag(readNBTTagCompound(buffer));
@@ -500,7 +500,7 @@ public class NetworkUtil
         }
         else
         {
-            buffer.writeShort(Item.getIdFromItem(itemStack.getItem()));
+            buffer.writeShort(Item.getId(itemStack.getItem()));
             buffer.writeByte(itemStack.getCount());
 
             buffer.writeBoolean(itemStack.getTag() != null);
@@ -511,7 +511,7 @@ public class NetworkUtil
         }
     }
 
-    public static CompoundNBT readNBTTagCompound(ByteBuf buffer) throws IOException
+    public static CompoundTag readNBTTagCompound(ByteBuf buffer) throws IOException
     {
         try
         {
@@ -519,7 +519,7 @@ public class NetworkUtil
             byte[] compressed = new byte[length];
             buffer.readBytes(compressed);
             ByteArrayInputStream bais = new ByteArrayInputStream(compressed);
-            return CompressedStreamTools.readCompressed(bais);
+            return NbtIo.readCompressed(bais);
         }
         catch (Exception e)
         {
@@ -528,12 +528,12 @@ public class NetworkUtil
         }
     }
 
-    public static void writeNBTTagCompound(CompoundNBT nbt, ByteBuf buffer) throws IOException
+    public static void writeNBTTagCompound(CompoundTag nbt, ByteBuf buffer) throws IOException
     {
         try
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            CompressedStreamTools.writeCompressed(nbt, baos);
+            NbtIo.writeCompressed(nbt, baos);
             byte[] compressed = baos.toByteArray();
             buffer.writeInt(compressed.length);
             buffer.writeBytes(compressed);
@@ -560,16 +560,16 @@ public class NetworkUtil
         }
     }
 
-    public static FluidTankGC readFluidTankGC(ByteBuf buffer, World world) throws IOException
+    public static FluidTankGC readFluidTankGC(ByteBuf buffer, Level world) throws IOException
     {
         BlockPos pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
-        TileEntity tile = world.getTileEntity(pos);
+        BlockEntity tile = world.getBlockEntity(pos);
         int capacity = buffer.readInt();
         String fluidName = readUTF8String(buffer);
         FluidTankGC fluidTank = new FluidTankGC(capacity, tile);
         int amount = buffer.readInt();
 
-        Fluid fluid = Registry.FLUID.getOrDefault(new ResourceLocation(fluidName)); // TODO Better way?
+        Fluid fluid = Registry.FLUID.get(new ResourceLocation(fluidName)); // TODO Better way?
         fluidTank.setFluid(new FluidStack(fluid, amount));
 
         return fluidTank;
@@ -588,7 +588,7 @@ public class NetworkUtil
         }
         else
         {
-            Fluid fluid = Registry.FLUID.getOrDefault(new ResourceLocation(fluidName)); // TODO Better way?
+            Fluid fluid = Registry.FLUID.get(new ResourceLocation(fluidName)); // TODO Better way?
             fluidTank.setFluid(new FluidStack(fluid, amount));
         }
 
@@ -619,7 +619,7 @@ public class NetworkUtil
         {
             Entity a2 = (Entity) a;
             Entity b2 = (Entity) b;
-            return fuzzyEquals(a2.getEntityId(), b2.getEntityId());
+            return fuzzyEquals(a2.getId(), b2.getId());
         }
         else if (a instanceof Vector3 && b instanceof Vector3)
         {

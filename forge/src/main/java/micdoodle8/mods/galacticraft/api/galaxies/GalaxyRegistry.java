@@ -1,7 +1,8 @@
 package micdoodle8.mods.galacticraft.api.galaxies;
 
 import com.google.common.collect.*;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -29,7 +30,7 @@ public class GalaxyRegistry
     static HashMap<CelestialBody, List<Satellite>> satelliteList = Maps.newHashMap();
     static HashMap<SolarSystem, List<Planet>> solarSystemList = Maps.newHashMap();
 
-    public static CelestialBody getCelestialBodyFromDimensionID(DimensionType dimensionID)
+    public static CelestialBody getCelestialBodyFromDimensionID(ResourceKey<DimensionType> dimensionID)
     {
         for (Planet planet : GalaxyRegistry.planets.values())
         {

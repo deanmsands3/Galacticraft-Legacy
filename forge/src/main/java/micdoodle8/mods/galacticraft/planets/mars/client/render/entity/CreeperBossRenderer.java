@@ -1,22 +1,21 @@
 package micdoodle8.mods.galacticraft.planets.mars.client.render.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.client.model.CreeperBossModel;
 import micdoodle8.mods.galacticraft.planets.mars.entities.CreeperBossEntity;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class CreeperBossRenderer extends MobRenderer<CreeperBossEntity, CreeperBossModel>
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/entity/creeper_boss.png");
     //    private static final ResourceLocation powerTexture = new ResourceLocation(Constants.MOD_ID_CORE, "textures/model/power.png");
 
-    public CreeperBossRenderer(EntityRendererManager renderManager)
+    public CreeperBossRenderer(EntityRenderDispatcher renderManager)
     {
         super(renderManager, new CreeperBossModel(), 1.0F);
     }
@@ -64,9 +63,9 @@ public class CreeperBossRenderer extends MobRenderer<CreeperBossEntity, CreeperB
     //    }
 
     @Override
-    protected void preRenderCallback(CreeperBossEntity entity, MatrixStack matrixStack, float partialTickTime)
+    protected void preRenderCallback(CreeperBossEntity entity, PoseStack matrixStack, float partialTickTime)
     {
         matrixStack.scale(4.0F, 4.0F, 4.0F);
-        matrixStack.rotate(new Quaternion(Vector3f.YP, (float) (Math.pow(entity.deathTicks, 2) / 5.0F + (Math.pow(entity.deathTicks, 2) / 5.0F - Math.pow(entity.deathTicks - 1, 2) / 5.0F) * partialTickTime), true));
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, (float) (Math.pow(entity.deathTicks, 2) / 5.0F + (Math.pow(entity.deathTicks, 2) / 5.0F - Math.pow(entity.deathTicks - 1, 2) / 5.0F) * partialTickTime), true));
     }
 }

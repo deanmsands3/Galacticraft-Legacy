@@ -5,18 +5,17 @@ import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.Rarity;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -54,10 +53,10 @@ public class ItemEmergencyKit extends ItemDesc implements ISortable
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity player, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand hand)
     {
-        ItemStack itemStack = player.getHeldItem(hand);
-        if (player instanceof ServerPlayerEntity)
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (player instanceof ServerPlayer)
         {
             GCPlayerStats stats = GCPlayerStats.get(player);
 
@@ -75,9 +74,9 @@ public class ItemEmergencyKit extends ItemDesc implements ISortable
             }
 
             itemStack.setCount(0);
-            return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
+            return new InteractionResultHolder<>(ActionResultType.SUCCESS, itemStack);
         }
-        return new ActionResult<>(ActionResultType.PASS, itemStack);
+        return new InteractionResultHolder<>(ActionResultType.PASS, itemStack);
     }
 
     public static ItemStack getContents(int slot)
@@ -97,9 +96,9 @@ public class ItemEmergencyKit extends ItemDesc implements ISortable
         case 5:
             return new ItemStack(GCItems.DEHYDRATED_POTATOES, 1);
         case 6:
-            return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.HEALING);
+            return PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.HEALING);
         case 7:
-            return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.LONG_NIGHT_VISION);
+            return PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_NIGHT_VISION);
         case 8:
             return new ItemStack(GCItems.RED_PARACHUTE, 1);
         default:
@@ -120,7 +119,7 @@ public class ItemEmergencyKit extends ItemDesc implements ISortable
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override

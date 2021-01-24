@@ -2,8 +2,8 @@ package micdoodle8.mods.galacticraft.core.world.gen;
 
 import micdoodle8.mods.galacticraft.api.world.BiomeGC;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;
 
 public class BiomeMoonSuperFlat extends BiomeMoon
 {
@@ -11,12 +11,12 @@ public class BiomeMoonSuperFlat extends BiomeMoon
 
     BiomeMoonSuperFlat()
     {
-        super((new Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(GCBlocks.MOON_TURF.getDefaultState(), GCBlocks.MOON_DIRT.getDefaultState(), GCBlocks.MOON_DIRT.getDefaultState())).precipitation(RainType.NONE).category(Category.NONE).depth(0.7F).scale(0.0F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
+        super((new BiomeBuilder()).surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderBaseConfiguration(GCBlocks.MOON_TURF.defaultBlockState(), GCBlocks.MOON_DIRT.defaultBlockState(), GCBlocks.MOON_DIRT.defaultBlockState())).precipitation(RainType.NONE).category(Category.NONE).depth(0.7F).scale(0.0F).temperature(0.0F).downfall(0.0F).waterColor(4159204).waterFogColor(329011).parent(null), true);
         addDefaultFeatures();
     }
 
     @Override
-    public float getSpawningChance()
+    public float getCreatureProbability()
     {
         return 0.1F;
     }

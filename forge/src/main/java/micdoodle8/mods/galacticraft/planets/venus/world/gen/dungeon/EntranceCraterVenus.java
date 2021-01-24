@@ -1,21 +1,18 @@
 package micdoodle8.mods.galacticraft.planets.venus.world.gen.dungeon;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 import static micdoodle8.mods.galacticraft.planets.venus.world.gen.VenusFeatures.CVENUS_DUNGEON_ENTRANCE;
 
@@ -23,21 +20,21 @@ public class EntranceCraterVenus extends SizedPieceVenus
 {
     private final int range = 16;
 
-    public EntranceCraterVenus(IStructurePieceType type, CompoundNBT nbt)
+    public EntranceCraterVenus(StructurePieceType type, CompoundTag nbt)
     {
         super(type, nbt);
     }
 
-    public EntranceCraterVenus(IStructurePieceType type, DungeonConfigurationVenus configuration, Random rand, int blockPosX, int blockPosZ)
+    public EntranceCraterVenus(StructurePieceType type, DungeonConfigurationVenus configuration, Random rand, int blockPosX, int blockPosZ)
     {
         super(type, configuration, rand.nextInt(4) + 6, 12, rand.nextInt(4) + 6, Direction.Plane.HORIZONTAL.random(rand));
-        this.setCoordBaseMode(Direction.SOUTH);
+        this.setOrientation(Direction.SOUTH);
 
-        this.boundingBox = new MutableBoundingBox(blockPosX - range, configuration.getYPosition() + 11, blockPosZ - range, blockPosX + range, 150, blockPosZ + range);
+        this.boundingBox = new BoundingBox(blockPosX - range, configuration.getYPosition() + 11, blockPosZ - range, blockPosX + range, 150, blockPosZ + range);
     }
 
     @Override
-    public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
+    public boolean postProcess(LevelAccessor worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, BoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
         BlockState block1;
 
@@ -48,14 +45,14 @@ public class EntranceCraterVenus extends SizedPieceVenus
             for (int k = -range; k <= range; k++)
             {
                 int j = 150;
-                int x = this.getXWithOffset(i + range, k + range);
-                int z = this.getZWithOffset(i + range, k + range);
+                int x = this.getWorldX(i + range, k + range);
+                int z = this.getWorldZ(i + range, k + range);
 
                 while (j >= 0)
                 {
                     j--;
 
-                    int y = this.getYWithOffset(j);
+                    int y = this.getWorldY(j);
                     BlockPos blockpos = new BlockPos(x, y, z);
                     Block block = worldIn.getBlockState(blockpos).getBlock();
 
@@ -71,9 +68,9 @@ public class EntranceCraterVenus extends SizedPieceVenus
 
         Mirror mirror = Mirror.NONE;
         Rotation rotation = Rotation.NONE;
-        if (this.getCoordBaseMode() != null)
+        if (this.getOrientation() != null)
         {
-            switch (this.getCoordBaseMode())
+            switch (this.getOrientation())
             {
             case SOUTH:
                 mirror = Mirror.LEFT_RIGHT;
@@ -101,11 +98,11 @@ public class EntranceCraterVenus extends SizedPieceVenus
                 int helper = 0;
                 for (int j = maxLevel; j > 1 && helper <= depth; j--)
                 {
-                    block1 = this.getBlockStateFromPos(worldIn, i + range, j, k + range, boundingBox);
+                    block1 = this.getBlock(worldIn, i + range, j, k + range, boundingBox);
 //                    if (block1 == this.configuration.getBrickBlock() || j != this.sizeY)
                     {
-                        BlockPos blockpos = new BlockPos(this.getXWithOffset(i + range, k + range), this.getYWithOffset(j), this.getZWithOffset(i + range, k + range));
-                        BlockState state = Blocks.AIR.getDefaultState();
+                        BlockPos blockpos = new BlockPos(this.getWorldX(i + range, k + range), this.getWorldY(j), this.getWorldZ(i + range, k + range));
+                        BlockState state = Blocks.AIR.defaultBlockState();
 
                         if (mirror != Mirror.NONE)
                         {
@@ -117,7 +114,7 @@ public class EntranceCraterVenus extends SizedPieceVenus
                             state = state.rotate(rotation);
                         }
 
-                        worldIn.setBlockState(blockpos, state, 2);
+                        worldIn.setBlock(blockpos, state, 2);
 //                        this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i + range, j, k + range, boundingBox);
                         helper++;
                     }
@@ -131,6 +128,6 @@ public class EntranceCraterVenus extends SizedPieceVenus
     @Override
     public PieceVenus getNextPiece(DungeonStartVenus startPiece, Random rand)
     {
-        return new RoomEntranceVenus(this.configuration, rand, this.boundingBox.minX + this.boundingBox.getXSize() / 2, this.boundingBox.minZ + this.boundingBox.getZSize() / 2);
+        return new RoomEntranceVenus(this.configuration, rand, this.boundingBox.x0 + this.boundingBox.getXSpan() / 2, this.boundingBox.z0 + this.boundingBox.getZSpan() / 2);
     }
 }

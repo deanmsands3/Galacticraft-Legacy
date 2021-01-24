@@ -8,10 +8,8 @@ import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
 import micdoodle8.mods.galacticraft.planets.venus.VenusModule;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityLaserTurret;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,7 +24,7 @@ public class EventHandlerVenus
     {
         if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START)
         {
-            ((ServerWorld) event.world).getEntities()
+            ((ServerLevel) event.world).getEntities()
                     .filter((e) -> e.ticksExisted % 20 == 1 && e instanceof LivingEntity && event.world.isMaterialInBB(e.getBoundingBox().grow(-0.1D, -0.4D, -0.1D), PlanetFluids.ACID_MATERIAL))
                     .forEach((e) -> e.attackEntityFrom(DamageSourceGC.acid, 3.0F));
         }
@@ -76,7 +74,7 @@ public class EventHandlerVenus
     {
         if (event.getEntity() instanceof ILaserTrackableFast)
         {
-            for (TileEntity tile : event.getEntity().getEntityWorld().loadedTileEntityList)
+            for (BlockEntity tile : event.getEntity().getEntityWorld().loadedTileEntityList)
             {
                 if (tile instanceof TileEntityLaserTurret)
                 {

@@ -4,26 +4,24 @@ import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;
 import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.BreakableBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
 import java.util.Random;
 
-public class BlockIceAsteroids extends BreakableBlock implements ISortable
+public class BlockIceAsteroids extends HalfTransparentBlock implements ISortable
 {
     public BlockIceAsteroids(Properties builder)
     {
@@ -31,44 +29,44 @@ public class BlockIceAsteroids extends BreakableBlock implements ISortable
     }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, TileEntity te, ItemStack tool)
+    public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, BlockEntity te, ItemStack tool)
     {
-        player.addStat(Stats.BLOCK_MINED.get(this));
-        player.addExhaustion(0.025F);
+        player.awardStat(Stats.BLOCK_MINED.get(this));
+        player.causeFoodExhaustion(0.025F);
 
-        if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, tool) == 0)
+        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) == 0)
         {
-            if (worldIn.dimension.getDimension().getType() == DimensionType.THE_NETHER || worldIn.dimension instanceof IGalacticraftDimension)
+            if (worldIn.dimension.getDimension().getType() == DimensionType.NETHER || worldIn.dimension instanceof IGalacticraftDimension)
             {
                 worldIn.removeBlock(pos, false);
                 return;
             }
 
-            Material material = worldIn.getBlockState(pos.down()).getMaterial();
-            if (material.blocksMovement() || material.isLiquid())
+            Material material = worldIn.getBlockState(pos.below()).getMaterial();
+            if (material.blocksMotion() || material.isLiquid())
             {
-                worldIn.setBlockState(pos, Blocks.WATER.getDefaultState());
+                worldIn.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
             }
         }
     }
 
     @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random)
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random)
     {
-        if (worldIn.getLightFor(LightType.BLOCK, pos) > 13 - state.getOpacity(worldIn, pos))
+        if (worldIn.getBrightness(LightType.BLOCK, pos) > 13 - state.getLightBlock(worldIn, pos))
         {
-            if (GCCoreUtil.getDimensionType(worldIn) == DimensionType.THE_NETHER || worldIn.dimension instanceof IGalacticraftDimension)
+            if (GCCoreUtil.getDimensionType(worldIn) == DimensionType.NETHER || worldIn.dimension instanceof IGalacticraftDimension)
             {
                 worldIn.removeBlock(pos, false);
                 return;
             }
 
-            worldIn.setBlockState(pos, Blocks.WATER.getDefaultState());
+            worldIn.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
         }
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state)
+    public PushReaction getPistonPushReaction(BlockState state)
     {
         return PushReaction.NORMAL;
     }

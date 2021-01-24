@@ -41,7 +41,7 @@ public class Constants
 
     public static final String TEXTURE_PREFIX = MOD_ID_CORE + ":";
     public static final String PREFIX = "micdoodle8.";
-    public static final String SS_PREFiX = MOD_ID_CORE + ":spacestation_";
+    public static final String SS_PREFIX = MOD_ID_CORE + ":spacestation_";
 
     public static final int GEAR_ID_OXYGEN_MASK = 0;
     public static final int GEAR_ID_OXYGEN_GEAR = 1;

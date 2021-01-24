@@ -7,18 +7,21 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.world.gen.GCFeatures;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.*;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeManager;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.feature.structure.*;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.ChunkGeneratorSettings;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +29,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-public class StructureDungeon extends Structure<DungeonConfiguration>
+public class StructureDungeon extends StructureFeature<DungeonConfiguration>
 {
 //    private DungeonConfiguration configuration;
 
@@ -48,27 +51,27 @@ public class StructureDungeon extends Structure<DungeonConfiguration>
     }
 
     @Override
-    public String getStructureName()
+    public String getFeatureName()
     {
         return Constants.MOD_ID_CORE + ":gc_dungeon";
     }
 
     @Override
-    public IStartFactory getStartFactory()
+    public StructureStartFactory getStartFactory()
     {
         return StructureDungeon.Start::new;
     }
 
     @Override
-    public int getSize()
+    public int getLookupRange()
     {
         return 12;
     }
 
     @Override
-    public boolean canBeGenerated(BiomeManager biomeManagerIn, ChunkGenerator<?> generatorIn, Random randIn, int chunkX, int chunkZ, Biome biomeIn)
+    public boolean isFeatureChunk(BiomeManager biomeManagerIn, ChunkGenerator<?> generatorIn, Random randIn, int chunkX, int chunkZ, Biome biomeIn)
     {
-        long dungeonPos = getDungeonPosForCoords(generatorIn, chunkX, chunkZ, ((IGalacticraftDimension) generatorIn.world.getDimension()).getDungeonSpacing());
+        long dungeonPos = getDungeonPosForCoords(generatorIn, chunkX, chunkZ, ((IGalacticraftDimension) generatorIn.level.getDimension()).getDungeonSpacing());
         int i = (int) (dungeonPos >> 32);
         int j = (int) dungeonPos;  //Java automatically gives the 32 least significant bits
         return i == chunkX && j == chunkZ;
@@ -89,7 +92,7 @@ public class StructureDungeon extends Structure<DungeonConfiguration>
 
         int k = chunkX / numChunks;
         int l = chunkZ / numChunks;
-        long seed = (long) k * 341873128712L + (long) l * 132897987541L + generator.world.getWorldInfo().getSeed() + (long) (10387340 + generator.world.getDimension().getType().getId());
+        long seed = (long) k * 341873128712L + (long) l * 132897987541L + generator.level.getWorldInfo().getSeed() + (long) (10387340 + generator.level.getDimension().getType().getId());
         Random random = new Random();
         random.setSeed(seed);
         k = k * numChunks + random.nextInt(numChunks);
@@ -101,15 +104,15 @@ public class StructureDungeon extends Structure<DungeonConfiguration>
      * This returns an angle between 0 and 360 degrees.  0 degrees means due North from the current (x, z) position
      * Only provides meaningful results in worlds with dungeon generation using this class!
      */
-    public static float directionToNearestDungeon(ServerWorld world, double xpos, double zpos)
+    public static float directionToNearestDungeon(ServerLevel world, double xpos, double zpos)
     {
         int spacing = ((IGalacticraftDimension) world.getDimension()).getDungeonSpacing();
         if (spacing == 0)
         {
             return 0F;
         }
-        int x = MathHelper.floor(xpos);
-        int z = MathHelper.floor(zpos);
+        int x = Mth.floor(xpos);
+        int z = Mth.floor(zpos);
         int quadrantX = x % spacing;
         int quadrantZ = z % spacing;
         int searchOffsetX = quadrantX / (spacing / 2);  //0 or 1
@@ -121,7 +124,7 @@ public class StructureDungeon extends Structure<DungeonConfiguration>
         {
             for (int cz = searchOffsetZ - 1; cz < searchOffsetZ + 1; cz++)
             {
-                long dungeonPos = getDungeonPosForCoords(world.getChunkProvider().getChunkGenerator(), (x + cx * spacing) / 16, (z + cz * spacing) / 16, spacing);
+                long dungeonPos = getDungeonPosForCoords(world.getChunkSource().getChunkGenerator(), (x + cx * spacing) / 16, (z + cz * spacing) / 16, spacing);
                 int i = 2 + (((int) (dungeonPos >> 32)) << 4);
                 int j = 2 + (((int) dungeonPos) << 4);  //Java automatically gives the 32 least significant bits
                 double oX = i - xpos;
@@ -147,7 +150,7 @@ public class StructureDungeon extends Structure<DungeonConfiguration>
 
     @Nullable
     @Override
-    public BlockPos findNearest(World worldIn, ChunkGenerator<? extends GenerationSettings> chunkGenerator, BlockPos pos, int radius, boolean p_211405_5_)
+    public BlockPos getNearestGeneratedFeature(Level worldIn, ChunkGenerator<? extends ChunkGeneratorSettings> chunkGenerator, BlockPos pos, int radius, boolean p_211405_5_)
     {
         return null;
     }
@@ -157,28 +160,28 @@ public class StructureDungeon extends Structure<DungeonConfiguration>
         //        private DungeonConfiguration configuration;
         DungeonStart startPiece;
 
-        public Start(Structure<?> structure, int chunkX, int chunkZ, MutableBoundingBox boundsIn, int referenceIn, long seed)
+        public Start(StructureFeature<?> structure, int chunkX, int chunkZ, BoundingBox boundsIn, int referenceIn, long seed)
         {
             super(structure, chunkX, chunkZ, boundsIn, referenceIn, seed);
 //            this.configuration = configuration;
         }
 
         @Override
-        public void init(ChunkGenerator<?> generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn)
+        public void generatePieces(ChunkGenerator<?> generator, StructureManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn)
         {
-            DungeonConfiguration dungeonConfig = generator.getStructureConfig(biomeIn, GCFeatures.MOON_DUNGEON);
-            startPiece = new DungeonStart((World) generator.world, dungeonConfig, rand, (chunkX << 4) + 2, (chunkZ << 4) + 2);
-            startPiece.buildComponent(startPiece, this.components, rand);
+            DungeonConfiguration dungeonConfig = generator.getStructureConfiguration(biomeIn, GCFeatures.MOON_DUNGEON);
+            startPiece = new DungeonStart((Level) generator.level, dungeonConfig, random, (chunkX << 4) + 2, (chunkZ << 4) + 2);
+            startPiece.addChildren(startPiece, this.pieces, random);
             List<StructurePiece> list = startPiece.attachedComponents;
 
             while (!list.isEmpty())
             {
-                int i = rand.nextInt(list.size());
+                int i = random.nextInt(list.size());
                 StructurePiece structurecomponent = list.remove(i);
-                structurecomponent.buildComponent(startPiece, this.components, rand);
+                structurecomponent.addChildren(startPiece, this.pieces, random);
             }
 
-            this.recalculateStructureSize();
+            this.calculateBoundingBox();
         }
 
         public boolean isValid() {
@@ -213,29 +216,29 @@ public class StructureDungeon extends Structure<DungeonConfiguration>
 
     public static class DungeonGenPanel extends JPanel
     {
-        DungeonGenPanel(List<MutableBoundingBox> componentBounds)
+        DungeonGenPanel(List<BoundingBox> componentBounds)
         {
             int absMinX = Integer.MAX_VALUE;
             int absMinZ = Integer.MAX_VALUE;
             int absMaxX = Integer.MIN_VALUE;
             int absMaxZ = Integer.MIN_VALUE;
-            for (MutableBoundingBox b : componentBounds)
+            for (BoundingBox b : componentBounds)
             {
-                if (b.minX < absMinX)
+                if (b.x0 < absMinX)
                 {
-                    absMinX = b.minX;
+                    absMinX = b.x0;
                 }
-                if (b.minZ < absMinZ)
+                if (b.z0 < absMinZ)
                 {
-                    absMinZ = b.minZ;
+                    absMinZ = b.z0;
                 }
-                if (b.maxX > absMaxX)
+                if (b.x1 > absMaxX)
                 {
-                    absMaxX = b.maxX;
+                    absMaxX = b.x1;
                 }
-                if (b.maxZ > absMaxZ)
+                if (b.z1 > absMaxZ)
                 {
-                    absMaxZ = b.maxZ;
+                    absMaxZ = b.z1;
                 }
             }
             setLayout(new GridLayout(absMaxX - absMinX, absMaxZ - absMinZ, 0, 0));
@@ -264,13 +267,13 @@ public class StructureDungeon extends Structure<DungeonConfiguration>
 
             int color = 0;
             // X is rows, Z is cols
-            for (MutableBoundingBox bb : componentBounds)
+            for (BoundingBox bb : componentBounds)
             {
                 color = ++color % colors.length;
 
-                for (int i = bb.minX; i < bb.maxX; ++i)
+                for (int i = bb.x0; i < bb.x1; ++i)
                 {
-                    for (int j = bb.minZ; j < bb.maxZ; ++j)
+                    for (int j = bb.z0; j < bb.z1; ++j)
                     {
                         cells.get(i - absMinX).get(j - absMinZ).setBackground(colors[color]);
                     }

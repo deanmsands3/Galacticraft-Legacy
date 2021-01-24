@@ -20,24 +20,25 @@ import micdoodle8.mods.galacticraft.planets.mars.MarsModule;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import net.minecraft.block.*;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Potions;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.state.properties.Half;
-import net.minecraft.tileentity.BrewingStandTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -54,7 +55,7 @@ public class BaseRoom extends SizedPiece
     private boolean farEnd;
     private int deckTier;
 
-    public BaseRoom(TemplateManager templateManager, CompoundNBT nbt)
+    public BaseRoom(StructureManager templateManager, CompoundTag nbt)
     {
         super(CBASE_ROOM, nbt);
     }
@@ -62,17 +63,17 @@ public class BaseRoom extends SizedPiece
     public BaseRoom(BaseConfiguration configuration, Random rand, int blockPosX, int yPos, int blockPosZ, int sizeX, int sizeY, int sizeZ, Direction entranceDir, EnumRoomType roomType, boolean near, boolean far, int deckTier)
     {
         super(CBASE_ROOM, configuration, sizeX, sizeY, sizeZ, entranceDir.getOpposite());
-        this.setCoordBaseMode(this.direction);
+        this.setOrientation(this.direction);
         this.type = roomType;
         this.nearEnd = near;
         this.farEnd = far;
         this.deckTier = deckTier;
 
-        this.boundingBox = new MutableBoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos + this.sizeY, blockPosZ + this.sizeZ);
+        this.boundingBox = new BoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos + this.sizeY, blockPosZ + this.sizeZ);
     }
 
     @Override
-    protected void writeStructureToNBT(CompoundNBT tagCompound)
+    protected void writeStructureToNBT(CompoundTag tagCompound)
     {
         super.writeStructureToNBT(tagCompound);
 
@@ -82,7 +83,7 @@ public class BaseRoom extends SizedPiece
     }
 
     @Override
-    protected void readStructureFromNBT(CompoundNBT tagCompound)
+    protected void readStructureFromNBT(CompoundTag tagCompound)
     {
         super.readStructureFromNBT(tagCompound);
         try
@@ -110,9 +111,9 @@ public class BaseRoom extends SizedPiece
     }
 
     @Override
-    public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
+    public boolean postProcess(LevelAccessor worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, BoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
-        BlockState blockAir = Blocks.AIR.getDefaultState();
+        BlockState blockAir = Blocks.AIR.defaultBlockState();
 //        Block blockStair = GCBlocks.moonStoneStairs;
 
         boolean axisEW = getDirection().getAxis() == Direction.Axis.X;
@@ -133,20 +134,20 @@ public class BaseRoom extends SizedPiece
                         boolean xEntrance = maxX > 6 ? (xx > 2 && xx < maxX - 2) : (xx > 1 && xx < maxX - 1);
                         if (this.type.blockEntrance != null && yy == 0 && zz == 0 && xEntrance && this.configuration.getDeckType() != EnumBaseType.TUNNELER)
                         {
-                            this.setBlockState(worldIn, this.type.blockEntrance, xx, yy, zz, mutableBoundingBoxIn);
-                            this.setBlockState(worldIn, this.configuration.getWallBlock(), xx, yy - 1, zz, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, this.type.blockEntrance, xx, yy, zz, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, this.configuration.getWallBlock(), xx, yy - 1, zz, mutableBoundingBoxIn);
                         }
                         //Shave the top and bottom corners
                         else if (!((zz == maxZ || near || far) && (yy == 0 && (this.deckTier & 1) == 1 || yy == this.sizeY && (this.deckTier & 2) == 2 || (zz == maxZ && (near || far)))) || zz == 0 && yy == 0)
                         {
-                            this.setBlockState(worldIn, this.configuration.getWallBlock(), xx, yy, zz, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, this.configuration.getWallBlock(), xx, yy, zz, mutableBoundingBoxIn);
                         }
                         //Special case, fill in some corners on hangardeck top deck
                         else if (yy == this.sizeY && (this.deckTier & 2) == 2 && this.configuration.isHangarDeck() && zz < 3)
                         {
                             if (xx == 0 || xx == maxX)
                             {
-                                this.setBlockState(worldIn, this.configuration.getWallBlock(), xx, yy, zz, mutableBoundingBoxIn);
+                                this.placeBlock(worldIn, this.configuration.getWallBlock(), xx, yy, zz, mutableBoundingBoxIn);
                             }
                         }
                     }
@@ -155,8 +156,8 @@ public class BaseRoom extends SizedPiece
                         //Room internals
                         if ((xx > 1 && xx < maxX - 1) && (zz > 0 && zz < maxZ - 1) || (yy > 1 && yy < this.sizeY - 1) || this.type.doEntryWallsToo)
                         {
-                            BlockPos blockpos = new BlockPos(this.getXWithOffset(xx, zz), this.getYWithOffset(yy), this.getZWithOffset(xx, zz));
-                            if (mutableBoundingBoxIn.isVecInside(blockpos))
+                            BlockPos blockpos = new BlockPos(this.getWorldX(xx, zz), this.getWorldY(yy), this.getWorldZ(xx, zz));
+                            if (mutableBoundingBoxIn.isInside(blockpos))
                             {
                                 this.buildRoomContents(worldIn, xx, yy, zz, maxX - 1, maxZ - 1, blockpos, randomInt);
                             }
@@ -196,16 +197,16 @@ public class BaseRoom extends SizedPiece
                             boolean xEntrance = maxX > 6 ? (xx > 2 && xx < maxX - 2) : (xx > 1 && xx < maxX - 1);
                             if (zz == 0 && (this.type.blockEntrance != null && xEntrance))
                             {
-                                this.setBlockState(worldIn, blockAir, xx, yy, zz, mutableBoundingBoxIn);
+                                this.placeBlock(worldIn, blockAir, xx, yy, zz, mutableBoundingBoxIn);
                             }
                             else
                             {
-                                this.setBlockState(worldIn, this.type.blockFloor, xx, yy, zz, mutableBoundingBoxIn);
+                                this.placeBlock(worldIn, this.type.blockFloor, xx, yy, zz, mutableBoundingBoxIn);
                             }
                         }
                         else
                         {
-                            this.setBlockState(worldIn, blockAir, xx, yy, zz, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, blockAir, xx, yy, zz, mutableBoundingBoxIn);
                         }
                     }
                 }
@@ -221,9 +222,9 @@ public class BaseRoom extends SizedPiece
      * y from 1 to this.sizeY - 1
      * z from 1 to maxZ
      */
-    private void buildRoomContents(IWorld worldIn, int x, int y, int z, int maxX, int maxZ, BlockPos blockpos, int randomInt)
+    private void buildRoomContents(LevelAccessor worldIn, int x, int y, int z, int maxX, int maxZ, BlockPos blockpos, int randomInt)
     {
-        BlockState state = Blocks.AIR.getDefaultState();
+        BlockState state = Blocks.AIR.defaultBlockState();
         int semirand = ((blockpos.getY() * 379 + blockpos.getX()) * 373 + blockpos.getZ()) * 7 & 15;
 
         int facing = 0;
@@ -531,10 +532,10 @@ public class BaseRoom extends SizedPiece
 //        default:
 //        } TODO Base room gen
 
-        worldIn.setBlockState(blockpos, state, 2);
-        if (state.getBlock() instanceof ITileEntityProvider)
+        worldIn.setBlock(blockpos, state, 2);
+        if (state.getBlock() instanceof EntityBlock)
         {
-            TileEntity tile = worldIn.getTileEntity(blockpos);
+            BlockEntity tile = worldIn.getBlockEntity(blockpos);
 
             if (tile instanceof IMultiBlock)
             {
@@ -542,7 +543,7 @@ public class BaseRoom extends SizedPiece
                 ((IMultiBlock) tile).getPositions(blockpos, positions);
                 for (BlockPos pos : positions)
                 {
-                    worldIn.setBlockState(pos, GCBlocks.MULTI_BLOCK.getDefaultState().with(BlockMulti.MULTI_TYPE, ((IMultiBlock) tile).getMultiType()), 2);
+                    worldIn.setBlock(pos, GCBlocks.MULTI_BLOCK.defaultBlockState().setValue(BlockMulti.MULTI_TYPE, ((IMultiBlock) tile).getMultiType()), 2);
                 }
             }
 
@@ -577,29 +578,29 @@ public class BaseRoom extends SizedPiece
                 case 0:
                     break;
                 case 1:
-                    ((TileEntityCrafting) tile).setInventorySlotContents(1, new ItemStack(Items.IRON_INGOT));
-                    ((TileEntityCrafting) tile).setInventorySlotContents(3, new ItemStack(Items.IRON_INGOT));
+                    ((TileEntityCrafting) tile).setItem(1, new ItemStack(Items.IRON_INGOT));
+                    ((TileEntityCrafting) tile).setItem(3, new ItemStack(Items.IRON_INGOT));
                     break;
                 case 2:
                     //Creeper or Zombie head
                     int slot = semirand % 9;
-                    ((TileEntityCrafting) tile).setInventorySlotContents(slot, new ItemStack((semirand % 13 < 6) ? Items.CREEPER_HEAD : Items.ZOMBIE_HEAD));
+                    ((TileEntityCrafting) tile).setItem(slot, new ItemStack((semirand % 13 < 6) ? Items.CREEPER_HEAD : Items.ZOMBIE_HEAD));
                     break;
                 case 3:
-                    ((TileEntityCrafting) tile).setInventorySlotContents(0, new ItemStack(Items.IRON_INGOT));
-                    ((TileEntityCrafting) tile).setInventorySlotContents(1, new ItemStack(Items.IRON_INGOT));
-                    ((TileEntityCrafting) tile).setInventorySlotContents(3, new ItemStack(Items.IRON_INGOT));
-                    ((TileEntityCrafting) tile).setInventorySlotContents(4, new ItemStack(Items.STICK));
-                    ((TileEntityCrafting) tile).setInventorySlotContents(7, new ItemStack(Items.STICK));
+                    ((TileEntityCrafting) tile).setItem(0, new ItemStack(Items.IRON_INGOT));
+                    ((TileEntityCrafting) tile).setItem(1, new ItemStack(Items.IRON_INGOT));
+                    ((TileEntityCrafting) tile).setItem(3, new ItemStack(Items.IRON_INGOT));
+                    ((TileEntityCrafting) tile).setItem(4, new ItemStack(Items.STICK));
+                    ((TileEntityCrafting) tile).setItem(7, new ItemStack(Items.STICK));
                     break;
                 }
             }
-            else if (tile instanceof BrewingStandTileEntity)
+            else if (tile instanceof BrewingStandBlockEntity)
             {
-                BrewingStandTileEntity stand = (BrewingStandTileEntity) tile;
-                stand.setInventorySlotContents(0, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.POISON));
-                stand.setInventorySlotContents(1, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WEAKNESS));
-                stand.setInventorySlotContents(2, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.HARMING));
+                BrewingStandBlockEntity stand = (BrewingStandBlockEntity) tile;
+                stand.setItem(0, PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.POISON));
+                stand.setItem(1, PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WEAKNESS));
+                stand.setItem(2, PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.HARMING));
             }
             else if (tile instanceof TileEntityEnergyStorageModule)
             {
@@ -607,8 +608,8 @@ public class BaseRoom extends SizedPiece
                 if (semirand % 3 == 1)
                 {
                     ItemStack stack = new ItemStack(GCItems.BATTERY, 1);
-                    stack.setDamage(100);
-                    store.setInventorySlotContents(1, stack);
+                    stack.setDamageValue(100);
+                    store.setItem(1, stack);
                 }
             }
         }
@@ -621,8 +622,8 @@ public class BaseRoom extends SizedPiece
                 //Apparently we have our North and our South reversed ?  So we don't want the opposite for North and South!
                 hangingDirection = hangingDirection.getOpposite();
             }
-            HangingSchematicEntity entityhanging = new HangingSchematicEntity(GCEntities.HANGING_SCHEMATIC, (World) worldIn, blockpos, hangingDirection, x / 3 - 1);
-            worldIn.addEntity(entityhanging);
+            HangingSchematicEntity entityhanging = new HangingSchematicEntity(GCEntities.HANGING_SCHEMATIC, (Level) worldIn, blockpos, hangingDirection, x / 3 - 1);
+            worldIn.addFreshEntity(entityhanging);
             entityhanging.setSendToClient();
         }
     }
@@ -630,14 +631,14 @@ public class BaseRoom extends SizedPiece
 
     public enum EnumRoomType
     {
-        ENGINEERING(AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), false),
+        ENGINEERING(AsteroidBlocks.DARK_DECORATION_BLOCK.defaultBlockState(), AsteroidBlocks.DARK_DECORATION_BLOCK.defaultBlockState(), false),
         POWER(null, null, false),
         STORE(null, null, false),
         EMPTY(null, null, false),
-        MEDICAL(Blocks.IRON_TRAPDOOR.getDefaultState(), Blocks.IRON_TRAPDOOR.getDefaultState().with(TrapDoorBlock.HALF, Half.TOP), false),
+        MEDICAL(Blocks.IRON_TRAPDOOR.defaultBlockState(), Blocks.IRON_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.HALF, Half.TOP), false),
         CREW(null, null, false),
-        CRYO(AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), true),
-        CONTROL(AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState()/* GCBlocks.slabGCHalf.getDefaultState() TODO Asteroids slab */, AsteroidBlocks.DARK_DECORATION_BLOCK.getDefaultState(), false);
+        CRYO(AsteroidBlocks.DARK_DECORATION_BLOCK.defaultBlockState(), AsteroidBlocks.DARK_DECORATION_BLOCK.defaultBlockState(), true),
+        CONTROL(AsteroidBlocks.DARK_DECORATION_BLOCK.defaultBlockState()/* GCBlocks.slabGCHalf.getDefaultState() TODO Asteroids slab */, AsteroidBlocks.DARK_DECORATION_BLOCK.defaultBlockState(), false);
 
         public final BlockState blockFloor;
         public final BlockState blockEntrance;

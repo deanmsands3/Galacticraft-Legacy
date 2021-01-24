@@ -3,9 +3,11 @@ package micdoodle8.mods.galacticraft.planets.asteroids.client.render.entity;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.client.obj.GCModelCache;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
@@ -13,32 +15,29 @@ import micdoodle8.mods.galacticraft.core.util.PlayerUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.Tier3RocketEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class Tier3RocketRenderer extends EntityRenderer<Tier3RocketEntity>
 {
-    private IBakedModel rocketModel;
-    private IBakedModel coneModel;
-    private IBakedModel cubeModel;
+    private BakedModel rocketModel;
+    private BakedModel coneModel;
+    private BakedModel cubeModel;
 
-    public Tier3RocketRenderer(EntityRendererManager manager)
+    public Tier3RocketRenderer(EntityRenderDispatcher manager)
     {
         super(manager);
-        this.shadowSize = 2F;
+        this.shadowRadius = 2F;
         GCModelCache.INSTANCE.reloadCallback(this::updateModels);
     }
 
@@ -53,28 +52,28 @@ public class Tier3RocketRenderer extends EntityRenderer<Tier3RocketEntity>
     @Override
     public ResourceLocation getEntityTexture(Tier3RocketEntity entity)
     {
-        return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
+        return TextureAtlas.LOCATION_BLOCKS;
     }
 
     @Override
-    public void render(Tier3RocketEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    public void render(Tier3RocketEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight)
     {
-        float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks + 180;
+        float pitch = entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks + 180;
         RenderSystem.disableRescaleNormal();
-        matrixStack.push();
-        matrixStack.rotate(new Quaternion(Vector3f.YP, 180.0F - entityYaw, true));
-        matrixStack.rotate(new Quaternion(Vector3f.ZN, pitch, true));
+        matrixStack.pushPose();
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, 180.0F - entityYaw, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.ZN, pitch, true));
         matrixStack.translate(0.0F, entity.getRenderOffsetY(), 0.0F);
         float rollAmplitude = entity.rollAmplitude / 3 - partialTicks;
 
         if (rollAmplitude > 0.0F)
         {
-            float i = entity.getLaunched() ? (5 - MathHelper.floor(entity.timeUntilLaunch / 85)) / 10F : 0.3F;
-            matrixStack.rotate(Vector3f.XP.rotation(MathHelper.sin(rollAmplitude) * rollAmplitude * i * partialTicks));
-            matrixStack.rotate(Vector3f.ZP.rotation(MathHelper.sin(rollAmplitude) * rollAmplitude * i * partialTicks));
+            float i = entity.getLaunched() ? (5 - Mth.floor(entity.timeUntilLaunch / 85)) / 10F : 0.3F;
+            matrixStack.mulPose(Vector3f.XP.rotation(Mth.sin(rollAmplitude) * rollAmplitude * i * partialTicks));
+            matrixStack.mulPose(Vector3f.ZP.rotation(Mth.sin(rollAmplitude) * rollAmplitude * i * partialTicks));
         }
 
-        if (Minecraft.isAmbientOcclusionEnabled())
+        if (Minecraft.useAmbientOcclusion())
         {
             RenderSystem.shadeModel(GL11.GL_SMOOTH);
         }
@@ -102,21 +101,21 @@ public class Tier3RocketRenderer extends EntityRenderer<Tier3RocketEntity>
 
         RenderSystem.disableLighting();
 
-        boolean red = Minecraft.getInstance().player.ticksExisted / 10 % 2 < 1;
+        boolean red = Minecraft.getInstance().player.tickCount / 10 % 2 < 1;
         ClientUtil.drawBakedModelColored(this.cubeModel, buffer, matrixStack, packedLight, 0, red ? 0 : 1.0F, red ? 1.0F : 0, 1.0F);
 
         RenderSystem.enableTexture();
         RenderSystem.enableLighting();
 
         RenderSystem.color3f(1F, 1F, 1F);
-        matrixStack.pop();
-        RenderHelper.enableStandardItemLighting();
+        matrixStack.popPose();
+        Lighting.turnBackOn();
     }
 
     @Override
-    public boolean shouldRender(Tier3RocketEntity rocket, ClippingHelperImpl camera, double camX, double camY, double camZ)
+    public boolean shouldRender(Tier3RocketEntity rocket, Frustum camera, double camX, double camY, double camZ)
     {
-        AxisAlignedBB axisalignedbb = rocket.getBoundingBox().grow(0.5D, 0, 0.5D);
-        return rocket.isInRangeToRender3d(camX, camY, camZ) && camera.isBoundingBoxInFrustum(axisalignedbb);
+        AABB axisalignedbb = rocket.getBoundingBox().inflate(0.5D, 0, 0.5D);
+        return rocket.shouldRender(camX, camY, camZ) && camera.isVisible(axisalignedbb);
     }
 }

@@ -6,9 +6,8 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.items.ItemBase;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -110,7 +109,7 @@ public class AsteroidsItems
 
     public static Item.Properties defaultBuilder()
     {
-        return new Item.Properties().group(GalacticraftCore.galacticraftItemsTab);
+        return new Item.Properties().tab(GalacticraftCore.galacticraftItemsTab);
     }
 
     public static void registerItems(RegistryEvent.Register<Item> evt)
@@ -122,7 +121,7 @@ public class AsteroidsItems
         register(r, new ItemTier3Rocket(defaultBuilder()), AsteroidItemNames.TIER_3_ROCKET_36_INVENTORY);
         register(r, new ItemTier3Rocket(defaultBuilder()), AsteroidItemNames.TIER_3_ROCKET_54_INVENTORY);
         register(r, new ItemTier3Rocket(defaultBuilder()), AsteroidItemNames.CREATIVE_TIER_3_ROCKET);
-        register(r, new ItemAstroMiner(defaultBuilder().maxDamage(0).maxStackSize(1)), AsteroidItemNames.ASTRO_MINER);
+        register(r, new ItemAstroMiner(defaultBuilder().durability(0).stacksTo(1)), AsteroidItemNames.ASTRO_MINER);
         register(r, new ItemThermalPadding(defaultBuilder()), AsteroidItemNames.THERMAL_HELMET);
         register(r, new ItemThermalPadding(defaultBuilder()), AsteroidItemNames.THERMAL_CHESTPLATE);
         register(r, new ItemThermalPadding(defaultBuilder()), AsteroidItemNames.THERMAL_LEGGINGS);

@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.api.transmission.tile;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 /**
  * Applied to all TileEntities that can interact with electricity.

@@ -5,24 +5,24 @@ import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityTreasureChest;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.BossInfo;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerBossInfo;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.BossEvent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Random;
 
-public abstract class EntityBossBase extends MonsterEntity implements IBoss
+public abstract class EntityBossBase extends Monster implements IBoss
 {
     protected TileEntityDungeonSpawner<?> spawner;
     public int deathTicks = 0;
@@ -30,9 +30,9 @@ public abstract class EntityBossBase extends MonsterEntity implements IBoss
     public int entitiesWithin;
     public int entitiesWithinLast;
 
-    private final ServerBossInfo bossInfo = new ServerBossInfo(this.getDisplayName(), getHealthBarColor(), BossInfo.Overlay.PROGRESS);
+    private final ServerBossEvent bossInfo = new ServerBossEvent(this.getDisplayName(), getHealthBarColor(), BossInfo.Overlay.PROGRESS);
 
-    public EntityBossBase(EntityType<? extends EntityBossBase> type, World worldIn)
+    public EntityBossBase(EntityType<? extends EntityBossBase> type, Level worldIn)
     {
         super(type, worldIn);
     }
@@ -43,36 +43,36 @@ public abstract class EntityBossBase extends MonsterEntity implements IBoss
 
     public abstract void dropKey();
 
-    public abstract BossInfo.Color getHealthBarColor();
+    public abstract BossEvent.BossBarColor getHealthBarColor();
 
     @Override
-    protected void updateAITasks()
+    protected void customServerAiStep()
     {
         this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
-        super.updateAITasks();
+        super.customServerAiStep();
     }
 
     @Override
-    protected void onDeathUpdate()
+    protected void tickDeath()
     {
         ++this.deathTicks;
 
         if (this.deathTicks >= 180 && this.deathTicks <= 200)
         {
-            final float x = (this.rand.nextFloat() - 0.5F) * this.getWidth();
-            final float y = (this.rand.nextFloat() - 0.5F) * (this.getHeight() / 2.0F);
-            final float z = (this.rand.nextFloat() - 0.5F) * this.getWidth();
+            final float x = (this.random.nextFloat() - 0.5F) * this.getBbWidth();
+            final float y = (this.random.nextFloat() - 0.5F) * (this.getBbHeight() / 2.0F);
+            final float z = (this.random.nextFloat() - 0.5F) * this.getBbWidth();
 //            this.world.addParticle(EnumParticleTypes.EXPLOSION_HUGE, this.getPosX() + x, this.getPosY() + 2.0D + y, this.getPosZ() + z, 0.0D, 0.0D, 0.0D); TODO Particles
         }
 
         int i;
         int j;
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.deathTicks >= 180 && this.deathTicks % 5 == 0)
             {
-                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(PacketSimple.EnumSimplePacket.C_PLAY_SOUND_EXPLODE, GCCoreUtil.getDimensionType(this.world), new Object[]{}), new PacketDistributor.TargetPoint(this.getPosX(), this.getPosY(), this.getPosZ(), 40.0D, GCCoreUtil.getDimensionType(this.world)));
+                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(PacketSimple.EnumSimplePacket.C_PLAY_SOUND_EXPLODE, GCCoreUtil.getDimensionType(this.level), new Object[]{}), new PacketDistributor.TargetPoint(this.getX(), this.getY(), this.getZ(), 40.0D, GCCoreUtil.getDimensionType(this.level)));
             }
 
             if (this.deathTicks > 150 && this.deathTicks % 5 == 0)
@@ -81,29 +81,29 @@ public abstract class EntityBossBase extends MonsterEntity implements IBoss
 
                 while (i > 0)
                 {
-                    j = ExperienceOrbEntity.getXPSplit(i);
+                    j = ExperienceOrb.getExperienceValue(i);
                     i -= j;
-                    this.world.addEntity(new ExperienceOrbEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), j));
+                    this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY(), this.getZ(), j));
                 }
             }
         }
 
-        if (this.deathTicks == 200 && !this.world.isRemote)
+        if (this.deathTicks == 200 && !this.level.isClientSide)
         {
             i = 20;
 
             while (i > 0)
             {
-                j = ExperienceOrbEntity.getXPSplit(i);
+                j = ExperienceOrb.getExperienceValue(i);
                 i -= j;
-                this.world.addEntity(new ExperienceOrbEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), j));
+                this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY(), this.getZ(), j));
             }
 
             TileEntityTreasureChest chest = null;
 
             if (this.spawner != null && this.spawner.getChestPos() != null)
             {
-                TileEntity chestTest = this.world.getTileEntity(this.spawner.getChestPos());
+                BlockEntity chestTest = this.level.getBlockEntity(this.spawner.getChestPos());
 
                 if (chestTest != null && chestTest instanceof TileEntityTreasureChest)
                 {
@@ -119,7 +119,7 @@ public abstract class EntityBossBase extends MonsterEntity implements IBoss
 
             if (chest != null)
             {
-                double dist = this.getDistanceSq(chest.getPos().getX() + 0.5, chest.getPos().getY() + 0.5, chest.getPos().getZ() + 0.5);
+                double dist = this.distanceToSqr(chest.getBlockPos().getX() + 0.5, chest.getBlockPos().getY() + 0.5, chest.getBlockPos().getZ() + 0.5);
                 if (dist < 1000 * 1000)
                 {
                     if (!chest.locked)
@@ -127,9 +127,9 @@ public abstract class EntityBossBase extends MonsterEntity implements IBoss
                         chest.locked = true;
                     }
 
-                    for (int k = 0; k < chest.getSizeInventory(); k++)
+                    for (int k = 0; k < chest.getContainerSize(); k++)
                     {
-                        chest.setInventorySlotContents(k, ItemStack.EMPTY);
+                        chest.setItem(k, ItemStack.EMPTY);
                     }
 
                     chest.fillWithLoot(null);
@@ -140,9 +140,9 @@ public abstract class EntityBossBase extends MonsterEntity implements IBoss
 //                    WeightedRandomChestContent.generateChestContents(this.rand, info.getItems(this.rand), chest, info.getCount(this.rand));
 //                    WeightedRandomChestContent.generateChestContents(this.rand, info.getItems(this.rand), chest, info.getCount(this.rand));
 
-                    ItemStack schematic = this.getGuaranteedLoot(this.rand);
-                    int slot = this.rand.nextInt(chest.getSizeInventory());
-                    chest.setInventorySlotContents(slot, schematic);
+                    ItemStack schematic = this.getGuaranteedLoot(this.random);
+                    int slot = this.random.nextInt(chest.getContainerSize());
+                    chest.setItem(slot, schematic);
                 }
             }
 
@@ -157,9 +157,9 @@ public abstract class EntityBossBase extends MonsterEntity implements IBoss
                 this.spawner.boss = null;
                 this.spawner.spawned = false;
 
-                if (!this.world.isRemote)
+                if (!this.level.isClientSide)
                 {
-                    this.spawner.lastKillTime = ((ServerWorld) this.world).getServer().getServerTime();
+                    this.spawner.lastKillTime = ((ServerLevel) this.level).getServer().getNextTickTime();
                 }
             }
         }
@@ -168,24 +168,24 @@ public abstract class EntityBossBase extends MonsterEntity implements IBoss
     @Override
     public void tick()
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             this.setHealth(this.getHealth());
         }
 
         if (this.spawner != null)
         {
-            List<PlayerEntity> playersWithin = this.world.getEntitiesWithinAABB(PlayerEntity.class, this.spawner.getRangeBounds());
+            List<Player> playersWithin = this.level.getEntitiesOfClass(Player.class, this.spawner.getRangeBounds());
 
             this.entitiesWithin = playersWithin.size();
 
             if (this.entitiesWithin == 0 && this.entitiesWithinLast != 0)
             {
-                List<PlayerEntity> entitiesWithin2 = this.world.getEntitiesWithinAABB(PlayerEntity.class, this.spawner.getRangeBoundsPlus11());
+                List<Player> entitiesWithin2 = this.level.getEntitiesOfClass(Player.class, this.spawner.getRangeBoundsPlus11());
 
-                for (PlayerEntity p : entitiesWithin2)
+                for (Player p : entitiesWithin2)
                 {
-                    p.sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.skeleton_boss.message")));
+                    p.sendMessage(new TextComponent(GCCoreUtil.translate("gui.skeleton_boss.message")));
                 }
 
                 this.remove();
@@ -220,16 +220,16 @@ public abstract class EntityBossBase extends MonsterEntity implements IBoss
     }
 
     @Override
-    public void addTrackingPlayer(ServerPlayerEntity player)
+    public void startSeenByPlayer(ServerPlayer player)
     {
-        super.addTrackingPlayer(player);
+        super.startSeenByPlayer(player);
         this.bossInfo.addPlayer(player);
     }
 
     @Override
-    public void removeTrackingPlayer(ServerPlayerEntity player)
+    public void stopSeenByPlayer(ServerPlayer player)
     {
-        super.removeTrackingPlayer(player);
+        super.stopSeenByPlayer(player);
         this.bossInfo.removePlayer(player);
     }
 }

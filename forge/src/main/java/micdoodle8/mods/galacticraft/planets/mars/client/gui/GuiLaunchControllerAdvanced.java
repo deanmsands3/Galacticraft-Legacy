@@ -16,15 +16,14 @@ import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerLaunchContro
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars.EnumSimplePacketMars;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityLaunchController;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-
+import com.mojang.blaze3d.platform.Lighting;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +40,10 @@ public class GuiLaunchControllerAdvanced extends GuiContainerGC<ContainerLaunchC
 
     private int cannotEditTimer;
 
-    public GuiLaunchControllerAdvanced(ContainerLaunchController container, PlayerInventory playerInv, ITextComponent title)
+    public GuiLaunchControllerAdvanced(ContainerLaunchController container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
-        this.ySize = 209;
+        this.imageHeight = 209;
         this.launchController = container.getLaunchController();
     }
 
@@ -72,7 +71,7 @@ public class GuiLaunchControllerAdvanced extends GuiContainerGC<ContainerLaunchC
 
         GL11.glColor3f(1, 1, 1);
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        RenderHelper.disableStandardItemLighting();
+        Lighting.turnOff();
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
@@ -99,7 +98,7 @@ public class GuiLaunchControllerAdvanced extends GuiContainerGC<ContainerLaunchC
 //		GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        RenderHelper.enableStandardItemLighting();
+        Lighting.turnBackOn();
     }
 
     @Override
@@ -107,8 +106,8 @@ public class GuiLaunchControllerAdvanced extends GuiContainerGC<ContainerLaunchC
     {
         super.init();
         this.buttons.clear();
-        final int xLeft = (this.width - this.xSize) / 2;
-        final int yTop = (this.height - this.ySize) / 2;
+        final int xLeft = (this.width - this.imageWidth) / 2;
+        final int yTop = (this.height - this.imageHeight) / 2;
         this.enablePadRemovalButton = new GuiElementCheckbox(this, this.width / 2 - 61, yTop + 20, GCCoreUtil.translate("gui.message.remove_pad"));
         this.launchWhenCheckbox = new GuiElementCheckbox(this, this.width / 2 - 61, yTop + 38, GCCoreUtil.translate("gui.message.launch_when") + ": ");
         this.dropdownTest = new GuiElementDropdown(this, xLeft + 52, yTop + 52, EnumAutoLaunch.CARGO_IS_UNLOADED.getTitle(), EnumAutoLaunch.CARGO_IS_FULL.getTitle(), EnumAutoLaunch.ROCKET_IS_FUELED.getTitle(), EnumAutoLaunch.INSTANT.getTitle(), EnumAutoLaunch.TIME_10_SECONDS.getTitle(), EnumAutoLaunch.TIME_30_SECONDS.getTitle(), EnumAutoLaunch.TIME_1_MINUTE.getTitle(), EnumAutoLaunch.REDSTONE_SIGNAL.getTitle());
@@ -119,7 +118,7 @@ public class GuiLaunchControllerAdvanced extends GuiContainerGC<ContainerLaunchC
                 this.cannotEditTimer = 50;
                 return;
             }
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_SWITCH_LAUNCH_CONTROLLER_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{this.launchController.getPos(), 1}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_SWITCH_LAUNCH_CONTROLLER_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{this.launchController.getBlockPos(), 1}));
         });
         this.buttons.add(this.enablePadRemovalButton);
         this.buttons.add(this.launchWhenCheckbox);
@@ -138,30 +137,30 @@ public class GuiLaunchControllerAdvanced extends GuiContainerGC<ContainerLaunchC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
 //        String displayString = GCCoreUtil.translate("gui.launch_controller.owner") + ": " + this.launchController.getOwnerUUID();
-        String displayString = "Owned " + this.getTitle().getFormattedText();
-        this.font.drawString(displayString, this.xSize - this.font.getStringWidth(displayString) - 5, 5, 4210752);
+        String displayString = "Owned " + this.getTitle().getColoredString();
+        this.font.draw(displayString, this.imageWidth - this.font.width(displayString) - 5, 5, 4210752);
 
         if (this.cannotEditTimer > 0)
         {
-            this.font.drawString("Owned", this.xSize / 2 - this.font.getStringWidth(displayString) / 2, 5, this.cannotEditTimer % 30 < 15 ? ColorUtil.to32BitColor(255, 255, 100, 100) : 4210752);
+            this.font.draw("Owned", this.imageWidth / 2 - this.font.width(displayString) / 2, 5, this.cannotEditTimer % 30 < 15 ? ColorUtil.to32BitColor(255, 255, 100, 100) : 4210752);
             this.cannotEditTimer--;
         }
 
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, 115, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, 115, 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void renderBg(float par1, int par2, int par3)
     {
         GL11.glPushMatrix();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.textureManager.bindTexture(GuiLaunchControllerAdvanced.launchControllerGui);
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
-        this.blit(var5, var6, 0, 0, this.xSize, this.ySize);
+        this.minecraft.textureManager.bind(GuiLaunchControllerAdvanced.launchControllerGui);
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
+        this.blit(var5, var6, 0, 0, this.imageWidth, this.imageHeight);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -175,7 +174,7 @@ public class GuiLaunchControllerAdvanced extends GuiContainerGC<ContainerLaunchC
     }
 
     @Override
-    public boolean canBeClickedBy(GuiElementDropdown dropdown, PlayerEntity player)
+    public boolean canBeClickedBy(GuiElementDropdown dropdown, Player player)
     {
         if (dropdown.equals(this.dropdownTest))
         {
@@ -191,7 +190,7 @@ public class GuiLaunchControllerAdvanced extends GuiContainerGC<ContainerLaunchC
         if (dropdown.equals(this.dropdownTest))
         {
             this.launchController.launchDropdownSelection = selection;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{1, this.launchController.getPos(), this.launchController.launchDropdownSelection}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{1, this.launchController.getBlockPos(), this.launchController.launchDropdownSelection}));
         }
     }
 
@@ -212,17 +211,17 @@ public class GuiLaunchControllerAdvanced extends GuiContainerGC<ContainerLaunchC
         if (checkbox.equals(this.enablePadRemovalButton))
         {
             this.launchController.launchPadRemovalDisabled = !newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{3, this.launchController.getPos(), this.launchController.launchPadRemovalDisabled ? 1 : 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{3, this.launchController.getBlockPos(), this.launchController.launchPadRemovalDisabled ? 1 : 0}));
         }
         else if (checkbox.equals(this.launchWhenCheckbox))
         {
             this.launchController.launchSchedulingEnabled = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{4, this.launchController.getPos(), this.launchController.launchSchedulingEnabled ? 1 : 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{4, this.launchController.getBlockPos(), this.launchController.launchSchedulingEnabled ? 1 : 0}));
         }
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckbox checkbox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementCheckbox checkbox, Player player)
     {
         return PlayerUtil.getName(player).equals(this.launchController.getOwnerUUID());
     }

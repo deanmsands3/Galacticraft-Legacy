@@ -1,8 +1,7 @@
 package micdoodle8.mods.galacticraft.core.client;
 
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
-
+import com.mojang.blaze3d.platform.NativeImage;
 import java.awt.image.BufferedImage;
 
 public class DynamicTextureProper extends DynamicTexture
@@ -26,18 +25,18 @@ public class DynamicTextureProper extends DynamicTexture
 
     public void update(NativeImage img)
     {
-        this.getTextureData().uploadTextureSub(0, 0, 0, false);
+        this.getPixels().upload(0, 0, 0, false);
         this.updateFlag = true;
     }
 
     @Override
-    public int getGlTextureId()
+    public int getId()
     {
         if (this.updateFlag)
         {
             this.updateFlag = false;
-            this.updateDynamicTexture();
+            this.upload();
         }
-        return super.getGlTextureId();
+        return super.getId();
     }
 }

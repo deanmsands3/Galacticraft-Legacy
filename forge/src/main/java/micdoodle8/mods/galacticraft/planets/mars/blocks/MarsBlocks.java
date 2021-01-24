@@ -7,14 +7,14 @@ import micdoodle8.mods.galacticraft.core.blocks.WallBlockGC;
 import micdoodle8.mods.galacticraft.core.items.ItemBlockDesc;
 import micdoodle8.mods.galacticraft.planets.client.renderer.ItemStackTileEntityRendererPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.tile.*;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -90,7 +90,7 @@ public class MarsBlocks
     {
         IForgeRegistry<Block> r = evt.getRegistry();
 
-        Block.Properties builder = Block.Properties.create(Material.ROCK);
+        Block.Properties builder = Block.Properties.of(Material.STONE);
         register(r, new BlockBasicMars(builder), MarsBlockNames.MARS_COPPER_ORE);
         register(r, new BlockBasicMars(builder), MarsBlockNames.MARS_TIN_ORE);
         register(r, new BlockBasicMars(builder), MarsBlockNames.DESH_ORE);
@@ -99,42 +99,42 @@ public class MarsBlocks
         register(r, new BlockBasicMars(builder), MarsBlockNames.MARS_FINE_REGOLITH);
         register(r, new BlockBasicMars(builder), MarsBlockNames.MARS_REGOLITH);
         register(r, new BlockBasicMars(builder), MarsBlockNames.MARS_STONE);
-        register(r, new StairsBlockGC(() -> MARS_COBBLESTONE.getDefaultState(), builder), MarsBlockNames.MARS_COBBLESTONE_STAIRS);
+        register(r, new StairsBlockGC(() -> MARS_COBBLESTONE.defaultBlockState(), builder), MarsBlockNames.MARS_COBBLESTONE_STAIRS);
         register(r, new SlabBlockGC(builder), MarsBlockNames.MARS_COBBLESTONE_SLAB);
         register(r, new WallBlockGC(builder), MarsBlockNames.MARS_COBBLESTONE_WALL);
 
-        builder = builder.hardnessAndResistance(5.0F, 20.0F);
+        builder = builder.strength(5.0F, 20.0F);
         register(r, new BlockBasicMars(builder), MarsBlockNames.DESH_BLOCK);
 
-        builder = builder.hardnessAndResistance(5.0F, 60.0F).tickRandomly();
+        builder = builder.strength(5.0F, 60.0F).randomTicks();
         register(r, new BlockBasicMars(builder), MarsBlockNames.MARS_DUNGEON_BRICKS);
-        register(r, new StairsBlockGC(() -> MARS_DUNGEON_BRICKS.getDefaultState(), builder), MarsBlockNames.MARS_DUNGEON_BRICK_STAIRS);
+        register(r, new StairsBlockGC(() -> MARS_DUNGEON_BRICKS.defaultBlockState(), builder), MarsBlockNames.MARS_DUNGEON_BRICK_STAIRS);
         register(r, new SlabBlockGC(builder), MarsBlockNames.MARS_DUNGEON_BRICK_SLAB);
         register(r, new WallBlockGC(builder), MarsBlockNames.MARS_DUNGEON_BRICK_WALL);
 
-        builder = Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().lightValue(15).tickRandomly().hardnessAndResistance(0.2F).sound(SoundType.PLANT);
+        builder = Block.Properties.of(Material.REPLACEABLE_PLANT).noCollission().lightLevel(15).randomTicks().strength(0.2F).sound(SoundType.GRASS);
         register(r, new BlockCavernousVine(builder), MarsBlockNames.CAVERNOUS_VINES);
 
-        builder = Block.Properties.create(Material.ROCK).notSolid();
+        builder = Block.Properties.of(Material.STONE).noOcclusion();
         register(r, new BlockSlimelingEgg(builder), MarsBlockNames.RED_SLIMELING_EGG);
         register(r, new BlockSlimelingEgg(builder), MarsBlockNames.BLUE_SLIMELING_EGG);
         register(r, new BlockSlimelingEgg(builder), MarsBlockNames.YELLOW_SLIMELING_EGG);
 
-        builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(100000.0F).sound(SoundType.STONE).lightValue(13).noDrops();
+        builder = Block.Properties.of(Material.STONE).strength(100000.0F).sound(SoundType.STONE).lightLevel(13).noDrops();
         register(r, new BlockTier2TreasureChest(builder), MarsBlockNames.TIER_2_TREASURE_CHEST);
 
-        builder = Block.Properties.create(Material.IRON).sound(SoundType.METAL);
-        register(r, new BlockCryoChamber(builder.notSolid()), MarsBlockNames.CRYOGENIC_CHAMBER);
+        builder = Block.Properties.of(Material.METAL).sound(SoundType.METAL);
+        register(r, new BlockCryoChamber(builder.noOcclusion()), MarsBlockNames.CRYOGENIC_CHAMBER);
         register(r, new BlockLaunchController(builder), MarsBlockNames.LAUNCH_CONTROLLER);
         register(r, new BlockTerraformer(builder), MarsBlockNames.TERRAFORMER);
         register(r, new BlockMethaneSynthesizer(builder), MarsBlockNames.METHANE_SYNTHESIZER);
         register(r, new BlockGasLiquefier(builder), MarsBlockNames.GAS_LIQUEFIER);
-        register(r, new BlockElectrolyzer(builder.tickRandomly()), MarsBlockNames.WATER_ELECTROLYZER);
+        register(r, new BlockElectrolyzer(builder.randomTicks()), MarsBlockNames.WATER_ELECTROLYZER);
 
-        builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 9.0F);
+        builder = Block.Properties.of(Material.STONE).strength(3.0F, 9.0F);
         register(r, new BlockCreeperEgg(builder), MarsBlockNames.CREEPER_EGG);
 
-        builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(1000000.0F).noDrops();
+        builder = Block.Properties.of(Material.STONE).strength(1000000.0F).noDrops();
         register(r, new BlockBossSpawnerMars(builder), MarsBlockNames.MARS_BOSS_SPAWNER);
 
 //        register(r, new BlockStairsGC(builder), MarsBlockNames.marsCobblestoneStairs);
@@ -170,7 +170,7 @@ public class MarsBlocks
     public static void registerItemBlocks(RegistryEvent.Register<Item> evt)
     {
         IForgeRegistry<Item> r = evt.getRegistry();
-        Item.Properties props = GCItems.defaultBuilder().group(GalacticraftCore.galacticraftBlocksTab);
+        Item.Properties props = GCItems.defaultBuilder().tab(GalacticraftCore.galacticraftBlocksTab);
         register(r, Registry.BLOCK.getKey(MARS_COPPER_ORE), new BlockItem(MARS_COPPER_ORE, props));
         register(r, Registry.BLOCK.getKey(MARS_TIN_ORE), new BlockItem(MARS_TIN_ORE, props));
         register(r, Registry.BLOCK.getKey(DESH_ORE), new BlockItem(DESH_ORE, props));
@@ -242,18 +242,18 @@ public class MarsBlocks
 //    } TODO
 
     @SubscribeEvent
-    public static void initTileEntities(RegistryEvent.Register<TileEntityType<?>> evt)
+    public static void initTileEntities(RegistryEvent.Register<BlockEntityType<?>> evt)
     {
-        IForgeRegistry<TileEntityType<?>> r = evt.getRegistry();
+        IForgeRegistry<BlockEntityType<?>> r = evt.getRegistry();
 
-        register(r, TileEntityType.Builder.create(TileEntityCryogenicChamber::new, CRYOGENIC_CHAMBER).build(null), MarsBlockNames.CRYOGENIC_CHAMBER);
-        register(r, TileEntityType.Builder.create(TileEntityDungeonSpawnerMars::new, MARS_BOSS_SPAWNER).build(null), MarsBlockNames.MARS_BOSS_SPAWNER);
-        register(r, TileEntityType.Builder.create(TileEntityElectrolyzer::new, WATER_ELECTROLYZER).build(null), MarsBlockNames.WATER_ELECTROLYZER);
-        register(r, TileEntityType.Builder.create(TileEntityGasLiquefier::new, GAS_LIQUEFIER).build(null), MarsBlockNames.GAS_LIQUEFIER);
-        register(r, TileEntityType.Builder.create(TileEntityLaunchController::new, LAUNCH_CONTROLLER).build(null), MarsBlockNames.LAUNCH_CONTROLLER);
-        register(r, TileEntityType.Builder.create(TileEntityMethaneSynthesizer::new, METHANE_SYNTHESIZER).build(null), MarsBlockNames.METHANE_SYNTHESIZER);
-        register(r, TileEntityType.Builder.create(TileEntitySlimelingEgg::new, RED_SLIMELING_EGG, BLUE_SLIMELING_EGG, YELLOW_SLIMELING_EGG).build(null), MarsBlockNames.SLIMELING_EGG);
-        register(r, TileEntityType.Builder.create(TileEntityTerraformer::new, TERRAFORMER).build(null), MarsBlockNames.TERRAFORMER);
-        register(r, TileEntityType.Builder.create(TileEntityTreasureChestMars::new, TIER_2_TREASURE_CHEST).build(null), MarsBlockNames.TIER_2_TREASURE_CHEST);
+        register(r, BlockEntityType.Builder.of(TileEntityCryogenicChamber::new, CRYOGENIC_CHAMBER).build(null), MarsBlockNames.CRYOGENIC_CHAMBER);
+        register(r, BlockEntityType.Builder.of(TileEntityDungeonSpawnerMars::new, MARS_BOSS_SPAWNER).build(null), MarsBlockNames.MARS_BOSS_SPAWNER);
+        register(r, BlockEntityType.Builder.of(TileEntityElectrolyzer::new, WATER_ELECTROLYZER).build(null), MarsBlockNames.WATER_ELECTROLYZER);
+        register(r, BlockEntityType.Builder.of(TileEntityGasLiquefier::new, GAS_LIQUEFIER).build(null), MarsBlockNames.GAS_LIQUEFIER);
+        register(r, BlockEntityType.Builder.of(TileEntityLaunchController::new, LAUNCH_CONTROLLER).build(null), MarsBlockNames.LAUNCH_CONTROLLER);
+        register(r, BlockEntityType.Builder.of(TileEntityMethaneSynthesizer::new, METHANE_SYNTHESIZER).build(null), MarsBlockNames.METHANE_SYNTHESIZER);
+        register(r, BlockEntityType.Builder.of(TileEntitySlimelingEgg::new, RED_SLIMELING_EGG, BLUE_SLIMELING_EGG, YELLOW_SLIMELING_EGG).build(null), MarsBlockNames.SLIMELING_EGG);
+        register(r, BlockEntityType.Builder.of(TileEntityTerraformer::new, TERRAFORMER).build(null), MarsBlockNames.TERRAFORMER);
+        register(r, BlockEntityType.Builder.of(TileEntityTreasureChestMars::new, TIER_2_TREASURE_CHEST).build(null), MarsBlockNames.TIER_2_TREASURE_CHEST);
     }
 }

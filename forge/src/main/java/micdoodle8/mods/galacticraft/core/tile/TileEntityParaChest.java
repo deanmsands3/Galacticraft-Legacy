@@ -10,17 +10,16 @@ import micdoodle8.mods.galacticraft.core.inventory.ContainerParaChest;
 import micdoodle8.mods.galacticraft.core.inventory.IInventorySettable;
 import micdoodle8.mods.galacticraft.core.network.PacketDynamicInventory;
 import micdoodle8.mods.galacticraft.core.util.FluidUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.LogicalSide;
@@ -32,7 +31,7 @@ import java.util.List;
 public class TileEntityParaChest extends TileEntityAdvanced implements IInventorySettable, IScaleableFuelLevel
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.PARACHEST)
-    public static TileEntityType<TileEntityParaChest> TYPE;
+    public static BlockEntityType<TileEntityParaChest> TYPE;
 
     private final int tankCapacity = 5000;
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -55,7 +54,7 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     @Override
     public void onLoad()
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             //Request size + contents information from server
             GalacticraftCore.packetPipeline.sendToServer(new PacketDynamicInventory(this));
@@ -90,9 +89,9 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
 
         int size = nbt.getInt("chestContentLength");
         if ((size - 3) % 18 != 0)
@@ -101,7 +100,7 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
         }
         this.inventory = NonNullList.withSize(size, ItemStack.EMPTY);
 
-        ItemStackHelper.loadAllItems(nbt, this.getInventory());
+        ContainerHelper.loadAllItems(nbt, this.getInventory());
 
         if (nbt.contains("fuelTank"))
         {
@@ -115,16 +114,16 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
 
         nbt.putInt("chestContentLength", this.getInventory().size());
-        ItemStackHelper.saveAllItems(nbt, this.getInventory());
+        ContainerHelper.saveAllItems(nbt, this.getInventory());
 
         if (this.fuelTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundNBT()));
+            nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundTag()));
         }
 
         nbt.putInt("color", this.color.ordinal());
@@ -132,15 +131,15 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void updateContainingBlockInfo()
+    public void clearCache()
     {
-        super.updateContainingBlockInfo();
+        super.clearCache();
         this.adjacentChestChecked = false;
     }
 
@@ -150,18 +149,18 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
         super.tick();
         float f;
 
-        if (!this.world.isRemote && this.numUsingPlayers != 0 && (this.ticks + this.getPos().getX() + this.getPos().getY() + this.getPos().getZ()) % 200 == 0)
+        if (!this.level.isClientSide && this.numUsingPlayers != 0 && (this.ticks + this.getBlockPos().getX() + this.getBlockPos().getY() + this.getBlockPos().getZ()) % 200 == 0)
         {
             this.numUsingPlayers = 0;
             f = 5.0F;
-            List<?> list = this.world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(this.getPos().getX() - f, this.getPos().getY() - f, this.getPos().getZ() - f, this.getPos().getX() + 1 + f, this.getPos().getY() + 1 + f, this.getPos().getZ() + 1 + f));
+            List<?> list = this.level.getEntitiesOfClass(Player.class, new AABB(this.getBlockPos().getX() - f, this.getBlockPos().getY() - f, this.getBlockPos().getZ() - f, this.getBlockPos().getX() + 1 + f, this.getBlockPos().getY() + 1 + f, this.getBlockPos().getZ() + 1 + f));
             Iterator<?> iterator = list.iterator();
 
             while (iterator.hasNext())
             {
-                PlayerEntity entityplayer = (PlayerEntity) iterator.next();
+                Player entityplayer = (Player) iterator.next();
 
-                if (entityplayer.openContainer instanceof ContainerParaChest)
+                if (entityplayer.containerMenu instanceof ContainerParaChest)
                 {
                     ++this.numUsingPlayers;
                 }
@@ -174,10 +173,10 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
 
         if (this.numUsingPlayers > 0 && this.lidAngle == 0.0F)
         {
-            double d1 = this.getPos().getX() + 0.5D;
-            d0 = this.getPos().getZ() + 0.5D;
+            double d1 = this.getBlockPos().getX() + 0.5D;
+            d0 = this.getBlockPos().getZ() + 0.5D;
 
-            this.world.playSound(null, d1, this.getPos().getY() + 0.5D, d0, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+            this.level.playSound(null, d1, this.getBlockPos().getY() + 0.5D, d0, SoundEvents.CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
         }
 
         if (this.numUsingPlayers == 0 && this.lidAngle > 0.0F || this.numUsingPlayers > 0 && this.lidAngle < 1.0F)
@@ -202,10 +201,10 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
 
             if (this.lidAngle < f2 && f1 >= f2)
             {
-                d0 = this.getPos().getX() + 0.5D;
-                double d2 = this.getPos().getZ() + 0.5D;
+                d0 = this.getBlockPos().getX() + 0.5D;
+                double d2 = this.getBlockPos().getZ() + 0.5D;
 
-                this.world.playSound(null, d0, this.getPos().getY() + 0.5D, d2, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+                this.level.playSound(null, d0, this.getBlockPos().getY() + 0.5D, d2, SoundEvents.CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
             }
 
             if (this.lidAngle < 0.0F)
@@ -214,7 +213,7 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
             }
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.checkFluidTankTransfer(this.getInventory().size() - 1, this.fuelTank);
         }
@@ -226,7 +225,7 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public boolean receiveClientEvent(int par1, int par2)
+    public boolean triggerEvent(int par1, int par2)
     {
         if (par1 == 1)
         {
@@ -235,12 +234,12 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
         }
         else
         {
-            return super.receiveClientEvent(par1, par2);
+            return super.triggerEvent(par1, par2);
         }
     }
 
     @Override
-    public void openInventory(PlayerEntity player)
+    public void startOpen(Player player)
     {
         if (this.numUsingPlayers < 0)
         {
@@ -248,31 +247,31 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
         }
 
         ++this.numUsingPlayers;
-        this.world.addBlockEvent(this.getPos(), this.getBlockState().getBlock(), 1, this.numUsingPlayers);
-        this.world.notifyNeighborsOfStateChange(this.getPos(), this.getBlockState().getBlock());
-        this.world.notifyNeighborsOfStateChange(this.getPos().down(), this.getBlockState().getBlock());
+        this.level.blockEvent(this.getBlockPos(), this.getBlockState().getBlock(), 1, this.numUsingPlayers);
+        this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
+        this.level.updateNeighborsAt(this.getBlockPos().below(), this.getBlockState().getBlock());
     }
 
     @Override
-    public void closeInventory(PlayerEntity player)
+    public void stopOpen(Player player)
     {
         --this.numUsingPlayers;
-        this.world.addBlockEvent(this.getPos(), this.getBlockState().getBlock(), 1, this.numUsingPlayers);
-        this.world.notifyNeighborsOfStateChange(this.getPos(), this.getBlockState().getBlock());
-        this.world.notifyNeighborsOfStateChange(this.getPos().down(), this.getBlockState().getBlock());
+        this.level.blockEvent(this.getBlockPos(), this.getBlockState().getBlock(), 1, this.numUsingPlayers);
+        this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
+        this.level.updateNeighborsAt(this.getBlockPos().below(), this.getBlockState().getBlock());
     }
 
     @Override
-    public boolean isItemValidForSlot(int par1, ItemStack par2ItemStack)
+    public boolean canPlaceItem(int par1, ItemStack par2ItemStack)
     {
         return true;
     }
 
     @Override
-    public void remove()
+    public void setRemoved()
     {
-        super.remove();
-        this.updateContainingBlockInfo();
+        super.setRemoved();
+        this.clearCache();
     }
 
     @Override

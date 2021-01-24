@@ -6,8 +6,8 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
 
 public class ColorUtil
@@ -330,6 +330,6 @@ public class ColorUtil
         int rr = gg >> 8;
         gg &= 255;
         int bb = col & 255;
-        GlStateManager.color4f(rr / 255F, gg / 255F, bb / 255F, 1.0F);
+        GlStateManager._color4f(rr / 255F, gg / 255F, bb / 255F, 1.0F);
     }
 }

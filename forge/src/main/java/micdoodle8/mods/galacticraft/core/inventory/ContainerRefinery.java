@@ -6,22 +6,22 @@ import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityRefinery;
 import micdoodle8.mods.galacticraft.core.util.FluidUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerRefinery extends Container
+public class ContainerRefinery extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.REFINERY)
-    public static ContainerType<ContainerRefinery> TYPE;
+    public static MenuType<ContainerRefinery> TYPE;
 
     private final TileEntityRefinery refinery;
 
-    public ContainerRefinery(int containerId, PlayerInventory playerInv, TileEntityRefinery refinery)
+    public ContainerRefinery(int containerId, Inventory playerInv, TileEntityRefinery refinery)
     {
         super(TYPE, containerId);
         this.refinery = refinery;
@@ -49,7 +49,7 @@ public class ContainerRefinery extends Container
             this.addSlot(new Slot(playerInv, var3, 8 + var3 * 18, 144));
         }
 
-        refinery.openInventory(playerInv.player);
+        refinery.startOpen(playerInv.player);
     }
 
     public TileEntityRefinery getRefinery()
@@ -58,16 +58,16 @@ public class ContainerRefinery extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity entityplayer)
+    public void removed(Player entityplayer)
     {
-        super.onContainerClosed(entityplayer);
-        this.refinery.closeInventory(entityplayer);
+        super.removed(entityplayer);
+        this.refinery.stopOpen(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.refinery.isUsableByPlayer(par1EntityPlayer);
+        return this.refinery.stillValid(par1EntityPlayer);
     }
 
     /**
@@ -75,33 +75,33 @@ public class ContainerRefinery extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(par1);
+        final Slot slot = this.slots.get(par1);
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            final ItemStack var4 = slot.getStack();
+            final ItemStack var4 = slot.getItem();
             var2 = var4.copy();
 
             if (par1 < 3)
             {
-                if (!this.mergeItemStack(var4, 3, 39, true))
+                if (!this.moveItemStackTo(var4, 3, 39, true))
                 {
                     return ItemStack.EMPTY;
                 }
 
                 if (par1 == 2)
                 {
-                    slot.onSlotChange(var4, var2);
+                    slot.onQuickCraft(var4, var2);
                 }
             }
             else
             {
                 if (EnergyUtil.isElectricItem(var4.getItem()))
                 {
-                    if (!this.mergeItemStack(var4, 0, 1, false))
+                    if (!this.moveItemStackTo(var4, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -110,26 +110,26 @@ public class ContainerRefinery extends Container
                 {
                     if (FluidUtil.isOilContainerAny(var4))
                     {
-                        if (!this.mergeItemStack(var4, 1, 2, false))
+                        if (!this.moveItemStackTo(var4, 1, 2, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
                     else if (FluidUtil.isPartialContainer(var4, GCItems.PARTIAL_FUEL_CANISTER))
                     {
-                        if (!this.mergeItemStack(var4, 2, 3, false))
+                        if (!this.moveItemStackTo(var4, 2, 3, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
                     else if (par1 < 30)
                     {
-                        if (!this.mergeItemStack(var4, 30, 39, false))
+                        if (!this.moveItemStackTo(var4, 30, 39, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (!this.mergeItemStack(var4, 3, 30, false))
+                    else if (!this.moveItemStackTo(var4, 3, 30, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -138,11 +138,11 @@ public class ContainerRefinery extends Container
 
             if (var4.getCount() == 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (var4.getCount() == var2.getCount())

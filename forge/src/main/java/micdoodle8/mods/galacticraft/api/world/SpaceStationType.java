@@ -1,7 +1,8 @@
 package micdoodle8.mods.galacticraft.api.world;
 
 import micdoodle8.mods.galacticraft.api.recipe.SpaceStationRecipe;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.dimension.DimensionType;
 
 /**
  * Currently only used internally, not guaranteed to work.
@@ -9,7 +10,7 @@ import net.minecraft.world.dimension.DimensionType;
 public class SpaceStationType
 {
     //    private final int spaceStationID;
-    private final DimensionType planetID;
+    private final ResourceKey<DimensionType> planetID;
     private SpaceStationRecipe recipe;
 
     /**
@@ -19,7 +20,7 @@ public class SpaceStationType
      * the planet ID should be 0 (it should be 0, even if the server has set ConfigManagerCore.idDimensionOverworld.get()
      * to a different value than 0).
      */
-    public SpaceStationType(/*int spaceStationID, */DimensionType planetID, SpaceStationRecipe recipe)
+    public SpaceStationType(/*int spaceStationID, */ResourceKey<DimensionType> planetID, SpaceStationRecipe recipe)
     {
 //        this.spaceStationID = spaceStationID;
         this.planetID = planetID;
@@ -37,7 +38,7 @@ public class SpaceStationType
     /**
      * Dimension ID of the planet this space station is orbiting
      */
-    public DimensionType getWorldToOrbitID()
+    public ResourceKey<DimensionType> getWorldToOrbitID()
     {
         return this.planetID;
     }

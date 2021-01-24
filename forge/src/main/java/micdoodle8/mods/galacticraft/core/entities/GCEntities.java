@@ -1,10 +1,7 @@
 package micdoodle8.mods.galacticraft.core.entities;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -22,43 +19,43 @@ public class GCEntities
 {
 //    public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Constants.MOD_ID_CORE);
 
-    public static final EntityType<EvolvedSpiderEntity> EVOLVED_SPIDER = EntityType.Builder.create(EvolvedSpiderEntity::new, EntityClassification.MONSTER)
+    public static final EntityType<EvolvedSpiderEntity> EVOLVED_SPIDER = EntityType.Builder.of(EvolvedSpiderEntity::new, EntityClassification.MONSTER)
             .size(1.5F, 1.0F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = EntityType.Builder.create(EvolvedZombieEntity::new, EntityClassification.MONSTER)
+    public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = EntityType.Builder.of(EvolvedZombieEntity::new, EntityClassification.MONSTER)
             .size(0.6F, 1.95F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = EntityType.Builder.create(EvolvedCreeperEntity::new, EntityClassification.MONSTER)
+    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = EntityType.Builder.of(EvolvedCreeperEntity::new, EntityClassification.MONSTER)
             .size(0.7F, 2.2F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EvolvedSkeletonEntity> EVOLVED_SKELETON = EntityType.Builder.create(EvolvedSkeletonEntity::new, EntityClassification.MONSTER)
+    public static final EntityType<EvolvedSkeletonEntity> EVOLVED_SKELETON = EntityType.Builder.of(EvolvedSkeletonEntity::new, EntityClassification.MONSTER)
             .size(0.6F, 1.99F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EvolvedEndermanEntity> EVOLVED_ENDERMAN = EntityType.Builder.create(EvolvedEndermanEntity::new, EntityClassification.MONSTER)
+    public static final EntityType<EvolvedEndermanEntity> EVOLVED_ENDERMAN = EntityType.Builder.of(EvolvedEndermanEntity::new, EntityClassification.MONSTER)
             .size(0.6F, 2.9F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EvolvedWitchEntity> EVOLVED_WITCH = EntityType.Builder.create(EvolvedWitchEntity::new, EntityClassification.MONSTER)
+    public static final EntityType<EvolvedWitchEntity> EVOLVED_WITCH = EntityType.Builder.of(EvolvedWitchEntity::new, EntityClassification.MONSTER)
             .size(0.6F, 1.95F)
             .setUpdateInterval(10)
             .setTrackingRange(64)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<EvolvedSkeletonBossEntity> EVOLVED_SKELETON_BOSS = EntityType.Builder.create(EvolvedSkeletonBossEntity::new, EntityClassification.MONSTER)
+    public static final EntityType<EvolvedSkeletonBossEntity> EVOLVED_SKELETON_BOSS = EntityType.Builder.of(EvolvedSkeletonBossEntity::new, EntityClassification.MONSTER)
             .size(1.5F, 4.0F)
             .immuneToFire()
             .setUpdateInterval(10)
@@ -66,62 +63,62 @@ public class GCEntities
             .setShouldReceiveVelocityUpdates(true)
             .build("");
     //    public static final EntityType<EntityAlienVillager> ALIEN_VILLAGER = register(GCEntityNames.alienVillager, GCEntities::alienVillager);
-    public static final EntityType<Tier1RocketEntity> TIER_1_ROCKET = EntityType.Builder.create(Tier1RocketEntity::new, EntityClassification.MISC)
+    public static final EntityType<Tier1RocketEntity> TIER_1_ROCKET = EntityType.Builder.of(Tier1RocketEntity::new, EntityClassification.MISC)
             .size(1.2F, 3.5F)
             .setUpdateInterval(1)
             .setTrackingRange(150)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<MeteorEntity> METEOR = EntityType.Builder.create(MeteorEntity::new, EntityClassification.MISC)
+    public static final EntityType<MeteorEntity> METEOR = EntityType.Builder.of(MeteorEntity::new, EntityClassification.MISC)
             .size(1.0F, 1.0F)
             .setUpdateInterval(5)
             .setTrackingRange(150)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<MeteorEntity> LARGE_METEOR = EntityType.Builder.create(MeteorEntity::new, EntityClassification.MISC)
+    public static final EntityType<MeteorEntity> LARGE_METEOR = EntityType.Builder.of(MeteorEntity::new, EntityClassification.MISC)
             .size(6.0F, 6.0F)
             .setUpdateInterval(5)
             .setTrackingRange(150)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<BuggyEntity> BUGGY = EntityType.Builder.create(BuggyEntity::new, EntityClassification.MISC)
+    public static final EntityType<BuggyEntity> BUGGY = EntityType.Builder.of(BuggyEntity::new, EntityClassification.MISC)
             .size(1.4F, 0.6F)
             .immuneToFire()
             .setUpdateInterval(5)
             .setTrackingRange(150)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<FlagEntity> FLAG = EntityType.Builder.<FlagEntity>create(FlagEntity::new, EntityClassification.MISC)
+    public static final EntityType<FlagEntity> FLAG = EntityType.Builder.<FlagEntity>of(FlagEntity::new, EntityClassification.MISC)
             .size(0.4F, 3F)
             .setUpdateInterval(5)
             .setTrackingRange(150)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<ParachestEntity> PARACHEST = EntityType.Builder.<ParachestEntity>create(ParachestEntity::new, EntityClassification.MISC)
+    public static final EntityType<ParachestEntity> PARACHEST = EntityType.Builder.<ParachestEntity>of(ParachestEntity::new, EntityClassification.MISC)
             .size(1.0F, 1.0F)
             .setUpdateInterval(5)
             .setTrackingRange(150)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<LanderEntity> LANDER = EntityType.Builder.<LanderEntity>create(LanderEntity::new, EntityClassification.MISC)
+    public static final EntityType<LanderEntity> LANDER = EntityType.Builder.<LanderEntity>of(LanderEntity::new, EntityClassification.MISC)
             .size(3.0F, 4.25F)
             .setUpdateInterval(5)
             .setTrackingRange(150)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<MeteorChunkEntity> METEOR_CHUNK = EntityType.Builder.<MeteorChunkEntity>create(MeteorChunkEntity::new, EntityClassification.MISC)
+    public static final EntityType<MeteorChunkEntity> METEOR_CHUNK = EntityType.Builder.<MeteorChunkEntity>of(MeteorChunkEntity::new, EntityClassification.MISC)
             .size(0.25F, 0.25F)
             .setUpdateInterval(5)
             .setTrackingRange(150)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<CelestialScreenEntity> CELESTIAL_SCREEN = EntityType.Builder.<CelestialScreenEntity>create(CelestialScreenEntity::new, EntityClassification.MISC)
+    public static final EntityType<CelestialScreenEntity> CELESTIAL_SCREEN = EntityType.Builder.<CelestialScreenEntity>of(CelestialScreenEntity::new, EntityClassification.MISC)
             .size(3.0F, 1.0F)
             .setUpdateInterval(5)
             .setTrackingRange(150)
             .setShouldReceiveVelocityUpdates(true)
             .build("");
-    public static final EntityType<HangingSchematicEntity> HANGING_SCHEMATIC = EntityType.Builder.<HangingSchematicEntity>create(HangingSchematicEntity::new, EntityClassification.MISC)
+    public static final EntityType<HangingSchematicEntity> HANGING_SCHEMATIC = EntityType.Builder.<HangingSchematicEntity>of(HangingSchematicEntity::new, EntityClassification.MISC)
             .size(0.5F, 0.5F)
             .setUpdateInterval(5)
             .setTrackingRange(150)

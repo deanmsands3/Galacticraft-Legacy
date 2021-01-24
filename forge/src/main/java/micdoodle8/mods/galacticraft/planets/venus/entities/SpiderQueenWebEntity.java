@@ -1,16 +1,26 @@
 package micdoodle8.mods.galacticraft.planets.venus.entities;
 
 import micdoodle8.mods.galacticraft.core.Constants;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.entity.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.util.Mth;
 import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -18,50 +28,50 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import java.util.List;
 import java.util.Optional;
 
-public class SpiderQueenWebEntity extends Entity implements IProjectile
+public class SpiderQueenWebEntity extends Entity implements Projectile
 {
     public int canBePickedUp;
     public int arrowShake;
     public Entity shootingEntity;
     private int ticksInAir;
 
-    public SpiderQueenWebEntity(EntityType<? extends SpiderQueenWebEntity> type, World worldIn)
+    public SpiderQueenWebEntity(EntityType<? extends SpiderQueenWebEntity> type, Level worldIn)
     {
         super(type, worldIn);
 //        this.setSize(0.5F, 0.5F);
     }
 
-    public static SpiderQueenWebEntity createEntityWebShot(World worldIn, double x, double y, double z)
+    public static SpiderQueenWebEntity createEntityWebShot(Level worldIn, double x, double y, double z)
     {
         SpiderQueenWebEntity webShot = new SpiderQueenWebEntity(VenusEntities.SPIDER_QUEEN_WEB, worldIn);
 //        this.setSize(0.5F, 0.5F);
-        webShot.setPosition(x, y, z);
+        webShot.setPos(x, y, z);
         return webShot;
     }
 
-    public static SpiderQueenWebEntity createEntityWebShot(World worldIn, LivingEntity shooter, LivingEntity target, float p_i1755_4_, float p_i1755_5_)
+    public static SpiderQueenWebEntity createEntityWebShot(Level worldIn, LivingEntity shooter, LivingEntity target, float p_i1755_4_, float p_i1755_5_)
     {
         SpiderQueenWebEntity webShot = new SpiderQueenWebEntity(VenusEntities.SPIDER_QUEEN_WEB, worldIn);
         webShot.shootingEntity = shooter;
 
-        if (shooter instanceof PlayerEntity)
+        if (shooter instanceof Player)
         {
             webShot.canBePickedUp = 1;
         }
 
-        webShot.setRawPosition(webShot.getPosX(), shooter.getPosY() + (double) shooter.getEyeHeight() - 0.10000000149011612D, webShot.getPosZ());
-        double d0 = target.getPosX() - shooter.getPosX();
-        double d1 = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - webShot.getPosY();
-        double d2 = target.getPosZ() - shooter.getPosZ();
-        double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
+        webShot.setPosRaw(webShot.getX(), shooter.getY() + (double) shooter.getEyeHeight() - 0.10000000149011612D, webShot.getZ());
+        double d0 = target.getX() - shooter.getX();
+        double d1 = target.getBoundingBox().minY + (double) (target.getBbHeight() / 3.0F) - webShot.getY();
+        double d2 = target.getZ() - shooter.getZ();
+        double d3 = Mth.sqrt(d0 * d0 + d2 * d2);
 
         if (d3 >= 1.0E-7D)
         {
-            float f = (float) MathHelper.atan2(d2, d0) * Constants.RADIANS_TO_DEGREES - 90.0F;
-            float f1 = (float) MathHelper.atan2(d1, d3) * -Constants.RADIANS_TO_DEGREES;
+            float f = (float) Mth.atan2(d2, d0) * Constants.RADIANS_TO_DEGREES - 90.0F;
+            float f1 = (float) Mth.atan2(d1, d3) * -Constants.RADIANS_TO_DEGREES;
             double d4 = d0 / d3;
             double d5 = d2 / d3;
-            webShot.setLocationAndAngles(shooter.getPosX() + d4, webShot.getPosY(), shooter.getPosZ() + d5, f, f1);
+            webShot.moveTo(shooter.getX() + d4, webShot.getY(), shooter.getZ() + d5, f, f1);
             float f2 = (float) (d3 * 0.20000000298023224D);
             webShot.shoot(d0, d1 + (double) f2, d2, p_i1755_4_, p_i1755_5_);
         }
@@ -69,44 +79,44 @@ public class SpiderQueenWebEntity extends Entity implements IProjectile
         return webShot;
     }
 
-    public static SpiderQueenWebEntity createEntityWebShot(World worldIn, LivingEntity shooter, float velocity)
+    public static SpiderQueenWebEntity createEntityWebShot(Level worldIn, LivingEntity shooter, float velocity)
     {
         SpiderQueenWebEntity webShot = new SpiderQueenWebEntity(VenusEntities.SPIDER_QUEEN_WEB, worldIn);
         webShot.shootingEntity = shooter;
 
-        if (shooter instanceof PlayerEntity)
+        if (shooter instanceof Player)
         {
             webShot.canBePickedUp = 1;
         }
 
 //        webShot.setSize(0.5F, 0.5F);
-        webShot.setLocationAndAngles(shooter.getPosX(), shooter.getPosY() + (double) shooter.getEyeHeight(), shooter.getPosZ(), shooter.rotationYaw, shooter.rotationPitch);
-        webShot.setRawPosition(webShot.getPosX() - MathHelper.cos(webShot.rotationYaw / Constants.RADIANS_TO_DEGREES) * 0.16F,
-                webShot.getPosY() - 0.10000000149011612D,
-                webShot.getPosZ() - MathHelper.sin(webShot.rotationYaw / Constants.RADIANS_TO_DEGREES) * 0.16F);
-        webShot.setPosition(webShot.getPosX(), webShot.getPosY(), webShot.getPosZ());
-        double motionX = -MathHelper.sin(webShot.rotationYaw / Constants.RADIANS_TO_DEGREES) * MathHelper.cos(webShot.rotationPitch / Constants.RADIANS_TO_DEGREES);
-        double motionZ = MathHelper.cos(webShot.rotationYaw / Constants.RADIANS_TO_DEGREES) * MathHelper.cos(webShot.rotationPitch / Constants.RADIANS_TO_DEGREES);
-        double motionY = -MathHelper.sin(webShot.rotationPitch / Constants.RADIANS_TO_DEGREES);
+        webShot.moveTo(shooter.getX(), shooter.getY() + (double) shooter.getEyeHeight(), shooter.getZ(), shooter.yRot, shooter.xRot);
+        webShot.setPosRaw(webShot.getX() - Mth.cos(webShot.yRot / Constants.RADIANS_TO_DEGREES) * 0.16F,
+                webShot.getY() - 0.10000000149011612D,
+                webShot.getZ() - Mth.sin(webShot.yRot / Constants.RADIANS_TO_DEGREES) * 0.16F);
+        webShot.setPos(webShot.getX(), webShot.getY(), webShot.getZ());
+        double motionX = -Mth.sin(webShot.yRot / Constants.RADIANS_TO_DEGREES) * Mth.cos(webShot.xRot / Constants.RADIANS_TO_DEGREES);
+        double motionZ = Mth.cos(webShot.yRot / Constants.RADIANS_TO_DEGREES) * Mth.cos(webShot.xRot / Constants.RADIANS_TO_DEGREES);
+        double motionY = -Mth.sin(webShot.xRot / Constants.RADIANS_TO_DEGREES);
         webShot.shoot(motionX, motionY, motionZ, velocity * 1.5F, 1.0F);
         return webShot;
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public boolean isInRangeToRenderDist(double distance)
+    public boolean shouldRenderAtSqrDistance(double distance)
     {
-        double d0 = this.getBoundingBox().getAverageEdgeLength();
+        double d0 = this.getBoundingBox().getSize();
 
         if (Double.isNaN(d0))
         {
@@ -120,44 +130,44 @@ public class SpiderQueenWebEntity extends Entity implements IProjectile
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy)
     {
-        float f = MathHelper.sqrt(x * x + y * y + z * z);
+        float f = Mth.sqrt(x * x + y * y + z * z);
         x = x / (double) f;
         y = y / (double) f;
         z = z / (double) f;
-        x = x + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double) inaccuracy;
-        y = y + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double) inaccuracy;
-        z = z + this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double) inaccuracy;
+        x = x + this.random.nextGaussian() * (double) (this.random.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double) inaccuracy;
+        y = y + this.random.nextGaussian() * (double) (this.random.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double) inaccuracy;
+        z = z + this.random.nextGaussian() * (double) (this.random.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double) inaccuracy;
         x = x * (double) velocity;
         y = y * (double) velocity;
         z = z * (double) velocity;
-        this.setMotion(x, y, z);
-        float f1 = MathHelper.sqrt(x * x + z * z);
-        this.prevRotationYaw = this.rotationYaw = (float) MathHelper.atan2(x, z) * Constants.RADIANS_TO_DEGREES;
-        this.prevRotationPitch = this.rotationPitch = (float) MathHelper.atan2(y, f1) * Constants.RADIANS_TO_DEGREES;
+        this.setDeltaMovement(x, y, z);
+        float f1 = Mth.sqrt(x * x + z * z);
+        this.yRotO = this.yRot = (float) Mth.atan2(x, z) * Constants.RADIANS_TO_DEGREES;
+        this.xRotO = this.xRot = (float) Mth.atan2(y, f1) * Constants.RADIANS_TO_DEGREES;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean p_180426_10_)
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean p_180426_10_)
     {
-        this.setPosition(x, y, z);
-        this.setRotation(yaw, pitch);
+        this.setPos(x, y, z);
+        this.setRot(yaw, pitch);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void setVelocity(double x, double y, double z)
+    public void lerpMotion(double x, double y, double z)
     {
-        this.setMotion(x, y, z);
+        this.setDeltaMovement(x, y, z);
 
-        if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
+        if (this.xRotO == 0.0F && this.yRotO == 0.0F)
         {
-            float f = MathHelper.sqrt(x * x + z * z);
-            this.prevRotationYaw = this.rotationYaw = (float) MathHelper.atan2(x, z) * Constants.RADIANS_TO_DEGREES;
-            this.prevRotationPitch = this.rotationPitch = (float) MathHelper.atan2(y, f) * Constants.RADIANS_TO_DEGREES;
-            this.prevRotationPitch = this.rotationPitch;
-            this.prevRotationYaw = this.rotationYaw;
-            this.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
+            float f = Mth.sqrt(x * x + z * z);
+            this.yRotO = this.yRot = (float) Mth.atan2(x, z) * Constants.RADIANS_TO_DEGREES;
+            this.xRotO = this.xRot = (float) Mth.atan2(y, f) * Constants.RADIANS_TO_DEGREES;
+            this.xRotO = this.xRot;
+            this.yRotO = this.yRot;
+            this.moveTo(this.getX(), this.getY(), this.getZ(), this.yRot, this.xRot);
         }
     }
 
@@ -166,11 +176,11 @@ public class SpiderQueenWebEntity extends Entity implements IProjectile
     {
         super.tick();
 
-        if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
+        if (this.xRotO == 0.0F && this.yRotO == 0.0F)
         {
-            float f = MathHelper.sqrt(this.getMotion().x * this.getMotion().x + this.getMotion().z * this.getMotion().z);
-            this.prevRotationYaw = this.rotationYaw = (float) MathHelper.atan2(this.getMotion().x, this.getMotion().z) * Constants.RADIANS_TO_DEGREES;
-            this.prevRotationPitch = this.rotationPitch = (float) MathHelper.atan2(this.getMotion().y, f) * Constants.RADIANS_TO_DEGREES;
+            float f = Mth.sqrt(this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().z * this.getDeltaMovement().z);
+            this.yRotO = this.yRot = (float) Mth.atan2(this.getDeltaMovement().x, this.getDeltaMovement().z) * Constants.RADIANS_TO_DEGREES;
+            this.xRotO = this.xRot = (float) Mth.atan2(this.getDeltaMovement().y, f) * Constants.RADIANS_TO_DEGREES;
         }
 
         if (this.arrowShake > 0)
@@ -178,25 +188,25 @@ public class SpiderQueenWebEntity extends Entity implements IProjectile
             --this.arrowShake;
         }
 
-        if (this.ticksExisted > 1000)
+        if (this.tickCount > 1000)
         {
             this.remove();
         }
 
         ++this.ticksInAir;
-        Vec3d vec31 = new Vec3d(this.getPosX(), this.getPosY(), this.getPosZ());
-        Vec3d vec3 = new Vec3d(this.getPosX() + this.getMotion().x, this.getPosY() + this.getMotion().y, this.getPosZ() + this.getMotion().z);
-        RayTraceResult castResult = this.world.rayTraceBlocks(new RayTraceContext(vec3, vec31, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
-        vec31 = new Vec3d(this.getPosX(), this.getPosY(), this.getPosZ());
-        vec3 = new Vec3d(this.getPosX() + this.getMotion().x, this.getPosY() + this.getMotion().y, this.getPosZ() + this.getMotion().z);
+        Vec3 vec31 = new Vec3(this.getX(), this.getY(), this.getZ());
+        Vec3 vec3 = new Vec3(this.getX() + this.getDeltaMovement().x, this.getY() + this.getDeltaMovement().y, this.getZ() + this.getDeltaMovement().z);
+        HitResult castResult = this.level.clip(new ClipContext(vec3, vec31, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
+        vec31 = new Vec3(this.getX(), this.getY(), this.getZ());
+        vec3 = new Vec3(this.getX() + this.getDeltaMovement().x, this.getY() + this.getDeltaMovement().y, this.getZ() + this.getDeltaMovement().z);
 
         if (castResult.getType() != RayTraceResult.Type.MISS)
         {
-            vec3 = new Vec3d(castResult.getHitVec().x, castResult.getHitVec().y, castResult.getHitVec().z);
+            vec3 = new Vec3(castResult.getLocation().x, castResult.getLocation().y, castResult.getLocation().z);
         }
 
         Entity entity = null;
-        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getBoundingBox().expand(this.getMotion().x, this.getMotion().y, this.getMotion().z).grow(1.0D, 1.0D, 1.0D));
+        List<Entity> list = this.level.getEntities(this, this.getBoundingBox().expandTowards(this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z).inflate(1.0D, 1.0D, 1.0D));
         double d0 = 0.0D;
         final double border = 0.3D;
 
@@ -204,14 +214,14 @@ public class SpiderQueenWebEntity extends Entity implements IProjectile
         {
             Entity entity1 = list.get(i);
 
-            if (entity1.canBeCollidedWith() && (entity1 != this.shootingEntity || this.ticksInAir >= 5))
+            if (entity1.isPickable() && (entity1 != this.shootingEntity || this.ticksInAir >= 5))
             {
-                AxisAlignedBB axisalignedbb1 = entity1.getBoundingBox().grow(border, border, border);
-                Optional<Vec3d> result = axisalignedbb1.rayTrace(vec31, vec3);
+                AABB axisalignedbb1 = entity1.getBoundingBox().inflate(border, border, border);
+                Optional<Vec3> result = axisalignedbb1.clip(vec31, vec3);
 
                 if (result.isPresent())
                 {
-                    double d1 = vec31.squareDistanceTo(result.get());
+                    double d1 = vec31.distanceToSqr(result.get());
 
                     if (d1 < d0 || d0 == 0.0D)
                     {
@@ -224,17 +234,17 @@ public class SpiderQueenWebEntity extends Entity implements IProjectile
 
         if (entity != null)
         {
-            castResult = new EntityRayTraceResult(entity);
+            castResult = new EntityHitResult(entity);
         }
 
         if (castResult.getType() == RayTraceResult.Type.ENTITY)
         {
-            EntityRayTraceResult entityResult = (EntityRayTraceResult) castResult;
-            if (entityResult.getEntity() instanceof PlayerEntity)
+            EntityHitResult entityResult = (EntityHitResult) castResult;
+            if (entityResult.getEntity() instanceof Player)
             {
-                PlayerEntity entityplayer = (PlayerEntity) entityResult.getEntity();
+                Player entityplayer = (Player) entityResult.getEntity();
 
-                if (entityplayer.abilities.disableDamage || this.shootingEntity instanceof PlayerEntity && !((PlayerEntity) this.shootingEntity).canAttackPlayer(entityplayer))
+                if (entityplayer.abilities.invulnerable || this.shootingEntity instanceof Player && !((Player) this.shootingEntity).canHarmPlayer(entityplayer))
                 {
                     castResult = null;
                 }
@@ -245,12 +255,12 @@ public class SpiderQueenWebEntity extends Entity implements IProjectile
         {
             if (castResult.getType() == RayTraceResult.Type.ENTITY)
             {
-                EntityRayTraceResult entityResult = (EntityRayTraceResult) castResult;
-                if (entityResult.getEntity() != this.shootingEntity && !this.world.isRemote)
+                EntityHitResult entityResult = (EntityHitResult) castResult;
+                if (entityResult.getEntity() != this.shootingEntity && !this.level.isClientSide)
                 {
                     if (entityResult.getEntity() instanceof LivingEntity)
                     {
-                        ((LivingEntity) entityResult.getEntity()).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 180, 2, true, true));
+                        ((LivingEntity) entityResult.getEntity()).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 180, 2, true, true));
                         this.remove();
                     }
                     else
@@ -258,69 +268,69 @@ public class SpiderQueenWebEntity extends Entity implements IProjectile
 //                        this.motionX *= -0.10000000149011612D;
 //                        this.motionY *= -0.10000000149011612D;
 //                        this.motionZ *= -0.10000000149011612D;
-                        this.setMotion(this.getMotion().mul(-0.10000000149011612D, -0.10000000149011612D, -0.10000000149011612D));
-                        this.rotationYaw += 180.0F;
-                        this.prevRotationYaw += 180.0F;
+                        this.setDeltaMovement(this.getDeltaMovement().multiply(-0.10000000149011612D, -0.10000000149011612D, -0.10000000149011612D));
+                        this.yRot += 180.0F;
+                        this.yRotO += 180.0F;
                         this.ticksInAir = 0;
                     }
                 }
             }
             else
             {
-                this.setMotion((float) (castResult.getHitVec().x - this.getPosX()), (float) (castResult.getHitVec().y - this.getPosY()), (float) (castResult.getHitVec().z - this.getPosZ()));
-                float f5 = MathHelper.sqrt(this.getMotion().x * this.getMotion().x + this.getMotion().y * this.getMotion().y + this.getMotion().z * this.getMotion().z);
-                this.setRawPosition(this.getPosX() - this.getMotion().x / (double) f5 * 0.05000000074505806D, this.getPosY() - this.getMotion().y / (double) f5 * 0.05000000074505806D, this.getPosZ() - this.getMotion().z / (double) f5 * 0.05000000074505806D);
+                this.setDeltaMovement((float) (castResult.getLocation().x - this.getX()), (float) (castResult.getLocation().y - this.getY()), (float) (castResult.getLocation().z - this.getZ()));
+                float f5 = Mth.sqrt(this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().y * this.getDeltaMovement().y + this.getDeltaMovement().z * this.getDeltaMovement().z);
+                this.setPosRaw(this.getX() - this.getDeltaMovement().x / (double) f5 * 0.05000000074505806D, this.getY() - this.getDeltaMovement().y / (double) f5 * 0.05000000074505806D, this.getZ() - this.getDeltaMovement().z / (double) f5 * 0.05000000074505806D);
                 this.arrowShake = 7;
                 this.remove();
             }
         }
 
-        this.setRawPosition(this.getPosX() + this.getMotion().x, this.getPosY() + this.getMotion().y, this.getPosZ() + this.getMotion().z);
-        float f3 = MathHelper.sqrt(this.getMotion().x * this.getMotion().x + this.getMotion().z * this.getMotion().z);
-        this.rotationYaw = (float) MathHelper.atan2(this.getMotion().x, this.getMotion().z) * Constants.RADIANS_TO_DEGREES;
+        this.setPosRaw(this.getX() + this.getDeltaMovement().x, this.getY() + this.getDeltaMovement().y, this.getZ() + this.getDeltaMovement().z);
+        float f3 = Mth.sqrt(this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().z * this.getDeltaMovement().z);
+        this.yRot = (float) Mth.atan2(this.getDeltaMovement().x, this.getDeltaMovement().z) * Constants.RADIANS_TO_DEGREES;
 
-        for (this.rotationPitch = (float) MathHelper.atan2(this.getMotion().y, f3) * Constants.RADIANS_TO_DEGREES; this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
+        for (this.xRot = (float) Mth.atan2(this.getDeltaMovement().y, f3) * Constants.RADIANS_TO_DEGREES; this.xRot - this.xRotO < -180.0F; this.xRotO -= 360.0F)
         {
         }
 
-        while (this.rotationPitch - this.prevRotationPitch >= 180.0F)
+        while (this.xRot - this.xRotO >= 180.0F)
         {
-            this.prevRotationPitch += 360.0F;
+            this.xRotO += 360.0F;
         }
 
-        while (this.rotationYaw - this.prevRotationYaw < -180.0F)
+        while (this.yRot - this.yRotO < -180.0F)
         {
-            this.prevRotationYaw -= 360.0F;
+            this.yRotO -= 360.0F;
         }
 
-        while (this.rotationYaw - this.prevRotationYaw >= 180.0F)
+        while (this.yRot - this.yRotO >= 180.0F)
         {
-            this.prevRotationYaw += 360.0F;
+            this.yRotO += 360.0F;
         }
 
-        this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
-        this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
+        this.xRot = this.xRotO + (this.xRot - this.xRotO) * 0.2F;
+        this.yRot = this.yRotO + (this.yRot - this.yRotO) * 0.2F;
 
         if (this.isInWater())
         {
             for (int i1 = 0; i1 < 4; ++i1)
             {
                 float f8 = 0.25F;
-                this.world.addParticle(ParticleTypes.BUBBLE, this.getPosX() - this.getMotion().x * (double) f8, this.getPosY() - this.getMotion().y * (double) f8, this.getPosZ() - this.getMotion().z * (double) f8, this.getMotion().x, this.getMotion().y, this.getMotion().z);
+                this.level.addParticle(ParticleTypes.BUBBLE, this.getX() - this.getDeltaMovement().x * (double) f8, this.getY() - this.getDeltaMovement().y * (double) f8, this.getZ() - this.getDeltaMovement().z * (double) f8, this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z);
             }
         }
 
-        if (this.isWet())
+        if (this.isInWaterOrRain())
         {
-            this.extinguish();
+            this.clearFire();
         }
 
-        this.setPosition(this.getPosX(), this.getPosY(), this.getPosZ());
-        this.doBlockCollisions();
+        this.setPos(this.getX(), this.getY(), this.getZ());
+        this.checkInsideBlocks();
     }
 
     @Override
-    protected void readAdditional(CompoundNBT nbt)
+    protected void readAdditionalSaveData(CompoundTag nbt)
     {
         this.arrowShake = nbt.getByte("shake") & 255;
 
@@ -331,14 +341,14 @@ public class SpiderQueenWebEntity extends Entity implements IProjectile
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT nbt)
+    protected void addAdditionalSaveData(CompoundTag nbt)
     {
         nbt.putByte("shake", (byte) this.arrowShake);
         nbt.putByte("pickup", (byte) this.canBePickedUp);
     }
 
     @Override
-    protected boolean canTriggerWalking()
+    protected boolean isMovementNoisy()
     {
         return false;
     }

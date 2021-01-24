@@ -7,11 +7,11 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.venus.network.PacketSimpleVenus;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityLaserTurret;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -29,7 +29,7 @@ public class GuiLaserTurretEditPriority extends Screen implements GuiElementSpin
 
     public GuiLaserTurretEditPriority(TileEntityLaserTurret turret)
     {
-        super(new StringTextComponent("Edit Turret Priority"));
+        super(new TextComponent("Edit Turret Priority"));
         this.laserTurret = turret;
     }
 
@@ -54,7 +54,7 @@ public class GuiLaserTurretEditPriority extends Screen implements GuiElementSpin
     {
         if (key == GLFW.GLFW_KEY_ESCAPE)
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_OPEN_LASER_TURRET_GUI, GCCoreUtil.getDimensionType(laserTurret.getWorld()), new Object[]{laserTurret.getPos()}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_OPEN_LASER_TURRET_GUI, GCCoreUtil.getDimensionType(laserTurret.getLevel()), new Object[]{laserTurret.getBlockPos()}));
             return true;
         }
         else
@@ -74,7 +74,7 @@ public class GuiLaserTurretEditPriority extends Screen implements GuiElementSpin
     {
         this.renderBackground();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GuiLaserTurretEditPriority.backgroundTexture);
+        this.minecraft.getTextureManager().bind(GuiLaserTurretEditPriority.backgroundTexture);
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
         this.blit(var5, var6, 0, 0, this.xSize, this.ySize - 10);
@@ -82,10 +82,10 @@ public class GuiLaserTurretEditPriority extends Screen implements GuiElementSpin
 
         super.render(mouseX, mouseY, partialTicks);
 
-        this.font.drawString(GCCoreUtil.translate("gui.message.priority_low"), var5 + 6, var6 + 8, ColorUtil.to32BitColor(255, 75, 75, 75));
-        this.font.drawString(GCCoreUtil.translate("gui.message.priority_closest"), this.priorityClosest.x + 35, this.priorityClosest.y + 10 - minecraft.fontRenderer.FONT_HEIGHT / 2, ColorUtil.to32BitColor(255, 75, 75, 75));
-        this.font.drawString(GCCoreUtil.translate("gui.message.priority_health_low"), this.priorityLowestHealth.x + 35, this.priorityLowestHealth.y + 10 - minecraft.fontRenderer.FONT_HEIGHT / 2, ColorUtil.to32BitColor(255, 75, 75, 75));
-        this.font.drawString(GCCoreUtil.translate("gui.message.priority_health_high"), this.priorityHighestHealth.x + 35, this.priorityHighestHealth.y + 10 - minecraft.fontRenderer.FONT_HEIGHT / 2, ColorUtil.to32BitColor(255, 75, 75, 75));
+        this.font.draw(GCCoreUtil.translate("gui.message.priority_low"), var5 + 6, var6 + 8, ColorUtil.to32BitColor(255, 75, 75, 75));
+        this.font.draw(GCCoreUtil.translate("gui.message.priority_closest"), this.priorityClosest.x + 35, this.priorityClosest.y + 10 - minecraft.font.lineHeight / 2, ColorUtil.to32BitColor(255, 75, 75, 75));
+        this.font.draw(GCCoreUtil.translate("gui.message.priority_health_low"), this.priorityLowestHealth.x + 35, this.priorityLowestHealth.y + 10 - minecraft.font.lineHeight / 2, ColorUtil.to32BitColor(255, 75, 75, 75));
+        this.font.draw(GCCoreUtil.translate("gui.message.priority_health_high"), this.priorityHighestHealth.x + 35, this.priorityHighestHealth.y + 10 - minecraft.font.lineHeight / 2, ColorUtil.to32BitColor(255, 75, 75, 75));
     }
 
     @Override
@@ -97,7 +97,7 @@ public class GuiLaserTurretEditPriority extends Screen implements GuiElementSpin
     @Override
     public void onSelectionChanged(GuiElementSpinner spinner, int newVal)
     {
-        for (Widget button : this.buttons)
+        for (AbstractWidget button : this.buttons)
         {
             if (button instanceof GuiElementSpinner)
             {
@@ -118,15 +118,15 @@ public class GuiLaserTurretEditPriority extends Screen implements GuiElementSpin
         this.laserTurret.priorityClosest = spinner == priorityClosest ? newVal : priorityClosest.value;
         this.laserTurret.priorityLowestHealth = spinner == priorityLowestHealth ? newVal : priorityLowestHealth.value;
         this.laserTurret.priorityHighestHealth = spinner == priorityHighestHealth ? newVal : priorityHighestHealth.value;
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{3, this.laserTurret.getPos(), this.laserTurret.priorityClosest}));
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{4, this.laserTurret.getPos(), this.laserTurret.priorityLowestHealth}));
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{5, this.laserTurret.getPos(), this.laserTurret.priorityHighestHealth}));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{3, this.laserTurret.getBlockPos(), this.laserTurret.priorityClosest}));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{4, this.laserTurret.getBlockPos(), this.laserTurret.priorityLowestHealth}));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleVenus(PacketSimpleVenus.EnumSimplePacketVenus.S_UPDATE_ADVANCED_GUI, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{5, this.laserTurret.getBlockPos(), this.laserTurret.priorityHighestHealth}));
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementSpinner spinner, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementSpinner spinner, Player player)
     {
-        return player.getUniqueID().equals(this.laserTurret.getOwnerUUID());
+        return player.getUUID().equals(this.laserTurret.getOwnerUUID());
     }
 
     @Override

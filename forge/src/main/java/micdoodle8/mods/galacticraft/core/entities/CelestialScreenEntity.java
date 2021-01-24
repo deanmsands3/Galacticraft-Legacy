@@ -5,19 +5,18 @@ import micdoodle8.mods.galacticraft.api.entity.IIgnoreShift;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.api.vector.Vector3D;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.*;
@@ -32,28 +31,28 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
     private ArrayList prevData;
     private boolean networkDataChanged;
 
-    public CelestialScreenEntity(EntityType<CelestialScreenEntity> type, World world)
+    public CelestialScreenEntity(EntityType<CelestialScreenEntity> type, Level world)
     {
         super(type, world);
     }
 
-    public CelestialScreenEntity(World var1, double var2, double var4, double var6)
+    public CelestialScreenEntity(Level var1, double var2, double var4, double var6)
     {
         this(GCEntities.CELESTIAL_SCREEN, var1);
-        this.setPosition(var2, var4, var6);
+        this.setPos(var2, var4, var6);
     }
 
-    public CelestialScreenEntity(ServerPlayerEntity player)
+    public CelestialScreenEntity(ServerPlayer player)
     {
-        this(player.world, player.getPosX(), player.getPosY(), player.getPosZ());
+        this(player.level, player.getX(), player.getY(), player.getZ());
 
-        this.setPositionAndRotation(player.getPosX(), player.getPosY(), player.getPosZ(), 0, 0);
+        this.absMoveTo(player.getX(), player.getY(), player.getZ(), 0, 0);
 
         player.startRiding(this, true);
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -80,22 +79,22 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
         }
         super.tick();
 
-        if (this.ticks < 40 && this.getPosY() > 150)
+        if (this.ticks < 40 && this.getY() > 150)
         {
             if (this.getPassengers().isEmpty())
             {
-                final PlayerEntity player = this.world.getClosestPlayer(this, 5);
+                final Player player = this.level.getNearestPlayer(this, 5);
 
-                if (player != null && player.getRidingEntity() == null)
+                if (player != null && player.getVehicle() == null)
                 {
                     player.startRiding(this, true);
                 }
             }
         }
 
-        AxisAlignedBB box = this.getBoundingBox().grow(0.2D, 0.4D, 0.2D);
+        AABB box = this.getBoundingBox().inflate(0.2D, 0.4D, 0.2D);
 
-        final List<Entity> var15 = this.world.getEntitiesWithinAABBExcludingEntity(this, box);
+        final List<Entity> var15 = this.level.getEntities(this, box);
 
         if (var15 != null && !var15.isEmpty())
         {
@@ -111,15 +110,15 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
 
     private void pushEntityAway(Entity entityToPush)
     {
-        if (!this.getPassengers().contains(entityToPush) && this.getRidingEntity() != entityToPush)
+        if (!this.getPassengers().contains(entityToPush) && this.getVehicle() != entityToPush)
         {
-            double d0 = this.getPosX() - entityToPush.getPosX();
-            double d1 = this.getPosZ() - entityToPush.getPosZ();
-            double d2 = MathHelper.absMax(d0, d1);
+            double d0 = this.getX() - entityToPush.getX();
+            double d1 = this.getZ() - entityToPush.getZ();
+            double d2 = Mth.absMax(d0, d1);
 
             if (d2 >= 0.009999999776482582D)
             {
-                d2 = MathHelper.sqrt(d2);
+                d2 = Mth.sqrt(d2);
                 d0 /= d2;
                 d1 /= d2;
                 double d3 = 1.0D / d2;
@@ -133,15 +132,15 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
                 d1 *= d3;
                 d0 *= 0.05000000074505806D;
                 d1 *= 0.05000000074505806D;
-                d0 *= 1.0F - entityToPush.entityCollisionReduction;
-                d1 *= 1.0F - entityToPush.entityCollisionReduction;
-                entityToPush.addVelocity(-d0, 0.0D, -d1);
+                d0 *= 1.0F - entityToPush.pushthrough;
+                d1 *= 1.0F - entityToPush.pushthrough;
+                entityToPush.push(-d0, 0.0D, -d1);
             }
         }
     }
 
     @Override
-    protected void readAdditional(CompoundNBT nbt)
+    protected void readAdditionalSaveData(CompoundTag nbt)
     {
         if (nbt.contains("RiderUUID_LSB"))
         {
@@ -150,9 +149,9 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        final ListNBT nbttaglist = new ListNBT();
+        final ListTag nbttaglist = new ListTag();
 
         UUID id = this.getOwnerUUID();
 
@@ -172,9 +171,9 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
     @Override
     public void tickInAir()
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
-            this.setMotion(0.0, 0.0, 0.0);
+            this.setDeltaMovement(0.0, 0.0, 0.0);
 
             this.lastShouldMove = false;
         }
@@ -185,7 +184,7 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
     {
         final ArrayList<Object> objList = new ArrayList<Object>();
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             this.shouldMoveClient = this.shouldMove();
             objList.add(this.shouldMoveClient);
@@ -195,7 +194,7 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
             this.shouldMoveServer = this.shouldMove();
             objList.add(this.shouldMoveServer);
             //Server send rider information for client to check
-            objList.add(this.getPassengers().isEmpty() ? -1 : this.getPassengers().get(0).getEntityId());
+            objList.add(this.getPassengers().isEmpty() ? -1 : this.getPassengers().get(0).getId());
         }
 
         this.networkDataChanged = !objList.equals(this.prevData);
@@ -232,7 +231,7 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
     {
         try
         {
-            if (this.world.isRemote)
+            if (this.level.isClientSide)
             {
                 this.hasReceivedPacket = true;
                 this.shouldMoveServer = buffer.readBoolean();
@@ -243,22 +242,22 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
                 {
                     if (shouldBeMountedId > -1)
                     {
-                        Entity e = Minecraft.getInstance().world.getEntityByID(shouldBeMountedId);
+                        Entity e = Minecraft.getInstance().level.getEntity(shouldBeMountedId);
                         if (e != null)
                         {
                             e.startRiding(this, true);
                         }
                     }
                 }
-                else if (this.getPassengers().get(0).getEntityId() != shouldBeMountedId)
+                else if (this.getPassengers().get(0).getId() != shouldBeMountedId)
                 {
                     if (shouldBeMountedId == -1)
                     {
-                        this.removePassengers();
+                        this.ejectPassengers();
                     }
                     else
                     {
-                        Entity e = Minecraft.getInstance().world.getEntityByID(shouldBeMountedId);
+                        Entity e = Minecraft.getInstance().level.getEntity(shouldBeMountedId);
                         if (e != null)
                         {
                             e.startRiding(this, true);
@@ -290,7 +289,7 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
     }
 
     @Override
-    public boolean isItemValidForSlot(int var1, ItemStack var2)
+    public boolean canPlaceItem(int var1, ItemStack var2)
     {
         return false;
     }
@@ -304,7 +303,7 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
     @Override
     public UUID getOwnerUUID()
     {
-        if (!this.getPassengers().isEmpty() && !(this.getPassengers().get(0) instanceof PlayerEntity))
+        if (!this.getPassengers().isEmpty() && !(this.getPassengers().get(0) instanceof Player))
         {
             return null;
         }
@@ -313,7 +312,7 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
 
         if (!this.getPassengers().isEmpty())
         {
-            id = this.getPassengers().get(0).getUniqueID();
+            id = this.getPassengers().get(0).getUUID();
 
             this.persistantRiderUUID = id;
         }
@@ -332,7 +331,7 @@ public class CelestialScreenEntity extends EntityAdvancedMotion implements IIgno
     }
 
     @Override
-    public int getSizeInventory()
+    public int getContainerSize()
     {
         return 0;
     }

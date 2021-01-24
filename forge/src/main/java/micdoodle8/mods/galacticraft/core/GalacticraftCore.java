@@ -49,22 +49,20 @@ import micdoodle8.mods.galacticraft.core.world.gen.BiomeMoonFlat;
 import micdoodle8.mods.galacticraft.core.world.gen.BiomeMoonHills;
 import micdoodle8.mods.galacticraft.core.world.gen.BiomeMoonSuperFlat;
 import micdoodle8.mods.galacticraft.core.world.gen.BiomeOrbit;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnListEntry;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.OverworldDimension;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biome.SpawnerData;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.NormalDimension;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -94,9 +92,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
-
-import static net.minecraftforge.common.BiomeDictionary.Type.RARE;
-import static net.minecraftforge.common.BiomeDictionary.Type.WET;
 
 //@Mod(modid = Constants.MOD_ID_CORE, name = GalacticraftCore.NAME, version = Constants.COMBINEDVERSION, useMetadata = true, acceptedMinecraftVersions = Constants.MCVERSION, dependencies = Constants.DEPENDENCIES_FORGE + Constants.DEPENDENCIES_MICCORE + Constants.DEPENDENCIES_MODS, guiFactory = "micdoodle8.mods.galacticraft.core.client.gui.screen.ConfigGuiFactoryCore")
 @Mod(Constants.MOD_ID_CORE)
@@ -174,8 +169,8 @@ public class GalacticraftCore
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::clientSetup);
         modBus.addListener(GalacticraftCore::onModConfigEvent);
-        modBus.addGenericListener(ContainerType.class, GCContainers::initContainers);
-        modBus.addGenericListener(IRecipeSerializer.class, GalacticraftCore::registerRecipeSerializers);
+        modBus.addGenericListener(MenuType.class, GCContainers::initContainers);
+        modBus.addGenericListener(RecipeSerializer.class, GalacticraftCore::registerRecipeSerializers);
         modBus.addGenericListener(Biome.class, GalacticraftCore::biomeRegisterEvent);
         GCFluids.FLUIDS.register(modBus);
         ConnectionEvents.register(MinecraftForge.EVENT_BUS);
@@ -187,7 +182,7 @@ public class GalacticraftCore
         GalacticraftCore.satelliteSpaceStation = (Satellite) new Satellite("spacestation.overworld").setParentBody(GalacticraftCore.planetOverworld).setRelativeSize(0.2667F).setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(9F, 9F)).setRelativeOrbitTime(1 / 0.05F);
     }
 
-    public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> evt)
+    public static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> evt)
     {
 //        GCBlocks.register(evt.getRegistry(), "replacable", new OreRecipeUpdatable.Serializer());
         CraftingHelper.register(new ResourceLocation("galacticraftcore", "advanced_metal"), IngredientAdvancedMetalSerializer.INSTANCE);
@@ -248,17 +243,17 @@ public class GalacticraftCore
         GalacticraftCore.solarSystemSol.setMainStar(starSol);
 
         GalacticraftCore.planetOverworld.setBodyIcon(new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/celestialbodies/earth.png"));
-        GalacticraftCore.planetOverworld.setDimensionInfo(DimensionType.OVERWORLD, OverworldDimension.class, false).setTierRequired(1);
+        GalacticraftCore.planetOverworld.setDimensionInfo(DimensionType.OVERWORLD, NormalDimension.class, false).setTierRequired(1);
         GalacticraftCore.planetOverworld.atmosphereComponent(EnumAtmosphericGas.NITROGEN).atmosphereComponent(EnumAtmosphericGas.OXYGEN).atmosphereComponent(EnumAtmosphericGas.ARGON).atmosphereComponent(EnumAtmosphericGas.WATER);
         GalacticraftCore.planetOverworld.addChecklistKeys("equip_parachute");
 
         GalacticraftCore.moonMoon.setBodyIcon(new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/celestialbodies/moon.png"));
         GalacticraftCore.moonMoon.setAtmosphere(new AtmosphereInfo(false, false, false, 0.0F, 0.0F, 0.0F));
-        GalacticraftCore.moonMoon.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_ZOMBIE, 8, 2, 3), EntityClassification.MONSTER);
-        GalacticraftCore.moonMoon.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_SPIDER, 8, 2, 3), EntityClassification.MONSTER);
-        GalacticraftCore.moonMoon.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_SKELETON, 8, 2, 3), EntityClassification.MONSTER);
-        GalacticraftCore.moonMoon.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_CREEPER, 8, 2, 3), EntityClassification.MONSTER);
-        GalacticraftCore.moonMoon.addMobInfo(new SpawnListEntry(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), EntityClassification.MONSTER);
+        GalacticraftCore.moonMoon.addMobInfo(new SpawnerData(GCEntities.EVOLVED_ZOMBIE, 8, 2, 3), EntityClassification.MONSTER);
+        GalacticraftCore.moonMoon.addMobInfo(new SpawnerData(GCEntities.EVOLVED_SPIDER, 8, 2, 3), EntityClassification.MONSTER);
+        GalacticraftCore.moonMoon.addMobInfo(new SpawnerData(GCEntities.EVOLVED_SKELETON, 8, 2, 3), EntityClassification.MONSTER);
+        GalacticraftCore.moonMoon.addMobInfo(new SpawnerData(GCEntities.EVOLVED_CREEPER, 8, 2, 3), EntityClassification.MONSTER);
+        GalacticraftCore.moonMoon.addMobInfo(new SpawnerData(GCEntities.EVOLVED_ENDERMAN, 10, 1, 4), EntityClassification.MONSTER);
         GalacticraftCore.moonMoon.addChecklistKeys("equip_oxygen_suit");
         GalacticraftCore.moonMoon.setSurfaceBlocks(Lists.newArrayList(GCBlocks.MOON_TURF));
 
@@ -295,7 +290,7 @@ public class GalacticraftCore
 //        {
 //            GCLog.severe("Failed to register space station dimension type with ID " + ConfigManagerCore.idDimensionOverworldOrbitStatic.get());
 //        }
-        GalacticraftRegistry.registerTeleportType(OverworldDimension.class, new TeleportTypeOverworld());
+        GalacticraftRegistry.registerTeleportType(NormalDimension.class, new TeleportTypeOverworld());
         GalacticraftRegistry.registerTeleportType(DimensionOverworldOrbit.class, new TeleportTypeOrbit());
         GalacticraftRegistry.registerTeleportType(DimensionMoon.class, new TeleportTypeMoon());
 //        GalacticraftRegistry.registerRocketGui(DimensionOverworldOrbit.class, new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/overworld_rocket_gui.png"));
@@ -523,7 +518,7 @@ public class GalacticraftCore
         Map<EnumSortCategory, List<StackSorted>> sortMap = new HashMap<>();
         for (ResourceLocation loc : list)
         {
-            Item item = Registry.ITEM.getValue(loc).orElse(null);
+            Item item = Registry.ITEM.getOptional(loc).orElse(null);
             EnumSortCategory category = EnumSortCategory.GENERAL;
             if (item instanceof ISortable)
             {
@@ -535,7 +530,7 @@ public class GalacticraftCore
                 ISortable sortableBlock = (ISortable) block;
                 category = sortableBlock.getCategory();
             }
-            else if (item.getGroup() != null)
+            else if (item.getItemCategory() != null)
             {
                 throw new RuntimeException("Must inherit " + ISortable.class.getSimpleName() + "!");
             }
@@ -689,7 +684,7 @@ public class GalacticraftCore
         String[] names = dataFolder.list();
         for (String name : names)
         {
-            if (name.startsWith(Constants.SS_PREFiX) && name.endsWith(".dat"))
+            if (name.startsWith(Constants.SS_PREFIX) && name.endsWith(".dat"))
             {
                 moveGCFile(new File(dataFolder, name), destFolder);
             }
@@ -873,7 +868,7 @@ public class GalacticraftCore
     public static class RegistrationHandler
     {
         @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void registerRecipes(RegistryEvent.Register<IRecipeSerializer<?>> evt)
+        public static void registerRecipes(RegistryEvent.Register<RecipeSerializer<?>> evt)
         {
             RecipeManagerGC.addUniversalRecipes();
 //            RecipeManagerGC.setConfigurableRecipes();

@@ -3,17 +3,16 @@ package micdoodle8.mods.galacticraft.core.world.gen.dungeon;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityDungeonSpawner;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import java.util.Random;
 
 import static micdoodle8.mods.galacticraft.core.world.gen.GCFeatures.CMOON_DUNGEON_BOSS;
@@ -22,12 +21,12 @@ public class RoomBoss extends SizedPiece
 {
     private BlockPos chestPos;
 
-    public RoomBoss(TemplateManager templateManager, CompoundNBT nbt)
+    public RoomBoss(StructureManager templateManager, CompoundTag nbt)
     {
         super(CMOON_DUNGEON_BOSS, nbt);
     }
 
-    protected RoomBoss(IStructurePieceType type, CompoundNBT nbt)
+    protected RoomBoss(StructurePieceType type, CompoundTag nbt)
     {
         super(type, nbt);
     }
@@ -40,17 +39,17 @@ public class RoomBoss extends SizedPiece
     public RoomBoss(DungeonConfiguration configuration, Random rand, int blockPosX, int blockPosZ, int sizeX, int sizeY, int sizeZ, Direction entranceDir)
     {
         super(CMOON_DUNGEON_BOSS, configuration, sizeX, sizeY, sizeZ, entranceDir.getOpposite());
-        this.setCoordBaseMode(Direction.SOUTH);
+        this.setOrientation(Direction.SOUTH);
         this.sizeX = sizeX;
         this.sizeZ = sizeZ;
         this.sizeY = sizeY;
         int yPos = configuration.getYPosition();
 
-        this.boundingBox = new MutableBoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos + this.sizeY, blockPosZ + this.sizeZ);
+        this.boundingBox = new BoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos + this.sizeY, blockPosZ + this.sizeZ);
     }
 
     @Override
-    public boolean create(IWorld worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, MutableBoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
+    public boolean postProcess(LevelAccessor worldIn, ChunkGenerator<?> chunkGeneratorIn, Random randomIn, BoundingBox mutableBoundingBoxIn, ChunkPos chunkPosIn)
     {
         for (int i = 0; i <= this.sizeX; i++)
         {
@@ -63,8 +62,8 @@ public class RoomBoss extends SizedPiece
                         boolean placeBlock = true;
                         if (getDirection().getAxis() == Direction.Axis.Z)
                         {
-                            int start = (this.boundingBox.maxX - this.boundingBox.minX) / 2 - 1;
-                            int end = (this.boundingBox.maxX - this.boundingBox.minX) / 2 + 1;
+                            int start = (this.boundingBox.x1 - this.boundingBox.x0) / 2 - 1;
+                            int end = (this.boundingBox.x1 - this.boundingBox.x0) / 2 + 1;
                             if (i > start && i <= end && j < 3 && j > 0)
                             {
                                 if (getDirection() == Direction.SOUTH && k == 0)
@@ -79,8 +78,8 @@ public class RoomBoss extends SizedPiece
                         }
                         else
                         {
-                            int start = (this.boundingBox.maxZ - this.boundingBox.minZ) / 2 - 1;
-                            int end = (this.boundingBox.maxZ - this.boundingBox.minZ) / 2 + 1;
+                            int start = (this.boundingBox.z1 - this.boundingBox.z0) / 2 - 1;
+                            int end = (this.boundingBox.z1 - this.boundingBox.z0) / 2 + 1;
                             if (k > start && k <= end && j < 3 && j > 0)
                             {
                                 if (getDirection() == Direction.EAST && i == 0)
@@ -95,21 +94,21 @@ public class RoomBoss extends SizedPiece
                         }
                         if (placeBlock)
                         {
-                            this.setBlockState(worldIn, this.configuration.getBrickBlock(), i, j, k, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, this.configuration.getBrickBlock(), i, j, k, mutableBoundingBoxIn);
                         }
                         else
                         {
-                            this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                            this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, mutableBoundingBoxIn);
                         }
                     }
                     else if ((i == 1 && k == 1) || (i == 1 && k == this.sizeZ - 1) || (i == this.sizeX - 1 && k == 1) || (i == this.sizeX - 1 && k == this.sizeZ - 1))
                     {
-                        this.setBlockState(worldIn, Blocks.LAVA.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                        this.placeBlock(worldIn, Blocks.LAVA.defaultBlockState(), i, j, k, mutableBoundingBoxIn);
                     }
                     else if (j % 3 == 0 && j >= 2 && ((i == 1 || i == this.sizeX - 1 || k == 1 || k == this.sizeZ - 1) || (i == 2 && k == 2) || (i == 2 && k == this.sizeZ - 2) || (i == this.sizeX - 2 && k == 2) || (i == this.sizeX - 2 && k == this.sizeZ - 2)))
                     {
                         // Horizontal bars
-                        this.setBlockState(worldIn, Blocks.IRON_BARS.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                        this.placeBlock(worldIn, Blocks.IRON_BARS.defaultBlockState(), i, j, k, mutableBoundingBoxIn);
                     }
                     else if ((i == 1 && k == 2) || (i == 2 && k == 1) ||
                             (i == 1 && k == this.sizeZ - 2) || (i == 2 && k == this.sizeZ - 1) ||
@@ -117,11 +116,11 @@ public class RoomBoss extends SizedPiece
                             (i == this.sizeX - 1 && k == this.sizeZ - 2) || (i == this.sizeX - 2 && k == this.sizeZ - 1))
                     {
                         // Vertical bars
-                        this.setBlockState(worldIn, Blocks.IRON_BARS.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                        this.placeBlock(worldIn, Blocks.IRON_BARS.defaultBlockState(), i, j, k, mutableBoundingBoxIn);
                     }
                     else
                     {
-                        this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i, j, k, mutableBoundingBoxIn);
+                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, mutableBoundingBoxIn);
                     }
                 }
             }
@@ -130,15 +129,15 @@ public class RoomBoss extends SizedPiece
         int spawnerX = this.sizeX / 2;
         int spawnerY = 1;
         int spawnerZ = this.sizeZ / 2;
-        BlockPos blockpos = new BlockPos(this.getXWithOffset(spawnerX, spawnerZ), this.getYWithOffset(spawnerY), this.getZWithOffset(spawnerX, spawnerZ));
+        BlockPos blockpos = new BlockPos(this.getWorldX(spawnerX, spawnerZ), this.getWorldY(spawnerY), this.getWorldZ(spawnerX, spawnerZ));
         //Is this position inside the chunk currently being generated?
-        if (mutableBoundingBoxIn.isVecInside(blockpos))
+        if (mutableBoundingBoxIn.isInside(blockpos))
         {
-            worldIn.setBlockState(blockpos, GCBlocks.MOON_BOSS_SPAWNER.getDefaultState(), 2);
-            TileEntityDungeonSpawner spawner = (TileEntityDungeonSpawner) worldIn.getTileEntity(blockpos);
+            worldIn.setBlock(blockpos, GCBlocks.MOON_BOSS_SPAWNER.defaultBlockState(), 2);
+            TileEntityDungeonSpawner spawner = (TileEntityDungeonSpawner) worldIn.getBlockEntity(blockpos);
             if (spawner != null)
             {
-                spawner.setRoom(new Vector3(this.boundingBox.minX + 1, this.boundingBox.minY + 1, this.boundingBox.minZ + 1), new Vector3(this.sizeX - 1, this.sizeY - 1, this.sizeZ - 1));
+                spawner.setRoom(new Vector3(this.boundingBox.x0 + 1, this.boundingBox.y0 + 1, this.boundingBox.z0 + 1), new Vector3(this.sizeX - 1, this.sizeY - 1, this.sizeZ - 1));
                 spawner.setChestPos(this.chestPos);
             }
         }
@@ -147,7 +146,7 @@ public class RoomBoss extends SizedPiece
     }
 
     @Override
-    protected void writeStructureToNBT(CompoundNBT tagCompound)
+    protected void writeStructureToNBT(CompoundTag tagCompound)
     {
         super.writeStructureToNBT(tagCompound);
 
@@ -160,7 +159,7 @@ public class RoomBoss extends SizedPiece
     }
 
     @Override
-    protected void readStructureFromNBT(CompoundNBT nbt)
+    protected void readStructureFromNBT(CompoundTag nbt)
     {
         super.readStructureFromNBT(nbt);
         this.chestPos = new BlockPos(nbt.getInt("chestX"), nbt.getInt("chestY"), nbt.getInt("chestZ"));

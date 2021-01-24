@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.galaxies;
 
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
 
 public class Satellite extends CelestialBody implements IChildBody
 {
@@ -29,7 +29,7 @@ public class Satellite extends CelestialBody implements IChildBody
 
     @Override
     @Deprecated
-    public CelestialBody setDimensionInfo(DimensionType type, Class<? extends Dimension> providerClass, boolean autoRegister)
+    public CelestialBody setDimensionInfo(DimensionType type, Class<? extends LevelStem> providerClass, boolean autoRegister)
     {
         throw new UnsupportedOperationException("Cannot set individual satellite types");
     }

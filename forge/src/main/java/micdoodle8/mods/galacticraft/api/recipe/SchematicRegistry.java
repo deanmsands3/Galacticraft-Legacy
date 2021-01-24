@@ -4,10 +4,10 @@ import micdoodle8.mods.galacticraft.api.recipe.SchematicEvent.FlipPage;
 import micdoodle8.mods.galacticraft.api.recipe.SchematicEvent.Unlock;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,7 +43,7 @@ public class SchematicRegistry
         {
             final ItemStack requiredItem = schematic.getRequiredItem();
 
-            if (requiredItem != null && stack != null && requiredItem.isItemEqual(stack))
+            if (requiredItem != null && stack != null && requiredItem.sameItem(stack))
             {
                 return schematic;
             }
@@ -77,7 +77,7 @@ public class SchematicRegistry
      * @param player the player that unlocked the schematic
      * @param page   the schematic page to be unlocked
      */
-    public static void addUnlockedPage(ServerPlayerEntity player, ISchematicPage page)
+    public static void addUnlockedPage(ServerPlayer player, ISchematicPage page)
     {
         // Used internally to add page to player's list of unlocked schematics.
         // No need to subscribe to this event
@@ -94,7 +94,7 @@ public class SchematicRegistry
      * @param stack  the itemstack the player has provided
      * @return the schematic page that was unlocked
      */
-    public static ISchematicPage unlockNewPage(ServerPlayerEntity player, ItemStack stack)
+    public static ISchematicPage unlockNewPage(ServerPlayer player, ItemStack stack)
     {
         if (stack != null)
         {
@@ -120,7 +120,7 @@ public class SchematicRegistry
     @OnlyIn(Dist.CLIENT)
     public static void flipToNextPage(Screen cs, int currentIndex)
     {
-        Minecraft.getInstance().currentScreen = null;
+        Minecraft.getInstance().screen = null;
 
         // Used internally inside Galacticraft to flip to the next page. No need
         // to subscribe to this event.
@@ -136,7 +136,7 @@ public class SchematicRegistry
     @OnlyIn(Dist.CLIENT)
     public static void flipToPrevPage(Screen cs, int currentIndex)
     {
-        Minecraft.getInstance().currentScreen = null;
+        Minecraft.getInstance().screen = null;
 
         // Used internally inside Galacticraft to flip to the last page. No need
         // to subscribe to this event.

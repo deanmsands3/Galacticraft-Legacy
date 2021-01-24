@@ -22,24 +22,24 @@ import micdoodle8.mods.galacticraft.planets.mars.blocks.BlockElectrolyzer;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlockNames;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerElectrolyzer;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerGasLiquefier;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -53,10 +53,10 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory implements ISidedInventory, IDisableableMachine, IFluidHandlerWrapper, IOxygenStorage, IOxygenReceiver, INamedContainerProvider
+public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory implements WorldlyContainer, IDisableableMachine, IFluidHandlerWrapper, IOxygenStorage, IOxygenReceiver, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + MarsBlockNames.WATER_ELECTROLYZER)
-    public static TileEntityType<TileEntityElectrolyzer> TYPE;
+    public static BlockEntityType<TileEntityElectrolyzer> TYPE;
 
     private final int tankCapacity = 4000;
 
@@ -125,7 +125,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     {
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             final FluidStack liquid = FluidUtil.getFluidContained(this.getInventory().get(1));
             if (FluidUtil.isFluidStrict(liquid, Fluids.WATER.getRegistryName().getPath()))
@@ -239,9 +239,9 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.processTicks = nbt.getInt("processTicks");
 
         if (nbt.contains("waterTank"))
@@ -260,23 +260,23 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("processTicks", this.processTicks);
 
         if (this.waterTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("waterTank", this.waterTank.writeToNBT(new CompoundNBT()));
+            nbt.put("waterTank", this.waterTank.writeToNBT(new CompoundTag()));
         }
 
         if (this.liquidTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("gasTank", this.liquidTank.writeToNBT(new CompoundNBT()));
+            nbt.put("gasTank", this.liquidTank.writeToNBT(new CompoundTag()));
         }
         if (this.liquidTank2.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("gasTank2", this.liquidTank2.writeToNBT(new CompoundNBT()));
+            nbt.put("gasTank2", this.liquidTank2.writeToNBT(new CompoundTag()));
         }
 
         return nbt;
@@ -297,9 +297,9 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (this.isItemValidForSlot(slotID, itemstack))
+        if (this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
@@ -315,9 +315,9 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
-        if (this.isItemValidForSlot(slotID, itemstack))
+        if (this.canPlaceItem(slotID, itemstack))
         {
             switch (slotID)
             {
@@ -333,7 +333,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         Item item = itemstack.getItem();
         switch (slotID)
@@ -421,7 +421,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     @Override
     public boolean canFill(Direction from, Fluid fluid)
     {
-        if (from == this.getFront().rotateY())
+        if (from == this.getFront().getClockWise())
         {
             //Can fill with water
             return fluid == null || fluid.getRegistryName().getPath().equals(Fluids.WATER.getRegistryName().getPath());
@@ -622,7 +622,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
 
     private Direction getHydrogenOutputDirection()
     {
-        return this.getFront().rotateYCCW();
+        return this.getFront().getCounterClockWise();
     }
 
     private boolean produceOxygen(Direction outputDirection)
@@ -631,7 +631,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
 
         if (provide > 0)
         {
-            TileEntity outputTile = new BlockVec3(this).modifyPositionFromSide(outputDirection).getTileEntity(this.world);
+            BlockEntity outputTile = new BlockVec3(this).modifyPositionFromSide(outputDirection).getTileEntity(this.level);
             FluidNetwork outputNetwork = NetworkHelper.getFluidNetworkFromTile(outputTile, outputDirection);
 
             if (outputNetwork != null)
@@ -686,7 +686,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
 
         if (provide > 0)
         {
-            TileEntity outputTile = new BlockVec3(this).modifyPositionFromSide(outputDirection).getTileEntity(this.world);
+            BlockEntity outputTile = new BlockVec3(this).modifyPositionFromSide(outputDirection).getTileEntity(this.level);
             FluidNetwork outputNetwork = NetworkHelper.getFluidNetworkFromTile(outputTile, outputDirection);
 
             if (outputNetwork != null)
@@ -820,7 +820,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
 
         if (type == NetworkType.FLUID)
         {
-            return this.getOxygenOutputDirection() == direction || this.getHydrogenOutputDirection() == direction || direction == this.getFront().rotateY();
+            return this.getOxygenOutputDirection() == direction || this.getHydrogenOutputDirection() == direction || direction == this.getFront().getClockWise();
         }
 
         if (type == NetworkType.POWER)
@@ -834,23 +834,23 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
 //    	if (state.getBlock() instanceof BlockMachineMarsT2)
 //    	{
 //    		return state.get(BlockMachineMarsT2.FACING);
 //    	}
-        return state.get(BlockElectrolyzer.FACING);
+        return state.getValue(BlockElectrolyzer.FACING);
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerElectrolyzer(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.electrolyzer");
+        return new TranslatableComponent("container.electrolyzer");
     }
 }

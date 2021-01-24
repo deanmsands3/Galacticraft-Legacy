@@ -10,11 +10,10 @@ import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.tick.TickHandlerServer;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.*;
 
 //import buildcraft.api.power.PowerHandler.Type;
@@ -73,7 +72,7 @@ public class EnergyNetwork implements IElectricityNetwork
     private final Map<Object, Direction> availableconnectedDirections = new HashMap<Object, Direction>();
 
     private final Map<Object, Float> energyRequests = new HashMap<Object, Float>();
-    private final List<TileEntity> ignoreAcceptors = new LinkedList<TileEntity>();
+    private final List<BlockEntity> ignoreAcceptors = new LinkedList<BlockEntity>();
 
     private final Set<IConductor> conductors = new HashSet<IConductor>();
 
@@ -93,7 +92,7 @@ public class EnergyNetwork implements IElectricityNetwork
      * @return Amount of energy requested in this network
      */
     @Override
-    public float getRequest(TileEntity... ignoreTiles)
+    public float getRequest(BlockEntity... ignoreTiles)
     {
         if (EnergyNetwork.tickCount != this.tickDone)
         {
@@ -114,7 +113,7 @@ public class EnergyNetwork implements IElectricityNetwork
      * @return Amount of energy REMAINING from the passed energy parameter
      */
     @Override
-    public float produce(float energy, boolean doReceive, int producerTier, TileEntity... ignoreTiles)
+    public float produce(float energy, boolean doReceive, int producerTier, BlockEntity... ignoreTiles)
     {
         if (this.loopPrevention)
         {
@@ -463,9 +462,9 @@ public class EnergyNetwork implements IElectricityNetwork
             catch (Exception e)
             {
                 GCLog.severe("DEBUG Energy network loop issue, please report this");
-                if (debugTE instanceof TileEntity)
+                if (debugTE instanceof BlockEntity)
                 {
-                    GCLog.severe("Problem was likely caused by tile in dim " + GCCoreUtil.getDimensionType(((TileEntity) debugTE).getWorld()) + " at " + ((TileEntity) debugTE).getPos() + " Type:" + debugTE.getClass().getSimpleName());
+                    GCLog.severe("Problem was likely caused by tile in dim " + GCCoreUtil.getDimensionType(((BlockEntity) debugTE).getLevel()) + " at " + ((BlockEntity) debugTE).getBlockPos() + " Type:" + debugTE.getClass().getSimpleName());
                 }
             }
         }
@@ -504,16 +503,16 @@ public class EnergyNetwork implements IElectricityNetwork
                 continue;
             }
 
-            TileEntity tile = (TileEntity) conductor;
-            World world = tile.getWorld();
+            BlockEntity tile = (BlockEntity) conductor;
+            Level world = tile.getLevel();
             //Remove any conductors in unloaded chunks
-            if (tile.isRemoved() || world == null || !world.isBlockLoaded(tile.getPos()))
+            if (tile.isRemoved() || world == null || !world.hasChunkAt(tile.getBlockPos()))
             {
                 it.remove();
                 continue;
             }
 
-            if (conductor != world.getTileEntity(tile.getPos()))
+            if (conductor != world.getBlockEntity(tile.getBlockPos()))
             {
                 it.remove();
                 continue;
@@ -554,8 +553,8 @@ public class EnergyNetwork implements IElectricityNetwork
                 continue;
             }
 
-            TileEntity tile = (TileEntity) conductor;
-            World world = tile.getWorld();
+            BlockEntity tile = (BlockEntity) conductor;
+            Level world = tile.getLevel();
             //Remove any conductors in unloaded chunks
             if (tile.isRemoved() || world == null)
             {
@@ -601,7 +600,7 @@ public class EnergyNetwork implements IElectricityNetwork
             //(Chunk loading can change the network if new conductors are found)
             for (IConductor conductor : conductorsCopy)
             {
-                EnergyUtil.setAdjacentPowerConnections((TileEntity) conductor, this.connectedAcceptors, this.connectedDirections);
+                EnergyUtil.setAdjacentPowerConnections((BlockEntity) conductor, this.connectedAcceptors, this.connectedDirections);
             }
         }
         catch (Exception e)
@@ -659,7 +658,7 @@ public class EnergyNetwork implements IElectricityNetwork
     @Override
     public void split(IConductor splitPoint)
     {
-        if (splitPoint instanceof TileEntity)
+        if (splitPoint instanceof BlockEntity)
         {
             this.getTransmitters().remove(splitPoint);
             splitPoint.setNetwork(null);
@@ -667,37 +666,37 @@ public class EnergyNetwork implements IElectricityNetwork
             //If the size of the residual network is 1, it should simply be preserved 
             if (this.getTransmitters().size() > 1)
             {
-                World world = ((TileEntity) splitPoint).getWorld();
+                Level world = ((BlockEntity) splitPoint).getLevel();
 
                 if (this.getTransmitters().size() > 0)
                 {
-                    TileEntity[] nextToSplit = new TileEntity[6];
+                    BlockEntity[] nextToSplit = new BlockEntity[6];
                     boolean[] toDo = {true, true, true, true, true, true};
-                    TileEntity tileEntity;
+                    BlockEntity tileEntity;
 
-                    BlockPos pos = ((TileEntity) splitPoint).getPos();
+                    BlockPos pos = ((BlockEntity) splitPoint).getBlockPos();
 
                     for (int j = 0; j < 6; j++)
                     {
                         switch (j)
                         {
                         case 0:
-                            tileEntity = world.getTileEntity(pos.down());
+                            tileEntity = world.getBlockEntity(pos.below());
                             break;
                         case 1:
-                            tileEntity = world.getTileEntity(pos.up());
+                            tileEntity = world.getBlockEntity(pos.above());
                             break;
                         case 2:
-                            tileEntity = world.getTileEntity(pos.north());
+                            tileEntity = world.getBlockEntity(pos.north());
                             break;
                         case 3:
-                            tileEntity = world.getTileEntity(pos.south());
+                            tileEntity = world.getBlockEntity(pos.south());
                             break;
                         case 4:
-                            tileEntity = world.getTileEntity(pos.west());
+                            tileEntity = world.getBlockEntity(pos.west());
                             break;
                         case 5:
-                            tileEntity = world.getTileEntity(pos.east());
+                            tileEntity = world.getBlockEntity(pos.east());
                             break;
                         default:
                             //Not reachable, only to prevent uninitiated compile errors
@@ -705,7 +704,7 @@ public class EnergyNetwork implements IElectricityNetwork
                             break;
                         }
 
-                        if (tileEntity instanceof IConductor && ((IConductor) tileEntity).canConnect(Direction.byIndex(j ^ 1), NetworkType.POWER))
+                        if (tileEntity instanceof IConductor && ((IConductor) tileEntity).canConnect(Direction.from3DDataValue(j ^ 1), NetworkType.POWER))
                         {
                             nextToSplit[j] = tileEntity;
                         }
@@ -719,14 +718,14 @@ public class EnergyNetwork implements IElectricityNetwork
                     {
                         if (toDo[i1])
                         {
-                            TileEntity connectedBlockA = nextToSplit[i1];
+                            BlockEntity connectedBlockA = nextToSplit[i1];
                             NetworkFinder finder = new NetworkFinder(world, new BlockVec3(connectedBlockA), new BlockVec3(pos));
                             List<IConductor> partNetwork = finder.exploreNetwork();
 
                             //Mark any others still to do in the nextToSplit array which are connected to this, as dealt with
                             for (int i2 = i1 + 1; i2 < 6; i2++)
                             {
-                                TileEntity connectedBlockB = nextToSplit[i2];
+                                BlockEntity connectedBlockB = nextToSplit[i2];
 
                                 if (toDo[i2])
                                 {

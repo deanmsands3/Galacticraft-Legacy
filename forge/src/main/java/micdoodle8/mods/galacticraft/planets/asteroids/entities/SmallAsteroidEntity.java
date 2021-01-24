@@ -1,29 +1,27 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.entities;
 
 import micdoodle8.mods.galacticraft.planets.mars.entities.TNTProjectileEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class SmallAsteroidEntity extends Entity
 {
-    private static final DataParameter<Float> SPIN_PITCH = EntityDataManager.createKey(SmallAsteroidEntity.class, DataSerializers.FLOAT);
-    private static final DataParameter<Float> SPIN_YAW = EntityDataManager.createKey(SmallAsteroidEntity.class, DataSerializers.FLOAT);
-    private static final DataParameter<Integer> ASTEROID_TYPE = EntityDataManager.createKey(SmallAsteroidEntity.class, DataSerializers.VARINT);
+    private static final EntityDataAccessor<Float> SPIN_PITCH = SynchedEntityData.defineId(SmallAsteroidEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> SPIN_YAW = SynchedEntityData.defineId(SmallAsteroidEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> ASTEROID_TYPE = SynchedEntityData.defineId(SmallAsteroidEntity.class, EntityDataSerializers.INT);
     public float spinPitch;
     public float spinYaw;
     public int type;
     private boolean firstUpdate = true;
 
-    public SmallAsteroidEntity(EntityType<? extends SmallAsteroidEntity> type, World worldIn)
+    public SmallAsteroidEntity(EntityType<? extends SmallAsteroidEntity> type, Level worldIn)
     {
         super(type, worldIn);
 //        this.setSize(1.0F, 1.0F);
@@ -31,7 +29,7 @@ public class SmallAsteroidEntity extends Entity
     }
 
     @Override
-    public IPacket<?> createSpawnPacket()
+    public Packet<?> getAddEntityPacket()
     {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -39,16 +37,16 @@ public class SmallAsteroidEntity extends Entity
     @Override
     public void baseTick()
     {
-        if (!this.firstUpdate)
+        if (!this.firstTick)
         {
             // Kill non-moving entities
-            if (Math.abs(this.getPosX() - this.prevPosX) + Math.abs(this.getPosZ() - this.prevPosZ) <= 0)
+            if (Math.abs(this.getX() - this.xo) + Math.abs(this.getZ() - this.zo) <= 0)
             {
                 this.remove();
             }
 
             // Remove entities far outside the build range, or too old (to stop accumulations)
-            else if (this.getPosY() > 288D || this.getPosY() < -32D || this.ticksExisted > 3000)
+            else if (this.getY() > 288D || this.getY() < -32D || this.tickCount > 3000)
             {
                 this.remove();
             }
@@ -56,21 +54,21 @@ public class SmallAsteroidEntity extends Entity
 
         super.baseTick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.setSpinPitch(this.spinPitch);
             this.setSpinYaw(this.spinYaw);
             this.setAsteroidType(this.type);
-            this.rotationPitch += this.spinPitch;
-            this.rotationYaw += this.spinYaw;
+            this.xRot += this.spinPitch;
+            this.yRot += this.spinYaw;
         }
         else
         {
-            this.rotationPitch += this.getSpinPitch();
-            this.rotationYaw += this.getSpinYaw();
+            this.xRot += this.getSpinPitch();
+            this.yRot += this.getSpinYaw();
         }
 
-        double sqrdMotion = this.getMotion().x * this.getMotion().x + this.getMotion().y * this.getMotion().y + this.getMotion().z * this.getMotion().z;
+        double sqrdMotion = this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().y * this.getDeltaMovement().y + this.getDeltaMovement().z * this.getDeltaMovement().z;
 
         if (sqrdMotion < 0.05)
         {
@@ -78,63 +76,63 @@ public class SmallAsteroidEntity extends Entity
 //            this.motionX *= 1.001D;
 //            this.motionY *= 1.001D;
 //            this.motionZ *= 1.001D;
-            this.setMotion(this.getMotion().x * 1.001, this.getMotion().y * 1.001, this.getMotion().z * 1.001);
+            this.setDeltaMovement(this.getDeltaMovement().x * 1.001, this.getDeltaMovement().y * 1.001, this.getDeltaMovement().z * 1.001);
         }
 
-        this.move(MoverType.SELF, this.getMotion());
-        this.firstUpdate = false;
+        this.move(MoverType.SELF, this.getDeltaMovement());
+        this.firstTick = false;
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
-        this.dataManager.register(SPIN_PITCH, 0.0F);
-        this.dataManager.register(SPIN_YAW, 0.0F);
-        this.dataManager.register(ASTEROID_TYPE, 0);
+        this.entityData.define(SPIN_PITCH, 0.0F);
+        this.entityData.define(SPIN_YAW, 0.0F);
+        this.entityData.define(ASTEROID_TYPE, 0);
     }
 
     @Override
-    protected void readAdditional(CompoundNBT nbt)
+    protected void readAdditionalSaveData(CompoundTag nbt)
     {
     }
 
-    public CompoundNBT writeToNBT(CompoundNBT compound)
+    public CompoundTag writeToNBT(CompoundTag compound)
     {
         return compound;
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT nbt)
+    protected void addAdditionalSaveData(CompoundTag nbt)
     {
     }
 
     public float getSpinPitch()
     {
-        return this.dataManager.get(SPIN_PITCH);
+        return this.entityData.get(SPIN_PITCH);
     }
 
     public float getSpinYaw()
     {
-        return this.dataManager.get(SPIN_YAW);
+        return this.entityData.get(SPIN_YAW);
     }
 
     public void setSpinPitch(float pitch)
     {
-        this.dataManager.set(SPIN_PITCH, pitch);
+        this.entityData.set(SPIN_PITCH, pitch);
     }
 
     public void setSpinYaw(float yaw)
     {
-        this.dataManager.set(SPIN_YAW, yaw);
+        this.entityData.set(SPIN_YAW, yaw);
     }
 
     public int getAsteroidType()
     {
-        return this.dataManager.get(ASTEROID_TYPE);
+        return this.entityData.get(ASTEROID_TYPE);
     }
 
     public void setAsteroidType(int type)
     {
-        this.dataManager.set(ASTEROID_TYPE, type);
+        this.entityData.set(ASTEROID_TYPE, type);
     }
 }

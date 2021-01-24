@@ -3,33 +3,32 @@ package micdoodle8.mods.galacticraft.core.inventory;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.util.RecipeUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerSchematicBuggy extends Container
+public class ContainerSchematicBuggy extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.SCHEMATIC_BUGGY)
-    public static ContainerType<ContainerSchematicBuggy> TYPE;
+    public static MenuType<ContainerSchematicBuggy> TYPE;
 
     public InventoryBuggyBench craftMatrix = new InventoryBuggyBench(this);
-    public IInventory craftResult = new CraftResultInventory();
-    private final World world;
+    public Container craftResult = new ResultContainer();
+    private final Level world;
 
-    public ContainerSchematicBuggy(int containerId, PlayerInventory playerInv)
+    public ContainerSchematicBuggy(int containerId, Inventory playerInv)
     {
         super(TYPE, containerId);
         final int change = 27;
-        this.world = playerInv.player.world;
+        this.world = playerInv.player.level;
         this.addSlot(new SlotRocketBenchResult(playerInv.player, this.craftMatrix, this.craftResult, 0, 142, 79 + change));
         int var6;
         int var7;
@@ -72,36 +71,36 @@ public class ContainerSchematicBuggy extends Container
             this.addSlot(new Slot(playerInv, var6, 8 + var6 * 18, 169 + change));
         }
 
-        this.onCraftMatrixChanged(this.craftMatrix);
+        this.slotsChanged(this.craftMatrix);
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity par1EntityPlayer)
+    public void removed(Player par1EntityPlayer)
     {
-        super.onContainerClosed(par1EntityPlayer);
+        super.removed(par1EntityPlayer);
 
-        if (!this.world.isRemote)
+        if (!this.world.isClientSide)
         {
-            for (int var2 = 1; var2 < this.craftMatrix.getSizeInventory(); ++var2)
+            for (int var2 = 1; var2 < this.craftMatrix.getContainerSize(); ++var2)
             {
-                final ItemStack slot = this.craftMatrix.removeStackFromSlot(var2);
+                final ItemStack slot = this.craftMatrix.removeItemNoUpdate(var2);
 
                 if (!slot.isEmpty())
                 {
-                    par1EntityPlayer.entityDropItem(slot, 0.0F);
+                    par1EntityPlayer.spawnAtLocation(slot, 0.0F);
                 }
             }
         }
     }
 
     @Override
-    public void onCraftMatrixChanged(IInventory par1IInventory)
+    public void slotsChanged(Container par1IInventory)
     {
-        this.craftResult.setInventorySlotContents(0, RecipeUtil.findMatchingBuggy(this.craftMatrix));
+        this.craftResult.setItem(0, RecipeUtil.findMatchingBuggy(this.craftMatrix));
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
         return true;
     }
@@ -111,27 +110,27 @@ public class ContainerSchematicBuggy extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(par1);
-        final int b = this.inventorySlots.size();
+        final Slot slot = this.slots.get(par1);
+        final int b = this.slots.size();
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            final ItemStack var4 = slot.getStack();
+            final ItemStack var4 = slot.getItem();
             var2 = var4.copy();
 
             if (par1 < b - 36)
             {
-                if (!this.mergeItemStack(var4, b - 36, b, true))
+                if (!this.moveItemStackTo(var4, b - 36, b, true))
                 {
                     return ItemStack.EMPTY;
                 }
 
                 if (par1 == 0)
                 {
-                    slot.onSlotChange(var4, var2);
+                    slot.onQuickCraft(var4, var2);
                 }
             }
             else
@@ -141,7 +140,7 @@ public class ContainerSchematicBuggy extends Container
                 {
                     for (int j = 1; j < 20; j++)
                     {
-                        if (this.inventorySlots.get(j).isItemValid(var4))
+                        if (this.slots.get(j).mayPlace(var4))
                         {
                             this.mergeOneItem(var4, j, j + 1, false);
                         }
@@ -151,14 +150,14 @@ public class ContainerSchematicBuggy extends Container
                 {
                     if (par1 < b - 9)
                     {
-                        if (!this.mergeItemStack(var4, b - 9, b, false))
+                        if (!this.moveItemStackTo(var4, b - 9, b, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
                     else
                     {
-                        if (!this.mergeItemStack(var4, b - 36, b - 9, false))
+                        if (!this.moveItemStackTo(var4, b - 36, b - 9, false))
                         {
                             return ItemStack.EMPTY;
                         }
@@ -168,7 +167,7 @@ public class ContainerSchematicBuggy extends Container
 
             if (var4.getCount() == 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
 
             if (var4.getCount() == var2.getCount())
@@ -176,7 +175,7 @@ public class ContainerSchematicBuggy extends Container
                 return ItemStack.EMPTY;
             }
 
-            slot.onSlotChanged();
+            slot.setChanged();
             slot.onTake(par1EntityPlayer, var4);
         }
 
@@ -194,16 +193,16 @@ public class ContainerSchematicBuggy extends Container
 
             for (int k = par2; k < par3; k++)
             {
-                slot = this.inventorySlots.get(k);
-                slotStack = slot.getStack();
+                slot = this.slots.get(k);
+                slotStack = slot.getItem();
 
                 if (slotStack.isEmpty())
                 {
                     ItemStack stackOneItem = par1ItemStack.copy();
                     stackOneItem.setCount(1);
                     par1ItemStack.shrink(1);
-                    slot.putStack(stackOneItem);
-                    slot.onSlotChanged();
+                    slot.set(stackOneItem);
+                    slot.setChanged();
                     flag1 = true;
                     break;
                 }

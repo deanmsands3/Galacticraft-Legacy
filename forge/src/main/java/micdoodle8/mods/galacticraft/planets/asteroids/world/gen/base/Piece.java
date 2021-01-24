@@ -1,45 +1,45 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.world.gen.base;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.gen.feature.structure.IStructurePieceType;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 
 public abstract class Piece extends StructurePiece
 {
     protected BaseConfiguration configuration;
 
-    public Piece(IStructurePieceType type)
+    public Piece(StructurePieceType type)
     {
         super(type, 0);
     }
 
-    public Piece(IStructurePieceType type, BaseConfiguration configuration)
+    public Piece(StructurePieceType type, BaseConfiguration configuration)
     {
         this(type);
         this.configuration = configuration;
     }
 
-    public Piece(IStructurePieceType type, CompoundNBT tagCompound)
+    public Piece(StructurePieceType type, CompoundTag tagCompound)
     {
         super(type, tagCompound);
         this.readStructureFromNBT(tagCompound);
     }
 
     @Override
-    protected void readAdditional(CompoundNBT tagCompound)
+    protected void addAdditionalSaveData(CompoundTag tagCompound)
     {
         // This is actually write, incorrect name mapping
         this.writeStructureToNBT(tagCompound);
     }
 
-    protected void writeStructureToNBT(CompoundNBT tagCompound)
+    protected void writeStructureToNBT(CompoundTag tagCompound)
     {
         this.configuration.writeToNBT(tagCompound);
     }
 
-    protected void readStructureFromNBT(CompoundNBT tagCompound)
+    protected void readStructureFromNBT(CompoundTag tagCompound)
     {
         if (this.configuration == null)
         {
@@ -48,7 +48,7 @@ public abstract class Piece extends StructurePiece
         }
     }
 
-    protected MutableBoundingBox getExtension(Direction direction, int length, int width)
+    protected BoundingBox getExtension(Direction direction, int length, int width)
     {
         int blockX, blockZ, sizeX, sizeZ;
         switch (direction)
@@ -56,29 +56,29 @@ public abstract class Piece extends StructurePiece
         case NORTH:
             sizeX = width;
             sizeZ = length;
-            blockX = this.boundingBox.minX + (this.boundingBox.maxX - this.boundingBox.minX) / 2 - sizeX / 2;
-            blockZ = this.boundingBox.minZ - sizeZ;
+            blockX = this.boundingBox.x0 + (this.boundingBox.x1 - this.boundingBox.x0) / 2 - sizeX / 2;
+            blockZ = this.boundingBox.z0 - sizeZ;
             break;
         case EAST:
             sizeX = length;
             sizeZ = width;
-            blockX = this.boundingBox.maxX;
-            blockZ = this.boundingBox.minZ + (this.boundingBox.maxZ - this.boundingBox.minZ) / 2 - sizeZ / 2;
+            blockX = this.boundingBox.x1;
+            blockZ = this.boundingBox.z0 + (this.boundingBox.z1 - this.boundingBox.z0) / 2 - sizeZ / 2;
             break;
         case SOUTH:
             sizeX = width;
             sizeZ = length;
-            blockX = this.boundingBox.minX + (this.boundingBox.maxX - this.boundingBox.minX) / 2 - sizeX / 2;
-            blockZ = this.boundingBox.maxZ;
+            blockX = this.boundingBox.x0 + (this.boundingBox.x1 - this.boundingBox.x0) / 2 - sizeX / 2;
+            blockZ = this.boundingBox.z1;
             break;
         case WEST:
         default:
             sizeX = length;
             sizeZ = width;
-            blockX = this.boundingBox.minX - sizeX;
-            blockZ = this.boundingBox.minZ + (this.boundingBox.maxZ - this.boundingBox.minZ) / 2 - sizeZ / 2;
+            blockX = this.boundingBox.x0 - sizeX;
+            blockZ = this.boundingBox.z0 + (this.boundingBox.z1 - this.boundingBox.z0) / 2 - sizeZ / 2;
             break;
         }
-        return new MutableBoundingBox(blockX, blockZ, blockX + sizeX, blockZ + sizeZ);
+        return new BoundingBox(blockX, blockZ, blockX + sizeX, blockZ + sizeZ);
     }
 }

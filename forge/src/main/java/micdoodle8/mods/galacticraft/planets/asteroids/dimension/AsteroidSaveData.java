@@ -1,27 +1,27 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.dimension;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.saveddata.SavedData;
 
-public class AsteroidSaveData extends WorldSavedData
+public class AsteroidSaveData extends SavedData
 {
     public static final String saveDataID = "GCAsteroidData";
-    public CompoundNBT datacompound;
+    public CompoundTag datacompound;
 
     public AsteroidSaveData(String s)
     {
         super(AsteroidSaveData.saveDataID);
-        this.datacompound = new CompoundNBT();
+        this.datacompound = new CompoundTag();
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
         this.datacompound = nbt.getCompound("asteroids");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
         nbt.put("asteroids", this.datacompound);
         return nbt;

@@ -5,13 +5,13 @@ import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumColor;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -44,15 +44,15 @@ public class ItemBase extends Item implements ISortable
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         if (stack != null && this == GCItems.TIER_1_HEAVY_DUTY_PLATE)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("item.tier1.desc")));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("item.tier1.desc")));
         }
         else if (stack != null && this == GCItems.DUNGEON_LOCATOR)
         {
-            tooltip.add(new StringTextComponent(EnumColor.RED + GCCoreUtil.translate("gui.creative_only.desc")));
+            tooltip.add(new TextComponent(EnumColor.RED + GCCoreUtil.translate("gui.creative_only.desc")));
         }
     }
 

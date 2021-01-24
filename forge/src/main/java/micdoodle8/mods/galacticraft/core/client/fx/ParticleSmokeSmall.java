@@ -1,54 +1,53 @@
 package micdoodle8.mods.galacticraft.core.client.fx;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import net.minecraft.client.Camera;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 @OnlyIn(Dist.CLIENT)
-public class ParticleSmokeSmall extends SpriteTexturedParticle
+public class ParticleSmokeSmall extends TextureSheetParticle
 {
     float smokeParticleScale;
-    private final IAnimatedSprite animatedSprite;
+    private final SpriteSet animatedSprite;
 
-    public ParticleSmokeSmall(World par1World, double posX, double posY, double posZ, double motX, double motY, double motZ, IAnimatedSprite animatedSprite)
+    public ParticleSmokeSmall(Level par1World, double posX, double posY, double posZ, double motX, double motY, double motZ, SpriteSet animatedSprite)
     {
         super(par1World, posX, posY, posZ, 0.0D, 0.0D, 0.0D);
-        this.motionX *= 0.01D;
-        this.motionY *= 0.01D;
-        this.motionZ *= 0.01D;
+        this.xd *= 0.01D;
+        this.yd *= 0.01D;
+        this.zd *= 0.01D;
         this.setSize(0.05F, 0.05F);
-        this.motionX += motX;
-        this.motionY += motY;
-        this.motionZ += motZ;
-        this.particleAlpha = 0.8F;
-        this.particleRed = this.particleGreen = this.particleBlue = (float) (Math.random() * 0.2D) + 0.7F;
-        this.particleScale *= 0.3F;
-        this.smokeParticleScale = this.particleScale;
-        this.maxAge = 110;
-        this.canCollide = true;
+        this.xd += motX;
+        this.yd += motY;
+        this.zd += motZ;
+        this.alpha = 0.8F;
+        this.rCol = this.gCol = this.bCol = (float) (Math.random() * 0.2D) + 0.7F;
+        this.quadSize *= 0.3F;
+        this.smokeParticleScale = this.quadSize;
+        this.lifetime = 110;
+        this.hasPhysics = true;
         this.animatedSprite = animatedSprite;
     }
 
     @Override
-    public IParticleRenderType getRenderType()
+    public ParticleRenderType getRenderType()
     {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
-    public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks)
+    public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks)
     {
         GL11.glPushMatrix();
         GL11.glDepthMask(false);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        float var8 = (this.age + partialTicks) / this.maxAge * 32.0F;
+        float var8 = (this.age + partialTicks) / this.lifetime * 32.0F;
 
         if (var8 < 0.0F)
         {
@@ -60,8 +59,8 @@ public class ParticleSmokeSmall extends SpriteTexturedParticle
             var8 = 1.0F;
         }
 
-        this.particleScale = this.smokeParticleScale * var8;
-        super.renderParticle(buffer, renderInfo, partialTicks);
+        this.quadSize = this.smokeParticleScale * var8;
+        super.render(buffer, renderInfo, partialTicks);
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(true);
@@ -71,45 +70,45 @@ public class ParticleSmokeSmall extends SpriteTexturedParticle
     @Override
     public void tick()
     {
-        this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
 
-        if (this.age++ >= this.maxAge)
+        if (this.age++ >= this.lifetime)
         {
-            this.setExpired();
+            this.remove();
         }
 
-        this.selectSpriteWithAge(animatedSprite);
-        this.move(this.motionX, this.motionY, this.motionZ);
+        this.setSpriteFromAge(animatedSprite);
+        this.move(this.xd, this.yd, this.zd);
 
-        if (this.posY == this.prevPosY)
+        if (this.y == this.yo)
         {
-            this.motionX *= 1.03D;
-            this.motionZ *= 1.03D;
+            this.xd *= 1.03D;
+            this.zd *= 1.03D;
         }
 
-        this.motionX *= 0.99D;
-        this.motionY *= 0.99D;
-        this.motionZ *= 0.99D;
-        this.selectSpriteWithAge(animatedSprite);
+        this.xd *= 0.99D;
+        this.yd *= 0.99D;
+        this.zd *= 0.99D;
+        this.setSpriteFromAge(animatedSprite);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<BasicParticleType>
+    public static class Factory implements ParticleProvider<SimpleParticleType>
     {
-        private final IAnimatedSprite spriteSet;
+        private final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite spriteSet)
+        public Factory(SpriteSet spriteSet)
         {
             this.spriteSet = spriteSet;
         }
 
         @Override
-        public Particle makeParticle(BasicParticleType typeIn, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle makeParticle(SimpleParticleType typeIn, Level worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
         {
             ParticleSmokeSmall particleSmokeSmall = new ParticleSmokeSmall(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
-            particleSmokeSmall.selectSpriteRandomly(this.spriteSet);
+            particleSmokeSmall.pickSprite(this.spriteSet);
             return particleSmokeSmall;
         }
     }

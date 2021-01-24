@@ -2,19 +2,19 @@ package micdoodle8.mods.galacticraft.core.dimension.chunk;
 
 import micdoodle8.mods.galacticraft.core.world.gen.CraterFeature;
 import micdoodle8.mods.galacticraft.core.world.gen.GCFeatures;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.gen.NoiseChunkGenerator;
-import net.minecraft.world.gen.OctavesNoiseGenerator;
-import net.minecraft.world.gen.WorldGenRegion;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
-public class MoonChunkGenerator extends NoiseChunkGenerator<MoonGenSettings>
+public class MoonChunkGenerator extends NoiseBasedChunkGenerator<MoonGenSettings>
 {
     private static final float[] BIOME_WEIGHTS = Util.make(new float[25], (weights) ->
     {
@@ -28,45 +28,45 @@ public class MoonChunkGenerator extends NoiseChunkGenerator<MoonGenSettings>
         }
     });
 
-    private final ConfiguredFeature<NoFeatureConfig, ?> craterGen = GCFeatures.MOON_CRATER.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);
+    private final ConfiguredFeature<NoneFeatureConfiguration, ?> craterGen = GCFeatures.MOON_CRATER.configured(FeatureConfiguration.NONE);
 
-    private final OctavesNoiseGenerator depthNoise;
+    private final PerlinNoise depthNoise;
 
-    public MoonChunkGenerator(IWorld worldIn, BiomeProvider biomeProvider, MoonGenSettings settingsIn)
+    public MoonChunkGenerator(LevelAccessor worldIn, BiomeSource biomeProvider, MoonGenSettings settingsIn)
     {
         super(worldIn, biomeProvider, 8, 8, 128, settingsIn, true);
-        this.depthNoise = new OctavesNoiseGenerator(this.randomSeed, 22, 0);
+        this.depthNoise = new PerlinNoise(this.random, 22, 0);
         ((CraterFeature) this.craterGen.feature).init(worldIn.getSeed());
     }
 
     @Override
-    public void decorate(WorldGenRegion region)
+    public void applyBiomeDecoration(WorldGenRegion region)
     {
-        int i = region.getMainChunkX();
-        int j = region.getMainChunkZ();
+        int i = region.getCenterX();
+        int j = region.getCenterZ();
         int k = i * 16;
         int l = j * 16;
         BlockPos blockpos = new BlockPos(k, 0, l);
         craterGen.place(region, this, region.getRandom(), blockpos);
-        super.decorate(region);
+        super.applyBiomeDecoration(region);
     }
 
     // get depth / scale
     @Override
-    protected double[] getBiomeNoiseColumn(int x, int z)
+    protected double[] getDepthAndScale(int x, int z)
     {
         double[] depthAndScale = new double[2];
         float scaleF1 = 0.0F;
         float depthF1 = 0.0F;
         float divisor = 0.0F;
         int j = this.getSeaLevel();
-        float baseDepth = this.biomeProvider.getNoiseBiome(x, j, z).getDepth();
+        float baseDepth = this.biomeSource.getNoiseBiome(x, j, z).getDepth();
 
         for (int xMod = -2; xMod <= 2; ++xMod)
         {
             for (int zMod = -2; zMod <= 2; ++zMod)
             {
-                Biome biomeAt = this.biomeProvider.getNoiseBiome(x + xMod, j, z + zMod);
+                Biome biomeAt = this.biomeSource.getNoiseBiome(x + xMod, j, z + zMod);
                 float biomeDepth = biomeAt.getDepth();
                 float biomeScale = biomeAt.getScale();
 
@@ -142,11 +142,11 @@ public class MoonChunkGenerator extends NoiseChunkGenerator<MoonGenSettings>
         final int topSlideMax = -10;
         final int topSlideScale = 6;
 
-        calcNoiseColumn(noiseColumn, x, z, xzScale, yScale, xzOtherScale, yOtherScale, topSlideScale, topSlideMax);
+        fillNoiseColumn(noiseColumn, x, z, xzScale, yScale, xzOtherScale, yOtherScale, topSlideScale, topSlideMax);
     }
 
     @Override
-    public int getGroundHeight()
+    public int getSpawnHeight()
     {
         return 69;
     }

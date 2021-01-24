@@ -1,6 +1,6 @@
 package micdoodle8.mods.galacticraft.api.client;
 
-import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.level.dimension.LevelStem;
 
 public interface IScreenManager
 {
@@ -9,5 +9,5 @@ public interface IScreenManager
      *
      * @return The WorldProvider of the world where the screen driver is located
      */
-    Dimension getWorldProvider();
+    LevelStem getWorldProvider();
 }

@@ -12,37 +12,37 @@ import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.util.OxygenUtil;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.WalkwayFluidPipeTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockWalkway extends BlockTransmitter implements IShiftDescription, ISortable
 {
     //    private Vector3 minVector = new Vector3(0.0, 0.32, 0.0);
     //    private Vector3 maxVector = new Vector3(1.0, 1.0, 1.0);
-    protected static final VoxelShape AABB_UNCONNECTED = VoxelShapes.create(0.0, 0.32, 0.0, 1.0, 1.0, 1.0);
-    protected static final VoxelShape AABB_CONNECTED_DOWN = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
+    protected static final VoxelShape AABB_UNCONNECTED = Shapes.box(0.0, 0.32, 0.0, 1.0, 1.0, 1.0);
+    protected static final VoxelShape AABB_CONNECTED_DOWN = Shapes.box(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
 
     protected BlockWalkway(Properties builder)
     {
         super(builder);
-        this.setDefaultState(this.stateContainer.getBaseState().with(UP, true).with(DOWN, false).with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(UP, true).setValue(DOWN, false).setValue(NORTH, false).setValue(EAST, false).setValue(SOUTH, false).setValue(WEST, false));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
     {
-        if (state.get(DOWN))
+        if (state.getValue(DOWN))
         {
             return AABB_CONNECTED_DOWN;
         }
@@ -52,7 +52,7 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         if (this == AsteroidBlocks.FLUID_PIPE_WALKWAY)
         {
@@ -92,7 +92,7 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
     @Override
     public String getShiftDescription(ItemStack itemStack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -102,32 +102,32 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(NORTH, EAST, SOUTH, WEST, DOWN, UP);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        BlockState state = context.getWorld().getBlockState(context.getPos().down());
+        BlockState state = context.getLevel().getBlockState(context.getClickedPos().below());
 
         if (state.getBlock() != AsteroidBlocks.WALKWAY && state.getBlock() == this)
         {
-            return this.getDefaultState().with(DOWN, true);
+            return this.defaultBlockState().setValue(DOWN, true);
         }
         return super.getStateForPlacement(context);
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos)
     {
         Object[] connectable = new Object[Direction.values().length];
-        TileEntity tileEntity = null;
+        BlockEntity tileEntity = null;
 
         if (state.getBlock() != AsteroidBlocks.WALKWAY) // pipe or wire
         {
-            tileEntity = world.getTileEntity(currentPos);
+            tileEntity = world.getBlockEntity(currentPos);
         }
 
         for (Direction direction : Direction.values())
@@ -139,9 +139,9 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
 
             if (state.getBlock() == AsteroidBlocks.WALKWAY)
             {
-                BlockPos neighbour = currentPos.offset(direction);
+                BlockPos neighbour = currentPos.relative(direction);
                 BlockState neighbourState = world.getBlockState(neighbour);
-                boolean sideSolid = neighbourState.isSolidSide(world, neighbour, direction.getOpposite());
+                boolean sideSolid = neighbourState.isFaceSturdy(world, neighbour, direction.getOpposite());
 
                 if (neighbourState.getBlock() == this || sideSolid)
                 {
@@ -158,11 +158,11 @@ public class BlockWalkway extends BlockTransmitter implements IShiftDescription,
             }
         }
 
-        return state.with(NORTH, connectable[Direction.NORTH.ordinal()] != null)
-                .with(EAST, connectable[Direction.EAST.ordinal()] != null)
-                .with(SOUTH, connectable[Direction.SOUTH.ordinal()] != null)
-                .with(WEST, connectable[Direction.WEST.ordinal()] != null)
-                .with(DOWN, connectable[Direction.DOWN.ordinal()] != null);
+        return state.setValue(NORTH, connectable[Direction.NORTH.ordinal()] != null)
+                .setValue(EAST, connectable[Direction.EAST.ordinal()] != null)
+                .setValue(SOUTH, connectable[Direction.SOUTH.ordinal()] != null)
+                .setValue(WEST, connectable[Direction.WEST.ordinal()] != null)
+                .setValue(DOWN, connectable[Direction.DOWN.ordinal()] != null);
     }
 
     @Override

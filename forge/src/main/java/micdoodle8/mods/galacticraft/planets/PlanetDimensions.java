@@ -11,11 +11,11 @@ import micdoodle8.mods.galacticraft.planets.mars.MarsModule;
 import micdoodle8.mods.galacticraft.planets.mars.dimension.DimensionMars;
 import micdoodle8.mods.galacticraft.planets.venus.VenusModule;
 import micdoodle8.mods.galacticraft.planets.venus.dimension.DimensionVenus;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.event.RegistryEvent;
@@ -52,7 +52,7 @@ public class PlanetDimensions
         ModDimension modDimension = new ModDimension()
         {
             @Override
-            public BiFunction<World, DimensionType, ? extends Dimension> getFactory()
+            public BiFunction<Level, DimensionType, ? extends Dimension> getFactory()
             {
                 return DimensionMars::new;
             }
@@ -62,7 +62,7 @@ public class PlanetDimensions
         modDimension = new ModDimension()
         {
             @Override
-            public BiFunction<World, DimensionType, ? extends Dimension> getFactory()
+            public BiFunction<Level, DimensionType, ? extends Dimension> getFactory()
             {
                 return DimensionAsteroids::new;
             }
@@ -72,7 +72,7 @@ public class PlanetDimensions
         modDimension = new ModDimension()
         {
             @Override
-            public BiFunction<World, DimensionType, ? extends Dimension> getFactory()
+            public BiFunction<Level, DimensionType, ? extends Dimension> getFactory()
             {
                 return DimensionVenus::new;
             }
@@ -84,36 +84,36 @@ public class PlanetDimensions
     public static void onModDimensionRegister(final RegisterDimensionsEvent event)
     {
         ResourceLocation id = new ResourceLocation(Constants.MOD_ID_PLANETS, NAME_MARS);
-        if (DimensionType.byName(id) == null)
+        if (DimensionType.getByName(id) == null)
         {
-            MARS_DIMENSION = DimensionManager.registerDimension(id, MARS_MOD_DIMENSION, new PacketBuffer(Unpooled.buffer()), true);
+            MARS_DIMENSION = DimensionManager.registerDimension(id, MARS_MOD_DIMENSION, new FriendlyByteBuf(Unpooled.buffer()), true);
             DimensionManager.keepLoaded(MARS_DIMENSION, false);
         }
         else
         {
-            MARS_DIMENSION = DimensionType.byName(id);
+            MARS_DIMENSION = DimensionType.getByName(id);
         }
 
         id = new ResourceLocation(Constants.MOD_ID_PLANETS, NAME_ASTEROIDS);
-        if (DimensionType.byName(id) == null)
+        if (DimensionType.getByName(id) == null)
         {
-            ASTEROIDS_DIMENSION = DimensionManager.registerDimension(id, ASTEROIDS_MOD_DIMENSION, new PacketBuffer(Unpooled.buffer()), true);
+            ASTEROIDS_DIMENSION = DimensionManager.registerDimension(id, ASTEROIDS_MOD_DIMENSION, new FriendlyByteBuf(Unpooled.buffer()), true);
             DimensionManager.keepLoaded(ASTEROIDS_DIMENSION, false);
         }
         else
         {
-            ASTEROIDS_DIMENSION = DimensionType.byName(id);
+            ASTEROIDS_DIMENSION = DimensionType.getByName(id);
         }
 
         id = new ResourceLocation(Constants.MOD_ID_PLANETS, NAME_VENUS);
-        if (DimensionType.byName(id) == null)
+        if (DimensionType.getByName(id) == null)
         {
-            VENUS_DIMENSION = DimensionManager.registerDimension(id, VENUS_MOD_DIMENSION, new PacketBuffer(Unpooled.buffer()), true);
+            VENUS_DIMENSION = DimensionManager.registerDimension(id, VENUS_MOD_DIMENSION, new FriendlyByteBuf(Unpooled.buffer()), true);
             DimensionManager.keepLoaded(VENUS_DIMENSION, false);
         }
         else
         {
-            VENUS_DIMENSION = DimensionType.byName(id);
+            VENUS_DIMENSION = DimensionType.getByName(id);
         }
 
         AsteroidsModule.planetAsteroids.setDimensionInfo(PlanetDimensions.ASTEROIDS_DIMENSION, DimensionAsteroids.class).setTierRequired(3);

@@ -2,11 +2,11 @@ package micdoodle8.mods.galacticraft.planets.venus.blocks;
 
 import micdoodle8.mods.galacticraft.core.items.ISortable;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MaterialColor;
 
 public class BlockDungeonBrick extends Block implements ISortable
 {
@@ -16,9 +16,9 @@ public class BlockDungeonBrick extends Block implements ISortable
     }
 
     @Override
-    public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos)
+    public MaterialColor getMapColor(BlockState state, BlockGetter worldIn, BlockPos pos)
     {
-        return MaterialColor.RED_TERRACOTTA;
+        return MaterialColor.TERRACOTTA_RED;
     }
 
     @Override

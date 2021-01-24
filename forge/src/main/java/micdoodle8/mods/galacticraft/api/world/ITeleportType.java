@@ -1,11 +1,10 @@
 package micdoodle8.mods.galacticraft.api.world;
 
 import micdoodle8.mods.galacticraft.api.vector.Vector3D;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import java.util.Random;
 
 /**
@@ -33,7 +32,7 @@ public interface ITeleportType
      * @return a vector3 object containing the coordinates to be spawned into
      * the world with
      */
-    Vector3D getPlayerSpawnLocation(ServerWorld world, ServerPlayerEntity player);
+    Vector3D getPlayerSpawnLocation(ServerLevel world, ServerPlayer player);
 
     /**
      * Gets the entity (non-player) spawn location when entering this dimension
@@ -43,7 +42,7 @@ public interface ITeleportType
      * @return a vector3 object containing the coordinates to be spawned into
      * the world with
      */
-    Vector3D getEntitySpawnLocation(ServerWorld world, Entity entity);
+    Vector3D getEntitySpawnLocation(ServerLevel world, Entity entity);
 
     /**
      * Gets the parachest spawn location when entering this dimension. Return
@@ -55,7 +54,7 @@ public interface ITeleportType
      * @return a vector3 object containing the coordinates to be spawned into
      * the world with. Return null for no spawn
      */
-    Vector3D getParaChestSpawnLocation(ServerWorld world, ServerPlayerEntity player, Random rand);
+    Vector3D getParaChestSpawnLocation(ServerLevel world, ServerPlayer player, Random rand);
 
     /**
      * Called when player is transferred to a space dimension
@@ -65,7 +64,7 @@ public interface ITeleportType
      * @param ridingAutoRocket If the player is riding an auto rocket. Do not spawn in
      *                         landers if so.
      */
-    void onSpaceDimensionChanged(World newWorld, ServerPlayerEntity player, boolean ridingAutoRocket);
+    void onSpaceDimensionChanged(Level newWorld, ServerPlayer player, boolean ridingAutoRocket);
 
 
     /**
@@ -73,5 +72,5 @@ public interface ITeleportType
      *
      * @param player
      */
-    void setupAdventureSpawn(ServerPlayerEntity player);
+    void setupAdventureSpawn(ServerPlayer player);
 }

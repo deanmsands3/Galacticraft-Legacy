@@ -3,7 +3,7 @@ package micdoodle8.mods.galacticraft.core.dimension.chunk;
 import java.util.function.Supplier;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.world.gen.ChunkGeneratorType;
+import net.minecraft.world.level.chunk.ChunkGeneratorType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;

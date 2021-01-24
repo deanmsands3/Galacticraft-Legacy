@@ -6,22 +6,22 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityOxygenSealer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerOxygenSealer extends Container
+public class ContainerOxygenSealer extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.OXYGEN_SEALER)
-    public static ContainerType<ContainerOxygenSealer> TYPE;
+    public static MenuType<ContainerOxygenSealer> TYPE;
 
     private final TileEntityOxygenSealer sealer;
 
-    public ContainerOxygenSealer(int containerId, PlayerInventory playerInv, TileEntityOxygenSealer sealer)
+    public ContainerOxygenSealer(int containerId, Inventory playerInv, TileEntityOxygenSealer sealer)
     {
         super(TYPE, containerId);
         this.sealer = sealer;
@@ -54,26 +54,26 @@ public class ContainerOxygenSealer extends Container
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity var1)
+    public boolean stillValid(Player var1)
     {
-        return this.sealer.isUsableByPlayer(var1);
+        return this.sealer.stillValid(var1);
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int par1)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int par1)
     {
         ItemStack var2 = ItemStack.EMPTY;
-        final Slot slot = this.inventorySlots.get(par1);
-        final int b = this.inventorySlots.size();
+        final Slot slot = this.slots.get(par1);
+        final int b = this.slots.size();
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            final ItemStack stack = slot.getStack();
+            final ItemStack stack = slot.getItem();
             var2 = stack.copy();
 
             if (par1 <= 2)
             {
-                if (!this.mergeItemStack(stack, b - 36, b, true))
+                if (!this.moveItemStackTo(stack, b - 36, b, true))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -82,21 +82,21 @@ public class ContainerOxygenSealer extends Container
             {
                 if (EnergyUtil.isElectricItem(stack.getItem()))
                 {
-                    if (!this.mergeItemStack(stack, 0, 1, false))
+                    if (!this.moveItemStackTo(stack, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (stack.getItem() instanceof IItemOxygenSupply)
                 {
-                    if (!this.mergeItemStack(stack, 1, 2, false))
+                    if (!this.moveItemStackTo(stack, 1, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (stack.getItem() == GCItems.AMBIENT_THERMAL_CONTROLLER)
                 {
-                    if (!this.mergeItemStack(stack, 2, 3, false))
+                    if (!this.moveItemStackTo(stack, 2, 3, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -105,12 +105,12 @@ public class ContainerOxygenSealer extends Container
                 {
                     if (par1 < b - 9)
                     {
-                        if (!this.mergeItemStack(stack, b - 9, b, false))
+                        if (!this.moveItemStackTo(stack, b - 9, b, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (!this.mergeItemStack(stack, b - 36, b - 9, false))
+                    else if (!this.moveItemStackTo(stack, b - 36, b - 9, false))
                     {
                         return ItemStack.EMPTY;
                     }
@@ -119,11 +119,11 @@ public class ContainerOxygenSealer extends Container
 
             if (stack.getCount() == 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (stack.getCount() == var2.getCount())

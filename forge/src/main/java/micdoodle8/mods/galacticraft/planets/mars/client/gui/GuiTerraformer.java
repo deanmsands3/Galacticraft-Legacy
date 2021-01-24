@@ -14,11 +14,11 @@ import micdoodle8.mods.galacticraft.core.util.RedstoneUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerTerraformer;
 import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityTerraformer;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
@@ -35,10 +35,10 @@ public class GuiTerraformer extends GuiContainerGC<ContainerTerraformer> impleme
     private final GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion(0, 0, 52, 9, null, 0, 0, this);
     private final GuiElementInfoRegion waterTankInfoRegion = new GuiElementInfoRegion(0, 0, 41, 28, null, 0, 0, this);
 
-    public GuiTerraformer(ContainerTerraformer container, PlayerInventory playerInv, ITextComponent title)
+    public GuiTerraformer(ContainerTerraformer container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
-        this.ySize = 237;
+        this.imageHeight = 237;
         this.terraformer = terraformer;
     }
 
@@ -67,34 +67,34 @@ public class GuiTerraformer extends GuiContainerGC<ContainerTerraformer> impleme
     {
         super.init();
         this.electricInfoRegion.tooltipStrings = new ArrayList<String>();
-        this.electricInfoRegion.xPosition = (this.width - this.xSize) / 2 + 44;
-        this.electricInfoRegion.yPosition = (this.height - this.ySize) / 2 + 47;
+        this.electricInfoRegion.xPosition = (this.width - this.imageWidth) / 2 + 44;
+        this.electricInfoRegion.yPosition = (this.height - this.imageHeight) / 2 + 47;
         this.electricInfoRegion.parentWidth = this.width;
         this.electricInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.electricInfoRegion);
         List<String> batterySlotDesc = new ArrayList<String>();
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.0"));
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.1"));
-        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 24, (this.height - this.ySize) / 2 + 38, 18, 18, batterySlotDesc, this.width, this.height, this));
+        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 24, (this.height - this.imageHeight) / 2 + 38, 18, 18, batterySlotDesc, this.width, this.height, this));
         batterySlotDesc = new ArrayList<String>();
         batterySlotDesc.add(GCCoreUtil.translate("gui.show_bubble.desc.0"));
-        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.xSize) / 2 + 85, (this.height - this.ySize) / 2 + 132, 85, 13, batterySlotDesc, this.width, this.height, this));
+        this.infoRegions.add(new GuiElementInfoRegion((this.width - this.imageWidth) / 2 + 85, (this.height - this.imageHeight) / 2 + 132, 85, 13, batterySlotDesc, this.width, this.height, this));
         this.waterTankInfoRegion.tooltipStrings = new ArrayList<String>();
-        this.waterTankInfoRegion.xPosition = (this.width - this.xSize) / 2 + 55;
-        this.waterTankInfoRegion.yPosition = (this.height - this.ySize) / 2 + 17;
+        this.waterTankInfoRegion.xPosition = (this.width - this.imageWidth) / 2 + 55;
+        this.waterTankInfoRegion.yPosition = (this.height - this.imageHeight) / 2 + 17;
         this.waterTankInfoRegion.parentWidth = this.width;
         this.waterTankInfoRegion.parentHeight = this.height;
         this.infoRegions.add(this.waterTankInfoRegion);
         this.buttons.clear();
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
         this.enableTreesButton = new Button(var5 + 98, var6 + 85, 72, 20, GCCoreUtil.translate("gui.message.enable_trees"), (button) ->
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{this.terraformer.getPos(), 0}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{this.terraformer.getBlockPos(), 0}));
         });
         this.enableGrassButton = new Button(var5 + 98, var6 + 109, 72, 20, GCCoreUtil.translate("gui.message.enable_grass"), (button) ->
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{this.terraformer.getPos(), 1}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{this.terraformer.getBlockPos(), 1}));
         });
         this.buttons.add(this.enableTreesButton);
         this.buttons.add(this.enableGrassButton);
@@ -103,19 +103,19 @@ public class GuiTerraformer extends GuiContainerGC<ContainerTerraformer> impleme
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        String displayString = getTitle().getFormattedText();
-        this.font.drawString(displayString, this.xSize / 2 - this.font.getStringWidth(displayString) / 2, 5, 4210752);
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, 144, 4210752);
-        this.font.drawSplitString(this.getStatus(), 105, 24, this.xSize - 105, 4210752);
+        String displayString = getTitle().getColoredString();
+        this.font.draw(displayString, this.imageWidth / 2 - this.font.width(displayString) / 2, 5, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, 144, 4210752);
+        this.font.drawWordWrap(this.getStatus(), 105, 24, this.imageWidth - 105, 4210752);
         //		this.font.drawString(ElectricityDisplay.getDisplay(this.terraformer.ueWattsPerTick * 20, ElectricUnit.WATT), 105, 56, 4210752);
         //		this.font.drawString(ElectricityDisplay.getDisplay(this.terraformer.getVoltage(), ElectricUnit.VOLTAGE), 105, 68, 4210752);
     }
 
     private String getStatus()
     {
-        if (RedstoneUtil.isBlockReceivingRedstone(this.terraformer.getWorld(), this.terraformer.getPos()))
+        if (RedstoneUtil.isBlockReceivingRedstone(this.terraformer.getLevel(), this.terraformer.getBlockPos()))
         {
             return EnumColor.RED + GCCoreUtil.translate("gui.status.off");
         }
@@ -168,13 +168,13 @@ public class GuiTerraformer extends GuiContainerGC<ContainerTerraformer> impleme
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void renderBg(float par1, int par2, int par3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.textureManager.bindTexture(GuiTerraformer.terraformerGui);
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
-        this.blit(var5, var6, 0, 0, this.xSize, this.ySize);
+        this.minecraft.textureManager.bind(GuiTerraformer.terraformerGui);
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
+        this.blit(var5, var6, 0, 0, this.imageWidth, this.imageHeight);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int scale = this.terraformer.getScaledElecticalLevel(54);
@@ -192,7 +192,7 @@ public class GuiTerraformer extends GuiContainerGC<ContainerTerraformer> impleme
         this.waterTankInfoRegion.tooltipStrings = processDesc;
 
         waterLevel = this.terraformer.getScaledWaterLevel(26);
-        this.blit((this.width - this.xSize) / 2 + 56, (this.height - this.ySize) / 2 + 17 + 27 - waterLevel, 176, 26 - waterLevel, 39, waterLevel);
+        this.blit((this.width - this.imageWidth) / 2 + 56, (this.height - this.imageHeight) / 2 + 17 + 27 - waterLevel, 176, 26 - waterLevel, 39, waterLevel);
 
         this.checkboxRenderBubble.isSelected = this.terraformer.shouldRenderBubble;
     }
@@ -201,11 +201,11 @@ public class GuiTerraformer extends GuiContainerGC<ContainerTerraformer> impleme
     public void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected)
     {
         this.terraformer.shouldRenderBubble = newSelected;
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{6, this.terraformer.getPos(), newSelected ? 1 : 0}));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{6, this.terraformer.getBlockPos(), newSelected ? 1 : 0}));
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckbox checkbox, PlayerEntity player)
+    public boolean canPlayerEdit(GuiElementCheckbox checkbox, Player player)
     {
         return true;
     }

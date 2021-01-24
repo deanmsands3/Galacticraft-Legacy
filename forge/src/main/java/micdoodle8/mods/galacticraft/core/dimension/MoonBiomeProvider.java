@@ -7,24 +7,22 @@ import micdoodle8.mods.galacticraft.core.dimension.chunk.MoonGenSettings;
 import micdoodle8.mods.galacticraft.core.world.gen.BiomeMoonFlat;
 import micdoodle8.mods.galacticraft.core.world.gen.BiomeMoonHills;
 import micdoodle8.mods.galacticraft.core.world.gen.BiomeMoonSuperFlat;
-import net.minecraft.block.BlockState;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.gen.IExtendedNoiseRandom;
-import net.minecraft.world.gen.LazyAreaLayerContext;
-import net.minecraft.world.gen.area.IArea;
-import net.minecraft.world.gen.area.IAreaFactory;
-import net.minecraft.world.gen.area.LazyArea;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.layer.Layer;
-import net.minecraft.world.gen.layer.ZoomLayer;
-import net.minecraft.world.storage.WorldInfo;
-
+import net.minecraft.world.level.LevelType;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.newbiome.area.Area;
+import net.minecraft.world.level.newbiome.area.AreaFactory;
+import net.minecraft.world.level.newbiome.area.LazyArea;
+import net.minecraft.world.level.newbiome.context.BigContext;
+import net.minecraft.world.level.newbiome.context.LazyAreaContext;
+import net.minecraft.world.level.newbiome.layer.Layer;
+import net.minecraft.world.level.storage.LevelData;
 import java.util.Set;
 import java.util.function.LongFunction;
 
-public class MoonBiomeProvider extends BiomeProvider
+public class MoonBiomeProvider extends BiomeSource
 {
     private final Layer noiseLayer;
     private final Layer blockLayer;
@@ -38,31 +36,31 @@ public class MoonBiomeProvider extends BiomeProvider
                 BiomeMoonHills.moonBiomeHills,
                 BiomeMoonSuperFlat.moonBiomeSuperFlat
         ));
-        final WorldInfo info = settings.getWorldInfo();
+        final LevelData info = settings.getWorldInfo();
         final MoonGenSettings generatorSettings = settings.getGeneratorSettings();
-        final Layer[] layers = buildMoonProcedure(info.getSeed(), info.getGenerator(), generatorSettings);
+        final Layer[] layers = buildMoonProcedure(info.getSeed(), info.getGeneratorType(), generatorSettings);
         noiseLayer = layers[0];
         blockLayer = layers[1];
     }
 
-    private static Layer[] buildMoonProcedure(long seed, WorldType type, MoonGenSettings settings)
+    private static Layer[] buildMoonProcedure(long seed, LevelType type, MoonGenSettings settings)
     {
-        final ImmutableList<IAreaFactory<LazyArea>> immutablelist = buildMoonProcedure(type, settings, procedure -> new LazyAreaLayerContext(25, seed, procedure));
+        final ImmutableList<AreaFactory<LazyArea>> immutablelist = buildMoonProcedure(type, settings, procedure -> new LazyAreaContext(25, seed, procedure));
         final Layer noiseLayer = new Layer(immutablelist.get(0));
         final Layer blockLayer = new Layer(immutablelist.get(1));
         return new Layer[]{noiseLayer, blockLayer};
     }
 
-    private static <T extends IArea, C extends IExtendedNoiseRandom<T>> ImmutableList<IAreaFactory<T>> buildMoonProcedure(final WorldType type, final MoonGenSettings settings, final LongFunction<C> context)
+    private static <T extends Area, C extends BigContext<T>> ImmutableList<AreaFactory<T>> buildMoonProcedure(final LevelType type, final MoonGenSettings settings, final LongFunction<C> context)
     {
-        IExtendedNoiseRandom<T> r = context.apply(1);
-        IAreaFactory<T> mainLayer = GenLayerMoonBiomes.INSTANCE.apply(r);
-        IAreaFactory<T> zoomLayer = ZoomLayer.NORMAL.apply(context.apply(1000L), mainLayer);
+        BigContext<T> r = context.apply(1);
+        AreaFactory<T> mainLayer = GenLayerMoonBiomes.INSTANCE.run(r);
+        AreaFactory<T> zoomLayer = ZoomLayer.NORMAL.apply(context.apply(1000L), mainLayer);
         zoomLayer = ZoomLayer.NORMAL.apply(context.apply(1001L), zoomLayer);
         zoomLayer = ZoomLayer.NORMAL.apply(context.apply(1002L), zoomLayer);
         zoomLayer = ZoomLayer.NORMAL.apply(context.apply(1003L), zoomLayer);
 
-        IAreaFactory<T> blockLayer = GCVoronoiZoomLayer.INSTANCE.apply(context.apply(10), zoomLayer);
+        AreaFactory<T> blockLayer = GCVoronoiZoomLayer.INSTANCE.run(context.apply(10), zoomLayer);
 
         return ImmutableList.of(zoomLayer, blockLayer);
     }
@@ -137,13 +135,13 @@ public class MoonBiomeProvider extends BiomeProvider
 
     // really is "can generate structure?"
     @Override
-    public boolean hasStructure(Structure<?> structure)
+    public boolean canGenerateStructure(StructureFeature<?> structure)
     {
-        return this.hasStructureCache.computeIfAbsent(structure, (structure1) ->
+        return this.supportedStructures.computeIfAbsent(structure, (structure1) ->
         {
-            for (Biome biome : biomes)
+            for (Biome biome : possibleBiomes)
             {
-                if (biome.hasStructure(structure1))
+                if (biome.isValidStart(structure1))
                 {
                     return true;
                 }
@@ -158,9 +156,9 @@ public class MoonBiomeProvider extends BiomeProvider
     {
         if (surfaceBlocks.isEmpty())
         {
-            for (Biome biome : biomes)
+            for (Biome biome : possibleBiomes)
             {
-                surfaceBlocks.add(biome.getSurfaceBuilderConfig().getTop());
+                surfaceBlocks.add(biome.getSurfaceBuilderConfig().getTopMaterial());
             }
         }
         return surfaceBlocks;

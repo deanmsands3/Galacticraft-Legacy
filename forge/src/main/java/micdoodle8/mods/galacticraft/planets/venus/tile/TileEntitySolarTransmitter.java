@@ -7,31 +7,31 @@ import micdoodle8.mods.galacticraft.api.transmission.tile.ITransmitter;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityAdvanced;
 import micdoodle8.mods.galacticraft.planets.venus.tick.VenusTickHandlerServer;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class TileEntitySolarTransmitter extends TileEntityAdvanced implements ITransmitter
 {
     private IGridNetwork network;
-    public TileEntity[] adjacentConnections = null;
+    public BlockEntity[] adjacentConnections = null;
     private boolean validated = true;
 
-    public TileEntitySolarTransmitter(TileEntityType<? extends TileEntitySolarTransmitter> type)
+    public TileEntitySolarTransmitter(BlockEntityType<? extends TileEntitySolarTransmitter> type)
     {
         super(type);
     }
 
     @Override
-    public void validate()
+    public void clearRemoved()
     {
         this.validated = false;
-        super.validate();
+        super.clearRemoved();
     }
 
     @Override
-    public void remove()
+    public void setRemoved()
     {
 //        if (!BlockFluidPipe.ignoreDrop)
         {
@@ -42,13 +42,13 @@ public abstract class TileEntitySolarTransmitter extends TileEntityAdvanced impl
 //            this.setNetwork(null);
 //        }
 
-        super.remove();
+        super.setRemoved();
     }
 
     @Override
     public void onChunkUnloaded()
     {
-        super.remove();
+        super.setRemoved();
         super.onChunkUnloaded();
     }
 
@@ -80,13 +80,13 @@ public abstract class TileEntitySolarTransmitter extends TileEntityAdvanced impl
     {
 //        this.world.markBlockRangeForRenderUpdate(this.getPos(), this.getPos());
         BlockState state = this.getBlockState();
-        world.markBlockRangeForRenderUpdate(pos, state.getBlock().getDefaultState(), state); // Forces block render update. Better way to do this?
+        level.setBlocksDirty(worldPosition, state.getBlock().defaultBlockState(), state); // Forces block render update. Better way to do this?
     }
 
     @Override
     public void tick()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (!this.validated)
             {
@@ -114,7 +114,7 @@ public abstract class TileEntitySolarTransmitter extends TileEntityAdvanced impl
             return;
         }
 
-        if (this.world.isRemote && this.network != null)
+        if (this.level.isClientSide && this.network != null)
         {
             SolarModuleNetwork solarNetwork = (SolarModuleNetwork) this.network;
             solarNetwork.removeTransmitter(this);
@@ -127,7 +127,7 @@ public abstract class TileEntitySolarTransmitter extends TileEntityAdvanced impl
 
         this.network = network;
 
-        if (this.world.isRemote && this.network != null)
+        if (this.level.isClientSide && this.network != null)
         {
             ((SolarModuleNetwork) this.network).getTransmitters().add(this);
         }
@@ -136,14 +136,14 @@ public abstract class TileEntitySolarTransmitter extends TileEntityAdvanced impl
     @Override
     public void refresh()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.adjacentConnections = null;
 
             BlockVec3 thisVec = new BlockVec3(this);
             for (Direction side : Direction.values())
             {
-                TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
+                BlockEntity tileEntity = thisVec.getTileEntityOnSide(this.level, side);
 
                 if (tileEntity != null)
                 {
@@ -170,24 +170,24 @@ public abstract class TileEntitySolarTransmitter extends TileEntityAdvanced impl
     }
 
     @Override
-    public TileEntity[] getAdjacentConnections()
+    public BlockEntity[] getAdjacentConnections()
     {
         /**
          * Cache the adjacentConnections.
          */
         if (this.adjacentConnections == null)
         {
-            this.adjacentConnections = new TileEntity[Direction.values().length];
+            this.adjacentConnections = new BlockEntity[Direction.values().length];
 
 
             BlockVec3 thisVec = new BlockVec3(this);
             for (Direction direction : Direction.values())
             {
-                TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, direction);
+                BlockEntity tileEntity = thisVec.getTileEntityOnSide(this.level, direction);
 
                 if (tileEntity instanceof TileEntitySolarArrayModule)
                 {
-                    if (this.world.isRemote || ((TileEntitySolarArrayModule) tileEntity).canConnect(direction.getOpposite(), NetworkType.SOLAR_MODULE))
+                    if (this.level.isClientSide || ((TileEntitySolarArrayModule) tileEntity).canConnect(direction.getOpposite(), NetworkType.SOLAR_MODULE))
                     {
                         this.adjacentConnections[direction.ordinal()] = tileEntity;
                     }

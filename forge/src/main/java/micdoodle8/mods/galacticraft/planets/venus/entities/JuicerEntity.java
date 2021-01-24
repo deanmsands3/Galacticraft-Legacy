@@ -4,72 +4,83 @@ import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
 import micdoodle8.mods.galacticraft.planets.venus.entities.ai.EntityMoveHelperCeiling;
 import micdoodle8.mods.galacticraft.planets.venus.entities.ai.PathNavigateCeiling;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.SharedMonsterAttributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
-public class JuicerEntity extends MonsterEntity implements IEntityBreathable
+public class JuicerEntity extends Monster implements IEntityBreathable
 {
-    private static final DataParameter<Boolean> IS_FALLING = EntityDataManager.createKey(JuicerEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> IS_HANGING = EntityDataManager.createKey(JuicerEntity.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_FALLING = SynchedEntityData.defineId(JuicerEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_HANGING = SynchedEntityData.defineId(JuicerEntity.class, EntityDataSerializers.BOOLEAN);
     private BlockPos jumpTarget;
     private int timeSinceLastJump = 0;
 
-    public JuicerEntity(EntityType<? extends JuicerEntity> type, World worldIn)
+    public JuicerEntity(EntityType<? extends JuicerEntity> type, Level worldIn)
     {
         super(type, worldIn);
-        this.moveController = new EntityMoveHelperCeiling(this);
+        this.moveControl = new EntityMoveHelperCeiling(this);
 //        this.setSize(0.95F, 0.6F);
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.addGoal(5, new RandomWalkingGoal(this, 0.8D));
-        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.8D));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.timeSinceLastJump = this.rand.nextInt(200) + 50;
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.timeSinceLastJump = this.random.nextInt(200) + 50;
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
-        super.registerData();
-        this.dataManager.register(IS_FALLING, false);
-        this.dataManager.register(IS_HANGING, false);
+        super.defineSynchedData();
+        this.entityData.define(IS_FALLING, false);
+        this.entityData.define(IS_HANGING, false);
     }
 
     public boolean isHanging()
     {
-        return this.dataManager.get(IS_FALLING);
+        return this.entityData.get(IS_FALLING);
     }
 
     public void setHanging(boolean hanging)
     {
-        this.dataManager.set(IS_FALLING, hanging);
+        this.entityData.set(IS_FALLING, hanging);
     }
 
     public boolean isFalling()
     {
-        return this.dataManager.get(IS_FALLING);
+        return this.entityData.get(IS_FALLING);
     }
 
     public void setFalling(boolean falling)
     {
-        this.dataManager.set(IS_FALLING, falling);
+        this.entityData.set(IS_FALLING, falling);
     }
 
     @Override
@@ -88,37 +99,37 @@ public class JuicerEntity extends MonsterEntity implements IEntityBreathable
     @Override
     protected SoundEvent getAmbientSound()
     {
-        return SoundEvents.ENTITY_SPIDER_AMBIENT;
+        return SoundEvents.SPIDER_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn)
     {
-        return SoundEvents.ENTITY_SPIDER_HURT;
+        return SoundEvents.SPIDER_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound()
     {
-        return SoundEvents.ENTITY_SPIDER_DEATH;
+        return SoundEvents.SPIDER_DEATH;
     }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn)
     {
-        this.playSound(SoundEvents.ENTITY_SPIDER_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.SPIDER_STEP, 0.15F, 1.0F);
     }
 
     @Override
-    protected boolean canTriggerWalking()
+    protected boolean isMovementNoisy()
     {
         return false;
     }
 
     @Override
-    protected float getSoundPitch()
+    protected float getVoicePitch()
     {
-        return super.getSoundPitch() + 0.4F;
+        return super.getVoicePitch() + 0.4F;
     }
 
 //    @Override
@@ -128,42 +139,42 @@ public class JuicerEntity extends MonsterEntity implements IEntityBreathable
 //    }
 
     @Override
-    public void livingTick()
+    public void aiStep()
     {
         if (this.isHanging())
         {
             this.onGround = true;
         }
 
-        super.livingTick();
+        super.aiStep();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             if (this.jumpTarget == null)
             {
                 if (this.timeSinceLastJump <= 0)
                 {
-                    BlockPos posAbove = new BlockPos(this.getPosX(), this.getPosY() + (this.isHanging() ? 1.0 : -0.5), this.getPosZ());
-                    BlockState blockAbove = this.world.getBlockState(posAbove);
+                    BlockPos posAbove = new BlockPos(this.getX(), this.getY() + (this.isHanging() ? 1.0 : -0.5), this.getZ());
+                    BlockState blockAbove = this.level.getBlockState(posAbove);
 
                     if (blockAbove.getBlock() == VenusBlocks.ORANGE_VENUS_DUNGEON_BRICKS || blockAbove.getBlock() == VenusBlocks.RED_VENUS_DUNGEON_BRICKS)
                     {
-                        RayTraceResult hit = this.world.rayTraceBlocks(new RayTraceContext(new Vec3d(this.getPosX(), this.getPosY(), this.getPosZ()), new Vec3d(this.getPosX(), this.getPosY() + (this.isHanging() ? -10 : 10), this.getPosZ()), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
+                        HitResult hit = this.level.clip(new ClipContext(new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(this.getX(), this.getY() + (this.isHanging() ? -10 : 10), this.getZ()), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
 
                         if (hit.getType() == RayTraceResult.Type.BLOCK)
                         {
-                            BlockRayTraceResult blockResult = (BlockRayTraceResult) hit;
-                            BlockState blockBelow = this.world.getBlockState(blockResult.getPos());
+                            BlockHitResult blockResult = (BlockHitResult) hit;
+                            BlockState blockBelow = this.level.getBlockState(blockResult.getBlockPos());
                             if (blockBelow.getBlock() == VenusBlocks.RED_VENUS_DUNGEON_BRICKS || blockBelow.getBlock() == VenusBlocks.ORANGE_VENUS_DUNGEON_BRICKS)
                             {
                                 if (this.isHanging())
                                 {
-                                    this.jumpTarget = blockResult.getPos();
+                                    this.jumpTarget = blockResult.getBlockPos();
                                     this.setFalling(this.jumpTarget != null);
                                 }
                                 else
                                 {
-                                    this.jumpTarget = blockResult.getPos().offset(Direction.DOWN);
+                                    this.jumpTarget = blockResult.getBlockPos().relative(Direction.DOWN);
                                     this.setFalling(this.jumpTarget != null);
                                 }
                             }
@@ -179,12 +190,12 @@ public class JuicerEntity extends MonsterEntity implements IEntityBreathable
 
         if (this.isHanging())
         {
-            this.setMotion(this.getMotion().x, 0.0, this.getMotion().z);
+            this.setDeltaMovement(this.getDeltaMovement().x, 0.0, this.getDeltaMovement().z);
         }
     }
 
     @Override
-    public void move(MoverType typeIn, Vec3d pos)
+    public void move(MoverType typeIn, Vec3 pos)
     {
         super.move(typeIn, pos);
         if (this.isHanging())
@@ -198,46 +209,46 @@ public class JuicerEntity extends MonsterEntity implements IEntityBreathable
     {
         super.tick();
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
-            this.prevLimbSwingAmount = this.limbSwingAmount;
-            double d1 = this.getPosX() - this.prevPosX;
-            double d0 = this.getPosZ() - this.prevPosZ;
-            float f2 = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
+            this.animationSpeedOld = this.animationSpeed;
+            double d1 = this.getX() - this.xo;
+            double d0 = this.getZ() - this.zo;
+            float f2 = Mth.sqrt(d1 * d1 + d0 * d0) * 4.0F;
 
             if (f2 > 1.0F)
             {
                 f2 = 1.0F;
             }
 
-            this.limbSwingAmount += (f2 - this.limbSwingAmount) * 0.4F;
-            this.limbSwing += this.limbSwingAmount;
+            this.animationSpeed += (f2 - this.animationSpeed) * 0.4F;
+            this.animationPosition += this.animationSpeed;
         }
         else
         {
             if (this.jumpTarget != null)
             {
-                double diffX = this.jumpTarget.getX() - this.getPosX() + 0.5;
-                double diffY = this.jumpTarget.getY() - this.getPosY() + 0.6;
-                double diffZ = this.jumpTarget.getZ() - this.getPosZ() + 0.5;
+                double diffX = this.jumpTarget.getX() - this.getX() + 0.5;
+                double diffY = this.jumpTarget.getY() - this.getY() + 0.6;
+                double diffZ = this.jumpTarget.getZ() - this.getZ() + 0.5;
                 double motY = diffY > 0 ? Math.min(diffY / 2.0F, 0.2123F) : Math.max(diffY / 2.0F, -0.2123F);
                 double motX = diffX > 0 ? Math.min(diffX / 2.0F, 0.2123F) : Math.max(diffX / 2.0F, -0.2123F);
                 double motZ = diffZ > 0 ? Math.min(diffZ / 2.0F, 0.2123F) : Math.max(diffZ / 2.0F, -0.2123F);
-                this.setMotion(motX, motY, motZ);
-                if (diffY > 0.0F && Math.abs(this.jumpTarget.getY() - (this.getPosY() + this.getMotion().y)) < 0.4F)
+                this.setDeltaMovement(motX, motY, motZ);
+                if (diffY > 0.0F && Math.abs(this.jumpTarget.getY() - (this.getY() + this.getDeltaMovement().y)) < 0.4F)
                 {
-                    this.setPosition(this.jumpTarget.getX() + 0.5, this.jumpTarget.getY() + 0.2, this.jumpTarget.getZ() + 0.5);
+                    this.setPos(this.jumpTarget.getX() + 0.5, this.jumpTarget.getY() + 0.2, this.jumpTarget.getZ() + 0.5);
                     this.jumpTarget = null;
                     this.setFalling(false);
-                    this.timeSinceLastJump = this.rand.nextInt(180) + 60;
+                    this.timeSinceLastJump = this.random.nextInt(180) + 60;
                     this.setHanging(true);
                 }
-                else if (diffY < 0.0F && Math.abs(this.jumpTarget.getY() - (this.getPosY() + this.getMotion().y)) < 0.8F)
+                else if (diffY < 0.0F && Math.abs(this.jumpTarget.getY() - (this.getY() + this.getDeltaMovement().y)) < 0.8F)
                 {
-                    this.setPosition(this.jumpTarget.getX() + 0.5, this.jumpTarget.getY() + 1.0, this.jumpTarget.getZ() + 0.5);
+                    this.setPos(this.jumpTarget.getX() + 0.5, this.jumpTarget.getY() + 1.0, this.jumpTarget.getZ() + 0.5);
                     this.jumpTarget = null;
                     this.setFalling(false);
-                    this.timeSinceLastJump = this.rand.nextInt(180) + 60;
+                    this.timeSinceLastJump = this.random.nextInt(180) + 60;
                     this.setHanging(false);
                 }
                 else
@@ -281,7 +292,7 @@ public class JuicerEntity extends MonsterEntity implements IEntityBreathable
     }
 
     @Override
-    protected PathNavigator createNavigator(World worldIn)
+    protected PathNavigation createNavigation(Level worldIn)
     {
         return new PathNavigateCeiling(this, worldIn);
     }
@@ -293,9 +304,9 @@ public class JuicerEntity extends MonsterEntity implements IEntityBreathable
 
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        super.writeAdditional(nbt);
+        super.addAdditionalSaveData(nbt);
 
         nbt.putInt("timeSinceLastJump", this.timeSinceLastJump);
         nbt.putBoolean("jumpTargetNull", this.jumpTarget == null);
@@ -308,9 +319,9 @@ public class JuicerEntity extends MonsterEntity implements IEntityBreathable
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
-        super.readAdditional(nbt);
+        super.readAdditionalSaveData(nbt);
 
         this.timeSinceLastJump = nbt.getInt("timeSinceLastJump");
         if (nbt.getBoolean("jumpTargetNull"))

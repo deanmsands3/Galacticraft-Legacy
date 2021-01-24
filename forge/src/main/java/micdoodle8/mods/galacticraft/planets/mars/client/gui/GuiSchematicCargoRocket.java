@@ -7,10 +7,10 @@ import micdoodle8.mods.galacticraft.core.inventory.ContainerRocketInventory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.inventory.ContainerSchematicCargoRocket;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.lwjgl.opengl.GL11;
 
 public class GuiSchematicCargoRocket extends GuiContainerGC<ContainerSchematicCargoRocket> implements ISchematicResultPage
@@ -19,10 +19,10 @@ public class GuiSchematicCargoRocket extends GuiContainerGC<ContainerSchematicCa
 
     private int pageIndex;
 
-    public GuiSchematicCargoRocket(ContainerSchematicCargoRocket container, PlayerInventory playerInv, ITextComponent title)
+    public GuiSchematicCargoRocket(ContainerSchematicCargoRocket container, Inventory playerInv, Component title)
     {
         super(container, playerInv, title);
-        this.ySize = 220;
+        this.imageHeight = 220;
     }
 
     @Override
@@ -41,20 +41,20 @@ public class GuiSchematicCargoRocket extends GuiContainerGC<ContainerSchematicCa
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void renderLabels(int par1, int par2)
     {
-        this.font.drawString(GCCoreUtil.translate("item.rocket_t2.cargo_rocket"), 7, -20 + 27, 4210752);
-        this.font.drawString(GCCoreUtil.translate("container.inventory"), 8, 220 - 104 + 2 + 9, 4210752);
+        this.font.draw(GCCoreUtil.translate("item.rocket_t2.cargo_rocket"), 7, -20 + 27, 4210752);
+        this.font.draw(GCCoreUtil.translate("container.inventory"), 8, 220 - 104 + 2 + 9, 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void renderBg(float par1, int par2, int par3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.textureManager.bindTexture(GuiSchematicCargoRocket.cargoRocketTexture);
-        final int var5 = (this.width - this.xSize) / 2;
-        final int var6 = (this.height - this.ySize) / 2;
-        this.blit(var5, var6, 0, 0, this.xSize, this.ySize);
+        this.minecraft.textureManager.bind(GuiSchematicCargoRocket.cargoRocketTexture);
+        final int var5 = (this.width - this.imageWidth) / 2;
+        final int var6 = (this.height - this.imageHeight) / 2;
+        this.blit(var5, var6, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

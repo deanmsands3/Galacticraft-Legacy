@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.planets.mars.dimension;
 
-import net.minecraft.world.gen.GenerationSettings;
+import net.minecraft.world.level.levelgen.ChunkGeneratorSettings;
 
-public class MarsGenSettings extends GenerationSettings
+public class MarsGenSettings extends ChunkGeneratorSettings
 {
     public int getBiomeSize()
     {
@@ -20,7 +20,7 @@ public class MarsGenSettings extends GenerationSettings
     }
 
     @Override
-    public int getBedrockFloorHeight()
+    public int getBedrockFloorPosition()
     {
         return 0;
     }

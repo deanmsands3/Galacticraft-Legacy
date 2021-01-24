@@ -8,21 +8,21 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityBuggyFuelerSingle;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityLandingPadSingle;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock, IShiftDescription, ISortable
 {
-    private static final VoxelShape SHAPE = VoxelShapes.create(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
+    private static final VoxelShape SHAPE = Shapes.box(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
 
     public BlockPad(Properties builder)
     {
@@ -30,18 +30,18 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context)
     {
         return SHAPE;
     }
 
-    private boolean checkAxis(IWorldReader world, BlockPos pos, Direction facing)
+    private boolean checkAxis(LevelReader world, BlockPos pos, Direction facing)
     {
         int sameCount = 0;
 
         for (int i = 1; i <= 3; i++)
         {
-            if (world.getBlockState(pos.offset(facing, i)).getBlock() == this)
+            if (world.getBlockState(pos.relative(facing, i)).getBlock() == this)
             {
                 sameCount++;
             }
@@ -51,7 +51,7 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos)
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos)
     {
         for (Direction direction : Direction.Plane.HORIZONTAL)
         {
@@ -60,7 +60,7 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
                 return false;
             }
 
-            if (world.getBlockState(pos.offset(Direction.DOWN)).getBlock() == this && direction == Direction.UP)
+            if (world.getBlockState(pos.relative(Direction.DOWN)).getBlock() == this && direction == Direction.UP)
             {
                 return false;
             }
@@ -69,7 +69,7 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
         return this == GCBlocks.ROCKET_LAUNCH_PAD ? new TileEntityLandingPadSingle() : new TileEntityBuggyFuelerSingle();
     }
@@ -81,7 +81,7 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
     }
 
     @Override
-    public boolean isSealed(World world, BlockPos pos, Direction direction)
+    public boolean isSealed(Level world, BlockPos pos, Direction direction)
     {
         return direction == Direction.UP;
     }
@@ -89,7 +89,7 @@ public class BlockPad extends BlockAdvancedTile implements IPartialSealableBlock
     @Override
     public String getShiftDescription(ItemStack itemStack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override

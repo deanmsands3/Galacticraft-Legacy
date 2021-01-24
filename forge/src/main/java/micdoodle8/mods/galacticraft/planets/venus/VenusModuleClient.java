@@ -19,10 +19,10 @@ import micdoodle8.mods.galacticraft.planets.venus.entities.VenusEntities;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityLaserTurret;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityTreasureChestVenus;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -54,9 +54,9 @@ public class VenusModuleClient implements IPlanetsModuleClient
 
         MinecraftForge.EVENT_BUS.register(new TickHandlerClientVenus());
 
-        RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(VenusBlocks.WEB_TORCH, cutout);
-        RenderTypeLookup.setRenderLayer(VenusBlocks.WEB_STRING, cutout);
+        RenderType cutout = RenderType.cutout();
+        ItemBlockRenderTypes.setRenderLayer(VenusBlocks.WEB_TORCH, cutout);
+        ItemBlockRenderTypes.setRenderLayer(VenusBlocks.WEB_STRING, cutout);
 
         ClientRegistry.bindTileEntityRenderer(TileEntityLaserTurret.TYPE, TileEntityLaserTurretRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityTreasureChestVenus.TYPE, rendererDispatcherIn -> new TileEntityTreasureChestRenderer(rendererDispatcherIn, new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/entity/tier_3_treasure_chest.png"), VenusBlocks.TIER_3_TREASURE_CHEST));
@@ -236,7 +236,7 @@ public class VenusModuleClient implements IPlanetsModuleClient
 
     @SubscribeEvent
     public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(ACID_EXHAUST, ParticleAcidExhaust.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(ACID_VAPOR, ParticleAcidVapor.Factory::new);
+        Minecraft.getInstance().particleEngine.register(ACID_EXHAUST, ParticleAcidExhaust.Factory::new);
+        Minecraft.getInstance().particleEngine.register(ACID_VAPOR, ParticleAcidVapor.Factory::new);
     }
 }

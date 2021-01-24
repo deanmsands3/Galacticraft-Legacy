@@ -5,8 +5,7 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityPlatform;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.util.math.AxisAlignedBB;
-
+import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 
 public class StatsClientCapability extends GCPlayerStatsClient
@@ -19,7 +18,7 @@ public class StatsClientCapability extends GCPlayerStatsClient
     public int thirdPersonView = 0;
     public long tick;
     public boolean oxygenSetupValid = true;
-    AxisAlignedBB boundingBoxBefore;
+    AABB boundingBoxBefore;
     public boolean lastOnGround;
 
     public double distanceSinceLastStep;
@@ -321,13 +320,13 @@ public class StatsClientCapability extends GCPlayerStatsClient
     }
 
     @Override
-    public AxisAlignedBB getBoundingBoxBefore()
+    public AABB getBoundingBoxBefore()
     {
         return boundingBoxBefore;
     }
 
     @Override
-    public void setBoundingBoxBefore(AxisAlignedBB boundingBoxBefore)
+    public void setBoundingBoxBefore(AABB boundingBoxBefore)
     {
         this.boundingBoxBefore = boundingBoxBefore;
     }

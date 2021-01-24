@@ -8,11 +8,10 @@ import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import java.util.Random;
 
 public class TeleportTypeMoon implements ITeleportType
@@ -24,7 +23,7 @@ public class TeleportTypeMoon implements ITeleportType
     }
 
     @Override
-    public Vector3D getPlayerSpawnLocation(ServerWorld world, ServerPlayerEntity player)
+    public Vector3D getPlayerSpawnLocation(ServerLevel world, ServerPlayer player)
     {
         if (player != null)
         {
@@ -62,49 +61,49 @@ public class TeleportTypeMoon implements ITeleportType
     }
 
     @Override
-    public Vector3D getEntitySpawnLocation(ServerWorld world, Entity entity)
+    public Vector3D getEntitySpawnLocation(ServerLevel world, Entity entity)
     {
-        return new Vector3D(entity.getPosX(), ConfigManagerCore.disableLander.get() ? 250.0 : 900.0, entity.getPosZ());
+        return new Vector3D(entity.getX(), ConfigManagerCore.disableLander.get() ? 250.0 : 900.0, entity.getZ());
     }
 
     @Override
-    public Vector3D getParaChestSpawnLocation(ServerWorld world, ServerPlayerEntity player, Random rand)
+    public Vector3D getParaChestSpawnLocation(ServerLevel world, ServerPlayer player, Random rand)
     {
         if (ConfigManagerCore.disableLander.get())
         {
             final float x = (rand.nextFloat() * 2 - 1.0F) * 4.0F;
             final float z = (rand.nextFloat() * 2 - 1.0F) * 4.0F;
-            return new Vector3D(player.getPosX() + x, 220.0, player.getPosZ() + z);
+            return new Vector3D(player.getX() + x, 220.0, player.getZ() + z);
         }
 
         return null;
     }
 
     @Override
-    public void onSpaceDimensionChanged(World newWorld, ServerPlayerEntity player, boolean ridingAutoRocket)
+    public void onSpaceDimensionChanged(Level newWorld, ServerPlayer player, boolean ridingAutoRocket)
     {
         GCPlayerStats stats = GCPlayerStats.get(player);
         if (!ridingAutoRocket && !ConfigManagerCore.disableLander.get() && stats.getTeleportCooldown() <= 0)
         {
-            if (player.abilities.isFlying)
+            if (player.abilities.flying)
             {
-                player.abilities.isFlying = false;
+                player.abilities.flying = false;
             }
 
             LanderEntity lander = new LanderEntity(player);
-            lander.setPosition(player.getPosX(), player.getPosY(), player.getPosZ());
+            lander.setPos(player.getX(), player.getY(), player.getZ());
 
-            if (!newWorld.isRemote)
+            if (!newWorld.isClientSide)
             {
-                boolean previous = CompatibilityManager.forceLoadChunks((ServerWorld) newWorld);
-                lander.forceSpawn = true;
-                newWorld.addEntity(lander);
-                lander.setWorld(newWorld);
+                boolean previous = CompatibilityManager.forceLoadChunks((ServerLevel) newWorld);
+                lander.forcedLoading = true;
+                newWorld.addFreshEntity(lander);
+                lander.setLevel(newWorld);
 //                newWorld.updateEntityWithOptionalForce(lander, true);
-                ((ServerWorld) newWorld).chunkCheck(lander);
+                ((ServerLevel) newWorld).updateChunkPos(lander);
                 player.startRiding(lander);
-                CompatibilityManager.forceLoadChunksEnd((ServerWorld) newWorld, previous);
-                GCLog.debug("Entering lander at : " + player.getPosX() + "," + player.getPosZ() + " lander spawn at: " + lander.getPosX() + "," + lander.getPosZ());
+                CompatibilityManager.forceLoadChunksEnd((ServerLevel) newWorld, previous);
+                GCLog.debug("Entering lander at : " + player.getX() + "," + player.getZ() + " lander spawn at: " + lander.getX() + "," + lander.getZ());
             }
 
             stats.setTeleportCooldown(10);
@@ -112,7 +111,7 @@ public class TeleportTypeMoon implements ITeleportType
     }
 
     @Override
-    public void setupAdventureSpawn(ServerPlayerEntity player)
+    public void setupAdventureSpawn(ServerPlayer player)
     {
         // TODO Auto-generated method stub
 

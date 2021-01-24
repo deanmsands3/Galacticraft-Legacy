@@ -8,31 +8,31 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityPlatform;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockPlatform extends BlockAdvancedTile implements IPartialSealableBlock, IShiftDescription, ISortable
 {
     public static final EnumProperty<EnumCorner> CORNER = EnumProperty.create("type", EnumCorner.class);
     public static final float HEIGHT = 0.875F;
-    protected static final VoxelShape BOUNDING_BOX = VoxelShapes.create(0.0D, 6 / 16.0D, 0.0D, 1.0D, HEIGHT, 1.0D);
-    protected static final VoxelShape BOUNDING_BOX_ZEROG = VoxelShapes.create(0.0D, 6 / 16.0D, 0.0D, 1.0D, 1.0D, 1.0D);
+    protected static final VoxelShape BOUNDING_BOX = Shapes.box(0.0D, 6 / 16.0D, 0.0D, 1.0D, HEIGHT, 1.0D);
+    protected static final VoxelShape BOUNDING_BOX_ZEROG = Shapes.box(0.0D, 6 / 16.0D, 0.0D, 1.0D, 1.0D, 1.0D);
     public static boolean ignoreCollisionTests;
 
-    public enum EnumCorner implements IStringSerializable
+    public enum EnumCorner implements StringRepresentable
     {
         NONE(0, "none"),
         NW(1, "sw"),
@@ -63,7 +63,7 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
         }
 
         @Override
-        public String getName()
+        public String getSerializedName()
         {
             return this.name;
         }
@@ -72,7 +72,7 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
     public BlockPlatform(Properties builder)
     {
         super(builder);
-        this.setDefaultState(stateContainer.getBaseState().with(CORNER, EnumCorner.NONE));
+        this.registerDefaultState(stateDefinition.any().setValue(CORNER, EnumCorner.NONE));
     }
 
 //    @Override
@@ -81,13 +81,13 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
 //        return GalacticraftCore.galacticraftBlocksTab;
 //    }
 
-    private boolean checkAxis(World worldIn, BlockPos pos, Block block, Direction facing)
+    private boolean checkAxis(Level worldIn, BlockPos pos, Block block, Direction facing)
     {
         int sameCount = 0;
         for (int i = 1; i <= 2; i++)
         {
-            BlockState bs = worldIn.getBlockState(pos.offset(facing, i));
-            if (bs.getBlock() == block && bs.get(BlockPlatform.CORNER) == BlockPlatform.EnumCorner.NONE)
+            BlockState bs = worldIn.getBlockState(pos.relative(facing, i));
+            if (bs.getBlock() == block && bs.getValue(BlockPlatform.CORNER) == BlockPlatform.EnumCorner.NONE)
             {
                 sameCount++;
             }
@@ -152,7 +152,7 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
 //    }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state)
+    public RenderShape getRenderShape(BlockState state)
     {
         return BlockRenderType.MODEL;
     }
@@ -164,9 +164,9 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
 //    }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world)
     {
-        return new TileEntityPlatform(state.get(CORNER));
+        return new TileEntityPlatform(state.getValue(CORNER));
     }
 
     @Override
@@ -176,9 +176,9 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        final TileEntity var9 = worldIn.getTileEntity(pos);
+        final BlockEntity var9 = worldIn.getBlockEntity(pos);
 
         if (state.getBlock() != this || newState.getBlock() != this)
         {
@@ -188,11 +188,11 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
             }
         }
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public boolean isSealed(World worldIn, BlockPos pos, Direction direction)
+    public boolean isSealed(Level worldIn, BlockPos pos, Direction direction)
     {
         return direction == Direction.UP;
     }
@@ -206,7 +206,7 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
     @Override
     public String getShiftDescription(ItemStack stack)
     {
-        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
+        return GCCoreUtil.translate(this.getDescriptionId() + ".description");
     }
 
     @Override
@@ -222,7 +222,7 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
 //    }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(CORNER);
     }
@@ -259,19 +259,19 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
 ////    }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
         if (ignoreCollisionTests)
         {
-            return VoxelShapes.empty();
+            return Shapes.empty();
         }
 
-        TileEntity tile = worldIn.getTileEntity(pos);
+        BlockEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof TileEntityPlatform)
         {
             if (((TileEntityPlatform) tile).noCollide())
             {
-                return VoxelShapes.empty();
+                return Shapes.empty();
             }
         }
 
@@ -279,9 +279,9 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context)
     {
-        if (worldIn instanceof World && ((World) worldIn).dimension instanceof IZeroGDimension)
+        if (worldIn instanceof Level && ((Level) worldIn).dimension instanceof IZeroGDimension)
         {
             return BOUNDING_BOX_ZEROG;
         }

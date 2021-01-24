@@ -7,13 +7,12 @@ import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.api.world.IGalacticraftDimension;
 import micdoodle8.mods.galacticraft.api.world.ITeleportType;
 import micdoodle8.mods.galacticraft.api.world.SpaceStationType;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.OverworldDimension;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -22,7 +21,7 @@ import java.util.*;
 
 public class GalacticraftRegistry
 {
-    private static final Map<Class<? extends Dimension>, ITeleportType> teleportTypeMap = new HashMap<Class<? extends Dimension>, ITeleportType>();
+    private static final Map<Class<? extends LevelStem>, ITeleportType> teleportTypeMap = new HashMap<>();
     private static final List<SpaceStationType> spaceStations = new ArrayList<SpaceStationType>();
     private static final List<INasaWorkbenchRecipe> rocketBenchT1Recipes = new ArrayList<INasaWorkbenchRecipe>();
     private static final List<INasaWorkbenchRecipe> buggyBenchRecipes = new ArrayList<INasaWorkbenchRecipe>();
@@ -30,7 +29,7 @@ public class GalacticraftRegistry
     private static final List<INasaWorkbenchRecipe> cargoRocketRecipes = new ArrayList<INasaWorkbenchRecipe>();
     private static final List<INasaWorkbenchRecipe> rocketBenchT3Recipes = new ArrayList<INasaWorkbenchRecipe>();
     private static final List<INasaWorkbenchRecipe> astroMinerRecipes = new ArrayList<INasaWorkbenchRecipe>();
-    private static final Map<Class<? extends Dimension>, ResourceLocation> rocketGuiMap = new HashMap<Class<? extends Dimension>, ResourceLocation>();
+    private static final Map<Class<? extends LevelStem>, ResourceLocation> rocketGuiMap = new HashMap<>();
     private static final Map<Integer, List<ItemStack>> dungeonLootMap = new HashMap<Integer, List<ItemStack>>();
     private static final List<DimensionType> dimensionTypeIDs = new ArrayList<>();
     private static final List<IGameScreen> gameScreens = new ArrayList<IGameScreen>();
@@ -47,7 +46,7 @@ public class GalacticraftRegistry
      * @param type  an ITeleportType-implemented class that will be used for the
      *              provided world type
      */
-    public static void registerTeleportType(Class<? extends Dimension> clazz, ITeleportType type)
+    public static void registerTeleportType(Class<? extends LevelStem> clazz, ITeleportType type)
     {
         if (!GalacticraftRegistry.teleportTypeMap.containsKey(clazz))
         {
@@ -62,7 +61,7 @@ public class GalacticraftRegistry
      * @param clazz     The World dimension class
      * @param rocketGui Resource Location for the gui texture
      */
-    public static void registerRocketGui(Class<? extends Dimension> clazz, ResourceLocation rocketGui)
+    public static void registerRocketGui(Class<? extends LevelStem> clazz, ResourceLocation rocketGui)
     {
         if (!GalacticraftRegistry.rocketGuiMap.containsKey(clazz))
         {
@@ -186,11 +185,11 @@ public class GalacticraftRegistry
         GalacticraftRegistry.astroMinerRecipes.clear();
     }
 
-    public static ITeleportType getTeleportTypeForDimension(Class<? extends Dimension> clazz)
+    public static ITeleportType getTeleportTypeForDimension(Class<? extends LevelStem> clazz)
     {
         if (!IGalacticraftDimension.class.isAssignableFrom(clazz))
         {
-            clazz = OverworldDimension.class;
+            clazz = .class;
         }
         return GalacticraftRegistry.teleportTypeMap.get(clazz);
     }
@@ -264,7 +263,7 @@ public class GalacticraftRegistry
     {
         if (!IGalacticraftDimension.class.isAssignableFrom(clazz))
         {
-            clazz = OverworldDimension.class;
+            clazz = NormalDimension.class;
         }
         return GalacticraftRegistry.rocketGuiMap.get(clazz);
     }
@@ -446,7 +445,7 @@ public class GalacticraftRegistry
                 }
                 else if (o instanceof ItemStack)
                 {
-                    if (stack.getItem() == ((ItemStack) o).getItem() && stack.getDamage() == ((ItemStack) o).getDamage())
+                    if (stack.getItem() == ((ItemStack) o).getItem() && stack.getDamageValue() == ((ItemStack) o).getDamageValue())
                     {
                         return entry.getKey();
                     }

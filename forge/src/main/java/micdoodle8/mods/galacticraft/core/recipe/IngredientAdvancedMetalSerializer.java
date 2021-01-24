@@ -6,10 +6,10 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.mars.items.MarsItems;
 import micdoodle8.mods.galacticraft.planets.venus.items.VenusItems;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
 
 import java.util.stream.Stream;
@@ -18,51 +18,51 @@ public class IngredientAdvancedMetalSerializer implements IIngredientSerializer<
 {
     public static final IngredientAdvancedMetalSerializer INSTANCE = new IngredientAdvancedMetalSerializer();
 
-    public Ingredient parse(PacketBuffer buffer)
+    public Ingredient parse(FriendlyByteBuf buffer)
     {
-        return Ingredient.fromItemListStream(Stream.generate(() -> new Ingredient.SingleItemList(buffer.readItemStack())).limit(buffer.readVarInt()));
+        return Ingredient.fromValues(Stream.generate(() -> new Ingredient.ItemValue(buffer.readItem())).limit(buffer.readVarInt()));
     }
 
     public Ingredient parse(JsonObject json)
     {
-        String metal = JSONUtils.getString(json, "metal");
+        String metal = GsonHelper.getAsString(json, "metal");
         if (metal.equals("meteoric_iron_ingot"))
         {
-            return Ingredient.fromStacks(new ItemStack(GCItems.METEORIC_IRON_INGOT, 1));// : new OreIngredient("ingotMeteoricIron");
+            return Ingredient.of(new ItemStack(GCItems.METEORIC_IRON_INGOT, 1));// : new OreIngredient("ingotMeteoricIron");
         }
         if (metal.equals("meteoric_iron_plate"))
         {
-            return Ingredient.fromStacks(new ItemStack(GCItems.COMPRESSED_METEORIC_IRON, 1));// : new OreIngredient("compressedMeteoricIron");
+            return Ingredient.of(new ItemStack(GCItems.COMPRESSED_METEORIC_IRON, 1));// : new OreIngredient("compressedMeteoricIron");
         }
         if (metal.equals("desh_ingot"))
         {
-            return GalacticraftCore.isPlanetsLoaded ? Ingredient.fromStacks(new ItemStack(MarsItems.DESH_INGOT, 1)) : Ingredient.fromItems(GCItems.TIER_1_HEAVY_DUTY_PLATE);
+            return GalacticraftCore.isPlanetsLoaded ? Ingredient.of(new ItemStack(MarsItems.DESH_INGOT, 1)) : Ingredient.of(GCItems.TIER_1_HEAVY_DUTY_PLATE);
         }
         if (metal.equals("desh_plate"))
         {
-            return Ingredient.fromStacks(new ItemStack(MarsItems.COMPRESSED_DESH, 1));// : new OreIngredient("compressedDesh");
+            return Ingredient.of(new ItemStack(MarsItems.COMPRESSED_DESH, 1));// : new OreIngredient("compressedDesh");
         }
         if (metal.equals("titanium_ingot"))
         {
-            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.TITANIUM_INGOT, 1));// : new OreIngredient("ingotTitanium");
+            return Ingredient.of(new ItemStack(AsteroidsItems.TITANIUM_INGOT, 1));// : new OreIngredient("ingotTitanium");
         }
         if (metal.equals("titanium_plate"))
         {
-            return Ingredient.fromStacks(new ItemStack(AsteroidsItems.COMPRESSED_TITANIUM, 1));// : new OreIngredient("compressedTitanium");
+            return Ingredient.of(new ItemStack(AsteroidsItems.COMPRESSED_TITANIUM, 1));// : new OreIngredient("compressedTitanium");
         }
         if (metal.equals("lead_ingot"))
         {
-            return Ingredient.fromStacks(new ItemStack(VenusItems.LEAD_INGOT, 1));// : new OreIngredient("ingotLead");
+            return Ingredient.of(new ItemStack(VenusItems.LEAD_INGOT, 1));// : new OreIngredient("ingotLead");
         }
-        return Ingredient.fromItems(GCItems.INFINITE_BATTERY);
+        return Ingredient.of(GCItems.INFINITE_BATTERY);
     }
 
-    public void write(PacketBuffer buffer, Ingredient ingredient)
+    public void write(FriendlyByteBuf buffer, Ingredient ingredient)
     {
-        ItemStack[] items = ingredient.getMatchingStacks();
+        ItemStack[] items = ingredient.getItems();
         buffer.writeVarInt(items.length);
 
         for (ItemStack stack : items)
-            buffer.writeItemStack(stack);
+            buffer.writeItem(stack);
     }
 }

@@ -32,36 +32,41 @@ import micdoodle8.mods.galacticraft.core.util.*;
 import micdoodle8.mods.galacticraft.core.wrappers.PlayerGearData;
 import micdoodle8.mods.galacticraft.planets.asteroids.AsteroidsModule;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.LocatableSound;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.FireChargeItem;
-import net.minecraft.item.FlintAndSteelItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.biome.DesertBiome;
-import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.AbstractSoundInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.FireChargeItem;
+import net.minecraft.world.item.FlintAndSteelItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.biome.DesertBiome;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GravelBlock;
+import net.minecraft.world.level.block.SandBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -147,7 +152,7 @@ public class EventHandlerGC
     @SubscribeEvent
     public static void onEntityDamaged(LivingHurtEvent event)
     {
-        if (event.getSource().damageType.equals(DamageSource.ON_FIRE.damageType))
+        if (event.getSource().damageType.equals(DamageSource.ON_FIRE.msgId))
         {
             if (OxygenUtil.noAtmosphericCombustion(event.getEntityLiving().world.getDimension()))
             {
@@ -156,9 +161,9 @@ public class EventHandlerGC
                     return;
                 }
 
-                if (event.getEntityLiving().world instanceof ServerWorld)
+                if (event.getEntityLiving().world instanceof ServerLevel)
                 {
-                    ((ServerWorld) event.getEntityLiving().world).spawnParticle(ParticleTypes.SMOKE, event.getEntityLiving().getPosX(), event.getEntityLiving().getPosY() + event.getEntityLiving().getBoundingBox().maxY - event.getEntityLiving().getBoundingBox().minY, event.getEntityLiving().getPosZ(), 50, 0.0, 0.05, 0.0, 0.001);
+                    ((ServerLevel) event.getEntityLiving().world).sendParticles(ParticleTypes.SMOKE, event.getEntityLiving().getPosX(), event.getEntityLiving().getPosY() + event.getEntityLiving().getBoundingBox().maxY - event.getEntityLiving().getBoundingBox().minY, event.getEntityLiving().getPosZ(), 50, 0.0, 0.05, 0.0, 0.001);
                 }
 
                 event.getEntityLiving().extinguish();
@@ -169,10 +174,10 @@ public class EventHandlerGC
     @SubscribeEvent
     public static void onEntityFall(LivingFallEvent event)
     {
-        if (event.getEntityLiving() instanceof PlayerEntity)
+        if (event.getEntityLiving() instanceof Player)
         {
-            PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-            if (player.getRidingEntity() instanceof EntityAutoRocket || player.getRidingEntity() instanceof EntityLanderBase)
+            Player player = (Player) event.getEntityLiving();
+            if (player.getVehicle() instanceof EntityAutoRocket || player.getVehicle() instanceof EntityLanderBase)
             {
                 event.setDistance(0.0F);
                 event.setCanceled(true);
@@ -189,8 +194,8 @@ public class EventHandlerGC
     @SubscribeEvent
     public static void blockBreakSpeed(PlayerEvent.BreakSpeed event)
     {
-        PlayerEntity p = event.getPlayer();
-        if (!p.onGround && p.world.getDimension() instanceof IZeroGDimension && !ConfigManagerCore.hardMode.get() && event.getOriginalSpeed() < 5.0F)
+        Player p = event.getPlayer();
+        if (!p.onGround && p.level.getDimension() instanceof IZeroGDimension && !ConfigManagerCore.hardMode.get() && event.getOriginalSpeed() < 5.0F)
         {
             event.setNewSpeed(event.getOriginalSpeed() * 5.0F);
         }
@@ -205,14 +210,14 @@ public class EventHandlerGC
             return;
         }
 
-        final World worldObj = event.getPlayer().world;
+        final Level worldObj = event.getPlayer().world;
         if (worldObj == null)
         {
             return;
         }
 
         final ItemStack heldStack = event.getPlayer().inventory.getCurrentItem();
-        final TileEntity tileClicked = worldObj.getTileEntity(event.getPos());
+        final BlockEntity tileClicked = worldObj.getBlockEntity(event.getPos());
 
         if (!heldStack.isEmpty())
         {
@@ -236,7 +241,7 @@ public class EventHandlerGC
             return;
         }
 
-        final World worldObj = event.getPlayer().world;
+        final Level worldObj = event.getPlayer().world;
         if (worldObj == null)
         {
             return;
@@ -244,14 +249,14 @@ public class EventHandlerGC
 
         final Block idClicked = worldObj.getBlockState(event.getPos()).getBlock();
 
-        if (idClicked instanceof BedBlock && worldObj.dimension instanceof IGalacticraftDimension && !worldObj.isRemote && !((IGalacticraftDimension) worldObj.dimension).hasBreathableAtmosphere())
+        if (idClicked instanceof BedBlock && worldObj.dimension instanceof IGalacticraftDimension && !worldObj.isClientSide && !((IGalacticraftDimension) worldObj.dimension).hasBreathableAtmosphere())
         {
             if (GalacticraftCore.isPlanetsLoaded)
             {
                 GCPlayerStats stats = GCPlayerStats.get(event.getPlayer());
                 if (!stats.hasReceivedBedWarning())
                 {
-                    event.getPlayer().sendMessage(new StringTextComponent(GCCoreUtil.translate("gui.bed_fail.message")));
+                    event.getPlayer().sendMessage(new TextComponent(GCCoreUtil.translate("gui.bed_fail.message")));
                     stats.setReceivedBedWarning(true);
                 }
             }
@@ -266,7 +271,7 @@ public class EventHandlerGC
 
             //Optionally prevent beds from exploding - depends on canRespawnHere() in the WorldProvider interacting with this
             EventHandlerGC.bedActivated = true;
-            if (worldObj.dimension.canRespawnHere() && !EventHandlerGC.bedActivated)
+            if (worldObj.dimension.mayRespawn() && !EventHandlerGC.bedActivated)
             {
                 EventHandlerGC.bedActivated = true;
 
@@ -281,7 +286,7 @@ public class EventHandlerGC
         }
 
         final ItemStack heldStack = event.getPlayer().inventory.getCurrentItem();
-        final TileEntity tileClicked = worldObj.getTileEntity(event.getPos());
+        final BlockEntity tileClicked = worldObj.getBlockEntity(event.getPos());
 
         if (!heldStack.isEmpty())
         {
@@ -306,9 +311,9 @@ public class EventHandlerGC
 
             if (heldStack.getItem() instanceof FlintAndSteelItem || heldStack.getItem() instanceof FireChargeItem)
             {
-                if (!worldObj.isRemote)
+                if (!worldObj.isClientSide)
                 {
-                    if (idClicked != Blocks.TNT && OxygenUtil.noAtmosphericCombustion(event.getPlayer().world.getDimension()) && !OxygenUtil.isAABBInBreathableAirBlock(event.getEntityLiving().world, new AxisAlignedBB(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), event.getPos().getX() + 1, event.getPos().getY() + 2, event.getPos().getZ() + 1)))
+                    if (idClicked != Blocks.TNT && OxygenUtil.noAtmosphericCombustion(event.getPlayer().world.getDimension()) && !OxygenUtil.isAABBInBreathableAirBlock(event.getEntityLiving().world, new AABB(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), event.getPos().getX() + 1, event.getPos().getY() + 2, event.getPos().getZ() + 1)))
                     {
                         event.setCanceled(true);
                     }
@@ -325,21 +330,21 @@ public class EventHandlerGC
     public static void entityLivingEvent(LivingEvent.LivingUpdateEvent event)
     {
         final LivingEntity entityLiving = event.getEntityLiving();
-        if (entityLiving instanceof ServerPlayerEntity)
+        if (entityLiving instanceof ServerPlayer)
         {
-            GalacticraftCore.handler.onPlayerUpdate((ServerPlayerEntity) entityLiving);
+            GalacticraftCore.handler.onPlayerUpdate((ServerPlayer) entityLiving);
             if (GalacticraftCore.isPlanetsLoaded)
             {
-                AsteroidsModule.playerHandler.onPlayerUpdate((ServerPlayerEntity) entityLiving);
+                AsteroidsModule.playerHandler.onPlayerUpdate((ServerPlayer) entityLiving);
             }
             return;
         }
 
-        if (entityLiving.ticksExisted % ConfigManagerCore.suffocationCooldown.get() == 0)
+        if (entityLiving.tickCount % ConfigManagerCore.suffocationCooldown.get() == 0)
         {
-            if (entityLiving.world.getDimension() instanceof IGalacticraftDimension)
+            if (entityLiving.level.getDimension() instanceof IGalacticraftDimension)
             {
-                if (!(entityLiving instanceof PlayerEntity) && (!(entityLiving instanceof IEntityBreathable) || !((IEntityBreathable) entityLiving).canBreath()) && !((IGalacticraftDimension) entityLiving.world.getDimension()).hasBreathableAtmosphere())
+                if (!(entityLiving instanceof Player) && (!(entityLiving instanceof IEntityBreathable) || !((IEntityBreathable) entityLiving).canBreath()) && !((IGalacticraftDimension) entityLiving.level.getDimension()).hasBreathableAtmosphere())
                 {
                     if (!OxygenUtil.isAABBInBreathableAirBlock(entityLiving))
                     {
@@ -351,7 +356,7 @@ public class EventHandlerGC
                             return;
                         }
 
-                        entityLiving.attackEntityFrom(DamageSourceGC.oxygenSuffocation, Math.max(ConfigManagerCore.suffocationDamage.get() / 2, 1));
+                        entityLiving.hurt(DamageSourceGC.oxygenSuffocation, Math.max(ConfigManagerCore.suffocationDamage.get() / 2, 1));
 
                         GCCoreOxygenSuffocationEvent suffocationEventPost = new GCCoreOxygenSuffocationEvent.Post(entityLiving);
                         MinecraftForge.EVENT_BUS.post(suffocationEventPost);
@@ -436,7 +441,7 @@ public class EventHandlerGC
 //        EventHandlerGC.generateOil(event.getWorld(), event.getRand(), worldX + 15, worldZ + 15, false);
 //    } TODO Oil gen
 
-    public static boolean oilPresent(IWorld world, Random rand, int x, int z, BlockVec3 pos)
+    public static boolean oilPresent(LevelAccessor world, Random rand, int x, int z, BlockVec3 pos)
     {
         boolean doGen2 = false;
 
@@ -499,7 +504,7 @@ public class EventHandlerGC
      * xx, zz are the central position of 4 chunks: the chunk currently being populated + 1 in the x,z plane
      * We must not stray more than 1 chunk away from this position, that's 16 blocks
      */
-    public static void generateOil(IWorld world, Random rand, int xx, int zz, boolean testFirst)
+    public static void generateOil(LevelAccessor world, Random rand, int xx, int zz, boolean testFirst)
     {
         BlockVec3 pos = new BlockVec3();
         if (oilPresent(world, rand, xx, zz, pos))
@@ -555,7 +560,7 @@ public class EventHandlerGC
                                 continue;
                             }
 
-                            world.setBlockState(new BlockPos(bx + x, by + cy, bz + z), crudeOil, 2);
+                            world.setBlock(new BlockPos(bx + x, by + cy, bz + z), crudeOil, 2);
                         }
                     }
                 }
@@ -563,7 +568,7 @@ public class EventHandlerGC
         }
     }
 
-    private static boolean checkOilPresent(IWorld world, int x, int cy, int z, int r)
+    private static boolean checkOilPresent(LevelAccessor world, int x, int cy, int z, int r)
     {
         final int r2 = r * r;
 
@@ -613,7 +618,7 @@ public class EventHandlerGC
         return false;
     }
 
-    public static void retrogenOil(IWorld world, IChunk chunk)
+    public static void retrogenOil(LevelAccessor world, ChunkAccess chunk)
     {
         int cx = chunk.getPos().x;
         int cz = chunk.getPos().z;
@@ -621,7 +626,7 @@ public class EventHandlerGC
         generateOil(world, new Random(), cx << 4, cz << 4, true);
     }
 
-    private static boolean checkBlock(IWorld w, BlockPos pos)
+    private static boolean checkBlock(LevelAccessor w, BlockPos pos)
     {
         BlockState state = w.getBlockState(pos);
         Block b = state.getBlock();
@@ -632,7 +637,7 @@ public class EventHandlerGC
         return /*b instanceof FlowingFluidBlock && */b != GCFluids.OIL.getBlock();
     }
 
-    private static boolean checkBlockAbove(IWorld w, BlockPos pos)
+    private static boolean checkBlockAbove(LevelAccessor w, BlockPos pos)
     {
         Block b = w.getBlockState(pos).getBlock();
         if (b instanceof SandBlock)
@@ -665,7 +670,7 @@ public class EventHandlerGC
                 List<Object> objList = new ArrayList<>();
                 objList.add(iArray);
 
-                GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SCHEMATIC_LIST, GCCoreUtil.getDimensionType(event.player.world), objList), event.player);
+                GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SCHEMATIC_LIST, GCCoreUtil.getDimensionType(event.player.level), objList), event.player);
             }
         }
     }
@@ -698,7 +703,7 @@ public class EventHandlerGC
 //                benchY = ((GuiPositionedContainer)cs).getY();
 //                benchZ = ((GuiPositionedContainer)cs).getZ();
 //            }
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_OPEN_SCHEMATIC_PAGE, GCCoreUtil.getDimensionType(Minecraft.getInstance().world), new Object[]{page.getPageID()}));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_OPEN_SCHEMATIC_PAGE, GCCoreUtil.getDimensionType(Minecraft.getInstance().level), new Object[]{page.getPageID()}));
 //            Minecraft.getInstance().player.openGui(GalacticraftCore.instance, page.getGuiID(), Minecraft.getInstance().player.world, benchX, benchY, benchZ); TODO Gui
         }
     }
@@ -706,7 +711,7 @@ public class EventHandlerGC
     @OnlyIn(Dist.CLIENT)
     private static ISchematicPage getNextSchematic(int currentIndex)
     {
-        ClientPlayerEntity player = PlayerUtil.getPlayerBaseClientFromPlayer(Minecraft.getInstance().player, false);
+        LocalPlayer player = PlayerUtil.getPlayerBaseClientFromPlayer(Minecraft.getInstance().player, false);
         GCPlayerStatsClient stats = GCPlayerStatsClient.get(player);
 
         final int size = stats.getUnlockedSchematics().size();
@@ -743,7 +748,7 @@ public class EventHandlerGC
     @OnlyIn(Dist.CLIENT)
     private static ISchematicPage getLastSchematic(int currentIndex)
     {
-        ClientPlayerEntity player = PlayerUtil.getPlayerBaseClientFromPlayer(Minecraft.getInstance().player, false);
+        LocalPlayer player = PlayerUtil.getPlayerBaseClientFromPlayer(Minecraft.getInstance().player, false);
         GCPlayerStatsClient stats = GCPlayerStatsClient.get(player);
 
         final int size = stats.getUnlockedSchematics().size();
@@ -859,16 +864,16 @@ public class EventHandlerGC
     @SubscribeEvent
     public static void onLeaveBedButtonClicked(SleepCancelledEvent event)
     {
-        PlayerEntity player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
 
-        BlockPos c = player.getBedLocation(player.world.dimension.getType());
+        BlockPos c = player.getRespawnPosition(player.level.dimension.getType());
 
         if (c != null)
         {
             EventWakePlayer event0 = new EventWakePlayer(player, c, true, true, false, true);
             MinecraftForge.EVENT_BUS.post(event0);
 //            player.wakeUpPlayer(true, true, false);
-            player.wakeUp();
+            player.stopSleeping();
 
 //            if (player.world.isRemote && GalacticraftCore.isPlanetsLoaded)
 //            {
@@ -884,7 +889,7 @@ public class EventHandlerGC
         {
             event.setCustomSummonedAid(new EvolvedZombieEntity(GCEntities.EVOLVED_ZOMBIE, event.getWorld()));
 
-            if (((LivingEntity) event.getEntity()).getRNG().nextFloat() < ((EvolvedZombieEntity) event.getEntity()).getAttribute(((EvolvedZombieEntity) event.getEntity()).getReinforcementsAttribute()).getValue())
+            if (((LivingEntity) event.getEntity()).getRandom().nextFloat() < ((EvolvedZombieEntity) event.getEntity()).getAttribute(((EvolvedZombieEntity) event.getEntity()).getReinforcementsAttribute()).getValue())
             {
                 event.setResult(Event.Result.ALLOW);
             }
@@ -899,14 +904,14 @@ public class EventHandlerGC
     @SubscribeEvent
     public static void overrideSkyColor(EntityViewRenderEvent.FogColors event)
     {
-        ClientPlayerEntity entity = Minecraft.getInstance().player;
-        ClientWorld worldclient = Minecraft.getInstance().world;
+        LocalPlayer entity = Minecraft.getInstance().player;
+        ClientLevel worldclient = Minecraft.getInstance().level;
         //Disable any night vision effects on the sky, if the planet has no atmosphere
-        if (entity != null && entity.isPotionActive(Effects.NIGHT_VISION))
+        if (entity != null && entity.hasEffect(MobEffects.NIGHT_VISION))
         {
             if (worldclient.dimension instanceof IGalacticraftDimension && ((IGalacticraftDimension) worldclient.dimension).hasNoAtmosphere() && !((IGalacticraftDimension) worldclient.dimension).hasBreathableAtmosphere())
             {
-                Vec3d vec = worldclient.getFogColor(1.0F);
+                Vec3 vec = worldclient.getFogColor(1.0F);
                 event.setRed((float) vec.x);
                 event.setGreen((float) vec.y);
                 event.setBlue((float) vec.z);
@@ -931,9 +936,9 @@ public class EventHandlerGC
             return;
         }
 
-        ClientPlayerEntity player = Minecraft.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
 
-        if (player != null && player.world != null && player.world.getDimension() instanceof IGalacticraftDimension)
+        if (player != null && player.level != null && player.level.getDimension() instanceof IGalacticraftDimension)
         {
             //Only modify standard game sounds, not music
             if (event.getResultSound().getAttenuationType() != ISound.AttenuationType.NONE)
@@ -948,9 +953,9 @@ public class EventHandlerGC
                 {
                     // If the player doesn't have a frequency module, and the player isn't in an oxygenated environment
                     // Note: this is a very simplistic approach, and nowhere near realistic, but required for performance reasons
-                    AxisAlignedBB bb = new AxisAlignedBB(x - 0.0015D, y - 0.0015D, z - 0.0015D, x + 0.0015D, y + 0.0015D, z + 0.0015D);
+                    AABB bb = new AABB(x - 0.0015D, y - 0.0015D, z - 0.0015D, x + 0.0015D, y + 0.0015D, z + 0.0015D);
                     boolean playerInAtmosphere = OxygenUtil.isAABBInBreathableAirBlock(player);
-                    boolean soundInAtmosphere = OxygenUtil.isAABBInBreathableAirBlock(player.world, bb);
+                    boolean soundInAtmosphere = OxygenUtil.isAABBInBreathableAirBlock(player.level, bb);
                     if ((!playerInAtmosphere || !soundInAtmosphere))
                     {
                         float volume = 1.0F;
@@ -960,9 +965,9 @@ public class EventHandlerGC
                         {
                             try
                             {
-                                volumeField = LocatableSound.class.getDeclaredField(GCCoreUtil.isDeobfuscated() ? "volume" : "field_147662_b"); // TODO Obfuscated environment support
+                                volumeField = AbstractSoundInstance.class.getDeclaredField(GCCoreUtil.isDeobfuscated() ? "volume" : "field_147662_b"); // TODO Obfuscated environment support
                                 volumeField.setAccessible(true);
-                                pitchField = LocatableSound.class.getDeclaredField(GCCoreUtil.isDeobfuscated() ? "pitch" : "field_147663_c"); // TODO Obfuscated environment support
+                                pitchField = AbstractSoundInstance.class.getDeclaredField(GCCoreUtil.isDeobfuscated() ? "pitch" : "field_147663_c"); // TODO Obfuscated environment support
                                 pitchField.setAccessible(true);
                             }
                             catch (Exception e)
@@ -975,8 +980,8 @@ public class EventHandlerGC
                         {
                             try
                             {
-                                volume = event.getSound() instanceof LocatableSound ? (float) volumeField.get(event.getSound()) : 1.0F;
-                                pitch = event.getSound() instanceof LocatableSound ? (float) pitchField.get(event.getSound()) : 1.0F;
+                                volume = event.getSound() instanceof AbstractSoundInstance ? (float) volumeField.get(event.getSound()) : 1.0F;
+                                pitch = event.getSound() instanceof AbstractSoundInstance ? (float) pitchField.get(event.getSound()) : 1.0F;
                             }
                             catch (IllegalAccessException e)
                             {
@@ -997,7 +1002,7 @@ public class EventHandlerGC
                         }
 
                         //If it's not a duplicate: play the same sound but at reduced volume
-                        float newVolume = volume / Math.max(0.01F, ((IGalacticraftDimension) player.world.getDimension()).getSoundVolReductionAmount());
+                        float newVolume = volume / Math.max(0.01F, ((IGalacticraftDimension) player.level.getDimension()).getSoundVolReductionAmount());
 
 //                        soundPlayList.add(new SoundPlayEntry(event.getName(), x, y, z, newVolume));
 //                        SoundEvent soundEvent = SoundEvent.REGISTRY.getObject(event.getResultSound().getSoundLocation());

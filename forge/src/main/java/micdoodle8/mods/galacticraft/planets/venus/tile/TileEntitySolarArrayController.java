@@ -20,32 +20,32 @@ import micdoodle8.mods.galacticraft.planets.venus.dimension.DimensionVenus;
 import micdoodle8.mods.galacticraft.core.Annotations.NetworkedField;
 import micdoodle8.mods.galacticraft.planets.venus.inventory.ContainerGeothermal;
 import micdoodle8.mods.galacticraft.planets.venus.inventory.ContainerSolarArrayController;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-public class TileEntitySolarArrayController extends TileBaseUniversalElectricalSource implements IDisableableMachine, IInventoryDefaults, ISidedInventory, IConnector, INamedContainerProvider
+public class TileEntitySolarArrayController extends TileBaseUniversalElectricalSource implements IDisableableMachine, IInventoryDefaults, WorldlyContainer, IConnector, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.SOLAR_ARRAY_CONTROLLER)
-    public static TileEntityType<TileEntitySolarArrayController> TYPE;
+    public static BlockEntityType<TileEntitySolarArrayController> TYPE;
 
     private int solarStrength = 0;
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -80,7 +80,7 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
             this.initialised = true;
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.receiveEnergyGC(null, this.generateWatts, false);
 
@@ -99,7 +99,7 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
             solarArray.clear();
             for (Direction direction : outputDirections)
             {
-                TileEntity tileAdj = thisVec.getTileEntityOnSide(this.world, direction);
+                BlockEntity tileAdj = thisVec.getTileEntityOnSide(this.level, direction);
 
                 if (tileAdj != null)
                 {
@@ -129,7 +129,7 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
 
         super.tick();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.recharge(this.getInventory().get(0));
 
@@ -143,25 +143,25 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
                 this.solarStrength = 0;
                 int arraySizeWithinRange = 0;
                 BlockPos offset;
-                if (this.world.isDaytime() && (this.world.getDimension() instanceof IGalacticraftDimension || !this.world.isRaining() && !this.world.isThundering()))
+                if (this.level.isDay() && (this.level.getDimension() instanceof IGalacticraftDimension || !this.level.isRaining() && !this.level.isThundering()))
                 {
                     for (ITransmitter transmitter : solarArray)
                     {
-                        TileEntity tile = (TileEntity) transmitter;
-                        Vec3i diff = tile.getPos().subtract(this.getPos());
+                        BlockEntity tile = (BlockEntity) transmitter;
+                        Vec3i diff = tile.getBlockPos().subtract(this.getBlockPos());
                         if (Math.abs(diff.getX()) <= 16 && diff.getY() == 0 && Math.abs(diff.getZ()) <= 16)
                         {
                             arraySizeWithinRange++;
-                            if (this.world.canBlockSeeSky(tile.getPos()))
+                            if (this.level.canSeeSkyFromBelowWater(tile.getBlockPos()))
                             {
                                 boolean valid = true;
 
-                                for (int y = this.getPos().getY() + 1; y < 256; y++)
+                                for (int y = this.getBlockPos().getY() + 1; y < 256; y++)
                                 {
-                                    offset = this.getPos().add(0, y, 0);
-                                    BlockState state = this.world.getBlockState(offset);
+                                    offset = this.getBlockPos().offset(0, y, 0);
+                                    BlockState state = this.level.getBlockState(offset);
 
-                                    if (state.isOpaqueCube(world, offset))
+                                    if (state.isSolidRender(level, offset))
                                     {
                                         valid = false;
                                         break;
@@ -181,20 +181,20 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
             }
         }
 
-        float angle = this.world.getCelestialAngle(1.0F) - 0.7845194F < 0 ? 1.0F - 0.7845194F : -0.7845194F;
-        float celestialAngle = (this.world.getCelestialAngle(1.0F) + angle) * 360.0F;
-        if (!(this.world.getDimension() instanceof DimensionSpaceStation))
+        float angle = this.level.getTimeOfDay(1.0F) - 0.7845194F < 0 ? 1.0F - 0.7845194F : -0.7845194F;
+        float celestialAngle = (this.level.getTimeOfDay(1.0F) + angle) * 360.0F;
+        if (!(this.level.getDimension() instanceof DimensionSpaceStation))
         {
             celestialAngle += 12.5F;
         }
-        if (this.world.getDimension() instanceof DimensionVenus)
+        if (this.level.getDimension() instanceof DimensionVenus)
         {
             celestialAngle = 180F - celestialAngle;
         }
         celestialAngle %= 360;
-        boolean isDaytime = this.world.isDaytime() && (celestialAngle < 180.5F || celestialAngle > 359.5F) || this.world.getDimension() instanceof DimensionSpaceStation;
+        boolean isDaytime = this.level.isDay() && (celestialAngle < 180.5F || celestialAngle > 359.5F) || this.level.getDimension() instanceof DimensionSpaceStation;
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             int generated = this.getGenerate();
             if (generated > 0)
@@ -222,17 +222,17 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
 
     public float getSolarBoost()
     {
-        float result = (float) (this.world.getDimension() instanceof ISolarLevel ? ((ISolarLevel) this.world.getDimension()).getSolarEnergyMultiplier() : 1.0F);
-        if (this.world.getDimension() instanceof DimensionSpaceStation)
+        float result = (float) (this.level.getDimension() instanceof ISolarLevel ? ((ISolarLevel) this.level.getDimension()).getSolarEnergyMultiplier() : 1.0F);
+        if (this.level.getDimension() instanceof DimensionSpaceStation)
         {
             // 10% boost for new solar on space stations
             result *= 1.1F;
         }
-        if (this.world.getDimension() instanceof DimensionVenus)
+        if (this.level.getDimension() instanceof DimensionVenus)
         {
-            if (this.pos.getY() > 90)
+            if (this.worldPosition.getY() > 90)
             {
-                result += (this.pos.getY() - 90) / 1000F;   //Small improvement on Venus at higher altitudes
+                result += (this.worldPosition.getY() - 90) / 1000F;   //Small improvement on Venus at higher altitudes
             }
         }
         return result;
@@ -245,9 +245,9 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.storage.setCapacity(nbt.getFloat("maxEnergy"));
         this.setDisabled(0, nbt.getBoolean("disabled"));
         this.disableCooldown = nbt.getInt("disabledCooldown");
@@ -256,9 +256,9 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putFloat("maxEnergy", this.getMaxEnergyStoredGC());
         nbt.putInt("disabledCooldown", this.disableCooldown);
         nbt.putBoolean("disabled", this.getDisabled(0));
@@ -281,10 +281,10 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
 
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (state.getBlock() instanceof BlockSolarArrayController)
         {
-            return state.get(BlockSolarArrayController.FACING);
+            return state.getValue(BlockSolarArrayController.FACING);
         }
         return Direction.NORTH;
     }
@@ -329,7 +329,7 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 1;
     }
@@ -341,13 +341,13 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         return slotID == 0;
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         return slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem());
     }
@@ -370,14 +370,14 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerSolarArrayController(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.solar_array_controller");
+        return new TranslatableComponent("container.solar_array_controller");
     }
 }

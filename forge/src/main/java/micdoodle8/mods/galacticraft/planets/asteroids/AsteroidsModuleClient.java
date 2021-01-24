@@ -23,9 +23,9 @@ import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityMinerBase;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityShortRangeTelepad;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.VenusBlocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -58,14 +58,14 @@ public class AsteroidsModuleClient implements IPlanetsModuleClient
         MinecraftForge.EVENT_BUS.register(clientEventHandler);
         FluidTexturesGC.init();
 
-        RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.ASTRO_MINER_BASE, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.FULL_ASTRO_MINER_BASE, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.WALKWAY, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.WIRE_WALKWAY, cutout);
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.FLUID_PIPE_WALKWAY, cutout);
-        RenderType transluscent = RenderType.getTranslucent();
-        RenderTypeLookup.setRenderLayer(AsteroidBlocks.DENSE_ICE, transluscent);
+        RenderType cutout = RenderType.cutout();
+        ItemBlockRenderTypes.setRenderLayer(AsteroidBlocks.ASTRO_MINER_BASE, cutout);
+        ItemBlockRenderTypes.setRenderLayer(AsteroidBlocks.FULL_ASTRO_MINER_BASE, cutout);
+        ItemBlockRenderTypes.setRenderLayer(AsteroidBlocks.WALKWAY, cutout);
+        ItemBlockRenderTypes.setRenderLayer(AsteroidBlocks.WIRE_WALKWAY, cutout);
+        ItemBlockRenderTypes.setRenderLayer(AsteroidBlocks.FLUID_PIPE_WALKWAY, cutout);
+        RenderType transluscent = RenderType.translucent();
+        ItemBlockRenderTypes.setRenderLayer(AsteroidBlocks.DENSE_ICE, transluscent);
 
         ClientRegistry.bindTileEntityRenderer(TileEntityBeamReflector.TYPE, TileEntityBeamReflectorRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TileEntityBeamReceiver.TYPE, TileEntityBeamReceiverRenderer::new);
@@ -290,7 +290,7 @@ public class AsteroidsModuleClient implements IPlanetsModuleClient
 
     @SubscribeEvent
     public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(TELEPAD_DOWN, ParticleTelepad.DownFactory::new);
-        Minecraft.getInstance().particles.registerFactory(TELEPAD_UP, ParticleTelepad.UpFactory::new);
+        Minecraft.getInstance().particleEngine.register(TELEPAD_DOWN, ParticleTelepad.DownFactory::new);
+        Minecraft.getInstance().particleEngine.register(TELEPAD_UP, ParticleTelepad.UpFactory::new);
     }
 }

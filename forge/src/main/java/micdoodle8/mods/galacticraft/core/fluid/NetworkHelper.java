@@ -5,9 +5,8 @@ import micdoodle8.mods.galacticraft.api.transmission.grid.IElectricityNetwork;
 import micdoodle8.mods.galacticraft.api.transmission.tile.IConnector;
 import micdoodle8.mods.galacticraft.api.transmission.tile.INetworkProvider;
 import micdoodle8.mods.galacticraft.api.vector.BlockVec3;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +19,7 @@ import java.util.Set;
  */
 public class NetworkHelper
 {
-    public static EnumSet<Direction> getDirections(TileEntity tileEntity, NetworkType type)
+    public static EnumSet<Direction> getDirections(BlockEntity tileEntity, NetworkType type)
     {
         EnumSet<Direction> possibleSides = EnumSet.noneOf(Direction.class);
 
@@ -28,7 +27,7 @@ public class NetworkHelper
         {
             for (int i = 0; i < 6; i++)
             {
-                Direction direction = Direction.byIndex(i);
+                Direction direction = Direction.from3DDataValue(i);
                 if (((IConnector) tileEntity).canConnect(direction, type))
                 {
                     possibleSides.add(direction);
@@ -45,7 +44,7 @@ public class NetworkHelper
      * @return A list of networks from all specified sides. There will be no
      * repeated ElectricityNetworks and it will never return null.
      */
-    public static Set<IElectricityNetwork> getNetworksFromMultipleSides(TileEntity tileEntity, EnumSet<Direction> approachingDirection)
+    public static Set<IElectricityNetwork> getNetworksFromMultipleSides(BlockEntity tileEntity, EnumSet<Direction> approachingDirection)
     {
         final Set<IElectricityNetwork> connectedNetworks = new HashSet<IElectricityNetwork>();
 
@@ -54,7 +53,7 @@ public class NetworkHelper
         {
             if (approachingDirection.contains(side))
             {
-                TileEntity outputConductor = tileVec.getTileEntityOnSide(tileEntity.getWorld(), side);
+                BlockEntity outputConductor = tileVec.getTileEntityOnSide(tileEntity.getLevel(), side);
                 IElectricityNetwork electricityNetwork = NetworkHelper.getElectricalNetworkFromTileEntity(outputConductor, side);
 
                 if (electricityNetwork != null)
@@ -76,7 +75,7 @@ public class NetworkHelper
      * @param approachDirection - The direction you are approaching this wire from.
      * @return The ElectricityNetwork or null if not found.
      */
-    public static IElectricityNetwork getElectricalNetworkFromTileEntity(TileEntity tileEntity, Direction approachDirection)
+    public static IElectricityNetwork getElectricalNetworkFromTileEntity(BlockEntity tileEntity, Direction approachDirection)
     {
         if (tileEntity != null)
         {
@@ -105,7 +104,7 @@ public class NetworkHelper
         return null;
     }
 
-    public static FluidNetwork getFluidNetworkFromTile(TileEntity tileEntity, Direction approachDirection)
+    public static FluidNetwork getFluidNetworkFromTile(BlockEntity tileEntity, Direction approachDirection)
     {
         if (tileEntity != null)
         {

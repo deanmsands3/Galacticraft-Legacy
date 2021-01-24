@@ -11,13 +11,12 @@ import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseConductor;
 import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.item.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -64,14 +63,14 @@ public class EnergyUtil
 //    public static Capability<IGasHandler> mekGasHandler = null;
     public static Class<?> mekCapabilities;
 
-    public static TileEntity[] getAdjacentPowerConnections(TileEntity tile)
+    public static BlockEntity[] getAdjacentPowerConnections(BlockEntity tile)
     {
-        return getAdjacentPowerConnections(new BlockVec3(tile), tile.getWorld(), (dir) -> !(tile instanceof IConductor) || ((IConductor) tile).canConnect(dir, NetworkType.POWER));
+        return getAdjacentPowerConnections(new BlockVec3(tile), tile.getLevel(), (dir) -> !(tile instanceof IConductor) || ((IConductor) tile).canConnect(dir, NetworkType.POWER));
     }
 
-    public static TileEntity[] getAdjacentPowerConnections(BlockVec3 pos, World world, Predicate<Direction> canConnect)
+    public static BlockEntity[] getAdjacentPowerConnections(BlockVec3 pos, Level world, Predicate<Direction> canConnect)
     {
-        final TileEntity[] adjacentConnections = new TileEntity[6];
+        final BlockEntity[] adjacentConnections = new BlockEntity[6];
 
         for (Direction direction : Direction.values())
         {
@@ -84,7 +83,7 @@ public class EnergyUtil
 //                continue;
 //            }
 
-            TileEntity tileEntity = pos.getTileEntityOnSide(world, direction);
+            BlockEntity tileEntity = pos.getTileEntityOnSide(world, direction);
 
             if (tileEntity == null)
             {
@@ -283,13 +282,13 @@ public class EnergyUtil
      * @param directions
      * @throws Exception
      */
-    public static void setAdjacentPowerConnections(TileEntity conductor, List<Object> connectedAcceptors, List<Direction> directions) throws Exception
+    public static void setAdjacentPowerConnections(BlockEntity conductor, List<Object> connectedAcceptors, List<Direction> directions) throws Exception
     {
         final BlockVec3 thisVec = new BlockVec3(conductor);
-        final World world = conductor.getWorld();
+        final Level world = conductor.getLevel();
         for (Direction direction : Direction.values())
         {
-            TileEntity tileEntity = thisVec.getTileEntityOnSide(world, direction);
+            BlockEntity tileEntity = thisVec.getTileEntityOnSide(world, direction);
 
             if (tileEntity == null || tileEntity instanceof IConductor)  //world.getTileEntity will not have returned an invalid tile, invalid tiles are null
             {
@@ -394,7 +393,7 @@ public class EnergyUtil
         return;
     }
 
-    public static float otherModsEnergyTransfer(TileEntity tileAdj, Direction inputAdj, float toSend, boolean simulate)
+    public static float otherModsEnergyTransfer(BlockEntity tileAdj, Direction inputAdj, float toSend, boolean simulate)
     {
         /*if (isMekLoaded && !EnergyConfigHandler.disableMekanismOutput)
         {
@@ -500,7 +499,7 @@ public class EnergyUtil
         return 0F;
     }
 
-    public static float otherModsEnergyExtract(TileEntity tileAdj, Direction inputAdj, float toPull, boolean simulate)
+    public static float otherModsEnergyExtract(BlockEntity tileAdj, Direction inputAdj, float toPull, boolean simulate)
     {
         /*if (isIC2Loaded && !EnergyConfigHandler.disableIC2Input && tileAdj instanceof IEnergySource)
         {
@@ -583,7 +582,7 @@ public class EnergyUtil
      * @param tileAdj  - the tile under test, it might be an energy tile from another mod
      * @param inputAdj - the energy input LogicalSide for that tile which is under test
      */
-    public static boolean otherModCanReceive(TileEntity tileAdj, Direction inputAdj)
+    public static boolean otherModCanReceive(BlockEntity tileAdj, Direction inputAdj)
     {
         if (tileAdj instanceof TileBaseConductor || tileAdj instanceof EnergyStorageTile)
         {
@@ -625,7 +624,7 @@ public class EnergyUtil
      * @param tileAdj - the tile under test, it might be an energy tile from another mod
      * @param side    - the energy output LogicalSide for that tile which is under test
      */
-    public static boolean otherModCanProduce(TileEntity tileAdj, Direction side)
+    public static boolean otherModCanProduce(BlockEntity tileAdj, Direction side)
     {
         if (tileAdj instanceof TileBaseConductor || tileAdj instanceof EnergyStorageTile)
         {

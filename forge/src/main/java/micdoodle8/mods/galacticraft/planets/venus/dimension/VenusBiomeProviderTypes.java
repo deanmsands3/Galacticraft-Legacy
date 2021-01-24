@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.planets.venus.dimension;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.world.biome.provider.BiomeProviderType;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.level.biome.BiomeSourceType;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -14,21 +14,21 @@ import static micdoodle8.mods.galacticraft.core.GCBlocks.register;
 
 public class VenusBiomeProviderTypes
 {
-    public static final DeferredRegister<BiomeProviderType<?, ?>> BIOME_PROVIDER_TYPES = new DeferredRegister<>(ForgeRegistries.BIOME_PROVIDER_TYPES, Constants.MOD_ID_PLANETS);
+    public static final DeferredRegister<BiomeSourceType<?, ?>> BIOME_PROVIDER_TYPES = new DeferredRegister<>(ForgeRegistries.BIOME_PROVIDER_TYPES, Constants.MOD_ID_PLANETS);
 
-    public static final BiomeProviderType<VenusBiomeProviderSettings, VenusBiomeProvider> VENUS_TYPE = newType();
+    public static final BiomeSourceType<VenusBiomeProviderSettings, VenusBiomeProvider> VENUS_TYPE = newType();
 
     // TODO Yikes, fix this once forge makes BiomeProviderType constructor public
-    private static BiomeProviderType<VenusBiomeProviderSettings, VenusBiomeProvider> newType()
+    private static BiomeSourceType<VenusBiomeProviderSettings, VenusBiomeProvider> newType()
     {
-        Class<?> c = BiomeProviderType.class;
+        Class<?> c = BiomeSourceType.class;
         try
         {
             Constructor<?> cons = c.getDeclaredConstructor(Function.class, Function.class);
             cons.setAccessible(true);
             Function<VenusBiomeProviderSettings, VenusBiomeProvider> f1 = VenusBiomeProvider::new;
-            Function<WorldInfo, VenusBiomeProviderSettings> f2 = VenusBiomeProviderSettings::new;
-            return (BiomeProviderType<VenusBiomeProviderSettings, VenusBiomeProvider>)cons.newInstance(f1, f2);
+            Function<LevelData, VenusBiomeProviderSettings> f2 = VenusBiomeProviderSettings::new;
+            return (BiomeSourceType<VenusBiomeProviderSettings, VenusBiomeProvider>)cons.newInstance(f1, f2);
         }
         catch (NoSuchMethodException e)
         {

@@ -5,15 +5,15 @@ import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.planets.asteroids.network.PacketSimpleAsteroids;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars;
 import micdoodle8.mods.galacticraft.planets.venus.network.PacketSimpleVenus;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -64,9 +64,9 @@ public class GalacticraftChannelHandler
      * @param message - the message to send
      * @param player  - the player to send it to
      */
-    public <MSG> void sendTo(MSG message, ServerPlayerEntity player)
+    public <MSG> void sendTo(MSG message, ServerPlayer player)
     {
-        INSTANCE.sendTo(message, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+        INSTANCE.sendTo(message, player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
     /**
@@ -110,18 +110,18 @@ public class GalacticraftChannelHandler
         INSTANCE.send(PacketDistributor.NEAR.with(() -> point), message);
     }
 
-    public <MSG> void sendToAllTracking(MSG message, TileEntity tile)
+    public <MSG> void sendToAllTracking(MSG message, BlockEntity tile)
     {
-        sendToAllTracking(message, tile.getWorld(), tile.getPos());
+        sendToAllTracking(message, tile.getLevel(), tile.getBlockPos());
     }
 
-    public <MSG> void sendToAllTracking(MSG message, World world, BlockPos pos)
+    public <MSG> void sendToAllTracking(MSG message, Level world, BlockPos pos)
     {
-        if (world instanceof ServerWorld)
+        if (world instanceof ServerLevel)
         {
             //If we have a ServerWorld just directly figure out the ChunkPos so as to not require looking up the chunk
             // This provides a decent performance boost over using the packet distributor
-            ((ServerWorld) world).getChunkProvider().chunkManager.getTrackingPlayers(new ChunkPos(pos), false).forEach(p -> sendTo(message, p));
+            ((ServerLevel) world).getChunkSource().chunkManager.getTrackingPlayers(new ChunkPos(pos), false).forEach(p -> sendTo(message, p));
         }
         else
         {

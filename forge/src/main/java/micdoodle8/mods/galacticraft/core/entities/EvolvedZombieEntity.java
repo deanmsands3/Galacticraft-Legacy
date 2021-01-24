@@ -5,31 +5,26 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCItems;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Effects;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.monster.SharedMonsterAttributes;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 
-public class EvolvedZombieEntity extends ZombieEntity implements IEntityBreathable, ITumblable
+public class EvolvedZombieEntity extends Zombie implements IEntityBreathable, ITumblable
 {
-    private static final DataParameter<Float> SPIN_PITCH = EntityDataManager.createKey(EvolvedZombieEntity.class, DataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> SPIN_PITCH = SynchedEntityData.defineId(EvolvedZombieEntity.class, EntityDataSerializers.FLOAT);
     private final int conversionTime = 0;
     private float tumbling = 0F;
     private float tumbleAngle = 0F;
 
-    public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> type, World worldIn)
+    public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> type, Level worldIn)
     {
         super(type, worldIn);
     }
@@ -40,7 +35,7 @@ public class EvolvedZombieEntity extends ZombieEntity implements IEntityBreathab
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
         double difficulty = 0;
-        switch (this.world.getDifficulty())
+        switch (this.level.getDifficulty())
         {
         case HARD:
             difficulty = 2D;
@@ -60,9 +55,9 @@ public class EvolvedZombieEntity extends ZombieEntity implements IEntityBreathab
         return true;
     }
 
-    public IAttribute getReinforcementsAttribute()
+    public Attribute getReinforcementsAttribute()
     {
-        return ZombieEntity.SPAWN_REINFORCEMENTS_CHANCE;
+        return Zombie.SPAWN_REINFORCEMENTS_CHANCE;
     }
 
 //    protected void addRandomDrop()
@@ -153,7 +148,7 @@ public class EvolvedZombieEntity extends ZombieEntity implements IEntityBreathab
         {
             if (this.tumbling == 0F)
             {
-                this.tumbling = (this.world.rand.nextFloat() + 0.5F) * value;
+                this.tumbling = (this.level.random.nextFloat() + 0.5F) * value;
             }
         }
         else
@@ -176,7 +171,7 @@ public class EvolvedZombieEntity extends ZombieEntity implements IEntityBreathab
                 }
             }
 
-            if (!this.world.isRemote)
+            if (!this.level.isClientSide)
             {
                 this.setSpinPitch(this.tumbling);
             }
@@ -197,34 +192,34 @@ public class EvolvedZombieEntity extends ZombieEntity implements IEntityBreathab
     }
 
     @Override
-    protected void registerData()
+    protected void defineSynchedData()
     {
-        super.registerData();
-        this.getDataManager().register(SPIN_PITCH, 0.0F);
+        super.defineSynchedData();
+        this.getEntityData().define(SPIN_PITCH, 0.0F);
     }
 
     @Override
-    public void readAdditional(CompoundNBT nbt)
+    public void readAdditionalSaveData(CompoundTag nbt)
     {
-        super.readAdditional(nbt);
+        super.readAdditionalSaveData(nbt);
         this.tumbling = nbt.getFloat("tumbling");
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        super.writeAdditional(nbt);
+        super.addAdditionalSaveData(nbt);
         nbt.putFloat("tumbling", this.tumbling);
     }
 
     public float getSpinPitch()
     {
-        return this.getDataManager().get(SPIN_PITCH);
+        return this.getEntityData().get(SPIN_PITCH);
     }
 
     public void setSpinPitch(float pitch)
     {
-        this.getDataManager().set(SPIN_PITCH, pitch);
+        this.getEntityData().set(SPIN_PITCH, pitch);
     }
 
     @Override
@@ -247,22 +242,22 @@ public class EvolvedZombieEntity extends ZombieEntity implements IEntityBreathab
     @Override
     public float getTumbleAxisX()
     {
-        double velocity2 = this.getMotion().x * this.getMotion().x + this.getMotion().z * this.getMotion().z;
+        double velocity2 = this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().z * this.getDeltaMovement().z;
         if (velocity2 == 0D)
         {
             return 1F;
         }
-        return (float) (this.getMotion().z / MathHelper.sqrt(velocity2));
+        return (float) (this.getDeltaMovement().z / Mth.sqrt(velocity2));
     }
 
     @Override
     public float getTumbleAxisZ()
     {
-        double velocity2 = this.getMotion().x * this.getMotion().x + this.getMotion().z * this.getMotion().z;
+        double velocity2 = this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().z * this.getDeltaMovement().z;
         if (velocity2 == 0D)
         {
             return 0F;
         }
-        return (float) (this.getMotion().x / MathHelper.sqrt(velocity2));
+        return (float) (this.getDeltaMovement().x / Mth.sqrt(velocity2));
     }
 }

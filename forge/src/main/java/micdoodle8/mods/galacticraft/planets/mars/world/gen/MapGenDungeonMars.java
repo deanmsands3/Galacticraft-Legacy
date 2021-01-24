@@ -14,7 +14,7 @@ public class MapGenDungeonMars extends StructureDungeon
     }
 
     @Override
-    public String getStructureName()
+    public String getFeatureName()
     {
         return "GC_Dungeon_Mars";
     }

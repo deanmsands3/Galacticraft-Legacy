@@ -10,9 +10,7 @@ import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityCrashedProbe;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityGeothermalGenerator;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityLaserTurret;
 import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntitySolarArrayController;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -25,14 +23,14 @@ import static micdoodle8.mods.galacticraft.planets.asteroids.blocks.AsteroidBloc
 public class VenusContainers
 {
     @SubscribeEvent
-    public static void initContainers(RegistryEvent.Register<ContainerType<?>> evt)
+    public static void initContainers(RegistryEvent.Register<MenuType<?>> evt)
     {
-        IForgeRegistry<ContainerType<?>> r = evt.getRegistry();
+        IForgeRegistry<MenuType<?>> r = evt.getRegistry();
 
-        ContainerType<ContainerCrashedProbe> crashedProbe = IForgeContainerType.create((windowId, inv, data) -> new ContainerCrashedProbe(windowId, inv, (TileEntityCrashedProbe) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
-        ContainerType<ContainerGeothermal> geothermal = IForgeContainerType.create((windowId, inv, data) -> new ContainerGeothermal(windowId, inv, (TileEntityGeothermalGenerator) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
-        ContainerType<ContainerLaserTurret> laserTurret = IForgeContainerType.create((windowId, inv, data) -> new ContainerLaserTurret(windowId, inv, (TileEntityLaserTurret) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
-        ContainerType<ContainerSolarArrayController> solarArrayController = IForgeContainerType.create((windowId, inv, data) -> new ContainerSolarArrayController(windowId, inv, (TileEntitySolarArrayController) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerCrashedProbe> crashedProbe = IForgeContainerType.create((windowId, inv, data) -> new ContainerCrashedProbe(windowId, inv, (TileEntityCrashedProbe) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerGeothermal> geothermal = IForgeContainerType.create((windowId, inv, data) -> new ContainerGeothermal(windowId, inv, (TileEntityGeothermalGenerator) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerLaserTurret> laserTurret = IForgeContainerType.create((windowId, inv, data) -> new ContainerLaserTurret(windowId, inv, (TileEntityLaserTurret) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
+        MenuType<ContainerSolarArrayController> solarArrayController = IForgeContainerType.create((windowId, inv, data) -> new ContainerSolarArrayController(windowId, inv, (TileEntitySolarArrayController) inv.player.world.getTileEntity(new BlockPos(data.readInt(), data.readInt(), data.readInt()))));
 
         register(r, crashedProbe, VenusContainerNames.CRASHED_PROBE);
         register(r, geothermal, VenusContainerNames.GEOTHERMAL);

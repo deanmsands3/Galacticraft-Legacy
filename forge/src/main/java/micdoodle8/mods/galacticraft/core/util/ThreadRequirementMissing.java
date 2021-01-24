@@ -45,6 +45,6 @@ public class ThreadRequirementMissing extends Thread
     @OnlyIn(Dist.CLIENT)
     private static void openGuiClient()
     {
-        Minecraft.getInstance().displayGuiScreen(new GuiMissingCore());
+        Minecraft.getInstance().setScreen(new GuiMissingCore());
     }
 }

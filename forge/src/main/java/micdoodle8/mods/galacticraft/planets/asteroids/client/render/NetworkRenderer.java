@@ -3,24 +3,23 @@ package micdoodle8.mods.galacticraft.planets.asteroids.client.render;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.planets.asteroids.tile.TileEntityBeamOutput;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.world.World;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkRenderer
 {
-    public static void renderNetworks(World world, float partialTicks)
+    public static void renderNetworks(Level world, float partialTicks)
     {
         List<TileEntityBeamOutput> nodes = new ArrayList<TileEntityBeamOutput>();
 
-        for (Object o : new ArrayList<TileEntity>(world.loadedTileEntityList))
+        for (Object o : new ArrayList<BlockEntity>(world.blockEntityList))
         {
             if (o instanceof TileEntityBeamOutput)
             {
@@ -33,11 +32,11 @@ public class NetworkRenderer
             return;
         }
 
-        Tessellator tess = Tessellator.getInstance();
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        double interpPosX = player.lastTickPosX + (player.getPosX() - player.lastTickPosX) * partialTicks;
-        double interpPosY = player.lastTickPosY + (player.getPosY() - player.lastTickPosY) * partialTicks;
-        double interpPosZ = player.lastTickPosZ + (player.getPosZ() - player.lastTickPosZ) * partialTicks;
+        Tesselator tess = Tesselator.getInstance();
+        LocalPlayer player = Minecraft.getInstance().player;
+        double interpPosX = player.xOld + (player.getX() - player.xOld) * partialTicks;
+        double interpPosY = player.yOld + (player.getY() - player.yOld) * partialTicks;
+        double interpPosZ = player.zOld + (player.getZ() - player.zOld) * partialTicks;
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
 
@@ -56,25 +55,25 @@ public class NetworkRenderer
             Vector3 direction = Vector3.subtract(outputPoint, targetInputPoint);
             float directionLength = direction.getMagnitude();
 
-            float posX = (float) (tileEntity.getPos().getX() - interpPosX);
-            float posY = (float) (tileEntity.getPos().getY() - interpPosY);
-            float posZ = (float) (tileEntity.getPos().getZ() - interpPosZ);
+            float posX = (float) (tileEntity.getBlockPos().getX() - interpPosX);
+            float posY = (float) (tileEntity.getBlockPos().getY() - interpPosY);
+            float posZ = (float) (tileEntity.getBlockPos().getZ() - interpPosZ);
             GL11.glTranslatef(posX, posY, posZ);
 
-            GL11.glTranslatef(outputPoint.floatX() - tileEntity.getPos().getX(), outputPoint.floatY() - tileEntity.getPos().getY(), outputPoint.floatZ() - tileEntity.getPos().getZ());
+            GL11.glTranslatef(outputPoint.floatX() - tileEntity.getBlockPos().getX(), outputPoint.floatY() - tileEntity.getBlockPos().getY(), outputPoint.floatZ() - tileEntity.getBlockPos().getZ());
             GL11.glRotatef(tileEntity.yaw + 180, 0, 1, 0);
             GL11.glRotatef(-tileEntity.pitch, 1, 0, 0);
             GL11.glRotatef(tileEntity.ticks * 10, 0, 0, 1);
 
-            tess.getBuffer().begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+            tess.getBuilder().begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
 
             for (Direction dir : Direction.values())
             {
-                tess.getBuffer().pos(dir.getXOffset() / 40.0F, dir.getYOffset() / 40.0F, dir.getZOffset() / 40.0F).color(tileEntity.getColor().floatX(), tileEntity.getColor().floatY(), tileEntity.getColor().floatZ(), 1.0F).endVertex();
-                tess.getBuffer().pos(dir.getXOffset() / 40.0F, dir.getYOffset() / 40.0F, directionLength + dir.getZOffset() / 40.0F).color(tileEntity.getColor().floatX(), tileEntity.getColor().floatY(), tileEntity.getColor().floatZ(), 1.0F).endVertex();
+                tess.getBuilder().vertex(dir.getStepX() / 40.0F, dir.getStepY() / 40.0F, dir.getStepZ() / 40.0F).color(tileEntity.getColor().floatX(), tileEntity.getColor().floatY(), tileEntity.getColor().floatZ(), 1.0F).endVertex();
+                tess.getBuilder().vertex(dir.getStepX() / 40.0F, dir.getStepY() / 40.0F, directionLength + dir.getStepZ() / 40.0F).color(tileEntity.getColor().floatX(), tileEntity.getColor().floatY(), tileEntity.getColor().floatZ(), 1.0F).endVertex();
             }
 
-            tess.draw();
+            tess.end();
 
             GL11.glPopMatrix();
         }

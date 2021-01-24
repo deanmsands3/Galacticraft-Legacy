@@ -12,10 +12,10 @@ import micdoodle8.mods.galacticraft.core.energy.grid.EnergyNetwork;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseConductor;
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseUniversalConductor;
 import micdoodle8.mods.galacticraft.core.util.RedstoneUtil;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
@@ -23,7 +23,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
     public static class TileEntityAluminumWireSwitchableT1 extends TileEntityAluminumWireSwitch
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.SWITCHABLE_ALUMINUM_WIRE)
-        public static TileEntityType<TileEntityAluminumWireSwitchableT1> TYPE;
+        public static BlockEntityType<TileEntityAluminumWireSwitchableT1> TYPE;
 
         public TileEntityAluminumWireSwitchableT1()
         {
@@ -34,7 +34,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
     public static class TileEntityAluminumWireSwitchableT2 extends TileEntityAluminumWireSwitch
     {
         @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.SWITCHABLE_HEAVY_ALUMINUM_WIRE)
-        public static TileEntityType<TileEntityAluminumWireSwitchableT2> TYPE;
+        public static BlockEntityType<TileEntityAluminumWireSwitchableT2> TYPE;
 
         public TileEntityAluminumWireSwitchableT2()
         {
@@ -45,16 +45,16 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
     public int tier;
     private boolean disableConnections;
 
-    public TileEntityAluminumWireSwitch(TileEntityType<?> type, int tier)
+    public TileEntityAluminumWireSwitch(BlockEntityType<?> type, int tier)
     {
         super(type);
         this.tier = tier;
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.tier = nbt.getInt("tier");
         //For legacy worlds (e.g. converted from 1.6.4)
         if (this.tier == 0)
@@ -65,17 +65,17 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putInt("tier", this.tier);
         return nbt;
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
         if (newDisableConnections && !this.disableConnections)
         {
             this.disableConnections = newDisableConnections;
-            if (!this.world.isRemote)
+            if (!this.level.isClientSide)
             {
                 this.disConnect();
             }
@@ -99,13 +99,13 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
         else if (!newDisableConnections && this.disableConnections)
         {
             this.disableConnections = newDisableConnections;
-            if (!this.world.isRemote)
+            if (!this.level.isClientSide)
             {
                 this.setNetwork(null);  //Force a full network refresh of this and conductors either LogicalSide
             }
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.adjacentConnections = null;
             if (!this.disableConnections)
@@ -117,7 +117,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
                 {
                     if (this.canConnect(side, NetworkType.POWER))
                     {
-                        TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
+                        BlockEntity tileEntity = thisVec.getTileEntityOnSide(this.level, side);
 
                         if (tileEntity instanceof TileBaseConductor && ((TileBaseConductor) tileEntity).canConnect(side.getOpposite(), NetworkType.POWER))
                         {
@@ -147,7 +147,7 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
 
     private boolean disableConnections()
     {
-        return RedstoneUtil.isBlockReceivingRedstone(this.world, this.pos);
+        return RedstoneUtil.isBlockReceivingRedstone(this.level, this.worldPosition);
     }
 
     @Override
@@ -173,21 +173,21 @@ public class TileEntityAluminumWireSwitch extends TileBaseUniversalConductor
     }
 
     @Override
-    public TileEntity[] getAdjacentConnections()
+    public BlockEntity[] getAdjacentConnections()
     {
         if (this.adjacentConnections == null)
         {
-            this.adjacentConnections = new TileEntity[6];
+            this.adjacentConnections = new BlockEntity[6];
 
             if (!this.disableConnections)
             {
                 BlockVec3 thisVec = new BlockVec3(this);
                 for (int i = 0; i < 6; i++)
                 {
-                    Direction side = Direction.byIndex(i);
+                    Direction side = Direction.from3DDataValue(i);
                     if (this.canConnect(side, NetworkType.POWER))
                     {
-                        TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
+                        BlockEntity tileEntity = thisVec.getTileEntityOnSide(this.level, side);
 
                         if (tileEntity instanceof IConnector)
                         {

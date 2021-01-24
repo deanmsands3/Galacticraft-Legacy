@@ -19,28 +19,28 @@ import micdoodle8.mods.galacticraft.planets.venus.VenusModule;
 import micdoodle8.mods.galacticraft.planets.venus.blocks.BlockGeothermalGenerator;
 import micdoodle8.mods.galacticraft.planets.venus.client.fx.VenusParticles;
 import micdoodle8.mods.galacticraft.planets.venus.inventory.ContainerGeothermal;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.EnumSet;
 
-public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSource implements IInventoryDefaults, ISidedInventory, IConnector, IDisableableMachine, INamedContainerProvider
+public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSource implements IInventoryDefaults, WorldlyContainer, IConnector, IDisableableMachine, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_PLANETS + ":" + VenusBlockNames.GEOTHERMAL_GENERATOR)
-    public static TileEntityType<TileEntityGeothermalGenerator> TYPE;
+    public static BlockEntityType<TileEntityGeothermalGenerator> TYPE;
 
     public static final int MAX_GENERATE_GJ_PER_TICK = 200;
     public static final int MIN_GENERATE_GJ_PER_TICK = 30;
@@ -66,7 +66,7 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
     @Override
     public void tick()
     {
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.receiveEnergyGC(null, this.generateWatts, false);
         }
@@ -75,23 +75,23 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
 
         if (this.ticks % 20 == 0)
         {
-            BlockPos below = this.getPos().down();
-            BlockState stateBelow = this.world.getBlockState(below);
+            BlockPos below = this.getBlockPos().below();
+            BlockState stateBelow = this.level.getBlockState(below);
 
             boolean lastValidSpout = this.validSpout;
             this.validSpout = false;
             if (stateBelow.getBlock() == VenusBlocks.VAPOR_SPOUT)
             {
-                BlockPos pos1 = below.down();
-                for (; this.getPos().getY() - pos1.getY() < 20; pos1 = pos1.down())
+                BlockPos pos1 = below.below();
+                for (; this.getBlockPos().getY() - pos1.getY() < 20; pos1 = pos1.below())
                 {
-                    BlockState state = this.world.getBlockState(pos1);
+                    BlockState state = this.level.getBlockState(pos1);
                     if (state.getBlock() == PlanetFluids.SULPHURIC_ACID.getBlock())
                     {
                         this.validSpout = true;
                         break;
                     }
-                    else if (!state.getBlock().isAir(this.world.getBlockState(pos1), this.world, pos1))
+                    else if (!state.getBlock().isAir(this.level.getBlockState(pos1), this.level, pos1))
                     {
                         // Not valid
                         break;
@@ -99,15 +99,15 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
                 }
             }
 
-            if (this.world.isRemote && this.validSpout != lastValidSpout)
+            if (this.level.isClientSide && this.validSpout != lastValidSpout)
             {
                 // tick active texture
-                BlockState state = this.world.getBlockState(this.getPos());
-                this.world.notifyBlockUpdate(this.getPos(), state, state, 3);
+                BlockState state = this.level.getBlockState(this.getBlockPos());
+                this.level.sendBlockUpdated(this.getBlockPos(), state, state, 3);
             }
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.recharge(this.getInventory().get(0));
 
@@ -122,18 +122,18 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
         {
             if (this.generateWatts > 0 && this.ticks % ((int) ((float) MAX_GENERATE_GJ_PER_TICK / (this.generateWatts + 1)) * 5 + 1) == 0)
             {
-                double posX = pos.getX() + 0.5;
-                double posY = pos.getY() + 1.0;
-                double posZ = pos.getZ() + 0.5;
-                world.addParticle(VenusParticles.ACID_EXHAUST, posX - 0.25, posY, posZ - 0.25, 0.0, 0.025, 0.0);
-                world.addParticle(VenusParticles.ACID_EXHAUST, posX - 0.25, posY, posZ, 0.0, 0.025, 0.0);
-                world.addParticle(VenusParticles.ACID_EXHAUST, posX - 0.25, posY, posZ + 0.25, 0.0, 0.025, 0.0);
-                world.addParticle(VenusParticles.ACID_EXHAUST, posX, posY, posZ - 0.25, 0.0, 0.025, 0.0);
-                world.addParticle(VenusParticles.ACID_EXHAUST, posX, posY, posZ, 0.0, 0.025, 0.0);
-                world.addParticle(VenusParticles.ACID_EXHAUST, posX, posY, posZ + 0.25, 0.0, 0.025, 0.0);
-                world.addParticle(VenusParticles.ACID_EXHAUST, posX + 0.25, posY, posZ - 0.25, 0.0, 0.025, 0.0);
-                world.addParticle(VenusParticles.ACID_EXHAUST, posX + 0.25, posY, posZ, 0.0, 0.025, 0.0);
-                world.addParticle(VenusParticles.ACID_EXHAUST, posX + 0.25, posY, posZ + 0.25, 0.0, 0.025, 0.0);
+                double posX = worldPosition.getX() + 0.5;
+                double posY = worldPosition.getY() + 1.0;
+                double posZ = worldPosition.getZ() + 0.5;
+                level.addParticle(VenusParticles.ACID_EXHAUST, posX - 0.25, posY, posZ - 0.25, 0.0, 0.025, 0.0);
+                level.addParticle(VenusParticles.ACID_EXHAUST, posX - 0.25, posY, posZ, 0.0, 0.025, 0.0);
+                level.addParticle(VenusParticles.ACID_EXHAUST, posX - 0.25, posY, posZ + 0.25, 0.0, 0.025, 0.0);
+                level.addParticle(VenusParticles.ACID_EXHAUST, posX, posY, posZ - 0.25, 0.0, 0.025, 0.0);
+                level.addParticle(VenusParticles.ACID_EXHAUST, posX, posY, posZ, 0.0, 0.025, 0.0);
+                level.addParticle(VenusParticles.ACID_EXHAUST, posX, posY, posZ + 0.25, 0.0, 0.025, 0.0);
+                level.addParticle(VenusParticles.ACID_EXHAUST, posX + 0.25, posY, posZ - 0.25, 0.0, 0.025, 0.0);
+                level.addParticle(VenusParticles.ACID_EXHAUST, posX + 0.25, posY, posZ, 0.0, 0.025, 0.0);
+                level.addParticle(VenusParticles.ACID_EXHAUST, posX + 0.25, posY, posZ + 0.25, 0.0, 0.025, 0.0);
             }
         }
 
@@ -175,10 +175,10 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
 
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (state.getBlock() instanceof BlockGeothermalGenerator)
         {
-            return state.get(BlockGeothermalGenerator.FACING);
+            return state.getValue(BlockGeothermalGenerator.FACING);
         }
         return Direction.NORTH;
     }
@@ -186,13 +186,13 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
     @Override
     public EnumSet<Direction> getElectricalOutputDirections()
     {
-        return EnumSet.of(getFront().rotateY());
+        return EnumSet.of(getFront().getClockWise());
     }
 
     @Override
     public Direction getElectricOutputDirection()
     {
-        return getFront().rotateY();
+        return getFront().getClockWise();
     }
 
 //    @Override
@@ -206,11 +206,11 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
     {
         if (this.disableCooldown == 0)
         {
-            if (this.disabled != disabled && this.world.isRemote)
+            if (this.disabled != disabled && this.level.isClientSide)
             {
                 // tick active texture
-                BlockState state = this.world.getBlockState(this.getPos());
-                this.world.notifyBlockUpdate(this.getPos(), state, state, 3);
+                BlockState state = this.level.getBlockState(this.getBlockPos());
+                this.level.sendBlockUpdated(this.getBlockPos(), state, state, 3);
             }
 
             this.disabled = disabled;
@@ -230,7 +230,7 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
     }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 1;
     }
@@ -242,13 +242,13 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         return slotID == 0;
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         return slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem());
     }
@@ -259,14 +259,14 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerGeothermal(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.geothermal_generator");
+        return new TranslatableComponent("container.geothermal_generator");
     }
 }

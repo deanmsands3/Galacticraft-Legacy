@@ -2,14 +2,14 @@ package micdoodle8.mods.galacticraft.core.client.gui.element;
 
 import micdoodle8.mods.galacticraft.core.Constants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiElementTurnPageButton extends Widget
+public class GuiElementTurnPageButton extends AbstractWidget
 {
     private final boolean nextPage;
     private static final ResourceLocation BACKGROUND = new ResourceLocation(Constants.MOD_ID_CORE, "textures/gui/bookleft.png");
@@ -27,7 +27,7 @@ public class GuiElementTurnPageButton extends Widget
         {
             boolean var4 = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            Minecraft.getInstance().getTextureManager().bindTexture(GuiElementTurnPageButton.BACKGROUND);
+            Minecraft.getInstance().getTextureManager().bind(GuiElementTurnPageButton.BACKGROUND);
             int var5 = 0;
             int var6 = 192;
 

@@ -8,20 +8,26 @@ import micdoodle8.mods.galacticraft.core.fluid.GCFluids;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.EnumSortCategory;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.util.math.*;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -62,45 +68,45 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortable
 //    }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand)
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand hand)
     {
-        ItemStack itemstack = playerIn.getHeldItem(hand);
+        ItemStack itemstack = playerIn.getItemInHand(hand);
         final float var4 = 1.0F;
-        final float var5 = playerIn.prevRotationPitch + (playerIn.rotationPitch - playerIn.prevRotationPitch) * var4;
-        final float var6 = playerIn.prevRotationYaw + (playerIn.rotationYaw - playerIn.prevRotationYaw) * var4;
-        final double var7 = playerIn.prevPosX + (playerIn.getPosX() - playerIn.prevPosX) * var4;
-        final double var9 = playerIn.prevPosY + (playerIn.getPosY() - playerIn.prevPosY) * var4 + 1.62D - playerIn.getYOffset();
-        final double var11 = playerIn.prevPosZ + (playerIn.getPosZ() - playerIn.prevPosZ) * var4;
-        final Vec3d var13 = new Vec3d(var7, var9, var11);
-        final float var14 = MathHelper.cos(-var6 / Constants.RADIANS_TO_DEGREES - (float) Math.PI);
-        final float var15 = MathHelper.sin(-var6 / Constants.RADIANS_TO_DEGREES - (float) Math.PI);
-        final float var16 = -MathHelper.cos(-var5 / Constants.RADIANS_TO_DEGREES);
-        final float var17 = MathHelper.sin(-var5 / Constants.RADIANS_TO_DEGREES);
+        final float var5 = playerIn.xRotO + (playerIn.xRot - playerIn.xRotO) * var4;
+        final float var6 = playerIn.yRotO + (playerIn.yRot - playerIn.yRotO) * var4;
+        final double var7 = playerIn.xo + (playerIn.getX() - playerIn.xo) * var4;
+        final double var9 = playerIn.yo + (playerIn.getY() - playerIn.yo) * var4 + 1.62D - playerIn.getRidingHeight();
+        final double var11 = playerIn.zo + (playerIn.getZ() - playerIn.zo) * var4;
+        final Vec3 var13 = new Vec3(var7, var9, var11);
+        final float var14 = Mth.cos(-var6 / Constants.RADIANS_TO_DEGREES - (float) Math.PI);
+        final float var15 = Mth.sin(-var6 / Constants.RADIANS_TO_DEGREES - (float) Math.PI);
+        final float var16 = -Mth.cos(-var5 / Constants.RADIANS_TO_DEGREES);
+        final float var17 = Mth.sin(-var5 / Constants.RADIANS_TO_DEGREES);
         final float var18 = var15 * var16;
         final float var20 = var14 * var16;
         final double var21 = 5.0D;
-        final Vec3d var23 = var13.add(var18 * var21, var17 * var21, var20 * var21);
-        final RayTraceResult var24 = worldIn.rayTraceBlocks(new RayTraceContext(var13, var23, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.ANY, playerIn));
+        final Vec3 var23 = var13.add(var18 * var21, var17 * var21, var20 * var21);
+        final HitResult var24 = worldIn.clip(new ClipContext(var13, var23, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.ANY, playerIn));
 
         if (var24.getType() == RayTraceResult.Type.MISS)
         {
-            return new ActionResult<>(ActionResultType.PASS, itemstack);
+            return new InteractionResultHolder<>(ActionResultType.PASS, itemstack);
         }
         else
         {
-            final Vec3d var25 = playerIn.getLook(var4);
+            final Vec3 var25 = playerIn.getViewVector(var4);
             boolean var26 = false;
             final float var27 = 1.0F;
-            final List<?> var28 = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getBoundingBox().grow(var25.x * var21, var25.y * var21, var25.z * var21).expand(var27, var27, var27));
+            final List<?> var28 = worldIn.getEntities(playerIn, playerIn.getBoundingBox().inflate(var25.x * var21, var25.y * var21, var25.z * var21).expandTowards(var27, var27, var27));
 
             for (int i = 0; i < var28.size(); ++i)
             {
                 final Entity var30 = (Entity) var28.get(i);
 
-                if (var30.canBeCollidedWith())
+                if (var30.isPickable())
                 {
-                    final float var31 = var30.getCollisionBorderSize();
-                    final AxisAlignedBB var32 = var30.getBoundingBox().expand(var31, var31, var31);
+                    final float var31 = var30.getPickRadius();
+                    final AABB var32 = var30.getBoundingBox().expandTowards(var31, var31, var31);
 
                     if (var32.contains(var13))
                     {
@@ -111,16 +117,16 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortable
 
             if (var26)
             {
-                return new ActionResult<>(ActionResultType.PASS, itemstack);
+                return new InteractionResultHolder<>(ActionResultType.PASS, itemstack);
             }
             else
             {
                 if (var24.getType() == RayTraceResult.Type.BLOCK)
                 {
-                    BlockRayTraceResult blockResult = (BlockRayTraceResult) var24;
-                    int x = blockResult.getPos().getX();
-                    int y = blockResult.getPos().getY();
-                    int z = blockResult.getPos().getZ();
+                    BlockHitResult blockResult = (BlockHitResult) var24;
+                    int x = blockResult.getBlockPos().getX();
+                    int y = blockResult.getBlockPos().getY();
+                    int z = blockResult.getBlockPos().getZ();
 
                     if (worldIn.getBlockState(new BlockPos(x, y, z)).getBlock() == Blocks.SNOW)
                     {
@@ -129,7 +135,7 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortable
 
                     final BuggyEntity var35 = GCEntities.BUGGY.create(worldIn);
                     var35.setBuggyType(BuggyEntity.getTypeFromItem(itemstack.getItem()));
-                    var35.setPosition(x + 0.5F, y + 1.0F, z + 0.5F);
+                    var35.setPos(x + 0.5F, y + 1.0F, z + 0.5F);
 
 //                    if (!worldIn.getCollisionBoxes(var35, var35.getBoundingBox().expand(-0.1D, -0.1D, -0.1D)).isEmpty())
 //                    {
@@ -141,51 +147,51 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortable
                         var35.buggyFuelTank.setFluid(new FluidStack(GCFluids.FUEL.getFluid(), itemstack.getTag().getInt("BuggyFuel")));
                     }
 
-                    if (!worldIn.isRemote)
+                    if (!worldIn.isClientSide)
                     {
-                        worldIn.addEntity(var35);
+                        worldIn.addFreshEntity(var35);
                     }
 
-                    if (!playerIn.abilities.isCreativeMode)
+                    if (!playerIn.abilities.instabuild)
                     {
                         itemstack.shrink(1);
                     }
                 }
 
-                return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+                return new InteractionResultHolder<>(ActionResultType.SUCCESS, itemstack);
             }
         }
     }
 
     @Override
-    public void addInformation(ItemStack item, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack item, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         BuggyEntity.BuggyType type = BuggyEntity.getTypeFromItem(item.getItem());
         if (type.getInvSize() != 0)
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.buggy.storage_space") + ": " + type.getInvSize()));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("gui.buggy.storage_space") + ": " + type.getInvSize()));
         }
 
         if (item.hasTag() && item.getTag().contains("BuggyFuel"))
         {
-            tooltip.add(new StringTextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + item.getTag().getInt("BuggyFuel") + " / " + BuggyEntity.tankCapacity));
+            tooltip.add(new TextComponent(GCCoreUtil.translate("gui.message.fuel") + ": " + item.getTag().getInt("BuggyFuel") + " / " + BuggyEntity.tankCapacity));
         }
     }
 
     @Override
-    public boolean shouldHoldLeftHandUp(PlayerEntity player)
+    public boolean shouldHoldLeftHandUp(Player player)
     {
         return true;
     }
 
     @Override
-    public boolean shouldHoldRightHandUp(PlayerEntity player)
+    public boolean shouldHoldRightHandUp(Player player)
     {
         return true;
     }
 
     @Override
-    public boolean shouldCrouch(PlayerEntity player)
+    public boolean shouldCrouch(Player player)
     {
         return true;
     }

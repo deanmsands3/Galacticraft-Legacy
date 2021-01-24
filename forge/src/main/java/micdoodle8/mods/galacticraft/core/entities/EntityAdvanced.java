@@ -7,10 +7,10 @@ import micdoodle8.mods.galacticraft.core.network.IPacketReceiver;
 import micdoodle8.mods.galacticraft.core.network.NetworkUtil;
 import micdoodle8.mods.galacticraft.core.network.PacketDynamic;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -25,11 +25,11 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
     private final Map<Field, Object> lastSentData = new HashMap<Field, Object>();
     private boolean networkDataChanged = false;
 
-    public EntityAdvanced(EntityType<?> type, World world)
+    public EntityAdvanced(EntityType<?> type, Level world)
     {
         super(type, world);
 
-        if (world.isRemote)
+        if (world.isClientSide)
         {
             //Empty packet client->server just to kickstart the server into sending this client an initial packet
             this.fieldCacheServer = new LinkedHashSet<Field>();
@@ -80,14 +80,14 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
      *
      * @param player The player associated with the received packet
      */
-    public abstract void onPacketClient(PlayerEntity player);
+    public abstract void onPacketClient(Player player);
 
     /**
      * Called after a packet is read, only on server LogicalSide.
      *
      * @param player The player associated with the received packet
      */
-    public abstract void onPacketServer(PlayerEntity player);
+    public abstract void onPacketServer(Player player);
 
     /**
      * Packets will be sent to all (client-LogicalSide) players within this range
@@ -105,7 +105,7 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
 
         if (this.isNetworkedEntity())
         {
-            if (!this.world.isRemote && this.ticks % this.getPacketCooldown(LogicalSide.CLIENT) == 0)
+            if (!this.level.isClientSide && this.ticks % this.getPacketCooldown(LogicalSide.CLIENT) == 0)
             {
                 if (this.fieldCacheClient == null)
                 {
@@ -122,11 +122,11 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
                 PacketDynamic packet = new PacketDynamic(this);
                 if (networkDataChanged)
                 {
-                    GalacticraftCore.packetPipeline.sendToAllAround(packet, new PacketDistributor.TargetPoint(this.getPosX(), this.getPosY(), this.getPosZ(), this.getPacketRange(), GCCoreUtil.getDimensionType(this.world)));
+                    GalacticraftCore.packetPipeline.sendToAllAround(packet, new PacketDistributor.TargetPoint(this.getX(), this.getY(), this.getZ(), this.getPacketRange(), GCCoreUtil.getDimensionType(this.level)));
                 }
             }
 
-            if (this.world.isRemote && this.ticks % this.getPacketCooldown(LogicalSide.SERVER) == 0)
+            if (this.level.isClientSide && this.ticks % this.getPacketCooldown(LogicalSide.SERVER) == 0)
             {
                 if (this.fieldCacheClient == null)  //The target server cache may have been initialised to an empty set
                 {
@@ -178,7 +178,7 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
         Set<Field> fieldList = null;
         boolean changed = false;
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             fieldList = this.fieldCacheServer;
         }
@@ -262,7 +262,7 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
 
         Set<Field> fieldSet = null;
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             fieldSet = this.fieldCacheClient;
         }
@@ -275,7 +275,7 @@ public abstract class EntityAdvanced extends Entity implements IPacketReceiver
         {
             try
             {
-                Object obj = NetworkUtil.getFieldValueFromStream(field, buffer, this.world);
+                Object obj = NetworkUtil.getFieldValueFromStream(field, buffer, this.level);
                 field.set(this, obj);
             }
             catch (Exception e)

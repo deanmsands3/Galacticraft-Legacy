@@ -2,25 +2,24 @@ package micdoodle8.mods.galacticraft.planets.asteroids.client.sounds;
 
 import micdoodle8.mods.galacticraft.core.client.sounds.GCSounds;
 import micdoodle8.mods.galacticraft.planets.asteroids.entities.AstroMinerEntity;
-import net.minecraft.client.audio.TickableSound;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.world.entity.Entity;
 
 /**
  * This file is part of the Galacticraft project
  *
  * @author micdoodle8, radfast
  */
-public class SoundUpdaterMiner extends TickableSound
+public class SoundUpdaterMiner extends AbstractTickableSoundInstance
 {
-    private final ClientPlayerEntity thePlayer;
+    private final LocalPlayer thePlayer;
     private final AstroMinerEntity theRocket;
     private boolean soundStopped;
     private float targetVolume;
     private float targetPitch;
 
-    public SoundUpdaterMiner(ClientPlayerEntity par1EntityPlayerSP, AstroMinerEntity par2Entity)
+    public SoundUpdaterMiner(LocalPlayer par1EntityPlayerSP, AstroMinerEntity par2Entity)
     {
         super(GCSounds.astroMiner, SoundCategory.AMBIENT);
         this.theRocket = par2Entity;
@@ -29,8 +28,8 @@ public class SoundUpdaterMiner extends TickableSound
         this.targetVolume = 0.6F;
         this.targetPitch = 1.0F;
         this.pitch = 1.0F;  //pitch
-        this.repeat = true;
-        this.repeatDelay = 0;  //repeat delay
+        this.looping = true;
+        this.delay = 0;  //repeat delay
         this.updateSoundLocation(par2Entity);
     }
 
@@ -88,20 +87,20 @@ public class SoundUpdaterMiner extends TickableSound
         }
         else
         {
-            this.donePlaying = true;
+            this.stopped = true;
         }
     }
 
     public void stopRocketSound()
     {
-        this.donePlaying = true;
+        this.stopped = true;
         this.soundStopped = true;
     }
 
     public void updateSoundLocation(Entity e)
     {
-        this.x = (float) e.getPosX();
-        this.y = (float) e.getPosY();
-        this.z = (float) e.getPosZ();
+        this.x = (float) e.getX();
+        this.y = (float) e.getY();
+        this.z = (float) e.getZ();
     }
 }

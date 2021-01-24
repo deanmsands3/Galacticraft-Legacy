@@ -7,10 +7,10 @@ import micdoodle8.mods.galacticraft.planets.mars.entities.SlimelingEntity;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars;
 import micdoodle8.mods.galacticraft.planets.mars.network.PacketSimpleMars.EnumSimplePacketMars;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 
 public class GuiSlimelingFeed extends Screen
 {
@@ -33,7 +33,7 @@ public class GuiSlimelingFeed extends Screen
 
     public GuiSlimelingFeed(SlimelingEntity slimeling)
     {
-        super(new StringTextComponent("gui.slimeling.feed"));
+        super(new TextComponent("gui.slimeling.feed"));
         this.slimeling = slimeling;
         this.xSize = 138;
         this.ySize = 51;
@@ -47,31 +47,31 @@ public class GuiSlimelingFeed extends Screen
         final int var6 = (this.height - this.ySize) / 2;
         this.buttonGrowSlimeling = new Button(this.width / 2 - 65, var6 - 15, 64, 20, GCCoreUtil.translate("gui.message.grow"), (button) ->
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{this.slimeling.getEntityId(), 2, ""}));
-            Minecraft.getInstance().displayGuiScreen(null);
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{this.slimeling.getId(), 2, ""}));
+            Minecraft.getInstance().setScreen(null);
         });
         this.buttons.add(this.buttonGrowSlimeling);
         this.buttonBreedSlimeling = new Button(this.width / 2 + 1, var6 - 15, 64, 20, GCCoreUtil.translate("gui.message.breed"), (button) ->
         {
-            if (!this.slimeling.isInLove() && this.slimeling.isOwner(this.minecraft.player) && this.slimeling.world.isRemote)
+            if (!this.slimeling.isInLove() && this.slimeling.isOwnedBy(this.minecraft.player) && this.slimeling.level.isClientSide)
             {
                 this.slimeling.setInLove(this.minecraft.player);
             }
 
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{this.slimeling.getEntityId(), 3, ""}));
-            Minecraft.getInstance().displayGuiScreen(null);
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{this.slimeling.getId(), 3, ""}));
+            Minecraft.getInstance().setScreen(null);
         });
         this.buttons.add(this.buttonBreedSlimeling);
         this.buttonStrengthenSlimeling = new Button(this.width / 2 - 65, var6 + 7, 64, 20, GCCoreUtil.translate("gui.message.strengthen"), (button) ->
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{this.slimeling.getEntityId(), 4, ""}));
-            Minecraft.getInstance().displayGuiScreen(null);
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{this.slimeling.getId(), 4, ""}));
+            Minecraft.getInstance().setScreen(null);
         });
         this.buttons.add(this.buttonStrengthenSlimeling);
         this.buttonHealSlimeling = new Button(this.width / 2 + 1, var6 + 7, 64, 20, GCCoreUtil.translate("gui.message.heal"), (button) ->
         {
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionType(minecraft.world), new Object[]{this.slimeling.getEntityId(), 5, ""}));
-            Minecraft.getInstance().displayGuiScreen(null);
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionType(minecraft.level), new Object[]{this.slimeling.getId(), 5, ""}));
+            Minecraft.getInstance().setScreen(null);
         });
         this.buttons.add(this.buttonHealSlimeling);
     }
@@ -95,7 +95,7 @@ public class GuiSlimelingFeed extends Screen
     @Override
     public void render(int mouseX, int mouseY, float partialTicks)
     {
-        this.minecraft.textureManager.bindTexture(GuiSlimelingFeed.slimelingPanelGui);
+        this.minecraft.textureManager.bind(GuiSlimelingFeed.slimelingPanelGui);
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
         this.blit(var5, var6 - 20, 0, 0, this.xSize, this.ySize);
@@ -105,6 +105,6 @@ public class GuiSlimelingFeed extends Screen
         this.buttonHealSlimeling.active = this.slimeling.getHealth() < Math.floor(this.slimeling.getMaxHealth());
         this.buttonGrowSlimeling.active = this.slimeling.getScale() < 1.0F;
         this.buttonStrengthenSlimeling.active = this.slimeling.getAttackDamage() < 1.0;
-        this.buttonBreedSlimeling.active = !this.slimeling.isInLove() && !this.slimeling.isChild();
+        this.buttonBreedSlimeling.active = !this.slimeling.isInLove() && !this.slimeling.isBaby();
     }
 }

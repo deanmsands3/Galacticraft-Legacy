@@ -3,20 +3,16 @@ package micdoodle8.mods.galacticraft.core.world.gen.dungeon;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.EndSpikeFeature;
-import net.minecraft.world.gen.feature.EndSpikeFeatureConfig;
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-public class DungeonConfiguration implements IFeatureConfig
+public class DungeonConfiguration implements FeatureConfiguration
 {
     private BlockState brickBlock;
     private int yPosition;
@@ -43,9 +39,9 @@ public class DungeonConfiguration implements IFeatureConfig
         this.treasureRoom = treasureRoom;
     }
 
-    public CompoundNBT writeToNBT(CompoundNBT tagCompound)
+    public CompoundTag writeToNBT(CompoundTag tagCompound)
     {
-        Minecraft.getInstance().mouseHelper.ungrabMouse();
+        Minecraft.getInstance().mouseHandler.releaseMouse();
         tagCompound.putString("brickBlock", this.brickBlock.getBlock().getRegistryName().toString());
 //        tagCompound.putInt("brickBlockMeta", this.brickBlock.getBlock().getMetaFromState(this.brickBlock));
         tagCompound.putInt("yPosition", this.yPosition);
@@ -55,15 +51,15 @@ public class DungeonConfiguration implements IFeatureConfig
         tagCompound.putInt("roomHeight", this.roomHeight);
         tagCompound.putString("bossRoom", this.bossRoom.getName());
         tagCompound.putString("treasureRoom", this.treasureRoom.getName());
-        Minecraft.getInstance().mouseHelper.grabMouse(); // TODO Remove
+        Minecraft.getInstance().mouseHandler.grabMouse(); // TODO Remove
         return tagCompound;
     }
 
-    public void readFromNBT(CompoundNBT tagCompound)
+    public void readFromNBT(CompoundTag tagCompound)
     {
         try
         {
-            Minecraft.getInstance().mouseHelper.ungrabMouse();
+            Minecraft.getInstance().mouseHandler.releaseMouse();
             this.brickBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tagCompound.getString("brickBlock"))).getDefaultState();
             this.yPosition = tagCompound.getInt("yPosition");
             this.hallwayLengthMin = tagCompound.getInt("hallwayLengthMin");
@@ -72,7 +68,7 @@ public class DungeonConfiguration implements IFeatureConfig
             this.roomHeight = tagCompound.getInt("roomHeight");
             this.bossRoom = Class.forName(tagCompound.getString("bossRoom"));
             this.treasureRoom = Class.forName(tagCompound.getString("treasureRoom"));
-            Minecraft.getInstance().mouseHelper.grabMouse(); // TODO Remove
+            Minecraft.getInstance().mouseHandler.grabMouse(); // TODO Remove
         }
         catch (Exception e)
         {

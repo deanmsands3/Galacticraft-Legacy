@@ -11,20 +11,20 @@ import micdoodle8.mods.galacticraft.core.network.PacketDynamicInventory;
 import micdoodle8.mods.galacticraft.core.util.FluidUtil;
 import micdoodle8.mods.galacticraft.core.util.WorldUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -47,21 +47,21 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     private boolean networkDataChanged;
     private boolean syncAdjustFlag = true;
 
-    public EntityLanderBase(EntityType<?> type, World world)
+    public EntityLanderBase(EntityType<?> type, Level world)
     {
         super(type, world);
 //        this.setSize(3.0F, 3.0F);
     }
 
-    public EntityLanderBase(EntityType<?> type, World world, double x, double y, double z)
+    public EntityLanderBase(EntityType<?> type, Level world, double x, double y, double z)
     {
         this(type, world);
-        this.setPosition(x, y, z);
+        this.setPos(x, y, z);
     }
 
-    public EntityLanderBase(EntityType<?> type, ServerPlayerEntity player)
+    public EntityLanderBase(EntityType<?> type, ServerPlayer player)
     {
-        this(type, player.world, player.getPosX(), player.getPosY(), player.getPosZ());
+        this(type, player.level, player.getX(), player.getY(), player.getZ());
 
         GCPlayerStats stats = GCPlayerStats.get(player);
         this.stacks = NonNullList.withSize(stats.getRocketStacks().size() + 1, ItemStack.EMPTY);
@@ -79,17 +79,17 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
             }
         }
 
-        this.setPositionAndRotation(player.getPosX(), player.getPosY(), player.getPosZ(), 0, 0);
+        this.absMoveTo(player.getX(), player.getY(), player.getZ(), 0, 0);
 
         player.startRiding(this, true);
     }
 
     @Override
-    public void updatePassenger(Entity passenger)
+    public void positionRider(Entity passenger)
     {
-        if (this.isPassenger(passenger))
+        if (this.hasPassenger(passenger))
         {
-            passenger.setPosition(this.getPosX(), this.getPosY() + this.getMountedYOffset() + passenger.getYOffset(), this.getPosZ());
+            passenger.setPos(this.getX(), this.getY() + this.getRideHeight() + passenger.getRidingHeight(), this.getZ());
         }
     }
 
@@ -107,21 +107,21 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean b)
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean b)
     {
-        super.setPositionAndRotationDirect(x, y, z, yaw, pitch, posRotationIncrements, b);
-        if (this.syncAdjustFlag && this.world.isBlockLoaded(new BlockPos(x, 255D, z)))
+        super.lerpTo(x, y, z, yaw, pitch, posRotationIncrements, b);
+        if (this.syncAdjustFlag && this.level.hasChunkAt(new BlockPos(x, 255D, z)))
         {
-            PlayerEntity p = Minecraft.getInstance().player;
-            double dx = x - p.getPosX();
-            double dz = z - p.getPosZ();
+            Player p = Minecraft.getInstance().player;
+            double dx = x - p.getX();
+            double dz = z - p.getZ();
             if (dx * dx + dz * dz < 1024)
             {
-                if (this.world.getEntityByID(this.getEntityId()) == null)
+                if (this.level.getEntity(this.getId()) == null)
                 {
                     try
                     {
-                        ((ClientWorld) this.world).addEntity(this.getEntityId(), this);
+                        ((ClientLevel) this.level).putNonPlayerEntity(this.getId(), this);
                     }
                     catch (Exception e)
                     {
@@ -129,20 +129,20 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
                     }
                 }
 
-                this.setRawPosition(x, y, z);
+                this.setPosRaw(x, y, z);
 
-                int cx = MathHelper.floor(x / 16.0D);
-                int cz = MathHelper.floor(z / 16.0D);
+                int cx = Mth.floor(x / 16.0D);
+                int cz = Mth.floor(z / 16.0D);
 
-                if (!this.addedToChunk || this.chunkCoordX != cx || this.chunkCoordZ != cz)
+                if (!this.inChunk || this.xChunk != cx || this.zChunk != cz)
                 {
-                    if (this.addedToChunk && this.world.isBlockLoaded(new BlockPos(this.chunkCoordX << 4, 255, this.chunkCoordZ << 4)))
+                    if (this.inChunk && this.level.hasChunkAt(new BlockPos(this.xChunk << 4, 255, this.zChunk << 4)))
                     {
-                        this.world.getChunk(this.chunkCoordX, this.chunkCoordZ).removeEntityAtIndex(this, this.chunkCoordY);
+                        this.level.getChunk(this.xChunk, this.zChunk).removeEntity(this, this.yChunk);
                     }
 
-                    this.addedToChunk = true;
-                    this.world.getChunk(cx, cz).addEntity(this);
+                    this.inChunk = true;
+                    this.level.getChunk(cx, cz).addEntity(this);
                 }
 
                 this.syncAdjustFlag = false;
@@ -163,27 +163,27 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     {
         super.tick();
 
-        if (this.ticks < 40 && this.getPosY() > 150)
+        if (this.ticks < 40 && this.getY() > 150)
         {
             if (this.getPassengers().isEmpty())
             {
-                final PlayerEntity player = this.world.getClosestPlayer(this, 5);
+                final Player player = this.level.getNearestPlayer(this, 5);
 
-                if (player != null && player.getRidingEntity() == null)
+                if (player != null && player.getVehicle() == null)
                 {
                     player.startRiding(this);
                 }
             }
         }
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             this.checkFluidTankTransfer(this.stacks.size() - 1, this.fuelTank);
         }
 
-        AxisAlignedBB box = this.getBoundingBox().grow(0.2D, 0.4D, 0.2D);
+        AABB box = this.getBoundingBox().inflate(0.2D, 0.4D, 0.2D);
 
-        final List<Entity> var15 = this.world.getEntitiesWithinAABBExcludingEntity(this, box);
+        final List<Entity> var15 = this.level.getEntities(this, box);
 
         if (var15 != null && !var15.isEmpty())
         {
@@ -205,15 +205,15 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
 
     private void pushEntityAway(Entity entityToPush)
     {
-        if (!this.getPassengers().contains(entityToPush) && this.getRidingEntity() != entityToPush)
+        if (!this.getPassengers().contains(entityToPush) && this.getVehicle() != entityToPush)
         {
-            double d0 = this.getPosX() - entityToPush.getPosX();
-            double d1 = this.getPosZ() - entityToPush.getPosZ();
-            double d2 = MathHelper.absMax(d0, d1);
+            double d0 = this.getX() - entityToPush.getX();
+            double d1 = this.getZ() - entityToPush.getZ();
+            double d2 = Mth.absMax(d0, d1);
 
             if (d2 >= 0.009999999776482582D)
             {
-                d2 = MathHelper.sqrt(d2);
+                d2 = Mth.sqrt(d2);
                 d0 /= d2;
                 d1 /= d2;
                 double d3 = 1.0D / d2;
@@ -227,15 +227,15 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
                 d1 *= d3;
                 d0 *= 0.05000000074505806D;
                 d1 *= 0.05000000074505806D;
-                d0 *= 1.0F - entityToPush.entityCollisionReduction;
-                d1 *= 1.0F - entityToPush.entityCollisionReduction;
-                entityToPush.addVelocity(-d0, 0.0D, -d1);
+                d0 *= 1.0F - entityToPush.pushthrough;
+                d1 *= 1.0F - entityToPush.pushthrough;
+                entityToPush.push(-d0, 0.0D, -d1);
             }
         }
     }
 
     @Override
-    protected void readAdditional(CompoundNBT nbt)
+    protected void readAdditionalSaveData(CompoundTag nbt)
     {
         int invSize = nbt.getInt("rocketStacksLength");
         if (invSize < 3)
@@ -243,7 +243,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
             invSize = 3;
         }
         this.stacks = NonNullList.withSize(invSize, ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(nbt, this.stacks);
+        ContainerHelper.loadAllItems(nbt, this.stacks);
 
         if (nbt.contains("fuelTank"))
         {
@@ -257,19 +257,19 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     }
 
     @Override
-    public void writeAdditional(CompoundNBT nbt)
+    public void addAdditionalSaveData(CompoundTag nbt)
     {
-        if (world.isRemote)
+        if (level.isClientSide)
         {
             return;
         }
         nbt.putInt("rocketStacksLength", this.stacks.size());
 
-        ItemStackHelper.saveAllItems(nbt, this.stacks);
+        ContainerHelper.saveAllItems(nbt, this.stacks);
 
         if (this.fuelTank.getFluid() != FluidStack.EMPTY)
         {
-            nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundNBT()));
+            nbt.put("fuelTank", this.fuelTank.writeToNBT(new CompoundTag()));
         }
 
         UUID id = this.getOwnerUUID();
@@ -302,16 +302,16 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     @Override
     public void tickInAir()
     {
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             if (!this.shouldMove())
             {
-                this.setMotion(0.0, 0.0, 0.0);
+                this.setDeltaMovement(0.0, 0.0, 0.0);
             }
 
             if (this.shouldMove() && !this.lastShouldMove)
             {
-                this.setMotion(getMotion().x, this.getInitialMotionY(), this.getMotion().z);
+                this.setDeltaMovement(getDeltaMovement().x, this.getInitialMotionY(), this.getDeltaMovement().z);
             }
 
             this.lastShouldMove = this.shouldMove();
@@ -323,14 +323,14 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     {
         final ArrayList<Object> objList = new ArrayList<Object>();
 
-        if (!this.world.isRemote)
+        if (!this.level.isClientSide)
         {
             Integer cargoLength = this.stacks != null ? this.stacks.size() : 0;
             objList.add(cargoLength);
             objList.add(this.fuelTank.getFluid() == FluidStack.EMPTY ? 0 : this.fuelTank.getFluid().getAmount());
         }
 
-        if (this.world.isRemote)
+        if (this.level.isClientSide)
         {
             this.shouldMoveClient = this.shouldMove();
             objList.add(this.shouldMoveClient);
@@ -340,7 +340,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
             this.shouldMoveServer = this.shouldMove();
             objList.add(this.shouldMoveServer);
             //Server send rider information for client to check
-            objList.add(this.getPassengers().isEmpty() ? -1 : this.getPassengers().get(0).getEntityId());
+            objList.add(this.getPassengers().isEmpty() ? -1 : this.getPassengers().get(0).getId());
         }
 
         this.networkDataChanged = !objList.equals(this.prevData);
@@ -377,7 +377,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     {
         try
         {
-            if (this.world.isRemote)
+            if (this.level.isClientSide)
             {
                 if (!this.hasReceivedPacket)
                 {
@@ -402,14 +402,14 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
                 {
                     if (shouldBeMountedId > -1)
                     {
-                        Entity e = Minecraft.getInstance().world.getEntityByID(shouldBeMountedId);
+                        Entity e = Minecraft.getInstance().level.getEntity(shouldBeMountedId);
                         if (e != null)
                         {
                             if (e.dimension != this.dimension)
                             {
-                                if (e instanceof PlayerEntity)
+                                if (e instanceof Player)
                                 {
-                                    e = WorldUtil.forceRespawnClient(this.dimension, e.world.getWorldInfo().getGenerator(), ((ServerPlayerEntity) e).interactionManager.getGameType());
+                                    e = WorldUtil.forceRespawnClient(this.level.dimensionType(), ((ServerPlayer) e).gameMode.getGameModeForPlayer());
                                     e.startRiding(this);
                                     this.syncAdjustFlag = true;
                                 }
@@ -422,22 +422,22 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
                         }
                     }
                 }
-                else if (this.getPassengers().get(0).getEntityId() != shouldBeMountedId)
+                else if (this.getPassengers().get(0).getId() != shouldBeMountedId)
                 {
                     if (shouldBeMountedId == -1)
                     {
-                        this.removePassengers();
+                        this.ejectPassengers();
                     }
                     else
                     {
-                        Entity e = Minecraft.getInstance().world.getEntityByID(shouldBeMountedId);
+                        Entity e = Minecraft.getInstance().level.getEntity(shouldBeMountedId);
                         if (e != null)
                         {
                             if (e.dimension != this.dimension)
                             {
-                                if (e instanceof PlayerEntity)
+                                if (e instanceof Player)
                                 {
-                                    e = WorldUtil.forceRespawnClient(this.dimension, e.world.getWorldInfo().getGenerator(), ((ServerPlayerEntity) e).interactionManager.getGameType());
+                                    e = WorldUtil.forceRespawnClient(this.level.dimensionType(), ((ServerPlayer) e).gameMode.getGameModeForPlayer());
                                     e.startRiding(this, true);
                                     this.syncAdjustFlag = true;
                                 }
@@ -475,7 +475,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     }
 
     @Override
-    public int getSizeInventory()
+    public int getContainerSize()
     {
         return this.stacks.size();
     }
@@ -487,7 +487,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     }
 
     @Override
-    public boolean isItemValidForSlot(int var1, ItemStack var2)
+    public boolean canPlaceItem(int var1, ItemStack var2)
     {
         return false;
     }
@@ -501,7 +501,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
     @Override
     public UUID getOwnerUUID()
     {
-        if (!this.getPassengers().isEmpty() && !(this.getPassengers().get(0) instanceof PlayerEntity))
+        if (!this.getPassengers().isEmpty() && !(this.getPassengers().get(0) instanceof Player))
         {
             return null;
         }
@@ -510,7 +510,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
 
         if (!this.getPassengers().isEmpty())
         {
-            id = this.getPassengers().get(0).getUniqueID();
+            id = this.getPassengers().get(0).getUUID();
 
             this.persistantRiderUUID = id;
         }

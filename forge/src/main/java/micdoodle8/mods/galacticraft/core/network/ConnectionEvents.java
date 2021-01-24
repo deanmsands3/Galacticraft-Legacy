@@ -7,12 +7,12 @@ import micdoodle8.mods.galacticraft.core.dimension.SpaceRaceManager;
 import micdoodle8.mods.galacticraft.core.entities.player.GCPlayerStats;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.*;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketDirection;
-import net.minecraft.network.ProtocolType;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,14 +35,14 @@ public class ConnectionEvents
 
     static
     {
-        ProtocolType.STATES_BY_CLASS.put(PacketSimple.class, ProtocolType.PLAY);
+        ConnectionProtocol.PROTOCOL_BY_PACKET.put(PacketSimple.class, ProtocolType.PLAY);
         registerPacket(PacketDirection.CLIENTBOUND, PacketSimple.class, PacketSimple::new);
     }
 
-    protected static <P extends IPacket<?>> void registerPacket(PacketDirection direction, Class<P> clazz, Supplier<P> supplier)
+    protected static <P extends Packet<?>> void registerPacket(PacketFlow direction, Class<P> clazz, Supplier<P> supplier)
     {
         Object o = ProtocolType.PLAY.field_229711_h_.get(direction);
-        Class<? extends ProtocolType> outerClass = ProtocolType.PLAY.getClass();
+        Class<? extends ConnectionProtocol> outerClass = ProtocolType.PLAY.getClass();
         Class<?>[] innerClasses = outerClass.getDeclaredClasses();
         Class<?> packetListClass = innerClasses[1];
         try
@@ -91,12 +91,12 @@ public class ConnectionEvents
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
     {
-        if (event.getPlayer() instanceof ServerPlayerEntity)
+        if (event.getPlayer() instanceof ServerPlayer)
         {
-            ServerPlayerEntity thePlayer = (ServerPlayerEntity) event.getPlayer();
+            ServerPlayer thePlayer = (ServerPlayer) event.getPlayer();
             GCPlayerStats stats = GCPlayerStats.get(thePlayer);
 //            SpaceStationWorldData.checkAllStations(thePlayer, stats); TODO
-            GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SPACESTATION_CLIENT_ID, GCCoreUtil.getDimensionType(thePlayer.world), new Object[] { WorldUtil.spaceStationDataToString(stats.getSpaceStationDimensionData()) }), thePlayer);
+            GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_SPACESTATION_CLIENT_ID, GCCoreUtil.getDimensionType(thePlayer.level), new Object[] { WorldUtil.spaceStationDataToString(stats.getSpaceStationDimensionData()) }), thePlayer);
             SpaceRace raceForPlayer = SpaceRaceManager.getSpaceRaceFromPlayer(PlayerUtil.getName(thePlayer));
             if (raceForPlayer != null)
             {
@@ -104,7 +104,7 @@ public class ConnectionEvents
             }
         }
 
-        if (event.getPlayer().world.getDimension() instanceof DimensionSpaceStation && event.getPlayer() instanceof ServerPlayerEntity)
+        if (event.getPlayer().world.getDimension() instanceof DimensionSpaceStation && event.getPlayer() instanceof ServerPlayer)
         {
 //            ((DimensionSpaceStation) event.getPlayer().world.getDimension()).getSpinManager().sendPackets((ServerPlayerEntity) event.getPlayer()); TODO Spin Manager
         }
@@ -123,9 +123,9 @@ public class ConnectionEvents
             }
             GCLog.info("Galacticraft server sending dimension IDs to connecting client: " + ids);
         }
-        NetworkManager networkManager = ((ServerPlayerEntity) event.getPlayer()).connection.netManager;
-        networkManager.sendPacket(ConnectionPacket.createDimPacket(WorldUtil.getPlanetListInts()));
-        networkManager.sendPacket(ConnectionPacket.createSSPacket(WorldUtil.getSpaceStationListInts()));
+        Connection networkManager = ((ServerPlayer) event.getPlayer()).connection.connection;
+        networkManager.send(ConnectionPacket.createDimPacket(WorldUtil.getPlanetListInts()));
+        networkManager.send(ConnectionPacket.createSSPacket(WorldUtil.getSpaceStationListInts()));
 //        networkManager.sendPacket(ConnectionPacket.createConfigPacket(ConfigManagerCore.getServerConfigOverride.get()()));
     }
 

@@ -5,17 +5,17 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.placement.NoPlacementConfig;
-import net.minecraft.world.gen.placement.SimplePlacement;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneDecoratorConfiguration;
+import net.minecraft.world.level.levelgen.placement.SimpleFeatureDecorator;
 
-public class SapphirePlacement extends SimplePlacement<NoPlacementConfig>
+public class SapphirePlacement extends SimpleFeatureDecorator<NoneDecoratorConfiguration>
 {
-   public SapphirePlacement(Function<Dynamic<?>, ? extends NoPlacementConfig> config) {
+   public SapphirePlacement(Function<Dynamic<?>, ? extends NoneDecoratorConfiguration> config) {
       super(config);
    }
 
-   public Stream<BlockPos> getPositions(Random random, NoPlacementConfig config, BlockPos pos) {
+   public Stream<BlockPos> getPositions(Random random, NoneDecoratorConfiguration config, BlockPos pos) {
       int i = 1 + random.nextInt(2);
       return IntStream.range(0, i).mapToObj((i1) -> {
          int j = random.nextInt(16) + pos.getX();

@@ -4,22 +4,22 @@ import micdoodle8.mods.galacticraft.core.GCBlockNames;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.blocks.BlockConcealedDetector;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class TileEntityPlayerDetector extends TileEntity implements ITickableTileEntity
+public class TileEntityPlayerDetector extends BlockEntity implements TickableBlockEntity
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.PLAYER_DETECTOR)
-    public static TileEntityType<TileEntityPlayerDetector> TYPE;
+    public static BlockEntityType<TileEntityPlayerDetector> TYPE;
 
     private int ticks = 24;
-    private AxisAlignedBB playerSearch;
+    private AABB playerSearch;
     private boolean result = false;
 
     public TileEntityPlayerDetector()
@@ -30,38 +30,38 @@ public class TileEntityPlayerDetector extends TileEntity implements ITickableTil
     @Override
     public void tick()
     {
-        if (!this.world.isRemote && ++this.ticks >= 25)
+        if (!this.level.isClientSide && ++this.ticks >= 25)
         {
             this.ticks = 0;
             Direction facing = Direction.NORTH;
-            BlockState state = this.world.getBlockState(this.pos);
+            BlockState state = this.level.getBlockState(this.worldPosition);
             if (state.getBlock() == GCBlocks.PLAYER_DETECTOR)
             {
-                facing = state.get(BlockConcealedDetector.FACING);
+                facing = state.getValue(BlockConcealedDetector.FACING);
             }
-            int x = this.getPos().getX();
-            double y = this.getPos().getY();
-            int z = this.getPos().getZ();
+            int x = this.getBlockPos().getX();
+            double y = this.getBlockPos().getY();
+            int z = this.getBlockPos().getZ();
             double range = 14D;
             double hysteresis = result ? 3D : 0D;
             switch (facing)
             {
             case SOUTH:
-                this.playerSearch = new AxisAlignedBB(x - range / 2 + 0.5D - hysteresis, y - 6 - hysteresis, z - range - hysteresis, x + range / 2 + 0.5D + hysteresis, y + 2 + hysteresis, z + hysteresis);
+                this.playerSearch = new AABB(x - range / 2 + 0.5D - hysteresis, y - 6 - hysteresis, z - range - hysteresis, x + range / 2 + 0.5D + hysteresis, y + 2 + hysteresis, z + hysteresis);
                 break;
             case WEST:
-                this.playerSearch = new AxisAlignedBB(x + 1 - hysteresis, y - 6 - hysteresis, z - range / 2 + 0.5D - hysteresis, x + range + 1 + hysteresis, y + 2 + hysteresis, z + range / 2 + 0.5D + hysteresis);
+                this.playerSearch = new AABB(x + 1 - hysteresis, y - 6 - hysteresis, z - range / 2 + 0.5D - hysteresis, x + range + 1 + hysteresis, y + 2 + hysteresis, z + range / 2 + 0.5D + hysteresis);
                 break;
             case NORTH:
-                this.playerSearch = new AxisAlignedBB(x - range / 2 + 0.5D - hysteresis, y - 6 - hysteresis, z + 1 - hysteresis, x + range / 2 + 0.5D + hysteresis, y + 2 + hysteresis, z + range + 1D + hysteresis);
+                this.playerSearch = new AABB(x - range / 2 + 0.5D - hysteresis, y - 6 - hysteresis, z + 1 - hysteresis, x + range / 2 + 0.5D + hysteresis, y + 2 + hysteresis, z + range + 1D + hysteresis);
                 break;
             case EAST:
-                this.playerSearch = new AxisAlignedBB(x - range - hysteresis, y - 6 - hysteresis, z - range / 2 + 0.5D - hysteresis, x + hysteresis, y + 2 + hysteresis, z + range / 2 + 0.5D + hysteresis);
+                this.playerSearch = new AABB(x - range - hysteresis, y - 6 - hysteresis, z - range / 2 + 0.5D - hysteresis, x + hysteresis, y + 2 + hysteresis, z + range / 2 + 0.5D + hysteresis);
             }
-            result = !this.world.getEntitiesWithinAABB(PlayerEntity.class, playerSearch).isEmpty();
+            result = !this.level.getEntitiesOfClass(Player.class, playerSearch).isEmpty();
             if (this.getBlockState().getBlock() instanceof BlockConcealedDetector)
             {
-                ((BlockConcealedDetector) this.getBlockState().getBlock()).updateState(this.world, this.getPos(), result);
+                ((BlockConcealedDetector) this.getBlockState().getBlock()).updateState(this.level, this.getBlockPos(), result);
             }
         }
     }

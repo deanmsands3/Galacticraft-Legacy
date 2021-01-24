@@ -1,9 +1,7 @@
 package micdoodle8.mods.galacticraft.planets.asteroids.world.gen;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-
 import java.util.ArrayList;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class SpecialAsteroidBlock
 {

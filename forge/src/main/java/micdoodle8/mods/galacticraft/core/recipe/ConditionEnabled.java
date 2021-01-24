@@ -5,8 +5,8 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.util.GCLog;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
@@ -65,9 +65,9 @@ public class ConditionEnabled implements ICondition
         @Override
         public ConditionEnabled read(JsonObject json)
         {
-            if(JSONUtils.hasField(json, "sub_cond"))
+            if(GsonHelper.isValidNode(json, "sub_cond"))
             {
-                String data = JSONUtils.getString(json, "sub_cond");
+                String data = GsonHelper.getAsString(json, "sub_cond");
                 return new ConditionEnabled(data);
             }
 

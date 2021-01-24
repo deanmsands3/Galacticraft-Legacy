@@ -4,22 +4,22 @@ import micdoodle8.mods.galacticraft.api.item.IItemElectric;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.energy.EnergyUtil;
 import micdoodle8.mods.galacticraft.core.tile.TileEntityEnergyStorageModule;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerEnergyStorageModule extends Container
+public class ContainerEnergyStorageModule extends AbstractContainerMenu
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCContainerNames.ENERGY_STORAGE_MODULE)
-    public static ContainerType<ContainerEnergyStorageModule> TYPE;
+    public static MenuType<ContainerEnergyStorageModule> TYPE;
 
     private final TileEntityEnergyStorageModule storageModule;
 
-    public ContainerEnergyStorageModule(int containerId, PlayerInventory playerInv, TileEntityEnergyStorageModule storageModule)
+    public ContainerEnergyStorageModule(int containerId, Inventory playerInv, TileEntityEnergyStorageModule storageModule)
     {
         super(TYPE, containerId);
         this.storageModule = storageModule;
@@ -51,16 +51,16 @@ public class ContainerEnergyStorageModule extends Container
     }
 
     @Override
-    public void onContainerClosed(PlayerEntity entityplayer)
+    public void removed(Player entityplayer)
     {
-        super.onContainerClosed(entityplayer);
+        super.removed(entityplayer);
         this.storageModule.playersUsing.remove(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
-        return this.storageModule.isUsableByPlayer(par1EntityPlayer);
+        return this.storageModule.stillValid(par1EntityPlayer);
     }
 
     /**
@@ -68,15 +68,15 @@ public class ContainerEnergyStorageModule extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity par1EntityPlayer, int slotID)
+    public ItemStack quickMoveStack(Player par1EntityPlayer, int slotID)
     {
         ItemStack returnStack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(slotID);
-        final int b = this.inventorySlots.size();
+        Slot slot = this.slots.get(slotID);
+        final int b = this.slots.size();
 
-        if (slot != null && slot.getHasStack())
+        if (slot != null && slot.hasItem())
         {
-            ItemStack itemStack = slot.getStack();
+            ItemStack itemStack = slot.getItem();
             returnStack = itemStack.copy();
             boolean movedToMachineSlot = false;
 
@@ -86,9 +86,9 @@ public class ContainerEnergyStorageModule extends Container
                 {
                     if (EnergyUtil.isChargedElectricItem(itemStack))
                     {
-                        if (!this.mergeItemStack(itemStack, 1, 2, false))
+                        if (!this.moveItemStackTo(itemStack, 1, 2, false))
                         {
-                            if (EnergyUtil.isFillableElectricItem(itemStack) && !this.mergeItemStack(itemStack, 0, 1, false))
+                            if (EnergyUtil.isFillableElectricItem(itemStack) && !this.moveItemStackTo(itemStack, 0, 1, false))
                             {
                                 return ItemStack.EMPTY;
                             }
@@ -97,7 +97,7 @@ public class ContainerEnergyStorageModule extends Container
                     }
                     else
                     {
-                        if (!this.mergeItemStack(itemStack, 0, 1, false))
+                        if (!this.moveItemStackTo(itemStack, 0, 1, false))
                         {
                             return ItemStack.EMPTY;
                         }
@@ -108,18 +108,18 @@ public class ContainerEnergyStorageModule extends Container
                 {
                     if (slotID < b - 9)
                     {
-                        if (!this.mergeItemStack(itemStack, b - 9, b, false))
+                        if (!this.moveItemStackTo(itemStack, b - 9, b, false))
                         {
                             return ItemStack.EMPTY;
                         }
                     }
-                    else if (!this.mergeItemStack(itemStack, b - 36, b - 9, false))
+                    else if (!this.moveItemStackTo(itemStack, b - 36, b - 9, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
             }
-            else if (!this.mergeItemStack(itemStack, 2, 38, false))
+            else if (!this.moveItemStackTo(itemStack, 2, 38, false))
             {
                 return ItemStack.EMPTY;
             }
@@ -131,16 +131,16 @@ public class ContainerEnergyStorageModule extends Container
                 {
                     ItemStack remainder = returnStack.copy();
                     remainder.shrink(1);
-                    slot.putStack(remainder);
+                    slot.set(remainder);
                 }
                 else
                 {
-                    slot.putStack(ItemStack.EMPTY);
+                    slot.set(ItemStack.EMPTY);
                 }
             }
             else
             {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (itemStack.getCount() == returnStack.getCount())

@@ -13,29 +13,29 @@ import micdoodle8.mods.galacticraft.core.blocks.BlockCargoLoader;
 import micdoodle8.mods.galacticraft.core.energy.item.ItemElectricBase;
 import micdoodle8.mods.galacticraft.core.inventory.ContainerCargoBase.ContainerCargoLoader;
 import micdoodle8.mods.galacticraft.core.util.RecipeUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class TileEntityCargoLoader extends TileEntityCargoBase implements ISidedInventory, ILandingPadAttachable, ILockable, INamedContainerProvider
+public class TileEntityCargoLoader extends TileEntityCargoBase implements WorldlyContainer, ILandingPadAttachable, ILockable, MenuProvider
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.CARGO_LOADER)
-    public static TileEntityType<TileEntityCargoLoader> TYPE;
+    public static BlockEntityType<TileEntityCargoLoader> TYPE;
 
     public boolean outOfItems;
     @NetworkedField(targetSide = LogicalSide.CLIENT)
@@ -61,7 +61,7 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
     {
         super.tick();
 
-        if (!this.getWorld().isRemote)
+        if (!this.getLevel().isClientSide)
         {
             if (this.ticks % 100 == 0)
             {
@@ -107,11 +107,11 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
         BlockVec3 thisVec = new BlockVec3(this);
         for (final Direction dir : Direction.values())
         {
-            final TileEntity pad = thisVec.getTileEntityOnSide(this.getWorld(), dir);
+            final BlockEntity pad = thisVec.getTileEntityOnSide(this.getLevel(), dir);
 
             if (pad != null && pad instanceof TileEntityFake)
             {
-                final TileEntity mainTile = ((TileEntityFake) pad).getMainBlockTile();
+                final BlockEntity mainTile = ((TileEntityFake) pad).getMainBlockTile();
 
                 if (mainTile instanceof ICargoEntity)
                 {
@@ -135,16 +135,16 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
     }
 
     @Override
-    public void read(CompoundNBT nbt)
+    public void load(CompoundTag nbt)
     {
-        super.read(nbt);
+        super.load(nbt);
         this.locked = nbt.getBoolean("locked");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt)
+    public CompoundTag save(CompoundTag nbt)
     {
-        super.write(nbt);
+        super.save(nbt);
         nbt.putBoolean("locked", this.locked);
         return nbt;
     }
@@ -164,7 +164,7 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canPlaceItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         if (side != this.getElectricInputDirection())
         {
@@ -183,13 +183,13 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
 
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, Direction side)
+    public boolean canTakeItemThroughFace(int slotID, ItemStack itemstack, Direction side)
     {
         return false;
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
+    public boolean canPlaceItem(int slotID, ItemStack itemstack)
     {
         if (slotID == 0)
         {
@@ -229,7 +229,7 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
 
                 if (doRemove)
                 {
-                    this.markDirty();
+                    this.setChanged();
                 }
 
                 return new RemovalResult(EnumCargoLoadingState.SUCCESS, resultStack);
@@ -255,7 +255,7 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
                     if (doAdd)
                     {
                         stackAt.grow(stack.getCount());
-                        this.markDirty();
+                        this.setChanged();
                     }
 
                     return EnumCargoLoadingState.SUCCESS;
@@ -269,7 +269,7 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
                     if (doAdd)
                     {
                         stackAt.setCount(stackAt.getMaxStackSize());
-                        this.markDirty();
+                        this.setChanged();
                     }
 
                     stack.setCount(surplus);
@@ -294,7 +294,7 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
                 if (doAdd)
                 {
                     this.getInventory().set(count, stack);
-                    this.markDirty();
+                    this.setChanged();
                 }
 
                 return EnumCargoLoadingState.SUCCESS;
@@ -305,7 +305,7 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
     }
 
     @Override
-    public boolean canAttachToLandingPad(IWorldReader world, BlockPos pos)
+    public boolean canAttachToLandingPad(LevelReader world, BlockPos pos)
     {
         return true;
     }
@@ -313,10 +313,10 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
     @Override
     public Direction getFront()
     {
-        BlockState state = this.world.getBlockState(getPos());
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (state.getBlock() instanceof BlockCargoLoader)
         {
-            return (state.get(BlockCargoLoader.FACING));
+            return (state.getValue(BlockCargoLoader.FACING));
         }
         return Direction.NORTH;
     }
@@ -324,7 +324,7 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
     @Override
     public Direction getElectricInputDirection()
     {
-        return getFront().rotateY();
+        return getFront().getClockWise();
     }
 
     @Override
@@ -343,14 +343,14 @@ public class TileEntityCargoLoader extends TileEntityCargoBase implements ISided
     }
 
     @Override
-    public Container createMenu(int containerId, PlayerInventory playerInv, PlayerEntity player)
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInv, Player player)
     {
         return new ContainerCargoLoader(containerId, playerInv, this);
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent("container.cargo_loader");
+        return new TranslatableComponent("container.cargo_loader");
     }
 }

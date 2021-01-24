@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.core.entities.player;
 
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -11,10 +11,10 @@ import javax.annotation.Nullable;
 
 public class CapabilityProviderStatsClient implements ICapabilityProvider
 {
-    private final ClientPlayerEntity owner;
+    private final LocalPlayer owner;
     private final LazyOptional<GCPlayerStatsClient> holder = LazyOptional.of(StatsClientCapability::new);
 
-    public CapabilityProviderStatsClient(ClientPlayerEntity owner)
+    public CapabilityProviderStatsClient(LocalPlayer owner)
     {
         this.owner = owner;
     }

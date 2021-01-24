@@ -3,18 +3,17 @@ package micdoodle8.mods.galacticraft.core.energy.item;
 import micdoodle8.mods.galacticraft.api.item.IItemElectricBase;
 import micdoodle8.mods.galacticraft.core.energy.EnergyConfigHandler;
 import micdoodle8.mods.galacticraft.core.energy.EnergyDisplayHelper;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.DoubleNBT;
-import net.minecraft.nbt.FloatNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -59,7 +58,7 @@ public abstract class ItemElectricBase extends Item implements IItemElectricBase
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
     {
         String color = "";
         float joules = this.getElectricityStored(stack);
@@ -77,7 +76,7 @@ public abstract class ItemElectricBase extends Item implements IItemElectricBase
             color = "\u00a76";
         }
 
-        tooltip.add(new StringTextComponent(color + EnergyDisplayHelper.getEnergyDisplayS(joules) + "/" + EnergyDisplayHelper.getEnergyDisplayS(this.getMaxElectricityStored(stack))));
+        tooltip.add(new TextComponent(color + EnergyDisplayHelper.getEnergyDisplayS(joules) + "/" + EnergyDisplayHelper.getEnergyDisplayS(this.getMaxElectricityStored(stack))));
     }
 
     /**
@@ -85,7 +84,7 @@ public abstract class ItemElectricBase extends Item implements IItemElectricBase
      * Change this if you do not want this to happen!
      */
     @Override
-    public void onCreated(ItemStack itemStack, World par2World, PlayerEntity par3EntityPlayer)
+    public void onCraftedBy(ItemStack itemStack, Level par2World, Player par3EntityPlayer)
     {
         this.setElectricity(itemStack, 0);
     }
@@ -135,7 +134,7 @@ public abstract class ItemElectricBase extends Item implements IItemElectricBase
         // Saves the frequency in the ItemStack
         if (itemStack.getTag() == null)
         {
-            itemStack.setTag(new CompoundNBT());
+            itemStack.setTag(new CompoundTag());
         }
 
         float electricityStored = Math.max(Math.min(joules, this.getMaxElectricityStored(itemStack)), 0);
@@ -145,7 +144,7 @@ public abstract class ItemElectricBase extends Item implements IItemElectricBase
         }
 
         /** Sets the damage as a percentage to render the bar properly. */
-        itemStack.setDamage(DAMAGE_RANGE - (int) (electricityStored / this.getMaxElectricityStored(itemStack) * DAMAGE_RANGE));
+        itemStack.setDamageValue(DAMAGE_RANGE - (int) (electricityStored / this.getMaxElectricityStored(itemStack) * DAMAGE_RANGE));
     }
 
     @Override
@@ -162,34 +161,34 @@ public abstract class ItemElectricBase extends Item implements IItemElectricBase
     {
         if (itemStack.getTag() == null)
         {
-            itemStack.setTag(new CompoundNBT());
+            itemStack.setTag(new CompoundTag());
         }
         float energyStored = 0f;
         if (itemStack.getTag().contains("electricity"))
         {
-            INBT obj = itemStack.getTag().get("electricity");
-            if (obj instanceof DoubleNBT)
+            Tag obj = itemStack.getTag().get("electricity");
+            if (obj instanceof DoubleTag)
             {
-                energyStored = ((DoubleNBT) obj).getFloat();
+                energyStored = ((DoubleTag) obj).getAsFloat();
             }
-            else if (obj instanceof FloatNBT)
+            else if (obj instanceof FloatTag)
             {
-                energyStored = ((FloatNBT) obj).getFloat();
+                energyStored = ((FloatTag) obj).getAsFloat();
             }
         }
         else //First time check item - maybe from addInformation() in a JEI recipe display?
         {
-            if (itemStack.getDamage() == DAMAGE_RANGE)
+            if (itemStack.getDamageValue() == DAMAGE_RANGE)
             {
                 return 0F;
             }
 
-            energyStored = this.getMaxElectricityStored(itemStack) * (DAMAGE_RANGE - itemStack.getDamage()) / DAMAGE_RANGE;
+            energyStored = this.getMaxElectricityStored(itemStack) * (DAMAGE_RANGE - itemStack.getDamageValue()) / DAMAGE_RANGE;
             itemStack.getTag().putFloat("electricity", energyStored);
         }
 
         /** Sets the damage as a percentage to render the bar properly. */
-        itemStack.setDamage(DAMAGE_RANGE - (int) (energyStored / this.getMaxElectricityStored(itemStack) * DAMAGE_RANGE));
+        itemStack.setDamageValue(DAMAGE_RANGE - (int) (energyStored / this.getMaxElectricityStored(itemStack) * DAMAGE_RANGE));
         return energyStored;
     }
 

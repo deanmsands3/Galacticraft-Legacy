@@ -1,17 +1,17 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.model.MeteorModel;
 import micdoodle8.mods.galacticraft.core.entities.MeteorEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,10 +21,10 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity>
     private static final ResourceLocation TEXTURE = new ResourceLocation(Constants.MOD_ID_CORE, "textures/entity/meteor.png");
     private final MeteorModel meteor = new MeteorModel();
 
-    public MeteorRenderer(EntityRendererManager manager)
+    public MeteorRenderer(EntityRenderDispatcher manager)
     {
         super(manager);
-        this.shadowSize = 1F;
+        this.shadowRadius = 1F;
     }
 
     @Override
@@ -34,16 +34,16 @@ public class MeteorRenderer extends EntityRenderer<MeteorEntity>
     }
 
     @Override
-    public void render(MeteorEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight)
+    public void render(MeteorEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight)
     {
-        matrixStack.push();
-        float interpolatedPitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
-        matrixStack.rotate(new Quaternion(Vector3f.YP, entityYaw, true));
-        matrixStack.rotate(new Quaternion(Vector3f.ZN, interpolatedPitch, true));
+        matrixStack.pushPose();
+        float interpolatedPitch = entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks;
+        matrixStack.mulPose(new Quaternion(Vector3f.YP, entityYaw, true));
+        matrixStack.mulPose(new Quaternion(Vector3f.ZN, interpolatedPitch, true));
         float f = entity.getSize();
         matrixStack.scale(f / 2.0F, f / 2.0F, f / 2.0F);
-        IVertexBuilder ivertexbuilder = buffer.getBuffer(this.meteor.getRenderType(this.getEntityTexture(entity)));
-        this.meteor.render(matrixStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        matrixStack.pop();
+        VertexConsumer ivertexbuilder = buffer.getBuffer(this.meteor.renderType(this.getEntityTexture(entity)));
+        this.meteor.renderToBuffer(matrixStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        matrixStack.popPose();
     }
 }

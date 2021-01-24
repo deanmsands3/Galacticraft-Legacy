@@ -1,9 +1,9 @@
 package micdoodle8.mods.galacticraft.core.client;
 
 import micdoodle8.mods.galacticraft.core.util.GCLog;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
@@ -11,14 +11,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public abstract class KeyHandler
 {
-    private final KeyBinding[] keyBindings;
-    private KeyBinding[] vKeyBindings;
+    private final KeyMapping[] keyBindings;
+    private KeyMapping[] vKeyBindings;
     private boolean[] keyDown;
     private boolean[] repeatings;
     private boolean[] vRepeatings;
     public boolean isDummy;
 
-    public KeyHandler(KeyBinding[] keyBindings, boolean[] repeatings, KeyBinding[] vanillaKeys, boolean[] vanillaRepeatings)
+    public KeyHandler(KeyMapping[] keyBindings, boolean[] repeatings, KeyMapping[] vanillaKeys, boolean[] vanillaRepeatings)
     {
         assert keyBindings.length == repeatings.length : "You need to pass two arrays of identical length";
         assert vanillaKeys.length == vanillaRepeatings.length : "You need to pass two arrays of identical length";
@@ -29,7 +29,7 @@ public abstract class KeyHandler
         this.keyDown = new boolean[keyBindings.length + vanillaKeys.length];
     }
 
-    public KeyHandler(KeyBinding[] keyBindings)
+    public KeyHandler(KeyMapping[] keyBindings)
     {
         this.keyBindings = keyBindings;
         this.isDummy = true;
@@ -51,14 +51,14 @@ public abstract class KeyHandler
 
     public void keyTick(TickEvent.Type type, boolean tickEnd)
     {
-        boolean inChat = Minecraft.getInstance().currentScreen instanceof ChatScreen;
+        boolean inChat = Minecraft.getInstance().screen instanceof ChatScreen;
 
         for (int i = 0; i < this.keyBindings.length; i++)
         {
-            KeyBinding keyBinding = this.keyBindings[i];
+            KeyMapping keyBinding = this.keyBindings[i];
 //            int keyCode = keyBinding.getKeyCode();
 //            if (keyCode == Keyboard.KEY_NONE) continue;
-            boolean state = keyBinding.isKeyDown();
+            boolean state = keyBinding.isDown();
 
 //            try
 //            {
@@ -99,11 +99,11 @@ public abstract class KeyHandler
         }
         for (int i = 0; i < this.vKeyBindings.length; i++)
         {
-            KeyBinding keyBinding = this.vKeyBindings[i];
+            KeyMapping keyBinding = this.vKeyBindings[i];
 //            int keyCode = keyBinding.getKeyCode();
 //            if (keyCode == Keyboard.KEY_NONE) continue;
 //            boolean state = keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode);
-            boolean state = keyBinding.isKeyDown();
+            boolean state = keyBinding.isDown();
             if (state != this.keyDown[i + this.keyBindings.length] || state && this.vRepeatings[i])
             {
                 if (state)
@@ -122,8 +122,8 @@ public abstract class KeyHandler
         }
     }
 
-    public abstract void keyDown(TickEvent.Type types, KeyBinding kb, boolean tickEnd, boolean isRepeat);
+    public abstract void keyDown(TickEvent.Type types, KeyMapping kb, boolean tickEnd, boolean isRepeat);
 
-    public abstract void keyUp(TickEvent.Type types, KeyBinding kb, boolean tickEnd);
+    public abstract void keyUp(TickEvent.Type types, KeyMapping kb, boolean tickEnd);
 
 }

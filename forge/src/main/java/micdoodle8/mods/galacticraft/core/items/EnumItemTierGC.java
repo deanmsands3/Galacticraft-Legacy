@@ -1,17 +1,16 @@
 package micdoodle8.mods.galacticraft.core.items;
 
 import micdoodle8.mods.galacticraft.core.GCItems;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
-
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
-public enum EnumItemTierGC implements IItemTier
+public enum EnumItemTierGC implements Tier
 {
     STEEL(3, 768, 5.0F, 2, 8, () ->
     {
-        return Ingredient.fromItems(GCItems.COMPRESSED_STEEL);
+        return Ingredient.of(GCItems.COMPRESSED_STEEL);
     });
 
     private final int harvestLevel;
@@ -19,7 +18,7 @@ public enum EnumItemTierGC implements IItemTier
     private final float efficiency;
     private final float attackDamage;
     private final int enchantability;
-    private final LazyValue<Ingredient> repairMaterial;
+    private final LazyLoadedValue<Ingredient> repairMaterial;
 
     EnumItemTierGC(int harvestLevelIn, int maxUsesIn, float efficiencyIn, float attackDamageIn, int enchantabilityIn, Supplier<Ingredient> repairMaterialIn)
     {
@@ -28,42 +27,42 @@ public enum EnumItemTierGC implements IItemTier
         this.efficiency = efficiencyIn;
         this.attackDamage = attackDamageIn;
         this.enchantability = enchantabilityIn;
-        this.repairMaterial = new LazyValue<>(repairMaterialIn);
+        this.repairMaterial = new LazyLoadedValue<>(repairMaterialIn);
     }
 
     @Override
-    public int getMaxUses()
+    public int getUses()
     {
         return this.maxUses;
     }
 
     @Override
-    public float getEfficiency()
+    public float getSpeed()
     {
         return this.efficiency;
     }
 
     @Override
-    public float getAttackDamage()
+    public float getAttackDamageBonus()
     {
         return this.attackDamage;
     }
 
     @Override
-    public int getHarvestLevel()
+    public int getLevel()
     {
         return this.harvestLevel;
     }
 
     @Override
-    public int getEnchantability()
+    public int getEnchantmentValue()
     {
         return this.enchantability;
     }
 
     @Override
-    public Ingredient getRepairMaterial()
+    public Ingredient getRepairIngredient()
     {
-        return this.repairMaterial.getValue();
+        return this.repairMaterial.get();
     }
 }

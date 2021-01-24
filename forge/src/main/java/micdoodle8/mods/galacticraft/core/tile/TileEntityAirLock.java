@@ -2,14 +2,14 @@ package micdoodle8.mods.galacticraft.core.tile;
 
 import micdoodle8.mods.galacticraft.core.GCBlockNames;
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class TileEntityAirLock extends TileEntityAdvanced
 {
     @ObjectHolder(Constants.MOD_ID_CORE + ":" + GCBlockNames.AIR_LOCK_FRAME)
-    public static TileEntityType<TileEntityAirLock> TYPE;
+    public static BlockEntityType<TileEntityAirLock> TYPE;
 
     public TileEntityAirLock()
     {

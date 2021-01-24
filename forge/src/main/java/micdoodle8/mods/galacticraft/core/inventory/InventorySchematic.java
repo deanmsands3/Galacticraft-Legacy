@@ -1,76 +1,73 @@
 package micdoodle8.mods.galacticraft.core.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 
-public class InventorySchematic implements IInventory
+public class InventorySchematic implements Container
 {
     public NonNullList<ItemStack> stacks;
-    protected final Container eventHandler;
+    protected final AbstractContainerMenu eventHandler;
 
-    public InventorySchematic(Container par1Container)
+    public InventorySchematic(AbstractContainerMenu par1Container)
     {
         this.stacks = NonNullList.withSize(1, ItemStack.EMPTY);
         this.eventHandler = par1Container;
     }
 
     @Override
-    public int getSizeInventory()
+    public int getContainerSize()
     {
         return this.stacks.size();
     }
 
     @Override
-    public ItemStack getStackInSlot(int index)
+    public ItemStack getItem(int index)
     {
         return this.stacks.get(index);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
+    public ItemStack removeItem(int index, int count)
     {
-        ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
+        ItemStack itemstack = ContainerHelper.removeItem(this.stacks, index, count);
 
         if (!itemstack.isEmpty())
         {
-            this.markDirty();
-            this.eventHandler.onCraftMatrixChanged(this);
+            this.setChanged();
+            this.eventHandler.slotsChanged(this);
         }
 
         return itemstack;
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
+    public ItemStack removeItemNoUpdate(int index)
     {
-        ItemStack oldstack = ItemStackHelper.getAndRemove(this.stacks, index);
+        ItemStack oldstack = ContainerHelper.takeItem(this.stacks, index);
         if (!oldstack.isEmpty())
         {
-            this.markDirty();
-            this.eventHandler.onCraftMatrixChanged(this);
+            this.setChanged();
+            this.eventHandler.slotsChanged(this);
         }
         return oldstack;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
+    public void setItem(int index, ItemStack stack)
     {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
+        if (stack.getCount() > this.getMaxStackSize())
         {
-            stack.setCount(this.getInventoryStackLimit());
+            stack.setCount(this.getMaxStackSize());
         }
 
-        this.markDirty();
-        this.eventHandler.onCraftMatrixChanged(this);
+        this.setChanged();
+        this.eventHandler.slotsChanged(this);
     }
 
     @Override
@@ -94,37 +91,37 @@ public class InventorySchematic implements IInventory
 //    }
 
     @Override
-    public int getInventoryStackLimit()
+    public int getMaxStackSize()
     {
         return 64;
     }
 
     @Override
-    public void markDirty()
+    public void setChanged()
     {
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity par1EntityPlayer)
+    public boolean stillValid(Player par1EntityPlayer)
     {
         return true;
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
+    public boolean canPlaceItem(int i, ItemStack itemstack)
     {
         return false;
     }
 
     //We don't use these because we use forge containers
     @Override
-    public void openInventory(PlayerEntity player)
+    public void startOpen(Player player)
     {
     }
 
     //We don't use these because we use forge containers
     @Override
-    public void closeInventory(PlayerEntity player)
+    public void stopOpen(Player player)
     {
     }
 
@@ -146,7 +143,7 @@ public class InventorySchematic implements IInventory
 //    }
 
     @Override
-    public void clear()
+    public void clearContent()
     {
 
     }

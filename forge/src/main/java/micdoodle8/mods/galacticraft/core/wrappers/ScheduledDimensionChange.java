@@ -1,20 +1,20 @@
 package micdoodle8.mods.galacticraft.core.wrappers;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.dimension.DimensionType;
 
 public class ScheduledDimensionChange
 {
-    private ServerPlayerEntity player;
+    private ServerPlayer player;
     private DimensionType dimensionName;
 
-    public ScheduledDimensionChange(ServerPlayerEntity player, DimensionType dimensionName)
+    public ScheduledDimensionChange(ServerPlayer player, DimensionType dimensionName)
     {
         this.player = player;
         this.dimensionName = dimensionName;
     }
 
-    public ServerPlayerEntity getPlayer()
+    public ServerPlayer getPlayer()
     {
         return player;
     }
@@ -24,7 +24,7 @@ public class ScheduledDimensionChange
         return dimensionName;
     }
 
-    public void setPlayer(ServerPlayerEntity player)
+    public void setPlayer(ServerPlayer player)
     {
         this.player = player;
     }

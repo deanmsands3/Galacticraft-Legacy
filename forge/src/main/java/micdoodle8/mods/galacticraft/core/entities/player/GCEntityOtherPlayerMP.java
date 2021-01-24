@@ -8,39 +8,38 @@ import micdoodle8.mods.galacticraft.api.world.IZeroGDimension;
 import micdoodle8.mods.galacticraft.core.client.EventHandlerClient;
 import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
-import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.RemotePlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class GCEntityOtherPlayerMP extends RemoteClientPlayerEntity
+public class GCEntityOtherPlayerMP extends RemotePlayer
 {
     private boolean checkedCape = false;
     private ResourceLocation galacticraftCape = null;
 
-    public GCEntityOtherPlayerMP(ClientWorld world, GameProfile profile)
+    public GCEntityOtherPlayerMP(ClientLevel world, GameProfile profile)
     {
         super(world, profile);
     }
 
     @Override
-    public ResourceLocation getLocationCape()
+    public ResourceLocation getCloakTextureLocation()
     {
-        if (this.getRidingEntity() instanceof EntitySpaceshipBase)
+        if (this.getVehicle() instanceof EntitySpaceshipBase)
         {
             // Don't draw any cape if riding a rocket (the cape renders outside the rocket model!)
             return null;
         }
 
-        ResourceLocation vanillaCape = super.getLocationCape();
+        ResourceLocation vanillaCape = super.getCloakTextureLocation();
 
         if (!this.checkedCape)
         {
-            NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
-            this.galacticraftCape = ClientProxyCore.capeMap.get(networkplayerinfo.getGameProfile().getId().toString().replace("-", ""));
+            PlayerInfo networkplayerinfo = this.getPlayerInfo();
+            this.galacticraftCape = ClientProxyCore.capeMap.get(networkplayerinfo.getProfile().getId().toString().replace("-", ""));
             this.checkedCape = true;
         }
 
@@ -66,13 +65,13 @@ public class GCEntityOtherPlayerMP extends RemoteClientPlayerEntity
 //    }
 
     @Override
-    public boolean isSneaking()
+    public boolean isShiftKeyDown()
     {
-        if (EventHandlerClient.sneakRenderOverride && !(this.world.getDimension() instanceof IZeroGDimension))
+        if (EventHandlerClient.sneakRenderOverride && !(this.level.getDimension() instanceof IZeroGDimension))
         {
-            if (this.onGround && this.inventory.getCurrentItem() != null && this.inventory.getCurrentItem().getItem() instanceof IHoldableItem && !(this.getRidingEntity() instanceof ICameraZoomEntity))
+            if (this.onGround && this.inventory.getSelected() != null && this.inventory.getSelected().getItem() instanceof IHoldableItem && !(this.getVehicle() instanceof ICameraZoomEntity))
             {
-                IHoldableItem holdableItem = (IHoldableItem) this.inventory.getCurrentItem().getItem();
+                IHoldableItem holdableItem = (IHoldableItem) this.inventory.getSelected().getItem();
 
                 if (holdableItem.shouldCrouch(this))
                 {
@@ -80,6 +79,6 @@ public class GCEntityOtherPlayerMP extends RemoteClientPlayerEntity
                 }
             }
         }
-        return super.isSneaking();
+        return super.isShiftKeyDown();
     }
 }

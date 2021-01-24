@@ -10,9 +10,9 @@ import micdoodle8.mods.galacticraft.planets.asteroids.AsteroidsModule;
 import micdoodle8.mods.galacticraft.planets.asteroids.client.render.NetworkRenderer;
 import micdoodle8.mods.galacticraft.planets.asteroids.dimension.DimensionAsteroids;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
@@ -26,7 +26,7 @@ public class AsteroidsEventHandlerClient
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
         Minecraft minecraft = Minecraft.getInstance();
-        ClientWorld world = minecraft.world;
+        ClientLevel world = minecraft.level;
 
         if (world != null)
         {
@@ -52,7 +52,7 @@ public class AsteroidsEventHandlerClient
         if (renderEvent.celestialBody.equals(AsteroidsModule.planetAsteroids))
         {
             float alpha = 1.0F;
-            Screen screen = Minecraft.getInstance().currentScreen;
+            Screen screen = Minecraft.getInstance().screen;
             if (screen instanceof GuiCelestialSelection)
             {
                 alpha = ((GuiCelestialSelection) screen).getAlpha(renderEvent.celestialBody);
@@ -66,8 +66,8 @@ public class AsteroidsEventHandlerClient
             GL11.glBegin(GL11.GL_LINE_LOOP);
 
             final float theta = Constants.twoPI / 90;
-            final float cos = MathHelper.cos(theta);
-            final float sin = MathHelper.sin(theta);
+            final float cos = Mth.cos(theta);
+            final float sin = Mth.sin(theta);
 
             float min = 72.0F;
             float max = 78.0F;
@@ -143,6 +143,6 @@ public class AsteroidsEventHandlerClient
     @SubscribeEvent
     public void onSpecialRender(EventSpecialRender event)
     {
-        NetworkRenderer.renderNetworks(Minecraft.getInstance().world, event.partialTicks);
+        NetworkRenderer.renderNetworks(Minecraft.getInstance().level, event.partialTicks);
     }
 }
