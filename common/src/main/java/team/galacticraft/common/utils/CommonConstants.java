@@ -1,4 +1,4 @@
-package team.galactiacraft.common.utils;
+package team.galacticraft.common.utils;
 
 public interface CommonConstants {
     // Mod Meta

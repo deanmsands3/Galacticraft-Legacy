@@ -1,7 +1,7 @@
 package team.galacticraft.fabric;
 
 import net.fabricmc.api.ModInitializer;
-import team.galactiacraft.common.GalacticraftCommon;
+import team.galacticraft.common.GalacticraftCommon;
 
 public class GalacticraftFabric implements ModInitializer {
     @Override

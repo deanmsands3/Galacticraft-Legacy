@@ -1,4 +1,4 @@
-package team.galactiacraft.common.algorithm;
+package team.galacticraft.common.algorithm;
 
 public enum Dimension {
 

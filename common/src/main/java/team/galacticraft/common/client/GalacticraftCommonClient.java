@@ -1,4 +1,4 @@
-package team.galactiacraft.common.client;
+package team.galacticraft.common.client;
 
 public class GalacticraftCommonClient {
 

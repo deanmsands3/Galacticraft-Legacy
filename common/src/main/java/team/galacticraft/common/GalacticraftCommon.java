@@ -1,4 +1,4 @@
-package team.galactiacraft.common;
+package team.galacticraft.common;
 
 import java.io.File;
 
@@ -12,7 +12,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import team.galactiacraft.common.utils.CommonConstants;
+import team.galacticraft.common.utils.CommonConstants;
 
 public class GalacticraftCommon {
     public static final LazyLoadedValue<Registries> REGISTRIES = new LazyLoadedValue<>(() -> Registries.get(CommonConstants.MOD_ID));
