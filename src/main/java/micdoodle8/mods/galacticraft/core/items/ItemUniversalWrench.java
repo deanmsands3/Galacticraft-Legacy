@@ -37,7 +37,7 @@ public class ItemUniversalWrench extends Item implements ISortableItem
     public ItemUniversalWrench(String assetName)
     {
         super();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setMaxStackSize(1);
         this.setMaxDamage(256);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);

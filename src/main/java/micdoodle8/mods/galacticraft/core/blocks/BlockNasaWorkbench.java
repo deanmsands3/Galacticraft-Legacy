@@ -36,11 +36,11 @@ public class BlockNasaWorkbench extends BlockContainer implements ITileEntityPro
 //        this.setBlockBounds(-0.3F, 0.0F, -0.3F, 1.3F, 0.5F, 1.3F);
         this.setHardness(2.5F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -171,7 +171,7 @@ public class BlockNasaWorkbench extends BlockContainer implements ITileEntityPro
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

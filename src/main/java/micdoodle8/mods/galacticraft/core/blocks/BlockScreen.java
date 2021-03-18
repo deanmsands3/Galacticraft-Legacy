@@ -52,7 +52,7 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(LEFT, false).withProperty(RIGHT, false).withProperty(UP, false).withProperty(DOWN, false));
         this.setHardness(0.1F);
         this.setSoundType(SoundType.GLASS);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         final int angle = MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-        int change = EnumFacing.getHorizontal(angle).getOpposite().getIndex();
+        int change = EnumFacing.byHorizontalIndex(angle).getOpposite().getIndex();
         worldIn.setBlockState(pos, getStateFromMeta(change), 3);
     }
 
@@ -109,7 +109,7 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -139,7 +139,7 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override
@@ -178,7 +178,7 @@ public class BlockScreen extends BlockAdvanced implements IShiftDescription, IPa
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getFront(meta);
+        EnumFacing enumfacing = EnumFacing.byIndex(meta);
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 

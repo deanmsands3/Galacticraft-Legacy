@@ -45,7 +45,7 @@ public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlo
         this.setLightLevel(lit ? 0.9375F : 0.2F);
         this.setHardness(0.0F);
         this.setSoundType(SoundType.WOOD);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.UP));
     }
 
@@ -180,10 +180,10 @@ public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlo
         if (enumfacing.getAxis().isHorizontal())
         {
             EnumFacing enumfacing1 = enumfacing.getOpposite();
-            worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4 * (double) enumfacing1.getFrontOffsetX(), d1 + d3, d2 + d4 * (double) enumfacing1.getFrontOffsetZ(), 0.0D, 0.0D, 0.0D, new int[0]);
+            worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4 * (double) enumfacing1.getXOffset(), d1 + d3, d2 + d4 * (double) enumfacing1.getZOffset(), 0.0D, 0.0D, 0.0D, new int[0]);
             if (this == GCBlocks.unlitTorchLit)
             {
-                worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4 * (double) enumfacing1.getFrontOffsetX(), d1 + d3, d2 + d4 * (double) enumfacing1.getFrontOffsetZ(), 0.0D, 0.0D, 0.0D, new int[0]);
+                worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4 * (double) enumfacing1.getXOffset(), d1 + d3, d2 + d4 * (double) enumfacing1.getZOffset(), 0.0D, 0.0D, 0.0D, new int[0]);
             }
         }
         else
@@ -232,7 +232,7 @@ public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlo
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }

@@ -27,7 +27,7 @@ public class ItemSwordAsteroids extends ItemSword implements ISortableItem
     public ItemSwordAsteroids(String assetName)
     {
         super(AsteroidsItems.TOOL_TITANIUM);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.attackDamageD = 9.0D;
         //this.setTextureName(GalacticraftPlanets.TEXTURE_PREFIX + assetName);
     }

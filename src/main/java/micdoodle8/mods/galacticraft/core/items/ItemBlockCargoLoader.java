@@ -13,7 +13,7 @@ public class ItemBlockCargoLoader extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
+    public String getTranslationKey(ItemStack par1ItemStack)
     {
         String name = "";
 
@@ -26,7 +26,7 @@ public class ItemBlockCargoLoader extends ItemBlockDesc
             name = "unloader";
         }
 
-        return this.getBlock().getUnlocalizedName() + "." + name;
+        return this.getBlock().getTranslationKey() + "." + name;
     }
 
     @Override

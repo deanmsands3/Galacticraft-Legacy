@@ -48,7 +48,7 @@ public class ItemCanisterLiquidNitrogen extends ItemCanisterGeneric implements I
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         if (itemStack.getMaxDamage() - itemStack.getItemDamage() == 0)
         {

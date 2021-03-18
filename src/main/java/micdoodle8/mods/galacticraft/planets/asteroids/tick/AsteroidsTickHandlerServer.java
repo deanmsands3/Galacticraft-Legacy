@@ -153,7 +153,7 @@ public class AsteroidsTickHandlerServer
                         if (droppedChunks == null)
                         {
                             Class clazz = ((WorldServer)miner.world).getChunkProvider().getClass();
-                            droppedChunks = clazz.getDeclaredField(GCCoreUtil.isDeobfuscated() ? "droppedChunksSet" : "field_73248_b");
+                            droppedChunks = clazz.getDeclaredField(GCCoreUtil.isDeobfuscated() ? "droppedChunks" : "field_73248_b");
                             droppedChunks.setAccessible(true);
                         }
                         Set<Long> undrop = (Set<Long>) droppedChunks.get(((WorldServer)miner.world).getChunkProvider());

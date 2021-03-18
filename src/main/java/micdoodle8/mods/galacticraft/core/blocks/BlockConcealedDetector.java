@@ -35,12 +35,12 @@ public class BlockConcealedDetector extends Block implements ISortableBlock, ITi
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
         this.blockResistance = 15F;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, Integer.valueOf(0)).withProperty(VARIANT, Integer.valueOf(0)).withProperty(DETECTED, false));
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }

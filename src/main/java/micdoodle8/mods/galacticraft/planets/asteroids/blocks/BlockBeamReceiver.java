@@ -49,7 +49,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
     public BlockBeamReceiver(String assetName)
     {
         super(Material.IRON);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setSoundType(SoundType.METAL);
     }
 
@@ -76,7 +76,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -85,7 +85,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
         int oldMeta = getMetaFromState(worldIn.getBlockState(pos));
-        int meta = this.getMetadataFromAngle(worldIn, pos, EnumFacing.getFront(oldMeta).getOpposite());
+        int meta = this.getMetadataFromAngle(worldIn, pos, EnumFacing.byIndex(oldMeta).getOpposite());
 
         if (meta == -1)
         {
@@ -98,7 +98,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
             if (thisTile instanceof TileEntityBeamReceiver)
             {
                 TileEntityBeamReceiver thisReceiver = (TileEntityBeamReceiver) thisTile;
-                thisReceiver.setFacing(EnumFacing.getFront(meta));
+                thisReceiver.setFacing(EnumFacing.byIndex(meta));
                 thisReceiver.invalidateReflector();
                 thisReceiver.initiateReflector();
             }
@@ -113,7 +113,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
         TileEntity thisTile = world.getTileEntity(pos);
         if (thisTile instanceof TileEntityBeamReceiver)
         {
-            ((TileEntityBeamReceiver) thisTile).setFacing(EnumFacing.getFront(getMetaFromState(state)));
+            ((TileEntityBeamReceiver) thisTile).setFacing(EnumFacing.byIndex(getMetaFromState(state)));
         }
     }
 
@@ -124,7 +124,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
 //
 //        if (meta != -1)
 //        {
-//            EnumFacing dir = EnumFacing.getFront(meta);
+//            EnumFacing dir = EnumFacing.byIndex(meta);
 //
 //            switch (dir)
 //            {
@@ -163,7 +163,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
     {
         EnumFacing direction = side.getOpposite();
 
-        TileEntity tileAt = world.getTileEntity(pos.add(direction.getFrontOffsetX(), direction.getFrontOffsetY(), direction.getFrontOffsetZ()));
+        TileEntity tileAt = world.getTileEntity(pos.add(direction.getXOffset(), direction.getYOffset(), direction.getZOffset()));
 
         if (tileAt instanceof EnergyStorageTile)
         {
@@ -188,7 +188,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
             {
                 continue;
             }
-            tileAt = world.getTileEntity(pos.add(adjacentDir.getFrontOffsetX(), adjacentDir.getFrontOffsetY(), adjacentDir.getFrontOffsetZ()));
+            tileAt = world.getTileEntity(pos.add(adjacentDir.getXOffset(), adjacentDir.getYOffset(), adjacentDir.getZOffset()));
 
             if (tileAt instanceof IConductor)
             {
@@ -296,7 +296,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override
@@ -308,7 +308,7 @@ public class BlockBeamReceiver extends BlockTileGC implements IShiftDescription,
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getFront(meta);
+        EnumFacing enumfacing = EnumFacing.byIndex(meta);
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 

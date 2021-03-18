@@ -25,7 +25,7 @@ public class ItemBuggyMaterial extends Item implements ISortableItem
         this.setMaxStackSize(1);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 
@@ -55,9 +55,9 @@ public class ItemBuggyMaterial extends Item implements ISortableItem
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
-        return this.getUnlocalizedName() + "." + ItemBuggyMaterial.names[itemStack.getItemDamage()];
+        return this.getTranslationKey() + "." + ItemBuggyMaterial.names[itemStack.getItemDamage()];
     }
 
     /*@Override

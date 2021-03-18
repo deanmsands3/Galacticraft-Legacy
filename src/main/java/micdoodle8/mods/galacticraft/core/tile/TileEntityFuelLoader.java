@@ -245,7 +245,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
     	IBlockState state = this.world.getBlockState(getPos()); 
     	if (state.getBlock() instanceof BlockFuelLoader)
@@ -267,7 +267,7 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
     {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
         {
-            return (T) new FluidHandlerWrapper(this, facing);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FluidHandlerWrapper(this, facing));
         }
         return super.getCapability(capability, facing);
     }
@@ -296,16 +296,16 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return byIndex().rotateYCCW();
         case REAR:
-            return getFront().getOpposite();
+            return byIndex().getOpposite();
         case TOP:
             return EnumFacing.UP;
         case BOTTOM:
             return EnumFacing.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return byIndex().rotateY();
         }
     }
 
@@ -316,15 +316,15 @@ public class TileEntityFuelLoader extends TileBaseElectricBlockWithInventory imp
         {
         case RIGHT:
         default:
-            return getFront().rotateYCCW();
+            return byIndex().rotateYCCW();
         case REAR:
-            return getFront().getOpposite();
+            return byIndex().getOpposite();
         case TOP:
             return EnumFacing.UP;
         case BOTTOM:
             return EnumFacing.DOWN;
         case LEFT:
-            return getFront().rotateY();
+            return byIndex().rotateY();
         }
     }
 

@@ -98,7 +98,7 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
         super(GCBlocks.machine);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setResistance(1000000000000000.0F);
     }
 
@@ -411,8 +411,8 @@ public class BlockMulti extends BlockAdvanced implements IPartialSealableBlock, 
 
         for (int l = 0; l <= 1; ++l)
         {
-            int i1 = i - enumfacing.getFrontOffsetX() * l - 1;
-            int j1 = k - enumfacing.getFrontOffsetZ() * l - 1;
+            int i1 = i - enumfacing.getXOffset() * l - 1;
+            int j1 = k - enumfacing.getZOffset() * l - 1;
             int k1 = i1 + 2;
             int l1 = j1 + 2;
 

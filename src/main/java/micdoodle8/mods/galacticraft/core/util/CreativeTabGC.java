@@ -23,7 +23,7 @@ public class CreativeTabGC extends CreativeTabs
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ItemStack getTabIconItem()
+    public ItemStack createIcon()
     {
         return this.itemForTab;
     }
@@ -35,7 +35,7 @@ public class CreativeTabGC extends CreativeTabs
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String getTranslatedTabLabel()
+    public String getTranslationKey()
     {
         return "item_group." + this.getTabLabel();
     }

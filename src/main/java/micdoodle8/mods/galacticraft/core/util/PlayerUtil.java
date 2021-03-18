@@ -171,7 +171,7 @@ public class PlayerUtil
 
     public static boolean isPlayerOnline(EntityPlayerMP player)
     {
-        return player.mcServer.getPlayerList().getPlayers().contains(player);
+        return player.server.getPlayerList().getPlayers().contains(player);
     }
     
     public static String getName(EntityPlayer player)

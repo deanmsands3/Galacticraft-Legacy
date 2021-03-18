@@ -115,7 +115,7 @@ public class BlockVec3 implements Cloneable
                 }
                 else
                 {
-                    final Chunk chunk = world.getChunkFromChunkCoords(chunkx, chunkz);
+                    final Chunk chunk = world.getChunk(chunkx, chunkz);
                     BlockVec3.chunkCached_Client = chunk;
                     BlockVec3.chunkCacheDim_Client = world.provider.getDimension();
                     BlockVec3.chunkCacheX_Client = chunkx;
@@ -133,7 +133,7 @@ public class BlockVec3 implements Cloneable
                 }
                 else
                 {
-                    final Chunk chunk = world.getChunkFromChunkCoords(chunkx, chunkz);
+                    final Chunk chunk = world.getChunk(chunkx, chunkz);
                     BlockVec3.chunkCached = chunk;
                     BlockVec3.chunkCacheDim = world.provider.getDimension();
                     BlockVec3.chunkCacheX = chunkx;
@@ -181,7 +181,7 @@ public class BlockVec3 implements Cloneable
                     }
                     else
                     {
-                        final Chunk chunk = world.getChunkFromChunkCoords(chunkx, chunkz);
+                        final Chunk chunk = world.getChunk(chunkx, chunkz);
                         BlockVec3.chunkCached_Client = chunk;
                         BlockVec3.chunkCacheDim_Client = world.provider.getDimension();
                         BlockVec3.chunkCacheX_Client = chunkx;
@@ -199,7 +199,7 @@ public class BlockVec3 implements Cloneable
                     }
                     else
                     {
-                        final Chunk chunk = world.getChunkFromChunkCoords(chunkx, chunkz);
+                        final Chunk chunk = world.getChunk(chunkx, chunkz);
                         BlockVec3.chunkCached = chunk;
                         BlockVec3.chunkCacheDim = world.provider.getDimension();
                         BlockVec3.chunkCacheX = chunkx;
@@ -257,7 +257,7 @@ public class BlockVec3 implements Cloneable
                     }
                     else
                     {
-                        final Chunk chunk = world.getChunkFromChunkCoords(chunkx, chunkz);
+                        final Chunk chunk = world.getChunk(chunkx, chunkz);
                         BlockVec3.chunkCached_Client = chunk;
                         BlockVec3.chunkCacheDim_Client = world.provider.getDimension();
                         BlockVec3.chunkCacheX_Client = chunkx;
@@ -275,7 +275,7 @@ public class BlockVec3 implements Cloneable
                     }
                     else
                     {
-                        final Chunk chunk = world.getChunkFromChunkCoords(chunkx, chunkz);
+                        final Chunk chunk = world.getChunk(chunkx, chunkz);
                         BlockVec3.chunkCached = chunk;
                         BlockVec3.chunkCacheDim = world.provider.getDimension();
                         BlockVec3.chunkCacheX = chunkx;
@@ -535,7 +535,7 @@ public class BlockVec3 implements Cloneable
             return false;
         }
         final BlockPos pos = new BlockPos(x, y, z);
-        return world.getBlockState(pos).getBlock().isSideSolid(world.getBlockState(pos), world, pos, EnumFacing.getFront(side ^ 1));
+        return world.getBlockState(pos).getBlock().isSideSolid(world.getBlockState(pos), world, pos, EnumFacing.byIndex(side ^ 1));
     }
 
     /**

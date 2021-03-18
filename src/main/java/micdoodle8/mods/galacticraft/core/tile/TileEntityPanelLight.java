@@ -108,7 +108,7 @@ public class TileEntityPanelLight extends TileEntity implements IPacketReceiver
             this.color = nbt.getInteger("col");
         }
         NBTTagCompound tag = nbt.getCompoundTag("sust");
-        if (!tag.hasNoTags())
+        if (!tag.isEmpty())
         {
             this.superState = readBlockState(tag);
         }

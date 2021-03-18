@@ -126,7 +126,7 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
         this.setHardness(0.3F);
         this.setSoundType(SoundType.GLASS);
         this.setDefaultState(this.blockState.getBaseState().withProperty(COLOR, EnumDyeColor.WHITE));
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.mode = mode;
     }
 
@@ -203,7 +203,7 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         if (this.mode == EnumPipeMode.NORMAL)
         {
@@ -343,7 +343,7 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override
@@ -360,7 +360,7 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }

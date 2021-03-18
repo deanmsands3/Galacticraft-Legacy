@@ -49,7 +49,7 @@ public class Satellite extends CelestialBody implements IChildBody
     }
 
     @Override
-    public String getUnlocalizedNamePrefix()
+    public String getTranslationKeyPrefix()
     {
         return "satellite";
     }

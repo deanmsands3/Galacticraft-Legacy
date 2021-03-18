@@ -323,7 +323,7 @@ public abstract class TileEntityFluidTransmitter extends TileEntityAdvanced impl
     {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
         {
-            return (T) new FluidHandlerWrapper(this, facing);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FluidHandlerWrapper(this, facing));
         }
         return super.getCapability(capability, facing);
     }

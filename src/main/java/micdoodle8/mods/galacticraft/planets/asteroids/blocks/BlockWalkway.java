@@ -79,7 +79,7 @@ public class BlockWalkway extends BlockTransmitter implements ITileEntityProvide
     {
         super(Material.IRON);
         this.setHardness(1.0F);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setSoundType(SoundType.METAL);
         this.hasTileEntity = true;
         this.setDefaultState(this.blockState.getBaseState().withProperty(WALKWAY_TYPE, EnumWalkwayType.WALKWAY));
@@ -107,7 +107,7 @@ public class BlockWalkway extends BlockTransmitter implements ITileEntityProvide
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -394,7 +394,7 @@ public class BlockWalkway extends BlockTransmitter implements ITileEntityProvide
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }

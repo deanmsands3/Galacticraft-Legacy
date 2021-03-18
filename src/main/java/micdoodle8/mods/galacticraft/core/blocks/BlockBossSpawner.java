@@ -28,7 +28,7 @@ public class BlockBossSpawner extends Block implements ITileEntityProvider
         super(Material.ROCK);
         this.blockHardness = 1000000.0F;
         this.blockResistance = 1000000.0F;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
 //    @Override

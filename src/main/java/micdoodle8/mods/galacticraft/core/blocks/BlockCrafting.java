@@ -28,11 +28,11 @@ public class BlockCrafting extends BlockAdvancedTile implements ITileEntityProvi
     public BlockCrafting(String assetName)
     {
         super(Material.IRON);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -150,7 +150,7 @@ public class BlockCrafting extends BlockAdvancedTile implements ITileEntityProvi
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override
@@ -162,7 +162,7 @@ public class BlockCrafting extends BlockAdvancedTile implements ITileEntityProvi
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
+        return this.getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta));
     }
 
     @Override

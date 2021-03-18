@@ -94,12 +94,12 @@ public class BlockBasicMoon extends Block implements IDetectableResource, IPlant
         this.blockHardness = 1.5F;
         this.blockResistance = 2.5F;
         this.setDefaultState(this.blockState.getBaseState().withProperty(BASIC_TYPE_MOON, EnumBlockBasicMoon.ORE_COPPER_MOON));
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -363,15 +363,16 @@ public class BlockBasicMoon extends Block implements IDetectableResource, IPlant
         EnumBlockBasicMoon type = ((EnumBlockBasicMoon) getStateFromMeta(meta).getValue(BASIC_TYPE_MOON));
         switch (type)
         {
-        case ORE_CHEESE_MOON:
-        case ORE_COPPER_MOON:
-        case ORE_SAPPHIRE:
-        case ORE_TIN_MOON:
-            return EnumSortCategoryBlock.ORE;
-        case MOON_DUNGEON_BRICK:
-            return EnumSortCategoryBlock.BRICKS;
+        	case ORE_CHEESE_MOON:
+        	case ORE_COPPER_MOON:
+        	case ORE_SAPPHIRE:
+        	case ORE_TIN_MOON:
+        		return EnumSortCategoryBlock.ORE;
+        	case MOON_DUNGEON_BRICK:
+        		return EnumSortCategoryBlock.BRICKS;
+			default:
+				return EnumSortCategoryBlock.GENERAL;
         }
-        return EnumSortCategoryBlock.GENERAL;
     }
 
     @Override

@@ -102,12 +102,12 @@ public class BlockBasicVenus extends Block implements IDetectableResource, IPlan
         this.blockHardness = 2.2F;
         this.blockResistance = 2.5F;
         this.setDefaultState(this.blockState.getBaseState().withProperty(BASIC_TYPE_VENUS, EnumBlockBasicVenus.ROCK_SOFT));
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }

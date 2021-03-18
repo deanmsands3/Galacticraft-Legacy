@@ -37,7 +37,7 @@ public class ItemFlag extends Item implements IHoldableItemCustom, ISortableItem
         super();
         this.setMaxDamage(0);
         this.setMaxStackSize(1);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName("arrow");
     }
 
@@ -145,7 +145,7 @@ public class ItemFlag extends Item implements IHoldableItemCustom, ISortableItem
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         return "item.flag";
     }

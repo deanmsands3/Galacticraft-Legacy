@@ -36,7 +36,7 @@ public class ItemMeteorChunk extends Item implements ISortableItem
         this.setHasSubtypes(true);
         this.maxStackSize = 16;
         this.setCreativeTab(CreativeTabs.MATERIALS);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName("arrow");
     }
 
@@ -131,7 +131,7 @@ public class ItemMeteorChunk extends Item implements ISortableItem
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         return "item." + ItemMeteorChunk.names[itemStack.getItemDamage()];
     }

@@ -1082,7 +1082,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
         //There are 12 blocks around ... and 12 in front.  One block per tick?
         //(That means can move at 5/6 block per second when mining, and 1.67 bps when traveling)
         BlockPos pos = new BlockPos(x, y, z);
-        switch (EnumFacing.getFront(this.facingAI.getIndex() & 6))
+        switch (EnumFacing.byIndex(this.facingAI.getIndex() & 6))
         {
         case DOWN:
             if (tryMineBlock(pos))
@@ -1319,7 +1319,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
         //There are 12 blocks around ... and 12 in front.  One block per tick?
         //(That means can move at 5/6 block per second when mining, and 1.67 bps when traveling)
         BlockPos pos = new BlockPos(x, y, z);
-        switch (EnumFacing.getFront(this.facing.getIndex() & 6))
+        switch (EnumFacing.byIndex(this.facing.getIndex() & 6))
         {
         case DOWN:
             if (tryBlockClient(pos))
@@ -1679,7 +1679,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
 
         if (item == null)
         {
-            GCLog.info("AstroMiner was unable to mine anything from: " + b.getUnlocalizedName());
+            GCLog.info("AstroMiner was unable to mine anything from: " + b.getTranslationKey());
             return null;
         }
             
@@ -2467,7 +2467,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
         }
         if (nbt.hasKey("BaseFacing"))
         {
-            this.baseFacing = EnumFacing.getFront(nbt.getInteger("BaseFacing"));
+            this.baseFacing = EnumFacing.byIndex(nbt.getInteger("BaseFacing"));
         }
         if (nbt.hasKey("AIState"))
         {
@@ -2475,7 +2475,7 @@ public class EntityAstroMiner extends Entity implements IInventory, IPacketRecei
         }
         if (nbt.hasKey("Facing"))
         {
-            this.facingAI = EnumFacing.getFront(nbt.getInteger("Facing"));
+            this.facingAI = EnumFacing.byIndex(nbt.getInteger("Facing"));
             switch (this.facingAI)
             {
             case NORTH:

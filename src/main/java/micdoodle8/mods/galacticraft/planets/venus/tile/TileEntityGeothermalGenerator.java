@@ -156,7 +156,7 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
         return EnumSet.noneOf(EnumFacing.class);
     }
 
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         IBlockState state = this.world.getBlockState(getPos()); 
         if (state.getBlock() instanceof BlockGeothermalGenerator)
@@ -169,13 +169,13 @@ public class TileEntityGeothermalGenerator extends TileBaseUniversalElectricalSo
     @Override
     public EnumSet<EnumFacing> getElectricalOutputDirections()
     {
-        return EnumSet.of(getFront().rotateY());
+        return EnumSet.of(byIndex().rotateY());
     }
 
     @Override
     public EnumFacing getElectricOutputDirection()
     {
-        return getFront().rotateY();
+        return byIndex().rotateY();
     }
 
     @Override

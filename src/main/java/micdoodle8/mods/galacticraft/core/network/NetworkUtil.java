@@ -327,7 +327,7 @@ public class NetworkUtil
             }
             else if (clazz.equals(EnumFacing.class))
             {
-                objList.add(EnumFacing.getFront(buffer.readInt()));
+                objList.add(EnumFacing.byIndex(buffer.readInt()));
             }
             else if (clazz.equals(BlockPos.class))
             {
@@ -422,7 +422,7 @@ public class NetworkUtil
         }
         else if (dataValue.equals(EnumFacing.class))
         {
-            return EnumFacing.getFront(buffer.readInt());
+            return EnumFacing.byIndex(buffer.readInt());
         }
         else if (dataValue.equals(BlockPos.class))
         {

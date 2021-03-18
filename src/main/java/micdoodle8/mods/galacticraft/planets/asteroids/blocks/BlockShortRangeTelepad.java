@@ -44,13 +44,13 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
     {
         super(Material.IRON);
         this.blockHardness = 3.0F;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setSoundType(SoundType.METAL);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -238,7 +238,7 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

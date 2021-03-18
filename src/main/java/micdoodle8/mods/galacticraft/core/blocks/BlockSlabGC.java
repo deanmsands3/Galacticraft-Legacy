@@ -31,7 +31,7 @@ public class BlockSlabGC extends BlockSlab implements ISortableBlock
     public BlockSlabGC(String name, Material material)
     {
         super(material);
-        this.setUnlocalizedName(name);
+        this.setTranslationKey(name);
         this.useNeighborBrightness = true;
     }
 
@@ -69,7 +69,7 @@ public class BlockSlabGC extends BlockSlab implements ISortableBlock
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return this.isDouble() ? null : GalacticraftCore.galacticraftBlocksTab;
     }
@@ -101,7 +101,7 @@ public class BlockSlabGC extends BlockSlab implements ISortableBlock
     }
 
     @Override
-    public String getUnlocalizedName(int meta)
+    public String getTranslationKey(int meta)
     {
         BlockType type = ((BlockType) this.getStateFromMeta(meta).getValue(VARIANT));
         return type.getLangName();

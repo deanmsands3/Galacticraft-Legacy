@@ -82,7 +82,7 @@ public class BlockMachine extends BlockMachineBase
         }
 
         @Override
-        public String getUnlocalizedName()
+        public String getTranslationKey()
         {
             return this.blockName;
         }
@@ -143,7 +143,7 @@ public class BlockMachine extends BlockMachineBase
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getHorizontal(meta % 4);
+        EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta % 4);
         EnumMachineType type = (EnumMachineType) typeBase.fromMetadata(meta);
         return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(TYPE, type);
     }

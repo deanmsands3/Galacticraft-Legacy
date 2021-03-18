@@ -86,7 +86,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
     public BlockBasicMars(String assetName)
     {
         super(Material.ROCK);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class BlockBasicMars extends Block implements IDetectableResource, IPlant
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }

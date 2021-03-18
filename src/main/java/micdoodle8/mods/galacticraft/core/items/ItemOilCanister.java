@@ -40,7 +40,7 @@ public class ItemOilCanister extends ItemCanisterGeneric implements ISortableIte
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         if (itemStack.getMaxDamage() - itemStack.getItemDamage() == 0)
         {

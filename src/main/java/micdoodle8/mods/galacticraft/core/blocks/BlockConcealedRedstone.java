@@ -36,12 +36,12 @@ public class BlockConcealedRedstone extends Block implements ISortableBlock
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
         this.blockResistance = 15F;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setDefaultState(this.blockState.getBaseState().withProperty(POWER, Integer.valueOf(0)));
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -91,7 +91,7 @@ public class BlockConcealedRedstone extends Block implements ISortableBlock
         int maxPower = 0;
         maxPower = this.getMaxCurrentStrength(worldIn, pos2, maxPower);
         this.canProvidePower = false;
-        int k = worldIn.isBlockIndirectlyGettingPowered(pos1);
+        int k = worldIn.getRedstonePowerFromNeighbors(pos1);
         this.canProvidePower = true;
 
         if (k > 0 && k > maxPower - 1)

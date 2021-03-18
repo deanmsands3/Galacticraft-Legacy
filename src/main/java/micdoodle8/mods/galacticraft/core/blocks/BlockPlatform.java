@@ -83,12 +83,12 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
         this.setHardness(1.0F);
         this.setResistance(10.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setDefaultState(this.blockState.getBaseState().withProperty(CORNER, EnumCorner.NONE));
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -158,7 +158,7 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }
@@ -209,7 +209,7 @@ public class BlockPlatform extends BlockAdvancedTile implements IPartialSealable
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

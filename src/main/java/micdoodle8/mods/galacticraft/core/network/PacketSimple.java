@@ -680,22 +680,22 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
 
             for (CelestialBody cBody : GalaxyRegistry.getRegisteredPlanets().values())
             {
-                str = str.concat(cBody.getUnlocalizedName() + ";");
+                str = str.concat(cBody.getTranslationKey() + ";");
             }
 
             for (CelestialBody cBody : GalaxyRegistry.getRegisteredMoons().values())
             {
-                str = str.concat(cBody.getUnlocalizedName() + ";");
+                str = str.concat(cBody.getTranslationKey() + ";");
             }
 
             for (CelestialBody cBody : GalaxyRegistry.getRegisteredSatellites().values())
             {
-                str = str.concat(cBody.getUnlocalizedName() + ";");
+                str = str.concat(cBody.getTranslationKey() + ";");
             }
 
             for (SolarSystem solarSystem : GalaxyRegistry.getRegisteredSolarSystems().values())
             {
-                str = str.concat(solarSystem.getUnlocalizedName() + ";");
+                str = str.concat(solarSystem.getTranslationKey() + ";");
             }
 
             GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_COMPLETE_CBODY_HANDSHAKE, getDimensionID(), new Object[] { str }));
@@ -778,7 +778,7 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
             }
             break;
         case C_SPAWN_HANGING_SCHEMATIC:
-            EntityHangingSchematic entity = new EntityHangingSchematic(player.world, (BlockPos) this.data.get(0), EnumFacing.getFront((Integer) this.data.get(2)), (Integer) this.data.get(3));
+            EntityHangingSchematic entity = new EntityHangingSchematic(player.world, (BlockPos) this.data.get(0), EnumFacing.byIndex((Integer) this.data.get(2)), (Integer) this.data.get(3));
             ((WorldClient)player.world).addEntityToWorld((Integer) this.data.get(1), entity);
             break;
         default:
@@ -796,7 +796,7 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
             return;
         }
         
-        final MinecraftServer server = playerBase.mcServer;
+        final MinecraftServer server = playerBase.server;
         final GCPlayerStats stats = GCPlayerStats.get(playerBase);
 
         switch (this.type)
@@ -1157,22 +1157,22 @@ public class PacketSimple extends PacketBase implements Packet<INetHandler>
 
             for (CelestialBody cBody : GalaxyRegistry.getRegisteredPlanets().values())
             {
-                serverObjects.add(cBody.getUnlocalizedName());
+                serverObjects.add(cBody.getTranslationKey());
             }
 
             for (CelestialBody cBody : GalaxyRegistry.getRegisteredMoons().values())
             {
-                serverObjects.add(cBody.getUnlocalizedName());
+                serverObjects.add(cBody.getTranslationKey());
             }
 
             for (CelestialBody cBody : GalaxyRegistry.getRegisteredSatellites().values())
             {
-                serverObjects.add(cBody.getUnlocalizedName());
+                serverObjects.add(cBody.getTranslationKey());
             }
 
             for (SolarSystem solarSystem : GalaxyRegistry.getRegisteredSolarSystems().values())
             {
-                serverObjects.add(solarSystem.getUnlocalizedName());
+                serverObjects.add(solarSystem.getTranslationKey());
             }
 
             for (String str : serverObjects)

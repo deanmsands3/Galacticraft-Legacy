@@ -276,7 +276,7 @@ public class OxygenUtil
             {
                 if (permeableFlag || OxygenUtil.canBlockPassAirOnSide(world, block, pos, side))
                 {
-                    BlockPos sidevec = pos.add(side.getFrontOffsetX(), side.getFrontOffsetY(), side.getFrontOffsetZ());
+                    BlockPos sidevec = pos.add(side.getXOffset(), side.getYOffset(), side.getZOffset());
                     if (!checked.contains(sidevec))
                     {
                         Block newblock = world.getBlockState(sidevec).getBlock();
@@ -328,7 +328,7 @@ public class OxygenUtil
             return false;
         }
 
-        return !block.isSideSolid(world.getBlockState(vec), world, vec, EnumFacing.getFront(side.getIndex() ^ 1));
+        return !block.isSideSolid(world.getBlockState(vec), world, vec, EnumFacing.byIndex(side.getIndex() ^ 1));
     }
 
     public static int getDrainSpacing(ItemStack tank, ItemStack tank2)

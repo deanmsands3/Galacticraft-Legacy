@@ -32,7 +32,7 @@ public class BlockSludge extends BlockFluidClassic
 //    IIcon flowingIcon;
 
     @Override
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
+    public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
         if (!worldIn.isRemote)
         {
@@ -52,7 +52,7 @@ public class BlockSludge extends BlockFluidClassic
             }
         }
 
-        super.onEntityCollidedWithBlock(worldIn, pos, state, entityIn);
+        super.onEntityCollision(worldIn, pos, state, entityIn);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class BlockSludge extends BlockFluidClassic
         this.setQuantaPerBlock(9);
         this.setLightLevel(1.0F);
         this.needsRandomTick = true;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     /*@Override

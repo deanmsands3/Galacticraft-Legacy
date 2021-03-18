@@ -16,12 +16,12 @@ public class BlockStairsGC extends BlockStairs implements ISortableBlock
     public BlockStairsGC(String name, IBlockState state)
     {
         super(state);
-        this.setUnlocalizedName(name);
+        this.setTranslationKey(name);
         this.useNeighborBrightness = true;
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }

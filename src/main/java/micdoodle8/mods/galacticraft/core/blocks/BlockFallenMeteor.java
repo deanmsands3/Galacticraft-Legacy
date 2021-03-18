@@ -43,7 +43,7 @@ public class BlockFallenMeteor extends Block implements ITileEntityProvider, ISh
         super(Material.ROCK);
         this.setHardness(40.0F);
         this.setSoundType(SoundType.STONE);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class BlockFallenMeteor extends Block implements ITileEntityProvider, ISh
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -89,7 +89,7 @@ public class BlockFallenMeteor extends Block implements ITileEntityProvider, ISh
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
+    public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
         TileEntity tile = worldIn.getTileEntity(pos);
 
@@ -276,7 +276,7 @@ public class BlockFallenMeteor extends Block implements ITileEntityProvider, ISh
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

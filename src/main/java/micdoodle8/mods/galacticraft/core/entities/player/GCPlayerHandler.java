@@ -99,24 +99,6 @@ public class GCPlayerHandler
         }
     }
 
-//    @SubscribeEvent
-//    public void onPlayerLogout(PlayerLoggedOutEvent event)
-//    {
-//        if (event.player instanceof EntityPlayerMP)
-//        {
-//            this.onPlayerLogout((EntityPlayerMP) event.player);
-//        }
-//    }
-//
-//    @SubscribeEvent
-//    public void onPlayerRespawn(PlayerRespawnEvent event)
-//    {
-//        if (event.player instanceof EntityPlayerMP)
-//        {
-//            this.onPlayerRespawn((EntityPlayerMP) event.player);
-//        }
-//    }
-
     @SubscribeEvent
     public void onPlayerCloned(PlayerEvent.Clone event)
     {
@@ -133,7 +115,7 @@ public class GCPlayerHandler
             if (event.getOriginal().world.provider instanceof IGalacticraftWorldProvider)
             {
                 Integer timeA = deathTimes.get(uu);
-                int bb = ((EntityPlayerMP) event.getOriginal()).mcServer.getTickCounter();
+                int bb = ((EntityPlayerMP) event.getOriginal()).server.getTickCounter();
                 if (timeA != null && (bb - timeA) < 1500)
                 {
                     String msg = EnumColor.YELLOW + GCCoreUtil.translate("commands.gchouston.help.1") + " " + EnumColor.WHITE + GCCoreUtil.translate("commands.gchouston.help.2");
@@ -252,7 +234,7 @@ public class GCPlayerHandler
 
         if (stats.getFrequencyModuleInSlot() != stats.getLastFrequencyModuleInSlot() || forceSend)
         {
-            if (player.mcServer != null)
+            if (player.server != null)
             {
                 if (stats.getFrequencyModuleInSlot().isEmpty())
                 {
@@ -1245,7 +1227,7 @@ public class GCPlayerHandler
 
     public static void sendGearUpdatePacket(EntityPlayerMP player, EnumModelPacketType packetType, EnumExtendedInventorySlot gearType, int gearID)
     {
-        MinecraftServer theServer = player.mcServer;
+        MinecraftServer theServer = player.server;
         if (theServer != null && PlayerUtil.getPlayerForUsernameVanilla(theServer, PlayerUtil.getName(player)) != null)
         {
             GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_UPDATE_GEAR_SLOT, GCCoreUtil.getDimensionID(player.world), new Object[] { PlayerUtil.getName(player), packetType.ordinal(), gearType.ordinal(), gearID }), new TargetPoint(GCCoreUtil.getDimensionID(player.world), player.posX, player.posY, player.posZ, 50.0D));
@@ -1289,7 +1271,7 @@ public class GCPlayerHandler
                 worldOld.getEntityTracker().untrack(player);
                 if (player.addedToChunk && worldOld.getChunkProvider().chunkExists(player.chunkCoordX, player.chunkCoordZ))
                 {
-                    Chunk chunkOld = worldOld.getChunkFromChunkCoords(player.chunkCoordX, player.chunkCoordZ);
+                    Chunk chunkOld = worldOld.getChunk(player.chunkCoordX, player.chunkCoordZ);
                     chunkOld.removeEntity(player);
                     chunkOld.setModified(true);
                 }
@@ -1306,14 +1288,14 @@ public class GCPlayerHandler
                 }
                 worldNew.spawnEntity(player);
                 player.setWorld(worldNew);
-                player.mcServer.getPlayerList().preparePlayer(player, (WorldServer) worldOld);
+                player.server.getPlayerList().preparePlayer(player, (WorldServer) worldOld);
             }
 
             //This is a mini version of the code at WorldUtil.teleportEntity
             player.interactionManager.setWorld((WorldServer) player.world);
             final ITeleportType type = GalacticraftRegistry.getTeleportTypeForDimension(player.world.provider.getClass());
             Vector3 spawnPos = type.getPlayerSpawnLocation((WorldServer) player.world, player);
-            ChunkPos pair = player.world.getChunkFromChunkCoords(spawnPos.intX() >> 4, spawnPos.intZ() >> 4).getPos();
+            ChunkPos pair = player.world.getChunk(spawnPos.intX() >> 4, spawnPos.intZ() >> 4).getPos();
             GCLog.debug("Loading first chunk in new dimension.");
             ((WorldServer) player.world).getChunkProvider().loadChunk(pair.x, pair.z);
             player.setLocationAndAngles(spawnPos.x, spawnPos.y, spawnPos.z, player.rotationYaw, player.rotationPitch);

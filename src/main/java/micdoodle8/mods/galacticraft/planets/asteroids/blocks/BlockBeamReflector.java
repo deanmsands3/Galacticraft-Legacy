@@ -33,7 +33,7 @@ public class BlockBeamReflector extends BlockTileGC implements IShiftDescription
     public BlockBeamReflector(String assetName)
     {
         super(Material.IRON);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setSoundType(SoundType.METAL);
     }
 
@@ -45,7 +45,7 @@ public class BlockBeamReflector extends BlockTileGC implements IShiftDescription
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -116,7 +116,7 @@ public class BlockBeamReflector extends BlockTileGC implements IShiftDescription
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

@@ -200,8 +200,8 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
             boolean doubleResult = false;
             if (this.tierGC > 1)
             {
-                String nameSmelted = this.getInventory().get(1).getUnlocalizedName().toLowerCase();
-                if ((resultItemStack.getUnlocalizedName().toLowerCase().contains("ingot") || resultItemStack.getItem() == Items.QUARTZ) && (nameSmelted.contains("ore") || nameSmelted.contains("raw") || nameSmelted.contains("moon") || nameSmelted.contains("mars") || nameSmelted.contains("shard")))
+                String nameSmelted = this.getInventory().get(1).getTranslationKey().toLowerCase();
+                if ((resultItemStack.getTranslationKey().toLowerCase().contains("ingot") || resultItemStack.getItem() == Items.QUARTZ) && (nameSmelted.contains("ore") || nameSmelted.contains("raw") || nameSmelted.contains("moon") || nameSmelted.contains("mars") || nameSmelted.contains("shard")))
                 {
                     doubleResult = true;
                 }
@@ -342,9 +342,9 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
-        return BlockMachineBase.getFront(this.world.getBlockState(getPos())); 
+        return BlockMachineBase.byIndex(this.world.getBlockState(getPos())); 
     }
 
     @Override
@@ -353,16 +353,16 @@ public class TileEntityElectricFurnace extends TileBaseElectricBlockWithInventor
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return byIndex().rotateYCCW();
         case REAR:
-            return getFront().getOpposite();
+            return byIndex().getOpposite();
         case TOP:
             return EnumFacing.UP;
         case BOTTOM:
             return EnumFacing.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return byIndex().rotateY();
         }
     }
 

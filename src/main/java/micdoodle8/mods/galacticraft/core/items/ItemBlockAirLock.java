@@ -30,7 +30,7 @@ public class ItemBlockAirLock extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
+    public String getTranslationKey(ItemStack itemstack)
     {
         String name = "";
 
@@ -54,8 +54,8 @@ public class ItemBlockAirLock extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName()
+    public String getTranslationKey()
     {
-        return this.getBlock().getUnlocalizedName() + ".0";
+        return this.getBlock().getTranslationKey() + ".0";
     }
 }

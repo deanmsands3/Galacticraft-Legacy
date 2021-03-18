@@ -18,7 +18,7 @@ public class ItemMeteoricIron extends Item implements ISortableItem
     {
         super();
 //        this.iconName = assetName;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     /*@Override

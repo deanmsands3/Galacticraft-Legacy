@@ -38,7 +38,7 @@ public abstract class ItemCanisterGeneric extends ItemFluidContainer
         this.setMaxDamage(ItemCanisterGeneric.EMPTY);
         this.setMaxStackSize(1);
         this.setNoRepair();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setContainerItem(GCItems.oilCanister);
         this.setHasSubtypes(true);
     }

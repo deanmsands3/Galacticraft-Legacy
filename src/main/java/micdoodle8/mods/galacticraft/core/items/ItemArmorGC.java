@@ -19,7 +19,7 @@ public class ItemArmorGC extends ItemArmor implements ISortableItem
     public ItemArmorGC(EntityEquipmentSlot armorIndex, String assetSuffix)
     {
         super(GCItems.ARMOR_STEEL, 0, armorIndex);
-        this.setUnlocalizedName("steel_" + assetSuffix);
+        this.setTranslationKey("steel_" + assetSuffix);
         //this.setTextureName(Constants.TEXTURE_PREFIX + "steel_" + assetSuffix);
     }
 

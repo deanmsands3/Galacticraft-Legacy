@@ -217,7 +217,7 @@ public class WorldUtil
         {
             final SpaceStationWorldData data = SpaceStationWorldData.getStationData(playerBase.world, element, null);
 
-            if (!ConfigManagerCore.spaceStationsRequirePermission || data.getAllowedAll() || data.getAllowedPlayers().contains(PlayerUtil.getName(playerBase)) || ArrayUtils.contains(playerBase.mcServer.getPlayerList().getOppedPlayerNames(), playerBase.getName()))
+            if (!ConfigManagerCore.spaceStationsRequirePermission || data.getAllowedAll() || data.getAllowedPlayers().contains(PlayerUtil.getName(playerBase)) || ArrayUtils.contains(playerBase.server.getPlayerList().getOppedPlayerNames(), playerBase.getName()))
             {
                 //Satellites always reachable from their own homeworld or from its other satellites
                 if (playerBase != null)
@@ -410,7 +410,7 @@ public class WorldUtil
         {
             if (!body.getReachable())
             {
-                map.put(body.getLocalizedName() + "*", body.getDimensionID());
+                map.put(body.getTranslatedName() + "*", body.getDimensionID());
             }
         }
 
@@ -820,7 +820,7 @@ public class WorldUtil
                     GCLog.info("DEBUG: Sending respawn packet to player for dim " + dimID);
                 }
                 player.connection.sendPacket(new SPacketRespawn(dimID, worldNew.getDifficulty(), worldNew.getWorldInfo().getTerrainType(), player.interactionManager.getGameType()));
-                player.mcServer.getPlayerList().updatePermissionLevel(player);
+                player.server.getPlayerList().updatePermissionLevel(player);
                 if (worldNew.provider instanceof WorldProviderSpaceStation)
                 {
                     if (WorldUtil.registeredSpaceStations.containsKey(dimID))
@@ -851,11 +851,11 @@ public class WorldUtil
                 }
                 player.capabilities.isFlying = false;
 
-                player.mcServer.getPlayerList().preparePlayer(player, (WorldServer) worldOld);
+                player.server.getPlayerList().preparePlayer(player, (WorldServer) worldOld);
                 player.interactionManager.setWorld((WorldServer) worldNew);
                 player.connection.sendPacket(new SPacketPlayerAbilities(player.capabilities));
-                player.mcServer.getPlayerList().updateTimeAndWeatherForPlayer(player, (WorldServer) worldNew);
-                player.mcServer.getPlayerList().syncPlayerInventory(player);
+                player.server.getPlayerList().updateTimeAndWeatherForPlayer(player, (WorldServer) worldNew);
+                player.server.getPlayerList().syncPlayerInventory(player);
 
                 for (Object o : player.getActivePotionEffects())
                 {
@@ -1056,10 +1056,10 @@ public class WorldUtil
             forceMoveEntityToPos(player, (WorldServer) worldNew, spawnPos, true);
             GCLog.info("Server attempting to transfer player " + PlayerUtil.getName(player) + " to dimension " + GCCoreUtil.getDimensionID(worldNew));
 
-            player.mcServer.getPlayerList().preparePlayer(player, (WorldServer) worldOld);
+            player.server.getPlayerList().preparePlayer(player, (WorldServer) worldOld);
             player.interactionManager.setWorld((WorldServer) worldNew);
-            player.mcServer.getPlayerList().updateTimeAndWeatherForPlayer(player, (WorldServer) worldNew);
-            player.mcServer.getPlayerList().syncPlayerInventory(player);
+            player.server.getPlayerList().updateTimeAndWeatherForPlayer(player, (WorldServer) worldNew);
+            player.server.getPlayerList().syncPlayerInventory(player);
 
             for (Object o : player.getActivePotionEffects())
             {
@@ -1098,7 +1098,7 @@ public class WorldUtil
     public static void forceMoveEntityToPos(Entity entity, WorldServer worldNew, Vector3 spawnPos, boolean spawnRequired)
     {
         boolean previous = CompatibilityManager.forceLoadChunks(worldNew);
-        ChunkPos pair = worldNew.getChunkFromChunkCoords(spawnPos.intX() >> 4, spawnPos.intZ() >> 4).getPos();
+        ChunkPos pair = worldNew.getChunk(spawnPos.intX() >> 4, spawnPos.intZ() >> 4).getPos();
         GCLog.debug("Loading first chunk in new dimension at " + pair.x + "," + pair.z);
         worldNew.getChunkProvider().loadChunk(pair.x, pair.z);
         entity.setLocationAndAngles(spawnPos.x, spawnPos.y, spawnPos.z, entity.rotationYaw, entity.rotationPitch);
@@ -1135,7 +1135,7 @@ public class WorldUtil
     @SideOnly(Side.CLIENT)
     public static EntityPlayer forceRespawnClient(int dimID, int par2, String par3, int par4)
     {
-        SPacketRespawn fakePacket = new SPacketRespawn(dimID, EnumDifficulty.getDifficultyEnum(par2), WorldType.parseWorldType(par3), WorldSettings.getGameTypeById(par4));
+        SPacketRespawn fakePacket = new SPacketRespawn(dimID, EnumDifficulty.byId(par2), WorldType.byName(par3), WorldSettings.getGameTypeById(par4));
         FMLClientHandler.instance().getClient().player.connection.handleRespawn(fakePacket);
         return FMLClientHandler.instance().getClientPlayerEntity();
     }
@@ -1158,7 +1158,7 @@ public class WorldUtil
 
         if (var1.addedToChunk && var0.isBlockLoaded(new BlockPos(i << 4, 63, j << 4), true))
         {
-            var0.getChunkFromChunkCoords(i, j).removeEntity(var1);
+            var0.getChunk(i, j).removeEntity(var1);
         }
 
         if (directlyRemove)
@@ -1433,8 +1433,8 @@ public class WorldUtil
                     {
                         if (!world.getBlockState(offsetPos).getBlock().isAir(world.getBlockState(offsetPos), world, offsetPos))
                         {
-                            position.x += direction.getFrontOffsetX();
-                            position.z += direction.getFrontOffsetZ();
+                            position.x += direction.getXOffset();
+                            position.z += direction.getZOffset();
                             break;
                         }
                     }
@@ -1522,7 +1522,7 @@ public class WorldUtil
             CelestialBody cb = ((IGalacticraftWorldProvider) wp).getCelestialBody();
             if (cb != null && !(cb instanceof Satellite))
             {
-                return cb.getUnlocalizedName();
+                return cb.getTranslationKey();
             }
         }
 
@@ -1547,7 +1547,7 @@ public class WorldUtil
                 }
             }
             List<String> checklist = Lists.newArrayList();
-            checklist.add(body.getUnlocalizedName());
+            checklist.add(body.getTranslationKey());
             checklist.addAll(body.getChecklistKeys());
             checklistValues.add(insertPos, checklist);
             bodiesDone.add(body);

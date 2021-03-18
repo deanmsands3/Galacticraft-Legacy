@@ -32,13 +32,13 @@ public class BlockMinerBase extends BlockTileGC implements IShiftDescription, IS
     {
         super(Material.ROCK);
         this.blockHardness = 3.0F;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setSoundType(SoundType.METAL);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -94,7 +94,7 @@ public class BlockMinerBase extends BlockTileGC implements IShiftDescription, IS
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override
@@ -105,7 +105,7 @@ public class BlockMinerBase extends BlockTileGC implements IShiftDescription, IS
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }

@@ -30,7 +30,7 @@ public class PathfinderChecker extends Pathfinder
 
                 for (int i = 0; i < 6; i++)
                 {
-                    EnumFacing direction = EnumFacing.getFront(i);
+                    EnumFacing direction = EnumFacing.byIndex(i);
                     BlockVec3 position = currentNode.clone().modifyPositionFromSide(direction);
                     TileEntity connectedBlock = position.getTileEntity(world);
 

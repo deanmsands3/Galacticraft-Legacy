@@ -80,7 +80,6 @@ public class GCItems
     public static Item itemBasicMoon;
     public static Item bucketOil;
     public static Item bucketFuel;
-//	public static Item cheeseBlock;
     public static Item prelaunchChecklist;
     public static Item dungeonFinder;
     public static Item ic2compat;
@@ -140,7 +139,6 @@ public class GCItems
         GCItems.meteorChunk = new ItemMeteorChunk("meteor_chunk");
         GCItems.wrench = new ItemUniversalWrench("standard_wrench");
         GCItems.cheeseCurd = new ItemCheese(1, 0.1F, false);
-//		GCItems.cheeseBlock = new ItemBlockCheese(GCBlocks.cheeseBlock, "cheeseBlock");
         GCItems.meteoricIronRaw = new ItemMeteoricIron("meteoric_iron_raw");
         GCItems.itemBasicMoon = new ItemMoon("item_basic_moon");
         GCItems.prelaunchChecklist = new ItemPreLaunchChecklist("prelaunch_checklist");
@@ -235,7 +233,7 @@ public class GCItems
         List<StackSorted> itemOrderListItems = Lists.newArrayList();
         for (EnumSortCategoryItem type : EnumSortCategoryItem.values())
         {
-            List stackSorteds = sortMapItems.get(type);
+            List<StackSorted> stackSorteds = sortMapItems.get(type);
             if (stackSorteds != null)
             {
                 itemOrderListItems.addAll(stackSorteds);
@@ -341,7 +339,7 @@ public class GCItems
 
     public static void registerItem(Item item)
     {
-        String name = item.getUnlocalizedName().substring(5);
+        String name = item.getTranslationKey().substring(5);
         if (item.getRegistryName() == null)
         {
             item.setRegistryName(name);

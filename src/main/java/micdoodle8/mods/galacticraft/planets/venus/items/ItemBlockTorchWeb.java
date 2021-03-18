@@ -39,10 +39,10 @@ public class ItemBlockTorchWeb extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
+    public String getTranslationKey(ItemStack itemstack)
     {
         String name = BlockTorchWeb.EnumWebType.values()[itemstack.getItemDamage()].getName();
-        return this.getBlock().getUnlocalizedName() + "." + name;
+        return this.getBlock().getTranslationKey() + "." + name;
     }
 
     @Override
@@ -55,8 +55,8 @@ public class ItemBlockTorchWeb extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName()
+    public String getTranslationKey()
     {
-        return this.getBlock().getUnlocalizedName() + ".0";
+        return this.getBlock().getTranslationKey() + ".0";
     }
 }

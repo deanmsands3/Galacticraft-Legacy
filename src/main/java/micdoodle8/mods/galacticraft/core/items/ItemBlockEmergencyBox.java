@@ -13,14 +13,14 @@ public class ItemBlockEmergencyBox extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
+    public String getTranslationKey(ItemStack par1ItemStack)
     {
         if (par1ItemStack.getItemDamage() == 1)
         {
-            return this.getBlock().getUnlocalizedName() + ".filled";
+            return this.getBlock().getTranslationKey() + ".filled";
         }
 
-        return this.getBlock().getUnlocalizedName();
+        return this.getBlock().getTranslationKey();
     }
 
     @Override

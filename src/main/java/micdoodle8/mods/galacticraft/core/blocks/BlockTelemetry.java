@@ -33,7 +33,7 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
         super(Material.IRON);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -163,7 +163,7 @@ public class BlockTelemetry extends BlockAdvancedTile implements IShiftDescripti
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

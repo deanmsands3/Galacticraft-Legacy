@@ -85,7 +85,7 @@ public class GCFluids
         {
         	FluidRegistry.addBucketForFluid(GCFluids.fluidOil);  //Create a Universal Bucket AS WELL AS our type, this is needed to pull oil out of other mods tanks
             GCItems.bucketOil = new ItemBucketGC(GCBlocks.crudeOil, fluidOil);
-            GCItems.bucketOil.setUnlocalizedName("bucket_oil");
+            GCItems.bucketOil.setTranslationKey("bucket_oil");
             GCItems.registerItem(GCItems.bucketOil);
             EventHandlerGC.bucketList.put(GCBlocks.crudeOil, GCItems.bucketOil);
         }
@@ -119,7 +119,7 @@ public class GCFluids
         {
         	FluidRegistry.addBucketForFluid(GCFluids.fluidFuel);  //Create a Universal Bucket AS WELL AS our type, this is needed to pull fuel out of other mods tanks
             GCItems.bucketFuel = new ItemBucketGC(GCBlocks.fuel, fluidFuel);
-            GCItems.bucketFuel.setUnlocalizedName("bucket_fuel");
+            GCItems.bucketFuel.setTranslationKey("bucket_fuel");
             GCItems.registerItem(GCItems.bucketFuel);
             EventHandlerGC.bucketList.put(GCBlocks.fuel, GCItems.bucketFuel);
         }

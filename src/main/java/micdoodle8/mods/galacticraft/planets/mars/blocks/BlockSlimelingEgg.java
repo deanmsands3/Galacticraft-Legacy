@@ -76,7 +76,7 @@ public class BlockSlimelingEgg extends Block implements ITileEntityProvider, ISh
     {
         super(Material.ROCK);
 //        this.setBlockBounds(0.25F, 0.0F, 0.25F, 0.75F, 0.625F, 0.75F);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setDefaultState(this.blockState.getBaseState().withProperty(EGG_COLOR, EnumEggColor.RED).withProperty(BROKEN, false));
     }
 
@@ -194,7 +194,7 @@ public class BlockSlimelingEgg extends Block implements ITileEntityProvider, ISh
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -261,7 +261,7 @@ public class BlockSlimelingEgg extends Block implements ITileEntityProvider, ISh
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

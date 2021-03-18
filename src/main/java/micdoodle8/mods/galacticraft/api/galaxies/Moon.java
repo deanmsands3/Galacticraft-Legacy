@@ -22,7 +22,7 @@ public class Moon extends CelestialBody implements IChildBody
     }
 
     @Override
-    public String getUnlocalizedNamePrefix()
+    public String getTranslationKeyPrefix()
     {
         return "moon";
     }

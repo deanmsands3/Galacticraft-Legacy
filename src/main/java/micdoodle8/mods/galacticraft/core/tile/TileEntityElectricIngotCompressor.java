@@ -133,7 +133,7 @@ public class TileEntityElectricIngotCompressor extends TileBaseElectricBlock imp
         int contents1 = this.getInventory().get(1).getCount();
         int contents2 = this.getInventory().get(2).getCount();
         int result = itemstack.getCount();
-        if (ConfigManagerCore.quickMode && itemstack.getItem().getUnlocalizedName(itemstack).contains("compressed"))
+        if (ConfigManagerCore.quickMode && itemstack.getItem().getTranslationKey(itemstack).contains("compressed"))
         {
             result += result;
         }
@@ -170,7 +170,7 @@ public class TileEntityElectricIngotCompressor extends TileBaseElectricBlock imp
             ItemStack resultItemStack = this.producingStack.copy();
             if (ConfigManagerCore.quickMode)
             {
-                if (resultItemStack.getItem().getUnlocalizedName(resultItemStack).contains("compressed"))
+                if (resultItemStack.getItem().getTranslationKey(resultItemStack).contains("compressed"))
                 {
                     resultItemStack.grow(resultItemStack.getCount());
                 }
@@ -601,9 +601,9 @@ public class TileEntityElectricIngotCompressor extends TileBaseElectricBlock imp
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
-        return BlockMachineBase.getFront(this.world.getBlockState(getPos())); 
+        return BlockMachineBase.byIndex(this.world.getBlockState(getPos())); 
     }
 
     @Override
@@ -612,16 +612,16 @@ public class TileEntityElectricIngotCompressor extends TileBaseElectricBlock imp
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return byIndex().rotateYCCW();
         case REAR:
-            return getFront().getOpposite();
+            return byIndex().getOpposite();
         case TOP:
             return EnumFacing.UP;
         case BOTTOM:
             return EnumFacing.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return byIndex().rotateY();
         }
     }
 

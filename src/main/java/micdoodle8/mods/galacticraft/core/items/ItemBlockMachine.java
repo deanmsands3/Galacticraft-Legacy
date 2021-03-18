@@ -37,14 +37,14 @@ public class ItemBlockMachine extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
+    public String getTranslationKey(ItemStack itemstack)
     {
         int index = 0;
         int typenum = itemstack.getItemDamage() & 12;
 
         if (this.getBlock() instanceof BlockMachineBase)
         {
-            return ((BlockMachineBase) this.getBlock()).getUnlocalizedName(typenum);
+            return ((BlockMachineBase) this.getBlock()).getTranslationKey(typenum);
         }
         return "tile.machine.0";
     }
@@ -74,8 +74,8 @@ public class ItemBlockMachine extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName()
+    public String getTranslationKey()
     {
-        return this.getBlock().getUnlocalizedName() + ".0";
+        return this.getBlock().getTranslationKey() + ".0";
     }
 }

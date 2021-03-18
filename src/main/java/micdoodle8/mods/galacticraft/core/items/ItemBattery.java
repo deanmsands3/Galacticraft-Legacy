@@ -16,7 +16,7 @@ public class ItemBattery extends ItemElectricBase implements ISortableItem
     {
         super();
         this.setMaxStackSize(4);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 

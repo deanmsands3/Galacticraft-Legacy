@@ -1052,7 +1052,7 @@ public class StatsCapability extends GCPlayerStats
             }
         }
 
-        if (!nbttaglist.hasNoTags())
+        if (!nbttaglist.isEmpty())
         {
             nbt.setTag("RocketItems", nbttaglist);
         }

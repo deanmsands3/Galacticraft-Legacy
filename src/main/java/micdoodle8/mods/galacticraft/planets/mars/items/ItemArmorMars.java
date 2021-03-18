@@ -25,10 +25,10 @@ public class ItemArmorMars extends ItemArmor implements ISortableItem
     }
 
     /*@Override
-    public Item setUnlocalizedName(String par1Str)
+    public Item setTranslationKey(String par1Str)
     {
 //        super.setTextureName(par1Str);
-        super.setUnlocalizedName(par1Str);
+        super.setTranslationKey(par1Str);
         return this;
     }*/
 

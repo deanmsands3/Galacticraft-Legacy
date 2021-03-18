@@ -28,7 +28,7 @@ public class ItemPreLaunchChecklist extends Item implements ISortableItem
     public ItemPreLaunchChecklist(String assetName)
     {
         super();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setMaxStackSize(1);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }

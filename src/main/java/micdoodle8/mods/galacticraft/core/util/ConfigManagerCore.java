@@ -462,13 +462,13 @@ public class ConfigManagerCore
             }
 
             prop = getConfig(Constants.CONFIG_CATEGORY_COMPATIBILITY, "External Detectable IDs", new String[] {
-                    Block.REGISTRY.getNameForObject(Blocks.COAL_ORE).getResourcePath(),
-                    Block.REGISTRY.getNameForObject(Blocks.DIAMOND_ORE).getResourcePath(),
-                    Block.REGISTRY.getNameForObject(Blocks.GOLD_ORE).getResourcePath(),
-                    Block.REGISTRY.getNameForObject(Blocks.IRON_ORE).getResourcePath(),
-                    Block.REGISTRY.getNameForObject(Blocks.LAPIS_ORE).getResourcePath(),
-                    Block.REGISTRY.getNameForObject(Blocks.REDSTONE_ORE).getResourcePath(),
-                    Block.REGISTRY.getNameForObject(Blocks.LIT_REDSTONE_ORE).getResourcePath() });
+                    Block.REGISTRY.getNameForObject(Blocks.COAL_ORE).getPath(),
+                    Block.REGISTRY.getNameForObject(Blocks.DIAMOND_ORE).getPath(),
+                    Block.REGISTRY.getNameForObject(Blocks.GOLD_ORE).getPath(),
+                    Block.REGISTRY.getNameForObject(Blocks.IRON_ORE).getPath(),
+                    Block.REGISTRY.getNameForObject(Blocks.LAPIS_ORE).getPath(),
+                    Block.REGISTRY.getNameForObject(Blocks.REDSTONE_ORE).getPath(),
+                    Block.REGISTRY.getNameForObject(Blocks.LIT_REDSTONE_ORE).getPath() });
             prop.setComment("List blocks from other mods that the Sensor Glasses should recognize as solid blocks. Format is BlockName or BlockName:metadata.");
             prop.setLanguageKey("gc.configgui.detectable_i_ds").setRequiresMcRestart(true);
             detectableIDs = prop.getStringList();

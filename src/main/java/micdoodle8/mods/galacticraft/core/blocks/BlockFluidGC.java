@@ -44,7 +44,7 @@ public class BlockFluidGC extends BlockFluidClassic
             this.needsRandomTick = true;
         }
 
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class ItemTier3Rocket extends Item implements IHoldableItem, ISortableIte
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName("arrow");
     }
 
@@ -172,9 +172,9 @@ public class ItemTier3Rocket extends Item implements IHoldableItem, ISortableIte
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
+    public String getTranslationKey(ItemStack par1ItemStack)
     {
-        return super.getUnlocalizedName(par1ItemStack) + ".t3Rocket";
+        return super.getTranslationKey(par1ItemStack) + ".t3Rocket";
     }
 
     @Override

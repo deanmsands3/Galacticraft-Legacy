@@ -43,7 +43,7 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortableItem
         super();
         this.setMaxDamage(0);
         this.setMaxStackSize(1);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName("arrow");
     }
 

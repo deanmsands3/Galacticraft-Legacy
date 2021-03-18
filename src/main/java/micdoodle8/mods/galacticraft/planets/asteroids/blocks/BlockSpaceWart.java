@@ -8,6 +8,6 @@ public class BlockSpaceWart extends BlockNetherWart
     {
         super();
         this.setTickRandomly(false);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 }

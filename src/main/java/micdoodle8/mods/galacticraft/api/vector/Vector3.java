@@ -84,7 +84,7 @@ public class Vector3 implements Cloneable
 
     public Vector3(EnumFacing direction)
     {
-        this(direction.getFrontOffsetX(), direction.getFrontOffsetY(), direction.getFrontOffsetZ());
+        this(direction.getXOffset(), direction.getYOffset(), direction.getZOffset());
     }
 
     /**
@@ -199,7 +199,7 @@ public class Vector3 implements Cloneable
     {
         for (EnumFacing direction : EnumFacing.VALUES)
         {
-            if (this.x == direction.getFrontOffsetX() && this.y == direction.getFrontOffsetY() && this.z == direction.getFrontOffsetZ())
+            if (this.x == direction.getXOffset() && this.y == direction.getYOffset() && this.z == direction.getZOffset())
             {
                 return direction;
             }

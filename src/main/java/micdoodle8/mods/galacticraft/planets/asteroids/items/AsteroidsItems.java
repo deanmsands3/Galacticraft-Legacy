@@ -127,7 +127,7 @@ public class AsteroidsItems
 
     public static void registerItem(Item item)
     {
-        String name = item.getUnlocalizedName().substring(5);
+        String name = item.getTranslationKey().substring(5);
         GCCoreUtil.registerGalacticraftItem(name, item);
         GalacticraftCore.itemListTrue.add(item);
         item.setRegistryName(name);

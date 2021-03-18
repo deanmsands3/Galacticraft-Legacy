@@ -293,7 +293,7 @@ public class GCBlocks
     {
         GCBlocks.fuel = new BlockFluidGC(GCFluids.fluidFuel, "fuel");
         ((BlockFluidGC) GCBlocks.fuel).setQuantaPerBlock(3);
-        GCBlocks.fuel.setUnlocalizedName("fuel");
+        GCBlocks.fuel.setTranslationKey("fuel");
         GCBlocks.registerBlock(GCBlocks.fuel, ItemBlockGC.class);
     }
 
@@ -301,7 +301,7 @@ public class GCBlocks
     {
         GCBlocks.crudeOil = new BlockFluidGC(GCFluids.fluidOil, "oil");
         ((BlockFluidGC) GCBlocks.crudeOil).setQuantaPerBlock(3);
-        GCBlocks.crudeOil.setUnlocalizedName("crude_oil_still");
+        GCBlocks.crudeOil.setTranslationKey("crude_oil_still");
         GCBlocks.registerBlock(GCBlocks.crudeOil, ItemBlockGC.class);
     }
 
@@ -354,7 +354,7 @@ public class GCBlocks
 
     public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass, Object... itemCtorArgs)
     {
-        String name = block.getUnlocalizedName().substring(5);
+        String name = block.getTranslationKey().substring(5);
         if (block.getRegistryName() == null)
         {
             block.setRegistryName(name);
@@ -433,7 +433,7 @@ public class GCBlocks
                 sortMapBlocks.get(categoryBlock).add(new StackSorted(stack.getItem(), stack.getItemDamage()));
             }
         }
-        else if (block.getCreativeTabToDisplayOn() == GalacticraftCore.galacticraftBlocksTab)
+        else if (block.getCreativeTab() == GalacticraftCore.galacticraftBlocksTab)
         {
             throw new RuntimeException(block.getClass() + " must inherit " + ISortableBlock.class.getSimpleName() + "!");
         }
@@ -509,8 +509,5 @@ public class GCBlocks
         registerBlock(GCBlocks.grating, ItemBlockGC.class);
         registerBlock(GCBlocks.gratingWater, null);
         registerBlock(GCBlocks.gratingLava, null);
-//        GCCoreUtil.sortBlock(GCBlocks.aluminumWire, 0, new StackSorted(GCBlocks.landingPad, 1));
-//        GCCoreUtil.sortBlock(GCBlocks.aluminumWire, 1, new StackSorted(GCBlocks.aluminumWire, 0));
-//        GCCoreUtil.sortBlock(GCBlocks.oxygenPipe, 0, new StackSorted(GCBlocks.aluminumWire, 1));
     }
 }

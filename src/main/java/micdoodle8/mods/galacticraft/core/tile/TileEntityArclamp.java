@@ -78,11 +78,6 @@ public class TileEntityArclamp extends TileEntity implements ITickable, ITileCli
     public void update()
     {
         boolean initialLight = false;
-//        if (this.updateClientFlag)
-//        {
-//            this.updateAllInDimension();
-//            this.updateClientFlag = false;
-//        }
 
         if (RedstoneUtil.isBlockReceivingRedstone(this.world, this.getPos()))
         {
@@ -573,7 +568,7 @@ public class TileEntityArclamp extends TileEntity implements ITickable, ITileCli
     private void brightenAir(World world, BlockVec3 vec, IBlockState newState)
     {
         BlockPos blockpos = vec.toBlockPos();
-        Chunk chunk = this.world.getChunkFromBlockCoords(blockpos);
+        Chunk chunk = this.world.getChunk(blockpos);
         IBlockState oldState = chunk.setBlockState(blockpos, newState);
         if (this.world.isRemote && oldState != null) this.world.markAndNotifyBlock(blockpos, chunk, oldState, newState, 2);
         //No block update on server - not necessary for changing air to air (also must not trigger a sealer edge check!)
@@ -600,7 +595,7 @@ public class TileEntityArclamp extends TileEntity implements ITickable, ITileCli
             
 //      Roughly similar to:  this.worldObj.setBlockState(pos, newState, (this.worldObj.isRemote) ? 2 : 0);
         
-        Chunk chunk = this.world.getChunkFromBlockCoords(blockpos);
+        Chunk chunk = this.world.getChunk(blockpos);
         IBlockState oldState = chunk.setBlockState(blockpos, newState);
         if (this.world.isRemote && oldState != null) this.world.markAndNotifyBlock(blockpos, chunk, oldState, newState, 2);
         //No block update on server - not necessary for changing air to air (also must not trigger a sealer edge check!)
@@ -919,7 +914,7 @@ public class TileEntityArclamp extends TileEntity implements ITickable, ITileCli
     
     private void setLightFor_preChecked(EnumSkyBlock type, BlockPos pos, int lightValue)
     {
-        this.world.getChunkFromChunkCoords(pos.getX() >> 4, pos.getZ() >> 4).setLightFor(type, pos, lightValue);
+        this.world.getChunk(pos.getX() >> 4, pos.getZ() >> 4).setLightFor(type, pos, lightValue);
     }
 
     public boolean getEnabled()

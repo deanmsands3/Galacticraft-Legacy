@@ -67,7 +67,7 @@ public class BlockAirLockFrame extends BlockAdvancedTile implements IShiftDescri
         this.setDefaultState(this.blockState.getBaseState().withProperty(AIR_LOCK_TYPE, EnumAirLockType.AIR_LOCK_FRAME));
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class BlockAirLockFrame extends BlockAdvancedTile implements IShiftDescri
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -175,7 +175,7 @@ public class BlockAirLockFrame extends BlockAdvancedTile implements IShiftDescri
     @Override
     public String getShiftDescription(int itemDamage)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

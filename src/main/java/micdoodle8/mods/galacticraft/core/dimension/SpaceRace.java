@@ -131,7 +131,7 @@ public class SpaceRace
         for (Entry<CelestialBody, Integer> celestialBody : this.celestialBodyStatusList.entrySet())
         {
             NBTTagCompound tagComp = new NBTTagCompound();
-            tagComp.setString("CelestialBodyName", celestialBody.getKey().getUnlocalizedName());
+            tagComp.setString("CelestialBodyName", celestialBody.getKey().getTranslationKey());
             tagComp.setInteger("TimeTaken", celestialBody.getValue());
             tagList.appendTag(tagComp);
         }

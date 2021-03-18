@@ -71,7 +71,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
     {
         super(Material.CIRCUITS);
         this.setLightLevel(1.0F);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -200,7 +200,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override
@@ -211,7 +211,7 @@ public class BlockTorchWeb extends Block implements IShearable, IShiftDescriptio
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }

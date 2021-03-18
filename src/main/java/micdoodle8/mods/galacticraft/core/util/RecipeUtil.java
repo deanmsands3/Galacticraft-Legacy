@@ -58,11 +58,11 @@ public class RecipeUtil
     public static void addCustomRecipe(IRecipe rec)
     {
         String modID = Loader.instance().activeModContainer().getModId();
-        ResourceLocation newLocation = new ResourceLocation(modID, rec.getRecipeOutput().getItem().getRegistryName().getResourcePath());
+        ResourceLocation newLocation = new ResourceLocation(modID, rec.getRecipeOutput().getItem().getRegistryName().getPath());
         if (CraftingManager.REGISTRY.containsKey(newLocation))
         {
             int count = 1;
-            String newNameBase = newLocation.getResourcePath() + "_";
+            String newNameBase = newLocation.getPath() + "_";
             while (CraftingManager.REGISTRY.containsKey(newLocation))
             {
                 newLocation = new ResourceLocation(modID, newNameBase + count++);

@@ -20,7 +20,7 @@ public class ItemHeavyNoseCone extends Item implements ISortableItem
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 

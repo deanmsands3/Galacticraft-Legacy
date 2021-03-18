@@ -180,7 +180,7 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
         }
     }
 
-    public abstract EnumFacing getFront();
+    public abstract EnumFacing byIndex();
 
     @Override
     public boolean getDisabled(int index)
@@ -191,7 +191,7 @@ public abstract class TileBaseElectricBlock extends TileBaseUniversalElectrical 
     @RuntimeInterface(clazz = "ic2.api.tile.IWrenchable", modID = CompatibilityManager.modidIC2)
     public EnumFacing getFacing(World world, BlockPos pos)
     {
-        return this.getFront();
+        return this.byIndex();
     }
 
     @RuntimeInterface(clazz = "ic2.api.tile.IWrenchable", modID = CompatibilityManager.modidIC2)

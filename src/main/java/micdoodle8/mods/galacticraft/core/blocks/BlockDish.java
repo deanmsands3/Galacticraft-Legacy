@@ -30,11 +30,11 @@ public class BlockDish extends BlockTileGC implements IShiftDescription, IPartia
         super(Material.IRON);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -59,8 +59,8 @@ public class BlockDish extends BlockTileGC implements IShiftDescription, IPartia
             }
         }
 
-        EnumFacing facing = EnumFacing.getFront(side.getIndex() ^ 1);
-        return world.getBlockState(pos.add(facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ())).getBlock() != GCBlocks.fakeBlock;
+        EnumFacing facing = EnumFacing.byIndex(side.getIndex() ^ 1);
+        return world.getBlockState(pos.add(facing.getXOffset(), facing.getYOffset(), facing.getZOffset())).getBlock() != GCBlocks.fakeBlock;
     }
 
     @Override

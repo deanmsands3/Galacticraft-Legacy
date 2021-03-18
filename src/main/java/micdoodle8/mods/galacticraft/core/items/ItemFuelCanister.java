@@ -35,7 +35,7 @@ public class ItemFuelCanister extends ItemCanisterGeneric implements ISortableIt
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         if (itemStack.getItemDamage() == 1)
         {

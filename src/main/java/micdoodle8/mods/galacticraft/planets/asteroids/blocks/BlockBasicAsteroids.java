@@ -78,12 +78,12 @@ public class BlockBasicAsteroids extends Block implements IDetectableResource, I
     {
         super(Material.ROCK);
         this.blockHardness = 3.0F;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }

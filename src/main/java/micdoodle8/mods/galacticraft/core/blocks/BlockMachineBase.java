@@ -36,7 +36,7 @@ public abstract class BlockMachineBase extends BlockTileGC implements IShiftDesc
         super(GCBlocks.machine);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.initialiseTypes();
     }
 
@@ -44,7 +44,7 @@ public abstract class BlockMachineBase extends BlockTileGC implements IShiftDesc
 
     @Override
     @SideOnly(Side.CLIENT)
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -55,7 +55,7 @@ public abstract class BlockMachineBase extends BlockTileGC implements IShiftDesc
         int metadata = getMetaFromState(state);
 
         final int angle = MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-        int change = EnumFacing.getHorizontal(angle).getOpposite().getHorizontalIndex();
+        int change = EnumFacing.byHorizontalIndex(angle).getOpposite().getHorizontalIndex();
 
         worldIn.setBlockState(pos, this.getStateFromMeta((metadata & BlockMachineBase.METADATA_MASK) + change), 3);
     }
@@ -100,10 +100,10 @@ public abstract class BlockMachineBase extends BlockTileGC implements IShiftDesc
         return getMetaFromState(state) & BlockMachineBase.METADATA_MASK;
     }
 
-    public String getUnlocalizedName(int meta)
+    public String getTranslationKey(int meta)
     {
         EnumMachineBase type = typeBase.fromMetadata(meta);
-        return type.getUnlocalizedName();
+        return type.getTranslationKey();
     }
 
     @Override
@@ -119,7 +119,7 @@ public abstract class BlockMachineBase extends BlockTileGC implements IShiftDesc
         return true;
     }
 
-    public static EnumFacing getFront(IBlockState state)
+    public static EnumFacing byIndex(IBlockState state)
     {
         if (state.getBlock() instanceof BlockMachineBase)
         {
@@ -149,7 +149,7 @@ public abstract class BlockMachineBase extends BlockTileGC implements IShiftDesc
 
         String getShiftDescriptionKey();
 
-        String getUnlocalizedName();
+        String getTranslationKey();
 
         TileEntity tileConstructor();
     }

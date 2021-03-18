@@ -31,7 +31,7 @@ public class BlockCreeperEgg extends BlockDragonEgg implements IShiftDescription
     public BlockCreeperEgg(String assetName)
     {
         super();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class BlockCreeperEgg extends BlockDragonEgg implements IShiftDescription
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -96,7 +96,7 @@ public class BlockCreeperEgg extends BlockDragonEgg implements IShiftDescription
         }
 
         world.setBlockToAir(pos);
-        this.onBlockDestroyedByExplosion(world, pos, explosion);
+        this.onExplosionDestroy(world, pos, explosion);
     }
 
     @Override
@@ -125,13 +125,14 @@ public class BlockCreeperEgg extends BlockDragonEgg implements IShiftDescription
         {
             return 0.2F;
         }
-        return super.getPlayerRelativeBlockHardness(state, player, worldIn, pos);
+
+        return state.getPlayerRelativeBlockHardness(player, worldIn, pos);
     }
 
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

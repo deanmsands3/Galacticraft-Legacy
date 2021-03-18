@@ -815,60 +815,6 @@ public class EventHandlerGC
         }
     }
 
-    // @SideOnly(Side.CLIENT)
-    // @SubscribeEvent
-    // public void onMinecraftLoaded(MinecraftLoadedEvent event)
-    // {
-    // ;
-    // }
-
-    //	@SideOnly(Side.CLIENT)
-    //	@SubscribeEvent
-    //	public void onSoundLoad(SoundLoadEvent event)
-    //	{
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "ambience/scaryscape.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "ambience/singledrip1.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "ambience/singledrip2.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "ambience/singledrip3.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "ambience/singledrip4.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "ambience/singledrip5.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "ambience/singledrip6.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "ambience/singledrip7.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "ambience/singledrip8.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "entity/bossdeath.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "entity/bosslaugh.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "entity/bossliving.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "entity/slime_death.ogg");
-    //		ClientProxyCore.newMusic.add(this.func_110654_c(event.manager.soundPoolMusic, Constants.TEXTURE_PREFIX + "music/mars_JC.ogg"));
-    //		ClientProxyCore.newMusic.add(this.func_110654_c(event.manager.soundPoolMusic, Constants.TEXTURE_PREFIX + "music/mimas_JC.ogg"));
-    //		ClientProxyCore.newMusic.add(this.func_110654_c(event.manager.soundPoolMusic, Constants.TEXTURE_PREFIX + "music/orbit_JC.ogg"));
-    //		ClientProxyCore.newMusic.add(this.func_110654_c(event.manager.soundPoolMusic, Constants.TEXTURE_PREFIX + "music/scary_ambience.ogg"));
-    //		ClientProxyCore.newMusic.add(this.func_110654_c(event.manager.soundPoolMusic, Constants.TEXTURE_PREFIX + "music/spacerace_JC.ogg"));
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "player/closeairlock.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "player/openairlock.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "player/parachute.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "player/unlockchest.ogg");
-    //		event.manager.addSound(Constants.TEXTURE_PREFIX + "shuttle/shuttle.ogg");
-    //	}
-    //
-    //	@SideOnly(Side.CLIENT)
-    //	private SoundPoolEntry func_110654_c(SoundPool pool, String par1Str)
-    //	{
-    //		try
-    //		{
-    //			ResourceLocation resourcelocation = new ResourceLocation(par1Str);
-    //			String s1 = String.format("%s:%s:%s/%s", new Object[] { "mcsounddomain", resourcelocation.getResourceDomain(), "sound", resourcelocation.getResourcePath() });
-    //			SoundPoolProtocolHandler soundpoolprotocolhandler = new SoundPoolProtocolHandler(pool);
-    //			return new SoundPoolEntry(par1Str, new URL((URL) null, s1, soundpoolprotocolhandler));
-    //		}
-    //		catch (MalformedURLException e)
-    //		{
-    //			e.printStackTrace();
-    //		}
-    //
-    //		return null;
-    //	} TODO Fix sounds
-
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onLeaveBedButtonClicked(SleepCancelledEvent event)

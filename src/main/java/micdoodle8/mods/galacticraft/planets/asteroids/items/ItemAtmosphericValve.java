@@ -17,7 +17,7 @@ public class ItemAtmosphericValve extends Item implements ISortableItem
     {
         super();
         this.setMaxDamage(0);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setMaxStackSize(64);
     }
 

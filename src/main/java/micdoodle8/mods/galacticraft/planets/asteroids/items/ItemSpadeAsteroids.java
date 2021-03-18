@@ -16,7 +16,7 @@ public class ItemSpadeAsteroids extends ItemSpade implements ISortableItem
     public ItemSpadeAsteroids(String assetName)
     {
         super(AsteroidsItems.TOOL_TITANIUM);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(GalacticraftPlanets.TEXTURE_PREFIX + assetName);
     }
 

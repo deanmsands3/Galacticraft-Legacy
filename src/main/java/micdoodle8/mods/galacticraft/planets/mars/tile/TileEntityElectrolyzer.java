@@ -79,7 +79,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
         {
-            return (T) new FluidHandlerWrapper(this, facing);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FluidHandlerWrapper(this, facing));
         }
 
         if (EnergyUtil.checkMekGasHandler(capability))
@@ -391,7 +391,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     @Override
     public boolean canFill(EnumFacing from, Fluid fluid)
     {
-        if (from == this.getFront().rotateY())
+        if (from == this.byIndex().rotateY())
         {
             //Can fill with water
             return fluid == null || fluid.getName().equals(FluidRegistry.WATER.getName());
@@ -418,7 +418,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     {
         FluidTankInfo[] tankInfo = new FluidTankInfo[] {};
 
-        if (from == this.getFront().rotateY())
+        if (from == this.byIndex().rotateY())
         {
             tankInfo = new FluidTankInfo[] { new FluidTankInfo(this.waterTank) };
         }
@@ -535,12 +535,12 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
 
     private EnumFacing getOxygenOutputDirection()
     {
-        return this.getFront().getOpposite();
+        return this.byIndex().getOpposite();
     }
 
     private EnumFacing getHydrogenOutputDirection()
     {
-        return this.getFront().rotateYCCW();
+        return this.byIndex().rotateYCCW();
     }
 
     private boolean produceOxygen(EnumFacing outputDirection)
@@ -738,7 +738,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
 
         if (type == NetworkType.FLUID)
         {
-            return this.getOxygenOutputDirection() == direction || this.getHydrogenOutputDirection() == direction || direction == this.getFront().rotateY();
+            return this.getOxygenOutputDirection() == direction || this.getHydrogenOutputDirection() == direction || direction == this.byIndex().rotateY();
         }
 
         if (type == NetworkType.POWER)
@@ -750,7 +750,7 @@ public class TileEntityElectrolyzer extends TileBaseElectricBlockWithInventory i
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
     	IBlockState state = this.world.getBlockState(getPos()); 
     	if (state.getBlock() instanceof BlockMachineMarsT2)

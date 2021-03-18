@@ -16,7 +16,7 @@ public class ItemPickaxeGC extends ItemPickaxe implements ISortableItem
     public ItemPickaxeGC(String assetName)
     {
         super(GCItems.TOOL_STEEL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 

@@ -22,7 +22,7 @@ public class ItemOxygenMask extends Item implements ISortableItem, IClickableIte
     public ItemOxygenMask(String assetName)
     {
         super();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 

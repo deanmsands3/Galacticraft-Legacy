@@ -470,7 +470,7 @@ public class TileEntityLaunchController extends TileBaseElectricBlockWithInvento
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         IBlockState state = this.world.getBlockState(getPos()); 
         if (state.getBlock() instanceof BlockMachineMars)
@@ -483,6 +483,6 @@ public class TileEntityLaunchController extends TileBaseElectricBlockWithInvento
     @Override
     public EnumFacing getElectricInputDirection()
     {
-        return getFront().rotateY();
+        return byIndex().rotateY();
     }
 }

@@ -35,7 +35,7 @@ public class ItemBlockWalkway extends ItemBlockDesc
         }
         else if (itemStack.getItemDamage() == BlockWalkway.EnumWalkwayType.WALKWAY_PIPE.getMeta())
         {
-            tooltip.add(EnumColor.AQUA + GCCoreUtil.translate(GCBlocks.oxygenPipe.getUnlocalizedName() + ".name"));
+            tooltip.add(EnumColor.AQUA + GCCoreUtil.translate(GCBlocks.oxygenPipe.getTranslationKey() + ".name"));
         }
 
         super.addInformation(itemStack, worldIn, tooltip, flagIn);
@@ -48,15 +48,15 @@ public class ItemBlockWalkway extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
+    public String getTranslationKey(ItemStack itemstack)
     {
         String name = BlockWalkway.EnumWalkwayType.values()[itemstack.getItemDamage()].getName();
-        return this.getBlock().getUnlocalizedName() + "." + name;
+        return this.getBlock().getTranslationKey() + "." + name;
     }
 
     @Override
-    public String getUnlocalizedName()
+    public String getTranslationKey()
     {
-        return this.getBlock().getUnlocalizedName() + ".0";
+        return this.getBlock().getTranslationKey() + ".0";
     }
 }

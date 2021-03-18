@@ -24,7 +24,7 @@ public class ItemBatteryInfinite extends ItemElectricBase implements ISortableIt
     public ItemBatteryInfinite(String assetName)
     {
         super();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

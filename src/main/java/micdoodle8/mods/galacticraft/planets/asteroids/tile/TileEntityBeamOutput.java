@@ -124,7 +124,7 @@ public abstract class TileEntityBeamOutput extends TileEntityAdvanced implements
             {
                 if (this.world.getChunkProvider().getLoadedChunk(cX, cZ) != null)
                 {
-                    Chunk chunk = this.world.getChunkFromChunkCoords(cX, cZ);
+                    Chunk chunk = this.world.getChunk(cX, cZ);
 
                     for (Object obj : chunk.getTileEntityMap().values())
                     {

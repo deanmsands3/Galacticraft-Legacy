@@ -22,7 +22,7 @@ public class BlockSpaceStationBase extends BlockContainer implements ITileEntity
     {
         super(Material.ROCK);
         this.setHardness(-1);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

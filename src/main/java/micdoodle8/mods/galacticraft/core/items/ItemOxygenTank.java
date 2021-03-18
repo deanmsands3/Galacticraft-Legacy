@@ -31,7 +31,7 @@ public class ItemOxygenTank extends Item implements ISortableItem, IClickableIte
         super();
         this.setMaxStackSize(1);
         this.setMaxDamage(tier * 900);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
 //        this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
         this.setNoRepair();
     }

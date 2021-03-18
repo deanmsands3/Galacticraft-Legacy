@@ -40,7 +40,7 @@ public class ItemCanisterLiquidOxygen extends ItemCanisterGeneric implements IIt
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         if (ItemCanisterGeneric.EMPTY - itemStack.getItemDamage() == 0)
         {

@@ -59,7 +59,7 @@ public abstract class SizedPiece extends Piece
 
         if (tagCompound.hasKey("dir"))
         {
-            this.direction = EnumFacing.getFront(tagCompound.getInteger("dir"));
+            this.direction = EnumFacing.byIndex(tagCompound.getInteger("dir"));
         }
         else
         {
@@ -145,7 +145,7 @@ public abstract class SizedPiece extends Piece
         do
         {
             int randDir = rand.nextInt(4);
-            randomDir = EnumFacing.getHorizontal((randDir == getDirection().getOpposite().getHorizontalIndex() ? randDir + 1 : randDir) % 4);
+            randomDir = EnumFacing.byHorizontalIndex((randDir == getDirection().getOpposite().getHorizontalIndex() ? randDir + 1 : randDir) % 4);
             StructureBoundingBox extension = getExtension(randomDir, 1, 3);
             blockX = extension.minX;
             blockZ = extension.minZ;

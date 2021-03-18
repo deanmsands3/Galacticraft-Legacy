@@ -494,9 +494,9 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
-        return BlockMachineBase.getFront(this.world.getBlockState(getPos())); 
+        return BlockMachineBase.byIndex(this.world.getBlockState(getPos())); 
     }
 
     @Override
@@ -505,16 +505,16 @@ public class TileEntityDeconstructor extends TileBaseElectricBlock implements II
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return byIndex().rotateYCCW();
         case REAR:
-            return getFront().getOpposite();
+            return byIndex().getOpposite();
         case TOP:
             return EnumFacing.UP;
         case BOTTOM:
             return EnumFacing.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return byIndex().rotateY();
         }
     }
 

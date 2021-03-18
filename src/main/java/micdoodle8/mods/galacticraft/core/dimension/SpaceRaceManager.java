@@ -188,7 +188,7 @@ public class SpaceRaceManager
     {
         SpaceRace race = SpaceRaceManager.getSpaceRaceFromPlayer(PlayerUtil.getName(player));
         if (race == null) return;
-        MinecraftServer server = player.mcServer;
+        MinecraftServer server = player.server;
         for (String member : race.getPlayerNames())
         {
             if (player.getName().equalsIgnoreCase(member)) continue;

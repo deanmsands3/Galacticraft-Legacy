@@ -49,7 +49,7 @@ public class BlockCheese extends Block implements IShiftDescription, ISortableBl
         this.setHardness(0.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(BITES, Integer.valueOf(0)));
         this.setSoundType(SoundType.CLOTH);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class BlockCheese extends Block implements IShiftDescription, ISortableBl
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override
@@ -170,7 +170,7 @@ public class BlockCheese extends Block implements IShiftDescription, ISortableBl
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }

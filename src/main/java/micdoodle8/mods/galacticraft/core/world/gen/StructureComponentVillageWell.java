@@ -24,7 +24,7 @@ public class StructureComponentVillageWell extends StructureComponentVillage
     public StructureComponentVillageWell(StructureComponentVillageStartPiece par1ComponentVillageStartPiece, int par2, Random par3Random, int par4, int par5)
     {
         super(par1ComponentVillageStartPiece, par2);
-        this.setCoordBaseMode(EnumFacing.getFront(par3Random.nextInt(4)));
+        this.setCoordBaseMode(EnumFacing.byIndex(par3Random.nextInt(4)));
 
         switch (this.getCoordBaseMode().getHorizontalIndex())
         {
@@ -56,10 +56,10 @@ public class StructureComponentVillageWell extends StructureComponentVillage
     @Override
     public void buildComponent(StructureComponent par1StructureComponent, List<StructureComponent> par2List, Random par3Random)
     {
-        StructureVillagePiecesMoon.getNextStructureComponentVillagePath((StructureComponentVillageStartPiece) par1StructureComponent, par2List, par3Random, this.boundingBox.minX - 1, this.boundingBox.maxY - 4, this.boundingBox.minZ + 1, EnumFacing.getHorizontal(1), this.getComponentType());
-        StructureVillagePiecesMoon.getNextStructureComponentVillagePath((StructureComponentVillageStartPiece) par1StructureComponent, par2List, par3Random, this.boundingBox.maxX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ + 1, EnumFacing.getHorizontal(3), this.getComponentType());
-        StructureVillagePiecesMoon.getNextStructureComponentVillagePath((StructureComponentVillageStartPiece) par1StructureComponent, par2List, par3Random, this.boundingBox.minX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ - 1, EnumFacing.getHorizontal(2), this.getComponentType());
-        StructureVillagePiecesMoon.getNextStructureComponentVillagePath((StructureComponentVillageStartPiece) par1StructureComponent, par2List, par3Random, this.boundingBox.minX + 1, this.boundingBox.maxY - 4, this.boundingBox.maxZ + 1, EnumFacing.getHorizontal(0), this.getComponentType());
+        StructureVillagePiecesMoon.getNextStructureComponentVillagePath((StructureComponentVillageStartPiece) par1StructureComponent, par2List, par3Random, this.boundingBox.minX - 1, this.boundingBox.maxY - 4, this.boundingBox.minZ + 1, EnumFacing.byHorizontalIndex(1), this.getComponentType());
+        StructureVillagePiecesMoon.getNextStructureComponentVillagePath((StructureComponentVillageStartPiece) par1StructureComponent, par2List, par3Random, this.boundingBox.maxX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ + 1, EnumFacing.byHorizontalIndex(3), this.getComponentType());
+        StructureVillagePiecesMoon.getNextStructureComponentVillagePath((StructureComponentVillageStartPiece) par1StructureComponent, par2List, par3Random, this.boundingBox.minX + 1, this.boundingBox.maxY - 4, this.boundingBox.minZ - 1, EnumFacing.byHorizontalIndex(2), this.getComponentType());
+        StructureVillagePiecesMoon.getNextStructureComponentVillagePath((StructureComponentVillageStartPiece) par1StructureComponent, par2List, par3Random, this.boundingBox.minX + 1, this.boundingBox.maxY - 4, this.boundingBox.maxZ + 1, EnumFacing.byHorizontalIndex(0), this.getComponentType());
     }
 
     @Override

@@ -155,7 +155,7 @@ public class StructureVillagePiecesMoon
             if (var8 != null)
             {
                 par1List.add(var8);
-                par0ComponentVillageStartPiece.field_74932_i.add(var8);
+                par0ComponentVillageStartPiece.pendingHouses.add(var8);
                 return var8;
             }
 
@@ -182,7 +182,7 @@ public class StructureVillagePiecesMoon
                 final StructureComponentVillagePathGen var9 = new StructureComponentVillagePathGen(par0ComponentVillageStartPiece, par7, par2Random, var8, par6);
 
                 par1List.add(var9);
-                par0ComponentVillageStartPiece.field_74930_j.add(var9);
+                par0ComponentVillageStartPiece.pendingRoads.add(var9);
                 return var9;
             }
 

@@ -33,7 +33,7 @@ public class BlockMinerBaseFull extends BlockTileGC
         super(Material.ROCK);
         this.blockHardness = 3.0F;
         this.setResistance(35F);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setSoundType(SoundType.METAL);
     }
 
@@ -155,7 +155,7 @@ public class BlockMinerBaseFull extends BlockTileGC
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }

@@ -73,7 +73,7 @@ public class BlockSolar extends BlockTileGC implements IShiftDescription, IParti
         super(Material.IRON);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class BlockSolar extends BlockTileGC implements IShiftDescription, IParti
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -132,7 +132,7 @@ public class BlockSolar extends BlockTileGC implements IShiftDescription, IParti
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         final int angle = MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-        int change = EnumFacing.getHorizontal(angle).getOpposite().getHorizontalIndex();
+        int change = EnumFacing.byHorizontalIndex(angle).getOpposite().getHorizontalIndex();
 
         if (stack.getItemDamage() >= ADVANCED_METADATA)
         {
@@ -234,7 +234,7 @@ public class BlockSolar extends BlockTileGC implements IShiftDescription, IParti
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getHorizontal(meta % 4);
+        EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta % 4);
         EnumSolarType type = EnumSolarType.byMetadata((int) Math.floor(meta / 4.0));
         return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(TYPE, type);
     }

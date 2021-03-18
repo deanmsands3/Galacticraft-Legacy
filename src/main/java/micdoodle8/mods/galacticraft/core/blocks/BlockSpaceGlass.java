@@ -63,7 +63,7 @@ public class BlockSpaceGlass extends Block implements IPartialSealableBlock, ISh
         this.frame = newFrame;
         this.baseBlock = base == null ? this : base;
         this.color = frame.getDefaultColor();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setSoundType(SoundType.GLASS);
         this.hasTileEntity = true;
         this.setDefaultState(this.blockState.getBaseState().withProperty(MODEL, GlassModel.STANDARD_PANE).withProperty(ROTATION, GlassRotation.N));
@@ -89,7 +89,7 @@ public class BlockSpaceGlass extends Block implements IPartialSealableBlock, ISh
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -185,7 +185,7 @@ public class BlockSpaceGlass extends Block implements IPartialSealableBlock, ISh
         {
             return Material.WATER;
         }
-        return this.blockMaterial;
+        return this.material;
     }
 
     @Override
@@ -197,7 +197,7 @@ public class BlockSpaceGlass extends Block implements IPartialSealableBlock, ISh
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
          return BlockRenderLayer.TRANSLUCENT;
     }

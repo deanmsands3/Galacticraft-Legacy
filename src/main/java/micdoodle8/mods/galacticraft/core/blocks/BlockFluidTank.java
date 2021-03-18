@@ -42,7 +42,7 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
         this.setHardness(3.0F);
         this.setResistance(8.0F);
         this.setSoundType(SoundType.GLASS);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -64,14 +64,14 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }
@@ -103,7 +103,7 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

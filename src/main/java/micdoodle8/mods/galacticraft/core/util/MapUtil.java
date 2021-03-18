@@ -111,7 +111,7 @@ public class MapUtil
         ClientProxyCore.overworldTexturesValid = false;
         clientRequests.clear();
         overworldImageBytesPart = null;
-        File baseFolder = new File(FMLClientHandler.instance().getClient().mcDataDir, "assets/galacticraftMaps");
+        File baseFolder = new File(FMLClientHandler.instance().getClient().gameDir, "assets/galacticraftMaps");
         if (baseFolder.exists() && baseFolder.isDirectory())
         {
             for (File f : baseFolder.listFiles())
@@ -138,7 +138,7 @@ public class MapUtil
         {
             for (int z0 = -12; z0 <= 12; z0++)
             {
-                Chunk chunk = world.getChunkFromChunkCoords(chunkXPos + x0, chunkZPos + z0);
+                Chunk chunk = world.getChunk(chunkXPos + x0, chunkZPos + z0);
                 BlockPos pos = null;
 
                 if (chunk != null)
@@ -693,7 +693,7 @@ public class MapUtil
     {
         if (GalacticraftCore.enableJPEG)
         {
-            File folder = new File(FMLClientHandler.instance().getClient().mcDataDir, "assets/galacticraftMaps");
+            File folder = new File(FMLClientHandler.instance().getClient().gameDir, "assets/galacticraftMaps");
 
             try
             {
@@ -945,7 +945,7 @@ public class MapUtil
         int cx = convertMap(xCoord);
         int cz = convertMap(zCoord);
 
-        File baseFolder = new File(FMLClientHandler.instance().getClient().mcDataDir, "assets/galacticraftMaps");
+        File baseFolder = new File(FMLClientHandler.instance().getClient().gameDir, "assets/galacticraftMaps");
         if (!baseFolder.exists() && !baseFolder.mkdirs())
         {
             GCLog.severe("Base folder(s) could not be created: " + baseFolder.getAbsolutePath());
@@ -1232,7 +1232,7 @@ public class MapUtil
         {
             for (int z0 = -12; z0 <= 12; z0++)
             {
-                Chunk chunk = world.getChunkFromChunkCoords(chunkXPos + x0, chunkZPos + z0);
+                Chunk chunk = world.getChunk(chunkXPos + x0, chunkZPos + z0);
 
                 if (chunk != null)
                 {
@@ -1281,7 +1281,7 @@ public class MapUtil
     @SideOnly(Side.CLIENT)
     public static File getClientMapsFolder()
     {
-        File folder = new File(FMLClientHandler.instance().getClient().mcDataDir, "assets/galacticraftMaps");
+        File folder = new File(FMLClientHandler.instance().getClient().gameDir, "assets/galacticraftMaps");
         try
         {
             if (folder.exists() || folder.mkdirs())

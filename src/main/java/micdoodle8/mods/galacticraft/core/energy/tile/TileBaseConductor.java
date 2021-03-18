@@ -119,7 +119,7 @@ public abstract class TileBaseConductor extends TileEntity implements IConductor
             BlockVec3 thisVec = new BlockVec3(this);
             for (int i = 0; i < 6; i++)
             {
-                EnumFacing side = EnumFacing.getFront(i);
+                EnumFacing side = EnumFacing.byIndex(i);
                 TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
 
                 if (tileEntity instanceof IConnector)

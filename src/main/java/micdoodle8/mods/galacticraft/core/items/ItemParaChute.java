@@ -47,7 +47,7 @@ public class ItemParaChute extends Item implements ISortableItem, IClickableItem
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 
@@ -95,9 +95,9 @@ public class ItemParaChute extends Item implements ISortableItem, IClickableItem
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
-        return this.getUnlocalizedName() + "_" + ItemParaChute.names[itemStack.getItemDamage()];
+        return this.getTranslationKey() + "_" + ItemParaChute.names[itemStack.getItemDamage()];
     }
 
     /*@Override

@@ -88,11 +88,11 @@ public class BlockBasic extends Block implements IDetectableResource, ISortableB
         this.setHardness(1.0F);
         this.blockResistance = 15F;
         this.setDefaultState(this.blockState.getBaseState().withProperty(BASIC_TYPE, EnumBlockBasic.ALUMINUM_DECORATION_BLOCK_0));
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -209,13 +209,14 @@ public class BlockBasic extends Block implements IDetectableResource, ISortableB
         EnumBlockBasic type = state.getValue(BASIC_TYPE);
         switch (type)
         {
-        case ORE_COPPER:
-        case ORE_TIN:
-        case ORE_ALUMINUM:
-        case ORE_SILICON:
-            return true;
+        	case ORE_COPPER:
+        	case ORE_TIN:
+        	case ORE_ALUMINUM:
+        	case ORE_SILICON:
+        		return true;
+			default:
+				return false;
         }
-        return false;
     }
 
     @Override

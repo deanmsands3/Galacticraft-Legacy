@@ -562,7 +562,7 @@ public class FluidNetwork implements IGridNetwork<FluidNetwork, IBufferTransmitt
                 {
                     if (!(acceptor instanceof IBufferTransmitter) && acceptor != null)
                     {
-                        EnumFacing facing = EnumFacing.getFront(i).getOpposite();
+                        EnumFacing facing = EnumFacing.byIndex(i).getOpposite();
                         IFluidHandler handler = acceptor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
                         if (handler != null)
                         {

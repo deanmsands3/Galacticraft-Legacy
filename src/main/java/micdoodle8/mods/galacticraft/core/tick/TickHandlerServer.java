@@ -350,7 +350,7 @@ public class TickHandlerServer
 
                         if (chunkProviderServer != null)
                         {
-                            Iterator iterator = chunkProviderServer.getLoadedChunks().iterator();
+                            Iterator<Chunk> iterator = chunkProviderServer.getLoadedChunks().iterator();
 
                             while (iterator.hasNext())
                             {

@@ -16,7 +16,7 @@ public class ItemSwordGC extends ItemSword implements ISortableItem
     public ItemSwordGC(String assetName)
     {
         super(GCItems.TOOL_STEEL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 

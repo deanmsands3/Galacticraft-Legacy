@@ -35,20 +35,20 @@ public class MarsItems
     public static void initItems()
     {
         MarsItems.marsItemBasic = new ItemBasicMars("item_basic_mars");
-        MarsItems.deshPickaxe = new ItemPickaxeMars(MarsItems.TOOLDESH).setUnlocalizedName("desh_pick");
-        MarsItems.deshPickSlime = new ItemPickaxeStickyMars(MarsItems.TOOLDESH).setUnlocalizedName("desh_pick_slime");
-        MarsItems.deshAxe = new ItemAxeMars(MarsItems.TOOLDESH).setUnlocalizedName("desh_axe");
-        MarsItems.deshHoe = new ItemHoeMars(MarsItems.TOOLDESH).setUnlocalizedName("desh_hoe");
-        MarsItems.deshSpade = new ItemSpadeMars(MarsItems.TOOLDESH).setUnlocalizedName("desh_spade");
-        MarsItems.deshSword = new ItemSwordMars(MarsItems.TOOLDESH).setUnlocalizedName("desh_sword");
-        MarsItems.deshHelmet = new ItemArmorMars(MarsItems.ARMORDESH, 7, EntityEquipmentSlot.HEAD).setUnlocalizedName("desh_helmet");
-        MarsItems.deshChestplate = new ItemArmorMars(MarsItems.ARMORDESH, 7, EntityEquipmentSlot.CHEST).setUnlocalizedName("desh_chestplate");
-        MarsItems.deshLeggings = new ItemArmorMars(MarsItems.ARMORDESH, 7, EntityEquipmentSlot.LEGS).setUnlocalizedName("desh_leggings");
-        MarsItems.deshBoots = new ItemArmorMars(MarsItems.ARMORDESH, 7, EntityEquipmentSlot.FEET).setUnlocalizedName("desh_boots");
-        MarsItems.rocketMars = new ItemTier2Rocket().setUnlocalizedName("rocket_t2");
-        MarsItems.key = new ItemKeyMars().setUnlocalizedName("key");
-        MarsItems.schematic = new ItemSchematicTier2().setUnlocalizedName("schematic");
-        MarsItems.carbonFragments = new ItemCarbonFragments().setUnlocalizedName("carbon_fragments");
+        MarsItems.deshPickaxe = new ItemPickaxeMars(MarsItems.TOOLDESH).setTranslationKey("desh_pick");
+        MarsItems.deshPickSlime = new ItemPickaxeStickyMars(MarsItems.TOOLDESH).setTranslationKey("desh_pick_slime");
+        MarsItems.deshAxe = new ItemAxeMars(MarsItems.TOOLDESH).setTranslationKey("desh_axe");
+        MarsItems.deshHoe = new ItemHoeMars(MarsItems.TOOLDESH).setTranslationKey("desh_hoe");
+        MarsItems.deshSpade = new ItemSpadeMars(MarsItems.TOOLDESH).setTranslationKey("desh_spade");
+        MarsItems.deshSword = new ItemSwordMars(MarsItems.TOOLDESH).setTranslationKey("desh_sword");
+        MarsItems.deshHelmet = new ItemArmorMars(MarsItems.ARMORDESH, 7, EntityEquipmentSlot.HEAD).setTranslationKey("desh_helmet");
+        MarsItems.deshChestplate = new ItemArmorMars(MarsItems.ARMORDESH, 7, EntityEquipmentSlot.CHEST).setTranslationKey("desh_chestplate");
+        MarsItems.deshLeggings = new ItemArmorMars(MarsItems.ARMORDESH, 7, EntityEquipmentSlot.LEGS).setTranslationKey("desh_leggings");
+        MarsItems.deshBoots = new ItemArmorMars(MarsItems.ARMORDESH, 7, EntityEquipmentSlot.FEET).setTranslationKey("desh_boots");
+        MarsItems.rocketMars = new ItemTier2Rocket().setTranslationKey("rocket_t2");
+        MarsItems.key = new ItemKeyMars().setTranslationKey("key");
+        MarsItems.schematic = new ItemSchematicTier2().setTranslationKey("schematic");
+        MarsItems.carbonFragments = new ItemCarbonFragments().setTranslationKey("carbon_fragments");
 
         MarsItems.registerItems();
         MarsItems.registerHarvestLevels();
@@ -83,7 +83,7 @@ public class MarsItems
 
     public static void registerItem(Item item)
     {
-        String name = item.getUnlocalizedName().substring(5);
+        String name = item.getTranslationKey().substring(5);
         GCCoreUtil.registerGalacticraftItem(name, item);
         GalacticraftCore.itemListTrue.add(item);
         item.setRegistryName(name);

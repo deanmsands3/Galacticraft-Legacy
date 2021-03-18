@@ -88,13 +88,13 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
     public BlockGrating(String assetName, Material material)
     {
         super(material);
-        if (this.blockMaterial == Material.LAVA)
+        if (this.material == Material.LAVA)
         {
             this.liquidEquivalentStatic = Blocks.LAVA.getDefaultState();
             this.liquidEquivalentDynamic = Blocks.FLOWING_LAVA.getDefaultState();
             this.setTickRandomly(true);
         }
-        else if (this.blockMaterial == Material.WATER)
+        else if (this.material == Material.WATER)
         {
             this.liquidEquivalentStatic = Blocks.WATER.getDefaultState();
             this.liquidEquivalentDynamic = Blocks.FLOWING_WATER.getDefaultState();
@@ -108,7 +108,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
         this.setHardness(0.5F);
         this.blockResistance = 15F;
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     public BlockGrating(Block forge)
@@ -121,7 +121,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
         this.setHardness(0.5F);
         this.blockResistance = 15F;
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName("grating" + number);
+        this.setTranslationKey("grating" + number);
         number++;
     }
 
@@ -165,7 +165,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -215,7 +215,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
          return BlockRenderLayer.CUTOUT;
     }
@@ -302,7 +302,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
             int level = state.getValue(BlockFluidBase.LEVEL).intValue();
             return this.forgeBlock.getDefaultState().withProperty(BlockFluidBase.LEVEL, level);
         }
-        else if (this.blockMaterial == Material.WATER || this.blockMaterial == Material.LAVA)
+        else if (this.material == Material.WATER || this.material == Material.LAVA)
         {
             int level = state.getValue(BlockLiquid.LEVEL).intValue();
             return this.liquidEquivalentStatic.withProperty(BlockLiquid.LEVEL, level);
@@ -424,7 +424,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
             }
         }
 
-        return this.blockMaterial;
+        return this.material;
     }
     
     @Override
@@ -435,7 +435,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
     
     // Pistons cannot move this
     @Override
-    public EnumPushReaction getMobilityFlag(IBlockState state)
+    public EnumPushReaction getPushReaction(IBlockState state)
     {
         return EnumPushReaction.BLOCK;
     }
@@ -457,7 +457,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
     @Override
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
     {
-        if (!this.blockMaterial.isLiquid()) return;
+        if (!this.material.isLiquid()) return;
         if (this.forgeFluid)
         {
             if (this.forgeBlock instanceof BlockFluidClassic) 
@@ -470,7 +470,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
         int i = ((Integer)state.getValue(BlockLiquid.LEVEL)).intValue();
         int j = 1;
 
-        if (this.blockMaterial == Material.LAVA && !worldIn.provider.doesWaterVaporize())
+        if (this.material == Material.LAVA && !worldIn.provider.doesWaterVaporize())
         {
             j = 2;
         }
@@ -508,7 +508,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
                 }
             }
 
-            if (this.adjacentSourceBlocks >= 2 && net.minecraftforge.event.ForgeEventFactory.canCreateFluidSource(worldIn, pos, state, this.blockMaterial == Material.WATER))
+            if (this.adjacentSourceBlocks >= 2 && net.minecraftforge.event.ForgeEventFactory.canCreateFluidSource(worldIn, pos, state, this.material == Material.WATER))
             {
                 IBlockState iblockstate = worldIn.getBlockState(pos.down());
 
@@ -516,13 +516,13 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
                 {
                     i1 = 0;
                 }
-                else if (iblockstate.getMaterial() == this.blockMaterial && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0)
+                else if (iblockstate.getMaterial() == this.material && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0)
                 {
                     i1 = 0;
                 }
             }
 
-            if (this.blockMaterial == Material.LAVA && i < 8 && i1 < 8 && i1 > i && rand.nextInt(4) != 0)
+            if (this.material == Material.LAVA && i < 8 && i1 < 8 && i1 > i && rand.nextInt(4) != 0)
             {
                 k *= 4;
             }
@@ -558,7 +558,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
 
         if (this.canFlowInto(worldIn, down, iblockstate1))
         {
-            if (this.blockMaterial == Material.LAVA && iblockstate1.getMaterial() == Material.WATER && !(iblockstate1.getBlock() instanceof BlockGrating))
+            if (this.material == Material.LAVA && iblockstate1.getMaterial() == Material.WATER && !(iblockstate1.getBlock() instanceof BlockGrating))
             {
                 worldIn.setBlockState(down, Blocks.STONE.getDefaultState());
                 return;
@@ -601,7 +601,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
         {
             if (state.getMaterial() != Material.AIR && !(state.getBlock() instanceof BlockGrating))
             {
-                if (this.blockMaterial == Material.LAVA)
+                if (this.material == Material.LAVA)
                 {
                 }
                 else
@@ -626,7 +626,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
                 BlockPos blockpos = pos.offset(enumfacing);
                 IBlockState iblockstate = worldIn.getBlockState(blockpos);
 
-                if (!this.isBlocked(worldIn, blockpos, iblockstate) && (iblockstate.getMaterial() != this.blockMaterial || ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() > 0))
+                if (!this.isBlocked(worldIn, blockpos, iblockstate) && (iblockstate.getMaterial() != this.material || ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() > 0))
                 {
                     if (!this.isBlocked(worldIn, blockpos.down(), iblockstate))
                     {
@@ -651,7 +651,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
 
     private int getSlopeFindDistance(World worldIn)
     {
-        return this.blockMaterial == Material.LAVA && !worldIn.provider.doesWaterVaporize() ? 2 : 4;
+        return this.material == Material.LAVA && !worldIn.provider.doesWaterVaporize() ? 2 : 4;
     }
 
     /**
@@ -667,7 +667,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
             BlockPos blockpos = pos.offset(enumfacing);
             IBlockState iblockstate = worldIn.getBlockState(blockpos);
 
-            if (!this.isBlocked(worldIn, blockpos, iblockstate) && (iblockstate.getMaterial() != this.blockMaterial || ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() > 0))
+            if (!this.isBlocked(worldIn, blockpos, iblockstate) && (iblockstate.getMaterial() != this.material || ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() > 0))
             {
                 int j;
 
@@ -730,7 +730,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
     private boolean canFlowInto(World worldIn, BlockPos pos, IBlockState state)
     {
         Material material = state.getMaterial();
-        return material != this.blockMaterial && material != Material.LAVA && !this.isBlocked(worldIn, pos, state);
+        return material != this.material && material != Material.LAVA && !this.isBlocked(worldIn, pos, state);
     }
 
     //---------------From BlockLiquid etc
@@ -738,7 +738,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
     @Override
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
     {
-        if (this.blockMaterial.isLiquid())
+        if (this.material.isLiquid())
         {
             worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
         }
@@ -747,7 +747,7 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
-        if (this.blockMaterial.isLiquid())
+        if (this.material.isLiquid())
         {
             worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
         }
@@ -760,12 +760,12 @@ public class BlockGrating extends Block implements ISortableBlock, IPartialSeala
         {
             return this.forgeBlock.tickRate(worldIn);
         }
-        return this.blockMaterial == Material.WATER ? 5 : (this.blockMaterial == Material.LAVA ? (worldIn.provider.isNether() ? 10 : 30) : 0);
+        return this.material == Material.WATER ? 5 : (this.material == Material.LAVA ? (worldIn.provider.isNether() ? 10 : 30) : 0);
     }
     
     protected int getDepth(IBlockState p_189542_1_)
     {
-        return p_189542_1_.getMaterial() == this.blockMaterial ? ((Integer)p_189542_1_.getValue(BlockLiquid.LEVEL)).intValue() : -1;
+        return p_189542_1_.getMaterial() == this.material ? ((Integer)p_189542_1_.getValue(BlockLiquid.LEVEL)).intValue() : -1;
     }
     
     //------------------From BlockFluidBase

@@ -33,7 +33,7 @@ public class ItemBlockEnclosed extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
+    public String getTranslationKey(ItemStack par1ItemStack)
     {
         String name;
 
@@ -47,7 +47,7 @@ public class ItemBlockEnclosed extends ItemBlockDesc
             name = "null";
         }
 
-        return this.getBlock().getUnlocalizedName() + "." + name;
+        return this.getBlock().getTranslationKey() + "." + name;
     }
 
     @Override

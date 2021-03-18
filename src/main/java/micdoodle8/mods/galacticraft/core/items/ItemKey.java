@@ -20,7 +20,7 @@ public class ItemKey extends Item implements IKeyItem, ISortableItem
         this.setMaxStackSize(1);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -30,9 +30,9 @@ public class ItemKey extends Item implements IKeyItem, ISortableItem
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
-        return this.getUnlocalizedName() + ".t1";
+        return this.getTranslationKey() + ".t1";
     }
 
     @Override

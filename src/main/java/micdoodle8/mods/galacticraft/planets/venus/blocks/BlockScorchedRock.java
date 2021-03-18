@@ -23,12 +23,12 @@ public class BlockScorchedRock extends Block implements ISortableBlock
         this.blockHardness = 0.9F;
         this.blockResistance = 2.5F;
         this.setTickRandomly(true);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }

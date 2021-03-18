@@ -241,7 +241,7 @@ public class ClientProxyCore extends CommonProxyCore implements IResourceManager
         ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
 
         try {
-            Field ftc = Minecraft.getMinecraft().getClass().getDeclaredField(GCCoreUtil.isDeobfuscated() ? "mcMusicTicker" : "field_147126_aw");
+            Field ftc = Minecraft.getMinecraft().getClass().getDeclaredField(GCCoreUtil.isDeobfuscated() ? "musicTicker" : "field_147126_aw");
             ftc.setAccessible(true);
             ftc.set(Minecraft.getMinecraft(), new MusicTickerGC(Minecraft.getMinecraft()));
         } catch (Exception e) {e.printStackTrace();} 

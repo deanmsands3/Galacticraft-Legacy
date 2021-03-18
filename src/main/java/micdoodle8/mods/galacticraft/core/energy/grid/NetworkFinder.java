@@ -68,7 +68,7 @@ public class NetworkFinder
 
                 TileEntity tileEntity = worldObj.getTileEntity(new BlockPos(obj.x, obj.y, obj.z));
 
-                if (tileEntity instanceof IConductor && ((IConductor)tileEntity).canConnect(EnumFacing.getFront(dir ^ 1), NetworkType.POWER))
+                if (tileEntity instanceof IConductor && ((IConductor)tileEntity).canConnect(EnumFacing.byIndex(dir ^ 1), NetworkType.POWER))
                 {
                     found.add((IConductor) tileEntity);
                     loopAll(obj.x, obj.y, obj.z, dir ^ 1);

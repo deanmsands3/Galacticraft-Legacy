@@ -22,7 +22,7 @@ public class ItemOxygenGear extends Item implements ISortableItem, IClickableIte
     public ItemOxygenGear(String assetName)
     {
         super();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

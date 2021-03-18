@@ -26,7 +26,7 @@ public class ItemBase extends Item implements ISortableItem
     public ItemBase(String assetName)
     {
         super();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 

@@ -36,7 +36,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
+    public String getTranslationKey(ItemStack par1ItemStack)
     {
         if (names.length > par1ItemStack.getItemDamage())
         {

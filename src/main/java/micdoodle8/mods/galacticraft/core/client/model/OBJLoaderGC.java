@@ -48,7 +48,7 @@ public class OBJLoaderGC implements ICustomModelLoader {
     @Override
     public boolean accepts(ResourceLocation modelLocation)
     {
-        return enabledDomains.contains(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().endsWith(".obj");
+        return enabledDomains.contains(modelLocation.getNamespace()) && modelLocation.getPath().endsWith(".obj");
     }
 
     @Override
@@ -63,8 +63,8 @@ public class OBJLoaderGC implements ICustomModelLoader {
         {
             try
             {
-                String prefix = modelLocation.getResourcePath().contains("models/") ? "" : "models/";
-                ResourceLocation file = new ResourceLocation(modelLocation.getResourceDomain(), prefix + modelLocation.getResourcePath());
+                String prefix = modelLocation.getPath().contains("models/") ? "" : "models/";
+                ResourceLocation file = new ResourceLocation(modelLocation.getNamespace(), prefix + modelLocation.getPath());
                 IResource resource = manager.getResource(file);
                 if (resource != null)
                 {

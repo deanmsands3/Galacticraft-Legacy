@@ -31,7 +31,7 @@ public class ItemKeyMars extends Item implements IKeyItem, ISortableItem
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         return "item.key.t2";
     }

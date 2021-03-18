@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityCryoFX extends Particle
 {
-    float field_70569_a;
+    float oSize;
 
     public EntityCryoFX(World worldIn, Vector3 position, Vector3 motion)
     {
@@ -30,7 +30,7 @@ public class EntityCryoFX extends Particle
         this.particleGreen *= 0.8F;
         this.particleScale *= 0.25F;
         this.particleScale *= f;
-        this.field_70569_a = this.particleScale;
+        this.oSize = this.particleScale;
         this.particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.3D));
         this.particleMaxAge = (int) ((float) this.particleMaxAge * f);
         this.canCollide = false;
@@ -44,7 +44,7 @@ public class EntityCryoFX extends Particle
     {
         float f = ((float) this.particleAge + partialTicks) / (float) this.particleMaxAge * 32.0F;
         f = MathHelper.clamp(f, 0.0F, 1.0F);
-        this.particleScale = this.field_70569_a * f;
+        this.particleScale = this.oSize * f;
         super.renderParticle(worldRendererIn, entityIn, partialTicks, p_180434_4_, p_180434_5_, p_180434_6_, p_180434_7_, p_180434_8_);
     }
 

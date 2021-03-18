@@ -156,7 +156,7 @@ public class GuiCelestialSelection extends GuiScreen
 
             if (parentSolarSystem != null)
             {
-                return parentSolarSystem.getLocalizedName();
+                return parentSolarSystem.getTranslatedName();
             }
         }
         else if (this.selectedParent instanceof IChildBody)
@@ -169,7 +169,7 @@ public class GuiCelestialSelection extends GuiScreen
 
                 if (parentSolarSystem != null)
                 {
-                    return parentSolarSystem.getLocalizedName();
+                    return parentSolarSystem.getTranslatedName();
                 }
             }
         }
@@ -179,12 +179,12 @@ public class GuiCelestialSelection extends GuiScreen
 
             if (parentSolarSystem != null)
             {
-                return parentSolarSystem.getLocalizedParentGalaxyName();
+                return parentSolarSystem.getTranslatedParentGalaxyName();
             }
         }
         else if (this.selectedParent instanceof SolarSystem)
         {
-            return ((SolarSystem) this.selectedParent).getLocalizedParentGalaxyName();
+            return ((SolarSystem) this.selectedParent).getTranslatedParentGalaxyName();
         }
 
         return "Null";
@@ -203,7 +203,7 @@ public class GuiCelestialSelection extends GuiScreen
 
             if (parentSolarSystem != null)
             {
-                return parentSolarSystem.getLocalizedName();
+                return parentSolarSystem.getTranslatedName();
             }
         }
         else if (this.selectedBody instanceof IChildBody)
@@ -212,7 +212,7 @@ public class GuiCelestialSelection extends GuiScreen
 
             if (parentPlanet != null)
             {
-                return parentPlanet.getLocalizedName();
+                return parentPlanet.getTranslatedName();
             }
         }
         else if (this.selectedBody instanceof Star)
@@ -221,14 +221,14 @@ public class GuiCelestialSelection extends GuiScreen
 
             if (parentSolarSystem != null)
             {
-                return parentSolarSystem.getLocalizedName();
+                return parentSolarSystem.getTranslatedName();
             }
         }
         else if (this.selectedParent != null)
         {
             if (this.selectedParent instanceof SolarSystem)
             {
-                return ((SolarSystem) this.selectedParent).getLocalizedName();
+                return ((SolarSystem) this.selectedParent).getTranslatedName();
             }
         }
 
@@ -1327,7 +1327,7 @@ public class GuiCelestialSelection extends GuiScreen
         if (cBody == null) return new Vector3f(0.0F, 0.0F, 0.0F);
         if (cBody instanceof Star)
         {
-            if (cBody.getUnlocalizedName().equalsIgnoreCase("star.sol"))
+            if (cBody.getTranslationKey().equalsIgnoreCase("star.sol"))
             //Return zero vector for Sol, different location for other solar systems
             {
                 return new Vector3f();
@@ -1551,7 +1551,7 @@ public class GuiCelestialSelection extends GuiScreen
             GL11.glColor4f(0.0F, 0.6F, 1.0F, 1);
             this.mc.renderEngine.bindTexture(GuiCelestialSelection.guiMain0);
             this.drawTexturedModalRect(LHS - 95 + scale, TOP + 12, 95, 41, 0, 436, 95, 41, false, false);
-            str = planetZoomedNotMoon ? this.selectedBody.getLocalizedName() : this.getParentName();
+            str = planetZoomedNotMoon ? this.selectedBody.getTranslatedName() : this.getParentName();
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.fontRenderer.drawString(str, LHS + 9 - 95 + scale, TOP + 34, WHITE);
             GL11.glColor4f(1, 1, 0, 1);
@@ -1924,7 +1924,7 @@ public class GuiCelestialSelection extends GuiScreen
                     this.fontRenderer.drawString(str, width / 2 - this.fontRenderer.getStringWidth(str) / 2, TOP + 13, canReach ? GREY4 : RED3);
                 }
 
-                str = this.selectedBody.getLocalizedName();
+                str = this.selectedBody.getTranslatedName();
 
                 if (this.selectedBody instanceof Satellite)
                 {
@@ -2079,7 +2079,7 @@ public class GuiCelestialSelection extends GuiScreen
             {
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 int color = 14737632;
-                this.fontRenderer.drawString(child.getLocalizedName(), 7 + xOffset, yOffsetBase + yOffset + 2, color);
+                this.fontRenderer.drawString(child.getTranslatedName(), 7 + xOffset, yOffsetBase + yOffset + 2, color);
             }
             
             yOffset += 14;

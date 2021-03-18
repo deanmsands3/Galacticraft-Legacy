@@ -61,7 +61,7 @@ public class TileEntityAirLockController extends TileEntityAirLock
 
             if (this.redstoneActivation)
             {
-                this.active = this.world.isBlockIndirectlyGettingPowered(this.getPos()) > 0;
+                this.active = this.world.getRedstonePowerFromNeighbors(this.getPos()) > 0;
             }
 
             if ((this.active || !this.redstoneActivation) && this.playerDistanceActivation)

@@ -113,7 +113,7 @@ public class BlockVec3Dim implements Cloneable
             else
             {
                 Chunk chunk = null;
-                chunk = world.getChunkFromChunkCoords(chunkx, chunkz);
+                chunk = world.getChunk(chunkx, chunkz);
                 BlockVec3Dim.chunkCached = chunk;
                 BlockVec3Dim.chunkCacheDim = world.provider.getDimension();
                 BlockVec3Dim.chunkCacheX = chunkx;
@@ -163,7 +163,7 @@ public class BlockVec3Dim implements Cloneable
                 else
                 {
                     Chunk chunk = null;
-                    chunk = world.getChunkFromChunkCoords(chunkx, chunkz);
+                    chunk = world.getChunk(chunkx, chunkz);
                     BlockVec3Dim.chunkCached = chunk;
                     BlockVec3Dim.chunkCacheDim = world.provider.getDimension();
                     BlockVec3Dim.chunkCacheX = chunkx;

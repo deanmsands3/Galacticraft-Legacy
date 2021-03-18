@@ -38,7 +38,7 @@ public class ItemBlockDummy extends ItemBlock
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
+    public String getTranslationKey(ItemStack itemstack)
     {
         int metadata = itemstack.getItemDamage();
         String blockName = "";
@@ -65,12 +65,12 @@ public class ItemBlockDummy extends ItemBlock
             break;
         }
 
-        return this.getBlock().getUnlocalizedName() + "." + blockName;
+        return this.getBlock().getTranslationKey() + "." + blockName;
     }
 
     @Override
-    public String getUnlocalizedName()
+    public String getTranslationKey()
     {
-        return this.getBlock().getUnlocalizedName() + ".0";
+        return this.getBlock().getTranslationKey() + ".0";
     }
 }

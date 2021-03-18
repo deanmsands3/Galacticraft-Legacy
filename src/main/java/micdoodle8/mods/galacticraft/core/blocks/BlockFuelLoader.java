@@ -37,11 +37,11 @@ public class BlockFuelLoader extends BlockAdvancedTile implements IShiftDescript
         super(Material.ROCK);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -63,21 +63,21 @@ public class BlockFuelLoader extends BlockAdvancedTile implements IShiftDescript
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         final int angle = MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-        worldIn.setBlockState(pos, state.withProperty(FACING, EnumFacing.getHorizontal(angle).getOpposite()), 3);
+        worldIn.setBlockState(pos, state.withProperty(FACING, EnumFacing.byHorizontalIndex(angle).getOpposite()), 3);
         WorldUtil.markAdjacentPadForUpdate(worldIn, pos);
     }
 
     @Override
-    public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)
+    public void onPlayerDestroy(World worldIn, BlockPos pos, IBlockState state)
     {
-        super.onBlockDestroyedByPlayer(worldIn, pos, state);
+        super.onPlayerDestroy(worldIn, pos, state);
         WorldUtil.markAdjacentPadForUpdate(worldIn, pos);
     }
 
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override
@@ -89,7 +89,7 @@ public class BlockFuelLoader extends BlockAdvancedTile implements IShiftDescript
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
+        EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta);
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 

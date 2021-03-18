@@ -344,7 +344,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        this.facing = EnumFacing.getHorizontal(nbt.getInteger("facing"));
+        this.facing = EnumFacing.byHorizontalIndex(nbt.getInteger("facing"));
         if (GCCoreUtil.getEffectiveSide() == Side.SERVER)
         {
             this.isMaster = nbt.getBoolean("isMaster");
@@ -1047,7 +1047,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         return this.facing;
     }
@@ -1063,7 +1063,7 @@ public class TileEntityMinerBase extends TileBaseElectricBlockWithInventory impl
     public void updateClient(List<Object> data)
     {
         int data1 = (Integer) data.get(1);
-        this.facing = EnumFacing.getFront(data1 & 7);
+        this.facing = EnumFacing.byIndex(data1 & 7);
         this.setMainBlockPos(new BlockPos((Integer) data.get(2), (Integer) data.get(3), (Integer) data.get(4)));
         if (data1 > 7)
         {

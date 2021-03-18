@@ -43,6 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class EntityAlienVillager extends EntityAgeable implements IMerchant, INpc, IEntityBreathable
 {
@@ -55,7 +56,7 @@ public class EntityAlienVillager extends EntityAgeable implements IMerchant, INp
     private int timeUntilReset;
     private boolean needsInitilization;
     private int wealth;
-    private String lastBuyingPlayer;
+    private UUID lastBuyingPlayerUuid;
     private boolean isLookingForHome;
     private InventoryBasic villagerInventory;
     private static final EntityAlienVillager.ITradeList[] DEFAULT_TRADE_LIST_MAP = new EntityAlienVillager.ITradeList[] {
@@ -153,10 +154,10 @@ public class EntityAlienVillager extends EntityAgeable implements IMerchant, INp
                     this.populateBuyingList();
                     this.needsInitilization = false;
 
-                    if (this.villageObj != null && this.lastBuyingPlayer != null)
+                    if (this.villageObj != null && this.lastBuyingPlayerUuid != null)
                     {
                         this.world.setEntityState(this, (byte) 14);
-                        this.villageObj.modifyPlayerReputation(this.lastBuyingPlayer, 1);
+                        this.villageObj.modifyPlayerReputation(this.lastBuyingPlayerUuid, 1);
                     }
                 }
 
@@ -329,7 +330,7 @@ public class EntityAlienVillager extends EntityAgeable implements IMerchant, INp
                     i = -3;
                 }
 
-                this.villageObj.modifyPlayerReputation(livingBase.getName(), i);
+                this.villageObj.modifyPlayerReputation(livingBase.getUniqueID(), i);
 
                 if (this.isEntityAlive())
                 {
@@ -350,7 +351,7 @@ public class EntityAlienVillager extends EntityAgeable implements IMerchant, INp
             {
                 if (entity instanceof EntityPlayer)
                 {
-                    this.villageObj.modifyPlayerReputation(entity.getName(), -2);
+                    this.villageObj.modifyPlayerReputation(entity.getUniqueID(), -2);
                 }
                 else if (entity instanceof IMob)
                 {
@@ -403,11 +404,11 @@ public class EntityAlienVillager extends EntityAgeable implements IMerchant, INp
 
             if (this.buyingPlayer != null)
             {
-                this.lastBuyingPlayer = this.buyingPlayer.getName();
+            	this.lastBuyingPlayerUuid = this.buyingPlayer.getUniqueID();
             }
             else
             {
-                this.lastBuyingPlayer = null;
+            	this.lastBuyingPlayerUuid = null;
             }
 
             i += 5;
@@ -706,22 +707,22 @@ public class EntityAlienVillager extends EntityAgeable implements IMerchant, INp
 
     public static class ItemAndEmeraldToItem implements EntityAlienVillager.ITradeList
     {
-        public ItemStack field_179411_a;
-        public EntityAlienVillager.PriceInfo field_179409_b;
-        public ItemStack field_179410_c;
+        public ItemStack buyingItemStack;
+        public EntityAlienVillager.PriceInfo buyingPriceInfo;
+        public ItemStack sellingItemstack;
 
         public ItemAndEmeraldToItem(Item p_i45813_1_, EntityAlienVillager.PriceInfo p_i45813_2_, Item p_i45813_3_)
         {
-            this.field_179411_a = new ItemStack(p_i45813_1_);
-            this.field_179409_b = p_i45813_2_;
-            this.field_179410_c = new ItemStack(p_i45813_3_);
+            this.buyingItemStack = new ItemStack(p_i45813_1_);
+            this.buyingPriceInfo = p_i45813_2_;
+            this.sellingItemstack = new ItemStack(p_i45813_3_);
         }
 
         public ItemAndEmeraldToItem(ItemStack p_i45813_1_, EntityAlienVillager.PriceInfo p_i45813_2_, ItemStack p_i45813_3_)
         {
-            this.field_179411_a = p_i45813_1_;
-            this.field_179409_b = p_i45813_2_;
-            this.field_179410_c = p_i45813_3_;
+            this.buyingItemStack = p_i45813_1_;
+            this.buyingPriceInfo = p_i45813_2_;
+            this.sellingItemstack = p_i45813_3_;
         }
 
 
@@ -730,12 +731,12 @@ public class EntityAlienVillager extends EntityAgeable implements IMerchant, INp
         {
             int i = 1;
 
-            if (this.field_179409_b != null)
+            if (this.buyingPriceInfo != null)
             {
-                i = this.field_179409_b.getPrice(random);
+                i = this.buyingPriceInfo.getPrice(random);
             }
 
-            recipeList.add(new MerchantRecipe(this.field_179411_a.copy(), new ItemStack(GCItems.itemBasicMoon, i, 2), this.field_179410_c.copy()));
+            recipeList.add(new MerchantRecipe(this.buyingItemStack.copy(), new ItemStack(GCItems.itemBasicMoon, i, 2), this.sellingItemstack.copy()));
         }
     }
 

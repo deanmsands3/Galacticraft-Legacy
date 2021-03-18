@@ -634,7 +634,7 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         IBlockState state = world.getBlockState(getPos());
         if (state.getBlock() instanceof BlockLaserTurret)
@@ -650,16 +650,16 @@ public class TileEntityLaserTurret extends TileBaseElectricBlockWithInventory im
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case RIGHT:
-            return getFront().rotateYCCW();
+            return byIndex().rotateYCCW();
         case REAR:
-            return getFront().getOpposite();
+            return byIndex().getOpposite();
         case TOP:
             return EnumFacing.UP;
         case BOTTOM:
             return EnumFacing.DOWN;
         case LEFT:
         default:
-            return getFront().rotateY();
+            return byIndex().rotateY();
         }
     }
 

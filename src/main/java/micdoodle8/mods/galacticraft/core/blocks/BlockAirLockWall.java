@@ -55,7 +55,7 @@ public class BlockAirLockWall extends BlockBreakable implements IPartialSealable
         this.setTickRandomly(true);
         this.setHardness(1000.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

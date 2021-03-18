@@ -65,7 +65,7 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
 
         this.lastScaledOxygenLevel = this.scaledOxygenLevel;
 
-        this.produceOxygen(getFront().rotateY().getOpposite());
+        this.produceOxygen(byIndex().rotateY().getOpposite());
 
         // if (!this.world.isRemote)
         // {
@@ -173,9 +173,9 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
-        return BlockMachineBase.getFront(this.world.getBlockState(getPos())); 
+        return BlockMachineBase.byIndex(this.world.getBlockState(getPos())); 
     }
 
     @Override
@@ -277,7 +277,7 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
         switch (this.getSide(MachineSide.ELECTRIC_IN))
         {
         case REAR:
-            dir = getFront().getOpposite();
+            dir = byIndex().getOpposite();
             break;
         case TOP:
             dir = EnumFacing.UP;
@@ -286,11 +286,11 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
             dir = EnumFacing.DOWN;
             break;
         case RIGHT:
-            dir = getFront().rotateYCCW();
+            dir = byIndex().rotateYCCW();
             break;
         case LEFT:
         default:
-            dir = getFront().rotateY();
+            dir = byIndex().rotateY();
         }
         return EnumSet.of(dir);
     }
@@ -302,7 +302,7 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
         switch (this.getSide(MachineSide.PIPE_OUT))
         {
         case REAR:
-            dir = getFront().getOpposite();
+            dir = byIndex().getOpposite();
             break;
         case TOP:
             dir = EnumFacing.UP;
@@ -311,11 +311,11 @@ public class TileEntityOxygenStorageModule extends TileEntityOxygen implements I
             dir = EnumFacing.DOWN;
             break;
         case LEFT:
-            dir = getFront().rotateY();
+            dir = byIndex().rotateY();
             break;
         case RIGHT:
         default:
-            dir = getFront().rotateYCCW();
+            dir = byIndex().rotateYCCW();
         }
         return EnumSet.of(dir);
     }

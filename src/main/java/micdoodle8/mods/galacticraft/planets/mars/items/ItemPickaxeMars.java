@@ -37,7 +37,7 @@ public class ItemPickaxeMars extends ItemPickaxe implements ISortableItem
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon(this.getUnlocalizedName().replace("item.", "galacticraftmars:"));
+        this.itemIcon = par1IconRegister.registerIcon(this.getTranslationKey().replace("item.", "galacticraftmars:"));
     }*/
 
     @Override

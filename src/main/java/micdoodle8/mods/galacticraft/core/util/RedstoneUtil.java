@@ -157,7 +157,7 @@ public class RedstoneUtil
                 continue;
             }
             //This is a slightly faster pos.offset(side)
-            sidePos = pos.add(side.getFrontOffsetX(), 0, side.getFrontOffsetZ());
+            sidePos = pos.add(side.getXOffset(), 0, side.getZOffset());
             if (!w.isBlockLoaded(sidePos, false))
             {
                 continue;

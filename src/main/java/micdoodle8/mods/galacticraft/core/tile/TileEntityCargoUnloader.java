@@ -250,7 +250,7 @@ public class TileEntityCargoUnloader extends TileBaseElectricBlockWithInventory 
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         IBlockState state = this.world.getBlockState(getPos()); 
         if (state.getBlock() instanceof BlockCargoLoader)
@@ -263,6 +263,6 @@ public class TileEntityCargoUnloader extends TileBaseElectricBlockWithInventory 
     @Override
     public EnumFacing getElectricInputDirection()
     {
-        return getFront().rotateY();
+        return byIndex().rotateY();
     }
 }

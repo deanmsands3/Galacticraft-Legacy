@@ -245,7 +245,7 @@ public class GuiLaserTurretEditList extends GuiScreen implements GuiElementTextB
             // Then check without domain
             for (ResourceLocation loc : ForgeRegistries.ENTITIES.getKeys())
             {
-                if (this.name.text.equalsIgnoreCase(loc.getResourcePath()))
+                if (this.name.text.equalsIgnoreCase(loc.getPath()))
                 {
                     return ForgeRegistries.ENTITIES.getValue(loc);
                 }

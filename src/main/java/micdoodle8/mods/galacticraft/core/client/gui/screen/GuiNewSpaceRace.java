@@ -1097,7 +1097,7 @@ public class GuiNewSpaceRace extends GuiScreen implements ICheckBoxCallback, ITe
     {
         try
         {
-            String dirName = Minecraft.getMinecraft().mcDataDir.getAbsolutePath();
+            String dirName = Minecraft.getMinecraft().gameDir.getAbsolutePath();
             File directory = new File(dirName, "assets");
             boolean success = true;
             if (!directory.exists())

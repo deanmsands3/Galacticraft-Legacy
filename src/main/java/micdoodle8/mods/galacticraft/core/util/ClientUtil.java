@@ -72,7 +72,7 @@ public class ClientUtil
 
     public static void registerBlockJson(String texturePrefix, Block block)
     {
-        registerBlockJson(texturePrefix, block, 0, block.getUnlocalizedName().substring(5));
+        registerBlockJson(texturePrefix, block, 0, block.getTranslationKey().substring(5));
     }
 
     public static void registerBlockJson(String texturePrefix, Block block, int meta, String name)
@@ -83,7 +83,7 @@ public class ClientUtil
 
     public static void registerItemJson(String texturePrefix, Item item)
     {
-        registerItemJson(texturePrefix, item, 0, item.getUnlocalizedName().substring(5));
+        registerItemJson(texturePrefix, item, 0, item.getTranslationKey().substring(5));
     }
 
     public static void registerItemJson(String texturePrefix, Item item, int meta, String name)

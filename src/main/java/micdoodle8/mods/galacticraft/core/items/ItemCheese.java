@@ -15,7 +15,7 @@ public class ItemCheese extends ItemFood implements ISortableItem
     public ItemCheese(int par1, float par2, boolean par3)
     {
         super(par1, par2, par3);
-        this.setUnlocalizedName("cheese_curd");
+        this.setTranslationKey("cheese_curd");
     }
 
     public ItemCheese(int par1, boolean par2)

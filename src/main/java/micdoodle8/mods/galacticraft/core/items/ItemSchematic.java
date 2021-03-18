@@ -38,7 +38,7 @@ public class ItemSchematic extends ItemHangingEntity implements ISchematicItem, 
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

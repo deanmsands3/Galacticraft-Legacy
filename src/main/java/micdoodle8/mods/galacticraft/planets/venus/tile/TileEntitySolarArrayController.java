@@ -249,7 +249,7 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
         return EnumSet.noneOf(EnumFacing.class);
     }
 
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         IBlockState state = this.world.getBlockState(getPos()); 
         if (state.getBlock() instanceof BlockSolarArrayController)
@@ -262,13 +262,13 @@ public class TileEntitySolarArrayController extends TileBaseUniversalElectricalS
     @Override
     public EnumSet<EnumFacing> getElectricalOutputDirections()
     {
-        return EnumSet.of(getFront());
+        return EnumSet.of(byIndex());
     }
 
     @Override
     public EnumFacing getElectricOutputDirection()
     {
-        return getFront();
+        return byIndex();
     }
 
     @Override

@@ -313,7 +313,7 @@
 //            ItemStack resultItemStack = rec.getRecipeOutput().copy();
 //            if (ConfigManagerCore.quickMode)
 //            {
-//                if (resultItemStack.getItem().getUnlocalizedName(resultItemStack).contains("compressed"))
+//                if (resultItemStack.getItem().getTranslationKey(resultItemStack).contains("compressed"))
 //                {
 //                    resultItemStack.stackSize *= 2;
 //                }

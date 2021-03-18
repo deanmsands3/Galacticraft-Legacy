@@ -28,7 +28,7 @@ public class ItemBlockPanel extends ItemBlockDesc
     }
     
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
+    public String getTranslationKey(ItemStack par1ItemStack)
     {
         String name = "";
 
@@ -38,7 +38,7 @@ public class ItemBlockPanel extends ItemBlockDesc
             meta = 0;
         }
 
-        return this.getBlock().getUnlocalizedName() + "_" + meta;
+        return this.getBlock().getTranslationKey() + "_" + meta;
     }
 
     @Override

@@ -19,7 +19,7 @@ public class ItemArmorAsteroids extends ItemArmor implements ISortableItem
     public ItemArmorAsteroids(EntityEquipmentSlot armorIndex, String assetSuffix)
     {
         super(AsteroidsItems.ARMOR_TITANIUM, 0, armorIndex);
-        this.setUnlocalizedName("titanium_" + assetSuffix);
+        this.setTranslationKey("titanium_" + assetSuffix);
         //this.setTextureName(GalacticraftPlanets.TEXTURE_PREFIX + "titanium_" + assetSuffix);
     }
 

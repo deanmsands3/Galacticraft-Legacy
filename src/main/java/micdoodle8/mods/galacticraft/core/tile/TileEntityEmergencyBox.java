@@ -555,7 +555,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickable, IPa
     
     private void brightenAir(BlockPos blockpos, IBlockState newState)
     {
-        Chunk chunk = this.world.getChunkFromBlockCoords(blockpos);
+        Chunk chunk = this.world.getChunk(blockpos);
         IBlockState oldState = chunk.setBlockState(blockpos, newState);
         if (this.world.isRemote && oldState != null)
         {
@@ -585,7 +585,7 @@ public class TileEntityEmergencyBox extends TileEntity implements ITickable, IPa
             return;
         }
             
-        Chunk chunk = this.world.getChunkFromBlockCoords(blockpos);
+        Chunk chunk = this.world.getChunk(blockpos);
         IBlockState oldState = chunk.setBlockState(blockpos, newState);
         if (this.world.isRemote && oldState != null) this.world.markAndNotifyBlock(blockpos, chunk, oldState, newState, 2);
         this.world.checkLightFor(EnumSkyBlock.BLOCK, blockpos);

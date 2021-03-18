@@ -224,7 +224,7 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         return EnumFacing.NORTH;
     }

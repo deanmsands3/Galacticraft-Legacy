@@ -23,7 +23,7 @@ public class ItemRocketEngineGC extends Item implements ISortableItem
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 
@@ -53,9 +53,9 @@ public class ItemRocketEngineGC extends Item implements ISortableItem
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
-        return this.getUnlocalizedName() + "." + ItemRocketEngineGC.names[itemStack.getItemDamage()];
+        return this.getTranslationKey() + "." + ItemRocketEngineGC.names[itemStack.getItemDamage()];
     }
 
     /*@Override

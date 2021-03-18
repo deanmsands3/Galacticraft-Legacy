@@ -18,13 +18,13 @@ public class ItemBlockSolar extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
+    public String getTranslationKey(ItemStack par1ItemStack)
     {
         int index = Math.min(Math.max(par1ItemStack.getItemDamage() / 4, 0), BlockSolar.EnumSolarType.values().length);
 
         String name = BlockSolar.EnumSolarType.values()[index].getName();
 
-        return this.getBlock().getUnlocalizedName() + "." + name;
+        return this.getBlock().getTranslationKey() + "." + name;
     }
 
     @Override

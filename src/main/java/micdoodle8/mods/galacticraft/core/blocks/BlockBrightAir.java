@@ -18,7 +18,7 @@ public class BlockBrightAir extends BlockAir
     {
         this.setResistance(1000.0F);
         this.setHardness(0.0F);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setLightLevel(1.0F);
     }
 
@@ -29,7 +29,7 @@ public class BlockBrightAir extends BlockAir
     }
 
     @Override
-    public EnumPushReaction getMobilityFlag(IBlockState state)
+    public EnumPushReaction getPushReaction(IBlockState state)
     {
         return EnumPushReaction.DESTROY;
     }

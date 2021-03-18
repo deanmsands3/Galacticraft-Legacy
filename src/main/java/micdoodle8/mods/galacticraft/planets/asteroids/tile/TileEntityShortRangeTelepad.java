@@ -409,7 +409,7 @@ public class TileEntityShortRangeTelepad extends TileBaseElectricBlock implement
     @Override
     public EnumFacing getElectricInputDirection()
     {
-        return EnumFacing.getFront((this.getBlockMetadata() & 3) + 2);
+        return EnumFacing.byIndex((this.getBlockMetadata() & 3) + 2);
     }
 
     @Override
@@ -646,7 +646,7 @@ public class TileEntityShortRangeTelepad extends TileBaseElectricBlock implement
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         return EnumFacing.NORTH;
     }

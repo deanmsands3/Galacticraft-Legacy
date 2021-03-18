@@ -80,7 +80,7 @@ public class ConnectionEvents
             SpaceRace raceForPlayer = SpaceRaceManager.getSpaceRaceFromPlayer(PlayerUtil.getName(thePlayer));
             if (raceForPlayer != null)
             {
-                SpaceRaceManager.sendSpaceRaceData(thePlayer.mcServer, thePlayer, raceForPlayer);
+                SpaceRaceManager.sendSpaceRaceData(thePlayer.server, thePlayer, raceForPlayer);
             }
         }
 

@@ -16,7 +16,7 @@ public class ItemHoeGC extends ItemHoe implements ISortableItem
     public ItemHoeGC(String assetName)
     {
         super(GCItems.TOOL_STEEL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 

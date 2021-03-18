@@ -42,7 +42,7 @@ public class ItemVolcanicPickaxe extends ItemPickaxe implements ISortableItem, I
     public ItemVolcanicPickaxe(String assetName)
     {
         super(VenusItems.TOOL_VOLCANIC);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class ItemVolcanicPickaxe extends ItemPickaxe implements ISortableItem, I
                         boolean destroyed = block.removedByPlayer(state1, worldIn, pos1, player, canHarvest);
                         if (destroyed)
                         {
-                            block.onBlockDestroyedByPlayer(worldIn, pos1, state1);
+                            block.onPlayerDestroy(worldIn, pos1, state1);
                         }
                         if (canHarvest && destroyed)
                         {

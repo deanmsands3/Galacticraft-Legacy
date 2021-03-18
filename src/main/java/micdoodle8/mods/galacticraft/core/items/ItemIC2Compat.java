@@ -22,7 +22,7 @@ public class ItemIC2Compat extends Item implements ISortableItem
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(CompatibilityManager.isIc2Loaded());
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -39,11 +39,11 @@ public class ItemIC2Compat extends Item implements ISortableItem
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         int meta = itemStack.getItemDamage();
         if (!CompatibilityManager.isIc2Loaded()) meta = 0;
-        return this.getUnlocalizedName() + "." + ItemIC2Compat.types[meta % 4] + "_" + ItemIC2Compat.names[meta / 4];
+        return this.getTranslationKey() + "." + ItemIC2Compat.types[meta % 4] + "_" + ItemIC2Compat.names[meta / 4];
     }
 
     @Override

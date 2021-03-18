@@ -154,7 +154,7 @@ public class BlockEnclosed extends Block implements IPartialSealableBlock, ITile
         this.setResistance(0.2F);
         this.setHardness(0.4f);
         this.setSoundType(SoundType.STONE);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @SideOnly(Side.CLIENT)
@@ -215,7 +215,7 @@ public class BlockEnclosed extends Block implements IPartialSealableBlock, ITile
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -428,7 +428,7 @@ public class BlockEnclosed extends Block implements IPartialSealableBlock, ITile
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

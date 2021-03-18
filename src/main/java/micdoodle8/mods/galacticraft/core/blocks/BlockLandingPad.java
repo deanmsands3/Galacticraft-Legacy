@@ -71,7 +71,7 @@ public class BlockLandingPad extends BlockAdvancedTile implements IPartialSealab
         this.setHardness(1.0F);
         this.setResistance(10.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class BlockLandingPad extends BlockAdvancedTile implements IPartialSealab
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -182,7 +182,7 @@ public class BlockLandingPad extends BlockAdvancedTile implements IPartialSealab
     {
         if (meta == 0)
         {
-            return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+            return GCCoreUtil.translate(this.getTranslationKey() + ".description");
         }
         return GCCoreUtil.translate("tile.buggy_pad.description");
     }

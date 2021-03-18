@@ -139,7 +139,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         data[1] = connectedFlags;
     }
 
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         return this.getFacing(this.world.getBlockState(getPos()));
     }
@@ -714,7 +714,7 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
         ArrayList<TileEntityScreen> screenList = new ArrayList<TileEntityScreen>();
 
 //		int side = this.getRight(meta);
-        EnumFacing side = getFront().rotateY();
+        EnumFacing side = byIndex().rotateY();
 
         for (int x = -left; x <= right; x++)
         {
@@ -1101,8 +1101,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     private void joinUp()
     {
         int meta = this.getBlockMetadata();
-//    	EnumFacing side = EnumFacing.getFront(this.getRight(meta));
-        EnumFacing side = getFront().rotateY();
+//    	EnumFacing side = EnumFacing.byIndex(this.getRight(meta));
+        EnumFacing side = byIndex().rotateY();
         BlockVec3 vec = new BlockVec3(this);
         for (int x = -this.connectionsLeft; x <= this.connectionsRight; x++)
         {
@@ -1133,8 +1133,8 @@ public class TileEntityScreen extends TileEntityAdvanced implements ITileClientU
     private void joinDown()
     {
         int meta = this.getBlockMetadata();
-//    	EnumFacing side = EnumFacing.getFront(this.getRight(meta));
-        EnumFacing side = getFront().rotateY();
+//    	EnumFacing side = EnumFacing.byIndex(this.getRight(meta));
+        EnumFacing side = byIndex().rotateY();
         BlockVec3 vec = new BlockVec3(this);
         for (int x = -this.connectionsLeft; x <= this.connectionsRight; x++)
         {

@@ -342,7 +342,7 @@ public class EntityMeteorChunk extends Entity implements IProjectile
                     IBlockState hitState = this.world.getBlockState(movingobjectposition.getBlockPos());
                     if (!this.inTile.isAir(hitState, this.world, movingobjectposition.getBlockPos()))
                     {
-                        this.inTile.onEntityCollidedWithBlock(this.world, movingobjectposition.getBlockPos(), hitState, this);
+                        this.inTile.onEntityCollision(this.world, movingobjectposition.getBlockPos(), hitState, this);
                     }
                 }
             }

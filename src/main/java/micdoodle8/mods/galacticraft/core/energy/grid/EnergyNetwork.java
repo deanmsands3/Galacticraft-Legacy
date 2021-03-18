@@ -711,7 +711,7 @@ public class EnergyNetwork implements IElectricityNetwork
                             break;
                         }
 
-                        if (tileEntity instanceof IConductor && ((IConductor)tileEntity).canConnect(EnumFacing.getFront(j ^ 1), NetworkType.POWER))
+                        if (tileEntity instanceof IConductor && ((IConductor)tileEntity).canConnect(EnumFacing.byIndex(j ^ 1), NetworkType.POWER))
                         {
                             nextToSplit[j] = tileEntity;
                         }

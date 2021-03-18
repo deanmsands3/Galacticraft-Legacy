@@ -23,7 +23,7 @@ public class Planet extends CelestialBody
     }
 
     @Override
-    public String getUnlocalizedNamePrefix()
+    public String getTranslationKeyPrefix()
     {
         return "planet";
     }

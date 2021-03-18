@@ -45,7 +45,7 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortableIte
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
         //this.setTextureName("arrow");
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

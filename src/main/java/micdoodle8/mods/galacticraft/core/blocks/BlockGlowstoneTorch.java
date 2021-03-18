@@ -28,13 +28,13 @@ public class BlockGlowstoneTorch extends BlockTorchBase implements IShiftDescrip
         super(Material.CIRCUITS);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.UP));
         this.setTickRandomly(true);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setLightLevel(0.85F);
         this.setSoundType(SoundType.WOOD);
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -146,7 +146,7 @@ public class BlockGlowstoneTorch extends BlockTorchBase implements IShiftDescrip
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }
@@ -160,7 +160,7 @@ public class BlockGlowstoneTorch extends BlockTorchBase implements IShiftDescrip
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

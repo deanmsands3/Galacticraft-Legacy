@@ -380,7 +380,7 @@ public class EntityGrapple extends Entity implements IProjectile
 
                     if (this.hitBlock.getMaterial(state) != Material.AIR)
                     {
-                        this.hitBlock.onEntityCollidedWithBlock(this.world, this.hitVec, state, this);
+                        this.hitBlock.onEntityCollision(this.world, this.hitVec, state, this);
                     }
                 }
             }

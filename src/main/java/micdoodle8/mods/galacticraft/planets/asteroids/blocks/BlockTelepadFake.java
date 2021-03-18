@@ -41,7 +41,7 @@ public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityPr
         super(GCBlocks.machine);
         this.setSoundType(SoundType.METAL);
 //        this.setBlockTextureName(Constants.TEXTURE_PREFIX + assetName);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
 //        this.setBlockTextureName(Constants.TEXTURE_PREFIX + "launch_pad");
         this.setResistance(1000000000000000.0F);
     }

@@ -1072,7 +1072,7 @@ public class ThreadFindSeal
     {
         if (block instanceof IPartialSealableBlock)
         {
-            EnumFacing testSide = EnumFacing.getFront(side);
+            EnumFacing testSide = EnumFacing.byIndex(side);
             IPartialSealableBlock blockPartial = (IPartialSealableBlock) block;
             BlockPos vecPos = new BlockPos(vec.x, vec.y, vec.z);
             if (blockPartial.isSealed(this.world, vecPos, testSide))
@@ -1196,7 +1196,7 @@ public class ThreadFindSeal
         //General case - this should cover any block which correctly implements isBlockSolidOnSide
         //including most modded blocks - Forge microblocks in particular is covered by this.
         // ### Any exceptions in mods should implement the IPartialSealableBlock interface ###
-        if (block.isSideSolid(state, this.world, vec.toBlockPos(), EnumFacing.getFront(side ^ 1)))
+        if (block.isSideSolid(state, this.world, vec.toBlockPos(), EnumFacing.byIndex(side ^ 1)))
         {
             //Solid on all sides
             if (block.getMaterial(state).blocksMovement() && block.isFullCube(state))
@@ -1224,7 +1224,7 @@ public class ThreadFindSeal
             {
                 continue;
             }
-            if (block.isSideSolid(state, this.world, new BlockPos(vec.x, vec.y, vec.z), EnumFacing.getFront(i)))
+            if (block.isSideSolid(state, this.world, new BlockPos(vec.x, vec.y, vec.z), EnumFacing.byIndex(i)))
             {
                 vec.setSideDone(i);
             }

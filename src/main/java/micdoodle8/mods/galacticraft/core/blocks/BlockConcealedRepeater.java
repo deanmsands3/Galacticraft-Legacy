@@ -29,7 +29,7 @@ public class BlockConcealedRepeater extends BlockRedstoneRepeater implements ISo
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
         this.blockResistance = 15F;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setCreativeTab(powered ? null : GalacticraftCore.galacticraftBlocksTab);
     }
 

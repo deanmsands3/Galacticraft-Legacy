@@ -75,7 +75,7 @@ public class BlockWallGC extends Block /* Do not extend BlockWall */ implements 
         this.setHardness(1.5F);
         this.setResistance(2.5F);
         this.setDefaultState(this.getDefaultState().withProperty(UP, Boolean.FALSE).withProperty(NORTH, Boolean.FALSE).withProperty(EAST, Boolean.FALSE).withProperty(SOUTH, Boolean.FALSE).withProperty(WEST, Boolean.FALSE).withProperty(VARIANT, BlockType.TIN_1_WALL));
-        this.setUnlocalizedName(name);
+        this.setTranslationKey(name);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class BlockWallGC extends Block /* Do not extend BlockWall */ implements 
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }

@@ -20,7 +20,7 @@ public class BlockTuple
     public String toString()
     {
         Item item = Item.getItemFromBlock(this.block);
-    	if (item == null || item == Item.getItemFromBlock(Blocks.AIR)) return this.block.getUnlocalizedName() + ".name";
-    	return new ItemStack(item, 1, this.meta).getUnlocalizedName() + ".name";
+    	if (item == null || item == Item.getItemFromBlock(Blocks.AIR)) return this.block.getTranslationKey() + ".name";
+    	return new ItemStack(item, 1, this.meta).getTranslationKey() + ".name";
     }
 }

@@ -137,7 +137,7 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         IBlockState state = this.world.getBlockState(getPos()); 
         if (state.getBlock() instanceof BlockOxygenCompressor)
@@ -150,7 +150,7 @@ public class TileEntityOxygenCompressor extends TileEntityOxygen
     @Override
     public EnumFacing getElectricInputDirection()
     {
-        return getFront();
+        return byIndex();
     }
 
     @Override

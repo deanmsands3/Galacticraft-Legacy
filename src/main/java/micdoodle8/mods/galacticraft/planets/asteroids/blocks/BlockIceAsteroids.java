@@ -41,20 +41,20 @@ public class BlockIceAsteroids extends BlockBreakable implements ISortableBlock
         this.slipperiness = 0.98F;
         this.setTickRandomly(true);
         this.setHardness(0.5F);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setSoundType(SoundType.GLASS);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.TRANSLUCENT;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -121,7 +121,7 @@ public class BlockIceAsteroids extends BlockBreakable implements ISortableBlock
     }
 
     @Override
-    public EnumPushReaction getMobilityFlag(IBlockState state)
+    public EnumPushReaction getPushReaction(IBlockState state)
     {
         return EnumPushReaction.NORMAL;
     }

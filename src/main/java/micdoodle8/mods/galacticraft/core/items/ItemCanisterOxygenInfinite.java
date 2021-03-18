@@ -34,7 +34,7 @@ public class ItemCanisterOxygenInfinite extends Item implements IItemOxygenSuppl
         this.setMaxDamage(ItemCanisterGeneric.EMPTY);
         this.setMaxStackSize(1);
         this.setNoRepair();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setContainerItem(GCItems.oilCanister);
     }
 

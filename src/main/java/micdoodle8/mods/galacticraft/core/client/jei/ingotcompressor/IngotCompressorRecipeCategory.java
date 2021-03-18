@@ -95,7 +95,7 @@ public class IngotCompressorRecipeCategory implements IRecipeCategory
         {
             List<ItemStack> output = ingredients.getOutputs(ItemStack.class).get(0);
             ItemStack stackOutput = output.get(0);
-            if (stackOutput.getItem().getUnlocalizedName(stackOutput).contains("compressed"))
+            if (stackOutput.getItem().getTranslationKey(stackOutput).contains("compressed"))
             {
                 ItemStack stackDoubled = stackOutput.copy();
                 stackDoubled.setCount(stackOutput.getCount() * 2);

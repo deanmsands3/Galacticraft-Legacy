@@ -26,7 +26,7 @@ public class ItemAxeAsteroids extends ItemTool implements ISortableItem
     public ItemAxeAsteroids(String assetName)
     {
         super(GCItems.TOOL_STEEL, EFFECTIVE_ON);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.attackDamage = 6.0F;
         this.attackSpeed = -3.0F;
     }

@@ -668,7 +668,7 @@ public class TileEntityTerraformer extends TileBaseElectricBlockWithInventory im
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         IBlockState state = this.world.getBlockState(getPos()); 
         if (state.getBlock() instanceof BlockMachineMars)
@@ -681,7 +681,7 @@ public class TileEntityTerraformer extends TileBaseElectricBlockWithInventory im
     @Override
     public EnumFacing getElectricInputDirection()
     {
-        return getFront().rotateY();
+        return byIndex().rotateY();
     }
 
     @Override
@@ -696,7 +696,7 @@ public class TileEntityTerraformer extends TileBaseElectricBlockWithInventory im
     {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
         {
-            return (T) new FluidHandlerWrapper(this, facing);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FluidHandlerWrapper(this, facing));
         }
         return super.getCapability(capability, facing);
     }

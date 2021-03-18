@@ -22,8 +22,8 @@ public class StructureVillageStartMoon extends StructureStart
         final StructureComponentVillageStartPiece var7 = new StructureComponentVillageStartPiece(par1World.getBiomeProvider(), 0, par2Random, (par3 << 4) + 2, (par4 << 4) + 2, var6, par5);
         this.components.add(var7);
         var7.buildComponent(var7, this.components, par2Random);
-        final ArrayList<Object> var8 = var7.field_74930_j;
-        final ArrayList<Object> var9 = var7.field_74932_i;
+        final ArrayList<Object> var8 = var7.pendingRoads;
+        final ArrayList<Object> var9 = var7.pendingHouses;
         int var10;
 
         while (!var8.isEmpty() || !var9.isEmpty())

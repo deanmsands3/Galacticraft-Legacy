@@ -212,7 +212,7 @@ public class BlockAluminumWire extends BlockTransmitter implements ITileEntityPr
         this.setSoundType(SoundType.CLOTH);
         this.setResistance(0.2F);
         this.setHardness(0.075F);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -266,7 +266,7 @@ public class BlockAluminumWire extends BlockTransmitter implements ITileEntityPr
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }

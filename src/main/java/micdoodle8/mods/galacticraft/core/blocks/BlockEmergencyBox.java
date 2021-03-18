@@ -39,7 +39,7 @@ public class BlockEmergencyBox extends BlockAdvancedTile implements IShiftDescri
         this.setResistance(70F);
         this.setSoundType(SoundType.METAL);
         this.setLightLevel(1.0F);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setDefaultState(this.blockState.getBaseState().withProperty(KIT, false));
     }
 
@@ -83,7 +83,7 @@ public class BlockEmergencyBox extends BlockAdvancedTile implements IShiftDescri
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
+    public BlockRenderLayer getRenderLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }
@@ -119,7 +119,7 @@ public class BlockEmergencyBox extends BlockAdvancedTile implements IShiftDescri
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -142,7 +142,7 @@ public class BlockEmergencyBox extends BlockAdvancedTile implements IShiftDescri
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

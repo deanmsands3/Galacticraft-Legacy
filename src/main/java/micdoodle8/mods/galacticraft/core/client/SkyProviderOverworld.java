@@ -270,39 +270,22 @@ public class SkyProviderOverworld extends IRenderHandler
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         float threshold;
         Vec3d vec = TransformerHooks.getFogColorHook(this.minecraft.world);
-        threshold = Math.max(0.1F, (float) vec.lengthVector() - 0.1F);
+        threshold = Math.max(0.1F, (float) vec.length() - 0.1F);
         float var20 = ((float) playerHeight - Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / 1000.0F;
         var20 = MathHelper.sqrt(var20);
         float bright1 = Math.min(0.9F, var20 * 3);
-//        float bright2 = Math.min(0.85F, var20 * 2.5F);
-//        float bright3 = Math.min(0.8F, var20 * 2);
-//        float bright4 = Math.min(0.75F, var20 * 1.5F);
-//        float bright5 = Math.min(0.7F, var20 * 0.75F);
+
         if (bright1 > threshold)
         {
             GL11.glColor4f(bright1, bright1, bright1, 1.0F);
             GL11.glCallList(this.starGLCallList);
         }
-//        if (bright2 > threshold)
-//        {
-//	        GL11.glColor4f(bright2, bright2, bright2, 1.0F);
-//	        GL11.glCallList(this.starGLCallList + 1);
-//        }
-//        if (bright3 > threshold)
-//        {
-//	        GL11.glColor4f(bright3, bright3, bright3, 1.0F);
+
         GL11.glCallList(this.starGLCallList + 2);
-//        }
-//        if (bright4 > threshold)
-//        {
-//	        GL11.glColor4f(bright4, bright4, bright4, 1.0F);
+
         GL11.glCallList(this.starGLCallList + 3);
-//        }
-//        if (bright5 > threshold)
-//        {
-//	        GL11.glColor4f(bright5, bright5, bright5, 1.0F);
+
         GL11.glCallList(this.starGLCallList + 4);
-//        }
 
         //Draw sun
         GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -359,11 +342,7 @@ public class SkyProviderOverworld extends IRenderHandler
             scale = Math.max(scale, 0.2F);
             GL11.glScalef(scale, 1.0F, scale);
             GL11.glTranslatef(0.0F, -(float) mc.player.posY, 0.0F);
-//	        if (ClientProxyCore.overworldTextureLocal != null)
-//	        {
-//	            GL11.glBindTexture(GL11.GL_TEXTURE_2D, ClientProxyCore.overworldTextureLocal.getGlTextureId());
-//	        }
-//	        else
+
             {
                 this.minecraft.renderEngine.bindTexture(this.planetToRender);
             }
@@ -373,8 +352,6 @@ public class SkyProviderOverworld extends IRenderHandler
             GL11.glColor4f(sinth, sinth, sinth, 1.0F);
             worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-//	        float zoomIn = (1F - (float) var25 / 768F) / 5.86F;
-//	        if (zoomIn < 0F) zoomIn = 0F;
             double zoomIn = 0.0D;
             double cornerB = 1.0 - zoomIn;
             worldRenderer.pos(-size, 0, size).tex(zoomIn, cornerB).endVertex();

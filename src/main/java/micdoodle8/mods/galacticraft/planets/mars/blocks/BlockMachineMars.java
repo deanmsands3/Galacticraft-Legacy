@@ -91,7 +91,7 @@ public class BlockMachineMars extends BlockTileGC implements IShiftDescription, 
     {
         super(GCBlocks.machine);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class BlockMachineMars extends BlockTileGC implements IShiftDescription, 
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -120,7 +120,7 @@ public class BlockMachineMars extends BlockTileGC implements IShiftDescription, 
         int metadata = getMetaFromState(state);
 
         final int angle = MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-        int change = EnumFacing.getHorizontal(angle).getOpposite().getHorizontalIndex();
+        int change = EnumFacing.byHorizontalIndex(angle).getOpposite().getHorizontalIndex();
 
         worldIn.setBlockState(pos, getStateFromMeta((metadata & 12) + change), 3);
 
@@ -317,7 +317,7 @@ public class BlockMachineMars extends BlockTileGC implements IShiftDescription, 
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getHorizontal(meta % 4);
+        EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta % 4);
         EnumMachineType type = EnumMachineType.byMetadata((int) Math.floor(meta / 4.0));
         return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(TYPE, type);
     }

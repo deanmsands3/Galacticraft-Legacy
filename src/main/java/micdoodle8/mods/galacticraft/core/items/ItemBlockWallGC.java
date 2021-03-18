@@ -40,7 +40,7 @@ public class ItemBlockWallGC extends ItemBlock
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
+    public String getTranslationKey(ItemStack itemstack)
     {
         int meta = itemstack.getItemDamage();
 
@@ -48,6 +48,6 @@ public class ItemBlockWallGC extends ItemBlock
         {
             meta = 0;
         }
-        return super.getUnlocalizedName() + "." + types[meta];
+        return super.getTranslationKey() + "." + types[meta];
     }
 }

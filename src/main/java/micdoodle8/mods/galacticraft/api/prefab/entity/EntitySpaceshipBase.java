@@ -498,11 +498,11 @@ public abstract class EntitySpaceshipBase extends Entity implements IPacketRecei
                 {
                     if (this.addedToChunk && this.world.isBlockLoaded(new BlockPos(this.chunkCoordX << 4, 255, this.chunkCoordZ << 4), true))
                     {
-                        this.world.getChunkFromChunkCoords(this.chunkCoordX, this.chunkCoordZ).removeEntityAtIndex(this, this.chunkCoordY);
+                        this.world.getChunk(this.chunkCoordX, this.chunkCoordZ).removeEntityAtIndex(this, this.chunkCoordY);
                     }
 
                     this.addedToChunk = true;
-                    this.world.getChunkFromChunkCoords(cx, cz).addEntity(this);
+                    this.world.getChunk(cx, cz).addEntity(this);
                 }
                 
                 this.syncAdjustX = 0D;

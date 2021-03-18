@@ -87,7 +87,7 @@ public class BlockPanelLighting extends BlockAdvancedTile implements ISortableBl
         super(Material.IRON);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setDefaultState(this.blockState.getBaseState());
     }
 
@@ -188,7 +188,7 @@ public class BlockPanelLighting extends BlockAdvancedTile implements ISortableBl
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }

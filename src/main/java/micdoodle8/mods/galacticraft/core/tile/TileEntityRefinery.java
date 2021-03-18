@@ -259,7 +259,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         IBlockState state = this.world.getBlockState(getPos()); 
         if (state.getBlock() instanceof BlockRefinery)
@@ -271,12 +271,12 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
 
     private EnumFacing getOilPipe()
     {
-        return getFront().rotateY();
+        return byIndex().rotateY();
     }
     
     private EnumFacing getFuelPipe()
     {
-        return getFront().rotateYCCW();
+        return byIndex().rotateYCCW();
     }
     
     @Override
@@ -377,7 +377,7 @@ public class TileEntityRefinery extends TileBaseElectricBlockWithInventory imple
     {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
         {
-            return (T) new FluidHandlerWrapper(this, facing);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FluidHandlerWrapper(this, facing));
         }
         return super.getCapability(capability, facing);
     }

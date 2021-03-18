@@ -298,7 +298,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
         //Weird, huh?
         if (this.world.isRemote && this.addedToChunk && !CompatibilityManager.isCubicChunksLoaded)
         {
-            Chunk chunk = this.world.getChunkFromChunkCoords(this.chunkCoordX, this.chunkCoordZ);
+            Chunk chunk = this.world.getChunk(this.chunkCoordX, this.chunkCoordZ);
             int cx = MathHelper.floor(this.posX) >> 4;
             int cz = MathHelper.floor(this.posZ) >> 4;
             if (chunk.isLoaded() && this.chunkCoordX == cx && this.chunkCoordZ == cz)
@@ -759,7 +759,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
 	        			 {
 	        				 if (e instanceof EntityPlayer)
 	        				 {
-	        					 e = WorldUtil.forceRespawnClient(this.dimension, e.world.getDifficulty().getDifficultyId(), e.world.getWorldInfo().getTerrainType().getName(), ((EntityPlayerMP)e).interactionManager.getGameType().getID());
+	        					 e = WorldUtil.forceRespawnClient(this.dimension, e.world.getDifficulty().getId(), e.world.getWorldInfo().getTerrainType().getName(), ((EntityPlayerMP)e).interactionManager.getGameType().getID());
 	        					 e.startRiding(this);
 	        				 }
 	        			 }
@@ -783,7 +783,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
 	       		 		{
 	       		 			if (e instanceof EntityPlayer)
 	       		 			{
-	       		 				e = WorldUtil.forceRespawnClient(this.dimension, e.world.getDifficulty().getDifficultyId(), e.world.getWorldInfo().getTerrainType().getName(), ((EntityPlayerMP)e).interactionManager.getGameType().getID());
+	       		 				e = WorldUtil.forceRespawnClient(this.dimension, e.world.getDifficulty().getId(), e.world.getWorldInfo().getTerrainType().getName(), ((EntityPlayerMP)e).interactionManager.getGameType().getID());
 	       		 				e.startRiding(this);
 	       		 			}
 	       		 		}

@@ -32,7 +32,7 @@ public class ItemEmergencyKit extends ItemDesc implements ISortableItem
         this.setMaxDamage(0);
         this.setHasSubtypes(false);
         this.setMaxStackSize(1);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

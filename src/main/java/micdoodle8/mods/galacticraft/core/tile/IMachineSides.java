@@ -102,7 +102,7 @@ public interface IMachineSides extends ITileClientUpdates
      * This CANNOT be set: use a wrench to change the block's facing to change it
      * (If player wants to change the front then rotate the block's facing and all other sides)
      */
-    public EnumFacing getFront();
+    public EnumFacing byIndex();
 
     /**
      * Used internally by tileEntity logic

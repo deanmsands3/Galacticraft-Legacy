@@ -57,6 +57,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -575,7 +576,7 @@ public class TickHandlerClient
 
             if (world != null)
             {
-                List entityList = world.loadedEntityList;
+                List<Entity> entityList = world.loadedEntityList;
                 for (Object e : entityList)
                 {
                     if (e instanceof IEntityNoisy)
@@ -616,7 +617,7 @@ public class TickHandlerClient
                 ClientProxyCore.lastSpacebarDown = true;
             }
 
-            if (!(this.screenConnectionsUpdateList.isEmpty()))
+            if (!(TickHandlerClient.screenConnectionsUpdateList.isEmpty()))
             {
                 HashSet<TileEntityScreen> updateListCopy = (HashSet<TileEntityScreen>) screenConnectionsUpdateList.clone();
                 screenConnectionsUpdateList.clear();

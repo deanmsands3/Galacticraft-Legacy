@@ -28,7 +28,7 @@ public class ItemBasicMars extends Item implements ISortableItem
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
-        this.setUnlocalizedName(name);
+        this.setTranslationKey(name);
     }
 
     @SideOnly(Side.CLIENT)
@@ -58,7 +58,7 @@ public class ItemBasicMars extends Item implements ISortableItem
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
+    public String getTranslationKey(ItemStack par1ItemStack)
     {
         if (names.length > par1ItemStack.getItemDamage())
         {

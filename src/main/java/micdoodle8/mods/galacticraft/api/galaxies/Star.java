@@ -21,7 +21,7 @@ public class Star extends CelestialBody
     }
 
     @Override
-    public String getUnlocalizedNamePrefix()
+    public String getTranslationKeyPrefix()
     {
         return "star";
     }

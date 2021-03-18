@@ -355,7 +355,7 @@ public class ChunkLoadingCallback implements LoadingCallback
         //
         // if (tile != null && tile.equals(loader))
         // {
-        // Chunk chunkAt = world.getChunkFromChunkCoords(coords.posX >> 4,
+        // Chunk chunkAt = world.getChunk(coords.posX >> 4,
         // coords.posZ >> 4);
         // boolean foundOtherLoader = false;
         //

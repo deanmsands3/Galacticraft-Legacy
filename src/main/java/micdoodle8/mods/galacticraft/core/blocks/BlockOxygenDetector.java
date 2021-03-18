@@ -29,7 +29,7 @@ public class BlockOxygenDetector extends BlockContainer implements ITileEntityPr
         super(Material.IRON);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BlockOxygenDetector extends BlockContainer implements ITileEntityPr
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -95,7 +95,7 @@ public class BlockOxygenDetector extends BlockContainer implements ITileEntityPr
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override

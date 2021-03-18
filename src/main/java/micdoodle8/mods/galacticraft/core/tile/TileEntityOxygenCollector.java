@@ -138,7 +138,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen
                                 // Preload the first chunk for the z loop - there
                                 // can be a maximum of 2 chunks in the z loop
                                 int chunkz = this.getPos().getZ() - 5 >> 4;
-                                Chunk chunk = this.world.getChunkFromChunkCoords(chunkx, chunkz);
+                                Chunk chunk = this.world.getChunk(chunkx, chunkz);
                                 for (int z = this.getPos().getZ() - 5; z <= this.getPos().getZ() + 5; z++)
                                 {
                                     if (z >> 4 != chunkz)
@@ -146,7 +146,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen
                                         // moved across z chunk boundary into a new
                                         // chunk, so load the new chunk
                                         chunkz = z >> 4;
-                                        chunk = this.world.getChunkFromChunkCoords(chunkx, chunkz);
+                                        chunk = this.world.getChunk(chunkx, chunkz);
                                     }
                                     for (int y = miny; y <= maxy; y++)
                                     {
@@ -216,7 +216,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen
     }
 
     @Override
-    public EnumFacing getFront()
+    public EnumFacing byIndex()
     {
         IBlockState state = this.world.getBlockState(getPos()); 
         if (state.getBlock() instanceof BlockOxygenCollector)
@@ -229,7 +229,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen
     @Override
     public EnumFacing getElectricInputDirection()
     {
-        return getFront().rotateY();
+        return byIndex().rotateY();
     }
 
     @Override

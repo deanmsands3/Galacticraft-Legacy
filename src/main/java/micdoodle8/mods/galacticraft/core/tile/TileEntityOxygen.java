@@ -61,7 +61,7 @@ public abstract class TileEntityOxygen extends TileBaseElectricBlock implements 
     {
     	if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
     	{
-    		return (T) new FluidHandlerWrapper(this, facing);
+    		return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FluidHandlerWrapper(this, facing));
     	}
 
     	if (EnergyUtil.checkMekGasHandler(capability))

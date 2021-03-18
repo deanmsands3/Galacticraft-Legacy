@@ -99,7 +99,7 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
                 {
                     continue;
                 }
-                if (planet.getReachable() && planet.getTierRequirement() <= this.getRocketTier() && !planet.getUnlocalizedName().equals("planet.asteroids"))
+                if (planet.getReachable() && planet.getTierRequirement() <= this.getRocketTier() && !planet.getTranslationKey().equals("planet.asteroids"))
                 {
                     toPreGen.add(planet.getDimensionID());
                 }
@@ -195,13 +195,13 @@ public abstract class EntityTieredRocket extends EntityAutoRocket implements IRo
 	                    World w = mcserver.getWorld(coords.y);
                         if (w != null)
                         {
-                            w.getChunkFromChunkCoords(coords.x, coords.z);
+                            w.getChunk(coords.x, coords.z);
                             //Pregen a second chunk if still on launchpad (low strain on server)
                             if (this.launchPhase < EnumLaunchPhase.LAUNCHED.ordinal() && this.preGenIterator.hasNext())
                             {
                                 coords = this.preGenIterator.next();
                                 w = mcserver.getWorld(coords.y);
-                                w.getChunkFromChunkCoords(coords.x, coords.z);
+                                w.getChunk(coords.x, coords.z);
                             }
                         }
                     }

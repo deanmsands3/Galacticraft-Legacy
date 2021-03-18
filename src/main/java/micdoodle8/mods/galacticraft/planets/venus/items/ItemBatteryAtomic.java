@@ -25,7 +25,7 @@ public class ItemBatteryAtomic extends ItemElectricBase implements ISortableItem
     public ItemBatteryAtomic(String assetName)
     {
         super();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class ItemBasic extends Item implements ISortableItem
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 
@@ -56,14 +56,14 @@ public class ItemBasic extends Item implements ISortableItem
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         if (itemStack.getItemDamage() > 14 && itemStack.getItemDamage() < 19)
         {
-            return this.getUnlocalizedName() + ".canned_food";
+            return this.getTranslationKey() + ".canned_food";
         }
 
-        return this.getUnlocalizedName() + "." + ItemBasic.names[itemStack.getItemDamage()];
+        return this.getTranslationKey() + "." + ItemBasic.names[itemStack.getItemDamage()];
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ItemBasic extends Item implements ISortableItem
     {
         if (par1ItemStack.getItemDamage() > 14 && par1ItemStack.getItemDamage() < 19)
         {
-            tooltip.add(EnumColor.BRIGHT_GREEN + GCCoreUtil.translate(this.getUnlocalizedName() + "." + ItemBasic.names[par1ItemStack.getItemDamage()] + ".name"));
+            tooltip.add(EnumColor.BRIGHT_GREEN + GCCoreUtil.translate(this.getTranslationKey() + "." + ItemBasic.names[par1ItemStack.getItemDamage()] + ".name"));
         }
         else if (par1ItemStack.getItemDamage() == 19)
         {

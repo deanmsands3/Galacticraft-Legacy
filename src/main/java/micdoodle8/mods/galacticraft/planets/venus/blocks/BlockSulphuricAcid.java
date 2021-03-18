@@ -28,7 +28,7 @@ public class BlockSulphuricAcid extends BlockFluidClassic
         this.setQuantaPerBlock(9);
         this.setLightLevel(0.1F);
         this.needsRandomTick = true;
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override

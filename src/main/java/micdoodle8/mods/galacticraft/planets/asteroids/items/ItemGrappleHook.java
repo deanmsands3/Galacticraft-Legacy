@@ -28,7 +28,7 @@ public class ItemGrappleHook extends ItemBow implements ISortableItem
     public ItemGrappleHook(String assetName)
     {
         super();
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setMaxStackSize(1);
         //this.setTextureName("arrow");
     }

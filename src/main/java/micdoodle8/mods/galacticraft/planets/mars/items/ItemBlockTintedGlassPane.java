@@ -32,9 +32,9 @@ public class ItemBlockTintedGlassPane extends ItemBlock
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
+    public String getTranslationKey(ItemStack itemstack)
     {
-        return this.getBlock().getUnlocalizedName() + "." + ItemDye.DYE_COLORS[~itemstack.getItemDamage() & 15];
+        return this.getBlock().getTranslationKey() + "." + ItemDye.DYE_COLORS[~itemstack.getItemDamage() & 15];
     }
 
     @Override
@@ -45,8 +45,8 @@ public class ItemBlockTintedGlassPane extends ItemBlock
     }
 
     @Override
-    public String getUnlocalizedName()
+    public String getTranslationKey()
     {
-        return this.getBlock().getUnlocalizedName() + ".0";
+        return this.getBlock().getTranslationKey() + ".0";
     }
 }

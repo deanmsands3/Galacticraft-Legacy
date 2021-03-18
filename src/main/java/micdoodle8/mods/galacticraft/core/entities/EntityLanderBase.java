@@ -101,11 +101,11 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
                 {
                     if (this.addedToChunk && this.world.isBlockLoaded(new BlockPos(this.chunkCoordX << 4, 255, this.chunkCoordZ << 4), true))
                     {
-                        this.world.getChunkFromChunkCoords(this.chunkCoordX, this.chunkCoordZ).removeEntityAtIndex(this, this.chunkCoordY);
+                        this.world.getChunk(this.chunkCoordX, this.chunkCoordZ).removeEntityAtIndex(this, this.chunkCoordY);
                     }
 
                     this.addedToChunk = true;
-                    this.world.getChunkFromChunkCoords(cx, cz).addEntity(this);
+                    this.world.getChunk(cx, cz).addEntity(this);
                 }
                 
                 this.syncAdjustFlag = false;
@@ -400,7 +400,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
                             {
                                 if (e instanceof EntityPlayer)
                                 {
-                                    e = WorldUtil.forceRespawnClient(this.dimension, e.world.getDifficulty().getDifficultyId(), e.world.getWorldInfo().getTerrainType().getName(), ((EntityPlayerMP) e).interactionManager.getGameType().getID());
+                                    e = WorldUtil.forceRespawnClient(this.dimension, e.world.getDifficulty().getId(), e.world.getWorldInfo().getTerrainType().getName(), ((EntityPlayerMP) e).interactionManager.getGameType().getID());
                                     e.startRiding(this);
                                     this.syncAdjustFlag = true;
                                 }
@@ -428,7 +428,7 @@ public abstract class EntityLanderBase extends EntityAdvancedMotion implements I
                             {
                                 if (e instanceof EntityPlayer)
                                 {
-                                    e = WorldUtil.forceRespawnClient(this.dimension, e.world.getDifficulty().getDifficultyId(), e.world.getWorldInfo().getTerrainType().getName(), ((EntityPlayerMP) e).interactionManager.getGameType().getID());
+                                    e = WorldUtil.forceRespawnClient(this.dimension, e.world.getDifficulty().getId(), e.world.getWorldInfo().getTerrainType().getName(), ((EntityPlayerMP) e).interactionManager.getGameType().getID());
                                     e.startRiding(this, true);
                                     this.syncAdjustFlag = true;
                                 }

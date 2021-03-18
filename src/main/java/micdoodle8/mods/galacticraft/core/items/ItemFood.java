@@ -31,7 +31,7 @@ public class ItemFood extends net.minecraft.item.ItemFood implements ISortableIt
         super(2, 0.3F, false);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ItemFood extends net.minecraft.item.ItemFood implements ISortableIt
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
+    public String getTranslationKey(ItemStack itemStack)
     {
         if (itemStack.getItemDamage() < 4)
         {

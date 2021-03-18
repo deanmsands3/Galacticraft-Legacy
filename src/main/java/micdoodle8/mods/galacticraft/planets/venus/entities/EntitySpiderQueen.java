@@ -371,7 +371,7 @@ public class EntitySpiderQueen extends EntityBossBase implements IEntityBreathab
     @Override
     public void attackEntityWithRangedAttack(EntityLivingBase target, float damage)
     {
-        EntityWebShot entityarrow = new EntityWebShot(this.world, this, target, 0.8F, (float)(14 - this.world.getDifficulty().getDifficultyId() * 4));
+        EntityWebShot entityarrow = new EntityWebShot(this.world, this, target, 0.8F, (float)(14 - this.world.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_ARROW_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(entityarrow);
     }

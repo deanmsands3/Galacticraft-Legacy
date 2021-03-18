@@ -222,7 +222,7 @@ public class WorldGenTerraformTree extends WorldGenerator
                                     if (rand.nextInt(4 - l) == 0)
                                     {
                                         j1 = rand.nextInt(3);
-                                        this.func_181652_a(worldIn, rand.nextInt(3), position.add(enumfacing.getFrontOffsetX(), i - 5 + l, enumfacing.getFrontOffsetZ()), enumfacing);
+                                        this.func_181652_a(worldIn, rand.nextInt(3), position.add(enumfacing.getXOffset(), i - 5 + l, enumfacing.getZOffset()), enumfacing);
                                     }
                                 }
                             }

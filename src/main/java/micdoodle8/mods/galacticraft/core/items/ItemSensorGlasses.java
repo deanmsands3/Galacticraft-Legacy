@@ -23,7 +23,7 @@ public class ItemSensorGlasses extends ItemArmor implements ISortableItem, ISens
     public ItemSensorGlasses(String assetName)
     {
         super(GCItems.ARMOR_SENSOR_GLASSES, 0, EntityEquipmentSlot.HEAD);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 

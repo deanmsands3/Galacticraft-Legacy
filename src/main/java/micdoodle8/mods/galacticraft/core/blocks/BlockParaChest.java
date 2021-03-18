@@ -48,7 +48,7 @@ public class BlockParaChest extends BlockContainer implements ITileEntityProvide
         this.setHardness(3.0F);
         this.setSoundType(SoundType.WOOD);
 //        this.setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
@@ -71,7 +71,7 @@ public class BlockParaChest extends BlockContainer implements ITileEntityProvide
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
+    public CreativeTabs getCreativeTab()
     {
         return GalacticraftCore.galacticraftBlocksTab;
     }
@@ -223,7 +223,7 @@ public class BlockParaChest extends BlockContainer implements ITileEntityProvide
     @Override
     public String getShiftDescription(int meta)
     {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+        return GCCoreUtil.translate(this.getTranslationKey() + ".description");
     }
 
     @Override
@@ -235,7 +235,7 @@ public class BlockParaChest extends BlockContainer implements ITileEntityProvide
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getFront(meta);
+        EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
         {

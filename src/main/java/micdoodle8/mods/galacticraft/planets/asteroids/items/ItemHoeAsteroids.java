@@ -16,7 +16,7 @@ public class ItemHoeAsteroids extends ItemHoe implements ISortableItem
     public ItemHoeAsteroids(String assetName)
     {
         super(AsteroidsItems.TOOL_TITANIUM);
-        this.setUnlocalizedName(assetName);
+        this.setTranslationKey(assetName);
         //this.setTextureName(GalacticraftPlanets.TEXTURE_PREFIX + assetName);
     }
 

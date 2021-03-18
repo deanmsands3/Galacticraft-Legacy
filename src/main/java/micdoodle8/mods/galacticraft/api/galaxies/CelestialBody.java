@@ -24,7 +24,7 @@ import java.util.Locale;
 public abstract class CelestialBody implements Comparable<CelestialBody>
 {
     protected final String bodyName;
-    protected String unlocalizedName;
+    protected String translationKey;
 
     protected float relativeSize = 1.0F;
     protected ScalableDistance relativeDistanceFromCenter = new ScalableDistance(1.0F, 1.0F);
@@ -55,26 +55,34 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
     public CelestialBody(String bodyName)
     {
         this.bodyName = bodyName.toLowerCase(Locale.ENGLISH);
-        this.unlocalizedName = bodyName;
+        this.translationKey = bodyName;
     }
 
     public abstract int getID();
 
-    public abstract String getUnlocalizedNamePrefix();
+    public abstract String getTranslationKeyPrefix();
 
     public String getName()
     {
         return this.bodyName;
     }
-
-    public String getUnlocalizedName()
-    {
-        return this.getUnlocalizedNamePrefix() + "." + this.unlocalizedName;
+    
+    /**
+     * Use {@link CelestialBody#getTranslationKey()}
+     */
+    @Deprecated
+    public String getUnlocalizedName() {
+    	return getTranslationKey();
     }
 
-    public String getLocalizedName()
+    public String getTranslationKey()
     {
-        String s = this.getUnlocalizedName();
+        return this.getTranslationKeyPrefix() + "." + this.translationKey;
+    }
+
+    public String getTranslatedName()
+    {
+        String s = this.getTranslationKey();
         s = s == null ? "" : I18n.translateToLocal(s);
         int comment = s.indexOf('#');
         return (comment > 0) ? s.substring(0, comment).trim() : s;
@@ -281,7 +289,7 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
     @Override
     public int hashCode()
     {
-        return this.getUnlocalizedName().hashCode();
+        return this.getTranslationKey().hashCode();
     }
 
     @Override
@@ -289,7 +297,7 @@ public abstract class CelestialBody implements Comparable<CelestialBody>
     {
         if (other instanceof CelestialBody)
         {
-            return new EqualsBuilder().append(this.getUnlocalizedName(), ((CelestialBody) other).getUnlocalizedName()).isEquals();
+            return new EqualsBuilder().append(this.getTranslationKey(), ((CelestialBody) other).getTranslationKey()).isEquals();
         }
 
         return false;

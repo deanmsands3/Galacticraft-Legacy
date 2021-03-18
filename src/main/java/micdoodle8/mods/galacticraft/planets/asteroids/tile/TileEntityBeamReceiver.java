@@ -45,7 +45,7 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
 
         if (this.preLoadFacing != -1)
         {
-            this.setFacing(EnumFacing.getFront(this.preLoadFacing));
+            this.setFacing(EnumFacing.byIndex(this.preLoadFacing));
             this.preLoadFacing = -1;
         }
 
@@ -62,7 +62,7 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
 
                     if (electricalTile.storage.getEnergyStoredGC() > 0)
                     {
-                        EnergySourceAdjacent source = new EnergySourceAdjacent(EnumFacing.getFront(this.facing.getIndex() ^ 1));
+                        EnergySourceAdjacent source = new EnergySourceAdjacent(EnumFacing.byIndex(this.facing.getIndex() ^ 1));
                         float toSend = Math.min(electricalTile.storage.getMaxExtract(), electricalTile.storage.getEnergyStoredGC());
                         float transmitted = this.getTarget().receiveEnergyGC(new EnergySourceWireless(Lists.newArrayList((ILaserNode) this)), toSend, false);
                         electricalTile.extractEnergyGC(source, transmitted, false);
@@ -139,9 +139,9 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
         Vector3 headVec = new Vector3(this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5);
         if (this.facing != null)
         {
-            headVec.x += this.facing.getFrontOffsetX() * 0.1F;
-            headVec.y += this.facing.getFrontOffsetY() * 0.1F;
-            headVec.z += this.facing.getFrontOffsetZ() * 0.1F;
+            headVec.x += this.facing.getXOffset() * 0.1F;
+            headVec.y += this.facing.getYOffset() * 0.1F;
+            headVec.z += this.facing.getZOffset() * 0.1F;
         }
         return headVec;
     }
@@ -152,9 +152,9 @@ public class TileEntityBeamReceiver extends TileEntityBeamOutput implements IEne
         Vector3 headVec = new Vector3(this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5);
         if (this.facing != null)
         {
-            headVec.x += this.facing.getFrontOffsetX() * 0.1F;
-            headVec.y += this.facing.getFrontOffsetY() * 0.1F;
-            headVec.z += this.facing.getFrontOffsetZ() * 0.1F;
+            headVec.x += this.facing.getXOffset() * 0.1F;
+            headVec.y += this.facing.getYOffset() * 0.1F;
+            headVec.z += this.facing.getZOffset() * 0.1F;
         }
         return headVec;
     }
