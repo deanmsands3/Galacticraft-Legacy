@@ -11,13 +11,9 @@ buildscript {
 	}
 }
 
-plugins {
-	id "com.wynprice.cursemaven" version "2.1.5"
-}
-
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-def versionBuild = 281
+def versionBuild = 0
 if (System.getenv("BUILD_NUMBER") != null)
 	versionBuild = System.getenv("BUILD_NUMBER")
 
@@ -47,32 +43,30 @@ minecraft {
 
 repositories {
 	maven {
-		name = 'curseforge'
-		url = 'https://minecraft.curseforge.com/api/maven/'
-	}
+        url "https://www.cursemaven.com"
+    }
 	maven {
-		url = "https://mod-buildcraft.com/maven/"
+		url "https://mod-buildcraft.com/maven/"
 	}
 	maven { 
 		url "http://maven.ic2.player.to" 
 	}
 	maven {
-		name 'Tinkers/JEI'
 		url 'http://dvs1.progwml6.com/files/maven'
 	}
 }
 
 dependencies {
 	
-	compile "curse.maven:bop-7.0.1-2444:2842510"
-	compile "curse.maven:mekanism-api:2835176"
-	compile "curse.maven:appliedenergistics2:2747063"
-	compile "curse.maven:redstoneflux:2920436"
-	compile "curse.maven:actuallyadditions:3117927"
+	compile "curse.maven:bop-7.0.1.2444-220318:2842510"
+	compile "curse.maven:mekanism-9.8.3.390-268560:2835176"
+	compile "curse.maven:ae2-rv6-stable-7-223794:2747063"
+	compile "curse.maven:redstoneflux-1.1.1-270789:2920436"
+	compile "curse.maven:actuallyadditions-r152-228404:3117927"
+	compile "curse.maven:playerapi-1.1-449521:3212872"
 
 	compile "com.mod-buildcraft:buildcraft-api:7.99.24.6"
-	compile "industrial-craft:industrialcraft-2-2.8.221:ex112:api"
-	compile "player-api:PlayerAPI:1.12.1:1.0"
+	compile "net.industrial-craft:industrialcraft-2:2.8.221-ex112:api"
 	
 	compile "mezz.jei:jei_1.12.2:4.16.1.302:api"
 	runtime "mezz.jei:jei_1.12.2:4.16.1.302"
