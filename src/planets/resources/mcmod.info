@@ -1,0 +1,15 @@
+[
+{
+  "modid": "galacticraftplanets",
+  "name": "Galacticraft Planets",
+  "description": "Example placeholder mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://micdoodle8.com/mods/galacticraft",
+  "updateUrl": "",
+  "authorList": ["TeamGalacticraft"],
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

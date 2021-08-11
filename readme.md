@@ -5,7 +5,8 @@ Galacticraft [![Join our Discord!](https://img.shields.io/discord/44996634566524
 
 An advanced space exploration mod for Minecraft.
 
-Full documentation is at our wiki: [wiki.micdoodle8.com](https://wiki.micdoodle8.com/wiki/Galacticraft)
+**Literally more outdated than MS-DOS
+~~Full documentation is at our wiki: [wiki.micdoodle8.com](https://wiki.micdoodle8.com/wiki/Galacticraft)~~
 
 ------
 
@@ -34,7 +35,8 @@ For Pull Requests to help with translation, see [Notes for Contributors](https:/
 
 API and deobfuscated version for developers is available through our [downloads](https://micdoodle8.com/mods/galacticraft/downloads) page.  Detailed information on how to set up a development environment for the source code - if you want to use either the Galacticraft API or the full sources - is [here](https://wiki.micdoodle8.com/wiki/GC3_API)
 
-To build, run the command `gradlew build packCoreJar packPlanetsJar packMicCoreJar`
+**Nope not anymore, standby for changes to this documentation**
+~~To build, run the command `gradlew build packCoreJar packPlanetsJar packMicCoreJar`~~
  
 ------
  
